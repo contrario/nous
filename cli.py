@@ -25,6 +25,7 @@ from pathlib import Path
 from parser import parse_nous_file
 from validator import validate_program
 from codegen import generate_python
+from watch import watch
 
 VERSION = "1.4.0"
 BANNER = r"""
@@ -348,6 +349,11 @@ def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
         print(f"{prefix}{data}")
 
 
+def cmd_watch(args: argparse.Namespace) -> int:
+    sources = [Path(f) for f in args.files]
+    return watch(sources, poll=args.interval)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language")
     sub = ap.add_subparsers(dest="command", required=True)
@@ -377,13 +383,17 @@ def main() -> int:
     p = sub.add_parser("bridge", help="Analyze Noosphere integration")
     p.add_argument("file")
 
+    p = sub.add_parser("watch", help="Watch and hot-reload on changes")
+    p.add_argument("files", nargs="+", help=".nous files to watch")
+    p.add_argument("--interval", type=float, default=1.0, help="Poll interval in seconds")
+
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
     commands = {
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "version": cmd_version,
+        "info": cmd_info, "bridge": cmd_bridge, "version": cmd_version, "watch": cmd_watch,
     }
     return commands[args.command](args)
 
