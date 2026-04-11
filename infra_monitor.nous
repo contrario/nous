@@ -1,126 +1,29 @@
-# NOUS Example: Infrastructure Monitoring Cluster
-# 3 souls watching servers, databases, and APIs
+# infra_monitor.nous — Infrastructure Monitor
 
-world InfraWatch {
+world InfraMonitor {
     law CostCeiling = $0.05 per cycle
-    law MaxLatency = 10s
-    law AlertThreshold = constitutional(3)
     heartbeat = 1m
 }
 
-message Alert {
-    service: string
-    severity: string
-    metric: string
-    value: float
-    source: SoulRef
-}
-
 message HealthReport {
-    total_checks: int
-    failures: int
-    summary: string
+    status: string
+    source: string
 }
 
-soul ServerWatcher {
+soul Watcher {
     mind: gemini-flash @ Tier2
-    senses: [check_cpu, check_memory, check_disk]
+    senses: [check_positions]
 
     memory {
-        alerts: [Alert] = []
         check_count: int = 0
     }
 
     instinct {
-        let cpu = sense check_cpu()
-        guard cpu.usage > 80
-        speak Alert(service: "server", severity: "warning", metric: "cpu", value: cpu.usage, source: self)
-        let mem = sense check_memory()
-        guard mem.usage > 90
-        speak Alert(service: "server", severity: "critical", metric: "memory", value: mem.usage, source: self)
+        let status = sense check_positions()
         remember check_count += 1
     }
 
-    dna {
-        cpu_threshold: 80 ~ [60, 95]
-        memory_threshold: 90 ~ [70, 98]
-    }
-
-    heal {
-        on timeout => retry(3, exponential)
-        on api_error => sleep 1 cycle
-    }
-}
-
-soul DatabaseWatcher {
-    mind: gemini-flash @ Tier2
-    senses: [check_postgres, check_redis]
-
-    memory {
-        slow_queries: int = 0
-    }
-
-    instinct {
-        let pg = sense check_postgres()
-        guard pg.slow_queries > 10
-        speak Alert(service: "postgres", severity: "warning", metric: "slow_queries", value: pg.slow_queries, source: self)
-        let redis = sense check_redis()
-        guard redis.latency > 50
-        speak Alert(service: "redis", severity: "critical", metric: "latency_ms", value: redis.latency, source: self)
-        remember slow_queries = pg.slow_queries
-    }
-
-    dna {
-        query_threshold: 10 ~ [5, 50]
-        latency_ceiling: 50 ~ [10, 200]
-    }
-
     heal {
         on timeout => retry(2, exponential)
-        on api_error => fallback(check_postgres)
     }
-}
-
-soul Dispatcher {
-    mind: deepseek-r1 @ Tier1
-    senses: [send_telegram, send_slack, send_pagerduty]
-
-    memory {
-        dispatched: int = 0
-    }
-
-    instinct {
-        let alert = listen ServerWatcher::Alert
-        if alert.severity == "critical" {
-            sense send_pagerduty(alert.service, alert.metric, alert.value)
-        }
-        sense send_telegram(alert.service, alert.severity, alert.metric)
-        remember dispatched += 1
-    }
-
-    heal {
-        on timeout => retry(2, exponential)
-        on api_error => fallback(send_telegram)
-    }
-}
-
-nervous_system {
-    ServerWatcher -> Dispatcher
-    DatabaseWatcher -> Dispatcher
-}
-
-evolution {
-    schedule: 6:00 AM
-    fitness: langfuse(alert_accuracy)
-    mutate ServerWatcher.dna {
-        strategy: genetic(population: 3, generations: 2)
-        survive_if: fitness > parent.fitness
-        rollback_if: any_law_violated
-    }
-}
-
-perception {
-    on cron("*/1 * * * *") => wake_all
-    on telegram("/status") => wake Dispatcher
-    on system_error => alert Telegram
 }

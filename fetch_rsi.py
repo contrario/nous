@@ -1,106 +1,129 @@
 """
 NOUS Tool — fetch_rsi
-Fetches price history from DexScreener and calculates RSI-14.
+======================
+Fetches real OHLCV candles via ccxt and computes RSI-14.
+Falls back across exchanges if pair not found.
+
+Usage in .nous:
+    let rsi = sense fetch_rsi(token.pair)
 """
 from __future__ import annotations
 
+import asyncio
 import logging
-import time
-from typing import Any
+import os
+from typing import Any, Optional
 
-import httpx
+import ccxt.async_support as ccxt_async
 
-log = logging.getLogger("nous.tool.fetch_rsi")
+logger = logging.getLogger("nous.tools.fetch_rsi")
 
-DEXSCREENER_PAIRS = "https://api.dexscreener.com/latest/dex/pairs"
+DEFAULT_EXCHANGE = os.environ.get("NOUS_RSI_EXCHANGE", "binance")
+RSI_PERIOD = 14
+OHLCV_LIMIT = RSI_PERIOD + 50
+TIMEFRAME = "1h"
+
+FALLBACK_EXCHANGES = ["binance", "bybit", "gate", "kucoin", "okx"]
 
 
-def _calculate_rsi(prices: list[float], period: int = 14) -> float:
-    if len(prices) < period + 1:
+def _compute_rsi(closes: list[float], period: int = RSI_PERIOD) -> float:
+    if len(closes) < period + 1:
+        return 50.0
+    deltas = [closes[i] - closes[i - 1] for i in range(1, len(closes))]
+    gains = [d if d > 0 else 0.0 for d in deltas]
+    losses = [-d if d < 0 else 0.0 for d in deltas]
+    avg_gain = sum(gains[:period]) / period
+    avg_loss = sum(losses[:period]) / period
+    for i in range(period, len(deltas)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return 100.0 - (100.0 / (1.0 + rs))
+
+
+def _normalize_pair(pair: str) -> str:
+    pair = pair.strip().upper()
+    if "/" in pair:
+        return pair
+    for quote in ("USDT", "USDC", "USD", "BUSD", "BTC", "ETH"):
+        if pair.endswith(quote) and len(pair) > len(quote):
+            base = pair[: -len(quote)]
+            return f"{base}/{quote}"
+    return f"{pair}/USDT"
+
+
+async def _fetch_from_exchange(
+    exchange_id: str,
+    symbol: str,
+    timeframe: str = TIMEFRAME,
+    limit: int = OHLCV_LIMIT,
+) -> Optional[list[float]]:
+    exchange_class = getattr(ccxt_async, exchange_id, None)
+    if exchange_class is None:
+        return None
+    exchange = exchange_class({"enableRateLimit": True})
+    try:
+        await exchange.load_markets()
+        if symbol not in exchange.markets:
+            alt = symbol.replace("/USDT", "/USDC")
+            if alt in exchange.markets:
+                symbol = alt
+            else:
+                return None
+        ohlcv = await exchange.fetch_ohlcv(symbol, timeframe, limit=limit)
+        if not ohlcv or len(ohlcv) < RSI_PERIOD + 1:
+            return None
+        closes = [candle[4] for candle in ohlcv]
+        return closes
+    except Exception as e:
+        logger.debug("Exchange %s failed for %s: %s", exchange_id, symbol, e)
+        return None
+    finally:
+        try:
+            await exchange.close()
+        except Exception:
+            pass
+
+
+async def fetch_rsi(
+    pair: str = "",
+    timeframe: str = TIMEFRAME,
+    period: int = RSI_PERIOD,
+    exchange: str = DEFAULT_EXCHANGE,
+    **kwargs: Any,
+) -> float:
+    if not pair:
+        pair = kwargs.get("_pos_0", "")
+    if not pair:
+        logger.warning("fetch_rsi called without pair argument")
         return 50.0
 
-    deltas = [prices[i] - prices[i - 1] for i in range(1, len(prices))]
-    recent = deltas[-(period):]
+    symbol = _normalize_pair(str(pair))
+    logger.info("fetch_rsi: %s on %s (tf=%s, period=%d)", symbol, exchange, timeframe, period)
 
-    gains = [d for d in recent if d > 0]
-    losses = [-d for d in recent if d < 0]
+    exchanges_to_try = [exchange] + [e for e in FALLBACK_EXCHANGES if e != exchange]
+    for exch_id in exchanges_to_try:
+        closes = await _fetch_from_exchange(exch_id, symbol, timeframe, OHLCV_LIMIT)
+        if closes is not None:
+            rsi = _compute_rsi(closes, period)
+            logger.info("fetch_rsi: %s RSI=%0.2f (%d candles from %s)", symbol, rsi, len(closes), exch_id)
+            return round(rsi, 2)
 
-    avg_gain = sum(gains) / period if gains else 0.0
-    avg_loss = sum(losses) / period if losses else 0.0001
-
-    rs = avg_gain / avg_loss
-    rsi = 100.0 - (100.0 / (1.0 + rs))
-    return round(rsi, 2)
+    logger.warning("fetch_rsi: %s not found on any exchange, returning 50.0", symbol)
+    return 50.0
 
 
-async def execute(
-    pair: str = "",
-    chain: str = "solana",
-    period: int = 14,
-    **kwargs: Any,
-) -> dict[str, Any]:
-    start = time.monotonic()
+async def run(args: dict[str, Any] | None = None, **kwargs: Any) -> float:
+    if args is None:
+        args = kwargs
+    return await fetch_rsi(**args)
 
-    if isinstance(pair, dict):
-        pair = pair.get("pair", pair.get("pairAddress", ""))
 
-    if not pair:
-        return {"success": False, "error": "No pair address provided", "rsi": 50.0}
+if __name__ == "__main__":
+    import sys
 
-    async with httpx.AsyncClient(timeout=15.0) as http:
-        try:
-            url = f"{DEXSCREENER_PAIRS}/{chain}/{pair}"
-            resp = await http.get(url)
-            resp.raise_for_status()
-            data = resp.json()
-        except Exception as e:
-            log.error(f"DexScreener price fetch error: {e}")
-            return {"success": False, "error": str(e), "rsi": 50.0}
-
-    pair_data = data.get("pair") or (data.get("pairs", [{}])[0] if data.get("pairs") else {})
-
-    price_change_5m = float(pair_data.get("priceChange", {}).get("m5", 0) or 0)
-    price_change_1h = float(pair_data.get("priceChange", {}).get("h1", 0) or 0)
-    price_change_6h = float(pair_data.get("priceChange", {}).get("h6", 0) or 0)
-    price_change_24h = float(pair_data.get("priceChange", {}).get("h24", 0) or 0)
-
-    current_price = float(pair_data.get("priceUsd", 0) or 0)
-    if current_price <= 0:
-        return {"success": False, "error": "No price data", "rsi": 50.0}
-
-    synthetic_prices = []
-    base = current_price / (1 + price_change_24h / 100) if price_change_24h != -100 else current_price
-    changes = [
-        price_change_24h * 0.1,
-        price_change_24h * 0.2,
-        price_change_24h * 0.3,
-        price_change_24h * 0.35,
-        price_change_24h * 0.4,
-        price_change_24h * 0.45,
-        price_change_24h * 0.5,
-        price_change_24h * 0.55,
-        price_change_24h * 0.6,
-        price_change_24h * 0.65,
-        price_change_24h * 0.7,
-        price_change_6h * 0.5,
-        price_change_6h * 0.75,
-        price_change_1h * 0.5,
-        price_change_1h * 0.75,
-        price_change_5m * 0.5,
-        0.0,
-    ]
-    for pct in changes:
-        synthetic_prices.append(base * (1 + pct / 100))
-
-    rsi = _calculate_rsi(synthetic_prices, period)
-    elapsed = round((time.monotonic() - start) * 1000, 1)
-
-    log.info(f"RSI for {pair[:12]}...: {rsi} ({elapsed}ms)")
-    return {
-        "success": True,
-        "rsi": rsi,
-        "price_usd": current_price,
-        "price_change_24h": price_change_24h,
-        "pair": pair,
-        "latency_ms": elapsed,
-    }
+    pair = sys.argv[1] if len(sys.argv) > 1 else "BTC/USDT"
+    result = asyncio.run(fetch_rsi(pair=pair))
+    print(f"RSI-{RSI_PERIOD} for {pair}: {result}")

@@ -1,14 +1,15 @@
 """
-NOUS Parser — Lark → Living AST (Ψυχόδενδρο)
+NOUS Parser v2.0 — LALR Edition (Ψυχόδενδρο)
 ===============================================
-Transforms the Lark CST into Pydantic V2 AST nodes.
+Clean LALR parser. No post-processing workarounds.
+All keyword ambiguity resolved at grammar level.
 """
 from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
 
-from lark import Lark, Transformer, Token, Tree
+from lark import Lark, Transformer, Token
 
 from ast_nodes import (
     NousProgram, WorldNode, LawNode, LawCost, LawDuration,
@@ -21,112 +22,104 @@ from ast_nodes import (
     PerceptionNode, PerceptionRuleNode, PerceptionTriggerNode,
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
-    DeployNode, TopologyNode, TopoServerNode,
     Tier,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
 
+_PARSER_CACHE: Lark | None = None
+
+
+def _get_parser() -> Lark:
+    global _PARSER_CACHE
+    if _PARSER_CACHE is None:
+        grammar = GRAMMAR_PATH.read_text(encoding="utf-8")
+        _PARSER_CACHE = Lark(grammar, parser="lalr", start="start")
+    return _PARSER_CACHE
+
+
+def _strip(items: list) -> list:
+    return [i for i in items if i is not None and not isinstance(i, Token)]
+
 
 class NousTransformer(Transformer):
 
-    # ── Primitives ──
+    def WORLD(self, _t: Token) -> None: return None
+    def SOUL(self, _t: Token) -> None: return None
+    def MEMORY(self, _t: Token) -> None: return None
+    def INSTINCT(self, _t: Token) -> None: return None
+    def SENSE(self, _t: Token) -> None: return None
+    def REMEMBER(self, _t: Token) -> None: return None
+    def SPEAK(self, _t: Token) -> None: return None
+    def LISTEN(self, _t: Token) -> None: return None
+    def DNA(self, _t: Token) -> None: return None
+    def HEAL(self, _t: Token) -> None: return None
+    def LAW(self, _t: Token) -> None: return None
+    def GUARD(self, _t: Token) -> None: return None
+    def SLEEP(self, _t: Token) -> None: return None
+    def NERVOUS_SYSTEM(self, _t: Token) -> None: return None
+    def EVOLUTION(self, _t: Token) -> None: return None
+    def PERCEPTION(self, _t: Token) -> None: return None
+    def MESSAGE(self, _t: Token) -> None: return None
+    def SILENCE(self, _t: Token) -> None: return None
+    def WAKE_ALL(self, _t: Token) -> None: return None
+    def CONSTITUTIONAL(self, _t: Token) -> None: return None
+    def PER(self, _t: Token) -> None: return None
+    def CYCLE(self, _t: Token) -> None: return None
 
-    def INT(self, tok: Token) -> int:
-        return int(tok)
+    def INT(self, tok: Token) -> int: return int(tok)
+    def FLOAT(self, tok: Token) -> float: return float(tok)
+    def STRING(self, tok: Token) -> str: return str(tok)[1:-1]
+    def BOOL(self, tok: Token) -> bool: return tok == "true"
+    def NAME(self, tok: Token) -> str: return str(tok)
+    def TIER(self, tok: Token) -> str: return str(tok)
+    def COMP_OP(self, tok: Token) -> str: return str(tok)
+    def DURATION_UNIT(self, tok: Token) -> str: return str(tok)
+    def ADD_OP(self, tok: Token) -> str: return str(tok)
+    def MUL_OP(self, tok: Token) -> str: return str(tok)
 
-    def FLOAT(self, tok: Token) -> float:
-        return float(tok)
+    def named_type(self, items: list) -> str: return str(items[0])
+    def list_type(self, items: list) -> str: return f"[{items[0]}]"
+    def optional_type(self, items: list) -> str: return f"{items[0]}?"
+    def map_type(self, items: list) -> str: return f"{{{items[0]}: {items[1]}}}"
 
-    def STRING(self, tok: Token) -> str:
-        return str(tok)[1:-1]
+    def int_lit(self, items: list) -> Any: return items[0]
+    def float_lit(self, items: list) -> Any: return items[0]
+    def bool_lit(self, items: list) -> Any: return items[0]
+    def now_lit(self, _items: list) -> str: return "now()"
+    def self_ref(self, _items: list) -> str: return "self"
 
-    def BOOL(self, tok: Token) -> bool:
-        return tok == "true"
-
-    def NAME(self, tok: Token) -> str:
-        return str(tok)
-
-    def TIER(self, tok: Token) -> str:
-        return str(tok)
-
-    def COMP_OP(self, tok: Token) -> str:
-        return str(tok)
-
-    def DURATION_UNIT(self, tok: Token) -> str:
-        return str(tok)
-
-    # ── Types ──
-
-    def named_type(self, items: list) -> str:
-        return str(items[0])
-
-    def list_type(self, items: list) -> str:
-        return f"[{items[0]}]"
-
-    def optional_type(self, items: list) -> str:
-        return f"{items[0]}?"
-
-    def map_type(self, items: list) -> str:
-        return f"{{{items[0]}: {items[1]}}}"
-
-    # ── Literals ──
-
-    def int_lit(self, items: list) -> Any:
-        return items[0]
-
-    def float_lit(self, items: list) -> Any:
-        return items[0]
-
-    def string_lit(self, items: list) -> Any:
+    def string_lit(self, items: list) -> dict:
         return {"kind": "string_lit", "value": items[0]}
 
-    def bool_lit(self, items: list) -> Any:
-        return items[0]
-
     def currency_usd(self, items: list) -> dict:
-        return {"currency": "USD", "amount": float(items[0])}
+        v = _strip(items)
+        return {"currency": "USD", "amount": float(v[0])}
 
     def currency_eur(self, items: list) -> dict:
-        return {"currency": "EUR", "amount": float(items[0])}
+        v = _strip(items)
+        return {"currency": "EUR", "amount": float(v[0])}
 
-    def currency_lit(self, items: list) -> Any:
-        return items[0]
+    def currency_lit(self, items: list) -> Any: return items[0]
 
     def duration_lit(self, items: list) -> str:
-        return f"{items[0]}{items[1]}"
+        v = _strip(items)
+        return f"{v[0]}{v[1]}"
 
     def time_hm(self, items: list) -> str:
-        return f"{items[0]}:{items[1]:02d} {items[2]}"
+        v = _strip(items)
+        return f"{v[0]}:{v[1]:02d} {v[2]}"
 
-    def now_lit(self, _items: list) -> str:
-        return "now()"
-
-    def self_ref(self, _items: list) -> str:
-        return "self"
-
-    def name_ref(self, items: list) -> str:
-        return items[0]
-
-    def list_lit(self, items: list) -> list:
-        return items[0] if items else []
-
-    def map_lit(self, items: list) -> dict:
-        return items[0] if items else {}
-
-    def expr_list(self, items: list) -> list:
-        return list(items)
-
-    # ── Expressions ──
+    def name_ref(self, items: list) -> str: return items[0]
+    def list_lit(self, items: list) -> list: return items[0] if items else []
+    def map_lit(self, items: list) -> dict: return items[0] if items else {}
+    def expr_list(self, items: list) -> list: return list(items)
 
     def world_ref(self, items: list) -> dict:
         return {"kind": "world_ref", "path": items[0]}
 
     def dotted_name(self, items: list) -> str:
         return ".".join(str(i) for i in items)
-
-    def soul_ref(self, items: list) -> str:
-        return str(items[0])
 
     def soul_field_ref(self, items: list) -> dict:
         return {"kind": "soul_field", "soul": items[0], "field": items[1]}
@@ -135,9 +128,7 @@ class NousTransformer(Transformer):
         return {"kind": "attr", "obj": items[0], "attr": items[1]}
 
     def method_call(self, items: list) -> dict:
-        obj, method = items[0], items[1]
-        args = items[2] if len(items) > 2 else {}
-        return {"kind": "method_call", "obj": obj, "method": method, "args": args}
+        return {"kind": "method_call", "obj": items[0], "method": items[1], "args": items[2] if len(items) > 2 else {}}
 
     def func_call(self, items: list) -> dict:
         return {"kind": "func_call", "func": items[0], "args": items[1] if len(items) > 1 else {}}
@@ -149,76 +140,57 @@ class NousTransformer(Transformer):
         return {"kind": "neg", "operand": items[0]}
 
     def or_expr(self, items: list) -> Any:
-        if len(items) == 1:
-            return items[0]
-        return {"kind": "binop", "op": "||", "left": items[0], "right": items[1]}
+        if len(items) == 1: return items[0]
+        result = items[0]
+        for i in range(1, len(items)):
+            result = {"kind": "binop", "op": "||", "left": result, "right": items[i]}
+        return result
 
     def and_expr(self, items: list) -> Any:
-        if len(items) == 1:
-            return items[0]
-        return {"kind": "binop", "op": "&&", "left": items[0], "right": items[1]}
+        if len(items) == 1: return items[0]
+        result = items[0]
+        for i in range(1, len(items)):
+            result = {"kind": "binop", "op": "&&", "left": result, "right": items[i]}
+        return result
 
     def compare_expr(self, items: list) -> Any:
-        if len(items) == 1:
-            return items[0]
+        if len(items) == 1: return items[0]
         return {"kind": "binop", "op": items[1], "left": items[0], "right": items[2]}
 
-    def ADD_OP(self, tok: Token) -> str:
-        return str(tok)
-
-    def MUL_OP(self, tok: Token) -> str:
-        return str(tok)
-
     def add_expr(self, items: list) -> Any:
-        if len(items) == 1:
-            return items[0]
+        if len(items) == 1: return items[0]
         result = items[0]
         for i in range(1, len(items), 2):
-            op = items[i] if i < len(items) else "+"
-            right = items[i + 1] if i + 1 < len(items) else result
-            result = {"kind": "binop", "op": op, "left": result, "right": right}
+            result = {"kind": "binop", "op": items[i], "left": result, "right": items[i + 1]}
         return result
 
     def mul_expr(self, items: list) -> Any:
-        if len(items) == 1:
-            return items[0]
+        if len(items) == 1: return items[0]
         result = items[0]
         for i in range(1, len(items), 2):
-            op = items[i] if i < len(items) else "*"
-            right = items[i + 1] if i + 1 < len(items) else result
-            result = {"kind": "binop", "op": op, "left": result, "right": right}
+            result = {"kind": "binop", "op": items[i], "left": result, "right": items[i + 1]}
         return result
 
     def inline_if(self, items: list) -> dict:
         return {"kind": "inline_if", "condition": items[0], "then": items[1], "else": items[2]}
 
-    def msg_positional(self, items: list) -> dict:
-        return {"kind": "message_construct", "type": items[0], "args": items[1] if len(items) > 1 else {}}
+    def named_arg(self, items: list) -> dict:
+        return {"arg_name": items[0], "arg_value": items[1]}
 
-    def msg_braced(self, items: list) -> dict:
-        return {"kind": "message_construct", "type": items[0], "args": items[1] if len(items) > 1 else {}}
-
-    def message_construct(self, items: list) -> Any:
+    def positional_arg(self, items: list) -> Any:
         return items[0]
 
     def arg_list(self, items: list) -> dict:
-        result = {}
+        result: dict[str, Any] = {}
         for item in items:
             if isinstance(item, dict) and "arg_name" in item:
                 result[item["arg_name"]] = item["arg_value"]
-            elif isinstance(item, dict) and "positional" in item:
-                result[f"_pos_{len(result)}"] = item["positional"]
             else:
                 result[f"_pos_{len(result)}"] = item
         return result
 
-    def arg(self, items: list) -> Any:
-        if len(items) == 2:
-            return {"arg_name": items[0], "arg_value": items[1]}
-        return items[0]
-
     def kv_list(self, items: list) -> dict:
-        result = {}
+        result: dict[str, Any] = {}
         for item in items:
             if isinstance(item, dict) and "_kv" in item:
                 result[item["_kv"][0]] = item["_kv"][1]
@@ -227,73 +199,69 @@ class NousTransformer(Transformer):
     def kv_pair(self, items: list) -> dict:
         return {"_kv": (items[0], items[1])}
 
-    # ── Law ──
-
     def law_cost(self, items: list) -> LawCost:
-        c = items[0]
+        v = _strip(items)
+        c = v[0]
         return LawCost(amount=c["amount"], currency=c.get("currency", "USD"))
 
     def law_constitutional(self, items: list) -> LawConstitutional:
-        count = next(i for i in items if isinstance(i, int))
-        return LawConstitutional(count=count)
+        v = _strip(items)
+        return LawConstitutional(count=v[0])
 
     def law_duration(self, items: list) -> LawDuration:
-        d = items[0]
+        v = _strip(items)
+        d = v[0]
         val = int(d[:-1]) if d[-1].isalpha() else int(d[:-2])
         unit = d[-1] if d[-1].isalpha() else d[-2:]
         return LawDuration(value=val, unit=unit)
 
     def law_bool(self, items: list) -> LawBool:
-        return LawBool(value=items[0])
+        v = _strip(items)
+        return LawBool(value=v[0])
 
     def law_int(self, items: list) -> LawInt:
-        return LawInt(value=items[0])
+        v = _strip(items)
+        return LawInt(value=v[0])
 
     def law_decl(self, items: list) -> LawNode:
-        return LawNode(name=items[1], expr=items[2])
+        v = _strip(items)
+        return LawNode(name=v[0], expr=v[1])
 
-    def law_expr(self, items: list) -> Any:
-        return items[0]
-
-    # ── World ──
+    def law_expr(self, items: list) -> Any: return items[0]
 
     def heartbeat_decl(self, items: list) -> dict:
-        return {"heartbeat": items[0]}
+        v = _strip(items)
+        return {"heartbeat": v[0]}
 
     def timezone_decl(self, items: list) -> dict:
-        return {"timezone": items[0]}
+        v = _strip(items)
+        return {"timezone": v[0]}
 
     def config_assign(self, items: list) -> dict:
         return {"config": (items[0], items[1])}
 
-    def world_body(self, items: list) -> Any:
-        return items[0]
+    def world_body(self, items: list) -> Any: return items[0]
 
     def world_decl(self, items: list) -> WorldNode:
-        name = items[1]
-        node = WorldNode(name=name)
-        for item in items[2:]:
+        v = _strip(items)
+        node = WorldNode(name=v[0])
+        for item in v[1:]:
             if isinstance(item, LawNode):
                 node.laws.append(item)
             elif isinstance(item, dict):
-                if "heartbeat" in item:
-                    node.heartbeat = item["heartbeat"]
-                elif "timezone" in item:
-                    node.timezone = item["timezone"]
+                if "heartbeat" in item: node.heartbeat = item["heartbeat"]
+                elif "timezone" in item: node.timezone = item["timezone"]
                 elif "config" in item:
-                    k, v = item["config"]
-                    node.config[k] = v
+                    k, val = item["config"]
+                    node.config[k] = val
         return node
-
-    # ── Mind ──
 
     def model_name(self, items: list) -> str:
         return "-".join(str(i) for i in items)
 
     def mind_decl(self, items: list) -> MindNode:
-        return MindNode(model=items[0], tier=Tier(items[1]))
-
-    # ── Senses ──
+        v = _strip(items)
+        return MindNode(model=v[0], tier=Tier(v[1]))
 
     def name_list(self, items: list) -> list[str]:
         return [str(i) for i in items]
@@ -301,271 +269,150 @@ class NousTransformer(Transformer):
     def senses_decl(self, items: list) -> list[str]:
         return items[0]
 
-    # ── Memory ──
-
     def field_decl(self, items: list) -> FieldDeclNode:
         return FieldDeclNode(name=items[0], type_expr=items[1], default=items[2])
 
     def memory_block(self, items: list) -> MemoryNode:
-        fields = [i for i in items[1:] if isinstance(i, FieldDeclNode)]
-        return MemoryNode(fields=fields)
-
-    # ── Statements ──
+        v = _strip(items)
+        return MemoryNode(fields=[i for i in v if isinstance(i, FieldDeclNode)])
 
     def let_stmt(self, items: list) -> LetNode:
         return LetNode(name=items[0], value=items[1])
 
-    def remember_stmt(self, items: list) -> RememberNode:
-        if len(items) == 3:
-            return RememberNode(name=items[1], op="+=", value=items[2])
-        return RememberNode(name=items[1], value=items[2])
+    def let_sense_stmt(self, items: list) -> LetNode:
+        v = _strip(items)
+        return LetNode(name=v[0], value={"kind": "sense_call", "tool": v[1], "args": v[2] if len(v) > 2 else {}})
+
+    def let_listen_stmt(self, items: list) -> LetNode:
+        v = _strip(items)
+        return LetNode(name=v[0], value={"kind": "listen", "soul": v[1], "type": v[2]})
+
+    def remember_set(self, items: list) -> RememberNode:
+        v = _strip(items)
+        return RememberNode(name=v[0], op="=", value=v[1])
+
+    def remember_add(self, items: list) -> RememberNode:
+        v = _strip(items)
+        return RememberNode(name=v[0], op="+=", value=v[1])
 
     def speak_stmt(self, items: list) -> SpeakNode:
-        msg = items[1]
-        if isinstance(msg, dict) and msg.get("kind") == "message_construct":
-            return SpeakNode(message_type=msg["type"], args=msg.get("args", {}))
-        return SpeakNode(message_type=str(msg))
-
-    def listen_expr(self, items: list) -> LetNode:
-        bind_name = items[0]
-        soul = items[2]
-        msg_type = items[3]
-        return LetNode(name=bind_name, value={"kind": "listen", "soul": soul, "type": msg_type})
+        v = _strip(items)
+        return SpeakNode(message_type=v[0], args=v[1] if len(v) > 1 else {})
 
     def guard_stmt(self, items: list) -> GuardNode:
-        return GuardNode(condition=items[1])
+        v = _strip(items)
+        return GuardNode(condition=v[0])
 
-    def sense_call(self, items: list) -> Any:
-        sense_idx = -1
-        for i, item in enumerate(items):
-            if isinstance(item, Token) and str(item.type) == "SENSE":
-                sense_idx = i
-                break
-
-        if sense_idx == -1:
-            return SenseCallNode(tool_name=str(items[0]))
-
-        before_sense = [items[j] for j in range(sense_idx) if not isinstance(items[j], Token) or str(items[j].type) != "SENSE"]
-        after_sense = [items[j] for j in range(sense_idx + 1, len(items))]
-
-        tool_name = str(after_sense[0]) if after_sense else "unknown"
-        args = after_sense[1] if len(after_sense) > 1 and isinstance(after_sense[1], dict) else {}
-
-        if before_sense:
-            bind_name = str(before_sense[0])
-            return LetNode(name=bind_name, value={"kind": "sense_call", "tool": tool_name, "args": args})
-
-        return SenseCallNode(tool_name=tool_name, args=args if isinstance(args, dict) else {})
+    def sense_call(self, items: list) -> SenseCallNode:
+        v = _strip(items)
+        args = v[1] if len(v) > 1 else {}
+        return SenseCallNode(tool_name=v[0], args=args if isinstance(args, dict) else {})
 
     def sleep_stmt(self, items: list) -> SleepNode:
-        return SleepNode(cycles=items[1])
+        v = _strip(items)
+        return SleepNode(cycles=v[0])
 
-    def if_stmt(self, items: list) -> IfNode:
-        cond = items[0]
-        then_body = []
-        else_body = []
-        collecting_else = False
-        for item in items[1:]:
-            if isinstance(item, Token) and str(item) == "else":
-                collecting_else = True
-                continue
-            if collecting_else:
-                else_body.append(item)
-            else:
-                then_body.append(item)
-        return IfNode(condition=cond, then_body=then_body, else_body=else_body)
+    def then_block(self, items: list) -> list:
+        return _strip(items)
+
+    def else_block(self, items: list) -> list:
+        return _strip(items)
+
+    def if_no_else(self, items: list) -> IfNode:
+        v = _strip(items)
+        return IfNode(condition=v[0], then_body=v[1] if len(v) > 1 else [], else_body=[])
+
+    def if_else(self, items: list) -> IfNode:
+        v = _strip(items)
+        return IfNode(condition=v[0], then_body=v[1] if len(v) > 1 else [], else_body=v[2] if len(v) > 2 else [])
 
     def for_stmt(self, items: list) -> ForNode:
-        body = self._merge_keyword_stmts(list(items[2:]))
-        return ForNode(var_name=items[0], iterable=items[1], body=body)
+        v = _strip(items)
+        return ForNode(var_name=v[0], iterable=v[1], body=list(v[2:]))
 
-    def statement(self, items: list) -> Any:
-        return items[0]
-
-    # ── Instinct ──
+    def statement(self, items: list) -> Any: return items[0]
+    def expr_stmt(self, items: list) -> Any: return items[0]
 
     def instinct_block(self, items: list) -> InstinctNode:
-        stmts = [i for i in items[1:] if not isinstance(i, Token)]
-        stmts = self._merge_keyword_stmts(stmts)
-        return InstinctNode(statements=stmts)
-
-    def _merge_keyword_stmts(self, stmts: list) -> list:
-        result: list = []
-        i = 0
-        while i < len(stmts):
-            item = stmts[i]
-
-            if isinstance(item, str) and item in ("guard", "φύλακας"):
-                if i + 1 < len(stmts):
-                    result.append(GuardNode(condition=stmts[i + 1]))
-                    i += 2
-                    continue
-
-            if isinstance(item, str) and item in ("speak", "λέω", "peak"):
-                if i + 1 < len(stmts) and isinstance(stmts[i + 1], dict):
-                    fc = stmts[i + 1]
-                    if fc.get("kind") == "func_call":
-                        result.append(SpeakNode(
-                            message_type=fc.get("func", "Unknown"),
-                            args=fc.get("args", {}),
-                        ))
-                        i += 2
-                        continue
-
-            if isinstance(item, str) and item in ("sense", "αίσθηση"):
-                if i + 1 < len(stmts) and isinstance(stmts[i + 1], dict):
-                    fc = stmts[i + 1]
-                    if fc.get("kind") == "func_call":
-                        result.append(SenseCallNode(
-                            tool_name=fc.get("func", "unknown"),
-                            args=fc.get("args", {}),
-                        ))
-                        i += 2
-                        continue
-
-            if isinstance(item, LetNode) and isinstance(item.value, str) and item.value in ("sense", "αίσθηση"):
-                if i + 1 < len(stmts) and isinstance(stmts[i + 1], dict):
-                    fc = stmts[i + 1]
-                    if fc.get("kind") == "func_call":
-                        result.append(LetNode(
-                            name=item.name,
-                            value={"kind": "sense_call", "tool": fc.get("func", "unknown"), "args": fc.get("args", {})},
-                        ))
-                        i += 2
-                        continue
-
-            if isinstance(item, str) and len(item) > 1 and item[-1] in ("s", "m", "h", "d") and item[:-1].isdigit():
-                i += 1
-                continue
-
-            item = self._fix_duration_artifacts(item)
-
-            if isinstance(item, IfNode):
-                item = IfNode(
-                    condition=item.condition,
-                    then_body=self._merge_keyword_stmts(item.then_body),
-                    else_body=self._merge_keyword_stmts(item.else_body),
-                )
-
-            if isinstance(item, ForNode):
-                item = ForNode(
-                    var_name=item.var_name,
-                    iterable=item.iterable,
-                    body=self._merge_keyword_stmts(item.body),
-                )
-
-            result.append(item)
-            i += 1
-
-        return result
-
-    def _fix_duration_artifacts(self, item: Any) -> Any:
-        if isinstance(item, str) and len(item) > 1 and item[-1] in ("s", "m", "h", "d") and item[:-1].isdigit():
-            return int(item[:-1])
-        if isinstance(item, dict):
-            return {k: self._fix_duration_artifacts(v) for k, v in item.items()}
-        if isinstance(item, list):
-            return [self._fix_duration_artifacts(v) for v in item]
-        if isinstance(item, GuardNode):
-            return GuardNode(condition=self._fix_duration_artifacts(item.condition))
-        return item
-
-    # ── DNA ──
+        v = _strip(items)
+        return InstinctNode(statements=v)
 
     def gene_decl(self, items: list) -> GeneNode:
-        name = items[0]
-        value = items[1]
-        range_vals = list(items[2:])
-        return GeneNode(name=name, value=value, range=range_vals)
+        return GeneNode(name=items[0], value=items[1], range=list(items[2:]))
 
     def dna_block(self, items: list) -> DnaNode:
-        genes = [i for i in items[1:] if isinstance(i, GeneNode)]
-        return DnaNode(genes=genes)
-
-    # ── Heal ──
+        v = _strip(items)
+        return DnaNode(genes=[i for i in v if isinstance(i, GeneNode)])
 
     def heal_retry(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.RETRY, params={"max": items[0], "backoff": items[1]})
+        v = _strip(items)
+        return HealActionNode(strategy=HealStrategy.RETRY, params={"max": v[0], "backoff": v[1]})
 
     def heal_retry_simple(self, _items: list) -> HealActionNode:
         return HealActionNode(strategy=HealStrategy.RETRY, params={"max": 1})
 
     def heal_lower(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.LOWER, params={"param": items[0], "delta": items[1]})
+        v = _strip(items)
+        return HealActionNode(strategy=HealStrategy.LOWER, params={"param": v[0], "delta": v[1]})
 
     def heal_raise(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.RAISE, params={"param": items[0], "delta": items[1]})
+        v = _strip(items)
+        return HealActionNode(strategy=HealStrategy.RAISE, params={"param": v[0], "delta": v[1]})
 
     def heal_hibernate(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.HIBERNATE, params={"until": items[0]})
+        v = _strip(items)
+        return HealActionNode(strategy=HealStrategy.HIBERNATE, params={"until": v[0]})
 
     def heal_fallback(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.FALLBACK, params={"target": items[0]})
+        v = _strip(items)
+        return HealActionNode(strategy=HealStrategy.FALLBACK, params={"target": v[0]})
 
     def heal_delegate(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.DELEGATE, params={"soul": items[0]})
+        v = _strip(items)
+        return HealActionNode(strategy=HealStrategy.DELEGATE, params={"soul": v[0]})
 
     def heal_alert(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.ALERT, params={"channel": items[0]})
+        v = _strip(items)
+        return HealActionNode(strategy=HealStrategy.ALERT, params={"channel": v[0]})
 
     def heal_sleep(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.SLEEP, params={"cycles": items[0]})
+        v = _strip(items)
+        return HealActionNode(strategy=HealStrategy.SLEEP, params={"cycles": v[0]})
 
-    def heal_action(self, items: list) -> Any:
-        return items[0]
+    def heal_action(self, items: list) -> Any: return items[0]
 
     def heal_rule(self, items: list) -> HealRuleNode:
-        error_type = items[0]
-        actions = [i for i in items[1:] if isinstance(i, HealActionNode)]
-        return HealRuleNode(error_type=error_type, actions=actions)
+        v = _strip(items)
+        return HealRuleNode(error_type=v[0], actions=[i for i in v[1:] if isinstance(i, HealActionNode)])
 
     def heal_block(self, items: list) -> HealNode:
-        rules = [i for i in items[1:] if isinstance(i, HealRuleNode)]
-        return HealNode(rules=rules)
+        v = _strip(items)
+        return HealNode(rules=[i for i in v if isinstance(i, HealRuleNode)])
 
-    # ── Soul ──
-
-    def soul_body(self, items: list) -> Any:
-        return items[0]
+    def soul_body(self, items: list) -> Any: return items[0]
 
     def soul_decl(self, items: list) -> SoulNode:
-        name = items[1]
-        node = SoulNode(name=name)
-        for item in items[2:]:
-            if isinstance(item, MindNode):
-                node.mind = item
-            elif isinstance(item, list) and item and isinstance(item[0], str):
-                node.senses = item
-            elif isinstance(item, MemoryNode):
-                node.memory = item
-            elif isinstance(item, InstinctNode):
-                node.instinct = item
-            elif isinstance(item, DnaNode):
-                node.dna = item
-            elif isinstance(item, HealNode):
-                node.heal = item
+        v = _strip(items)
+        node = SoulNode(name=v[0])
+        for item in v[1:]:
+            if isinstance(item, MindNode): node.mind = item
+            elif isinstance(item, list) and item and isinstance(item[0], str): node.senses = item
+            elif isinstance(item, MemoryNode): node.memory = item
+            elif isinstance(item, InstinctNode): node.instinct = item
+            elif isinstance(item, DnaNode): node.dna = item
+            elif isinstance(item, HealNode): node.heal = item
         return node
 
-    # ── Message ──
-
     def message_field(self, items: list) -> MessageFieldNode:
-        name = items[0]
-        type_expr = items[1]
-        default = items[2] if len(items) > 2 else None
-        return MessageFieldNode(name=name, type_expr=type_expr, default=default)
+        return MessageFieldNode(name=items[0], type_expr=items[1], default=items[2] if len(items) > 2 else None)
 
     def message_decl(self, items: list) -> MessageNode:
-        name = items[1]
-        fields = [i for i in items[2:] if isinstance(i, MessageFieldNode)]
-        return MessageNode(name=name, fields=fields)
+        v = _strip(items)
+        return MessageNode(name=v[0], fields=[i for i in v[1:] if isinstance(i, MessageFieldNode)])
 
-    # ── Nervous System ──
-
-    def route_linear(self, items: list) -> RouteNode:
-        return RouteNode(source=items[0], target=items[1])
-
-    def route_chain3(self, items: list) -> list[RouteNode]:
-        return [RouteNode(source=items[0], target=items[1]), RouteNode(source=items[1], target=items[2])]
+    def route_chain(self, items: list) -> list[RouteNode]:
+        names = [str(i) for i in items]
+        return [RouteNode(source=names[i], target=names[i + 1]) for i in range(len(names) - 1)]
 
     def match_arm_soul(self, items: list) -> MatchArmNode:
         return MatchArmNode(condition=items[0], target=items[1])
@@ -574,9 +421,7 @@ class NousTransformer(Transformer):
         return MatchArmNode(condition="_", is_silence=True)
 
     def match_route(self, items: list) -> MatchRouteNode:
-        source = items[0]
-        arms = [i for i in items[1:] if isinstance(i, MatchArmNode)]
-        return MatchRouteNode(source=source, arms=arms)
+        return MatchRouteNode(source=items[0], arms=[i for i in items[1:] if isinstance(i, MatchArmNode)])
 
     def fanin_stmt(self, items: list) -> FanInNode:
         return FanInNode(sources=items[0], target=items[1])
@@ -587,63 +432,44 @@ class NousTransformer(Transformer):
     def feedback_stmt(self, items: list) -> FeedbackNode:
         return FeedbackNode(source_soul=items[0], source_field=items[1], target_soul=items[2], target_field=items[3])
 
-    def nerve_stmt(self, items: list) -> Any:
-        return items[0]
+    def nerve_stmt(self, items: list) -> Any: return items[0]
 
     def nervous_system_decl(self, items: list) -> NervousSystemNode:
+        v = _strip(items)
         routes: list = []
-        for item in items[1:]:
-            if isinstance(item, list):
-                routes.extend(item)
-            elif item is not None and not isinstance(item, Token):
-                routes.append(item)
+        for item in v:
+            if isinstance(item, list): routes.extend(item)
+            else: routes.append(item)
         return NervousSystemNode(routes=routes)
-
-    # ── Evolution ──
 
     def mutate_strategy(self, items: list) -> MutateStrategyNode:
         return MutateStrategyNode(name=items[0], params=items[1] if len(items) > 1 and isinstance(items[1], dict) else {})
 
-    def mutate_survive(self, items: list) -> dict:
-        return {"survive": items[0]}
-
-    def mutate_rollback(self, items: list) -> dict:
-        return {"rollback": items[0]}
-
-    def mutate_body(self, items: list) -> Any:
-        return items[0]
+    def mutate_survive(self, items: list) -> dict: return {"survive": items[0]}
+    def mutate_rollback(self, items: list) -> dict: return {"rollback": items[0]}
+    def mutate_body(self, items: list) -> Any: return items[0]
 
     def mutate_block(self, items: list) -> MutateBlockNode:
         target = items[0]
         node = MutateBlockNode(target=target)
         for item in items[1:]:
-            if isinstance(item, MutateStrategyNode):
-                node.strategy = item
+            if isinstance(item, MutateStrategyNode): node.strategy = item
             elif isinstance(item, dict):
-                if "survive" in item:
-                    node.survive_condition = item["survive"]
-                elif "rollback" in item:
-                    node.rollback_condition = item["rollback"]
+                if "survive" in item: node.survive_condition = item["survive"]
+                elif "rollback" in item: node.rollback_condition = item["rollback"]
         return node
 
-    def evolution_body(self, items: list) -> Any:
-        return items[0]
+    def evolution_body(self, items: list) -> Any: return items[0]
 
     def evolution_decl(self, items: list) -> EvolutionNode:
+        v = _strip(items)
         node = EvolutionNode()
-        for item in items[1:]:
-            if isinstance(item, str) and ":" in str(item):
-                node.schedule = item
-            elif isinstance(item, MutateBlockNode):
-                node.mutations.append(item)
-            elif isinstance(item, dict) and not isinstance(item, MutateBlockNode):
-                node.fitness = item
-            elif not isinstance(item, Token):
-                if node.fitness is None:
-                    node.fitness = item
+        for item in v:
+            if isinstance(item, str) and ":" in item: node.schedule = item
+            elif isinstance(item, MutateBlockNode): node.mutations.append(item)
+            elif isinstance(item, dict): node.fitness = item
+            elif not isinstance(item, (MutateBlockNode, str)) and node.fitness is None: node.fitness = item
         return node
-
-    # ── Perception ──
 
     def trigger_named(self, items: list) -> PerceptionTriggerNode:
         return PerceptionTriggerNode(kind="named", name=items[0], args=[items[1]])
@@ -666,85 +492,55 @@ class NousTransformer(Transformer):
     def action_alert(self, items: list) -> PerceptionActionNode:
         return PerceptionActionNode(kind="alert", target=items[0])
 
-    def perception_trigger(self, items: list) -> Any:
-        return items[0]
-
-    def perception_action(self, items: list) -> Any:
-        return items[0]
+    def perception_trigger(self, items: list) -> Any: return items[0]
+    def perception_action(self, items: list) -> Any: return items[0]
 
     def perception_rule(self, items: list) -> PerceptionRuleNode:
         return PerceptionRuleNode(trigger=items[0], action=items[1])
 
     def perception_decl(self, items: list) -> PerceptionNode:
-        rules = [i for i in items[1:] if isinstance(i, PerceptionRuleNode)]
-        return PerceptionNode(rules=rules)
+        v = _strip(items)
+        return PerceptionNode(rules=[i for i in v if isinstance(i, PerceptionRuleNode)])
 
-    # ── Deploy & Topology ──
-
-    def deploy_decl(self, items: list) -> DeployNode:
-        name = str(items[0])
+    def deploy_decl(self, items: list) -> dict:
+        v = _strip(items)
         config: dict[str, Any] = {}
-        for i in items[1:]:
-            if isinstance(i, tuple) and len(i) == 2:
-                config[i[0]] = i[1]
-        return DeployNode(name=name, config=config)
+        for item in v[1:]:
+            if isinstance(item, dict) and "_kv" in item: config[item["_kv"][0]] = item["_kv"][1]
+        return {"kind": "deploy", "name": v[0], "config": config}
 
-    def deploy_body(self, items: list) -> tuple[str, Any]:
-        return (str(items[0]), items[1])
+    def deploy_body(self, items: list) -> dict: return {"_kv": (items[0], items[1])}
 
-    def topology_decl(self, items: list) -> TopologyNode:
-        servers = [i for i in items if isinstance(i, TopoServerNode)]
-        return TopologyNode(servers=servers)
+    def topology_decl(self, items: list) -> dict:
+        return {"kind": "topology", "servers": [i for i in items if isinstance(i, dict) and i.get("kind") == "topo_server"]}
 
-    def topo_server(self, items: list) -> TopoServerNode:
-        name = str(items[0])
-        host = str(items[1])
+    def topo_server(self, items: list) -> dict:
         config: dict[str, Any] = {}
-        for i in items[2:]:
-            if isinstance(i, tuple) and len(i) == 2:
-                config[i[0]] = i[1]
-        return TopoServerNode(name=name, host=host, config=config)
+        for item in items[2:]:
+            if isinstance(item, dict) and "_kv" in item: config[item["_kv"][0]] = item["_kv"][1]
+        return {"kind": "topo_server", "name": items[0], "address": items[1], "config": config}
 
-    def topo_body(self, items: list) -> tuple[str, Any]:
-        return (str(items[0]), items[1])
-
-    # ── Top-Level ──
-
-    def top_level(self, items: list) -> Any:
-        return items[0]
+    def topo_body(self, items: list) -> dict: return {"_kv": (items[0], items[1])}
+    def top_level(self, items: list) -> Any: return items[0]
 
     def start(self, items: list) -> NousProgram:
         program = NousProgram()
         for item in items:
-            if isinstance(item, WorldNode):
-                program.world = item
-            elif isinstance(item, MessageNode):
-                program.messages.append(item)
-            elif isinstance(item, SoulNode):
-                program.souls.append(item)
-            elif isinstance(item, NervousSystemNode):
-                program.nervous_system = item
-            elif isinstance(item, EvolutionNode):
-                program.evolution = item
-            elif isinstance(item, PerceptionNode):
-                program.perception = item
-            elif isinstance(item, DeployNode):
-                program.deploy = item
-            elif isinstance(item, TopologyNode):
-                program.topology = item
+            if isinstance(item, WorldNode): program.world = item
+            elif isinstance(item, MessageNode): program.messages.append(item)
+            elif isinstance(item, SoulNode): program.souls.append(item)
+            elif isinstance(item, NervousSystemNode): program.nervous_system = item
+            elif isinstance(item, EvolutionNode): program.evolution = item
+            elif isinstance(item, PerceptionNode): program.perception = item
         return program
 
 
 def parse_nous(source: str) -> NousProgram:
-    """Parse a .nous source string into a Living AST."""
-    grammar = GRAMMAR_PATH.read_text()
-    lark_parser = Lark(grammar, parser="earley", start="start")
-    tree = lark_parser.parse(source)
-    transformer = NousTransformer()
-    return transformer.transform(tree)
+    parser = _get_parser()
+    tree = parser.parse(source)
+    return NousTransformer().transform(tree)
 
 
 def parse_nous_file(path: str | Path) -> NousProgram:
-    """Parse a .nous file into a Living AST."""
     source = Path(path).read_text(encoding="utf-8")
     return parse_nous(source)

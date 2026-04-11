@@ -25,9 +25,8 @@ from pathlib import Path
 from parser import parse_nous_file
 from validator import validate_program
 from codegen import generate_python
-from errors import format_parse_error, format_validation_errors
 
-VERSION = "1.1.0"
+VERSION = "1.4.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -45,12 +44,11 @@ def cmd_compile(args: argparse.Namespace) -> int:
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
     t0 = time.perf_counter()
-    source_text = source.read_text(encoding="utf-8")
     print(f"[1/3] Parsing {source.name}...")
     try:
         program = parse_nous_file(source)
     except Exception as e:
-        print(format_parse_error(e, source_text, source.name), file=sys.stderr)
+        print(f"Parse error: {e}", file=sys.stderr)
         return 1
     world_name = program.world.name if program.world else "Unknown"
     print(f"      World: {world_name} | {len(program.souls)} souls | {len(program.messages)} messages")
@@ -59,7 +57,8 @@ def cmd_compile(args: argparse.Namespace) -> int:
     for w in result.warnings:
         print(f"      {w}")
     if not result.ok:
-        print(format_validation_errors(source_text, result.errors, source.name))
+        for e in result.errors:
+            print(f"      {e}")
         print(f"\nValidation FAILED: {len(result.errors)} errors")
         return 1
     print(f"      Validation PASS")
@@ -74,17 +73,22 @@ def cmd_compile(args: argparse.Namespace) -> int:
 
 
 def cmd_run(args: argparse.Namespace) -> int:
-    source = Path(args.file)
+    files = args.files if hasattr(args, "files") else [args.file]
+    if len(files) > 1:
+        return _cmd_run_multi(files, args)
+    return _cmd_run_single(Path(files[0]), args)
+
+
+def _cmd_run_single(source: Path, args: argparse.Namespace) -> int:
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
     t0 = time.perf_counter()
-    source_text = source.read_text(encoding="utf-8")
     print(f"[1/3] Parsing {source.name}...")
     try:
         program = parse_nous_file(source)
     except Exception as e:
-        print(format_parse_error(e, source_text, source.name), file=sys.stderr)
+        print(f"Parse error: {e}", file=sys.stderr)
         return 1
     world_name = program.world.name if program.world else "Unknown"
     print(f"      World: {world_name}")
@@ -113,24 +117,49 @@ def cmd_run(args: argparse.Namespace) -> int:
             tmp_path.unlink()
 
 
+def _cmd_run_multi(files: list[str], args: argparse.Namespace) -> int:
+    import asyncio
+    import logging
+    from multiworld import run_multi
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(name)s | %(levelname)s | %(message)s",
+        datefmt="%H:%M:%S",
+    )
+
+    sources = []
+    for f in files:
+        p = Path(f)
+        if not p.exists():
+            print(f"Error: file not found: {p}", file=sys.stderr)
+            return 1
+        sources.append(p)
+
+    print(f"NOUS Multi-World: {len(sources)} worlds")
+    for s in sources:
+        print(f"  → {s.name}")
+    print()
+
+    try:
+        return asyncio.run(run_multi(sources, generate_python, parse_nous_file, validate_program))
+    except KeyboardInterrupt:
+        print("\n\nMulti-world stopped by user.")
+        return 0
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     source = Path(args.file)
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
-    source_text = source.read_text(encoding="utf-8")
     try:
         program = parse_nous_file(source)
     except Exception as e:
-        print(format_parse_error(e, source_text, source.name), file=sys.stderr)
+        print(f"Parse error: {e}", file=sys.stderr)
         return 1
     result = validate_program(program)
-    if not result.ok:
-        print(format_validation_errors(source_text, result.errors, source.name))
-    for w in result.warnings:
-        print(f"  ⚠ {w}")
-    status = "PASS" if result.ok else "FAIL"
-    print(f"\nValidation {status}: {len(result.errors)} errors, {len(result.warnings)} warnings")
+    print(result.summary())
     return 0 if result.ok else 1
 
 
@@ -139,11 +168,10 @@ def cmd_ast(args: argparse.Namespace) -> int:
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
-    source_text = source.read_text(encoding="utf-8")
     try:
         program = parse_nous_file(source)
     except Exception as e:
-        print(format_parse_error(e, source_text, source.name), file=sys.stderr)
+        print(f"Parse error: {e}", file=sys.stderr)
         return 1
     data = program.model_dump(exclude_none=True)
     if args.json:
@@ -328,7 +356,7 @@ def main() -> int:
     p.add_argument("file"); p.add_argument("-o", "--output")
 
     p = sub.add_parser("run", help="Compile and execute")
-    p.add_argument("file"); p.add_argument("--keep", action="store_true")
+    p.add_argument("files", nargs="+", help="One or more .nous files"); p.add_argument("--keep", action="store_true")
 
     p = sub.add_parser("validate", help="Validate .nous file")
     p.add_argument("file")

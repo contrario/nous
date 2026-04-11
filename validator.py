@@ -70,6 +70,7 @@ class NousValidator:
     def validate(self) -> ValidationResult:
         self._check_world_exists()
         self._collect_names()
+        self._check_constitutional_laws()
         self._check_souls()
         self._check_nervous_system()
         self._check_evolution()
@@ -95,6 +96,18 @@ class NousValidator:
             self.message_fields[msg.name] = [f.name for f in msg.fields]
 
     def _check_souls(self) -> None:
+
+        live_trade_tools = {
+            "execute_trade", "execute_live_trade", "place_order",
+            "market_buy", "market_sell", "limit_buy", "limit_sell",
+            "submit_order", "send_order",
+        }
+        paper_trade_tools = {
+            "execute_paper_trade", "paper_trade", "simulate_trade",
+        }
+
+        no_live = self._get_bool_law("NoLiveTrading")
+
         for soul in self.program.souls:
             loc = f"soul {soul.name}"
 
@@ -109,6 +122,17 @@ class NousValidator:
 
             if not soul.senses:
                 self.result.warn("S005", f"Soul {soul.name} has no senses declared.", loc)
+
+            if no_live:
+                for sense in soul.senses:
+                    if sense in live_trade_tools:
+                        self.result.error(
+                            "C001",
+                            f"Soul {soul.name} uses live trade tool '{sense}' but law NoLiveTrading = true. "
+                            f"Use 'execute_paper_trade' or set NoLiveTrading = false.",
+                            loc,
+                        )
+                self._check_live_sense_calls(soul, live_trade_tools)
 
             if soul.dna:
                 self._check_dna_ranges(soul)
@@ -131,6 +155,95 @@ class NousValidator:
                 if isinstance(gene.value, (int, float)):
                     if gene.value < min_val or gene.value > max_val:
                         self.result.error("D002", f"Gene {gene.name} value {gene.value} is outside range [{min_val}, {max_val}].", loc)
+
+    def _get_bool_law(self, name: str) -> bool:
+        if self.program.world is None:
+            return False
+        for law in self.program.world.laws:
+            if law.name == name and isinstance(law.expr, LawBool):
+                return law.expr.value
+        return False
+
+    def _get_currency_law(self, name: str) -> float | None:
+        if self.program.world is None:
+            return None
+        for law in self.program.world.laws:
+            if law.name == name and isinstance(law.expr, LawCost):
+                return law.expr.amount
+        return None
+
+    def _check_constitutional_laws(self) -> None:
+        if self.program.world is None:
+            return
+
+        for law in self.program.world.laws:
+            if isinstance(law.expr, LawConstitutional):
+                count = law.expr.count
+                if count < 1:
+                    self.result.error(
+                        "C002",
+                        f"Constitutional law '{law.name}' requires count >= 1, got {count}.",
+                        "world",
+                    )
+
+        max_pos = self._get_currency_law("MaxPositionSize")
+        max_loss = self._get_currency_law("MaxDailyLoss")
+        cost_ceiling = self._get_currency_law("CostCeiling")
+
+        has_trade_souls = any(
+            s for s in self.program.souls
+            if any(t in s.senses for t in (
+                "execute_paper_trade", "execute_trade", "execute_live_trade",
+                "place_order", "market_buy", "market_sell",
+            ))
+        )
+
+        if has_trade_souls and max_pos is None:
+            self.result.warn(
+                "C003",
+                "Trading souls detected but no MaxPositionSize law defined. "
+                "Add: law MaxPositionSize = $1000",
+                "world",
+            )
+
+        if has_trade_souls and max_loss is None:
+            self.result.warn(
+                "C004",
+                "Trading souls detected but no MaxDailyLoss law defined. "
+                "Add: law MaxDailyLoss = $100",
+                "world",
+            )
+
+    def _check_live_sense_calls(self, soul: SoulNode, forbidden: set[str]) -> None:
+        if soul.instinct is None:
+            return
+        self._scan_stmts_for_tools(soul.instinct.statements, soul.name, forbidden)
+
+    def _scan_stmts_for_tools(self, stmts: list[Any], soul_name: str, forbidden: set[str]) -> None:
+        for stmt in stmts:
+            if isinstance(stmt, SenseCallNode):
+                if stmt.tool_name in forbidden:
+                    self.result.error(
+                        "C001",
+                        f"Soul {soul_name} calls forbidden live trade tool '{stmt.tool_name}' "
+                        f"(NoLiveTrading = true).",
+                        f"soul {soul_name} > instinct",
+                    )
+            elif isinstance(stmt, LetNode):
+                if isinstance(stmt.value, dict) and stmt.value.get("kind") == "sense_call":
+                    tool = stmt.value.get("tool", "")
+                    if tool in forbidden:
+                        self.result.error(
+                            "C001",
+                            f"Soul {soul_name} calls forbidden live trade tool '{tool}' "
+                            f"(NoLiveTrading = true).",
+                            f"soul {soul_name} > instinct",
+                        )
+            elif isinstance(stmt, IfNode):
+                self._scan_stmts_for_tools(stmt.then_body, soul_name, forbidden)
+                self._scan_stmts_for_tools(stmt.else_body, soul_name, forbidden)
+            elif isinstance(stmt, ForNode):
+                self._scan_stmts_for_tools(stmt.body, soul_name, forbidden)
 
     def _check_nervous_system(self) -> None:
         ns = self.program.nervous_system

@@ -18,7 +18,6 @@ from ast_nodes import (
     EvolutionNode, PerceptionNode, LetNode, RememberNode,
     SpeakNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     GeneNode, LawCost, LawDuration, LawBool, LawInt, LawConstitutional,
-    DeployNode, TopologyNode, TopoServerNode,
 )
 
 
@@ -36,13 +35,12 @@ class NousCodeGen:
         self._emit_blank()
         self._emit_law_constants()
         self._emit_blank()
+        self._emit_constitutional_guards()
         self._emit_message_classes()
         self._emit_channel_registry()
         self._emit_blank()
         self._emit_soul_classes()
         self._emit_nervous_system()
-        self._emit_deploy_config()
-        self._emit_topology()
         self._emit_world_runner()
         self._emit_main()
         return "\n".join(self.lines)
@@ -100,11 +98,12 @@ class NousCodeGen:
         self._emit_blank()
         self._emit("try:")
         self._indent()
-        self._emit("from runtime import NousRuntime")
+        self._emit("from runtime import init_runtime, NousRuntime")
         self._dedent()
         self._emit("except ImportError:")
         self._indent()
-        self._emit("NousRuntime = None  # standalone mode")
+        self._emit("init_runtime = None")
+        self._emit("NousRuntime = None")
         self._dedent()
 
     # ── Laws ──
@@ -135,16 +134,113 @@ class NousCodeGen:
             elif isinstance(law.expr, LawConstitutional):
                 self._emit(f"{name} = {law.expr.count}")
 
+        self._emit_blank()
+        self._emit("import os")
+        config_entries: dict[str, str] = {}
         if world.config:
-            self._emit_blank()
-            self._emit("WORLD_CONFIG = {")
+            for k, v in world.config.items():
+                config_entries[k] = self._expr_to_python(v)
+        self._emit("WORLD_CONFIG = {")
+        self._indent()
+        for k, v in config_entries.items():
+            self._emit(f'"{k}": {v},')
+        self._emit(f'"telegram_chat": os.environ.get("TELEGRAM_CHAT_ID", ""),')
+        self._emit(f'"telegram_token": os.environ.get("TELEGRAM_BOT_TOKEN", ""),')
+        self._dedent()
+        self._emit("}")
+
+    # ── Constitutional Guards ──
+
+    def _emit_constitutional_guards(self) -> None:
+        if not self.program.world:
+            return
+        laws = {law.name: law.expr for law in self.program.world.laws}
+        has_trade_laws = any(n in laws for n in (
+            "NoLiveTrading", "MaxPositionSize", "MaxDailyLoss", "RequireApproval",
+        ))
+        if not has_trade_laws:
+            return
+
+        self._emit("# ═══ Constitutional Guards ═══")
+        self._emit_blank()
+        self._emit("class ConstitutionalGuard:")
+        self._indent()
+        self._emit("def __init__(self) -> None:")
+        self._indent()
+        self._emit("self.daily_pnl: float = 0.0")
+        self._emit("self.daily_trades: int = 0")
+        self._emit("self.trade_log: list[dict] = []")
+        self._emit("self._halted: bool = False")
+        self._dedent()
+        self._emit_blank()
+
+        self._emit("def check_trade(self, soul_name: str, action: str, size: float, pair: str = '') -> bool:")
+        self._indent()
+        self._emit("if self._halted:")
+        self._indent()
+        self._emit('log.warning("[GUARD] Trading halted — daily loss circuit breaker active")')
+        self._emit("return False")
+        self._dedent()
+
+        if "NoLiveTrading" in laws:
+            self._emit("if LAW_NOLIVETRADING:")
             self._indent()
-            for key, val in world.config.items():
-                self._emit(f"\"{key}\": {self._value_to_python(val)},")
+            self._emit('log.info("[GUARD] Paper trade mode — NoLiveTrading = true")')
             self._dedent()
-            self._emit("}")
-        else:
-            self._emit("WORLD_CONFIG = {}")
+
+        if "MaxPositionSize" in laws:
+            self._emit("if size > LAW_MAXPOSITIONSIZE:")
+            self._indent()
+            self._emit('log.warning("[GUARD] Position size $%.2f exceeds MaxPositionSize $%.2f", size, LAW_MAXPOSITIONSIZE)')
+            self._emit("return False")
+            self._dedent()
+
+        if "MaxDailyLoss" in laws:
+            self._emit("if self.daily_pnl < -LAW_MAXDAILYLOSS:")
+            self._indent()
+            self._emit('log.warning("[GUARD] Daily loss $%.2f exceeds MaxDailyLoss $%.2f — HALTING", abs(self.daily_pnl), LAW_MAXDAILYLOSS)')
+            self._emit("self._halted = True")
+            self._emit("return False")
+            self._dedent()
+
+        self._emit("entry = {")
+        self._indent()
+        self._emit('"soul": soul_name, "action": action, "size": size,')
+        self._emit('"pair": pair, "daily_pnl": self.daily_pnl,')
+        self._emit('"timestamp": __import__("time").time(),')
+        self._dedent()
+        self._emit("}")
+        self._emit("self.trade_log.append(entry)")
+        self._emit("self.daily_trades += 1")
+        self._emit('log.info("[AUDIT] Trade #%d: %s %s size=%.4f pair=%s pnl=%.2f", self.daily_trades, soul_name, action, size, pair, self.daily_pnl)')
+        self._emit("return True")
+        self._dedent()
+        self._emit_blank()
+
+        self._emit("def record_pnl(self, amount: float) -> None:")
+        self._indent()
+        self._emit("self.daily_pnl += amount")
+        if "MaxDailyLoss" in laws:
+            self._emit("if self.daily_pnl < -LAW_MAXDAILYLOSS:")
+            self._indent()
+            self._emit('log.warning("[GUARD] Circuit breaker triggered — daily loss $%.2f", abs(self.daily_pnl))')
+            self._emit("self._halted = True")
+            self._dedent()
+        self._dedent()
+        self._emit_blank()
+
+        self._emit("def reset_daily(self) -> None:")
+        self._indent()
+        self._emit("self.daily_pnl = 0.0")
+        self._emit("self.daily_trades = 0")
+        self._emit("self._halted = False")
+        self._emit('log.info("[GUARD] Daily counters reset")')
+        self._dedent()
+
+        self._dedent()
+        self._emit_blank()
+        self._emit("GUARD = ConstitutionalGuard()")
+        self._emit_blank()
 
     # ── Messages ──
 
@@ -167,6 +263,10 @@ class NousCodeGen:
                         self._emit(f"{f.name}: {py_type}")
             self._dedent()
             self._emit_blank()
+
+        for msg in self.program.messages:
+            self._emit(f"{msg.name}.model_rebuild()")
+        self._emit_blank()
 
     # ── Channels ──
 
@@ -208,7 +308,7 @@ class NousCodeGen:
         self._dedent()
         self._dedent()
         self._emit_blank()
-        self._emit("channels = ChannelRegistry()")
+        self._emit("channels = None  # Set by run_world() from runtime")
 
     # ── Souls ──
 
@@ -225,10 +325,9 @@ class NousCodeGen:
         self._emit_blank()
 
         # __init__
-        self._emit("def __init__(self, runtime: Any = None) -> None:")
+        self._emit("def __init__(self) -> None:")
         self._indent()
         self._emit(f"self.name = \"{soul.name}\"")
-        self._emit("self._runtime = runtime")
         if soul.mind:
             self._emit(f"self.model = \"{soul.mind.model}\"")
             self._emit(f"self.tier = \"{soul.mind.tier.value}\"")
@@ -247,10 +346,17 @@ class NousCodeGen:
             for gene in soul.dna.genes:
                 self._emit(f"self.dna_{gene.name} = {self._value_to_python(gene.value)}")
 
+        self._emit("self._runtime = None")
+
         self._dedent()
         self._emit_blank()
 
-        # instinct method
+        for sense_name in soul.senses:
+            self._emit(f"async def _sense_{sense_name}(self, *args, **kwargs) -> Any:")
+            self._indent()
+            self._emit(f"return await self._runtime.sense(self.name, \"{sense_name}\", *args, **kwargs)")
+            self._dedent()
+            self._emit_blank()
         self._emit("async def instinct(self) -> None:")
         self._indent()
         self._emit(f'"""Instinct cycle for {soul.name}"""')
@@ -327,7 +433,7 @@ class NousCodeGen:
                     tool = value.get("tool", "unknown")
                     args = value.get("args", {})
                     args_str = self._args_to_python(args)
-                    self._emit(f"{stmt.name} = await self._runtime.sense(self.name, \"{tool}\", {args_str})" if args_str else f"{stmt.name} = await self._runtime.sense(self.name, \"{tool}\")")
+                    self._emit(f"{stmt.name} = await self._sense_{tool}({args_str})")
                     return
             self._emit(f"{stmt.name} = {self._expr_to_python(value)}")
 
@@ -352,11 +458,10 @@ class NousCodeGen:
 
         elif isinstance(stmt, SenseCallNode):
             args_str = self._args_to_python(stmt.args)
-            sense_call = f"await self._runtime.sense(self.name, \"{stmt.tool_name}\", {args_str})" if args_str else f"await self._runtime.sense(self.name, \"{stmt.tool_name}\")"
             if stmt.bind_name:
-                self._emit(f"{stmt.bind_name} = {sense_call}")
+                self._emit(f"{stmt.bind_name} = await self._sense_{stmt.tool_name}({args_str})")
             else:
-                self._emit(sense_call)
+                self._emit(f"await self._sense_{stmt.tool_name}({args_str})")
 
         elif isinstance(stmt, SleepNode):
             self._emit(f"await asyncio.sleep(HEARTBEAT_SECONDS * {stmt.cycles})")
@@ -467,41 +572,6 @@ class NousCodeGen:
 
     # ── World runner ──
 
-    def _emit_deploy_config(self) -> None:
-        deploy = self.program.deploy
-        if not deploy:
-            return
-        self._emit_blank()
-        self._emit("# ═══ Deploy Configuration ═══")
-        self._emit_blank()
-        self._emit(f"DEPLOY_NAME = \"{deploy.name}\"")
-        self._emit("DEPLOY_CONFIG = {")
-        self._indent()
-        for key, val in deploy.config.items():
-            self._emit(f"\"{key}\": {repr(val)},")
-        self._dedent()
-        self._emit("}")
-
-    def _emit_topology(self) -> None:
-        topo = self.program.topology
-        if not topo:
-            return
-        self._emit_blank()
-        self._emit("# ═══ Topology — Multi-Server ═══")
-        self._emit_blank()
-        self._emit("TOPOLOGY = {")
-        self._indent()
-        for server in topo.servers:
-            self._emit(f"\"{server.name}\": {{")
-            self._indent()
-            self._emit(f"\"host\": \"{server.host}\",")
-            for key, val in server.config.items():
-                self._emit(f"\"{key}\": {repr(val)},")
-            self._dedent()
-            self._emit("},")
-        self._dedent()
-        self._emit("}")
-
     def _emit_world_runner(self) -> None:
         self._emit_blank()
         self._emit("# ═══ World Runner ═══")
@@ -510,38 +580,41 @@ class NousCodeGen:
         self._indent()
         world_name = self.program.world.name if self.program.world else "Unknown"
         self._emit(f'"""Boot and run world: {world_name}"""')
-        self._emit(f"log.info(f'Booting world: {world_name}')")
+        self._emit(f"log.info('Booting world: {world_name}')")
         self._emit_blank()
 
-        # Instantiate souls
-        self._emit("# Boot runtime")
-        self._emit("runtime = None")
-        self._emit("if NousRuntime is not None:")
+        budget = 1.0
+        if self.program.world:
+            for law in self.program.world.laws:
+                if isinstance(law.expr, LawCost):
+                    budget = law.expr.amount
+
+        self._emit("# Initialize runtime")
+        self._emit("global channels")
+        self._emit(f"runtime = init_runtime(")
         self._indent()
-        self._emit("runtime = NousRuntime()")
-        self._emit("runtime.boot()")
+        self._emit(f"world_name=\"{world_name}\",")
+        self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
+        self._emit(f"budget_per_cycle={budget},")
         self._dedent()
+        self._emit(")")
+        self._emit("channels = runtime.channels")
         self._emit_blank()
+
         self._emit("# Spawn souls")
         self._emit("souls = {}")
         for soul in self.program.souls:
-            self._emit(f"souls[\"{soul.name}\"] = Soul_{soul.name}(runtime)")
-            self._emit(f"log.info(f'Spawned soul: {soul.name}')")
+            self._emit(f"souls[\"{soul.name}\"] = Soul_{soul.name}()")
+            self._emit(f"runtime.register_soul(\"{soul.name}\", souls[\"{soul.name}\"])")
         self._emit_blank()
 
-        # Build topology
         if self.program.nervous_system:
             self._emit("topology = build_topology()")
             self._emit("log.info(f'Nervous system: {topology}')")
             self._emit_blank()
 
-        # Run all souls
-        self._emit("# Run all souls concurrently")
-        self._emit("async with asyncio.TaskGroup() as tg:")
-        self._indent()
-        for soul in self.program.souls:
-            self._emit(f"tg.create_task(souls[\"{soul.name}\"].run())")
-        self._dedent()
+        self._emit("# Run via runtime")
+        self._emit("await runtime.run()")
 
         self._dedent()
 
@@ -589,10 +662,6 @@ class NousCodeGen:
             return f"[{items}]"
         if isinstance(expr, dict):
             kind = expr.get("kind", "")
-            if kind == "string_lit":
-                val = expr.get("value", "")
-                escaped = val.replace("\\", "\\\\").replace('"', '\\"')
-                return f'"{escaped}"'
             if kind == "binop":
                 left = self._expr_to_python(expr["left"])
                 right = self._expr_to_python(expr["right"])
@@ -607,24 +676,18 @@ class NousCodeGen:
             elif kind == "neg":
                 return f"-({self._expr_to_python(expr['operand'])})"
             elif kind == "attr":
-                obj_expr = expr["obj"]
-                attr_name = expr["attr"]
-                if isinstance(obj_expr, dict) and obj_expr.get("kind") == "attr":
-                    if isinstance(obj_expr.get("obj"), str) and obj_expr["obj"] == "world" and obj_expr.get("attr") == "config":
-                        return f"WORLD_CONFIG.get(\"{attr_name}\", \"\")"
-                if isinstance(obj_expr, str) and obj_expr == "world":
-                    return f"WORLD_CONFIG.get(\"{attr_name}\", \"\")"
-                obj = self._expr_to_python(obj_expr)
-                return f"{obj}.{attr_name}"
+                obj = self._expr_to_python(expr["obj"])
+                return f"{obj}.{expr['attr']}"
             elif kind == "method_call":
                 obj = self._expr_to_python(expr["obj"])
-                method = expr.get("method", "")
+                method = expr["method"]
                 if method == "where":
-                    arg = expr.get("args", {}).get("_pos_0", {})
-                    if isinstance(arg, dict) and arg.get("kind") == "binop":
-                        field = str(arg.get("left", ""))
-                        op = str(arg.get("op", ""))
-                        val = self._expr_to_python(arg.get("right"))
+                    arg = expr.get("args", {})
+                    first_arg = arg.get("_pos_0", arg)
+                    if isinstance(first_arg, dict) and first_arg.get("kind") == "binop":
+                        field = self._expr_to_python(first_arg["left"])
+                        op = first_arg["op"]
+                        val = self._expr_to_python(first_arg["right"])
                         return f"{obj}.filter(\"{field}\", \"{op}\", {val})"
                 args = self._args_to_python(expr.get("args", {}))
                 return f"{obj}.{method}({args})"
@@ -634,11 +697,10 @@ class NousCodeGen:
                 return f"{func}({args})"
             elif kind == "world_ref":
                 path = expr.get("path", "")
-                parts = path.split(".")
-                if len(parts) >= 2 and parts[0] == "config":
-                    key = ".".join(parts[1:])
-                    return f"WORLD_CONFIG.get(\"{key}\", \"\")"
-                return f"WORLD_CONFIG.get(\"{path}\", \"\")"
+                if path.startswith("config."):
+                    key = path[7:]
+                    return f'WORLD_CONFIG.get("{key}", "")'
+                return f'WORLD_CONFIG.get("{path}", "")'
             elif kind == "soul_field":
                 return f"souls[\"{expr['soul']}\"].{expr['field']}"
             elif kind == "inline_if":
@@ -650,13 +712,17 @@ class NousCodeGen:
                 msg_type = expr.get("type", "")
                 args = self._kv_to_python(expr.get("args", {}))
                 return f"{msg_type}({args})"
+            elif kind == "string_lit":
+                val = expr.get("value", "")
+                escaped = val.replace("\\", "\\\\").replace('"', '\\"')
+                return f'"{escaped}"'
             elif kind == "listen":
                 channel = f"{expr['soul']}_{expr['type']}"
                 return f"await channels.receive(\"{channel}\")"
             elif kind == "sense_call":
                 tool = expr.get("tool", "")
                 args = self._args_to_python(expr.get("args", {}))
-                return f"await self._runtime.sense(self.name, \"{tool}\", {args})" if args else f"await self._runtime.sense(self.name, \"{tool}\")"
+                return f"await self._sense_{tool}({args})"
             else:
                 return str(expr)
         return str(expr)
