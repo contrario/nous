@@ -21,7 +21,6 @@ from ast_nodes import (
     PerceptionNode, PerceptionRuleNode, PerceptionTriggerNode,
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
-    DeployNode, TopologyNode, TopoServerNode,
     Tier,
 )
 
@@ -79,7 +78,7 @@ class NousTransformer(Transformer):
         return items[0]
 
     def string_lit(self, items: list) -> Any:
-        return {"kind": "string_lit", "value": items[0]}
+        return items[0]
 
     def bool_lit(self, items: list) -> Any:
         return items[0]
@@ -234,8 +233,7 @@ class NousTransformer(Transformer):
         return LawCost(amount=c["amount"], currency=c.get("currency", "USD"))
 
     def law_constitutional(self, items: list) -> LawConstitutional:
-        count = next(i for i in items if isinstance(i, int))
-        return LawConstitutional(count=count)
+        return LawConstitutional(count=items[0])
 
     def law_duration(self, items: list) -> LawDuration:
         d = items[0]
@@ -336,26 +334,14 @@ class NousTransformer(Transformer):
         return GuardNode(condition=items[1])
 
     def sense_call(self, items: list) -> Any:
-        sense_idx = -1
-        for i, item in enumerate(items):
-            if isinstance(item, Token) and str(item.type) == "SENSE":
-                sense_idx = i
-                break
-
-        if sense_idx == -1:
-            return SenseCallNode(tool_name=str(items[0]))
-
-        before_sense = [items[j] for j in range(sense_idx) if not isinstance(items[j], Token) or str(items[j].type) != "SENSE"]
-        after_sense = [items[j] for j in range(sense_idx + 1, len(items))]
-
-        tool_name = str(after_sense[0]) if after_sense else "unknown"
-        args = after_sense[1] if len(after_sense) > 1 and isinstance(after_sense[1], dict) else {}
-
-        if before_sense:
-            bind_name = str(before_sense[0])
-            return LetNode(name=bind_name, value={"kind": "sense_call", "tool": tool_name, "args": args})
-
-        return SenseCallNode(tool_name=tool_name, args=args if isinstance(args, dict) else {})
+        if isinstance(items[0], str) and items[0] == "let":
+            return LetNode(name=items[1], value={"kind": "sense_call", "tool": items[3], "args": items[4] if len(items) > 4 else {}})
+        filtered = [i for i in items if not isinstance(i, Token) or str(i) not in ("sense", "αίσθηση")]
+        if len(filtered) >= 1:
+            tool = filtered[0]
+            args = filtered[1] if len(filtered) > 1 else {}
+            return SenseCallNode(tool_name=tool, args=args if isinstance(args, dict) else {})
+        return SenseCallNode(tool_name=str(items[0]))
 
     def sleep_stmt(self, items: list) -> SleepNode:
         return SleepNode(cycles=items[1])
@@ -376,8 +362,7 @@ class NousTransformer(Transformer):
         return IfNode(condition=cond, then_body=then_body, else_body=else_body)
 
     def for_stmt(self, items: list) -> ForNode:
-        body = self._merge_keyword_stmts(list(items[2:]))
-        return ForNode(var_name=items[0], iterable=items[1], body=body)
+        return ForNode(var_name=items[0], iterable=items[1], body=list(items[2:]))
 
     def statement(self, items: list) -> Any:
         return items[0]
@@ -386,89 +371,7 @@ class NousTransformer(Transformer):
 
     def instinct_block(self, items: list) -> InstinctNode:
         stmts = [i for i in items[1:] if not isinstance(i, Token)]
-        stmts = self._merge_keyword_stmts(stmts)
         return InstinctNode(statements=stmts)
-
-    def _merge_keyword_stmts(self, stmts: list) -> list:
-        result: list = []
-        i = 0
-        while i < len(stmts):
-            item = stmts[i]
-
-            if isinstance(item, str) and item in ("guard", "φύλακας"):
-                if i + 1 < len(stmts):
-                    result.append(GuardNode(condition=stmts[i + 1]))
-                    i += 2
-                    continue
-
-            if isinstance(item, str) and item in ("speak", "λέω", "peak"):
-                if i + 1 < len(stmts) and isinstance(stmts[i + 1], dict):
-                    fc = stmts[i + 1]
-                    if fc.get("kind") == "func_call":
-                        result.append(SpeakNode(
-                            message_type=fc.get("func", "Unknown"),
-                            args=fc.get("args", {}),
-                        ))
-                        i += 2
-                        continue
-
-            if isinstance(item, str) and item in ("sense", "αίσθηση"):
-                if i + 1 < len(stmts) and isinstance(stmts[i + 1], dict):
-                    fc = stmts[i + 1]
-                    if fc.get("kind") == "func_call":
-                        result.append(SenseCallNode(
-                            tool_name=fc.get("func", "unknown"),
-                            args=fc.get("args", {}),
-                        ))
-                        i += 2
-                        continue
-
-            if isinstance(item, LetNode) and isinstance(item.value, str) and item.value in ("sense", "αίσθηση"):
-                if i + 1 < len(stmts) and isinstance(stmts[i + 1], dict):
-                    fc = stmts[i + 1]
-                    if fc.get("kind") == "func_call":
-                        result.append(LetNode(
-                            name=item.name,
-                            value={"kind": "sense_call", "tool": fc.get("func", "unknown"), "args": fc.get("args", {})},
-                        ))
-                        i += 2
-                        continue
-
-            if isinstance(item, str) and len(item) > 1 and item[-1] in ("s", "m", "h", "d") and item[:-1].isdigit():
-                i += 1
-                continue
-
-            item = self._fix_duration_artifacts(item)
-
-            if isinstance(item, IfNode):
-                item = IfNode(
-                    condition=item.condition,
-                    then_body=self._merge_keyword_stmts(item.then_body),
-                    else_body=self._merge_keyword_stmts(item.else_body),
-                )
-
-            if isinstance(item, ForNode):
-                item = ForNode(
-                    var_name=item.var_name,
-                    iterable=item.iterable,
-                    body=self._merge_keyword_stmts(item.body),
-                )
-
-            result.append(item)
-            i += 1
-
-        return result
-
-    def _fix_duration_artifacts(self, item: Any) -> Any:
-        if isinstance(item, str) and len(item) > 1 and item[-1] in ("s", "m", "h", "d") and item[:-1].isdigit():
-            return int(item[:-1])
-        if isinstance(item, dict):
-            return {k: self._fix_duration_artifacts(v) for k, v in item.items()}
-        if isinstance(item, list):
-            return [self._fix_duration_artifacts(v) for v in item]
-        if isinstance(item, GuardNode):
-            return GuardNode(condition=self._fix_duration_artifacts(item.condition))
-        return item
 
     # ── DNA ──
 
@@ -679,35 +582,6 @@ class NousTransformer(Transformer):
         rules = [i for i in items[1:] if isinstance(i, PerceptionRuleNode)]
         return PerceptionNode(rules=rules)
 
-    # ── Deploy & Topology ──
-
-    def deploy_decl(self, items: list) -> DeployNode:
-        name = str(items[0])
-        config: dict[str, Any] = {}
-        for i in items[1:]:
-            if isinstance(i, tuple) and len(i) == 2:
-                config[i[0]] = i[1]
-        return DeployNode(name=name, config=config)
-
-    def deploy_body(self, items: list) -> tuple[str, Any]:
-        return (str(items[0]), items[1])
-
-    def topology_decl(self, items: list) -> TopologyNode:
-        servers = [i for i in items if isinstance(i, TopoServerNode)]
-        return TopologyNode(servers=servers)
-
-    def topo_server(self, items: list) -> TopoServerNode:
-        name = str(items[0])
-        host = str(items[1])
-        config: dict[str, Any] = {}
-        for i in items[2:]:
-            if isinstance(i, tuple) and len(i) == 2:
-                config[i[0]] = i[1]
-        return TopoServerNode(name=name, host=host, config=config)
-
-    def topo_body(self, items: list) -> tuple[str, Any]:
-        return (str(items[0]), items[1])
-
     # ── Top-Level ──
 
     def top_level(self, items: list) -> Any:
@@ -728,10 +602,6 @@ class NousTransformer(Transformer):
                 program.evolution = item
             elif isinstance(item, PerceptionNode):
                 program.perception = item
-            elif isinstance(item, DeployNode):
-                program.deploy = item
-            elif isinstance(item, TopologyNode):
-                program.topology = item
         return program
 
 

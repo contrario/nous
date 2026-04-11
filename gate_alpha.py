@@ -20,6 +20,11 @@ except ImportError:
 
 log = logging.getLogger('nous.runtime')
 
+try:
+    from runtime import NousRuntime
+except ImportError:
+    NousRuntime = None  # standalone mode
+
 # ═══ World Laws ═══
 
 WORLD_NAME = "GateAlpha"
@@ -27,6 +32,7 @@ HEARTBEAT_SECONDS = 300
 LAW_COSTCEILING = 0.1  # USD per cycle
 LAW_MAXLATENCY = 30  # s
 LAW_NOLIVETRADING = True
+WORLD_CONFIG = {}
 
 # ═══ Message Types ═══
 
@@ -71,8 +77,9 @@ channels = ChannelRegistry()
 class Soul_Scout:
     """Soul: Scout"""
 
-    def __init__(self) -> None:
+    def __init__(self, runtime: Any = None) -> None:
         self.name = "Scout"
+        self._runtime = runtime
         self.model = "deepseek-r1"
         self.tier = "Tier1"
         self.senses = ['gate_alpha_scan', 'fetch_rsi', 'ddgs_search']
@@ -87,11 +94,13 @@ class Soul_Scout:
 
     async def instinct(self) -> None:
         """Instinct cycle for Scout"""
-        await self._sense_tokens()
-        filtered = tokens.where((volume_24h > 50000))
+        tokens = await self._runtime.sense(self.name, "gate_alpha_scan")
+        filtered = tokens.filter("volume_24h", ">", 50000)
         for token in filtered:
-            await self._sense_rsi()
-            Signal(pair=token.pair, score=token.composite_score, rsi=rsi, source=self)
+            rsi = await self._runtime.sense(self.name, "fetch_rsi", token.pair)
+            if not ((rsi < 70)):
+                return  # guard failed
+            await channels.send("Scout_Signal", Signal(pair=token.pair, score=token.composite_score, rsi=rsi, source=self.name))
         self.scan_count += 1
 
     async def heal(self, error: Exception) -> bool:
@@ -141,8 +150,9 @@ class Soul_Scout:
 class Soul_Quant:
     """Soul: Quant"""
 
-    def __init__(self) -> None:
+    def __init__(self, runtime: Any = None) -> None:
         self.name = "Quant"
+        self._runtime = runtime
         self.model = "claude-haiku"
         self.tier = "Tier0A"
         self.senses = ['calculate_kelly', 'backtest_pair']
@@ -153,10 +163,9 @@ class Soul_Quant:
     async def instinct(self) -> None:
         """Instinct cycle for Quant"""
         signal = await channels.receive("Scout_Signal")
-        kelly = sense
-        calculate_kelly(signal)
+        kelly = await self._runtime.sense(self.name, "calculate_kelly", signal)
         risk = (1.0 - kelly.edge)
-        Decision(action=(BUY if (kelly.edge > 0.15) else HOLD), size=(kelly.fraction * 0.5), risk=risk, sl_pct=8.0, tp_pct=25.0)
+        await channels.send("Quant_Decision", Decision(action=("BUY" if (kelly.edge > 0.15) else "HOLD"), size=(kelly.fraction * 0.5), risk=risk, sl_pct=8.0, tp_pct=25.0))
 
     async def heal(self, error: Exception) -> bool:
         """Error recovery for Quant"""
@@ -191,8 +200,9 @@ class Soul_Quant:
 class Soul_Hunter:
     """Soul: Hunter"""
 
-    def __init__(self) -> None:
+    def __init__(self, runtime: Any = None) -> None:
         self.name = "Hunter"
+        self._runtime = runtime
         self.model = "deepseek-r1"
         self.tier = "Tier1"
         self.senses = ['execute_paper_trade', 'check_balance']
@@ -203,7 +213,9 @@ class Soul_Hunter:
     async def instinct(self) -> None:
         """Instinct cycle for Hunter"""
         decision = await channels.receive("Quant_Decision")
-        execute_paper_trade(decision)
+        if not ((decision.action == "BUY")):
+            return  # guard failed
+        await self._runtime.sense(self.name, "execute_paper_trade", decision)
 
     async def heal(self, error: Exception) -> bool:
         """Error recovery for Hunter"""
@@ -242,8 +254,9 @@ class Soul_Hunter:
 class Soul_Monitor:
     """Soul: Monitor"""
 
-    def __init__(self) -> None:
+    def __init__(self, runtime: Any = None) -> None:
         self.name = "Monitor"
+        self._runtime = runtime
         self.model = "gemini-flash"
         self.tier = "Tier2"
         self.senses = ['check_positions', 'send_telegram']
@@ -254,7 +267,7 @@ class Soul_Monitor:
     async def instinct(self) -> None:
         """Instinct cycle for Monitor"""
         signal = await channels.receive("Scout_Signal")
-        send_telegram(chat=world.config.telegram_chat, text="scout signal received")
+        await self._runtime.sense(self.name, "send_telegram", chat=WORLD_CONFIG.get("telegram_chat", ""), text="scout signal received")
         self.alert_count += 1
 
     async def heal(self, error: Exception) -> bool:
@@ -303,15 +316,21 @@ async def run_world() -> None:
     """Boot and run world: GateAlpha"""
     log.info(f'Booting world: GateAlpha')
 
+    # Boot runtime
+    runtime = None
+    if NousRuntime is not None:
+        runtime = NousRuntime()
+        runtime.boot()
+
     # Spawn souls
     souls = {}
-    souls["Scout"] = Soul_Scout()
+    souls["Scout"] = Soul_Scout(runtime)
     log.info(f'Spawned soul: Scout')
-    souls["Quant"] = Soul_Quant()
+    souls["Quant"] = Soul_Quant(runtime)
     log.info(f'Spawned soul: Quant')
-    souls["Hunter"] = Soul_Hunter()
+    souls["Hunter"] = Soul_Hunter(runtime)
     log.info(f'Spawned soul: Hunter')
-    souls["Monitor"] = Soul_Monitor()
+    souls["Monitor"] = Soul_Monitor(runtime)
     log.info(f'Spawned soul: Monitor')
 
     topology = build_topology()

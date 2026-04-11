@@ -217,9 +217,10 @@ class ToolRegistry:
                     self._tools[tool_name] = module
                     count += 1
             except Exception as e:
-                log.warning(f"Failed to load tool {tool_name}: {e}")
+                log.debug(f"Skipped tool {tool_name}: {e}")
 
-        log.info(f"Loaded {count} tools from Noosphere")
+        loaded = sorted(self._tools.keys())
+        log.info(f"Loaded {count} tools: {loaded}")
         return count
 
     def register_stub(self, name: str, func: Callable[..., Coroutine[Any, Any, ToolResult]]) -> None:
