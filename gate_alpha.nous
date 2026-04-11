@@ -1,0 +1,157 @@
+# gate_alpha.nous — Gate Alpha Trading Cluster
+# NOUS v1.0 | Noosphere Multi-Agent Platform
+
+world GateAlpha {
+    law CostCeiling = $0.10 per cycle
+    law MaxLatency = 30s
+    law NoLiveTrading = true
+    heartbeat = 5m
+}
+
+message Signal {
+    pair: string
+    score: float
+    rsi: float?
+    source: SoulRef
+}
+
+message Decision {
+    action: string
+    size: float
+    risk: float
+    sl_pct: float
+    tp_pct: float
+}
+
+soul Scout {
+    mind: deepseek-r1 @ Tier1
+    senses: [gate_alpha_scan, fetch_rsi, ddgs_search]
+
+    memory {
+        signals: [Signal] = []
+        rejected: [string] = []
+        scan_count: int = 0
+    }
+
+    instinct {
+        let tokens = sense gate_alpha_scan()
+        let filtered = tokens.where(volume_24h > 50000)
+
+        for token in filtered {
+            let rsi = sense fetch_rsi(token.pair)
+            guard rsi < 70
+
+            speak Signal(
+                pair: token.pair,
+                score: token.composite_score,
+                rsi: rsi,
+                source: self
+            )
+        }
+
+        remember scan_count += 1
+    }
+
+    dna {
+        volume_threshold: 50000 ~ [10000, 200000]
+        rsi_ceiling: 70 ~ [60, 80]
+        temperature: 0.3 ~ [0.1, 0.9]
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => sleep 1 cycle
+        on hallucination => lower(temperature, 0.1) then retry
+    }
+}
+
+soul Quant {
+    mind: claude-haiku @ Tier0A
+    senses: [calculate_kelly, backtest_pair]
+
+    memory {
+        risk_score: float = 0.0
+    }
+
+    instinct {
+        let signal = listen Scout::Signal
+        let kelly = sense calculate_kelly(signal)
+        let risk = 1.0 - kelly.edge
+
+        speak Decision(
+            action: if kelly.edge > 0.15 { "BUY" } else { "HOLD" },
+            size: kelly.fraction * 0.5,
+            risk: risk,
+            sl_pct: 8.0,
+            tp_pct: 25.0
+        )
+    }
+
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}
+
+soul Hunter {
+    mind: deepseek-r1 @ Tier1
+    senses: [execute_paper_trade, check_balance]
+
+    memory {
+        last_trade: string = ""
+    }
+
+    instinct {
+        let decision = listen Quant::Decision
+        guard decision.action == "BUY"
+        sense execute_paper_trade(decision)
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on budget_exceeded => hibernate until next_cycle
+    }
+}
+
+soul Monitor {
+    mind: gemini-flash @ Tier2
+    senses: [check_positions, send_telegram]
+
+    memory {
+        alert_count: int = 0
+    }
+
+    instinct {
+        let signal = listen Scout::Signal
+        sense send_telegram(
+            chat: world.config.telegram_chat,
+            text: "scout signal received"
+        )
+        remember alert_count += 1
+    }
+
+    heal {
+        on timeout => retry(1, exponential)
+    }
+}
+
+nervous_system {
+    Scout -> Quant -> Hunter
+    Scout -> Monitor
+}
+
+evolution {
+    schedule: 3:00 AM
+    fitness: langfuse(quality_score)
+
+    mutate Scout.dna {
+        strategy: genetic(population: 3, generations: 2)
+        survive_if: fitness > parent.fitness
+        rollback_if: any_law_violated
+    }
+}
+
+perception {
+    on telegram("/scan") => wake Scout
+    on cron("*/5 * * * *") => wake_all
+    on system_error => alert Telegram
+}

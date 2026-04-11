@@ -1,0 +1,368 @@
+"""
+NOUS Living AST — Ψυχόδενδρο (Psychodendro)
+=============================================
+Pydantic V2 nodes for the runtime-mutable AST.
+Every node is typed, validated, serializable.
+"""
+from __future__ import annotations
+
+from enum import Enum
+from typing import Any, Optional, Union
+from pydantic import BaseModel, Field
+
+
+class Tier(str, Enum):
+    TIER0A = "Tier0A"
+    TIER0B = "Tier0B"
+    TIER1 = "Tier1"
+    TIER2 = "Tier2"
+    TIER3 = "Tier3"
+
+
+class HealStrategy(str, Enum):
+    RETRY = "retry"
+    LOWER = "lower"
+    RAISE = "raise"
+    HIBERNATE = "hibernate"
+    FALLBACK = "fallback"
+    DELEGATE = "delegate"
+    ALERT = "alert"
+    SLEEP = "sleep"
+
+
+class NousNode(BaseModel):
+    """Base node for the Living AST."""
+    model_config = {"extra": "forbid"}
+
+
+# ═══════════════════════════════════════════
+# LAW
+# ═══════════════════════════════════════════
+
+class LawCost(NousNode):
+    kind: str = "cost"
+    amount: float
+    currency: str = "USD"
+    per: str = "cycle"
+
+
+class LawDuration(NousNode):
+    kind: str = "duration"
+    value: int
+    unit: str
+
+
+class LawConstitutional(NousNode):
+    kind: str = "constitutional"
+    count: int
+
+
+class LawBool(NousNode):
+    kind: str = "bool"
+    value: bool
+
+
+class LawInt(NousNode):
+    kind: str = "int"
+    value: int
+
+
+LawExpr = Union[LawCost, LawDuration, LawConstitutional, LawBool, LawInt]
+
+
+class LawNode(NousNode):
+    name: str
+    expr: LawExpr
+
+
+# ═══════════════════════════════════════════
+# WORLD
+# ═══════════════════════════════════════════
+
+class WorldNode(NousNode):
+    name: str
+    laws: list[LawNode] = Field(default_factory=list)
+    heartbeat: Optional[str] = None
+    timezone: Optional[str] = None
+    config: dict[str, Any] = Field(default_factory=dict)
+
+
+# ═══════════════════════════════════════════
+# MESSAGE
+# ═══════════════════════════════════════════
+
+class MessageFieldNode(NousNode):
+    name: str
+    type_expr: str
+    default: Optional[Any] = None
+
+
+class MessageNode(NousNode):
+    name: str
+    fields: list[MessageFieldNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# TYPES
+# ═══════════════════════════════════════════
+
+class TypeExpr(NousNode):
+    base: str
+    is_list: bool = False
+    is_optional: bool = False
+    key_type: Optional[str] = None
+    value_type: Optional[str] = None
+
+
+# ═══════════════════════════════════════════
+# MEMORY
+# ═══════════════════════════════════════════
+
+class FieldDeclNode(NousNode):
+    name: str
+    type_expr: str
+    default: Any = None
+
+
+class MemoryNode(NousNode):
+    fields: list[FieldDeclNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# EXPRESSIONS
+# ═══════════════════════════════════════════
+
+class ExprNode(NousNode):
+    """Wrapper for any expression in the AST."""
+    kind: str
+    value: Any = None
+    left: Optional[ExprNode] = None
+    right: Optional[ExprNode] = None
+    op: Optional[str] = None
+    args: list[Any] = Field(default_factory=list)
+    children: list[ExprNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# STATEMENTS
+# ═══════════════════════════════════════════
+
+class LetNode(NousNode):
+    name: str
+    value: Any
+
+
+class RememberNode(NousNode):
+    name: str
+    op: str = "="
+    value: Any
+
+
+class SpeakNode(NousNode):
+    message_type: str
+    args: dict[str, Any] = Field(default_factory=dict)
+
+
+class ListenNode(NousNode):
+    target_soul: str
+    message_type: str
+    bind_name: str
+
+
+class GuardNode(NousNode):
+    condition: Any
+
+
+class SenseCallNode(NousNode):
+    tool_name: str
+    args: dict[str, Any] = Field(default_factory=dict)
+    bind_name: Optional[str] = None
+
+
+class SleepNode(NousNode):
+    cycles: int
+
+
+class IfNode(NousNode):
+    condition: Any
+    then_body: list[Any] = Field(default_factory=list)
+    else_body: list[Any] = Field(default_factory=list)
+
+
+class ForNode(NousNode):
+    var_name: str
+    iterable: Any
+    body: list[Any] = Field(default_factory=list)
+
+
+StatementNode = Union[
+    LetNode, RememberNode, SpeakNode, ListenNode,
+    GuardNode, SenseCallNode, SleepNode, IfNode, ForNode
+]
+
+
+# ═══════════════════════════════════════════
+# INSTINCT
+# ═══════════════════════════════════════════
+
+class InstinctNode(NousNode):
+    statements: list[Any] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# DNA
+# ═══════════════════════════════════════════
+
+class GeneNode(NousNode):
+    name: str
+    value: Any
+    range: list[Any] = Field(default_factory=list)
+
+
+class DnaNode(NousNode):
+    genes: list[GeneNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# HEAL
+# ═══════════════════════════════════════════
+
+class HealActionNode(NousNode):
+    strategy: HealStrategy
+    params: dict[str, Any] = Field(default_factory=dict)
+
+
+class HealRuleNode(NousNode):
+    error_type: str
+    actions: list[HealActionNode] = Field(default_factory=list)
+
+
+class HealNode(NousNode):
+    rules: list[HealRuleNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# MIND
+# ═══════════════════════════════════════════
+
+class MindNode(NousNode):
+    model: str
+    tier: Tier
+
+
+# ═══════════════════════════════════════════
+# SOUL
+# ═══════════════════════════════════════════
+
+class SoulNode(NousNode):
+    name: str
+    mind: Optional[MindNode] = None
+    senses: list[str] = Field(default_factory=list)
+    memory: Optional[MemoryNode] = None
+    instinct: Optional[InstinctNode] = None
+    dna: Optional[DnaNode] = None
+    heal: Optional[HealNode] = None
+
+
+# ═══════════════════════════════════════════
+# NERVOUS SYSTEM
+# ═══════════════════════════════════════════
+
+class RouteNode(NousNode):
+    source: str
+    target: str
+
+
+class MatchArmNode(NousNode):
+    condition: Any
+    target: Optional[str] = None
+    is_silence: bool = False
+
+
+class MatchRouteNode(NousNode):
+    source: str
+    arms: list[MatchArmNode] = Field(default_factory=list)
+
+
+class FanInNode(NousNode):
+    sources: list[str]
+    target: str
+
+
+class FanOutNode(NousNode):
+    source: str
+    targets: list[str]
+
+
+class FeedbackNode(NousNode):
+    source_soul: str
+    source_field: str
+    target_soul: str
+    target_field: str
+
+
+NerveStatement = Union[RouteNode, MatchRouteNode, FanInNode, FanOutNode, FeedbackNode]
+
+
+class NervousSystemNode(NousNode):
+    routes: list[NerveStatement] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# EVOLUTION
+# ═══════════════════════════════════════════
+
+class MutateStrategyNode(NousNode):
+    name: str
+    params: dict[str, Any] = Field(default_factory=dict)
+
+
+class MutateBlockNode(NousNode):
+    target: str
+    strategy: Optional[MutateStrategyNode] = None
+    survive_condition: Any = None
+    rollback_condition: Any = None
+
+
+class EvolutionNode(NousNode):
+    schedule: Optional[str] = None
+    fitness: Any = None
+    mutations: list[MutateBlockNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# PERCEPTION
+# ═══════════════════════════════════════════
+
+class PerceptionTriggerNode(NousNode):
+    kind: str
+    name: str
+    args: list[Any] = Field(default_factory=list)
+
+
+class PerceptionActionNode(NousNode):
+    kind: str
+    target: Optional[str] = None
+
+
+class PerceptionRuleNode(NousNode):
+    trigger: PerceptionTriggerNode
+    action: PerceptionActionNode
+
+
+class PerceptionNode(NousNode):
+    rules: list[PerceptionRuleNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# PROGRAM (ROOT)
+# ═══════════════════════════════════════════
+
+class NousProgram(NousNode):
+    """Root of the Living AST — the complete .nous program."""
+    world: Optional[WorldNode] = None
+    messages: list[MessageNode] = Field(default_factory=list)
+    souls: list[SoulNode] = Field(default_factory=list)
+    nervous_system: Optional[NervousSystemNode] = None
+    evolution: Optional[EvolutionNode] = None
+    perception: Optional[PerceptionNode] = None
