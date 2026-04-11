@@ -161,12 +161,14 @@ class RememberNode(NousNode):
 class SpeakNode(NousNode):
     message_type: str
     args: dict[str, Any] = Field(default_factory=dict)
+    target_world: str | None = None
 
 
 class ListenNode(NousNode):
     target_soul: str
     message_type: str
     bind_name: str
+    target_world: str | None = None
 
 
 class GuardNode(NousNode):

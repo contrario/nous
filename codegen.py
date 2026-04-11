@@ -309,6 +309,7 @@ class NousCodeGen:
         self._dedent()
         self._emit_blank()
         self._emit("channels = None  # Set by run_world() from runtime")
+        self._emit("cross_bus = None  # Set by MultiWorldRunner")
 
     # ── Souls ──
 
@@ -445,9 +446,12 @@ class NousCodeGen:
                 self._emit(f"self.{stmt.name} = {val}")
 
         elif isinstance(stmt, SpeakNode):
-            channel = f"{soul_name}_{stmt.message_type}"
             args_str = self._kv_to_python(stmt.args)
-            self._emit(f"await channels.send(\"{channel}\", {stmt.message_type}({args_str}))")
+            if stmt.target_world:
+                self._emit(f'await cross_bus.publish("{stmt.target_world}", "{stmt.message_type}", {stmt.message_type}({args_str}))')
+            else:
+                channel = f"{soul_name}_{stmt.message_type}"
+                self._emit(f'await channels.send("{channel}", {stmt.message_type}({args_str}))')
 
         elif isinstance(stmt, GuardNode):
             cond = self._expr_to_python(stmt.condition)
@@ -498,6 +502,11 @@ class NousCodeGen:
             kind = stmt.get("kind", "")
             if kind == "method_call":
                 self._emit(self._expr_to_python(stmt))
+            elif kind == "listen_cross":
+                world = val["world"]
+                msg_type = val["type"]
+                self._emit(f'{stmt.name} = await cross_bus.subscribe("{world}", "{msg_type}")')
+
             elif kind == "func_call":
                 self._emit(self._expr_to_python(stmt))
 

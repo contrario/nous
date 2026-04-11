@@ -72,12 +72,16 @@ statement: let_stmt
 
 let_stmt: "let" NAME "=" expr
 let_sense_stmt: "let" NAME "=" SENSE NAME "(" arg_list? ")"
-let_listen_stmt: "let" NAME "=" LISTEN NAME "::" NAME
+let_listen_stmt: "let" NAME "=" LISTEN NAME "::" NAME          -> listen_local
+              | "let" NAME "=" LISTEN cross_target NAME          -> listen_cross
 
 remember_set: REMEMBER NAME "=" expr
 remember_add: REMEMBER NAME "+=" expr
 
-speak_stmt: SPEAK NAME "(" arg_list? ")"
+speak_stmt: SPEAK NAME "(" arg_list? ")"           -> speak_local
+          | SPEAK cross_target NAME "(" arg_list? ")"  -> speak_cross
+
+cross_target: "@" NAME "::"
 
 guard_stmt: GUARD expr
 

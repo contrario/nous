@@ -1,0 +1,34 @@
+# cross_world_test.nous — Cross-World Communication Test
+# Two worlds: Radar sends alerts, Command receives them
+
+world Radar {
+    law CostCeiling = $0.10 per cycle
+    heartbeat = 5m
+}
+
+message Alert {
+    level: string
+    detail: string
+    source: SoulRef
+}
+
+soul Watcher {
+    mind: deepseek-r1 @ Tier1
+    senses: [check_health]
+
+    memory {
+        alert_count: int = 0
+    }
+
+    instinct {
+        let status = sense check_health()
+        if status.is_critical {
+            speak @Command::Alert(level: "critical", detail: status.message, source: self)
+            remember alert_count += 1
+        }
+    }
+
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}

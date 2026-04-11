@@ -295,9 +295,22 @@ class NousTransformer(Transformer):
         v = _strip(items)
         return RememberNode(name=v[0], op="+=", value=v[1])
 
-    def speak_stmt(self, items: list) -> SpeakNode:
-        v = _strip(items)
-        return SpeakNode(message_type=v[0], args=v[1] if len(v) > 1 else {})
+    def cross_target(self, items: list) -> str:
+        return str(items[0]) if items else ""
+
+    def speak_local(self, items: list) -> SpeakNode:
+        items = [i for i in items if i is not None]
+        msg_name = str(items[0])
+        args = items[1] if len(items) > 1 else {}
+        return SpeakNode(message_type=msg_name, args=args)
+
+    def speak_cross(self, items: list) -> SpeakNode:
+        items = [i for i in items if i is not None]
+        world_name = str(items[0])
+        msg_name = str(items[1])
+        args = items[2] if len(items) > 2 else {}
+        return SpeakNode(message_type=msg_name, args=args, target_world=world_name)
+
 
     def guard_stmt(self, items: list) -> GuardNode:
         v = _strip(items)

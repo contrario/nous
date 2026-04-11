@@ -1,0 +1,56 @@
+# cross_world_command.nous — Receives cross-world alerts from Radar
+
+world Command {
+    law CostCeiling = $0.10 per cycle
+    heartbeat = 5m
+}
+
+message Alert {
+    level: string
+    detail: string
+    source: SoulRef
+}
+
+message Response {
+    action: string
+    target: string
+}
+
+soul Dispatcher {
+    mind: deepseek-r1 @ Tier1
+    senses: [send_telegram]
+
+    memory {
+        handled: int = 0
+    }
+
+    instinct {
+        let alert = listen @Radar::Alert as incoming
+        if alert.level == "critical" {
+            speak Response(action: "escalate", target: alert.source)
+            remember handled += 1
+        }
+    }
+
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}
+
+nervous_system {
+    Dispatcher -> Logger
+}
+
+soul Logger {
+    mind: deepseek-r1 @ Tier2
+    senses: [write_log]
+
+    instinct {
+        let resp = listen Dispatcher::Response
+        sense write_log(entry: resp.action)
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+    }
+}
