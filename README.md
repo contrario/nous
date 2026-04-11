@@ -7,7 +7,7 @@
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v1.1.0
+ |_| \_|\___/ \___/|____/   v1.4.0
 ```
 
 **Author:** Hlias Staurou (Hlia) | **Project:** Noosphere | **GitHub:** contrario
@@ -28,23 +28,41 @@ NOUS transpiles to **Python 3.11+ asyncio** and integrates with the Noosphere Mu
 
 ---
 
+## Performance
+
+| Metric | Value |
+|--------|-------|
+| Parser | LALR (Lark), 3.3ms/parse |
+| Earley → LALR speedup | 90.6x |
+| Compile (gate_alpha.nous) | 0.14s → 421 lines Python |
+| Full pipeline (4 souls) | ~8s cycle |
+| Grammar rules | ~200 (bilingual EN+GR) |
+| AST nodes | 43+ Pydantic V2 models |
+
+---
+
 ## Quick Start
 
 ```bash
-# Install (one time)
-pip install lark pydantic --break-system-packages
+# Install
+pip install lark pydantic ccxt --break-system-packages
 cp install.sh /usr/local/bin/nous && chmod +x /usr/local/bin/nous
 
-# Use
+# Single world
 nous compile gate_alpha.nous          # → gate_alpha.py
 nous run gate_alpha.nous              # compile + execute
-nous validate gate_alpha.nous         # check laws
+nous validate gate_alpha.nous         # check laws + constitutional guards
+
+# Multi-world (concurrent)
+nous run gate_alpha.nous infra_monitor.nous   # 2 worlds, all souls concurrent
+
+# Tools
 nous info gate_alpha.nous             # program summary
 nous evolve gate_alpha.nous --cycles 5  # DNA mutation
 nous bridge gate_alpha.nous           # Noosphere integration
 nous ast gate_alpha.nous --json       # Living AST
 nous nsp "[NSP|CT.88|M.safe]"         # parse NSP tokens
-nous version                          # show version
+nous version                          # v1.4.0
 ```
 
 ---
@@ -53,14 +71,17 @@ nous version                          # show version
 
 ### World
 
-Every `.nous` file defines one world — a self-contained execution environment.
+Every `.nous` file defines one world — a self-contained execution environment with inviolable laws.
 
 ```nous
 world GateAlpha {
-    law CostCeiling = $0.10 per cycle    # inviolable
+    law CostCeiling = $0.10 per cycle
     law MaxLatency = 30s
     law NoLiveTrading = true
+    law MaxPositionSize = $500
+    law MaxDailyLoss = $100
     heartbeat = 5m
+    config telegram_chat = env("TELEGRAM_CHAT_ID")
 }
 ```
 
@@ -71,17 +92,25 @@ The fundamental unit — agent + state + behavior + evolution + healing in one c
 ```nous
 soul Scout {
     mind: deepseek-r1 @ Tier1
-    senses: [scan_market, fetch_rsi]
+    senses: [gate_alpha_scan, fetch_rsi]
 
     memory {
         signals: [Signal] = []
-        confidence: float = 0.0
+        scan_count: int = 0
     }
 
     instinct {
-        let data = sense scan_market()
-        remember signals = data.where(score > 0.7)
-        speak Signal(pair: data.best, score: data.score)
+        let tokens = sense gate_alpha_scan()
+        let candidates = tokens.where(volume_24h > 50000)
+
+        for token in candidates {
+            let rsi = sense fetch_rsi(pair: token.pair)
+            if rsi < 35 {
+                speak Signal(pair: token.pair, score: token.score, rsi: rsi, source: self)
+            }
+        }
+
+        remember scan_count += 1
     }
 
     dna {
@@ -108,6 +137,13 @@ message Signal {
     rsi: float?
     source: SoulRef
 }
+
+message Decision {
+    action: string
+    pair: string
+    size: float
+    reason: string
+}
 ```
 
 ### Nervous System
@@ -122,6 +158,25 @@ nervous_system {
     Alert -> [Monitor, Dashboard]  # fan-out
 }
 ```
+
+### Constitutional Guards
+
+Compile-time and runtime safety for trading systems:
+
+```nous
+world SafeTrader {
+    law NoLiveTrading = true       # C001: blocks live trade tools at compile time
+    law MaxPositionSize = $500     # C003: runtime position check
+    law MaxDailyLoss = $100        # C004: runtime circuit breaker
+}
+```
+
+The validator enforces:
+- **C001**: `NoLiveTrading` blocks forbidden tools (`execute_trade`, `place_order`, etc.) — recursive scan in if/for bodies
+- **C003**: Warning if trading souls exist without `MaxPositionSize`
+- **C004**: Warning if trading souls exist without `MaxDailyLoss`
+
+Runtime generates a `ConstitutionalGuard` class with position checks, daily loss circuit breaker, and audit logging.
 
 ### Evolution
 
@@ -151,6 +206,27 @@ perception {
     on system_error => alert Telegram
 }
 ```
+
+---
+
+## Multi-World Execution
+
+Run multiple worlds concurrently with shared communication:
+
+```bash
+nous run gate_alpha.nous infra_monitor.nous
+```
+
+```
+NOUS Multi-World: 2 worlds
+  → gate_alpha.nous
+  → infra_monitor.nous
+[gate_alpha] Scout: cycle complete
+[gate_alpha] Quant: Decision(BUY)
+[infra_monitor] Watcher: all systems nominal
+```
+
+Each world runs in its own asyncio task via `TaskGroup`. Cross-world communication via `SharedChannelBus` (prepared, integration in progress).
 
 ---
 
@@ -212,9 +288,9 @@ Every keyword works in English and Greek:
 ## Architecture
 
 ```
-.nous file → Lark Parser → Living AST (Ψυχόδενδρο) → Validator → Python CodeGen → asyncio runtime
-                                  ↑
-                            Aevolver (DNA mutations operate directly on this tree)
+.nous file → LALR Parser (3.3ms) → Living AST (Ψυχόδενδρο) → Validator → Python CodeGen → asyncio runtime
+                                          ↑
+                                    Aevolver (DNA mutations operate directly on this tree)
 ```
 
 The **Living AST** is not discarded after compilation — it persists in memory as the program's runtime representation. The Aevolver mutates DNA nodes directly on this graph.
@@ -224,39 +300,46 @@ The **Living AST** is not discarded after compilation — it persists in memory 
 ## File Structure
 
 ```
-/opt/aetherlang_agents/nous/
-├── nous.lark          # EBNF grammar (~200 rules)
-├── ast_nodes.py       # 40+ Pydantic V2 AST nodes
-├── parser.py          # Lark → Living AST transformer
-├── validator.py       # Law checker (8 error categories)
-├── codegen.py         # AST → Python 3.11+ asyncio
-├── cli.py             # CLI: compile/run/validate/evolve/nsp/info/bridge
+nous/
+├── nous.lark          # LALR grammar (~200 rules, bilingual)
+├── ast_nodes.py       # 43+ Pydantic V2 AST nodes
+├── parser.py          # LALR Transformer → Living AST (zero workarounds)
+├── validator.py       # Law checker + constitutional guards (C001-C004)
+├── codegen.py         # AST → Python 3.11+ asyncio + runtime integration
+├── multiworld.py      # Concurrent multi-world runner (TaskGroup)
+├── cli.py             # CLI v1.4.0: compile/run/validate/evolve/nsp/info/bridge
 ├── nsp.py             # Noosphere Shorthand Protocol
 ├── aevolver.py        # DNA mutation engine
 ├── bridge.py          # Noosphere integration analyzer
-├── migrate.py         # YAML/TOML → .nous converter
-├── gate_alpha.nous    # Example: Gate Alpha trading cluster
-└── README.md          # This file
+├── migrate.py         # YAML/TOML → .nous converter (106 agents migrated)
+├── gate_alpha.nous    # Example: Gate Alpha trading cluster (4 souls)
+├── infra_monitor.nous # Example: Infrastructure monitoring world
+└── README.md
 ```
 
 ---
 
-## Migration from YAML/TOML
+## Live Pipeline
 
-Convert existing Noosphere agent configs to `.nous`:
+```
+nous compile gate_alpha.nous  → 421 lines Python, 0.14s, py_compile PASS
 
-```bash
-python3 migrate.py /opt/aetherlang_agents/agents/
-python3 migrate.py /opt/aetherlang_agents/agents/greek_tax_advisor.yaml
+nous run gate_alpha.nous      → Full pipeline:
+  Scout  → DexScreener scan (7 candidates, 86ms)
+         → Real RSI from Binance (SOL/USDC RSI=60.67, 64 candles)
+  Quant  → Kelly criterion (edge=0.5468) → Decision(BUY)
+  Hunter → Paper trade ($150.30)
+  Monitor → Telegram ✅
+  All 4 souls: cycle complete in ~8s
 ```
 
 ---
 
 ## Safety Model
 
-**Compile-time:** Type mismatches, undefined references, cycle detection, missing heal blocks.
+**Compile-time:** Type mismatches, undefined references, cycle detection, missing heal blocks, constitutional guard enforcement (C001-C004).
 
-**Runtime:** Cost tracking per LLM call, constitution hash verification, forbidden phrase detection, atomic rollback on law violations.
+**Runtime:** Cost tracking per LLM call, position size limits, daily loss circuit breaker, audit logging, constitution hash verification, forbidden phrase detection, atomic rollback on law violations.
 
 **Evolution:** Shadow AST → validate → test → fitness check → commit or rollback. Never unsupervised.
 
@@ -272,10 +355,14 @@ python3 migrate.py /opt/aetherlang_agents/agents/greek_tax_advisor.yaml
 | `law` keyword | Safety as physics, not middleware |
 | `heal` block | Declarative self-repair |
 | `nervous_system` | DAG as native syntax (A -> B -> C) |
+| Constitutional Guards | Compile-time + runtime trading safety |
+| Multi-world | Concurrent world execution via TaskGroup |
+| LALR @ 3.3ms | Production-grade parser performance |
 | Bilingual | English + Greek keywords |
 | `speak/listen` | Type-safe inter-agent channels |
+| `sense` | Tool integration as language primitive |
 
 ---
 
-*NOUS v1.1.0 — Born from Noosphere. Built for the future.*
+*NOUS v1.4.0 — Born from Noosphere. Built for the future.*
 *Hlias Staurou | April 2026 | Athens, Greece*
