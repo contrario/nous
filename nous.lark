@@ -25,6 +25,7 @@ law_decl: LAW NAME "=" law_expr
 law_expr: currency_lit PER CYCLE          -> law_cost
         | CONSTITUTIONAL "(" INT ")"      -> law_constitutional
         | duration_lit                     -> law_duration
+        | currency_lit                     -> law_currency
         | BOOL                            -> law_bool
         | INT                             -> law_int
 

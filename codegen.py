@@ -11,6 +11,7 @@ import textwrap
 from typing import Any
 
 from ast_nodes import (
+    # TradeGuard imported at runtime in generated code
     NousProgram, WorldNode, SoulNode, MindNode, MemoryNode,
     InstinctNode, DnaNode, HealNode, HealRuleNode, HealActionNode,
     HealStrategy, MessageNode, NervousSystemNode, RouteNode,
@@ -310,8 +311,29 @@ class NousCodeGen:
         self._emit_blank()
         self._emit("channels = None  # Set by run_world() from runtime")
         self._emit("cross_bus = None  # Set by MultiWorldRunner")
+        self._emit("trade_guard = None  # Set by run_world() if trading laws exist")
 
     # ── Souls ──
+
+
+    def _get_trade_laws(self) -> dict[str, Any]:
+        """Extract trading-related laws."""
+        laws: dict[str, Any] = {}
+        if not self.program.world:
+            return laws
+        for law in self.program.world.laws:
+            name_lower = law.name.lower()
+            if name_lower == "nolivetrading":
+                laws["no_live_trading"] = getattr(law.expr, "value", True)
+            elif name_lower == "requireapproval":
+                laws["require_approval"] = getattr(law.expr, "value", False)
+            elif name_lower == "maxpositionsize":
+                laws["max_position"] = getattr(law.expr, "amount", 0)
+            elif name_lower == "maxdailyloss":
+                laws["max_daily_loss"] = getattr(law.expr, "amount", 0)
+            elif name_lower == "approvaltimeout":
+                laws["approval_timeout"] = getattr(law.expr, "value", 120)
+        return laws
 
     def _emit_soul_classes(self) -> None:
         self._emit("# ═══ Soul Definitions ═══")
@@ -608,9 +630,29 @@ class NousCodeGen:
         self._dedent()
         self._emit(")")
         self._emit("channels = runtime.channels")
-        self._emit_blank()
-
-        self._emit("# Spawn souls")
+        # Trade guard initialization
+        trade_laws = self._get_trade_laws()
+        if any(k in trade_laws for k in ("require_approval", "max_position", "max_daily_loss")):
+            self._emit("# Initialize trade guard")
+            self._emit("global trade_guard")
+            self._emit("from trading import TradeGuard")
+            wn = self.program.world.name if self.program.world else "default"
+            ra = trade_laws.get("require_approval", False)
+            nl = trade_laws.get("no_live_trading", True)
+            mp = trade_laws.get("max_position", 0)
+            md = trade_laws.get("max_daily_loss", 0)
+            at = trade_laws.get("approval_timeout", 120.0)
+            parts = [
+                'world_name="' + wn + '"',
+                "require_approval=" + str(ra),
+                "no_live_trading=" + str(nl),
+                "max_position=" + str(mp),
+                "max_daily_loss=" + str(md),
+                "approval_timeout=" + str(at),
+            ]
+            self._emit("trade_guard = TradeGuard(" + ", ".join(parts) + ")")
+            self._emit("await trade_guard.start()")
+        # Spawn souls
         self._emit("souls = {}")
         for soul in self.program.souls:
             self._emit(f"souls[\"{soul.name}\"] = Soul_{soul.name}()")

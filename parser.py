@@ -215,6 +215,13 @@ class NousTransformer(Transformer):
         unit = d[-1] if d[-1].isalpha() else d[-2:]
         return LawDuration(value=val, unit=unit)
 
+    def law_currency(self, items: list) -> Any:
+        from ast_nodes import LawCurrency
+        val = items[0] if items else 0
+        if isinstance(val, dict):
+            val = val.get("amount", 0)
+        return LawCurrency(amount=float(val))
+
     def law_bool(self, items: list) -> LawBool:
         v = _strip(items)
         return LawBool(value=v[0])

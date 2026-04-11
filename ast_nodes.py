@@ -57,6 +57,10 @@ class LawConstitutional(NousNode):
     count: int
 
 
+class LawCurrency(NousNode):
+    amount: float
+
+
 class LawBool(NousNode):
     kind: str = "bool"
     value: bool
@@ -67,7 +71,7 @@ class LawInt(NousNode):
     value: int
 
 
-LawExpr = Union[LawCost, LawDuration, LawConstitutional, LawBool, LawInt]
+LawExpr = Union[LawCost, LawDuration, LawConstitutional, LawCurrency, LawBool, LawInt]
 
 
 class LawNode(NousNode):

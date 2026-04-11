@@ -5,6 +5,9 @@ world GateAlpha {
     law CostCeiling = $0.10 per cycle
     law MaxLatency = 30s
     law NoLiveTrading = true
+    law RequireApproval = true
+    law MaxPositionSize = $500
+    law MaxDailyLoss = $100
     heartbeat = 5m
 }
 
