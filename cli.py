@@ -25,8 +25,9 @@ from pathlib import Path
 from parser import parse_nous_file
 from validator import validate_program
 from codegen import generate_python
+from errors import format_parse_error, format_validation_errors
 
-VERSION = "1.3.0"
+VERSION = "1.1.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -44,11 +45,12 @@ def cmd_compile(args: argparse.Namespace) -> int:
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
     t0 = time.perf_counter()
+    source_text = source.read_text(encoding="utf-8")
     print(f"[1/3] Parsing {source.name}...")
     try:
         program = parse_nous_file(source)
     except Exception as e:
-        print(f"Parse error: {e}", file=sys.stderr)
+        print(format_parse_error(e, source_text, source.name), file=sys.stderr)
         return 1
     world_name = program.world.name if program.world else "Unknown"
     print(f"      World: {world_name} | {len(program.souls)} souls | {len(program.messages)} messages")
@@ -57,8 +59,7 @@ def cmd_compile(args: argparse.Namespace) -> int:
     for w in result.warnings:
         print(f"      {w}")
     if not result.ok:
-        for e in result.errors:
-            print(f"      {e}")
+        print(format_validation_errors(source_text, result.errors, source.name))
         print(f"\nValidation FAILED: {len(result.errors)} errors")
         return 1
     print(f"      Validation PASS")
@@ -78,11 +79,12 @@ def cmd_run(args: argparse.Namespace) -> int:
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
     t0 = time.perf_counter()
+    source_text = source.read_text(encoding="utf-8")
     print(f"[1/3] Parsing {source.name}...")
     try:
         program = parse_nous_file(source)
     except Exception as e:
-        print(f"Parse error: {e}", file=sys.stderr)
+        print(format_parse_error(e, source_text, source.name), file=sys.stderr)
         return 1
     world_name = program.world.name if program.world else "Unknown"
     print(f"      World: {world_name}")
@@ -116,13 +118,19 @@ def cmd_validate(args: argparse.Namespace) -> int:
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
+    source_text = source.read_text(encoding="utf-8")
     try:
         program = parse_nous_file(source)
     except Exception as e:
-        print(f"Parse error: {e}", file=sys.stderr)
+        print(format_parse_error(e, source_text, source.name), file=sys.stderr)
         return 1
     result = validate_program(program)
-    print(result.summary())
+    if not result.ok:
+        print(format_validation_errors(source_text, result.errors, source.name))
+    for w in result.warnings:
+        print(f"  ⚠ {w}")
+    status = "PASS" if result.ok else "FAIL"
+    print(f"\nValidation {status}: {len(result.errors)} errors, {len(result.warnings)} warnings")
     return 0 if result.ok else 1
 
 
@@ -131,10 +139,11 @@ def cmd_ast(args: argparse.Namespace) -> int:
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
+    source_text = source.read_text(encoding="utf-8")
     try:
         program = parse_nous_file(source)
     except Exception as e:
-        print(f"Parse error: {e}", file=sys.stderr)
+        print(format_parse_error(e, source_text, source.name), file=sys.stderr)
         return 1
     data = program.model_dump(exclude_none=True)
     if args.json:
@@ -311,38 +320,6 @@ def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
         print(f"{prefix}{data}")
 
 
-def cmd_shell(args: argparse.Namespace) -> int:
-    from repl import NousREPL
-    repl = NousREPL()
-    if hasattr(args, "file") and args.file:
-        repl._cmd_load(args.file)
-    repl.start()
-    return 0
-
-
-def cmd_evolve_live(args: argparse.Namespace) -> int:
-    import asyncio
-    from aevolver_live import run_evolution_now, EvolutionScheduler
-    source = Path(args.file)
-    if not source.exists():
-        print(f"Error: file not found: {source}", file=sys.stderr)
-        return 1
-    if args.daemon:
-        async def run_daemon() -> None:
-            scheduler = EvolutionScheduler(source)
-            await scheduler.start()
-            try:
-                while True:
-                    await asyncio.sleep(3600)
-            except KeyboardInterrupt:
-                await scheduler.stop()
-        asyncio.run(run_daemon())
-    else:
-        report = asyncio.run(run_evolution_now(source))
-        print(report.summary())
-    return 0
-
-
 def main() -> int:
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language")
     sub = ap.add_subparsers(dest="command", required=True)
@@ -363,12 +340,6 @@ def main() -> int:
     p.add_argument("file"); p.add_argument("--cycles", type=int, default=3)
     p.add_argument("--save", action="store_true")
 
-    p = sub.add_parser("evolve-live", help="Run live evolution with Langfuse/Telegram")
-    p.add_argument("file"); p.add_argument("--daemon", action="store_true")
-
-    p = sub.add_parser("shell", help="Interactive NOUS REPL")
-    p.add_argument("file", nargs="?", default="")
-
     p = sub.add_parser("nsp", help="Parse/compress NSP tokens")
     p.add_argument("text"); p.add_argument("--compress", action="store_true")
 
@@ -383,8 +354,7 @@ def main() -> int:
     args = ap.parse_args()
     commands = {
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
-        "ast": cmd_ast, "evolve": cmd_evolve, "evolve-live": cmd_evolve_live,
-        "shell": cmd_shell, "nsp": cmd_nsp,
+        "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
         "info": cmd_info, "bridge": cmd_bridge, "version": cmd_version,
     }
     return commands[args.command](args)

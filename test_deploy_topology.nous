@@ -1,0 +1,49 @@
+world ClusterAlpha {
+    law CostCeiling = $0.50 per cycle
+    law MaxLatency = 30s
+    heartbeat = 5m
+}
+
+message Signal {
+    pair: string
+    score: float
+}
+
+soul Scout {
+    mind: deepseek-r1 @ Tier1
+    senses: [ddgs_search]
+
+    memory {
+        count: int = 0
+    }
+
+    instinct {
+        remember count += 1
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+    }
+}
+
+nervous_system {
+    Scout -> Scout
+}
+
+deploy production {
+    replicas: 3
+    region: "eu-central-1"
+    gpu: false
+    max_memory: 4096
+}
+
+topology {
+    primary: "188.245.245.132" {
+        souls: Scout
+        role: "leader"
+    }
+    secondary: "10.0.0.2" {
+        souls: Scout
+        role: "follower"
+    }
+}

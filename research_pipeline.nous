@@ -1,0 +1,152 @@
+# NOUS Example: Deep Research Pipeline
+# 4 souls: search → analyze → synthesize → publish
+
+world ResearchPipeline {
+    law CostCeiling = $0.50 per cycle
+    law MaxLatency = 60s
+    heartbeat = 30m
+}
+
+message Query {
+    topic: string
+    depth: int
+    requester: string
+}
+
+message Finding {
+    title: string
+    summary: string
+    relevance: float
+    source_url: string
+    source: SoulRef
+}
+
+message Synthesis {
+    topic: string
+    findings_count: int
+    report: string
+    confidence: float
+}
+
+soul Searcher {
+    mind: deepseek-r1 @ Tier1
+    senses: [ddgs_search, arxiv_search, scholar_search]
+
+    memory {
+        queries_processed: int = 0
+        sources_found: int = 0
+    }
+
+    instinct {
+        let query = listen Coordinator::Query
+        let web = sense ddgs_search(query.topic)
+        for result in web {
+            guard result.relevance > 0.6
+            speak Finding(title: result.title, summary: result.snippet, relevance: result.relevance, source_url: result.url, source: self)
+        }
+        remember queries_processed += 1
+        remember sources_found += web.length
+    }
+
+    dna {
+        relevance_threshold: 0.6 ~ [0.3, 0.9]
+        max_results: 10 ~ [5, 30]
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => fallback(ddgs_search)
+        on rate_limit => sleep 1 cycle
+    }
+}
+
+soul Analyst {
+    mind: claude-sonnet @ Tier0A
+    senses: [fetch_page, extract_text]
+
+    memory {
+        analyzed: int = 0
+    }
+
+    instinct {
+        let finding = listen Searcher::Finding
+        guard finding.relevance > 0.7
+        let content = sense fetch_page(finding.source_url)
+        let analysis = sense extract_text(content.body)
+        speak Finding(title: finding.title, summary: analysis.key_points, relevance: finding.relevance, source_url: finding.source_url, source: self)
+        remember analyzed += 1
+    }
+
+    dna {
+        analysis_depth: 0.7 ~ [0.5, 1.0]
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => sleep 1 cycle
+    }
+}
+
+soul Synthesizer {
+    mind: claude-sonnet @ Tier0A
+    senses: [generate_report]
+
+    memory {
+        reports_generated: int = 0
+    }
+
+    instinct {
+        let finding = listen Analyst::Finding
+        let report = sense generate_report(finding.title, finding.summary)
+        speak Synthesis(topic: finding.title, findings_count: 1, report: report.text, confidence: report.confidence)
+        remember reports_generated += 1
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => lower(temperature, 0.1) then retry
+    }
+}
+
+soul Publisher {
+    mind: gemini-flash @ Tier2
+    senses: [send_telegram, save_to_notion]
+
+    memory {
+        published: int = 0
+    }
+
+    instinct {
+        let synthesis = listen Synthesizer::Synthesis
+        guard synthesis.confidence > 0.7
+        sense send_telegram(synthesis.topic, synthesis.report)
+        sense save_to_notion(synthesis.topic, synthesis.report)
+        remember published += 1
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => fallback(send_telegram)
+    }
+}
+
+nervous_system {
+    Searcher -> Analyst
+    Analyst -> Synthesizer
+    Synthesizer -> Publisher
+}
+
+evolution {
+    schedule: 2:00 AM
+    fitness: langfuse(research_quality)
+    mutate Searcher.dna {
+        strategy: genetic(population: 3, generations: 2)
+        survive_if: fitness > parent.fitness
+        rollback_if: any_law_violated
+    }
+}
+
+perception {
+    on telegram("/research") => wake Searcher
+    on cron("0 8 * * *") => wake_all
+}

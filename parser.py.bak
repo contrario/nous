@@ -21,7 +21,6 @@ from ast_nodes import (
     PerceptionNode, PerceptionRuleNode, PerceptionTriggerNode,
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
-    DeployNode, TopologyNode, TopoServerNode,
     Tier,
 )
 
@@ -234,8 +233,7 @@ class NousTransformer(Transformer):
         return LawCost(amount=c["amount"], currency=c.get("currency", "USD"))
 
     def law_constitutional(self, items: list) -> LawConstitutional:
-        count = next(i for i in items if isinstance(i, int))
-        return LawConstitutional(count=count)
+        return LawConstitutional(count=items[0])
 
     def law_duration(self, items: list) -> LawDuration:
         d = items[0]
@@ -584,35 +582,6 @@ class NousTransformer(Transformer):
         rules = [i for i in items[1:] if isinstance(i, PerceptionRuleNode)]
         return PerceptionNode(rules=rules)
 
-    # ── Deploy & Topology ──
-
-    def deploy_decl(self, items: list) -> DeployNode:
-        name = str(items[0])
-        config: dict[str, Any] = {}
-        for i in items[1:]:
-            if isinstance(i, tuple) and len(i) == 2:
-                config[i[0]] = i[1]
-        return DeployNode(name=name, config=config)
-
-    def deploy_body(self, items: list) -> tuple[str, Any]:
-        return (str(items[0]), items[1])
-
-    def topology_decl(self, items: list) -> TopologyNode:
-        servers = [i for i in items if isinstance(i, TopoServerNode)]
-        return TopologyNode(servers=servers)
-
-    def topo_server(self, items: list) -> TopoServerNode:
-        name = str(items[0])
-        host = str(items[1])
-        config: dict[str, Any] = {}
-        for i in items[2:]:
-            if isinstance(i, tuple) and len(i) == 2:
-                config[i[0]] = i[1]
-        return TopoServerNode(name=name, host=host, config=config)
-
-    def topo_body(self, items: list) -> tuple[str, Any]:
-        return (str(items[0]), items[1])
-
     # ── Top-Level ──
 
     def top_level(self, items: list) -> Any:
@@ -633,10 +602,6 @@ class NousTransformer(Transformer):
                 program.evolution = item
             elif isinstance(item, PerceptionNode):
                 program.perception = item
-            elif isinstance(item, DeployNode):
-                program.deploy = item
-            elif isinstance(item, TopologyNode):
-                program.topology = item
         return program
 
 

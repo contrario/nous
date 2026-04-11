@@ -1,0 +1,225 @@
+{
+  "scopeName": "source.nous",
+  "name": "NOUS",
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#world" },
+    { "include": "#soul" },
+    { "include": "#message" },
+    { "include": "#nervous_system" },
+    { "include": "#evolution" },
+    { "include": "#perception" },
+    { "include": "#deploy" },
+    { "include": "#topology" },
+    { "include": "#nsp" },
+    { "include": "#keywords" },
+    { "include": "#operators" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#constants" },
+    { "include": "#types" },
+    { "include": "#tiers" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comment": {
+      "match": "#.*$",
+      "name": "comment.line.number-sign.nous"
+    },
+    "world": {
+      "match": "\\b(world|κόσμος)\\s+([a-zA-Z_\\u0370-\\u03FF][a-zA-Z0-9_\\u0370-\\u03FF]*)\\b",
+      "captures": {
+        "1": { "name": "keyword.declaration.world.nous" },
+        "2": { "name": "entity.name.class.world.nous" }
+      }
+    },
+    "soul": {
+      "match": "\\b(soul|ψυχή)\\s+([a-zA-Z_\\u0370-\\u03FF][a-zA-Z0-9_\\u0370-\\u03FF]*)\\b",
+      "captures": {
+        "1": { "name": "keyword.declaration.soul.nous" },
+        "2": { "name": "entity.name.class.soul.nous" }
+      }
+    },
+    "message": {
+      "match": "\\b(message|μήνυμα)\\s+([a-zA-Z_\\u0370-\\u03FF][a-zA-Z0-9_\\u0370-\\u03FF]*)\\b",
+      "captures": {
+        "1": { "name": "keyword.declaration.message.nous" },
+        "2": { "name": "entity.name.type.message.nous" }
+      }
+    },
+    "nervous_system": {
+      "match": "\\b(nervous_system|νευρικό)\\b",
+      "name": "keyword.declaration.nervous-system.nous"
+    },
+    "evolution": {
+      "match": "\\b(evolution|εξέλιξη)\\b",
+      "name": "keyword.declaration.evolution.nous"
+    },
+    "perception": {
+      "match": "\\b(perception|αντίληψη)\\b",
+      "name": "keyword.declaration.perception.nous"
+    },
+    "deploy": {
+      "match": "\\b(deploy)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\b",
+      "captures": {
+        "1": { "name": "keyword.declaration.deploy.nous" },
+        "2": { "name": "entity.name.tag.deploy.nous" }
+      }
+    },
+    "topology": {
+      "match": "\\b(topology)\\b",
+      "name": "keyword.declaration.topology.nous"
+    },
+    "nsp": {
+      "match": "\\b(nsp)\\b",
+      "name": "keyword.declaration.nsp.nous"
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\b(mind|νους|memory|μνήμη|instinct|ένστικτο|dna|DNA|heal|θεραπεία|senses)\\b",
+          "name": "keyword.other.block.nous"
+        },
+        {
+          "match": "\\b(sense|αίσθηση)\\b",
+          "name": "keyword.operator.sense.nous"
+        },
+        {
+          "match": "\\b(speak|λέω)\\b",
+          "name": "keyword.operator.speak.nous"
+        },
+        {
+          "match": "\\b(listen|ακούω)\\b",
+          "name": "keyword.operator.listen.nous"
+        },
+        {
+          "match": "\\b(remember|θυμάμαι)\\b",
+          "name": "keyword.operator.remember.nous"
+        },
+        {
+          "match": "\\b(guard|φύλακας)\\b",
+          "name": "keyword.control.guard.nous"
+        },
+        {
+          "match": "\\b(law|νόμος)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\b",
+          "captures": {
+            "1": { "name": "keyword.other.law.nous" },
+            "2": { "name": "variable.other.law-name.nous" }
+          }
+        },
+        {
+          "match": "\\b(let)\\b",
+          "name": "keyword.other.let.nous"
+        },
+        {
+          "match": "\\b(for|in|if|else|on|sleep|wake|wake_all|broadcast|alert)\\b",
+          "name": "keyword.control.nous"
+        },
+        {
+          "match": "\\b(retry|lower|raise|hibernate|fallback|delegate|then)\\b",
+          "name": "keyword.other.heal-action.nous"
+        },
+        {
+          "match": "\\b(mutate|strategy|survive_if|rollback_if|schedule|fitness)\\b",
+          "name": "keyword.other.evolution.nous"
+        },
+        {
+          "match": "\\b(per|cycle|constitutional)\\b",
+          "name": "keyword.other.modifier.nous"
+        },
+        {
+          "match": "\\b(self)\\b",
+          "name": "variable.language.self.nous"
+        },
+        {
+          "match": "\\b(silence|σιωπή)\\b",
+          "name": "constant.language.silence.nous"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "match": "->",
+          "name": "keyword.operator.arrow.nous"
+        },
+        {
+          "match": "::",
+          "name": "keyword.operator.scope.nous"
+        },
+        {
+          "match": "=>",
+          "name": "keyword.operator.fat-arrow.nous"
+        },
+        {
+          "match": "~",
+          "name": "keyword.operator.range.nous"
+        },
+        {
+          "match": "\\|\\||&&|!",
+          "name": "keyword.operator.logical.nous"
+        },
+        {
+          "match": "==|!=|>=|<=|>|<",
+          "name": "keyword.operator.comparison.nous"
+        },
+        {
+          "match": "\\+|-|\\*|/|%",
+          "name": "keyword.operator.arithmetic.nous"
+        },
+        {
+          "match": "\\+=",
+          "name": "keyword.operator.assignment.compound.nous"
+        },
+        {
+          "match": "@",
+          "name": "keyword.operator.at.nous"
+        }
+      ]
+    },
+    "strings": {
+      "match": "\"[^\"]*\"",
+      "name": "string.quoted.double.nous"
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "\\$\\d+\\.?\\d*",
+          "name": "constant.numeric.currency.usd.nous"
+        },
+        {
+          "match": "€\\d+\\.?\\d*",
+          "name": "constant.numeric.currency.eur.nous"
+        },
+        {
+          "match": "\\b\\d+\\.\\d+\\b",
+          "name": "constant.numeric.float.nous"
+        },
+        {
+          "match": "\\b\\d+(s|m|h|d|ms)\\b",
+          "name": "constant.numeric.duration.nous"
+        },
+        {
+          "match": "\\b\\d+\\b",
+          "name": "constant.numeric.integer.nous"
+        }
+      ]
+    },
+    "constants": {
+      "match": "\\b(true|false)\\b",
+      "name": "constant.language.boolean.nous"
+    },
+    "types": {
+      "match": "\\b(string|int|float|bool|SoulRef)\\b",
+      "name": "support.type.nous"
+    },
+    "tiers": {
+      "match": "\\bTier[0-3][A-B]?\\b",
+      "name": "constant.other.tier.nous"
+    },
+    "identifiers": {
+      "match": "\\b[a-zA-Z_\\u0370-\\u03FF][a-zA-Z0-9_\\u0370-\\u03FF]*\\b",
+      "name": "variable.other.nous"
+    }
+  }
+}

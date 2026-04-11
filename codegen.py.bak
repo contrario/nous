@@ -18,7 +18,6 @@ from ast_nodes import (
     EvolutionNode, PerceptionNode, LetNode, RememberNode,
     SpeakNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     GeneNode, LawCost, LawDuration, LawBool, LawInt, LawConstitutional,
-    DeployNode, TopologyNode, TopoServerNode,
 )
 
 
@@ -41,8 +40,6 @@ class NousCodeGen:
         self._emit_blank()
         self._emit_soul_classes()
         self._emit_nervous_system()
-        self._emit_deploy_config()
-        self._emit_topology()
         self._emit_world_runner()
         self._emit_main()
         return "\n".join(self.lines)
@@ -444,41 +441,6 @@ class NousCodeGen:
         self._dedent()
 
     # ── World runner ──
-
-    def _emit_deploy_config(self) -> None:
-        deploy = self.program.deploy
-        if not deploy:
-            return
-        self._emit_blank()
-        self._emit("# ═══ Deploy Configuration ═══")
-        self._emit_blank()
-        self._emit(f"DEPLOY_NAME = \"{deploy.name}\"")
-        self._emit("DEPLOY_CONFIG = {")
-        self._indent()
-        for key, val in deploy.config.items():
-            self._emit(f"\"{key}\": {repr(val)},")
-        self._dedent()
-        self._emit("}")
-
-    def _emit_topology(self) -> None:
-        topo = self.program.topology
-        if not topo:
-            return
-        self._emit_blank()
-        self._emit("# ═══ Topology — Multi-Server ═══")
-        self._emit_blank()
-        self._emit("TOPOLOGY = {")
-        self._indent()
-        for server in topo.servers:
-            self._emit(f"\"{server.name}\": {{")
-            self._indent()
-            self._emit(f"\"host\": \"{server.host}\",")
-            for key, val in server.config.items():
-                self._emit(f"\"{key}\": {repr(val)},")
-            self._dedent()
-            self._emit("},")
-        self._dedent()
-        self._emit("}")
 
     def _emit_world_runner(self) -> None:
         self._emit_blank()

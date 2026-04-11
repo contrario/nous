@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nous-lang"
+version = "1.3.0"
+description = "NOUS (Νοῦς) — The Living Language for Agentic AI Systems"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [
+    {name = "Hlias Staurou", email = "hlia@contrario.dev"},
+]
+keywords = ["ai", "agents", "language", "compiler", "evolution", "multi-agent"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "lark>=1.1.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.25.0",
+]
+
+[project.optional-dependencies]
+lsp = ["pygls>=1.3.0", "lsprotocol>=2024.0.0"]
+evolution = ["langfuse>=2.0.0"]
+all = ["nous-lang[lsp,evolution]"]
+
+[project.urls]
+Homepage = "https://nous-lang.dev"
+Repository = "https://github.com/contrario/nous"
+Documentation = "https://github.com/contrario/nous/wiki"
+
+[project.scripts]
+nous = "nous.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["nous*"]

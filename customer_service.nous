@@ -1,0 +1,137 @@
+# NOUS Example: Customer Service Bot
+# 3 souls: triage → specialist → responder
+
+world CustomerService {
+    law CostCeiling = $0.20 per cycle
+    law MaxLatency = 15s
+    law NoPersonalData = true
+    heartbeat = 1m
+}
+
+message Ticket {
+    customer_id: string
+    text: string
+    channel: string
+    priority: string
+}
+
+message Resolution {
+    ticket_id: string
+    response: string
+    category: string
+    confidence: float
+    escalate: bool
+    source: SoulRef
+}
+
+soul Triage {
+    mind: gemini-flash @ Tier2
+    senses: [classify_intent, detect_language, check_sentiment]
+
+    memory {
+        tickets_processed: int = 0
+        escalation_rate: float = 0.0
+    }
+
+    instinct {
+        let ticket = listen Intake::Ticket
+        let intent = sense classify_intent(ticket.text)
+        let sentiment = sense check_sentiment(ticket.text)
+        if sentiment.score < -0.5 {
+            speak Ticket(customer_id: ticket.customer_id, text: ticket.text, channel: ticket.channel, priority: "urgent")
+        } else {
+            speak Ticket(customer_id: ticket.customer_id, text: ticket.text, channel: ticket.channel, priority: intent.priority)
+        }
+        remember tickets_processed += 1
+    }
+
+    dna {
+        sentiment_threshold: -0.5 ~ [-1.0, 0.0]
+        temperature: 0.2 ~ [0.1, 0.5]
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => sleep 1 cycle
+        on hallucination => lower(temperature, 0.1) then retry
+    }
+}
+
+soul Specialist {
+    mind: claude-sonnet @ Tier0A
+    senses: [search_kb, search_faq, fetch_account]
+
+    memory {
+        resolved: int = 0
+        escalated: int = 0
+    }
+
+    instinct {
+        let ticket = listen Triage::Ticket
+        let kb_result = sense search_kb(ticket.text)
+        guard kb_result.confidence > 0.5
+        if kb_result.confidence > 0.8 {
+            speak Resolution(ticket_id: ticket.customer_id, response: kb_result.answer, category: kb_result.category, confidence: kb_result.confidence, escalate: false, source: self)
+            remember resolved += 1
+        } else {
+            speak Resolution(ticket_id: ticket.customer_id, response: kb_result.answer, category: kb_result.category, confidence: kb_result.confidence, escalate: true, source: self)
+            remember escalated += 1
+        }
+    }
+
+    dna {
+        confidence_threshold: 0.5 ~ [0.3, 0.9]
+        escalation_threshold: 0.8 ~ [0.6, 0.95]
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => fallback(search_faq)
+    }
+}
+
+soul Responder {
+    mind: deepseek-r1 @ Tier1
+    senses: [send_email, send_chat, send_telegram]
+
+    memory {
+        responses_sent: int = 0
+    }
+
+    instinct {
+        let resolution = listen Specialist::Resolution
+        guard resolution.escalate == false
+        if resolution.confidence > 0.7 {
+            sense send_chat(resolution.ticket_id, resolution.response)
+        } else {
+            sense send_email(resolution.ticket_id, resolution.response)
+        }
+        sense send_telegram(resolution.ticket_id, resolution.category)
+        remember responses_sent += 1
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => fallback(send_telegram)
+    }
+}
+
+nervous_system {
+    Triage -> Specialist -> Responder
+}
+
+evolution {
+    schedule: 4:00 AM
+    fitness: langfuse(resolution_rate)
+    mutate Specialist.dna {
+        strategy: genetic(population: 3, generations: 2)
+        survive_if: fitness > parent.fitness
+        rollback_if: any_law_violated
+    }
+}
+
+perception {
+    on telegram("/support") => wake Triage
+    on cron("*/1 * * * *") => wake_all
+    on system_error => alert Telegram
+}

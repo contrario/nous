@@ -355,6 +355,29 @@ class PerceptionNode(NousNode):
 
 
 # ═══════════════════════════════════════════
+# DEPLOY
+# ═══════════════════════════════════════════
+
+class DeployNode(NousNode):
+    name: str
+    config: dict[str, Any] = Field(default_factory=dict)
+
+
+# ═══════════════════════════════════════════
+# TOPOLOGY
+# ═══════════════════════════════════════════
+
+class TopoServerNode(NousNode):
+    name: str
+    host: str
+    config: dict[str, Any] = Field(default_factory=dict)
+
+
+class TopologyNode(NousNode):
+    servers: list[TopoServerNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
 # PROGRAM (ROOT)
 # ═══════════════════════════════════════════
 
@@ -366,3 +389,5 @@ class NousProgram(NousNode):
     nervous_system: Optional[NervousSystemNode] = None
     evolution: Optional[EvolutionNode] = None
     perception: Optional[PerceptionNode] = None
+    deploy: Optional[DeployNode] = None
+    topology: Optional[TopologyNode] = None
