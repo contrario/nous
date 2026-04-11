@@ -16,3 +16,5 @@ nohup.out
 *.swp
 *.swo
 *~
+NOUS_SESSION_*_PROMPT.md
+NOUS_SESSION_*_HANDOFF.md
