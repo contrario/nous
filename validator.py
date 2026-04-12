@@ -402,4 +402,7 @@ class NousValidator:
 def validate_program(program: NousProgram) -> ValidationResult:
     """Validate a NousProgram. Returns ValidationResult."""
     validator = NousValidator(program)
-    return validator.validate()
+    result = validator.validate()
+    from tool_validator import validate_sense_args
+    result.warnings.extend(validate_sense_args(program))
+    return result
