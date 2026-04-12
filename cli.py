@@ -26,6 +26,7 @@ from parser import parse_nous_file
 from validator import validate_program
 from codegen import generate_python
 from watch import watch
+from shell import start_repl
 
 VERSION = "1.4.0"
 BANNER = r"""
@@ -354,6 +355,14 @@ def cmd_watch(args: argparse.Namespace) -> int:
     return watch(sources, poll=args.interval)
 
 
+def cmd_shell(args: argparse.Namespace) -> int:
+    source = Path(args.file) if args.file else None
+    if source and not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    return start_repl(source)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language")
     sub = ap.add_subparsers(dest="command", required=True)
@@ -383,6 +392,9 @@ def main() -> int:
     p = sub.add_parser("bridge", help="Analyze Noosphere integration")
     p.add_argument("file")
 
+    p = sub.add_parser("shell", help="Interactive REPL")
+    p.add_argument("file", nargs="?", default=None, help=".nous file to load")
+
     p = sub.add_parser("watch", help="Watch and hot-reload on changes")
     p.add_argument("files", nargs="+", help=".nous files to watch")
     p.add_argument("--interval", type=float, default=1.0, help="Poll interval in seconds")
@@ -393,7 +405,7 @@ def main() -> int:
     commands = {
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "version": cmd_version, "watch": cmd_watch,
+        "info": cmd_info, "bridge": cmd_bridge, "version": cmd_version, "watch": cmd_watch, "shell": cmd_shell,
     }
     return commands[args.command](args)
 
