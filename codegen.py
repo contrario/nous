@@ -77,6 +77,8 @@ class NousCodeGen:
 
     def _emit_imports(self) -> None:
         self._emit("from __future__ import annotations")
+        self._emit("import warnings")
+        self._emit("warnings.filterwarnings('ignore', message='urllib3.*chardet.*')")
         self._emit_blank()
         self._emit("import asyncio")
         self._emit("import logging")
