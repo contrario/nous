@@ -18,6 +18,7 @@ from ast_nodes import (
     EvolutionNode, PerceptionNode, LetNode, RememberNode,
     SpeakNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     GeneNode, LawCost, LawDuration, LawBool, LawInt, LawConstitutional,
+    LawCurrency,
 )
 
 
@@ -122,6 +123,8 @@ class NousCodeGen:
                 self._emit(f"{name} = {law.expr.value}")
             elif isinstance(law.expr, LawConstitutional):
                 self._emit(f"{name} = {law.expr.count}")
+            elif isinstance(law.expr, LawCurrency):
+                self._emit(f"{name} = {law.expr.amount}  # {law.expr.currency}")
 
     # ── Messages ──
 

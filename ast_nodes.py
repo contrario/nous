@@ -67,7 +67,13 @@ class LawInt(NousNode):
     value: int
 
 
-LawExpr = Union[LawCost, LawDuration, LawConstitutional, LawBool, LawInt]
+class LawCurrency(NousNode):
+    kind: str = "currency"
+    amount: float
+    currency: str = "USD"
+
+
+LawExpr = Union[LawCost, LawDuration, LawConstitutional, LawBool, LawInt, LawCurrency]
 
 
 class LawNode(NousNode):

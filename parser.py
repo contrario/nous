@@ -12,7 +12,7 @@ from lark import Lark, Transformer, Token, Tree
 
 from ast_nodes import (
     NousProgram, WorldNode, LawNode, LawCost, LawDuration,
-    LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
+    LawConstitutional, LawBool, LawInt, LawCurrency, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
     HealNode, HealRuleNode, HealActionNode, HealStrategy,
     MessageNode, MessageFieldNode, NervousSystemNode, RouteNode,
@@ -251,6 +251,10 @@ class NousTransformer(Transformer):
 
     def law_int(self, items: list) -> LawInt:
         return LawInt(value=items[0])
+
+    def law_currency(self, items: list) -> LawCurrency:
+        c = items[0]
+        return LawCurrency(amount=c["amount"], currency=c.get("currency", "USD"))
 
     def law_decl(self, items: list) -> LawNode:
         return LawNode(name=items[1], expr=items[2])

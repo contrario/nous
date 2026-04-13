@@ -27,6 +27,7 @@ law_expr: currency_lit PER CYCLE          -> law_cost
         | duration_lit                     -> law_duration
         | BOOL                            -> law_bool
         | INT                             -> law_int
+        | currency_lit                    -> law_currency
 
 heartbeat_decl: "heartbeat" "=" duration_lit
 timezone_decl: "timezone" "=" STRING
