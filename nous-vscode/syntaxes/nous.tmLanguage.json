@@ -1,0 +1,243 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "NOUS",
+  "scopeName": "source.nous",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#cross-world" },
+    { "include": "#blocks" },
+    { "include": "#laws" },
+    { "include": "#keywords" },
+    { "include": "#operators" },
+    { "include": "#constants" },
+    { "include": "#types" },
+    { "include": "#tiers" },
+    { "include": "#numbers" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.nous",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.nous",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.nous",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "cross-world": {
+      "patterns": [
+        {
+          "name": "meta.cross-world.nous",
+          "match": "(@)(\\w+)(::)(\\w+)",
+          "captures": {
+            "1": { "name": "keyword.operator.cross-world.nous" },
+            "2": { "name": "entity.name.namespace.nous" },
+            "3": { "name": "keyword.operator.scope.nous" },
+            "4": { "name": "entity.name.type.message.nous" }
+          }
+        }
+      ]
+    },
+    "blocks": {
+      "patterns": [
+        {
+          "match": "\\b(world|κόσμος)\\s+(\\w+)",
+          "captures": {
+            "1": { "name": "keyword.declaration.world.nous" },
+            "2": { "name": "entity.name.class.world.nous" }
+          }
+        },
+        {
+          "match": "\\b(soul|ψυχή)\\s+(\\w+)",
+          "captures": {
+            "1": { "name": "keyword.declaration.soul.nous" },
+            "2": { "name": "entity.name.class.soul.nous" }
+          }
+        },
+        {
+          "match": "\\b(message|μήνυμα)\\s+(\\w+)",
+          "captures": {
+            "1": { "name": "keyword.declaration.message.nous" },
+            "2": { "name": "entity.name.type.message.nous" }
+          }
+        },
+        {
+          "name": "keyword.declaration.block.nous",
+          "match": "\\b(nervous_system|νευρικό|evolution|εξέλιξη|perception|αντίληψη|topology|deploy|nsp)\\b"
+        },
+        {
+          "name": "keyword.declaration.section.nous",
+          "match": "\\b(memory|μνήμη|instinct|ένστικτο|dna|DNA|heal|θεραπεία|senses)\\b"
+        },
+        {
+          "match": "\\b(mind)\\s*:\\s*([\\w-]+)\\s*(@)\\s*(Tier[0-3][A-B]?)",
+          "captures": {
+            "1": { "name": "keyword.other.mind.nous" },
+            "2": { "name": "string.unquoted.model.nous" },
+            "3": { "name": "keyword.operator.at.nous" },
+            "4": { "name": "constant.other.tier.nous" }
+          }
+        }
+      ]
+    },
+    "laws": {
+      "patterns": [
+        {
+          "match": "\\b(law|νόμος)\\s+(\\w+)\\s*=",
+          "captures": {
+            "1": { "name": "keyword.declaration.law.nous" },
+            "2": { "name": "variable.other.law.nous" }
+          }
+        },
+        {
+          "name": "constant.numeric.currency.nous",
+          "match": "[$€]\\d+(\\.\\d+)?"
+        },
+        {
+          "name": "keyword.other.law-modifier.nous",
+          "match": "\\b(per\\s+cycle|constitutional)\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.flow.nous",
+          "match": "\\b(if|else|for|in|match)\\b"
+        },
+        {
+          "name": "keyword.control.statement.nous",
+          "match": "\\b(let|remember|θυμάμαι|speak|λέω|listen|ακούω|guard|φύλακας|sleep|ύπνος|sense|αίσθηση)\\b"
+        },
+        {
+          "name": "keyword.control.route.nous",
+          "match": "(->|=>)"
+        },
+        {
+          "name": "keyword.other.heal-action.nous",
+          "match": "\\b(retry|lower|raise|hibernate|fallback|delegate|alert|then|on|wake|wake_all|broadcast)\\b"
+        },
+        {
+          "name": "keyword.other.evolution.nous",
+          "match": "\\b(mutate|schedule|fitness|strategy|survive_if|rollback_if)\\b"
+        },
+        {
+          "name": "keyword.other.config.nous",
+          "match": "\\b(heartbeat|timezone)\\b"
+        },
+        {
+          "name": "keyword.other.special.nous",
+          "match": "\\b(silence|σιωπή)\\b"
+        },
+        {
+          "name": "variable.language.self.nous",
+          "match": "\\bself\\b"
+        },
+        {
+          "name": "variable.language.world.nous",
+          "match": "\\bworld\\b(?=\\.)"
+        },
+        {
+          "match": "\\b(now)\\s*\\(\\s*\\)",
+          "name": "support.function.builtin.nous"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.nous",
+          "match": "(==|!=|>=|<=|>|<)"
+        },
+        {
+          "name": "keyword.operator.logical.nous",
+          "match": "(\\|\\||&&|!)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.nous",
+          "match": "([+\\-*/%])"
+        },
+        {
+          "name": "keyword.operator.assignment.nous",
+          "match": "(\\+=|=)"
+        },
+        {
+          "name": "keyword.operator.namespace.nous",
+          "match": "::"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.nous",
+          "match": "\\b(true|false)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "support.type.nous",
+          "match": "\\b(string|float|int|bool|timestamp|duration|currency|SoulRef|ToolRef)\\b"
+        }
+      ]
+    },
+    "tiers": {
+      "patterns": [
+        {
+          "name": "constant.other.tier.nous",
+          "match": "\\bTier[0-3][A-B]?\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.duration.nous",
+          "match": "\\b\\d+(ms|s|m|h|d)\\b"
+        },
+        {
+          "name": "constant.numeric.float.nous",
+          "match": "\\b\\d+\\.\\d+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.nous",
+          "match": "\\b\\d+\\b"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.definition.block.nous",
+          "match": "[{}]"
+        },
+        {
+          "name": "punctuation.definition.array.nous",
+          "match": "[\\[\\]]"
+        },
+        {
+          "name": "punctuation.separator.nous",
+          "match": "[,:]"
+        }
+      ]
+    }
+  }
+}

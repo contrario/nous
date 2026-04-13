@@ -1,0 +1,94 @@
+{
+  "name": "nous-lang",
+  "displayName": "NOUS — The Living Language",
+  "description": "Syntax highlighting, validation, and LSP support for NOUS (Νοῦς) — a self-evolving programming language for agentic AI systems.",
+  "version": "1.8.0",
+  "publisher": "noosphere",
+  "author": "Hlias Staurou",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/contrario/nous"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Snippets"
+  ],
+  "keywords": [
+    "nous",
+    "agentic",
+    "ai",
+    "language",
+    "noosphere"
+  ],
+  "icon": "icon.png",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:nous"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "nous",
+        "aliases": ["NOUS", "nous", "Νοῦς"],
+        "extensions": [".nous"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nous",
+        "scopeName": "source.nous",
+        "path": "./syntaxes/nous.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "nous.compile",
+        "title": "NOUS: Compile",
+        "category": "NOUS"
+      },
+      {
+        "command": "nous.run",
+        "title": "NOUS: Run",
+        "category": "NOUS"
+      },
+      {
+        "command": "nous.deploy",
+        "title": "NOUS: Deploy Topology",
+        "category": "NOUS"
+      }
+    ],
+    "configuration": {
+      "title": "NOUS",
+      "properties": {
+        "nous.pythonPath": {
+          "type": "string",
+          "default": "python3",
+          "description": "Path to Python 3.11+ interpreter"
+        },
+        "nous.parserPath": {
+          "type": "string",
+          "default": "/opt/aetherlang_agents/nous",
+          "description": "Path to NOUS parser directory (containing parser.py, validator.py, etc.)"
+        }
+      }
+    },
+    "snippets": [
+      {
+        "language": "nous",
+        "path": "./snippets.json"
+      }
+    ]
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0"
+  }
+}

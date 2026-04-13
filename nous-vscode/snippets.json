@@ -1,0 +1,182 @@
+{
+  "World": {
+    "prefix": "world",
+    "body": [
+      "world ${1:WorldName} {",
+      "\tlaw ${2:CostCeiling} = \\$${3:0.10} per cycle",
+      "\tlaw ${4:MaxLatency} = ${5:30s}",
+      "\theartbeat = ${6:5m}",
+      "\ttimezone = \"${7:UTC}\"",
+      "}"
+    ],
+    "description": "NOUS world declaration"
+  },
+  "Soul": {
+    "prefix": "soul",
+    "body": [
+      "soul ${1:SoulName} {",
+      "\tmind: ${2:model-name} @ ${3|Tier0A,Tier0B,Tier1,Tier2,Tier3|}",
+      "\tsenses: [${4:tool_name}]",
+      "",
+      "\tmemory {",
+      "\t\t${5:field}: ${6|string,int,float,bool,[string]|} = ${7:\"\"}}",
+      "\t}",
+      "",
+      "\tinstinct {",
+      "\t\t${0}",
+      "\t}",
+      "",
+      "\theal {",
+      "\t\ton timeout => retry(${8:3}, ${9|fixed,exponential|})",
+      "\t}",
+      "}"
+    ],
+    "description": "NOUS soul declaration"
+  },
+  "Message": {
+    "prefix": "message",
+    "body": [
+      "message ${1:MessageName} {",
+      "\t${2:field}: ${3|string,int,float,bool|}",
+      "}"
+    ],
+    "description": "NOUS message type declaration"
+  },
+  "Nervous System": {
+    "prefix": "nervous_system",
+    "body": [
+      "nervous_system {",
+      "\t${1:Source} -> ${2:Target}",
+      "}"
+    ],
+    "description": "NOUS nervous system routing"
+  },
+  "Topology": {
+    "prefix": "topology",
+    "body": [
+      "topology {",
+      "\t${1:server_name}: \"${2:host}\" {",
+      "\t\tsouls: [${3:Soul1, Soul2}]",
+      "\t\tport: ${4:9100}",
+      "\t}",
+      "}"
+    ],
+    "description": "NOUS distributed topology"
+  },
+  "Let Sense": {
+    "prefix": "let sense",
+    "body": [
+      "let ${1:result} = sense ${2:tool_name}(${3:arg}: ${4:value})"
+    ],
+    "description": "Bind tool result to variable"
+  },
+  "Speak": {
+    "prefix": "speak",
+    "body": [
+      "speak ${1:MessageType}(${2:field}: ${3:value})"
+    ],
+    "description": "Send message to channel"
+  },
+  "Speak Cross-World": {
+    "prefix": "speak @",
+    "body": [
+      "speak @${1:World}::${2:MessageType}(${3:field}: ${4:value})"
+    ],
+    "description": "Send cross-world message"
+  },
+  "Listen": {
+    "prefix": "listen",
+    "body": [
+      "let ${1:msg} = listen ${2:Soul}::${3:MessageType}"
+    ],
+    "description": "Receive message from soul channel"
+  },
+  "If Statement": {
+    "prefix": "if",
+    "body": [
+      "if ${1:condition} {",
+      "\t${0}",
+      "}"
+    ],
+    "description": "Conditional block"
+  },
+  "If-Else": {
+    "prefix": "ifelse",
+    "body": [
+      "if ${1:condition} {",
+      "\t${2}",
+      "} else {",
+      "\t${0}",
+      "}"
+    ],
+    "description": "Conditional with else"
+  },
+  "For Loop": {
+    "prefix": "for",
+    "body": [
+      "for ${1:item} in ${2:collection} {",
+      "\t${0}",
+      "}"
+    ],
+    "description": "For loop"
+  },
+  "Guard": {
+    "prefix": "guard",
+    "body": [
+      "guard ${1:condition}"
+    ],
+    "description": "Guard — exit instinct if false"
+  },
+  "Remember": {
+    "prefix": "remember",
+    "body": [
+      "remember ${1:field} = ${2:value}"
+    ],
+    "description": "Update soul memory"
+  },
+  "Evolution": {
+    "prefix": "evolution",
+    "body": [
+      "evolution {",
+      "\tschedule: ${1:6}:${2:00} ${3:daily}",
+      "\tfitness: ${4:metric}",
+      "",
+      "\tmutate ${5:Soul}.dna {",
+      "\t\tstrategy: ${6|gaussian,uniform,adaptive|}(${7:step}: ${8:0.1})",
+      "\t\tsurvive_if: ${9:fitness > 0.5}",
+      "\t}",
+      "}"
+    ],
+    "description": "NOUS evolution block"
+  },
+  "Heal Block": {
+    "prefix": "heal",
+    "body": [
+      "heal {",
+      "\ton ${1:timeout} => ${2|retry,retry(3\\, exponential),fallback(SoulName),hibernate,alert(telegram)|}",
+      "}"
+    ],
+    "description": "Error recovery block"
+  },
+  "Law Cost": {
+    "prefix": "law cost",
+    "body": [
+      "law ${1:CostCeiling} = \\$${2:0.10} per cycle"
+    ],
+    "description": "Cost law with per-cycle limit"
+  },
+  "Law Currency": {
+    "prefix": "law currency",
+    "body": [
+      "law ${1:MaxPositionSize} = \\$${2:500}"
+    ],
+    "description": "Standalone currency law"
+  },
+  "Law Boolean": {
+    "prefix": "law bool",
+    "body": [
+      "law ${1:NoLiveTrading} = ${2|true,false|}"
+    ],
+    "description": "Boolean law"
+  }
+}
