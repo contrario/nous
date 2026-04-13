@@ -404,6 +404,13 @@ def cmd_version(_args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_shell(args: argparse.Namespace) -> int:
+    from shell import run_shell
+    source = args.file if hasattr(args, "file") and args.file else None
+    run_shell(source)
+    return 0
+
+
 def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
     prefix = "  " * indent
     if isinstance(data, dict):
@@ -461,6 +468,9 @@ def main() -> int:
     p.add_argument("file")
     p.add_argument("action", choices=["show", "status", "stop"], nargs="?", default="show")
 
+    p = sub.add_parser("shell", help="Interactive REPL")
+    p.add_argument("file", nargs="?", default=None)
+
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
@@ -468,7 +478,7 @@ def main() -> int:
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
         "info": cmd_info, "bridge": cmd_bridge, "deploy": cmd_deploy,
-        "topology": cmd_topology, "version": cmd_version,
+        "topology": cmd_topology, "shell": cmd_shell, "version": cmd_version,
     }
     return commands[args.command](args)
 
