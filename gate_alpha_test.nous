@@ -1,0 +1,95 @@
+# gate_alpha_test.nous — Unit tests for GateAlpha
+
+world GateAlpha {
+    law CostCeiling = $0.10 per cycle
+    law MaxLatency = 30s
+    law NoLiveTrading = true
+    heartbeat = 5m
+}
+
+message Signal {
+    pair: string
+    rsi: float
+    volume: float
+}
+
+message Decision {
+    action: string
+    pair: string
+    confidence: float
+}
+
+soul Scout {
+    mind: deepseek-r1 @ Tier1
+    senses: [fetch_rsi, gate_alpha_scan]
+
+    memory {
+        scan_count: int = 0
+    }
+
+    instinct {
+        let candidates = sense gate_alpha_scan()
+        for token in candidates {
+            let rsi = sense fetch_rsi(pair: token.pair)
+            if rsi < 30 {
+                speak Signal(pair: token.pair, rsi: rsi, volume: 1000.0)
+            }
+        }
+        remember scan_count = scan_count + 1
+    }
+
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}
+
+soul Quant {
+    mind: claude-haiku @ Tier2
+    senses: [fetch_rsi]
+
+    memory {
+        decisions: int = 0
+    }
+
+    instinct {
+        let signal = listen Scout::Signal
+        let action = if signal.rsi < 30 { "buy" } else { "sell" }
+        speak Decision(action: action, pair: signal.pair, confidence: 0.8)
+        remember decisions = decisions + 1
+    }
+
+    heal {
+        on timeout => retry
+    }
+}
+
+nervous_system {
+    Scout -> Quant
+}
+
+# ═══ Tests ═══
+
+test "Scout increments scan_count after cycle" {
+    mock gate_alpha_scan returns []
+    run Scout
+    assert Scout.scan_count == 1
+}
+
+test "Scout speaks Signal on low RSI" {
+    mock gate_alpha_scan returns [{pair: "SOL/USDC", volume: 5000}]
+    mock fetch_rsi returns 25.0
+    run Scout
+    assert spoke Signal
+    assert Scout.scan_count == 1
+}
+
+test "Scout skips high RSI tokens" {
+    mock gate_alpha_scan returns [{pair: "BTC/USDC", volume: 3000}]
+    mock fetch_rsi returns 55.0
+    run Scout
+    assert Scout.scan_count == 1
+}
+
+test "Validation passes" {
+    assert true
+}

@@ -22,6 +22,7 @@ from ast_nodes import (
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     Tier, TopologyNode, TopologyServerNode,
+    TestNode, TestAssertNode, TestMockNode, TestRunNode,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
@@ -605,6 +606,37 @@ class NousTransformer(Transformer):
         rules = [i for i in items[1:] if isinstance(i, PerceptionRuleNode)]
         return PerceptionNode(rules=rules)
 
+    # ── Test ──
+
+    def test_assert_expr(self, items: list) -> TestAssertNode:
+        s = self._strip(items)
+        return TestAssertNode(kind="expr", expr=s[0])
+
+    def test_assert_field(self, items: list) -> TestAssertNode:
+        s = self._strip(items)
+        return TestAssertNode(kind="field", soul=s[0], field=s[1], op=s[2], expected=s[3])
+
+    def test_assert_spoke(self, items: list) -> TestAssertNode:
+        s = self._strip(items)
+        return TestAssertNode(kind="spoke", message_type=s[0])
+
+    def test_mock_tool(self, items: list) -> TestMockNode:
+        s = self._strip(items)
+        return TestMockNode(tool_name=s[0], returns=s[1])
+
+    def test_run_soul(self, items: list) -> TestRunNode:
+        s = self._strip(items)
+        return TestRunNode(soul_name=s[0])
+
+    def test_stmt(self, items: list) -> Any:
+        return items[0]
+
+    def test_decl(self, items: list) -> TestNode:
+        s = self._strip(items)
+        desc = s[0] if s else ""
+        stmts = [i for i in s[1:] if isinstance(i, (TestAssertNode, TestMockNode, TestRunNode))]
+        return TestNode(description=desc, stmts=stmts)
+
     # ── Topology ──
 
     def topo_body(self, items: list) -> dict:
@@ -660,6 +692,8 @@ class NousTransformer(Transformer):
                 program.perception = item
             elif isinstance(item, TopologyNode):
                 program.topology = item
+            elif isinstance(item, TestNode):
+                program.tests.append(item)
         return program
 
 

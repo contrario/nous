@@ -411,6 +411,17 @@ def cmd_shell(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_test(args: argparse.Namespace) -> int:
+    from test_runner import run_tests, print_results
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    suite = run_tests(str(source), verbose=args.verbose if hasattr(args, "verbose") else False)
+    print_results(suite)
+    return 0 if suite.ok else 1
+
+
 def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
     prefix = "  " * indent
     if isinstance(data, dict):
@@ -471,6 +482,10 @@ def main() -> int:
     p = sub.add_parser("shell", help="Interactive REPL")
     p.add_argument("file", nargs="?", default=None)
 
+    p = sub.add_parser("test", help="Run .nous test blocks")
+    p.add_argument("file")
+    p.add_argument("-v", "--verbose", action="store_true")
+
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
@@ -478,7 +493,8 @@ def main() -> int:
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
         "info": cmd_info, "bridge": cmd_bridge, "deploy": cmd_deploy,
-        "topology": cmd_topology, "shell": cmd_shell, "version": cmd_version,
+        "topology": cmd_topology, "shell": cmd_shell, "test": cmd_test,
+        "version": cmd_version,
     }
     return commands[args.command](args)
 

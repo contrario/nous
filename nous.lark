@@ -13,6 +13,7 @@ top_level: world_decl
          | perception_decl
          | deploy_decl
          | topology_decl
+         | test_decl
 
 // ═══════════════════════════════════════════
 // WORLD
@@ -182,6 +183,20 @@ deploy_body: NAME ":" expr
 topology_decl: "topology" "{" topo_server* "}"
 topo_server: NAME ":" STRING "{" topo_body* "}"
 topo_body: NAME ":" expr
+
+// ═══════════════════════════════════════════
+// TEST
+// ═══════════════════════════════════════════
+
+test_decl: TEST STRING "{" test_stmt* "}"
+test_stmt: test_assert | test_mock | test_run
+test_assert: "assert" expr                           -> test_assert_expr
+           | "assert" NAME "." NAME COMP_OP expr     -> test_assert_field
+           | "assert" "spoke" NAME                   -> test_assert_spoke
+test_mock: "mock" NAME "returns" expr                -> test_mock_tool
+test_run: "run" NAME                                 -> test_run_soul
+
+TEST.2: "test"
 
 // ═══════════════════════════════════════════
 // EXPRESSIONS

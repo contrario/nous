@@ -379,6 +379,34 @@ class TopologyNode(NousNode):
 
 
 # ═══════════════════════════════════════════
+# TEST
+# ═══════════════════════════════════════════
+
+class TestAssertNode(NousNode):
+    kind: str
+    expr: Any = None
+    soul: Optional[str] = None
+    field: Optional[str] = None
+    op: Optional[str] = None
+    expected: Any = None
+    message_type: Optional[str] = None
+
+
+class TestMockNode(NousNode):
+    tool_name: str
+    returns: Any
+
+
+class TestRunNode(NousNode):
+    soul_name: str
+
+
+class TestNode(NousNode):
+    description: str
+    stmts: list[Any] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
 # PROGRAM (ROOT)
 # ═══════════════════════════════════════════
 
@@ -391,3 +419,4 @@ class NousProgram(NousNode):
     evolution: Optional[EvolutionNode] = None
     perception: Optional[PerceptionNode] = None
     topology: Optional[TopologyNode] = None
+    tests: list[TestNode] = Field(default_factory=list)
