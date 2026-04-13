@@ -422,6 +422,30 @@ def cmd_test(args: argparse.Namespace) -> int:
     return 0 if suite.ok else 1
 
 
+def cmd_pkg(args: argparse.Namespace) -> int:
+    from package_manager import cmd_install, cmd_uninstall, cmd_list, cmd_init, cmd_search
+    action = args.action
+    if action == "install":
+        if not args.pkg_name:
+            print("Usage: nous pkg install <name>", file=sys.stderr)
+            return 1
+        ver = args.pkg_version if hasattr(args, "pkg_version") and args.pkg_version else "latest"
+        return cmd_install(args.pkg_name, ver)
+    elif action == "uninstall":
+        if not args.pkg_name:
+            print("Usage: nous pkg uninstall <name>", file=sys.stderr)
+            return 1
+        return cmd_uninstall(args.pkg_name)
+    elif action == "list":
+        return cmd_list()
+    elif action == "init":
+        return cmd_init(args.pkg_name)
+    elif action == "search":
+        return cmd_search(args.pkg_name or "")
+    print(f"Unknown pkg action: {action}", file=sys.stderr)
+    return 1
+
+
 def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
     prefix = "  " * indent
     if isinstance(data, dict):
@@ -486,6 +510,11 @@ def main() -> int:
     p.add_argument("file")
     p.add_argument("-v", "--verbose", action="store_true")
 
+    p = sub.add_parser("pkg", help="Package manager")
+    p.add_argument("action", choices=["install", "uninstall", "list", "init", "search"])
+    p.add_argument("pkg_name", nargs="?", default=None)
+    p.add_argument("pkg_version", nargs="?", default="latest")
+
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
@@ -494,7 +523,7 @@ def main() -> int:
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
         "info": cmd_info, "bridge": cmd_bridge, "deploy": cmd_deploy,
         "topology": cmd_topology, "shell": cmd_shell, "test": cmd_test,
-        "version": cmd_version,
+        "pkg": cmd_pkg, "version": cmd_version,
     }
     return commands[args.command](args)
 
