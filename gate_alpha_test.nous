@@ -76,7 +76,7 @@ test "Scout increments scan_count after cycle" {
 }
 
 test "Scout speaks Signal on low RSI" {
-    mock gate_alpha_scan returns [{pair: "SOL/USDC", volume: 5000}]
+    mock gate_alpha_scan returns [%{pair: "SOL/USDC", volume: 5000}]
     mock fetch_rsi returns 25.0
     run Scout
     assert spoke Signal
@@ -84,7 +84,7 @@ test "Scout speaks Signal on low RSI" {
 }
 
 test "Scout skips high RSI tokens" {
-    mock gate_alpha_scan returns [{pair: "BTC/USDC", volume: 3000}]
+    mock gate_alpha_scan returns [%{pair: "BTC/USDC", volume: 3000}]
     mock fetch_rsi returns 55.0
     run Scout
     assert Scout.scan_count == 1

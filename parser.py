@@ -26,6 +26,15 @@ from ast_nodes import (
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
+_PARSER_CACHE: Lark | None = None
+
+
+def _get_parser() -> Lark:
+    global _PARSER_CACHE
+    if _PARSER_CACHE is None:
+        grammar = GRAMMAR_PATH.read_text()
+        _PARSER_CACHE = Lark(grammar, parser="lalr", start="start")
+    return _PARSER_CACHE
 
 
 class NousTransformer(Transformer):
@@ -330,10 +339,10 @@ class NousTransformer(Transformer):
         return RememberNode(name=items[1], value=items[2])
 
     def speak_stmt(self, items: list) -> SpeakNode:
-        msg = items[1]
-        if isinstance(msg, dict) and msg.get("kind") == "message_construct":
-            return SpeakNode(message_type=msg["type"], args=msg.get("args", {}))
-        return SpeakNode(message_type=str(msg))
+        s = self._strip(items)
+        msg_name = s[0]
+        args = s[1] if len(s) > 1 and isinstance(s[1], dict) else {}
+        return SpeakNode(message_type=str(msg_name), args=args)
 
     def listen_expr(self, items: list) -> LetNode:
         s = self._strip(items)
@@ -369,15 +378,6 @@ class NousTransformer(Transformer):
         else_body: list[Any] = s[2] if len(s) > 2 and isinstance(s[2], list) else []
         return IfNode(condition=cond, then_body=then_body, else_body=else_body)
 
-    def then_body(self, items: list) -> list[Any]:
-        return [i for i in items if not isinstance(i, Token)]
-
-    def else_body(self, items: list) -> list[Any]:
-        return [i for i in items if not isinstance(i, Token)]
-
-    def for_body(self, items: list) -> list[Any]:
-        return [i for i in items if not isinstance(i, Token)]
-
     def for_stmt(self, items: list) -> ForNode:
         s = self._strip(items)
         var_name = s[0]
@@ -390,8 +390,12 @@ class NousTransformer(Transformer):
 
     # ── Instinct ──
 
+    def stmt_body(self, items: list) -> list[Any]:
+        return [i for i in items if not isinstance(i, Token)]
+
     def instinct_block(self, items: list) -> InstinctNode:
-        stmts = [i for i in items[1:] if not isinstance(i, Token)]
+        s = self._strip(items)
+        stmts = s[0] if s and isinstance(s[0], list) else []
         return InstinctNode(statements=stmts)
 
     # ── DNA ──
@@ -699,8 +703,7 @@ class NousTransformer(Transformer):
 
 def parse_nous(source: str) -> NousProgram:
     """Parse a .nous source string into a Living AST."""
-    grammar = GRAMMAR_PATH.read_text()
-    lark_parser = Lark(grammar, parser="earley", start="start")
+    lark_parser = _get_parser()
     tree = lark_parser.parse(source)
     transformer = NousTransformer()
     return transformer.transform(tree)

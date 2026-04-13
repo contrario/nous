@@ -1,5 +1,6 @@
-// nous.lark — EBNF Grammar for NOUS v1.0
+// nous.lark — EBNF Grammar for NOUS v1.8.0
 // The Living Language | Noosphere Project
+// Parser: LALR with keyword priority .2
 // Author: Hlias Staurou (Hlia) + Claude
 
 start: top_level+
@@ -57,7 +58,10 @@ memory_block: MEMORY "{" field_decl* "}"
 field_decl: NAME ":" type_expr "=" expr
 
 // ── Instinct ──
-instinct_block: INSTINCT "{" statement* "}"
+instinct_block: INSTINCT "{" stmt_body "}"
+
+// ── Shared statement body (CRITICAL: single rule for LALR) ──
+stmt_body: statement*
 
 statement: let_stmt
          | remember_stmt
@@ -74,17 +78,13 @@ let_stmt: LET NAME "=" expr
 remember_stmt: REMEMBER NAME "=" expr
              | REMEMBER NAME "+=" expr
 
-speak_stmt: SPEAK message_construct
+speak_stmt: SPEAK NAME "(" arg_list? ")"
 listen_expr: LET NAME "=" LISTEN soul_ref "::" NAME
 
 guard_stmt: GUARD expr
 
-if_stmt: IF expr "{" then_body "}" (ELSE "{" else_body "}")?
-for_stmt: FOR NAME IN expr "{" for_body "}"
-
-then_body: statement*
-else_body: statement*
-for_body: statement*
+if_stmt: IF expr "{" stmt_body "}" (ELSE "{" stmt_body "}")?
+for_stmt: FOR NAME IN expr "{" stmt_body "}"
 sleep_stmt: SLEEP INT CYCLE
 
 sense_call: SENSE NAME "(" arg_list? ")"
@@ -196,8 +196,6 @@ test_assert: "assert" expr                           -> test_assert_expr
 test_mock: "mock" NAME "returns" expr                -> test_mock_tool
 test_run: "run" NAME                                 -> test_run_soul
 
-TEST.2: "test"
-
 // ═══════════════════════════════════════════
 // EXPRESSIONS
 // ═══════════════════════════════════════════
@@ -233,15 +231,12 @@ MUL_OP: "*" | "/" | "%"
      | soul_ref "::" NAME                          -> soul_field_ref
      | NAME                                        -> name_ref
      | "[" expr_list? "]"                          -> list_lit
-     | "{" kv_list? "}"                            -> map_lit
-     | message_construct
+     | "%{" kv_list? "}"                           -> map_lit
      | inline_if
      | "(" expr ")"
 
 inline_if: IF expr "{" expr "}" ELSE "{" expr "}"
 
-message_construct: NAME "(" kv_list? ")"           -> msg_positional
-                 | NAME "{" kv_list? "}"            -> msg_braced
 
 arg_list: arg ("," arg)*
 arg: (NAME ":")? expr
@@ -306,8 +301,6 @@ CONSTITUTIONAL.2: "constitutional"
 PER.2: "per"
 CYCLE.2: "cycle"
 BOOL.2: "true" | "false"
-
-// Additional keywords for LALR
 LET.2: "let"
 IF.2: "if"
 ELSE.2: "else"
@@ -315,6 +308,7 @@ FOR.2: "for"
 IN.2: "in"
 ON.2: "on"
 MATCH.2: "match"
+TEST.2: "test"
 TIER.2: /Tier[0-3][A-B]?/
 
 // ═══════════════════════════════════════════
