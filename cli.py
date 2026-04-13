@@ -446,6 +446,22 @@ def cmd_pkg(args: argparse.Namespace) -> int:
     return 1
 
 
+def cmd_docs(args: argparse.Namespace) -> int:
+    from docs_generator import generate_docs_file
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    out = args.output if hasattr(args, "output") and args.output else None
+    try:
+        result = generate_docs_file(str(source), out)
+        print(f"✓ Documentation generated: {result}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+
 def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
     prefix = "  " * indent
     if isinstance(data, dict):
@@ -515,6 +531,10 @@ def main() -> int:
     p.add_argument("pkg_name", nargs="?", default=None)
     p.add_argument("pkg_version", nargs="?", default="latest")
 
+    p = sub.add_parser("docs", help="Generate HTML documentation")
+    p.add_argument("file")
+    p.add_argument("-o", "--output")
+
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
@@ -523,7 +543,7 @@ def main() -> int:
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
         "info": cmd_info, "bridge": cmd_bridge, "deploy": cmd_deploy,
         "topology": cmd_topology, "shell": cmd_shell, "test": cmd_test,
-        "pkg": cmd_pkg, "version": cmd_version,
+        "pkg": cmd_pkg, "docs": cmd_docs, "version": cmd_version,
     }
     return commands[args.command](args)
 
