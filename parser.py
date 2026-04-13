@@ -23,6 +23,7 @@ from ast_nodes import (
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     Tier, TopologyNode, TopologyServerNode,
     TestNode, TestAssertNode, TestMockNode, TestRunNode,
+    ImportNode,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
@@ -674,6 +675,12 @@ class NousTransformer(Transformer):
                 config[k] = v
         return {"kind": "deploy", "name": name, "config": config}
 
+    # ── Import ──
+
+    def import_decl(self, items: list) -> ImportNode:
+        s = self._strip(items)
+        return ImportNode(path=str(s[0]))
+
     # ── Top-Level ──
 
     def top_level(self, items: list) -> Any:
@@ -698,6 +705,8 @@ class NousTransformer(Transformer):
                 program.topology = item
             elif isinstance(item, TestNode):
                 program.tests.append(item)
+            elif isinstance(item, ImportNode):
+                program.imports.append(item)
         return program
 
 

@@ -15,6 +15,15 @@ top_level: world_decl
          | deploy_decl
          | topology_decl
          | test_decl
+         | import_decl
+
+// ═══════════════════════════════════════════
+// IMPORT
+// ═══════════════════════════════════════════
+
+import_decl: IMPORT STRING
+           | IMPORT NAME
+IMPORT.2: "import"
 
 // ═══════════════════════════════════════════
 // WORLD

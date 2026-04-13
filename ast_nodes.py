@@ -406,6 +406,10 @@ class TestNode(NousNode):
     stmts: list[Any] = Field(default_factory=list)
 
 
+class ImportNode(NousNode):
+    path: str
+
+
 # ═══════════════════════════════════════════
 # PROGRAM (ROOT)
 # ═══════════════════════════════════════════
@@ -420,3 +424,4 @@ class NousProgram(NousNode):
     perception: Optional[PerceptionNode] = None
     topology: Optional[TopologyNode] = None
     tests: list[TestNode] = Field(default_factory=list)
+    imports: list[ImportNode] = Field(default_factory=list)

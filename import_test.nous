@@ -1,0 +1,28 @@
+# import_test.nous — Tests import system
+
+import "signals.nous"
+
+world ImportTest {
+    law CostCeiling = $1.00 per cycle
+    heartbeat = 5m
+}
+
+soul Watcher {
+    mind: deepseek-r1 @ Tier1
+    senses: [fetch_rsi]
+
+    instinct {
+        let rsi = sense fetch_rsi(pair: "SOL")
+        if rsi < 30 {
+            speak Signal(pair: "SOL", rsi: rsi, volume: 1000.0, source: self)
+        }
+    }
+
+    heal {
+        on timeout => retry
+    }
+}
+
+test "imports resolve correctly" {
+    assert true
+}

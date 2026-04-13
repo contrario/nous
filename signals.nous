@@ -1,0 +1,14 @@
+# signals.nous — Shared message types
+
+message Signal {
+    pair: string
+    rsi: float
+    volume: float
+    source: string
+}
+
+message Alert {
+    level: string
+    detail: string
+    source: string
+}
