@@ -477,6 +477,17 @@ def cmd_profile(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_dashboard(args: argparse.Namespace) -> int:
+    from dashboard import start_dashboard
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    port = args.port if hasattr(args, "port") else 8080
+    start_dashboard(str(source), port)
+    return 0
+
+
 def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
     prefix = "  " * indent
     if isinstance(data, dict):
@@ -553,6 +564,10 @@ def main() -> int:
     p = sub.add_parser("profile", help="Profile .nous program")
     p.add_argument("file")
 
+    p = sub.add_parser("dashboard", help="Web monitoring dashboard")
+    p.add_argument("file")
+    p.add_argument("--port", type=int, default=8080)
+
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
@@ -562,7 +577,7 @@ def main() -> int:
         "info": cmd_info, "bridge": cmd_bridge, "deploy": cmd_deploy,
         "topology": cmd_topology, "shell": cmd_shell, "test": cmd_test,
         "pkg": cmd_pkg, "docs": cmd_docs, "profile": cmd_profile,
-        "version": cmd_version,
+        "dashboard": cmd_dashboard, "version": cmd_version,
     }
     return commands[args.command](args)
 
