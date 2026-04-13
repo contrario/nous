@@ -1,0 +1,2201 @@
+{
+  "version": "noesis-1.0",
+  "timestamp": 1776068205.2274168,
+  "atom_count": 70,
+  "atoms": [
+    {
+      "id": "ff75b0309424d441",
+      "patterns": [
+        "sun",
+        "type",
+        "main",
+        "sequence",
+        "star",
+        "center",
+        "solar",
+        "system"
+      ],
+      "relations": {
+        "subject": "sun",
+        "context": "system",
+        "predicate": "type",
+        "object": "main",
+        "is_a": "type main sequence star center solar system"
+      },
+      "template": "The Sun is a G-type main-sequence star at the center of the Solar System.",
+      "level": 3,
+      "confidence": 0.8200000000000001,
+      "usage_count": 1,
+      "success_count": 1,
+      "birth": 1776067113.2526004,
+      "source": "corpus_0",
+      "tags": [
+        "sequence",
+        "main",
+        "star",
+        "type"
+      ]
+    },
+    {
+      "id": "2414a37ddddbe2e4",
+      "patterns": [
+        "contains",
+        "99",
+        "86",
+        "total",
+        "mass",
+        "solar",
+        "system"
+      ],
+      "relations": {
+        "subject": "contains",
+        "context": "system",
+        "predicate": "99",
+        "object": "86"
+      },
+      "template": "It contains 99.86% of the total mass of the Solar System.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2526457,
+      "source": "corpus_0",
+      "tags": [
+        "mass",
+        "total",
+        "contains"
+      ]
+    },
+    {
+      "id": "3ee11016e2c9a994",
+      "patterns": [
+        "solar",
+        "system"
+      ],
+      "relations": {},
+      "template": "solar system",
+      "level": 2,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776067113.252657,
+      "source": "corpus_0",
+      "tags": [
+        "system",
+        "solar"
+      ]
+    },
+    {
+      "id": "f0a0eb4ddf290fad",
+      "patterns": [
+        "sun",
+        "core",
+        "temperature",
+        "reaches",
+        "approximately",
+        "15",
+        "million",
+        "degrees"
+      ],
+      "relations": {
+        "subject": "sun",
+        "context": "celsius",
+        "predicate": "core",
+        "object": "temperature"
+      },
+      "template": "The Sun's core temperature reaches approximately 15 million degrees Celsius.",
+      "level": 3,
+      "confidence": 0.8200000000000001,
+      "usage_count": 2,
+      "success_count": 1,
+      "birth": 1776067113.2526798,
+      "source": "corpus_0",
+      "tags": [
+        "approximately",
+        "core",
+        "temperature",
+        "reaches"
+      ]
+    },
+    {
+      "id": "5367509ac9912862",
+      "patterns": [
+        "nuclear",
+        "fusion",
+        "sun",
+        "converts",
+        "hydrogen",
+        "helium",
+        "releasing",
+        "enormous"
+      ],
+      "relations": {
+        "subject": "nuclear",
+        "context": "energy",
+        "predicate": "fusion",
+        "object": "sun"
+      },
+      "template": "Nuclear fusion in the Sun converts hydrogen into helium, releasing enormous energy.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2527106,
+      "source": "corpus_0",
+      "tags": [
+        "hydrogen",
+        "fusion",
+        "nuclear",
+        "converts"
+      ]
+    },
+    {
+      "id": "e129f6e27b40e310",
+      "patterns": [
+        "light",
+        "sun",
+        "takes",
+        "minutes",
+        "20",
+        "seconds",
+        "reach",
+        "earth"
+      ],
+      "relations": {
+        "subject": "light",
+        "context": "earth",
+        "predicate": "sun",
+        "object": "takes"
+      },
+      "template": "Light from the Sun takes about 8 minutes and 20 seconds to reach Earth.",
+      "level": 3,
+      "confidence": 0.8200000000000001,
+      "usage_count": 1,
+      "success_count": 1,
+      "birth": 1776067113.2527418,
+      "source": "corpus_0",
+      "tags": [
+        "light",
+        "takes",
+        "minutes"
+      ]
+    },
+    {
+      "id": "e31a2cb8543559dc",
+      "patterns": [
+        "moon",
+        "earth",
+        "natural",
+        "satellite"
+      ],
+      "relations": {
+        "subject": "moon",
+        "context": "satellite",
+        "predicate": "earth",
+        "object": "natural",
+        "is_a": "earth natural satellite"
+      },
+      "template": "The Moon is Earth's only natural satellite.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2529082,
+      "source": "corpus_1",
+      "tags": [
+        "moon",
+        "earth",
+        "satellite",
+        "natural"
+      ]
+    },
+    {
+      "id": "8fdbc90eb7a152c4",
+      "patterns": [
+        "orbits",
+        "earth",
+        "average",
+        "distance",
+        "384",
+        "400",
+        "kilometers"
+      ],
+      "relations": {
+        "subject": "orbits",
+        "context": "kilometers",
+        "predicate": "earth",
+        "object": "average"
+      },
+      "template": "It orbits Earth at an average distance of 384,400 kilometers.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2529287,
+      "source": "corpus_1",
+      "tags": [
+        "orbits",
+        "distance",
+        "earth",
+        "average"
+      ]
+    },
+    {
+      "id": "ed833d17d72d33fc",
+      "patterns": [
+        "moon",
+        "gravitational",
+        "influence",
+        "produces",
+        "ocean",
+        "tides",
+        "earth"
+      ],
+      "relations": {
+        "subject": "moon",
+        "context": "earth",
+        "predicate": "gravitational",
+        "object": "influence"
+      },
+      "template": "The Moon's gravitational influence produces ocean tides on Earth.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2529538,
+      "source": "corpus_1",
+      "tags": [
+        "moon",
+        "ocean",
+        "gravitational",
+        "influence",
+        "produces"
+      ]
+    },
+    {
+      "id": "a457e484d610cab2",
+      "patterns": [
+        "side",
+        "moon",
+        "always",
+        "faces",
+        "earth",
+        "due",
+        "tidal",
+        "locking"
+      ],
+      "relations": {
+        "subject": "side",
+        "context": "locking",
+        "predicate": "moon",
+        "object": "always"
+      },
+      "template": "The same side of the Moon always faces Earth due to tidal locking.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.252978,
+      "source": "corpus_1",
+      "tags": [
+        "moon",
+        "always",
+        "faces",
+        "side",
+        "earth"
+      ]
+    },
+    {
+      "id": "48ef128251b0aa6f",
+      "patterns": [
+        "moon",
+        "atmosphere",
+        "liquid",
+        "water",
+        "surface"
+      ],
+      "relations": {
+        "subject": "moon",
+        "context": "surface",
+        "predicate": "atmosphere",
+        "object": "liquid"
+      },
+      "template": "The Moon has no atmosphere and no liquid water on its surface.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.253134,
+      "source": "corpus_1",
+      "tags": [
+        "moon",
+        "liquid",
+        "water",
+        "surface",
+        "atmosphere"
+      ]
+    },
+    {
+      "id": "85f201700d86565a",
+      "patterns": [
+        "mars",
+        "fourth",
+        "planet",
+        "sun",
+        "solar",
+        "system"
+      ],
+      "relations": {
+        "subject": "mars",
+        "context": "system",
+        "predicate": "fourth",
+        "object": "planet",
+        "is_a": "fourth planet sun solar system"
+      },
+      "template": "Mars is the fourth planet from the Sun in our Solar System.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776067113.2533522,
+      "source": "corpus_2",
+      "tags": [
+        "mars",
+        "fourth",
+        "planet",
+        "solar"
+      ]
+    },
+    {
+      "id": "128053c1caebcae2",
+      "patterns": [
+        "mars",
+        "often",
+        "called",
+        "red",
+        "planet",
+        "iron",
+        "oxide",
+        "surface"
+      ],
+      "relations": {
+        "subject": "mars",
+        "context": "surface",
+        "predicate": "often",
+        "object": "called",
+        "is_a": "often called red planet iron oxide surface"
+      },
+      "template": "Mars is often called the Red Planet because of iron oxide on its surface.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.253385,
+      "source": "corpus_2",
+      "tags": [
+        "mars",
+        "often",
+        "called",
+        "planet"
+      ]
+    },
+    {
+      "id": "be3fafc5c7bea8c7",
+      "patterns": [
+        "olympus",
+        "mons",
+        "mars",
+        "largest",
+        "volcano",
+        "solar",
+        "system"
+      ],
+      "relations": {
+        "subject": "olympus mons mars",
+        "context": "system",
+        "predicate": "mons",
+        "object": "mars",
+        "is_a": "largest volcano solar system"
+      },
+      "template": "Olympus Mons on Mars is the largest volcano in the Solar System.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2534158,
+      "source": "corpus_2",
+      "tags": [
+        "mars",
+        "largest",
+        "mons",
+        "volcano",
+        "olympus"
+      ]
+    },
+    {
+      "id": "702f8837001d4fa5",
+      "patterns": [
+        "mars",
+        "two",
+        "small",
+        "moons",
+        "named",
+        "phobos",
+        "deimos"
+      ],
+      "relations": {
+        "subject": "mars",
+        "context": "deimos",
+        "predicate": "two",
+        "object": "small"
+      },
+      "template": "Mars has two small moons named Phobos and Deimos.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.253445,
+      "source": "corpus_2",
+      "tags": [
+        "mars",
+        "moons",
+        "small",
+        "named"
+      ]
+    },
+    {
+      "id": "2ef01895b5b72adf",
+      "patterns": [
+        "average",
+        "temperature",
+        "mars",
+        "minus",
+        "60",
+        "degrees",
+        "celsius"
+      ],
+      "relations": {
+        "subject": "average temperature mars",
+        "context": "celsius",
+        "predicate": "temperature",
+        "object": "mars",
+        "is_a": "minus 60 degrees celsius"
+      },
+      "template": "The average temperature on Mars is about minus 60 degrees Celsius.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2534714,
+      "source": "corpus_2",
+      "tags": [
+        "mars",
+        "average",
+        "minus",
+        "temperature"
+      ]
+    },
+    {
+      "id": "f5cf3e5c094ed184",
+      "patterns": [
+        "degrees",
+        "celsius"
+      ],
+      "relations": {},
+      "template": "degrees celsius",
+      "level": 2,
+      "confidence": 0.75,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2534788,
+      "source": "corpus_2",
+      "tags": [
+        "degrees",
+        "celsius"
+      ]
+    },
+    {
+      "id": "b45648774c4fcf6c",
+      "patterns": [
+        "socrates",
+        "ancient",
+        "greek",
+        "philosopher",
+        "athens",
+        "born",
+        "around",
+        "470"
+      ],
+      "relations": {
+        "subject": "socrates",
+        "context": "bc",
+        "predicate": "ancient",
+        "object": "greek",
+        "is_a": "ancient greek philosopher athens born around 470 bc"
+      },
+      "template": "Socrates was an ancient Greek philosopher from Athens, born around 470 BC.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776067113.2536762,
+      "source": "corpus_3",
+      "tags": [
+        "greek",
+        "ancient",
+        "athens",
+        "socrates",
+        "philosopher"
+      ]
+    },
+    {
+      "id": "687d1cecbc3fed2d",
+      "patterns": [
+        "socrates",
+        "developed",
+        "socratic",
+        "method",
+        "questioning",
+        "stimulate",
+        "critical",
+        "thinking"
+      ],
+      "relations": {
+        "subject": "socrates",
+        "context": "thinking",
+        "predicate": "developed",
+        "object": "socratic"
+      },
+      "template": "Socrates developed the Socratic method of questioning to stimulate critical thinking.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2537131,
+      "source": "corpus_3",
+      "tags": [
+        "socratic",
+        "developed",
+        "socrates",
+        "method",
+        "questioning"
+      ]
+    },
+    {
+      "id": "a460480a35d9cf3e",
+      "patterns": [
+        "socrates",
+        "believed",
+        "wisdom",
+        "begins",
+        "recognizing",
+        "one",
+        "ignorance"
+      ],
+      "relations": {
+        "subject": "socrates",
+        "context": "ignorance",
+        "predicate": "believed",
+        "object": "wisdom"
+      },
+      "template": "Socrates believed that wisdom begins with recognizing one's own ignorance.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2537386,
+      "source": "corpus_3",
+      "tags": [
+        "socrates",
+        "begins",
+        "believed",
+        "wisdom",
+        "recognizing"
+      ]
+    },
+    {
+      "id": "61b3a16af2b23294",
+      "patterns": [
+        "socrates",
+        "sentenced",
+        "death",
+        "drinking",
+        "hemlock",
+        "399",
+        "bc"
+      ],
+      "relations": {
+        "subject": "socrates",
+        "context": "bc",
+        "predicate": "sentenced",
+        "object": "death",
+        "is_a": "sentenced death drinking hemlock 399 bc"
+      },
+      "template": "Socrates was sentenced to death by drinking hemlock in 399 BC.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2537615,
+      "source": "corpus_3",
+      "tags": [
+        "socrates",
+        "death",
+        "hemlock",
+        "sentenced",
+        "drinking"
+      ]
+    },
+    {
+      "id": "95e0ad1f47252c73",
+      "patterns": [
+        "socrates",
+        "left",
+        "written",
+        "works"
+      ],
+      "relations": {
+        "subject": "socrates",
+        "context": "works",
+        "predicate": "left",
+        "object": "written"
+      },
+      "template": "Socrates left no written works;",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776067113.2537906,
+      "source": "corpus_3",
+      "tags": [
+        "written",
+        "works",
+        "socrates",
+        "left"
+      ]
+    },
+    {
+      "id": "d8fea53e659f4d22",
+      "patterns": [
+        "ideas",
+        "survive",
+        "students"
+      ],
+      "relations": {
+        "subject": "ideas",
+        "context": "students",
+        "predicate": "survive",
+        "object": "students"
+      },
+      "template": "his ideas survive through his students.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.253804,
+      "source": "corpus_3",
+      "tags": [
+        "students",
+        "survive",
+        "ideas"
+      ]
+    },
+    {
+      "id": "f098e0efad19ecd0",
+      "patterns": [
+        "plato",
+        "student",
+        "socrates",
+        "founded",
+        "academy",
+        "athens"
+      ],
+      "relations": {
+        "subject": "plato",
+        "context": "athens",
+        "predicate": "student",
+        "object": "socrates",
+        "is_a": "student socrates founded academy athens"
+      },
+      "template": "Plato was a student of Socrates and founded the Academy in Athens.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 3,
+      "success_count": 0,
+      "birth": 1776067113.2539787,
+      "source": "corpus_4",
+      "tags": [
+        "founded",
+        "plato",
+        "academy",
+        "socrates",
+        "student"
+      ]
+    },
+    {
+      "id": "25dc8b0bf225733f",
+      "patterns": [
+        "plato",
+        "proposed",
+        "theory",
+        "forms",
+        "suggesting",
+        "abstract",
+        "perfect",
+        "entities"
+      ],
+      "relations": {
+        "subject": "plato",
+        "context": "world",
+        "predicate": "proposed",
+        "object": "theory"
+      },
+      "template": "Plato proposed the Theory of Forms, suggesting abstract perfect entities exist beyond the physical world.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776067113.254007,
+      "source": "corpus_4",
+      "tags": [
+        "proposed",
+        "plato",
+        "theory",
+        "forms",
+        "suggesting"
+      ]
+    },
+    {
+      "id": "6d5a0359aab3add0",
+      "patterns": [
+        "republic",
+        "one",
+        "plato",
+        "influential",
+        "works",
+        "justice",
+        "governance"
+      ],
+      "relations": {
+        "subject": "republic",
+        "context": "governance",
+        "predicate": "one",
+        "object": "plato",
+        "is_a": "one plato influential works justice governance"
+      },
+      "template": "The Republic is one of Plato's most influential works on justice and governance.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2540412,
+      "source": "corpus_4",
+      "tags": [
+        "plato",
+        "republic",
+        "influential",
+        "works"
+      ]
+    },
+    {
+      "id": "fecdfcd50c667ea7",
+      "patterns": [
+        "plato",
+        "believed",
+        "philosophers",
+        "rule",
+        "kings",
+        "ideal",
+        "state"
+      ],
+      "relations": {
+        "subject": "plato",
+        "context": "state",
+        "predicate": "believed",
+        "object": "philosophers"
+      },
+      "template": "Plato believed philosophers should rule as kings for an ideal state.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776067113.2540793,
+      "source": "corpus_4",
+      "tags": [
+        "rule",
+        "philosophers",
+        "kings",
+        "plato",
+        "believed"
+      ]
+    },
+    {
+      "id": "5b948d4993721158",
+      "patterns": [
+        "plato",
+        "dialogues",
+        "remain",
+        "foundational",
+        "texts",
+        "western",
+        "philosophy"
+      ],
+      "relations": {
+        "subject": "plato",
+        "context": "philosophy",
+        "predicate": "dialogues",
+        "object": "remain"
+      },
+      "template": "Plato's dialogues remain foundational texts in Western philosophy.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776067113.2541063,
+      "source": "corpus_4",
+      "tags": [
+        "foundational",
+        "remain",
+        "plato",
+        "dialogues",
+        "texts"
+      ]
+    },
+    {
+      "id": "7bacdf0ce926622b",
+      "patterns": [
+        "aristotle",
+        "studied",
+        "plato",
+        "academy",
+        "twenty",
+        "years",
+        "founding",
+        "school"
+      ],
+      "relations": {
+        "subject": "aristotle",
+        "context": "lyceum",
+        "predicate": "studied",
+        "object": "plato"
+      },
+      "template": "Aristotle studied at Plato's Academy for twenty years before founding his own school, the Lyceum.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2543309,
+      "source": "corpus_5",
+      "tags": [
+        "aristotle",
+        "plato",
+        "academy",
+        "twenty",
+        "studied"
+      ]
+    },
+    {
+      "id": "cc80b49ad7055b62",
+      "patterns": [
+        "aristotle",
+        "created",
+        "formal",
+        "logic",
+        "syllogism",
+        "method",
+        "deductive",
+        "reasoning"
+      ],
+      "relations": {
+        "subject": "aristotle",
+        "context": "reasoning",
+        "predicate": "created",
+        "object": "formal"
+      },
+      "template": "Aristotle created formal logic and the syllogism as a method of deductive reasoning.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2543647,
+      "source": "corpus_5",
+      "tags": [
+        "aristotle",
+        "created",
+        "formal",
+        "syllogism",
+        "logic"
+      ]
+    },
+    {
+      "id": "1a57b14612a50d76",
+      "patterns": [
+        "aristotle",
+        "classified",
+        "living",
+        "organisms",
+        "considered",
+        "father",
+        "biology"
+      ],
+      "relations": {
+        "subject": "aristotle classified living organisms",
+        "context": "biology",
+        "predicate": "classified",
+        "object": "living",
+        "is_a": "considered father biology"
+      },
+      "template": "Aristotle classified living organisms and is considered the father of biology.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.254394,
+      "source": "corpus_5",
+      "tags": [
+        "aristotle",
+        "classified",
+        "living",
+        "considered",
+        "organisms"
+      ]
+    },
+    {
+      "id": "e7795f81570e619f",
+      "patterns": [
+        "aristotle",
+        "tutored",
+        "alexander",
+        "great",
+        "youth"
+      ],
+      "relations": {
+        "subject": "aristotle",
+        "context": "youth",
+        "predicate": "tutored",
+        "object": "alexander"
+      },
+      "template": "Aristotle tutored Alexander the Great during his youth.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.254419,
+      "source": "corpus_5",
+      "tags": [
+        "aristotle",
+        "tutored",
+        "youth",
+        "alexander",
+        "great"
+      ]
+    },
+    {
+      "id": "a388fa84b13b12ed",
+      "patterns": [
+        "aristotle",
+        "works",
+        "cover",
+        "physics",
+        "metaphysics",
+        "ethics",
+        "politics",
+        "poetics"
+      ],
+      "relations": {
+        "subject": "aristotle",
+        "context": "poetics",
+        "predicate": "works",
+        "object": "cover"
+      },
+      "template": "Aristotle's works cover physics, metaphysics, ethics, politics, and poetics.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2544384,
+      "source": "corpus_5",
+      "tags": [
+        "aristotle",
+        "cover",
+        "metaphysics",
+        "works",
+        "physics"
+      ]
+    },
+    {
+      "id": "fcc6889540f889dd",
+      "patterns": [
+        "alan",
+        "turing",
+        "proposed",
+        "concept",
+        "universal",
+        "computing",
+        "machine",
+        "1936"
+      ],
+      "relations": {
+        "subject": "alan",
+        "context": "1936",
+        "predicate": "turing",
+        "object": "proposed"
+      },
+      "template": "Alan Turing proposed the concept of a universal computing machine in 1936.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2546222,
+      "source": "corpus_6",
+      "tags": [
+        "proposed",
+        "universal",
+        "concept",
+        "alan",
+        "turing"
+      ]
+    },
+    {
+      "id": "c4ef0b808ffbbd9d",
+      "patterns": [
+        "turing",
+        "machine",
+        "mathematical",
+        "model",
+        "defines",
+        "limits",
+        "computation"
+      ],
+      "relations": {
+        "subject": "turing machine",
+        "context": "computation",
+        "predicate": "machine",
+        "object": "mathematical",
+        "is_a": "mathematical model defines limits computation"
+      },
+      "template": "The Turing machine is a mathematical model that defines the limits of computation.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2546594,
+      "source": "corpus_6",
+      "tags": [
+        "machine",
+        "model",
+        "mathematical",
+        "defines",
+        "turing"
+      ]
+    },
+    {
+      "id": "e3337f6db0cffcba",
+      "patterns": [
+        "turing",
+        "played",
+        "crucial",
+        "role",
+        "breaking",
+        "enigma",
+        "code",
+        "world"
+      ],
+      "relations": {
+        "subject": "turing",
+        "context": "ii",
+        "predicate": "played",
+        "object": "crucial"
+      },
+      "template": "Turing played a crucial role in breaking the Enigma code during World War II.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2546892,
+      "source": "corpus_6",
+      "tags": [
+        "played",
+        "breaking",
+        "role",
+        "crucial",
+        "turing"
+      ]
+    },
+    {
+      "id": "4aff7e73f69b2e0f",
+      "patterns": [
+        "turing",
+        "test",
+        "evaluates",
+        "whether",
+        "machine",
+        "exhibit",
+        "intelligent",
+        "behavior"
+      ],
+      "relations": {
+        "subject": "turing",
+        "context": "human",
+        "predicate": "test",
+        "object": "evaluates"
+      },
+      "template": "The Turing test evaluates whether a machine can exhibit intelligent behavior equivalent to a human.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2547228,
+      "source": "corpus_6",
+      "tags": [
+        "machine",
+        "test",
+        "evaluates",
+        "turing",
+        "whether"
+      ]
+    },
+    {
+      "id": "78a5fc113ffdfe31",
+      "patterns": [
+        "turing",
+        "widely",
+        "considered",
+        "father",
+        "theoretical",
+        "computer",
+        "science",
+        "artificial"
+      ],
+      "relations": {
+        "subject": "turing",
+        "context": "intelligence",
+        "predicate": "widely",
+        "object": "considered",
+        "is_a": "widely considered father theoretical computer science artificial intelligence"
+      },
+      "template": "Turing is widely considered the father of theoretical computer science and artificial intelligence.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.254753,
+      "source": "corpus_6",
+      "tags": [
+        "widely",
+        "theoretical",
+        "father",
+        "considered",
+        "turing"
+      ]
+    },
+    {
+      "id": "32158219a77aa8fb",
+      "patterns": [
+        "considered",
+        "father"
+      ],
+      "relations": {},
+      "template": "considered father",
+      "level": 2,
+      "confidence": 0.7,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2547605,
+      "source": "corpus_6",
+      "tags": [
+        "father",
+        "considered"
+      ]
+    },
+    {
+      "id": "058d98f2d61c15ab",
+      "patterns": [
+        "claude",
+        "shannon",
+        "founded",
+        "information",
+        "theory",
+        "1948",
+        "paper"
+      ],
+      "relations": {
+        "subject": "claude",
+        "context": "paper",
+        "predicate": "shannon",
+        "object": "founded"
+      },
+      "template": "Claude Shannon founded information theory with his 1948 paper.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.25495,
+      "source": "corpus_7",
+      "tags": [
+        "founded",
+        "claude",
+        "shannon",
+        "information",
+        "theory"
+      ]
+    },
+    {
+      "id": "9ddc717d200277ca",
+      "patterns": [
+        "shannon",
+        "proved",
+        "information",
+        "quantified",
+        "binary",
+        "digits",
+        "called",
+        "bits"
+      ],
+      "relations": {
+        "subject": "shannon",
+        "context": "bits",
+        "predicate": "proved",
+        "object": "information"
+      },
+      "template": "Shannon proved that information can be quantified in binary digits called bits.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2549822,
+      "source": "corpus_7",
+      "tags": [
+        "binary",
+        "shannon",
+        "information",
+        "proved",
+        "quantified"
+      ]
+    },
+    {
+      "id": "716e7dd90ff1c5e5",
+      "patterns": [
+        "shannon",
+        "noisy",
+        "channel",
+        "coding",
+        "theorem",
+        "defines",
+        "maximum",
+        "rate"
+      ],
+      "relations": {
+        "subject": "shannon",
+        "context": "communication",
+        "predicate": "noisy",
+        "object": "channel"
+      },
+      "template": "Shannon's noisy channel coding theorem defines the maximum rate of error-free communication.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2550113,
+      "source": "corpus_7",
+      "tags": [
+        "channel",
+        "shannon",
+        "theorem",
+        "coding",
+        "noisy"
+      ]
+    },
+    {
+      "id": "76c020755fbf789b",
+      "patterns": [
+        "shannon",
+        "demonstrated",
+        "boolean",
+        "algebra",
+        "applied",
+        "electrical",
+        "circuits"
+      ],
+      "relations": {
+        "subject": "shannon",
+        "context": "circuits",
+        "predicate": "demonstrated",
+        "object": "boolean"
+      },
+      "template": "Shannon demonstrated that Boolean algebra could be applied to electrical circuits.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2550411,
+      "source": "corpus_7",
+      "tags": [
+        "demonstrated",
+        "shannon",
+        "boolean",
+        "applied",
+        "algebra"
+      ]
+    },
+    {
+      "id": "b5e9661d0cf995cd",
+      "patterns": [
+        "shannon",
+        "work",
+        "laid",
+        "mathematical",
+        "foundations",
+        "digital",
+        "computing",
+        "telecommunications"
+      ],
+      "relations": {
+        "subject": "shannon",
+        "context": "telecommunications",
+        "predicate": "work",
+        "object": "laid"
+      },
+      "template": "Shannon's work laid the mathematical foundations for digital computing and telecommunications.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2550836,
+      "source": "corpus_7",
+      "tags": [
+        "shannon",
+        "foundations",
+        "mathematical",
+        "work",
+        "laid"
+      ]
+    },
+    {
+      "id": "4ae8479ce197405f",
+      "patterns": [
+        "nous",
+        "programming",
+        "language",
+        "designed",
+        "multi",
+        "agent",
+        "ai",
+        "systems"
+      ],
+      "relations": {
+        "subject": "nous",
+        "context": "systems",
+        "predicate": "programming",
+        "object": "language",
+        "is_a": "programming language designed multi agent ai systems"
+      },
+      "template": "NOUS is a programming language designed for multi-agent AI systems.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2552602,
+      "source": "corpus_8",
+      "tags": [
+        "language",
+        "designed",
+        "nous",
+        "programming",
+        "multi"
+      ]
+    },
+    {
+      "id": "ee98c27dc0fc2956",
+      "patterns": [
+        "nous",
+        "uses",
+        "souls",
+        "first",
+        "class",
+        "citizens",
+        "represent",
+        "autonomous"
+      ],
+      "relations": {
+        "subject": "nous",
+        "context": "agents",
+        "predicate": "uses",
+        "object": "souls"
+      },
+      "template": "NOUS uses souls as first-class citizens to represent autonomous agents.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.25529,
+      "source": "corpus_8",
+      "tags": [
+        "souls",
+        "uses",
+        "nous",
+        "first",
+        "class"
+      ]
+    },
+    {
+      "id": "7650301cbd233b1a",
+      "patterns": [
+        "nervous",
+        "system",
+        "nous",
+        "defines",
+        "directed",
+        "acyclic",
+        "graph",
+        "connecting"
+      ],
+      "relations": {
+        "subject": "nervous",
+        "context": "souls",
+        "predicate": "system",
+        "object": "nous"
+      },
+      "template": "The nervous system in NOUS defines the directed acyclic graph connecting souls.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2553163,
+      "source": "corpus_8",
+      "tags": [
+        "nous",
+        "nervous",
+        "defines",
+        "directed",
+        "system"
+      ]
+    },
+    {
+      "id": "ee08a344a7a0ce29",
+      "patterns": [
+        "nous",
+        "compiles",
+        "python",
+        "11",
+        "asyncio",
+        "code",
+        "concurrent",
+        "execution"
+      ],
+      "relations": {
+        "subject": "nous",
+        "context": "execution",
+        "predicate": "compiles",
+        "object": "python"
+      },
+      "template": "NOUS compiles to Python 3.11+ asyncio code for concurrent execution.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2553449,
+      "source": "corpus_8",
+      "tags": [
+        "asyncio",
+        "compiles",
+        "nous",
+        "python"
+      ]
+    },
+    {
+      "id": "738963288a87cb7f",
+      "patterns": [
+        "laws",
+        "nous",
+        "constitutional",
+        "constraints",
+        "enforced",
+        "compile",
+        "time"
+      ],
+      "relations": {
+        "subject": "laws nous",
+        "context": "time",
+        "predicate": "nous",
+        "object": "constitutional",
+        "is_a": "constitutional constraints enforced compile time"
+      },
+      "template": "Laws in NOUS are constitutional constraints enforced at compile time.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2553713,
+      "source": "corpus_8",
+      "tags": [
+        "nous",
+        "enforced",
+        "constraints",
+        "laws",
+        "constitutional"
+      ]
+    },
+    {
+      "id": "cbe5fe75af66e948",
+      "patterns": [
+        "noesis",
+        "symbolic",
+        "reasoning",
+        "engine",
+        "embedded",
+        "nous",
+        "language"
+      ],
+      "relations": {
+        "subject": "noesis",
+        "context": "language",
+        "predicate": "symbolic",
+        "object": "reasoning",
+        "is_a": "symbolic reasoning engine embedded nous language"
+      },
+      "template": "Noesis is a symbolic reasoning engine embedded in the NOUS language.",
+      "level": 3,
+      "confidence": 0.8200000000000001,
+      "usage_count": 1,
+      "success_count": 1,
+      "birth": 1776067113.256508,
+      "source": "corpus_9",
+      "tags": [
+        "reasoning",
+        "embedded",
+        "noesis",
+        "symbolic",
+        "engine"
+      ]
+    },
+    {
+      "id": "2061f8b5099113de",
+      "patterns": [
+        "noesis",
+        "stores",
+        "knowledge",
+        "compressed",
+        "atoms",
+        "instead",
+        "neural",
+        "network"
+      ],
+      "relations": {
+        "subject": "noesis",
+        "context": "weights",
+        "predicate": "stores",
+        "object": "knowledge"
+      },
+      "template": "Noesis stores knowledge as compressed atoms instead of neural network weights.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2565453,
+      "source": "corpus_9",
+      "tags": [
+        "compressed",
+        "atoms",
+        "noesis",
+        "stores",
+        "knowledge"
+      ]
+    },
+    {
+      "id": "98c780df90b6ed0c",
+      "patterns": [
+        "noesis",
+        "uses",
+        "pattern",
+        "resonance",
+        "instead",
+        "matrix",
+        "multiplication",
+        "retrieval"
+      ],
+      "relations": {
+        "subject": "noesis",
+        "context": "retrieval",
+        "predicate": "uses",
+        "object": "pattern"
+      },
+      "template": "Noesis uses pattern resonance instead of matrix multiplication for retrieval.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2565887,
+      "source": "corpus_9",
+      "tags": [
+        "uses",
+        "instead",
+        "noesis",
+        "resonance",
+        "pattern"
+      ]
+    },
+    {
+      "id": "d5038b7158c8fbc9",
+      "patterns": [
+        "noesis",
+        "learn",
+        "without",
+        "backpropagation",
+        "algorithmic",
+        "compression"
+      ],
+      "relations": {
+        "subject": "noesis",
+        "context": "compression",
+        "predicate": "learn",
+        "object": "without"
+      },
+      "template": "Noesis can learn without backpropagation through algorithmic compression.",
+      "level": 3,
+      "confidence": 0.8200000000000001,
+      "usage_count": 2,
+      "success_count": 1,
+      "birth": 1776067113.256617,
+      "source": "corpus_9",
+      "tags": [
+        "learn",
+        "backpropagation",
+        "algorithmic",
+        "without",
+        "noesis"
+      ]
+    },
+    {
+      "id": "1c68359c18f6d344",
+      "patterns": [
+        "noesis",
+        "evolves",
+        "knowledge",
+        "lattice",
+        "pruning",
+        "merging",
+        "mutation"
+      ],
+      "relations": {
+        "subject": "noesis",
+        "context": "mutation",
+        "predicate": "evolves",
+        "object": "knowledge"
+      },
+      "template": "Noesis evolves its knowledge lattice through pruning, merging, and mutation.",
+      "level": 3,
+      "confidence": 0.8200000000000001,
+      "usage_count": 1,
+      "success_count": 1,
+      "birth": 1776067113.2566373,
+      "source": "corpus_9",
+      "tags": [
+        "pruning",
+        "lattice",
+        "evolves",
+        "noesis",
+        "knowledge"
+      ]
+    },
+    {
+      "id": "f651ce629d920194",
+      "patterns": [
+        "maillard",
+        "reaction",
+        "occurs",
+        "amino",
+        "acids",
+        "reducing",
+        "sugars",
+        "react"
+      ],
+      "relations": {
+        "subject": "maillard",
+        "context": "temperatures",
+        "predicate": "reaction",
+        "object": "occurs"
+      },
+      "template": "Maillard reaction occurs when amino acids and reducing sugars react at high temperatures.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2567687,
+      "source": "corpus_10",
+      "tags": [
+        "occurs",
+        "maillard",
+        "acids",
+        "reaction",
+        "amino"
+      ]
+    },
+    {
+      "id": "6aed3940753f0625",
+      "patterns": [
+        "maillard",
+        "reaction",
+        "responsible",
+        "browning",
+        "flavor",
+        "seared",
+        "meat"
+      ],
+      "relations": {
+        "subject": "maillard reaction",
+        "context": "meat",
+        "predicate": "reaction",
+        "object": "responsible",
+        "is_a": "responsible browning flavor seared meat"
+      },
+      "template": "The Maillard reaction is responsible for the browning and flavor of seared meat.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2568085,
+      "source": "corpus_10",
+      "tags": [
+        "responsible",
+        "reaction",
+        "browning",
+        "maillard",
+        "flavor"
+      ]
+    },
+    {
+      "id": "7031c900423b8e12",
+      "patterns": [
+        "maillard",
+        "reaction"
+      ],
+      "relations": {},
+      "template": "maillard reaction",
+      "level": 2,
+      "confidence": 0.7,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2568154,
+      "source": "corpus_10",
+      "tags": [
+        "reaction",
+        "maillard"
+      ]
+    },
+    {
+      "id": "5c4be1029bf5638e",
+      "patterns": [
+        "caramelization",
+        "oxidation",
+        "sugar",
+        "temperatures",
+        "170",
+        "degrees",
+        "celsius"
+      ],
+      "relations": {
+        "subject": "caramelization",
+        "context": "celsius",
+        "predicate": "oxidation",
+        "object": "sugar",
+        "is_a": "oxidation sugar temperatures 170 degrees celsius"
+      },
+      "template": "Caramelization is the oxidation of sugar at temperatures above 170 degrees Celsius.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2568412,
+      "source": "corpus_10",
+      "tags": [
+        "oxidation",
+        "sugar",
+        "temperatures",
+        "caramelization"
+      ]
+    },
+    {
+      "id": "b2a2043357bcef1e",
+      "patterns": [
+        "emulsification",
+        "combines",
+        "two",
+        "immiscible",
+        "liquids",
+        "like",
+        "oil",
+        "water"
+      ],
+      "relations": {
+        "subject": "emulsification",
+        "context": "mixture",
+        "predicate": "combines",
+        "object": "two"
+      },
+      "template": "Emulsification combines two immiscible liquids like oil and water into a stable mixture.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2568686,
+      "source": "corpus_10",
+      "tags": [
+        "combines",
+        "immiscible",
+        "liquids",
+        "emulsification"
+      ]
+    },
+    {
+      "id": "5aa81272176de0f4",
+      "patterns": [
+        "fermentation",
+        "metabolic",
+        "process",
+        "organisms",
+        "convert",
+        "carbohydrates",
+        "alcohol",
+        "acids"
+      ],
+      "relations": {
+        "subject": "fermentation",
+        "context": "acids",
+        "predicate": "metabolic",
+        "object": "process",
+        "is_a": "metabolic process organisms convert carbohydrates alcohol acids"
+      },
+      "template": "Fermentation is a metabolic process where organisms convert carbohydrates to alcohol or acids.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2569056,
+      "source": "corpus_10",
+      "tags": [
+        "process",
+        "fermentation",
+        "convert",
+        "metabolic",
+        "organisms"
+      ]
+    },
+    {
+      "id": "7a8ddf3453f1ec3f",
+      "patterns": [
+        "greek",
+        "cuisine",
+        "relies",
+        "heavily",
+        "olive",
+        "oil",
+        "fresh",
+        "vegetables"
+      ],
+      "relations": {
+        "subject": "greek",
+        "context": "herbs",
+        "predicate": "cuisine",
+        "object": "relies"
+      },
+      "template": "Greek cuisine relies heavily on olive oil, fresh vegetables, and herbs.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2570992,
+      "source": "corpus_11",
+      "tags": [
+        "olive",
+        "relies",
+        "greek",
+        "cuisine",
+        "heavily"
+      ]
+    },
+    {
+      "id": "bdaedcd7f26997d4",
+      "patterns": [
+        "moussaka",
+        "layered",
+        "dish",
+        "eggplant",
+        "ground",
+        "meat",
+        "bechamel",
+        "sauce"
+      ],
+      "relations": {
+        "subject": "moussaka",
+        "context": "sauce",
+        "predicate": "layered",
+        "object": "dish",
+        "is_a": "layered dish eggplant ground meat bechamel sauce"
+      },
+      "template": "Moussaka is a layered dish of eggplant, ground meat, and bechamel sauce.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2571337,
+      "source": "corpus_11",
+      "tags": [
+        "dish",
+        "eggplant",
+        "moussaka",
+        "ground",
+        "layered"
+      ]
+    },
+    {
+      "id": "def320d972d16a30",
+      "patterns": [
+        "souvlaki",
+        "consists",
+        "small",
+        "pieces",
+        "meat",
+        "grilled",
+        "skewer"
+      ],
+      "relations": {
+        "subject": "souvlaki",
+        "context": "skewer",
+        "predicate": "consists",
+        "object": "small"
+      },
+      "template": "Souvlaki consists of small pieces of meat grilled on a skewer.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.257162,
+      "source": "corpus_11",
+      "tags": [
+        "pieces",
+        "small",
+        "consists",
+        "souvlaki",
+        "meat"
+      ]
+    },
+    {
+      "id": "21e0a6a5263afd03",
+      "patterns": [
+        "tzatziki",
+        "yogurt",
+        "based",
+        "sauce",
+        "cucumber",
+        "garlic",
+        "olive",
+        "oil"
+      ],
+      "relations": {
+        "subject": "tzatziki",
+        "context": "oil",
+        "predicate": "yogurt",
+        "object": "based",
+        "is_a": "yogurt based sauce cucumber garlic olive oil"
+      },
+      "template": "Tzatziki is a yogurt-based sauce with cucumber, garlic, and olive oil.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 1,
+      "success_count": 0,
+      "birth": 1776067113.2571852,
+      "source": "corpus_11",
+      "tags": [
+        "tzatziki",
+        "based",
+        "sauce",
+        "cucumber",
+        "yogurt"
+      ]
+    },
+    {
+      "id": "4267eb72e56db0a2",
+      "patterns": [
+        "olive",
+        "oil"
+      ],
+      "relations": {},
+      "template": "olive oil",
+      "level": 2,
+      "confidence": 0.7,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.257192,
+      "source": "corpus_11",
+      "tags": [
+        "olive"
+      ]
+    },
+    {
+      "id": "f29305c93d49b0c8",
+      "patterns": [
+        "spanakopita",
+        "savory",
+        "pie",
+        "made",
+        "spinach",
+        "feta",
+        "cheese",
+        "phyllo"
+      ],
+      "relations": {
+        "subject": "spanakopita",
+        "context": "dough",
+        "predicate": "savory",
+        "object": "pie",
+        "is_a": "savory pie made spinach feta cheese phyllo dough"
+      },
+      "template": "Spanakopita is a savory pie made with spinach and feta cheese in phyllo dough.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776067113.2572112,
+      "source": "corpus_11",
+      "tags": [
+        "spanakopita",
+        "savory",
+        "spinach",
+        "made"
+      ]
+    },
+    {
+      "id": "9be8b99e557fdbf5",
+      "patterns": [
+        "quantum",
+        "entanglement",
+        "quantum",
+        "mechanical",
+        "phenomenon",
+        "quantum",
+        "states",
+        "two"
+      ],
+      "relations": {
+        "subject": "quantum entanglement",
+        "context": "distance",
+        "predicate": "entanglement",
+        "object": "quantum",
+        "is_a": "quantum mechanical phenomenon quantum states two objects linked together state one object cannot described independently others even objects separated large distance"
+      },
+      "template": "Quantum entanglement is a quantum mechanical phenomenon in which the quantum states of two or more objects are linked together, so that the state of one object cannot be described independently of the others, even when the objects are separated by a large distance.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776068094.2413063,
+      "source": "oracle",
+      "tags": [
+        "quantum",
+        "entanglement",
+        "mechanical",
+        "phenomenon"
+      ]
+    },
+    {
+      "id": "ba445f6feed1606a",
+      "patterns": [
+        "entangled",
+        "particles",
+        "exhibit",
+        "strong",
+        "correlation",
+        "their",
+        "properties",
+        "polarization"
+      ],
+      "relations": {
+        "subject": "entangled",
+        "context": "distance",
+        "predicate": "particles",
+        "object": "exhibit"
+      },
+      "template": "Entangled particles exhibit a strong correlation in their properties, such as polarization or spin, regardless of the distance between them.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776068094.2419837,
+      "source": "oracle",
+      "tags": [
+        "entangled",
+        "particles",
+        "strong",
+        "correlation",
+        "exhibit"
+      ]
+    },
+    {
+      "id": "e303345dc0fc17ac",
+      "patterns": [
+        "\u03c4\u03b5\u03c7\u03bd\u03b7\u03c4\u03ae",
+        "\u03bd\u03bf\u03b7\u03bc\u03bf\u03c3\u03cd\u03bd\u03b7",
+        "\u03c4\u03bd",
+        "\u03ba\u03bb\u03ac\u03b4\u03bf\u03c2",
+        "\u03b5\u03c0\u03b9\u03c3\u03c4\u03ae\u03bc\u03b7\u03c2",
+        "\u03c5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03ce\u03bd",
+        "\u03b1\u03c3\u03c7\u03bf\u03bb\u03b5\u03af\u03c4\u03b1\u03b9",
+        "\u03c4\u03b7"
+      ],
+      "relations": {
+        "subject": "\u03c4\u03b5\u03c7\u03bd\u03b7\u03c4\u03ae \u03bd\u03bf\u03b7\u03bc\u03bf\u03c3\u03cd\u03bd\u03b7 \u03c4\u03bd",
+        "context": "\u03b1\u03c0\u03bf\u03c6\u03ac\u03c3\u03b5\u03c9\u03bd",
+        "predicate": "\u03bd\u03bf\u03b7\u03bc\u03bf\u03c3\u03cd\u03bd\u03b7",
+        "object": "\u03c4\u03bd",
+        "is_a": "\u03ba\u03bb\u03ac\u03b4\u03bf\u03c2 \u03b5\u03c0\u03b9\u03c3\u03c4\u03ae\u03bc\u03b7\u03c2 \u03c5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03ce\u03bd \u03b1\u03c3\u03c7\u03bf\u03bb\u03b5\u03af\u03c4\u03b1\u03b9 \u03c4\u03b7 \u03b4\u03b7\u03bc\u03b9\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03c3\u03c5\u03c3\u03c4\u03b7\u03bc\u03ac\u03c4\u03c9\u03bd \u03b1\u03bb\u03b3\u03bf\u03c1\u03af\u03b8\u03bc\u03c9\u03bd \u03ad\u03c7\u03bf\u03c5\u03bd \u03b9\u03ba\u03b1\u03bd\u03cc\u03c4\u03b7\u03c4\u03b1 \u03bc\u03b9\u03bc\u03bf\u03cd\u03bd\u03c4\u03b1\u03b9 \u03b1\u03bd\u03b8\u03c1\u03ce\u03c0\u03b9\u03bd\u03b5\u03c2 \u03bd\u03bf\u03b7\u03c4\u03b9\u03ba\u03ad\u03c2 \u03b4\u03b9\u03b1\u03b4\u03b9\u03ba\u03b1\u03c3\u03af\u03b5\u03c2 \u03cc\u03c0\u03c9\u03c2 \u03bc\u03ac\u03b8\u03b7\u03c3\u03b7 \u03b5\u03c0\u03af\u03bb\u03c5\u03c3\u03b7 \u03c0\u03c1\u03bf\u03b2\u03bb\u03b7\u03bc\u03ac\u03c4\u03c9\u03bd \u03c4\u03b7 \u03bb\u03ae\u03c8\u03b7 \u03b1\u03c0\u03bf\u03c6\u03ac\u03c3\u03b5\u03c9\u03bd"
+      },
+      "template": "\u0397 \u03c4\u03b5\u03c7\u03bd\u03b7\u03c4\u03ae \u03bd\u03bf\u03b7\u03bc\u03bf\u03c3\u03cd\u03bd\u03b7 (\u03a4\u039d) \u03b5\u03af\u03bd\u03b1\u03b9 \u03ba\u03bb\u03ac\u03b4\u03bf\u03c2 \u03c4\u03b7\u03c2 \u03b5\u03c0\u03b9\u03c3\u03c4\u03ae\u03bc\u03b7\u03c2 \u03c4\u03c9\u03bd \u03c5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03ce\u03bd \u03c0\u03bf\u03c5 \u03b1\u03c3\u03c7\u03bf\u03bb\u03b5\u03af\u03c4\u03b1\u03b9 \u03bc\u03b5 \u03c4\u03b7 \u03b4\u03b7\u03bc\u03b9\u03bf\u03c5\u03c1\u03b3\u03af\u03b1 \u03c3\u03c5\u03c3\u03c4\u03b7\u03bc\u03ac\u03c4\u03c9\u03bd \u03ba\u03b1\u03b9 \u03b1\u03bb\u03b3\u03bf\u03c1\u03af\u03b8\u03bc\u03c9\u03bd \u03c0\u03bf\u03c5 \u03ad\u03c7\u03bf\u03c5\u03bd \u03c4\u03b7\u03bd \u03b9\u03ba\u03b1\u03bd\u03cc\u03c4\u03b7\u03c4\u03b1 \u03bd\u03b1 \u03bc\u03b9\u03bc\u03bf\u03cd\u03bd\u03c4\u03b1\u03b9 \u03b1\u03bd\u03b8\u03c1\u03ce\u03c0\u03b9\u03bd\u03b5\u03c2 \u03bd\u03bf\u03b7\u03c4\u03b9\u03ba\u03ad\u03c2 \u03b4\u03b9\u03b1\u03b4\u03b9\u03ba\u03b1\u03c3\u03af\u03b5\u03c2, \u03cc\u03c0\u03c9\u03c2 \u03c4\u03b7\u03bd \u03bc\u03ac\u03b8\u03b7\u03c3\u03b7, \u03c4\u03b7\u03bd \u03b5\u03c0\u03af\u03bb\u03c5\u03c3\u03b7 \u03c0\u03c1\u03bf\u03b2\u03bb\u03b7\u03bc\u03ac\u03c4\u03c9\u03bd \u03ba\u03b1\u03b9 \u03c4\u03b7 \u03bb\u03ae\u03c8\u03b7 \u03b1\u03c0\u03bf\u03c6\u03ac\u03c3\u03b5\u03c9\u03bd.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 2,
+      "success_count": 0,
+      "birth": 1776068185.2960215,
+      "source": "oracle",
+      "tags": [
+        "\u03ba\u03bb\u03ac\u03b4\u03bf\u03c2",
+        "\u03c4\u03b5\u03c7\u03bd\u03b7\u03c4\u03ae",
+        "\u03bd\u03bf\u03b7\u03bc\u03bf\u03c3\u03cd\u03bd\u03b7",
+        "\u03b5\u03c0\u03b9\u03c3\u03c4\u03ae\u03bc\u03b7\u03c2"
+      ]
+    },
+    {
+      "id": "0f658e33a4f00e0f",
+      "patterns": [
+        "\u03c3\u03c4\u03cc\u03c7\u03bf\u03c2",
+        "\u03c4\u03bd",
+        "\u03ba\u03b1\u03c4\u03b1\u03c3\u03ba\u03b5\u03c5\u03b1\u03c3\u03c4\u03bf\u03cd\u03bd",
+        "\u03bc\u03b7\u03c7\u03b1\u03bd\u03ad\u03c2",
+        "\u03c5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03b9\u03ba\u03ac",
+        "\u03c3\u03c5\u03c3\u03c4\u03ae\u03bc\u03b1\u03c4\u03b1",
+        "\u03b5\u03c0\u03b9\u03b4\u03b5\u03b9\u03ba\u03bd\u03cd\u03bf\u03c5\u03bd",
+        "\u03b5\u03c5\u03c6\u03c5\u0390\u03b1"
+      ],
+      "relations": {
+        "subject": "\u03c3\u03c4\u03cc\u03c7\u03bf\u03c2 \u03c4\u03bd",
+        "context": "\u03b1\u03bd\u03b8\u03c1\u03ce\u03c0\u03c9\u03bd",
+        "predicate": "\u03c4\u03bd",
+        "object": "\u03ba\u03b1\u03c4\u03b1\u03c3\u03ba\u03b5\u03c5\u03b1\u03c3\u03c4\u03bf\u03cd\u03bd",
+        "is_a": "\u03ba\u03b1\u03c4\u03b1\u03c3\u03ba\u03b5\u03c5\u03b1\u03c3\u03c4\u03bf\u03cd\u03bd \u03bc\u03b7\u03c7\u03b1\u03bd\u03ad\u03c2 \u03c5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03b9\u03ba\u03ac \u03c3\u03c5\u03c3\u03c4\u03ae\u03bc\u03b1\u03c4\u03b1 \u03b5\u03c0\u03b9\u03b4\u03b5\u03b9\u03ba\u03bd\u03cd\u03bf\u03c5\u03bd \u03b5\u03c5\u03c6\u03c5\u0390\u03b1 \u03c3\u03c5\u03b3\u03ba\u03c1\u03af\u03c3\u03b9\u03bc\u03b7 \u03c4\u03b7 \u03bd\u03bf\u03b7\u03bc\u03bf\u03c3\u03cd\u03bd\u03b7 \u03b1\u03bd\u03b8\u03c1\u03ce\u03c0\u03c9\u03bd"
+      },
+      "template": "\u039f \u03c3\u03c4\u03cc\u03c7\u03bf\u03c2 \u03c4\u03b7\u03c2 \u03a4\u039d \u03b5\u03af\u03bd\u03b1\u03b9 \u03bd\u03b1 \u03ba\u03b1\u03c4\u03b1\u03c3\u03ba\u03b5\u03c5\u03b1\u03c3\u03c4\u03bf\u03cd\u03bd \u03bc\u03b7\u03c7\u03b1\u03bd\u03ad\u03c2 \u03ba\u03b1\u03b9 \u03c5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03b9\u03ba\u03ac \u03c3\u03c5\u03c3\u03c4\u03ae\u03bc\u03b1\u03c4\u03b1 \u03c0\u03bf\u03c5 \u03b5\u03c0\u03b9\u03b4\u03b5\u03b9\u03ba\u03bd\u03cd\u03bf\u03c5\u03bd \u03b5\u03c5\u03c6\u03c5\u0390\u03b1 \u03c3\u03c5\u03b3\u03ba\u03c1\u03af\u03c3\u03b9\u03bc\u03b7 \u03bc\u03b5 \u03c4\u03b7 \u03bd\u03bf\u03b7\u03bc\u03bf\u03c3\u03cd\u03bd\u03b7 \u03c4\u03c9\u03bd \u03b1\u03bd\u03b8\u03c1\u03ce\u03c0\u03c9\u03bd.",
+      "level": 3,
+      "confidence": 0.8,
+      "usage_count": 0,
+      "success_count": 0,
+      "birth": 1776068185.2964978,
+      "source": "oracle",
+      "tags": [
+        "\u03c5\u03c0\u03bf\u03bb\u03bf\u03b3\u03b9\u03c3\u03c4\u03b9\u03ba\u03ac",
+        "\u03ba\u03b1\u03c4\u03b1\u03c3\u03ba\u03b5\u03c5\u03b1\u03c3\u03c4\u03bf\u03cd\u03bd",
+        "\u03c3\u03c4\u03cc\u03c7\u03bf\u03c2",
+        "\u03bc\u03b7\u03c7\u03b1\u03bd\u03ad\u03c2"
+      ]
+    }
+  ]
+}

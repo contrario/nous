@@ -21,13 +21,17 @@ from ast_nodes import (
     PerceptionNode, PerceptionRuleNode, PerceptionTriggerNode,
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
-    Tier,
+    Tier, TopologyNode, TopologyServerNode,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
 
 
 class NousTransformer(Transformer):
+
+    def _strip(self, items: list) -> list:
+        """Remove None and raw Token objects (keyword terminals) from items."""
+        return [i for i in items if i is not None and not isinstance(i, Token)]
 
     # ── Primitives ──
 
@@ -50,9 +54,6 @@ class NousTransformer(Transformer):
         return str(tok)
 
     def COMP_OP(self, tok: Token) -> str:
-        return str(tok)
-
-    def DURATION_UNIT(self, tok: Token) -> str:
         return str(tok)
 
     # ── Types ──
@@ -93,7 +94,10 @@ class NousTransformer(Transformer):
         return items[0]
 
     def duration_lit(self, items: list) -> str:
-        return f"{items[0]}{items[1]}"
+        return str(items[0])
+
+    def DURATION_VAL(self, tok: Token) -> str:
+        return str(tok)
 
     def time_hm(self, items: list) -> str:
         return f"{items[0]}:{items[1]:02d} {items[2]}"
@@ -189,7 +193,8 @@ class NousTransformer(Transformer):
         return result
 
     def inline_if(self, items: list) -> dict:
-        return {"kind": "inline_if", "condition": items[0], "then": items[1], "else": items[2]}
+        s = self._strip(items)
+        return {"kind": "inline_if", "condition": s[0], "then": s[1], "else": s[2]}
 
     def msg_positional(self, items: list) -> dict:
         return {"kind": "message_construct", "type": items[0], "args": items[1] if len(items) > 1 else {}}
@@ -311,7 +316,8 @@ class NousTransformer(Transformer):
     # ── Statements ──
 
     def let_stmt(self, items: list) -> LetNode:
-        return LetNode(name=items[0], value=items[1])
+        s = self._strip(items)
+        return LetNode(name=s[0], value=s[1])
 
     def remember_stmt(self, items: list) -> RememberNode:
         if len(items) == 3:
@@ -325,44 +331,54 @@ class NousTransformer(Transformer):
         return SpeakNode(message_type=str(msg))
 
     def listen_expr(self, items: list) -> LetNode:
-        bind_name = items[0]
-        soul = items[2]
-        msg_type = items[3]
+        s = self._strip(items)
+        bind_name = s[0]
+        soul = s[1]
+        msg_type = s[2]
         return LetNode(name=bind_name, value={"kind": "listen", "soul": soul, "type": msg_type})
 
     def guard_stmt(self, items: list) -> GuardNode:
         return GuardNode(condition=items[1])
 
     def sense_call(self, items: list) -> Any:
-        if isinstance(items[0], str) and items[0] == "let":
-            return LetNode(name=items[1], value={"kind": "sense_call", "tool": items[3], "args": items[4] if len(items) > 4 else {}})
-        filtered = [i for i in items if not isinstance(i, Token) or str(i) not in ("sense", "αίσθηση")]
-        if len(filtered) >= 1:
-            tool = filtered[0]
-            args = filtered[1] if len(filtered) > 1 else {}
-            return SenseCallNode(tool_name=tool, args=args if isinstance(args, dict) else {})
-        return SenseCallNode(tool_name=str(items[0]))
+        s = self._strip(items)
+        if len(s) >= 3 and isinstance(s[1], dict):
+            return LetNode(name=s[0], value={"kind": "sense_call", "tool": s[0], "args": s[1] if isinstance(s[1], dict) else {}})
+        has_let = any(isinstance(i, Token) and str(i) == "let" for i in items)
+        if has_let:
+            bind_name = s[0]
+            tool = s[1]
+            args = s[2] if len(s) > 2 and isinstance(s[2], dict) else {}
+            return LetNode(name=bind_name, value={"kind": "sense_call", "tool": tool, "args": args})
+        tool = s[0]
+        args = s[1] if len(s) > 1 and isinstance(s[1], dict) else {}
+        return SenseCallNode(tool_name=tool, args=args)
 
     def sleep_stmt(self, items: list) -> SleepNode:
         return SleepNode(cycles=items[1])
 
     def if_stmt(self, items: list) -> IfNode:
-        cond = items[0]
-        then_body = []
-        else_body = []
-        collecting_else = False
-        for item in items[1:]:
-            if isinstance(item, Token) and str(item) == "else":
-                collecting_else = True
-                continue
-            if collecting_else:
-                else_body.append(item)
-            else:
-                then_body.append(item)
+        s = self._strip(items)
+        cond = s[0]
+        then_body: list[Any] = s[1] if len(s) > 1 and isinstance(s[1], list) else []
+        else_body: list[Any] = s[2] if len(s) > 2 and isinstance(s[2], list) else []
         return IfNode(condition=cond, then_body=then_body, else_body=else_body)
 
+    def then_body(self, items: list) -> list[Any]:
+        return [i for i in items if not isinstance(i, Token)]
+
+    def else_body(self, items: list) -> list[Any]:
+        return [i for i in items if not isinstance(i, Token)]
+
+    def for_body(self, items: list) -> list[Any]:
+        return [i for i in items if not isinstance(i, Token)]
+
     def for_stmt(self, items: list) -> ForNode:
-        return ForNode(var_name=items[0], iterable=items[1], body=list(items[2:]))
+        s = self._strip(items)
+        var_name = s[0]
+        iterable = s[1]
+        body: list[Any] = s[2] if len(s) > 2 and isinstance(s[2], list) else []
+        return ForNode(var_name=var_name, iterable=iterable, body=body)
 
     def statement(self, items: list) -> Any:
         return items[0]
@@ -418,8 +434,9 @@ class NousTransformer(Transformer):
         return items[0]
 
     def heal_rule(self, items: list) -> HealRuleNode:
-        error_type = items[0]
-        actions = [i for i in items[1:] if isinstance(i, HealActionNode)]
+        s = self._strip(items)
+        error_type = s[0]
+        actions = [i for i in s[1:] if isinstance(i, HealActionNode)]
         return HealRuleNode(error_type=error_type, actions=actions)
 
     def heal_block(self, items: list) -> HealNode:
@@ -477,8 +494,9 @@ class NousTransformer(Transformer):
         return MatchArmNode(condition="_", is_silence=True)
 
     def match_route(self, items: list) -> MatchRouteNode:
-        source = items[0]
-        arms = [i for i in items[1:] if isinstance(i, MatchArmNode)]
+        s = self._strip(items)
+        source = s[0]
+        arms = [i for i in s[1:] if isinstance(i, MatchArmNode)]
         return MatchRouteNode(source=source, arms=arms)
 
     def fanin_stmt(self, items: list) -> FanInNode:
@@ -576,11 +594,45 @@ class NousTransformer(Transformer):
         return items[0]
 
     def perception_rule(self, items: list) -> PerceptionRuleNode:
-        return PerceptionRuleNode(trigger=items[0], action=items[1])
+        s = self._strip(items)
+        return PerceptionRuleNode(trigger=s[0], action=s[1])
 
     def perception_decl(self, items: list) -> PerceptionNode:
         rules = [i for i in items[1:] if isinstance(i, PerceptionRuleNode)]
         return PerceptionNode(rules=rules)
+
+    # ── Topology ──
+
+    def topo_body(self, items: list) -> dict:
+        return {"_topo_kv": (items[0], items[1])}
+
+    def topo_server(self, items: list) -> TopologyServerNode:
+        name = items[0]
+        host = items[1]
+        config: dict[str, Any] = {}
+        for item in items[2:]:
+            if isinstance(item, dict) and "_topo_kv" in item:
+                k, v = item["_topo_kv"]
+                config[k] = v
+        return TopologyServerNode(name=name, host=host, config=config)
+
+    def topology_decl(self, items: list) -> TopologyNode:
+        servers = [i for i in items if isinstance(i, TopologyServerNode)]
+        return TopologyNode(servers=servers)
+
+    # ── Deploy ──
+
+    def deploy_body(self, items: list) -> dict:
+        return {"_deploy_kv": (items[0], items[1])}
+
+    def deploy_decl(self, items: list) -> dict:
+        name = items[0]
+        config: dict[str, Any] = {}
+        for item in items[1:]:
+            if isinstance(item, dict) and "_deploy_kv" in item:
+                k, v = item["_deploy_kv"]
+                config[k] = v
+        return {"kind": "deploy", "name": name, "config": config}
 
     # ── Top-Level ──
 
@@ -602,6 +654,8 @@ class NousTransformer(Transformer):
                 program.evolution = item
             elif isinstance(item, PerceptionNode):
                 program.perception = item
+            elif isinstance(item, TopologyNode):
+                program.topology = item
         return program
 
 

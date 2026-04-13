@@ -11,7 +11,6 @@ import textwrap
 from typing import Any
 
 from ast_nodes import (
-    # TradeGuard imported at runtime in generated code
     NousProgram, WorldNode, SoulNode, MindNode, MemoryNode,
     InstinctNode, DnaNode, HealNode, HealRuleNode, HealActionNode,
     HealStrategy, MessageNode, NervousSystemNode, RouteNode,
@@ -36,7 +35,6 @@ class NousCodeGen:
         self._emit_blank()
         self._emit_law_constants()
         self._emit_blank()
-        self._emit_constitutional_guards()
         self._emit_message_classes()
         self._emit_channel_registry()
         self._emit_blank()
@@ -77,8 +75,6 @@ class NousCodeGen:
 
     def _emit_imports(self) -> None:
         self._emit("from __future__ import annotations")
-        self._emit("import warnings")
-        self._emit("warnings.filterwarnings('ignore', message='urllib3.*chardet.*')")
         self._emit_blank()
         self._emit("import asyncio")
         self._emit("import logging")
@@ -98,16 +94,6 @@ class NousCodeGen:
         self._dedent()
         self._emit_blank()
         self._emit("log = logging.getLogger('nous.runtime')")
-        self._emit_blank()
-        self._emit("try:")
-        self._indent()
-        self._emit("from runtime import init_runtime, NousRuntime")
-        self._dedent()
-        self._emit("except ImportError:")
-        self._indent()
-        self._emit("init_runtime = None")
-        self._emit("NousRuntime = None")
-        self._dedent()
 
     # ── Laws ──
 
@@ -137,114 +123,6 @@ class NousCodeGen:
             elif isinstance(law.expr, LawConstitutional):
                 self._emit(f"{name} = {law.expr.count}")
 
-        self._emit_blank()
-        self._emit("import os")
-        config_entries: dict[str, str] = {}
-        if world.config:
-            for k, v in world.config.items():
-                config_entries[k] = self._expr_to_python(v)
-        self._emit("WORLD_CONFIG = {")
-        self._indent()
-        for k, v in config_entries.items():
-            self._emit(f'"{k}": {v},')
-        self._emit(f'"telegram_chat": os.environ.get("TELEGRAM_CHAT_ID", ""),')
-        self._emit(f'"telegram_token": os.environ.get("TELEGRAM_BOT_TOKEN", ""),')
-        self._dedent()
-        self._emit("}")
-
-    # ── Constitutional Guards ──
-
-    def _emit_constitutional_guards(self) -> None:
-        if not self.program.world:
-            return
-        laws = {law.name: law.expr for law in self.program.world.laws}
-        has_trade_laws = any(n in laws for n in (
-            "NoLiveTrading", "MaxPositionSize", "MaxDailyLoss", "RequireApproval",
-        ))
-        if not has_trade_laws:
-            return
-
-        self._emit("# ═══ Constitutional Guards ═══")
-        self._emit_blank()
-        self._emit("class ConstitutionalGuard:")
-        self._indent()
-        self._emit("def __init__(self) -> None:")
-        self._indent()
-        self._emit("self.daily_pnl: float = 0.0")
-        self._emit("self.daily_trades: int = 0")
-        self._emit("self.trade_log: list[dict] = []")
-        self._emit("self._halted: bool = False")
-        self._dedent()
-        self._emit_blank()
-
-        self._emit("def check_trade(self, soul_name: str, action: str, size: float, pair: str = '') -> bool:")
-        self._indent()
-        self._emit("if self._halted:")
-        self._indent()
-        self._emit('log.warning("[GUARD] Trading halted — daily loss circuit breaker active")')
-        self._emit("return False")
-        self._dedent()
-
-        if "NoLiveTrading" in laws:
-            self._emit("if LAW_NOLIVETRADING:")
-            self._indent()
-            self._emit('log.info("[GUARD] Paper trade mode — NoLiveTrading = true")')
-            self._dedent()
-
-        if "MaxPositionSize" in laws:
-            self._emit("if size > LAW_MAXPOSITIONSIZE:")
-            self._indent()
-            self._emit('log.warning("[GUARD] Position size $%.2f exceeds MaxPositionSize $%.2f", size, LAW_MAXPOSITIONSIZE)')
-            self._emit("return False")
-            self._dedent()
-
-        if "MaxDailyLoss" in laws:
-            self._emit("if self.daily_pnl < -LAW_MAXDAILYLOSS:")
-            self._indent()
-            self._emit('log.warning("[GUARD] Daily loss $%.2f exceeds MaxDailyLoss $%.2f — HALTING", abs(self.daily_pnl), LAW_MAXDAILYLOSS)')
-            self._emit("self._halted = True")
-            self._emit("return False")
-            self._dedent()
-
-        self._emit("entry = {")
-        self._indent()
-        self._emit('"soul": soul_name, "action": action, "size": size,')
-        self._emit('"pair": pair, "daily_pnl": self.daily_pnl,')
-        self._emit('"timestamp": __import__("time").time(),')
-        self._dedent()
-        self._emit("}")
-        self._emit("self.trade_log.append(entry)")
-        self._emit("self.daily_trades += 1")
-        self._emit('log.info("[AUDIT] Trade #%d: %s %s size=%.4f pair=%s pnl=%.2f", self.daily_trades, soul_name, action, size, pair, self.daily_pnl)')
-        self._emit("return True")
-        self._dedent()
-        self._emit_blank()
-
-        self._emit("def record_pnl(self, amount: float) -> None:")
-        self._indent()
-        self._emit("self.daily_pnl += amount")
-        if "MaxDailyLoss" in laws:
-            self._emit("if self.daily_pnl < -LAW_MAXDAILYLOSS:")
-            self._indent()
-            self._emit('log.warning("[GUARD] Circuit breaker triggered — daily loss $%.2f", abs(self.daily_pnl))')
-            self._emit("self._halted = True")
-            self._dedent()
-        self._dedent()
-        self._emit_blank()
-
-        self._emit("def reset_daily(self) -> None:")
-        self._indent()
-        self._emit("self.daily_pnl = 0.0")
-        self._emit("self.daily_trades = 0")
-        self._emit("self._halted = False")
-        self._emit('log.info("[GUARD] Daily counters reset")')
-        self._dedent()
-
-        self._dedent()
-        self._emit_blank()
-        self._emit("GUARD = ConstitutionalGuard()")
-        self._emit_blank()
-
     # ── Messages ──
 
     def _emit_message_classes(self) -> None:
@@ -266,10 +144,6 @@ class NousCodeGen:
                         self._emit(f"{f.name}: {py_type}")
             self._dedent()
             self._emit_blank()
-
-        for msg in self.program.messages:
-            self._emit(f"{msg.name}.model_rebuild()")
-        self._emit_blank()
 
     # ── Channels ──
 
@@ -311,31 +185,9 @@ class NousCodeGen:
         self._dedent()
         self._dedent()
         self._emit_blank()
-        self._emit("channels = None  # Set by run_world() from runtime")
-        self._emit("cross_bus = None  # Set by MultiWorldRunner")
-        self._emit("trade_guard = None  # Set by run_world() if trading laws exist")
+        self._emit("channels = ChannelRegistry()")
 
     # ── Souls ──
-
-
-    def _get_trade_laws(self) -> dict[str, Any]:
-        """Extract trading-related laws."""
-        laws: dict[str, Any] = {}
-        if not self.program.world:
-            return laws
-        for law in self.program.world.laws:
-            name_lower = law.name.lower()
-            if name_lower == "nolivetrading":
-                laws["no_live_trading"] = getattr(law.expr, "value", True)
-            elif name_lower == "requireapproval":
-                laws["require_approval"] = getattr(law.expr, "value", False)
-            elif name_lower == "maxpositionsize":
-                laws["max_position"] = getattr(law.expr, "amount", 0)
-            elif name_lower == "maxdailyloss":
-                laws["max_daily_loss"] = getattr(law.expr, "amount", 0)
-            elif name_lower == "approvaltimeout":
-                laws["approval_timeout"] = getattr(law.expr, "value", 120)
-        return laws
 
     def _emit_soul_classes(self) -> None:
         self._emit("# ═══ Soul Definitions ═══")
@@ -371,17 +223,10 @@ class NousCodeGen:
             for gene in soul.dna.genes:
                 self._emit(f"self.dna_{gene.name} = {self._value_to_python(gene.value)}")
 
-        self._emit("self._runtime = None")
-
         self._dedent()
         self._emit_blank()
 
-        for sense_name in soul.senses:
-            self._emit(f"async def _sense_{sense_name}(self, *args, **kwargs) -> Any:")
-            self._indent()
-            self._emit(f"return await self._runtime.sense(self.name, \"{sense_name}\", *args, **kwargs)")
-            self._dedent()
-            self._emit_blank()
+        # instinct method
         self._emit("async def instinct(self) -> None:")
         self._indent()
         self._emit(f'"""Instinct cycle for {soul.name}"""')
@@ -470,12 +315,9 @@ class NousCodeGen:
                 self._emit(f"self.{stmt.name} = {val}")
 
         elif isinstance(stmt, SpeakNode):
+            channel = f"{soul_name}_{stmt.message_type}"
             args_str = self._kv_to_python(stmt.args)
-            if stmt.target_world:
-                self._emit(f'await cross_bus.publish("{stmt.target_world}", "{stmt.message_type}", {stmt.message_type}({args_str}))')
-            else:
-                channel = f"{soul_name}_{stmt.message_type}"
-                self._emit(f'await channels.send("{channel}", {stmt.message_type}({args_str}))')
+            self._emit(f"await channels.send(\"{channel}\", {stmt.message_type}({args_str}))")
 
         elif isinstance(stmt, GuardNode):
             cond = self._expr_to_python(stmt.condition)
@@ -526,11 +368,6 @@ class NousCodeGen:
             kind = stmt.get("kind", "")
             if kind == "method_call":
                 self._emit(self._expr_to_python(stmt))
-            elif kind == "listen_cross":
-                world = val["world"]
-                msg_type = val["type"]
-                self._emit(f'{stmt.name} = await cross_bus.subscribe("{world}", "{msg_type}")')
-
             elif kind == "func_call":
                 self._emit(self._expr_to_python(stmt))
 
@@ -613,61 +450,30 @@ class NousCodeGen:
         self._indent()
         world_name = self.program.world.name if self.program.world else "Unknown"
         self._emit(f'"""Boot and run world: {world_name}"""')
-        self._emit(f"log.info('Booting world: {world_name}')")
+        self._emit(f"log.info(f'Booting world: {world_name}')")
         self._emit_blank()
 
-        budget = 1.0
-        if self.program.world:
-            for law in self.program.world.laws:
-                if isinstance(law.expr, LawCost):
-                    budget = law.expr.amount
-
-        self._emit("# Initialize runtime")
-        self._emit("global channels")
-        self._emit(f"runtime = init_runtime(")
-        self._indent()
-        self._emit(f"world_name=\"{world_name}\",")
-        self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
-        self._emit(f"budget_per_cycle={budget},")
-        self._dedent()
-        self._emit(")")
-        self._emit("channels = runtime.channels")
-        # Trade guard initialization
-        trade_laws = self._get_trade_laws()
-        if any(k in trade_laws for k in ("require_approval", "max_position", "max_daily_loss")):
-            self._emit("# Initialize trade guard")
-            self._emit("global trade_guard")
-            self._emit("from trading import TradeGuard")
-            wn = self.program.world.name if self.program.world else "default"
-            ra = trade_laws.get("require_approval", False)
-            nl = trade_laws.get("no_live_trading", True)
-            mp = trade_laws.get("max_position", 0)
-            md = trade_laws.get("max_daily_loss", 0)
-            at = trade_laws.get("approval_timeout", 120.0)
-            parts = [
-                'world_name="' + wn + '"',
-                "require_approval=" + str(ra),
-                "no_live_trading=" + str(nl),
-                "max_position=" + str(mp),
-                "max_daily_loss=" + str(md),
-                "approval_timeout=" + str(at),
-            ]
-            self._emit("trade_guard = TradeGuard(" + ", ".join(parts) + ")")
-            self._emit("await trade_guard.start()")
-        # Spawn souls
+        # Instantiate souls
+        self._emit("# Spawn souls")
         self._emit("souls = {}")
         for soul in self.program.souls:
             self._emit(f"souls[\"{soul.name}\"] = Soul_{soul.name}()")
-            self._emit(f"runtime.register_soul(\"{soul.name}\", souls[\"{soul.name}\"])")
+            self._emit(f"log.info(f'Spawned soul: {soul.name}')")
         self._emit_blank()
 
+        # Build topology
         if self.program.nervous_system:
             self._emit("topology = build_topology()")
             self._emit("log.info(f'Nervous system: {topology}')")
             self._emit_blank()
 
-        self._emit("# Run via runtime")
-        self._emit("await runtime.run()")
+        # Run all souls
+        self._emit("# Run all souls concurrently")
+        self._emit("async with asyncio.TaskGroup() as tg:")
+        self._indent()
+        for soul in self.program.souls:
+            self._emit(f"tg.create_task(souls[\"{soul.name}\"].run())")
+        self._dedent()
 
         self._dedent()
 
@@ -699,7 +505,7 @@ class NousCodeGen:
             return str(expr)
         if isinstance(expr, str):
             if expr == "self":
-                return "self.name"
+                return "self"
             if expr == "now()":
                 return "time.time()"
             if expr.startswith('"') or expr.startswith("'"):
@@ -733,27 +539,15 @@ class NousCodeGen:
                 return f"{obj}.{expr['attr']}"
             elif kind == "method_call":
                 obj = self._expr_to_python(expr["obj"])
-                method = expr["method"]
-                if method == "where":
-                    arg = expr.get("args", {})
-                    first_arg = arg.get("_pos_0", arg)
-                    if isinstance(first_arg, dict) and first_arg.get("kind") == "binop":
-                        field = self._expr_to_python(first_arg["left"])
-                        op = first_arg["op"]
-                        val = self._expr_to_python(first_arg["right"])
-                        return f"{obj}.filter(\"{field}\", \"{op}\", {val})"
                 args = self._args_to_python(expr.get("args", {}))
-                return f"{obj}.{method}({args})"
+                return f"{obj}.{expr['method']}({args})"
             elif kind == "func_call":
                 func = self._expr_to_python(expr["func"])
                 args = self._args_to_python(expr.get("args", {}))
                 return f"{func}({args})"
             elif kind == "world_ref":
                 path = expr.get("path", "")
-                if path.startswith("config."):
-                    key = path[7:]
-                    return f'WORLD_CONFIG.get("{key}", "")'
-                return f'WORLD_CONFIG.get("{path}", "")'
+                return f"world_config.{path}"
             elif kind == "soul_field":
                 return f"souls[\"{expr['soul']}\"].{expr['field']}"
             elif kind == "inline_if":
@@ -765,10 +559,6 @@ class NousCodeGen:
                 msg_type = expr.get("type", "")
                 args = self._kv_to_python(expr.get("args", {}))
                 return f"{msg_type}({args})"
-            elif kind == "string_lit":
-                val = expr.get("value", "")
-                escaped = val.replace("\\", "\\\\").replace('"', '\\"')
-                return f'"{escaped}"'
             elif kind == "listen":
                 channel = f"{expr['soul']}_{expr['type']}"
                 return f"await channels.receive(\"{channel}\")"

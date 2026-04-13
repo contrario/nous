@@ -4,8 +4,6 @@ Auto-generated from .nous source. Do not edit manually.
 Runtime: Python 3.11+ asyncio
 """
 from __future__ import annotations
-import warnings
-warnings.filterwarnings('ignore', message='urllib3.*chardet.*')
 
 import asyncio
 import logging
@@ -22,12 +20,6 @@ except ImportError:
 
 log = logging.getLogger('nous.runtime')
 
-try:
-    from runtime import init_runtime, NousRuntime
-except ImportError:
-    init_runtime = None
-    NousRuntime = None
-
 # ═══ World Laws ═══
 
 WORLD_NAME = "GateAlpha"
@@ -35,59 +27,6 @@ HEARTBEAT_SECONDS = 300
 LAW_COSTCEILING = 0.1  # USD per cycle
 LAW_MAXLATENCY = 30  # s
 LAW_NOLIVETRADING = True
-LAW_REQUIREAPPROVAL = True
-
-import os
-WORLD_CONFIG = {
-    "telegram_chat": os.environ.get("TELEGRAM_CHAT_ID", ""),
-    "telegram_token": os.environ.get("TELEGRAM_BOT_TOKEN", ""),
-}
-
-# ═══ Constitutional Guards ═══
-
-class ConstitutionalGuard:
-    def __init__(self) -> None:
-        self.daily_pnl: float = 0.0
-        self.daily_trades: int = 0
-        self.trade_log: list[dict] = []
-        self._halted: bool = False
-
-    def check_trade(self, soul_name: str, action: str, size: float, pair: str = '') -> bool:
-        if self._halted:
-            log.warning("[GUARD] Trading halted — daily loss circuit breaker active")
-            return False
-        if LAW_NOLIVETRADING:
-            log.info("[GUARD] Paper trade mode — NoLiveTrading = true")
-        if size > LAW_MAXPOSITIONSIZE:
-            log.warning("[GUARD] Position size $%.2f exceeds MaxPositionSize $%.2f", size, LAW_MAXPOSITIONSIZE)
-            return False
-        if self.daily_pnl < -LAW_MAXDAILYLOSS:
-            log.warning("[GUARD] Daily loss $%.2f exceeds MaxDailyLoss $%.2f — HALTING", abs(self.daily_pnl), LAW_MAXDAILYLOSS)
-            self._halted = True
-            return False
-        entry = {
-            "soul": soul_name, "action": action, "size": size,
-            "pair": pair, "daily_pnl": self.daily_pnl,
-            "timestamp": __import__("time").time(),
-        }
-        self.trade_log.append(entry)
-        self.daily_trades += 1
-        log.info("[AUDIT] Trade #%d: %s %s size=%.4f pair=%s pnl=%.2f", self.daily_trades, soul_name, action, size, pair, self.daily_pnl)
-        return True
-
-    def record_pnl(self, amount: float) -> None:
-        self.daily_pnl += amount
-        if self.daily_pnl < -LAW_MAXDAILYLOSS:
-            log.warning("[GUARD] Circuit breaker triggered — daily loss $%.2f", abs(self.daily_pnl))
-            self._halted = True
-
-    def reset_daily(self) -> None:
-        self.daily_pnl = 0.0
-        self.daily_trades = 0
-        self._halted = False
-        log.info("[GUARD] Daily counters reset")
-
-GUARD = ConstitutionalGuard()
 
 # ═══ Message Types ═══
 
@@ -103,9 +42,6 @@ class Decision(BaseModel):
     risk: float
     sl_pct: float
     tp_pct: float
-
-Signal.model_rebuild()
-Decision.model_rebuild()
 
 # ═══ Channel Registry ═══
 
@@ -128,9 +64,7 @@ class ChannelRegistry:
         except asyncio.TimeoutError:
             raise TimeoutError(f'Channel {key}: receive timeout after {timeout}s')
 
-channels = None  # Set by run_world() from runtime
-cross_bus = None  # Set by MultiWorldRunner
-trade_guard = None  # Set by run_world() if trading laws exist
+channels = ChannelRegistry()
 
 # ═══ Soul Definitions ═══
 
@@ -150,26 +84,16 @@ class Soul_Scout:
         self.dna_volume_threshold = 50000
         self.dna_rsi_ceiling = 70
         self.dna_temperature = 0.3
-        self._runtime = None
-
-    async def _sense_gate_alpha_scan(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "gate_alpha_scan", *args, **kwargs)
-
-    async def _sense_fetch_rsi(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "fetch_rsi", *args, **kwargs)
-
-    async def _sense_ddgs_search(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "ddgs_search", *args, **kwargs)
 
     async def instinct(self) -> None:
         """Instinct cycle for Scout"""
         tokens = await self._sense_gate_alpha_scan()
-        filtered = tokens.filter("volume_24h", ">", 50000)
+        filtered = tokens.where((volume_24h > 50000))
         for token in filtered:
             rsi = await self._sense_fetch_rsi(token.pair)
             if not ((rsi < 70)):
                 return  # guard failed
-            await channels.send("Scout_Signal", Signal(pair=token.pair, score=token.composite_score, rsi=rsi, source=self.name))
+            await channels.send("Scout_Signal", Signal(pair=token.pair, score=token.composite_score, rsi=rsi, source=self))
         self.scan_count += 1
 
     async def heal(self, error: Exception) -> bool:
@@ -227,16 +151,10 @@ class Soul_Quant:
         self.cycle_count = 0
         self._alive = True
         self.risk_score = 0.0
-        self._runtime = None
-
-    async def _sense_calculate_kelly(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "calculate_kelly", *args, **kwargs)
-
-    async def _sense_backtest_pair(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "backtest_pair", *args, **kwargs)
 
     async def instinct(self) -> None:
         """Instinct cycle for Quant"""
+        signal = await channels.receive("Scout_Signal")
         kelly = await self._sense_calculate_kelly(signal)
         risk = 1.0
         await channels.send("Quant_Decision", Decision(action=("BUY" if (kelly.edge > 0.15) else "HOLD"), size=(kelly.fraction * 0.5), risk=risk, sl_pct=8.0, tp_pct=25.0))
@@ -282,16 +200,10 @@ class Soul_Hunter:
         self.cycle_count = 0
         self._alive = True
         self.last_trade = ""
-        self._runtime = None
-
-    async def _sense_execute_paper_trade(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "execute_paper_trade", *args, **kwargs)
-
-    async def _sense_check_balance(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "check_balance", *args, **kwargs)
 
     async def instinct(self) -> None:
         """Instinct cycle for Hunter"""
+        decision = await channels.receive("Quant_Decision")
         if not ((decision.action == "BUY")):
             return  # guard failed
         await self._sense_execute_paper_trade(decision)
@@ -341,17 +253,11 @@ class Soul_Monitor:
         self.cycle_count = 0
         self._alive = True
         self.alert_count = 0
-        self._runtime = None
-
-    async def _sense_check_positions(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "check_positions", *args, **kwargs)
-
-    async def _sense_send_telegram(self, *args, **kwargs) -> Any:
-        return await self._runtime.sense(self.name, "send_telegram", *args, **kwargs)
 
     async def instinct(self) -> None:
         """Instinct cycle for Monitor"""
-        await self._sense_send_telegram(chat=WORLD_CONFIG.get("telegram_chat", ""), text="scout signal received")
+        signal = await channels.receive("Scout_Signal")
+        await self._sense_send_telegram(chat=world_config.config.telegram_chat, text="scout signal received")
         self.alert_count += 1
 
     async def heal(self, error: Exception) -> bool:
@@ -398,36 +304,28 @@ def build_topology() -> dict[str, list[str]]:
 
 async def run_world() -> None:
     """Boot and run world: GateAlpha"""
-    log.info('Booting world: GateAlpha')
+    log.info(f'Booting world: GateAlpha')
 
-    # Initialize runtime
-    global channels
-    runtime = init_runtime(
-        world_name="GateAlpha",
-        heartbeat_seconds=HEARTBEAT_SECONDS,
-        budget_per_cycle=0.1,
-    )
-    channels = runtime.channels
-    # Initialize trade guard
-    global trade_guard
-    from trading import TradeGuard
-    trade_guard = TradeGuard(world_name="GateAlpha", require_approval=True, no_live_trading=True, max_position=500.0, max_daily_loss=100.0, approval_timeout=120.0)
-    await trade_guard.start()
+    # Spawn souls
     souls = {}
     souls["Scout"] = Soul_Scout()
-    runtime.register_soul("Scout", souls["Scout"])
+    log.info(f'Spawned soul: Scout')
     souls["Quant"] = Soul_Quant()
-    runtime.register_soul("Quant", souls["Quant"])
+    log.info(f'Spawned soul: Quant')
     souls["Hunter"] = Soul_Hunter()
-    runtime.register_soul("Hunter", souls["Hunter"])
+    log.info(f'Spawned soul: Hunter')
     souls["Monitor"] = Soul_Monitor()
-    runtime.register_soul("Monitor", souls["Monitor"])
+    log.info(f'Spawned soul: Monitor')
 
     topology = build_topology()
     log.info(f'Nervous system: {topology}')
 
-    # Run via runtime
-    await runtime.run()
+    # Run all souls concurrently
+    async with asyncio.TaskGroup() as tg:
+        tg.create_task(souls["Scout"].run())
+        tg.create_task(souls["Quant"].run())
+        tg.create_task(souls["Hunter"].run())
+        tg.create_task(souls["Monitor"].run())
 
 
 if __name__ == "__main__":

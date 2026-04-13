@@ -1,0 +1,210 @@
+# noesis_alpha.nous — Symbolic Intelligence Cluster
+# NOUS v2.0 | Noesis Integration | Νόηση meets Νοῦς
+
+world NoesisAlpha {
+    law CostCeiling = $0.05 per cycle
+    law MaxLatency = 10s
+    law NoExternalCalls = false
+    heartbeat = 1m
+}
+
+# Knowledge atoms flowing between souls
+message Question {
+    text: string
+    context: string?
+    source: SoulRef
+}
+
+message Knowledge {
+    query: string
+    response: string
+    score: float
+    atoms_used: int
+    oracle_used: bool
+    source: SoulRef
+}
+
+message LearnRequest {
+    text: string
+    source: string
+    priority: float
+}
+
+message EvolutionReport {
+    pruned: int
+    merged: int
+    lattice_size: int
+    avg_fitness: float
+}
+
+# Thinker — the core Noesis reasoning soul
+# Uses sense noesis_think instead of LLM calls
+soul Thinker {
+    mind: noesis-engine @ Tier3
+    senses: [noesis_think, noesis_search, noesis_stats]
+
+    memory {
+        queries_answered: int = 0
+        avg_score: float = 0.0
+        oracle_ratio: float = 0.0
+    }
+
+    instinct {
+        let query = listen User::Question
+        let result = sense noesis_think(query.text)
+
+        guard result.score > 0.1
+
+        speak Knowledge(
+            query: query.text,
+            response: result.response,
+            score: result.score,
+            atoms_used: result.atoms_matched,
+            oracle_used: result.oracle_used,
+            source: self
+        )
+
+        remember queries_answered += 1
+    }
+
+    dna {
+        confidence_threshold: 0.3 ~ [0.1, 0.8]
+        top_k: 5 ~ [3, 15]
+        mode: "compose" ~ ["compose", "reason", "direct"]
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => sleep 1 cycle
+    }
+}
+
+# Learner — ingests new knowledge into the lattice
+soul Learner {
+    mind: noesis-engine @ Tier3
+    senses: [noesis_learn, ddgs_search]
+
+    memory {
+        atoms_total: int = 0
+        sources_ingested: int = 0
+    }
+
+    instinct {
+        let request = listen Curator::LearnRequest
+        let added = sense noesis_learn(request.text, request.source)
+        remember atoms_total += added.atoms_added
+        remember sources_ingested += 1
+    }
+
+    heal {
+        on timeout => retry(1, exponential)
+    }
+}
+
+# Evolver — periodically evolves the knowledge lattice
+soul Evolver {
+    mind: noesis-engine @ Tier3
+    senses: [noesis_evolve, noesis_stats]
+
+    memory {
+        evolution_count: int = 0
+        total_pruned: int = 0
+        total_merged: int = 0
+    }
+
+    instinct {
+        let stats = sense noesis_stats()
+        guard stats.atoms > 50
+
+        let result = sense noesis_evolve()
+
+        speak EvolutionReport(
+            pruned: result.pruned,
+            merged: result.merged,
+            lattice_size: result.after,
+            avg_fitness: stats.avg_fitness
+        )
+
+        remember evolution_count += 1
+        remember total_pruned += result.pruned
+        remember total_merged += result.merged
+    }
+
+    dna {
+        min_confidence: 0.1 ~ [0.05, 0.3]
+        min_usage: 0 ~ [0, 5]
+        evolve_threshold: 50 ~ [20, 200]
+    }
+
+    heal {
+        on timeout => retry(1, exponential)
+    }
+}
+
+# Curator — decides what to learn and orchestrates knowledge
+soul Curator {
+    mind: deepseek-r1 @ Tier1
+    senses: [ddgs_search, noesis_search, noesis_stats]
+
+    memory {
+        topics_curated: [string] = []
+        gaps_identified: [string] = []
+    }
+
+    instinct {
+        let knowledge = listen Thinker::Knowledge
+
+        if knowledge.oracle_used {
+            speak LearnRequest(
+                text: knowledge.response,
+                source: "oracle_feedback",
+                priority: 1.0
+            )
+        }
+
+        if knowledge.score < 0.3 {
+            let search = sense ddgs_search(knowledge.query)
+            speak LearnRequest(
+                text: search.text,
+                source: "web_search",
+                priority: 0.8
+            )
+        }
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => sleep 1 cycle
+    }
+}
+
+nervous_system {
+    Thinker -> Curator
+    Curator -> Learner
+    Evolver -> Curator
+}
+
+evolution {
+    schedule: 3:00 AM
+    fitness: langfuse(noesis_accuracy)
+
+    mutate Thinker.dna {
+        strategy: genetic(population: 3, generations: 2)
+        survive_if: fitness > parent.fitness
+        rollback_if: any_law_violated
+    }
+
+    mutate Evolver.dna {
+        strategy: genetic(population: 2, generations: 1)
+        survive_if: fitness > parent.fitness
+        rollback_if: any_law_violated
+    }
+}
+
+perception {
+    on telegram("/think") => wake Thinker
+    on telegram("/learn") => wake Learner
+    on telegram("/evolve") => wake Evolver
+    on cron("0 3 * * *") => wake Evolver
+    on system_error => alert Telegram
+}
