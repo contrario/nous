@@ -11,8 +11,9 @@ from typing import Any
 from lark import Lark, Transformer, Token, Tree
 
 from ast_nodes import (
+    NoesisConfigNode,
     NousProgram, WorldNode, LawNode, LawCost, LawDuration,
-    LawConstitutional, LawBool, LawInt, LawCurrency, SoulNode, MindNode,
+    LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
     HealNode, HealRuleNode, HealActionNode, HealStrategy,
     MessageNode, MessageFieldNode, NervousSystemNode, RouteNode,
@@ -21,28 +22,13 @@ from ast_nodes import (
     PerceptionNode, PerceptionRuleNode, PerceptionTriggerNode,
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
-    Tier, TopologyNode, TopologyServerNode,
-    TestNode, TestAssertNode, TestMockNode, TestRunNode,
-    ImportNode,
+    Tier,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
-_PARSER_CACHE: Lark | None = None
-
-
-def _get_parser() -> Lark:
-    global _PARSER_CACHE
-    if _PARSER_CACHE is None:
-        grammar = GRAMMAR_PATH.read_text()
-        _PARSER_CACHE = Lark(grammar, parser="lalr", start="start")
-    return _PARSER_CACHE
 
 
 class NousTransformer(Transformer):
-
-    def _strip(self, items: list) -> list:
-        """Remove None and raw Token objects (keyword terminals) from items."""
-        return [i for i in items if i is not None and not isinstance(i, Token)]
 
     # ── Primitives ──
 
@@ -65,6 +51,9 @@ class NousTransformer(Transformer):
         return str(tok)
 
     def COMP_OP(self, tok: Token) -> str:
+        return str(tok)
+
+    def DURATION_UNIT(self, tok: Token) -> str:
         return str(tok)
 
     # ── Types ──
@@ -105,10 +94,7 @@ class NousTransformer(Transformer):
         return items[0]
 
     def duration_lit(self, items: list) -> str:
-        return str(items[0])
-
-    def DURATION_VAL(self, tok: Token) -> str:
-        return str(tok)
+        return f"{items[0]}{items[1]}"
 
     def time_hm(self, items: list) -> str:
         return f"{items[0]}:{items[1]:02d} {items[2]}"
@@ -204,8 +190,7 @@ class NousTransformer(Transformer):
         return result
 
     def inline_if(self, items: list) -> dict:
-        s = self._strip(items)
-        return {"kind": "inline_if", "condition": s[0], "then": s[1], "else": s[2]}
+        return {"kind": "inline_if", "condition": items[0], "then": items[1], "else": items[2]}
 
     def msg_positional(self, items: list) -> dict:
         return {"kind": "message_construct", "type": items[0], "args": items[1] if len(items) > 1 else {}}
@@ -262,10 +247,6 @@ class NousTransformer(Transformer):
 
     def law_int(self, items: list) -> LawInt:
         return LawInt(value=items[0])
-
-    def law_currency(self, items: list) -> LawCurrency:
-        c = items[0]
-        return LawCurrency(amount=c["amount"], currency=c.get("currency", "USD"))
 
     def law_decl(self, items: list) -> LawNode:
         return LawNode(name=items[1], expr=items[2])
@@ -331,8 +312,7 @@ class NousTransformer(Transformer):
     # ── Statements ──
 
     def let_stmt(self, items: list) -> LetNode:
-        s = self._strip(items)
-        return LetNode(name=s[0], value=s[1])
+        return LetNode(name=items[0], value=items[1])
 
     def remember_stmt(self, items: list) -> RememberNode:
         if len(items) == 3:
@@ -340,63 +320,98 @@ class NousTransformer(Transformer):
         return RememberNode(name=items[1], value=items[2])
 
     def speak_stmt(self, items: list) -> SpeakNode:
-        s = self._strip(items)
-        msg_name = s[0]
-        args = s[1] if len(s) > 1 and isinstance(s[1], dict) else {}
-        return SpeakNode(message_type=str(msg_name), args=args)
+        msg = items[1]
+        if isinstance(msg, dict) and msg.get("kind") == "message_construct":
+            return SpeakNode(message_type=msg["type"], args=msg.get("args", {}))
+        return SpeakNode(message_type=str(msg))
 
     def listen_expr(self, items: list) -> LetNode:
-        s = self._strip(items)
-        bind_name = s[0]
-        soul = s[1]
-        msg_type = s[2]
+        bind_name = items[0]
+        soul = items[2]
+        msg_type = items[3]
         return LetNode(name=bind_name, value={"kind": "listen", "soul": soul, "type": msg_type})
 
     def guard_stmt(self, items: list) -> GuardNode:
         return GuardNode(condition=items[1])
 
+
+    def noesis_decl(self, items: list) -> NoesisConfigNode:
+        config = NoesisConfigNode()
+        for item in items:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(config, k):
+                        setattr(config, k, v)
+        return config
+
+    def noesis_lattice(self, items: list) -> dict:
+        return {"lattice_path": str(items[0]).strip('"')}
+
+    def noesis_threshold(self, items: list) -> dict:
+        return {"oracle_threshold": float(items[0])}
+
+    def noesis_auto_learn(self, items: list) -> dict:
+        return {"auto_learn": str(items[0]).lower() in ("true", "1", "yes")}
+
+    def noesis_auto_evolve(self, items: list) -> dict:
+        return {"auto_evolve": str(items[0]).lower() in ("true", "1", "yes")}
+
+    def noesis_gap_tracking(self, items: list) -> dict:
+        return {"gap_tracking": str(items[0]).lower() in ("true", "1", "yes")}
+
+    def resonate_bind(self, items: list) -> LetNode:
+        filtered = [i for i in items if not (isinstance(i, Token) and i.type == "RESONATE")]
+        return LetNode(name=str(filtered[0]), value={"kind": "resonate", "query": str(filtered[1]).strip('"')})
+
+    def resonate_bind_guarded(self, items: list) -> LetNode:
+        filtered = [i for i in items if not (isinstance(i, Token) and i.type == "RESONATE")]
+        return LetNode(name=str(filtered[0]), value={
+            "kind": "resonate", "query": str(filtered[1]).strip('"'),
+            "guard_field": str(filtered[2]), "guard_threshold": float(filtered[3]),
+        })
+
+    def resonate_bare(self, items: list) -> dict:
+        filtered = [i for i in items if not (isinstance(i, Token) and i.type == "RESONATE")]
+        return {"kind": "resonate", "query": str(filtered[0]).strip('"')}
+
     def sense_call(self, items: list) -> Any:
-        s = self._strip(items)
-        if len(s) >= 3 and isinstance(s[1], dict):
-            return LetNode(name=s[0], value={"kind": "sense_call", "tool": s[0], "args": s[1] if isinstance(s[1], dict) else {}})
-        has_let = any(isinstance(i, Token) and str(i) == "let" for i in items)
-        if has_let:
-            bind_name = s[0]
-            tool = s[1]
-            args = s[2] if len(s) > 2 and isinstance(s[2], dict) else {}
-            return LetNode(name=bind_name, value={"kind": "sense_call", "tool": tool, "args": args})
-        tool = s[0]
-        args = s[1] if len(s) > 1 and isinstance(s[1], dict) else {}
-        return SenseCallNode(tool_name=tool, args=args)
+        if isinstance(items[0], str) and items[0] == "let":
+            return LetNode(name=items[1], value={"kind": "sense_call", "tool": items[3], "args": items[4] if len(items) > 4 else {}})
+        filtered = [i for i in items if not isinstance(i, Token) or str(i) not in ("sense", "αίσθηση")]
+        if len(filtered) >= 1:
+            tool = filtered[0]
+            args = filtered[1] if len(filtered) > 1 else {}
+            return SenseCallNode(tool_name=tool, args=args if isinstance(args, dict) else {})
+        return SenseCallNode(tool_name=str(items[0]))
 
     def sleep_stmt(self, items: list) -> SleepNode:
         return SleepNode(cycles=items[1])
 
     def if_stmt(self, items: list) -> IfNode:
-        s = self._strip(items)
-        cond = s[0]
-        then_body: list[Any] = s[1] if len(s) > 1 and isinstance(s[1], list) else []
-        else_body: list[Any] = s[2] if len(s) > 2 and isinstance(s[2], list) else []
+        cond = items[0]
+        then_body = []
+        else_body = []
+        collecting_else = False
+        for item in items[1:]:
+            if isinstance(item, Token) and str(item) == "else":
+                collecting_else = True
+                continue
+            if collecting_else:
+                else_body.append(item)
+            else:
+                then_body.append(item)
         return IfNode(condition=cond, then_body=then_body, else_body=else_body)
 
     def for_stmt(self, items: list) -> ForNode:
-        s = self._strip(items)
-        var_name = s[0]
-        iterable = s[1]
-        body: list[Any] = s[2] if len(s) > 2 and isinstance(s[2], list) else []
-        return ForNode(var_name=var_name, iterable=iterable, body=body)
+        return ForNode(var_name=items[0], iterable=items[1], body=list(items[2:]))
 
     def statement(self, items: list) -> Any:
         return items[0]
 
     # ── Instinct ──
 
-    def stmt_body(self, items: list) -> list[Any]:
-        return [i for i in items if not isinstance(i, Token)]
-
     def instinct_block(self, items: list) -> InstinctNode:
-        s = self._strip(items)
-        stmts = s[0] if s and isinstance(s[0], list) else []
+        stmts = [i for i in items[1:] if not isinstance(i, Token)]
         return InstinctNode(statements=stmts)
 
     # ── DNA ──
@@ -444,9 +459,8 @@ class NousTransformer(Transformer):
         return items[0]
 
     def heal_rule(self, items: list) -> HealRuleNode:
-        s = self._strip(items)
-        error_type = s[0]
-        actions = [i for i in s[1:] if isinstance(i, HealActionNode)]
+        error_type = items[0]
+        actions = [i for i in items[1:] if isinstance(i, HealActionNode)]
         return HealRuleNode(error_type=error_type, actions=actions)
 
     def heal_block(self, items: list) -> HealNode:
@@ -504,9 +518,8 @@ class NousTransformer(Transformer):
         return MatchArmNode(condition="_", is_silence=True)
 
     def match_route(self, items: list) -> MatchRouteNode:
-        s = self._strip(items)
-        source = s[0]
-        arms = [i for i in s[1:] if isinstance(i, MatchArmNode)]
+        source = items[0]
+        arms = [i for i in items[1:] if isinstance(i, MatchArmNode)]
         return MatchRouteNode(source=source, arms=arms)
 
     def fanin_stmt(self, items: list) -> FanInNode:
@@ -604,82 +617,11 @@ class NousTransformer(Transformer):
         return items[0]
 
     def perception_rule(self, items: list) -> PerceptionRuleNode:
-        s = self._strip(items)
-        return PerceptionRuleNode(trigger=s[0], action=s[1])
+        return PerceptionRuleNode(trigger=items[0], action=items[1])
 
     def perception_decl(self, items: list) -> PerceptionNode:
         rules = [i for i in items[1:] if isinstance(i, PerceptionRuleNode)]
         return PerceptionNode(rules=rules)
-
-    # ── Test ──
-
-    def test_assert_expr(self, items: list) -> TestAssertNode:
-        s = self._strip(items)
-        return TestAssertNode(kind="expr", expr=s[0])
-
-    def test_assert_field(self, items: list) -> TestAssertNode:
-        s = self._strip(items)
-        return TestAssertNode(kind="field", soul=s[0], field=s[1], op=s[2], expected=s[3])
-
-    def test_assert_spoke(self, items: list) -> TestAssertNode:
-        s = self._strip(items)
-        return TestAssertNode(kind="spoke", message_type=s[0])
-
-    def test_mock_tool(self, items: list) -> TestMockNode:
-        s = self._strip(items)
-        return TestMockNode(tool_name=s[0], returns=s[1])
-
-    def test_run_soul(self, items: list) -> TestRunNode:
-        s = self._strip(items)
-        return TestRunNode(soul_name=s[0])
-
-    def test_stmt(self, items: list) -> Any:
-        return items[0]
-
-    def test_decl(self, items: list) -> TestNode:
-        s = self._strip(items)
-        desc = s[0] if s else ""
-        stmts = [i for i in s[1:] if isinstance(i, (TestAssertNode, TestMockNode, TestRunNode))]
-        return TestNode(description=desc, stmts=stmts)
-
-    # ── Topology ──
-
-    def topo_body(self, items: list) -> dict:
-        return {"_topo_kv": (items[0], items[1])}
-
-    def topo_server(self, items: list) -> TopologyServerNode:
-        name = items[0]
-        host = items[1]
-        config: dict[str, Any] = {}
-        for item in items[2:]:
-            if isinstance(item, dict) and "_topo_kv" in item:
-                k, v = item["_topo_kv"]
-                config[k] = v
-        return TopologyServerNode(name=name, host=host, config=config)
-
-    def topology_decl(self, items: list) -> TopologyNode:
-        servers = [i for i in items if isinstance(i, TopologyServerNode)]
-        return TopologyNode(servers=servers)
-
-    # ── Deploy ──
-
-    def deploy_body(self, items: list) -> dict:
-        return {"_deploy_kv": (items[0], items[1])}
-
-    def deploy_decl(self, items: list) -> dict:
-        name = items[0]
-        config: dict[str, Any] = {}
-        for item in items[1:]:
-            if isinstance(item, dict) and "_deploy_kv" in item:
-                k, v = item["_deploy_kv"]
-                config[k] = v
-        return {"kind": "deploy", "name": name, "config": config}
-
-    # ── Import ──
-
-    def import_decl(self, items: list) -> ImportNode:
-        s = self._strip(items)
-        return ImportNode(path=str(s[0]))
 
     # ── Top-Level ──
 
@@ -699,20 +641,17 @@ class NousTransformer(Transformer):
                 program.nervous_system = item
             elif isinstance(item, EvolutionNode):
                 program.evolution = item
+            elif isinstance(item, NoesisConfigNode):
+                program.noesis = item
             elif isinstance(item, PerceptionNode):
                 program.perception = item
-            elif isinstance(item, TopologyNode):
-                program.topology = item
-            elif isinstance(item, TestNode):
-                program.tests.append(item)
-            elif isinstance(item, ImportNode):
-                program.imports.append(item)
         return program
 
 
 def parse_nous(source: str) -> NousProgram:
     """Parse a .nous source string into a Living AST."""
-    lark_parser = _get_parser()
+    grammar = GRAMMAR_PATH.read_text()
+    lark_parser = Lark(grammar, parser="earley", start="start")
     tree = lark_parser.parse(source)
     transformer = NousTransformer()
     return transformer.transform(tree)

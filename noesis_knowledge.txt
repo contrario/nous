@@ -1,0 +1,85 @@
+NOUS is a complete programming language designed exclusively for multi-agent AI systems. It is not a framework or library but a full language with its own grammar, parser, validator, compiler, and runtime. You write agents in 140 lines of NOUS, and the compiler generates 333 lines of production Python that runs on asyncio.
+
+NOUS was created by Hlias Staurou and Claude in April 2026 in Athens, Greece. Hlias is a chef of 23 years who became an AI architect and vibe coder. He designed the language concepts while Claude implemented them.
+
+The NOUS grammar has approximately 200 rules written in Lark EBNF format. The grammar supports bilingual keywords in both English and Greek. For example, soul and ψυχή mean the same thing, sense and αίσθηση are equivalent.
+
+A soul in NOUS is an autonomous agent with its own mind, memory, instincts, DNA, and healing capabilities. Souls are first-class citizens in the language, not configuration files. Each soul has a mind that specifies which LLM model to use and at which tier.
+
+Souls communicate through typed message channels using the speak and listen keywords. When a soul speaks a message, it places it on an asyncio queue. Other souls receive messages by listening to specific channels identified by the soul name and message type.
+
+The nervous system in NOUS defines the directed acyclic graph that connects souls together. For example, Scout sends signals to Quant, which analyzes them and sends decisions to Hunter. The syntax is simple: Scout -> Quant -> Hunter.
+
+Memory in NOUS is owned state that belongs to a soul. Each soul declares typed fields with default values. The remember keyword mutates memory during execution. Other souls cannot directly access another soul's memory.
+
+Instinct is the behavior block of a soul. It contains the sequence of operations the soul performs each cycle. Operations include sense for tool invocation, speak for emitting messages, listen for receiving messages, guard for conditional assertions, and control flow with if and for.
+
+DNA in NOUS represents evolvable parameters. Each gene has a current value and a valid range. The Aevolver engine can mutate DNA values within their ranges, test the mutations, and commit or rollback based on fitness improvement.
+
+Heal blocks define error recovery strategies for each soul. When a specific error occurs, the soul can retry with exponential backoff, lower a parameter, hibernate until the next cycle, fall back to another model, or alert an external channel.
+
+Laws in NOUS are constitutional constraints enforced at compile time. A law can set cost ceilings per cycle, maximum latency, or boolean flags like NoLiveTrading. The validator checks that all laws are respected before code generation.
+
+Evolution in NOUS allows agents to self-mutate their DNA while sleeping. The evolution block specifies a schedule, a fitness function connected to Langfuse, and mutation strategies. Mutations are tested on shadow copies of the AST and only committed if fitness improves.
+
+Perception enables external event triggers such as Telegram commands, cron schedules, and system error alerts. When a trigger fires, it can wake a specific soul, wake all souls, or broadcast alerts.
+
+The NOUS compiler pipeline has four stages. First, the Lark parser converts source code to a concrete syntax tree. Second, the NousTransformer converts the CST to a Living AST made of Pydantic V2 nodes. Third, the validator checks the AST for errors and law violations. Fourth, the code generator emits production Python.
+
+The Living AST is called Psychodendro. It has over 40 Pydantic V2 node types including WorldNode, SoulNode, MindNode, MemoryNode, InstinctNode, DnaNode, HealNode, MessageNode, and NervousSystemNode. The AST is mutable and persists in memory for the Aevolver to mutate.
+
+NSP is the Nous Structured Protocol that achieves 70 percent token savings when communicating between agents. Instead of verbose JSON, NSP uses a compact pipe-delimited format that both humans and LLMs can read.
+
+Gate Alpha is the first NOUS program. It defines a four-soul trading cluster with Scout, Quant, Hunter, and Monitor. Scout scans DexScreener for trading pairs, Quant runs Kelly criterion analysis, Hunter executes paper trades, and Monitor sends Telegram notifications.
+
+The NOUS CLI has 12 commands including compile, run, validate, ast, evolve, shell, evolve-live, nsp, info, bridge, version, and help. It is installed as a wrapper script at /usr/local/bin/nous.
+
+Noesis is a symbolic reasoning engine embedded in the NOUS language. It stores knowledge as compressed atoms instead of neural network weights. It uses pattern resonance instead of matrix multiplication for retrieval. It can learn without backpropagation through algorithmic compression.
+
+An atom in Noesis is the fundamental unit of knowledge. It contains patterns for matching, relations for connecting to other knowledge, a template for the original text, a confidence score, and usage statistics. Atoms are infinitely more efficient than distributed neural weights for storing individual facts.
+
+The Noesis Lattice is the knowledge structure that holds all atoms. It uses a trie for prefix matching, an inverted index for fast token lookup, and concept and relation indices for semantic connections. The lattice can be saved to JSON and loaded back.
+
+The Noesis Compressor takes raw text and creates atoms from it. It splits text into sentences, extracts keywords, identifies relations between concepts, and generates sentence-level atoms. It strips markdown formatting before processing to avoid creating noise atoms.
+
+The Noesis Resonator finds relevant atoms for a query. It tokenizes the query, searches the lattice indices, scores candidates by relevance, confidence, recency, and usage, and returns the top matches. It strongly prefers full sentence atoms over fragments.
+
+The Noesis Weaver takes resonated atoms and composes them into a coherent response. It has three modes: compose for natural text, reason for logical chains, and chain for multi-hop reasoning across related atoms.
+
+The Oracle Bridge in Noesis enables hybrid thinking. When Noesis does not know something, it asks an external LLM like Claude. It learns the response by creating atoms from it. The next time the same question is asked, Noesis answers from its lattice without any API call. This makes each oracle call a one-time investment.
+
+Multi-hop reasoning in Noesis follows chains of related atoms. If atom A mentions Socrates and Plato, and atom B mentions Plato and Aristotle, Noesis can chain them to reason about the connection between Socrates and Aristotle through Plato.
+
+The Noesis Feeder is a bulk ingestion tool that can feed text files, directories, or web search results into the lattice. It supports all NOUS project files as known sources and runs evolution after ingestion to prune weak atoms and merge duplicates.
+
+Autonomy in Noesis measures the percentage of queries answered from the lattice without oracle calls. The goal is to reach 90 percent or higher autonomy, meaning Noesis can answer most questions independently after learning from oracle responses.
+
+The Maillard reaction occurs when amino acids and reducing sugars react at temperatures above 140 degrees Celsius. It produces hundreds of different flavor compounds responsible for the browning, aroma, and complex flavors of cooked foods including bread, coffee, grilled meat, and roasted vegetables.
+
+Caramelization is a separate process from the Maillard reaction that involves the oxidation of sugar at temperatures above 170 degrees Celsius. While both produce browning, caramelization only involves sugars, whereas the Maillard reaction requires both amino acids and sugars.
+
+Emulsification is the process of combining two normally immiscible liquids into a stable, uniform mixture. In cooking, this is achieved using emulsifiers like egg yolk lecithin or mustard, which lower the surface tension between oil and water droplets.
+
+Greek cuisine is built on three pillars: olive oil, fresh vegetables, and aromatic herbs. Traditional dishes include moussaka with layers of eggplant, ground meat, and bechamel sauce; souvlaki with grilled meat on skewers; spanakopita with spinach and feta in phyllo dough; and tzatziki with yogurt, cucumber, garlic, and olive oil.
+
+Fermentation is a metabolic process where microorganisms convert carbohydrates to alcohol or organic acids under anaerobic conditions. In bread making, yeast ferments sugars to produce carbon dioxide, which causes the dough to rise. In wine making, yeast converts grape sugars to ethanol.
+
+The five French mother sauces are bechamel made from butter, flour, and milk; veloute made from butter, flour, and light stock; espagnole made from butter, flour, and brown stock; sauce tomate made from pork, tomatoes, and aromatics; and hollandaise made from egg yolks, butter, and lemon juice.
+
+Knife skills are fundamental to professional cooking. The main cuts include brunoise for very fine cubes of about 3 millimeters, julienne for thin strips about 3 millimeters wide, chiffonade for thinly sliced herbs or leafy greens, and mirepoix for roughly chopped onion, carrot, and celery used as a flavor base.
+
+Socrates was an ancient Greek philosopher born in Athens around 470 BC. He developed the Socratic method of questioning to stimulate critical thinking. He believed that wisdom begins with recognizing one's own ignorance. He was sentenced to death by drinking hemlock in 399 BC.
+
+Plato was a student of Socrates who founded the Academy in Athens around 387 BC. He proposed the Theory of Forms, suggesting that abstract perfect entities exist beyond the physical world. His most famous work, The Republic, explores justice, governance, and the ideal state ruled by philosopher kings.
+
+Aristotle studied at Plato's Academy for twenty years before founding his own school, the Lyceum. He created formal logic and the syllogism as methods of deductive reasoning. He classified living organisms and is considered the father of biology. He also tutored Alexander the Great during his youth.
+
+The Sun is a G-type main-sequence star at the center of our Solar System containing 99.86 percent of its total mass. Nuclear fusion in the Sun's core converts hydrogen into helium at temperatures reaching 15 million degrees Celsius. Light from the Sun takes approximately 8 minutes and 20 seconds to reach Earth.
+
+Quantum entanglement is a phenomenon where two or more quantum particles become linked such that the quantum state of one particle cannot be described independently of the others, regardless of the distance separating them. Einstein famously called this spooky action at a distance.
+
+Artificial intelligence is a branch of computer science focused on creating systems that can perform tasks typically requiring human intelligence, such as learning, problem solving, pattern recognition, and decision making. Modern AI systems include neural networks, reinforcement learning agents, and large language models.
+
+Alan Turing proposed the concept of a universal computing machine in 1936, establishing the theoretical foundations of computer science. He played a crucial role in breaking the Enigma code during World War II. The Turing test evaluates whether a machine can exhibit intelligent behavior equivalent to a human.
+
+Claude Shannon founded information theory with his landmark 1948 paper. He proved that information can be quantified in binary digits called bits. His noisy channel coding theorem defines the maximum rate of error-free digital communication and laid the mathematical foundations for modern computing and telecommunications.

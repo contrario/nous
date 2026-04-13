@@ -1,0 +1,58 @@
+# nous-stdlib/aggregator — Fan-In Collector Soul
+# Usage: import aggregator
+
+message AggregatorInput {
+    source: SoulRef
+    key: string
+    value: float
+    timestamp: float
+}
+
+message AggregatorReport {
+    window: string
+    count: int
+    total: float
+    average: float
+    min_val: float
+    max_val: float
+}
+
+soul Aggregator {
+    mind: claude-haiku @ Tier0A
+    senses: [compute_stats]
+
+    memory {
+        buffer: [AggregatorInput] = []
+        window_size: int = 10
+        reports_sent: int = 0
+    }
+
+    instinct {
+        let input = listen Aggregator::AggregatorInput
+        remember buffer += input
+
+        if self.buffer.len() >= self.window_size {
+            let stats = sense compute_stats(data: self.buffer)
+            speak AggregatorReport(
+                window: stats.window_id,
+                count: stats.count,
+                total: stats.total,
+                average: stats.average,
+                min_val: stats.min_val,
+                max_val: stats.max_val
+            )
+            remember buffer = []
+            remember reports_sent += 1
+        }
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on overflow => lower(window_size, 5) then retry
+    }
+
+    dna {
+        window_size: 10 ~ [5, 100]
+        flush_interval: 60 ~ [10, 300]
+    }
+}

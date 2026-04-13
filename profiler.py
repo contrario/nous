@@ -1,35 +1,52 @@
 """
-NOUS Performance Profiler — Μέτρηση (Metrisi)
-===============================================
-Profile .nous programs: parse/validate/compile timing, per-soul analysis,
-tool latency estimation, LLM cost estimation.
+NOUS Profiler v2 — Μέτρηση (Metrisi)
+=======================================
+Per-soul cost tracking, token estimation, latency analysis.
+Static analysis — no runtime needed.
 """
 from __future__ import annotations
 
-import sys
-import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from ast_nodes import (
-    NousProgram, SoulNode, LawCost, LawCurrency,
-    LetNode, SenseCallNode, SpeakNode, RememberNode,
-    IfNode, ForNode, GuardNode, SleepNode,
+    NousProgram, SoulNode, LawCost, LawDuration,
+    LetNode, RememberNode, SpeakNode, GuardNode,
+    SenseCallNode, SleepNode, IfNode, ForNode,
 )
-from parser import parse_nous_file
-from validator import validate_program
-from codegen import generate_python
 
-TIER_COSTS = {
-    "Tier0A": {"input": 0.25, "output": 1.25},
-    "Tier0B": {"input": 0.15, "output": 0.60},
-    "Tier1": {"input": 0.55, "output": 2.19},
-    "Tier2": {"input": 2.50, "output": 10.00},
-    "Tier3": {"input": 15.00, "output": 60.00},
+TIER_COSTS: dict[str, dict[str, float]] = {
+    "Tier0A": {"input_per_1k": 0.00025, "output_per_1k": 0.00125, "label": "Haiku-class"},
+    "Tier0B": {"input_per_1k": 0.0005, "output_per_1k": 0.0025, "label": "Flash-class"},
+    "Tier1":  {"input_per_1k": 0.003, "output_per_1k": 0.015, "label": "Sonnet-class"},
+    "Tier2":  {"input_per_1k": 0.005, "output_per_1k": 0.025, "label": "GPT4o-class"},
+    "Tier3":  {"input_per_1k": 0.015, "output_per_1k": 0.075, "label": "Opus-class"},
 }
 
-AVG_TOKENS_PER_CYCLE = {"input": 800, "output": 200}
+SENSE_TOKEN_ESTIMATES: dict[str, int] = {
+    "http_get": 200,
+    "fetch_rsi": 150,
+    "ddgs_search": 500,
+    "calculate_kelly": 300,
+    "execute_paper_trade": 200,
+    "check_balance": 100,
+    "check_positions": 300,
+    "send_telegram": 100,
+    "gate_alpha_scan": 800,
+    "backtest_pair": 1000,
+    "check_endpoint": 150,
+    "compute_stats": 200,
+    "cron_check": 100,
+    "execute_task": 300,
+    "resolve_route": 150,
+    "deliver_message": 100,
+    "write_log": 50,
+    "query_logs": 200,
+    "flush_logs": 100,
+}
+
+DEFAULT_SENSE_TOKENS = 200
 
 
 @dataclass
@@ -37,236 +54,243 @@ class SoulProfile:
     name: str
     model: str = ""
     tier: str = ""
+    tier_label: str = ""
     sense_count: int = 0
     memory_fields: int = 0
-    instinct_stmts: int = 0
+    gene_count: int = 0
+    stmt_count: int = 0
     speak_count: int = 0
     listen_count: int = 0
-    sense_calls: int = 0
-    if_branches: int = 0
-    for_loops: int = 0
+    sense_call_count: int = 0
     guard_count: int = 0
-    remember_ops: int = 0
-    tools_used: list[str] = field(default_factory=list)
+    loop_count: int = 0
+    branch_count: int = 0
+    est_input_tokens: int = 0
+    est_output_tokens: int = 0
     est_cost_per_cycle: float = 0.0
+    est_latency_ms: int = 0
     complexity_score: int = 0
+    senses_used: list[str] = field(default_factory=list)
 
 
 @dataclass
-class ProfileResult:
-    file: str
+class ProfileReport:
     world_name: str = ""
-    parse_time_ms: float = 0.0
-    validate_time_ms: float = 0.0
-    compile_time_ms: float = 0.0
-    total_time_ms: float = 0.0
-    generated_lines: int = 0
-    soul_count: int = 0
-    message_count: int = 0
-    law_count: int = 0
-    route_count: int = 0
-    test_count: int = 0
-    souls: list[SoulProfile] = field(default_factory=list)
-    cost_ceiling: float = 0.0
-    est_total_cost: float = 0.0
-    heartbeat_seconds: int = 300
-    est_daily_cost: float = 0.0
-    est_monthly_cost: float = 0.0
+    heartbeat: str = ""
+    total_souls: int = 0
+    total_messages: int = 0
+    total_routes: int = 0
+    soul_profiles: list[SoulProfile] = field(default_factory=list)
+    total_cost_per_cycle: float = 0.0
+    total_cost_per_hour: float = 0.0
+    total_cost_per_day: float = 0.0
+    law_cost_ceiling: Optional[float] = None
+    budget_ok: bool = True
 
 
-def _count_stmts(stmts: list[Any]) -> dict[str, int]:
-    counts: dict[str, int] = {
-        "total": 0, "sense": 0, "speak": 0, "listen": 0,
-        "if": 0, "for": 0, "guard": 0, "remember": 0,
-    }
-    tools: list[str] = []
-    for stmt in stmts:
-        counts["total"] += 1
-        if isinstance(stmt, SenseCallNode):
-            counts["sense"] += 1
-            tools.append(stmt.tool_name)
-        elif isinstance(stmt, SpeakNode):
-            counts["speak"] += 1
-        elif isinstance(stmt, RememberNode):
-            counts["remember"] += 1
-        elif isinstance(stmt, GuardNode):
-            counts["guard"] += 1
-        elif isinstance(stmt, LetNode):
-            if isinstance(stmt.value, dict):
-                kind = stmt.value.get("kind", "")
-                if kind == "sense_call":
-                    counts["sense"] += 1
-                    tools.append(stmt.value.get("tool", ""))
-                elif kind == "listen":
-                    counts["listen"] += 1
-        elif isinstance(stmt, IfNode):
-            counts["if"] += 1
-            sub = _count_stmts(stmt.then_body)
-            for k in counts:
-                counts[k] += sub[k]
-            sub2 = _count_stmts(stmt.else_body)
-            for k in counts:
-                counts[k] += sub2[k]
-            tools.extend(sub.get("_tools", []))
-            tools.extend(sub2.get("_tools", []))
-        elif isinstance(stmt, ForNode):
-            counts["for"] += 1
-            sub = _count_stmts(stmt.body)
-            for k in counts:
-                counts[k] += sub[k]
-            tools.extend(sub.get("_tools", []))
-    counts["_tools"] = tools
-    return counts
+class NousProfiler:
+    """Static profiler for NOUS programs."""
 
+    def __init__(self, program: NousProgram) -> None:
+        self.program = program
 
-def _profile_soul(soul: SoulNode) -> SoulProfile:
-    sp = SoulProfile(name=soul.name)
-    if soul.mind:
-        sp.model = soul.mind.model
-        sp.tier = soul.mind.tier.value
-    sp.sense_count = len(soul.senses)
-    sp.memory_fields = len(soul.memory.fields) if soul.memory else 0
+    def profile(self) -> ProfileReport:
+        report = ProfileReport()
 
-    if soul.instinct:
-        counts = _count_stmts(soul.instinct.statements)
-        sp.instinct_stmts = counts["total"]
-        sp.sense_calls = counts["sense"]
-        sp.speak_count = counts["speak"]
-        sp.listen_count = counts["listen"]
-        sp.if_branches = counts["if"]
-        sp.for_loops = counts["for"]
-        sp.guard_count = counts["guard"]
-        sp.remember_ops = counts["remember"]
-        sp.tools_used = list(set(counts.get("_tools", [])))
+        if self.program.world:
+            report.world_name = self.program.world.name
+            report.heartbeat = self.program.world.heartbeat or "5m"
+            for law in self.program.world.laws:
+                if isinstance(law.expr, LawCost) and law.expr.per == "cycle":
+                    report.law_cost_ceiling = law.expr.amount
 
-    tier_cost = TIER_COSTS.get(sp.tier, TIER_COSTS["Tier1"])
-    input_cost = (AVG_TOKENS_PER_CYCLE["input"] / 1_000_000) * tier_cost["input"]
-    output_cost = (AVG_TOKENS_PER_CYCLE["output"] / 1_000_000) * tier_cost["output"]
-    sp.est_cost_per_cycle = input_cost + output_cost
+        report.total_souls = len(self.program.souls)
+        report.total_messages = len(self.program.messages)
+        if self.program.nervous_system:
+            report.total_routes = len(self.program.nervous_system.routes)
 
-    sp.complexity_score = (
-        sp.instinct_stmts * 1
-        + sp.sense_calls * 3
-        + sp.if_branches * 2
-        + sp.for_loops * 4
-        + sp.speak_count * 1
-        + sp.listen_count * 2
-    )
+        for soul in self.program.souls:
+            sp = self._profile_soul(soul)
+            report.soul_profiles.append(sp)
+            report.total_cost_per_cycle += sp.est_cost_per_cycle
 
-    return sp
+        heartbeat_seconds = self._parse_duration(report.heartbeat)
+        cycles_per_hour = 3600 / heartbeat_seconds if heartbeat_seconds > 0 else 0
+        report.total_cost_per_hour = report.total_cost_per_cycle * cycles_per_hour
+        report.total_cost_per_day = report.total_cost_per_hour * 24
 
+        if report.law_cost_ceiling is not None:
+            report.budget_ok = report.total_cost_per_cycle <= report.law_cost_ceiling
 
-def _duration_to_seconds(duration: str) -> int:
-    if not duration:
-        return 300
-    if duration.endswith("ms"):
-        return max(1, int(duration[:-2]) // 1000)
-    unit = duration[-1]
-    try:
-        val = int(duration[:-1])
-    except ValueError:
-        return 300
-    if unit == "s":
+        return report
+
+    def _profile_soul(self, soul: SoulNode) -> SoulProfile:
+        sp = SoulProfile(name=soul.name)
+
+        if soul.mind:
+            sp.model = soul.mind.model
+            sp.tier = soul.mind.tier.value
+            tier_info = TIER_COSTS.get(sp.tier, TIER_COSTS["Tier1"])
+            sp.tier_label = tier_info["label"]
+
+        sp.sense_count = len(soul.senses)
+        sp.senses_used = list(soul.senses)
+        sp.memory_fields = len(soul.memory.fields) if soul.memory else 0
+        sp.gene_count = len(soul.dna.genes) if soul.dna else 0
+
+        if soul.instinct:
+            counts = self._count_statements(soul.instinct.statements)
+            sp.stmt_count = counts["total"]
+            sp.speak_count = counts["speak"]
+            sp.listen_count = counts["listen"]
+            sp.sense_call_count = counts["sense"]
+            sp.guard_count = counts["guard"]
+            sp.loop_count = counts["loop"]
+            sp.branch_count = counts["branch"]
+
+        base_prompt = 200
+        memory_tokens = sp.memory_fields * 30
+        sense_context = sum(
+            SENSE_TOKEN_ESTIMATES.get(s, DEFAULT_SENSE_TOKENS)
+            for s in sp.senses_used
+            if s in self._get_used_senses(soul)
+        )
+        if not sense_context:
+            sense_context = sp.sense_call_count * DEFAULT_SENSE_TOKENS
+
+        sp.est_input_tokens = base_prompt + memory_tokens + sense_context
+        sp.est_output_tokens = max(100, sp.speak_count * 150 + sp.stmt_count * 20)
+
+        tier_info = TIER_COSTS.get(sp.tier, TIER_COSTS["Tier1"])
+        sp.est_cost_per_cycle = (
+            (sp.est_input_tokens / 1000) * tier_info["input_per_1k"]
+            + (sp.est_output_tokens / 1000) * tier_info["output_per_1k"]
+        )
+
+        base_latency = {"Tier0A": 500, "Tier0B": 800, "Tier1": 2000, "Tier2": 1500, "Tier3": 5000}
+        sp.est_latency_ms = base_latency.get(sp.tier, 2000) + sp.sense_call_count * 300
+
+        sp.complexity_score = (
+            sp.stmt_count
+            + sp.branch_count * 2
+            + sp.loop_count * 3
+            + sp.sense_call_count * 2
+            + sp.guard_count
+        )
+
+        return sp
+
+    def _count_statements(self, stmts: list[Any]) -> dict[str, int]:
+        counts = {"total": 0, "speak": 0, "listen": 0, "sense": 0, "guard": 0, "loop": 0, "branch": 0}
+        for stmt in stmts:
+            counts["total"] += 1
+            if isinstance(stmt, SpeakNode):
+                counts["speak"] += 1
+            elif isinstance(stmt, LetNode):
+                if isinstance(stmt.value, dict):
+                    kind = stmt.value.get("kind", "")
+                    if kind == "listen":
+                        counts["listen"] += 1
+                    elif kind == "sense_call":
+                        counts["sense"] += 1
+            elif isinstance(stmt, SenseCallNode):
+                counts["sense"] += 1
+            elif isinstance(stmt, GuardNode):
+                counts["guard"] += 1
+            elif isinstance(stmt, ForNode):
+                counts["loop"] += 1
+                sub = self._count_statements(stmt.body)
+                for k in counts:
+                    counts[k] += sub[k]
+            elif isinstance(stmt, IfNode):
+                counts["branch"] += 1
+                sub = self._count_statements(stmt.then_body)
+                for k in counts:
+                    counts[k] += sub[k]
+                if stmt.else_body:
+                    sub = self._count_statements(stmt.else_body)
+                    for k in counts:
+                        counts[k] += sub[k]
+        return counts
+
+    def _get_used_senses(self, soul: SoulNode) -> set[str]:
+        used: set[str] = set()
+        if soul.instinct:
+            self._collect_senses(soul.instinct.statements, used)
+        return used
+
+    def _collect_senses(self, stmts: list[Any], used: set[str]) -> None:
+        for stmt in stmts:
+            if isinstance(stmt, SenseCallNode):
+                used.add(stmt.tool_name)
+            elif isinstance(stmt, LetNode) and isinstance(stmt.value, dict):
+                if stmt.value.get("kind") == "sense_call":
+                    used.add(stmt.value.get("tool", ""))
+            elif isinstance(stmt, ForNode):
+                self._collect_senses(stmt.body, used)
+            elif isinstance(stmt, IfNode):
+                self._collect_senses(stmt.then_body, used)
+                self._collect_senses(stmt.else_body, used)
+
+    def _parse_duration(self, d: str) -> int:
+        if not d:
+            return 300
+        if d.endswith("ms"):
+            return max(1, int(d[:-2]) // 1000)
+        unit = d[-1]
+        try:
+            val = int(d[:-1])
+        except ValueError:
+            return 300
+        if unit == "s":
+            return val
+        elif unit == "m":
+            return val * 60
+        elif unit == "h":
+            return val * 3600
+        elif unit == "d":
+            return val * 86400
         return val
-    elif unit == "m":
-        return val * 60
-    elif unit == "h":
-        return val * 3600
-    elif unit == "d":
-        return val * 86400
-    return val
 
 
-def profile(source_path: str) -> ProfileResult:
-    path = Path(source_path)
-    result = ProfileResult(file=str(path))
+def print_profile(report: ProfileReport) -> None:
+    print(f"\n═══ NOUS Profiler — {report.world_name} ═══\n")
+    print(f"  Heartbeat:  {report.heartbeat}")
+    print(f"  Souls:      {report.total_souls}")
+    print(f"  Messages:   {report.total_messages}")
+    print(f"  Routes:     {report.total_routes}")
 
-    t0 = time.perf_counter()
-    program = parse_nous_file(path)
-    result.parse_time_ms = (time.perf_counter() - t0) * 1000
+    for sp in report.soul_profiles:
+        print(f"\n  ┌─ {sp.name} ({sp.model} @ {sp.tier} / {sp.tier_label})")
+        print(f"  │  Statements:  {sp.stmt_count} (speak:{sp.speak_count} listen:{sp.listen_count} sense:{sp.sense_call_count} guard:{sp.guard_count} if:{sp.branch_count} for:{sp.loop_count})")
+        print(f"  │  Memory:      {sp.memory_fields} fields, {sp.gene_count} genes")
+        print(f"  │  Tokens:      ~{sp.est_input_tokens} in / ~{sp.est_output_tokens} out")
+        print(f"  │  Cost/cycle:  ${sp.est_cost_per_cycle:.6f}")
+        print(f"  │  Latency:     ~{sp.est_latency_ms}ms")
+        print(f"  └  Complexity:  {sp.complexity_score}")
 
-    t1 = time.perf_counter()
-    validate_program(program)
-    result.validate_time_ms = (time.perf_counter() - t1) * 1000
+    print(f"\n  ── Cost Summary ──")
+    print(f"  Per cycle:  ${report.total_cost_per_cycle:.6f}")
+    print(f"  Per hour:   ${report.total_cost_per_hour:.4f}")
+    print(f"  Per day:    ${report.total_cost_per_day:.2f}")
 
-    t2 = time.perf_counter()
-    code = generate_python(program)
-    result.compile_time_ms = (time.perf_counter() - t2) * 1000
-
-    result.total_time_ms = (time.perf_counter() - t0) * 1000
-    result.generated_lines = len(code.splitlines())
-
-    w = program.world
-    if w:
-        result.world_name = w.name
-        result.law_count = len(w.laws)
-        result.heartbeat_seconds = _duration_to_seconds(w.heartbeat) if w.heartbeat else 300
-        for law in w.laws:
-            if isinstance(law.expr, LawCost):
-                result.cost_ceiling = law.expr.amount
-
-    result.soul_count = len(program.souls)
-    result.message_count = len(program.messages)
-    result.test_count = len(program.tests)
-    if program.nervous_system:
-        result.route_count = len(program.nervous_system.routes)
-
-    for soul in program.souls:
-        sp = _profile_soul(soul)
-        result.souls.append(sp)
-
-    result.est_total_cost = sum(s.est_cost_per_cycle for s in result.souls)
-    cycles_per_day = 86400 / result.heartbeat_seconds
-    result.est_daily_cost = result.est_total_cost * cycles_per_day
-    result.est_monthly_cost = result.est_daily_cost * 30
-
-    return result
+    if report.law_cost_ceiling is not None:
+        icon = "✓" if report.budget_ok else "✗"
+        print(f"  Budget:     {icon} ${report.total_cost_per_cycle:.6f} / ${report.law_cost_ceiling:.2f} ceiling")
 
 
-def print_profile(r: ProfileResult) -> None:
-    G = "\033[92m"
-    Y = "\033[93m"
-    C = "\033[96m"
-    M = "\033[95m"
-    D = "\033[2m"
-    B = "\033[1m"
-    R = "\033[0m"
-    if not sys.stdout.isatty():
-        G = Y = C = M = D = B = R = ""
-
-    print(f"\n{B}═══ NOUS Profiler ═══{R}")
-    print(f"File: {C}{r.file}{R}  World: {C}{r.world_name}{R}\n")
-
-    print(f"{B}Pipeline Timing{R}")
-    bar_parse = "█" * max(1, int(r.parse_time_ms / max(r.total_time_ms, 0.01) * 30))
-    bar_valid = "█" * max(1, int(r.validate_time_ms / max(r.total_time_ms, 0.01) * 30))
-    bar_comp = "█" * max(1, int(r.compile_time_ms / max(r.total_time_ms, 0.01) * 30))
-    print(f"  Parse:    {G}{bar_parse}{R} {r.parse_time_ms:.1f}ms")
-    print(f"  Validate: {Y}{bar_valid}{R} {r.validate_time_ms:.1f}ms")
-    print(f"  Compile:  {C}{bar_comp}{R} {r.compile_time_ms:.1f}ms")
-    print(f"  Total:    {B}{r.total_time_ms:.1f}ms{R} → {r.generated_lines} lines\n")
-
-    print(f"{B}Program Structure{R}")
-    print(f"  Souls: {r.soul_count}  Messages: {r.message_count}  Laws: {r.law_count}  Routes: {r.route_count}  Tests: {r.test_count}\n")
-
-    print(f"{B}Soul Analysis{R}")
-    print(f"  {'Name':<14} {'Tier':<8} {'Stmts':>5} {'Sense':>5} {'Speak':>5} {'If':>4} {'For':>4} {'Cost/cyc':>10} {'Complexity':>10}")
-    print(f"  {'─'*76}")
-    for s in r.souls:
-        print(f"  {M}{s.name:<14}{R} {s.tier:<8} {s.instinct_stmts:>5} {s.sense_calls:>5} {s.speak_count:>5} {s.if_branches:>4} {s.for_loops:>4} {Y}${s.est_cost_per_cycle:.6f}{R} {s.complexity_score:>10}")
-        if s.tools_used:
-            tools = ", ".join(s.tools_used)
-            print(f"  {D}  tools: {tools}{R}")
-    print()
-
-    print(f"{B}Cost Estimation{R} {D}(based on avg {AVG_TOKENS_PER_CYCLE['input']}+{AVG_TOKENS_PER_CYCLE['output']} tokens/cycle){R}")
-    hb = r.heartbeat_seconds
-    cpd = 86400 / hb
-    print(f"  Heartbeat:       {hb}s ({cpd:.0f} cycles/day)")
-    print(f"  Per cycle:       {Y}${r.est_total_cost:.6f}{R}")
-    if r.cost_ceiling:
-        pct = (r.est_total_cost / r.cost_ceiling) * 100
-        color = G if pct < 80 else Y
-        print(f"  Cost ceiling:    ${r.cost_ceiling:.2f}/cycle ({color}{pct:.0f}% utilized{R})")
-    print(f"  Daily estimate:  {Y}${r.est_daily_cost:.4f}{R}")
-    print(f"  Monthly estimate:{Y}${r.est_monthly_cost:.2f}{R}\n")
+def cmd_profile(file_path: str) -> int:
+    from parser import parse_nous_file
+    source = Path(file_path)
+    if not source.exists():
+        print(f"Error: file not found: {source}")
+        return 1
+    try:
+        program = parse_nous_file(source)
+    except Exception as e:
+        print(f"Parse error: {e}")
+        return 1
+    profiler = NousProfiler(program)
+    report = profiler.profile()
+    print_profile(report)
+    return 0

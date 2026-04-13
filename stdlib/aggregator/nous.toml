@@ -1,0 +1,8 @@
+[package]
+name = "aggregator"
+version = "1.0.0"
+description = "Fan-in collector soul — buffers inputs, computes windowed statistics"
+entry = "main.nous"
+author = "nous-stdlib"
+
+[dependencies]

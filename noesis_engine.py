@@ -178,6 +178,66 @@ class Lattice:
         ids = self.concepts.get(concept, set())
         return [self.atoms[aid] for aid in ids if aid in self.atoms]
 
+    def find_chain(self, start_token: str, max_hops: int = 3) -> list[list[Atom]]:
+        chains: list[list[Atom]] = []
+        start_atoms = list(self.inverted.get(start_token.lower(), set()))
+        if not start_atoms:
+            return chains
+        visited: set[str] = set()
+        for start_id in start_atoms[:5]:
+            atom = self.atoms.get(start_id)
+            if atom is None:
+                continue
+            chain = [atom]
+            visited.add(start_id)
+            self._extend_chain(chain, visited, max_hops - 1, chains)
+            visited.discard(start_id)
+        chains.sort(key=len, reverse=True)
+        return chains[:5]
+
+    def _extend_chain(
+        self,
+        chain: list[Atom],
+        visited: set[str],
+        remaining: int,
+        results: list[list[Atom]],
+    ) -> None:
+        if remaining <= 0 or len(chain) >= 4:
+            if len(chain) >= 2:
+                results.append(list(chain))
+            return
+        current = chain[-1]
+        link_tokens: set[str] = set()
+        for val in current.relations.values():
+            for token in val.lower().split():
+                if len(token) > 2 and token not in _STOP_WORDS:
+                    link_tokens.add(token)
+        for pattern in current.patterns[-3:]:
+            if pattern.lower() not in _STOP_WORDS:
+                link_tokens.add(pattern.lower())
+        next_ids: set[str] = set()
+        for token in link_tokens:
+            next_ids.update(self.inverted.get(token, set()))
+        next_ids -= visited
+        scored: list[tuple[str, float]] = []
+        for nid in next_ids:
+            next_atom = self.atoms.get(nid)
+            if next_atom is None or next_atom.level < 3:
+                continue
+            overlap = len(link_tokens & set(p.lower() for p in next_atom.patterns))
+            if overlap > 0:
+                scored.append((nid, overlap * next_atom.confidence))
+        scored.sort(key=lambda x: x[1], reverse=True)
+        for nid, _ in scored[:3]:
+            next_atom = self.atoms[nid]
+            chain.append(next_atom)
+            visited.add(nid)
+            self._extend_chain(chain, visited, remaining - 1, results)
+            chain.pop()
+            visited.discard(nid)
+        if len(chain) >= 2:
+            results.append(list(chain))
+
     @property
     def size(self) -> int:
         return len(self.atoms)
@@ -249,15 +309,84 @@ class Compressor:
         self._pattern_freq: dict[str, int] = defaultdict(int)
 
     def compress(self, text: str) -> list[Atom]:
+        text = self._strip_markdown(text)
         sentences = self._split_sentences(text)
         atoms: list[Atom] = []
         for sentence in sentences:
             atoms.extend(self._compress_sentence(sentence))
         return atoms
 
+    def _strip_markdown(self, text: str) -> str:
+        text = re.sub(r'```[\s\S]*?```', '', text)
+        text = re.sub(r'`[^`]+`', '', text)
+        text = re.sub(r'^\|.*\|$', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^[-|:]+$', '', text, flags=re.MULTILINE)
+        text = re.sub(r'^#{1,6}\s+', '', text, flags=re.MULTILINE)
+        text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+        text = re.sub(r'\*([^*]+)\*', r'\1', text)
+        text = re.sub(r'^\s*[-*]\s+\[.\]\s*', '', text, flags=re.MULTILINE)
+        text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
+        text = re.sub(r'[═─│├└┌┐╔╚║╗╝╠╣╬]+', '', text)
+        text = re.sub(r'^\s*[-*>]\s+', '', text, flags=re.MULTILINE)
+        return text
+
     def _split_sentences(self, text: str) -> list[str]:
-        raw = re.split(r'(?<=[.!?;])\s+', text.strip())
-        return [s.strip() for s in raw if len(s.strip()) > 5]
+        lines = text.split("\n")
+        raw_sentences: list[str] = []
+        for line in lines:
+            line = line.strip()
+            if not line or len(line) < 30:
+                continue
+            if self._is_code_or_markup(line):
+                continue
+            parts = re.split(r'(?<=[.!?])\s+', line)
+            for part in parts:
+                part = part.strip()
+                if len(part) >= 30 and self._is_natural_language(part):
+                    raw_sentences.append(part)
+        return raw_sentences
+
+    def _is_natural_language(self, text: str) -> bool:
+        line = text.strip()
+        words = line.split()
+        if len(words) < 5:
+            return False
+        alpha_words = sum(1 for w in words if w[0].isalpha() or w[0] in "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρστυφχψωάέήίόύώ")
+        if alpha_words / len(words) < 0.7:
+            return False
+        special = sum(1 for c in line if c in "{}[]()=<>|&;$@#`\\_*~^→←├└│─═")
+        if len(line) > 0 and special / len(line) > 0.05:
+            return False
+        if re.search(r'\s{3,}', line):
+            return False
+        if line.startswith(("-", "*", ">", "#", "|")):
+            return False
+        return True
+
+    def _is_code_or_markup(self, text: str) -> bool:
+        line = text.strip()
+        if line.startswith(("```", "│", "├", "└", "═", "─", "┌", "┐", "╔", "╚", "║")):
+            return True
+        if line.startswith(("import ", "from ", "def ", "class ", "async ", "await ", "self.")):
+            return True
+        if line.startswith(("$", ">>>", "root@", "nous:", "//", "/*", "#!", "% ", "pip ")):
+            return True
+        if line.startswith("|") and "|" in line[1:]:
+            return True
+        if line.startswith(("- ", "* ", "> ", "# ")):
+            return True
+        if line.startswith("**") and ":**" in line:
+            return True
+        if "`" in line:
+            return True
+        if "--" in line and re.search(r'--\w', line):
+            return True
+        code_chars = sum(1 for c in line if c in "{}[]()=<>|&;$@#`\\_")
+        if len(line) > 0 and code_chars / len(line) > 0.08:
+            return True
+        if re.match(r'^[A-Z_]{2,}\s*[:=]', line):
+            return True
+        return False
 
     def _compress_sentence(self, sentence: str) -> list[Atom]:
         tokens = _tokenize(sentence)
@@ -276,21 +405,6 @@ class Compressor:
             tags=self._extract_tags(keywords),
         )
         atoms.append(sentence_atom)
-        for n in range(self.min_pattern_len, min(self.max_pattern_len + 1, len(keywords) + 1)):
-            for gram in _ngrams(keywords, n):
-                gram_key = " ".join(gram)
-                self._pattern_freq[gram_key] += 1
-                if self._pattern_freq[gram_key] >= 2:
-                    phrase_atom = Atom(
-                        id=_atom_id(gram_key),
-                        patterns=gram,
-                        template=gram_key,
-                        level=2,
-                        confidence=min(1.0, 0.5 + 0.1 * self._pattern_freq[gram_key]),
-                        source="ngram",
-                        tags=self._extract_tags(gram),
-                    )
-                    atoms.append(phrase_atom)
         return atoms
 
     def _extract_relations(self, tokens: list[str]) -> dict[str, str]:
@@ -345,12 +459,16 @@ class Resonator:
             relevance = self._relevance_score(atom, query_set)
             recency = self._recency_score(atom)
             usage_score = min(1.0, math.log1p(atom.usage_count) / 5.0)
+            level_bonus = 0.3 if atom.level >= 3 else -0.2
+            template_quality = 0.1 if len(atom.template) > 30 else -0.1
             total = (
-                base_score * 0.3
-                + relevance * 0.35
-                + atom.confidence * 0.15
-                + recency * 0.1
-                + usage_score * 0.1
+                base_score * 0.25
+                + relevance * 0.3
+                + atom.confidence * 0.1
+                + recency * 0.05
+                + usage_score * 0.05
+                + level_bonus
+                + template_quality
             )
             if total >= min_score:
                 rescored.append((atom, total))
@@ -456,15 +574,35 @@ class Weaver:
             atom.usage_count += 1
             if atom.relations:
                 subj = atom.relations.get("subject", "")
-                pred = atom.relations.get("predicate", atom.relations.get("is_a", ""))
+                is_a = atom.relations.get("is_a", "")
+                pred = atom.relations.get("predicate", "")
                 obj = atom.relations.get("object", atom.relations.get("context", ""))
-                if subj and pred:
+                if is_a:
+                    lines.append(f"{subj} ≡ {is_a}")
+                elif subj and pred:
                     lines.append(f"{subj} → {pred} → {obj}" if obj else f"{subj} → {pred}")
                 else:
                     lines.append(atom.template)
             else:
                 lines.append(atom.template)
         return " ∴ ".join(lines)
+
+    def weave_chain(self, chains: list[list["Atom"]], query: str) -> str:
+        if not chains:
+            return ""
+        best_chain = chains[0]
+        parts: list[str] = []
+        for i, atom in enumerate(best_chain):
+            atom.usage_count += 1
+            template = atom.template.strip()
+            if not template or len(template) < 10:
+                continue
+            if not template[-1] in ".!?":
+                template += "."
+            parts.append(template)
+        if not parts:
+            return ""
+        return " → ".join(parts) if len(parts) <= 3 else " ".join(parts)
 
     def _pick_connector(self, prev: str, curr: str) -> str:
         if prev.endswith((".", "!", "?")):
@@ -514,6 +652,8 @@ class NoesisEngine:
             confidence_threshold=oracle_threshold,
         )
         self._query_log: list[dict[str, Any]] = []
+        self._oracle_queries: int = 0
+        self._lattice_queries: int = 0
 
     def learn(self, text: str, source: str = "input") -> int:
         atoms = self.compressor.compress(text)
@@ -548,9 +688,23 @@ class NoesisEngine:
             oracle_response = self.oracle.consult(query)
             if oracle_response:
                 oracle_used = True
+                self._oracle_queries += 1
                 new_atoms = self.learn(oracle_response, source="oracle")
                 resonated = self.resonator.resonate(query, self.lattice, top_k=top_k)
-        response = self.weaver.weave(resonated, query, mode=mode)
+        if not oracle_used:
+            self._lattice_queries += 1
+        if mode == "chain":
+            tokens = _tokenize(query)
+            keywords = _remove_stopwords(tokens)
+            chains: list[list[Atom]] = []
+            for kw in keywords[:3]:
+                chains.extend(self.lattice.find_chain(kw, max_hops=3))
+            if chains:
+                response = self.weaver.weave_chain(chains, query)
+            else:
+                response = self.weaver.weave(resonated, query, mode="compose")
+        else:
+            response = self.weaver.weave(resonated, query, mode=mode)
         if not response and oracle_response:
             response = oracle_response
         elapsed = time.perf_counter() - t0
@@ -624,21 +778,33 @@ class NoesisEngine:
                 "atoms": 0, "queries": len(self._query_log),
                 "oracle_calls": self.oracle.call_count,
                 "avg_confidence": 0.0, "avg_fitness": 0.0,
+                "autonomy": "N/A",
             }
         confidences = [a.confidence for a in self.lattice.atoms.values()]
         fitnesses = [a.fitness for a in self.lattice.atoms.values()]
         levels = defaultdict(int)
+        sources = defaultdict(int)
         for a in self.lattice.atoms.values():
             levels[a.level] += 1
+            sources[a.source] += 1
+        total_answered = self._oracle_queries + self._lattice_queries
+        if total_answered > 0:
+            autonomy_pct = (self._lattice_queries / total_answered) * 100
+            autonomy_str = f"{autonomy_pct:.1f}%"
+        else:
+            autonomy_str = "N/A"
         return {
             "atoms": self.lattice.size,
             "queries": len(self._query_log),
             "oracle_calls": self.oracle.call_count,
-            "oracle_learns": self.oracle.learn_count,
+            "lattice_answers": self._lattice_queries,
+            "oracle_answers": self._oracle_queries,
+            "autonomy": autonomy_str,
             "avg_confidence": sum(confidences) / len(confidences),
             "max_confidence": max(confidences),
             "avg_fitness": sum(fitnesses) / len(fitnesses),
             "by_level": dict(levels),
+            "by_source": dict(sources),
             "unique_patterns": len(self.lattice.inverted),
             "unique_concepts": len(self.lattice.concepts),
             "unique_relations": len(self.lattice.relation_index),
@@ -774,3 +940,12 @@ class NoesisSoul:
 
     def sense_search(self, query: str, top_k: int = 5) -> list[dict[str, Any]]:
         return self.engine.search_atoms(query, top_k=top_k)
+
+import noesis_quality_patch
+
+import noesis_quality_patch
+import noesis_quality_patch
+import noesis_reasoning_patch
+import noesis_scaling_patch
+import noesis_scaling_patch
+import noesis_autofeeding_patch

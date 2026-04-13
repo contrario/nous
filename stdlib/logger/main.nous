@@ -1,0 +1,59 @@
+# nous-stdlib/logger — Audit Trail Soul
+# Usage: import logger
+
+message LogEntry {
+    source: SoulRef
+    level: string
+    event: string
+    data: string
+    timestamp: float
+}
+
+message LogQuery {
+    source: string = ""
+    level: string = ""
+    since: float = 0.0
+    limit: int = 100
+}
+
+message LogBatch {
+    entries: [LogEntry] = []
+    count: int = 0
+    earliest: float = 0.0
+    latest: float = 0.0
+}
+
+soul Logger {
+    mind: gemini-flash @ Tier2
+    senses: [write_log, query_logs, flush_logs]
+
+    memory {
+        buffer: [LogEntry] = []
+        total_logged: int = 0
+        flush_threshold: int = 50
+        last_flush: float = 0.0
+    }
+
+    instinct {
+        let entry = listen Logger::LogEntry
+        remember buffer += entry
+        remember total_logged += 1
+
+        if self.buffer.len() >= self.flush_threshold {
+            sense flush_logs(entries: self.buffer)
+            remember buffer = []
+            remember last_flush = now()
+        }
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on disk_full => lower(flush_threshold, 10) then retry
+        on write_error => sleep 1 cycle
+    }
+
+    dna {
+        flush_threshold: 50 ~ [10, 500]
+        retention_days: 30 ~ [7, 365]
+    }
+}

@@ -1,0 +1,8 @@
+[package]
+name = "router"
+version = "1.0.0"
+description = "Dynamic routing soul — routes messages by topic to destinations"
+entry = "main.nous"
+author = "nous-stdlib"
+
+[dependencies]

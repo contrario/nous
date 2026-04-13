@@ -1,0 +1,56 @@
+# nous-stdlib/watcher — Periodic Monitoring Soul
+# Usage: import watcher
+
+message WatcherTick {
+    target: string
+    status: string
+    value: float
+    timestamp: float
+}
+
+message WatcherAlert {
+    target: string
+    reason: string
+    severity: string
+    value: float
+}
+
+soul Watcher {
+    mind: gemini-flash @ Tier2
+    senses: [http_get, check_endpoint]
+
+    memory {
+        targets: [string] = []
+        last_status: string = "unknown"
+        check_count: int = 0
+        alert_count: int = 0
+    }
+
+    instinct {
+        for target in self.targets {
+            let result = sense check_endpoint(url: target)
+            speak WatcherTick(
+                target: target,
+                status: result.status,
+                value: result.latency,
+                timestamp: now()
+            )
+            if result.status != "ok" {
+                speak WatcherAlert(
+                    target: target,
+                    reason: result.error,
+                    severity: "warning",
+                    value: result.latency
+                )
+                remember alert_count += 1
+            }
+        }
+        remember check_count += 1
+        remember last_status = "completed"
+    }
+
+    heal {
+        on timeout => retry(3, exponential)
+        on api_error => sleep 1 cycle
+    }
+}

@@ -1,0 +1,8 @@
+[package]
+name = "scheduler"
+version = "1.0.0"
+description = "Cron-based task execution soul — schedules and runs tasks on intervals"
+entry = "main.nous"
+author = "nous-stdlib"
+
+[dependencies]

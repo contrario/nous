@@ -1,0 +1,61 @@
+# nous-stdlib/router — Dynamic Routing Soul
+# Usage: import router
+
+message Routable {
+    source: SoulRef
+    topic: string
+    payload: string
+    priority: int = 0
+}
+
+message RouteResult {
+    destination: string
+    delivered: bool
+    latency: float
+}
+
+soul Router {
+    mind: claude-haiku @ Tier0A
+    senses: [resolve_route, deliver_message]
+
+    memory {
+        route_table: [string] = []
+        routed_count: int = 0
+        dropped_count: int = 0
+        last_route: string = ""
+    }
+
+    instinct {
+        let msg = listen Router::Routable
+        let destination = sense resolve_route(
+            topic: msg.topic,
+            routes: self.route_table
+        )
+
+        if destination.found == true {
+            let result = sense deliver_message(
+                target: destination.target,
+                payload: msg.payload
+            )
+            speak RouteResult(
+                destination: destination.target,
+                delivered: result.ok,
+                latency: result.elapsed
+            )
+            remember routed_count += 1
+            remember last_route = destination.target
+        } else {
+            remember dropped_count += 1
+        }
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on route_not_found => fallback(default_handler)
+    }
+
+    dna {
+        max_retries: 3 ~ [1, 10]
+        timeout_ms: 5000 ~ [1000, 30000]
+    }
+}

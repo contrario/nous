@@ -1,0 +1,52 @@
+[package]
+name = "gate_alpha"
+version = "1.0.0"
+entry = "gate_alpha.nous"
+
+[tools.gate_alpha_scan]
+description = "Scan for opportunities"
+returns = "[any]"
+params = []
+
+[tools.fetch_rsi]
+description = "Fetch RSI"
+returns = "float"
+params = [{name = "pair", type = "string", required = true}]
+
+[tools.calculate_kelly]
+description = "Calculate Kelly criterion"
+returns = "any"
+params = [{name = "signal", type = "any", required = true}]
+
+[tools.execute_paper_trade]
+description = "Execute paper trade"
+returns = "any"
+params = [{name = "decision", type = "any", required = true}]
+
+[tools.send_telegram]
+description = "Send Telegram message"
+returns = "bool"
+params = [
+    {name = "chat", type = "string", required = true},
+    {name = "text", type = "string", required = true}
+]
+
+[tools.check_positions]
+description = "Check open positions"
+returns = "[any]"
+params = []
+
+[tools.check_balance]
+description = "Check balance"
+returns = "float"
+params = []
+
+[tools.ddgs_search]
+description = "DuckDuckGo search"
+returns = "[string]"
+params = [{name = "query", type = "string", required = true}]
+
+[tools.backtest_pair]
+description = "Backtest pair"
+returns = "any"
+params = [{name = "pair", type = "string", required = true}]

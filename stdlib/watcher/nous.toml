@@ -1,0 +1,8 @@
+[package]
+name = "watcher"
+version = "1.0.0"
+description = "Periodic monitoring soul — checks endpoints, emits ticks and alerts"
+entry = "main.nous"
+author = "nous-stdlib"
+
+[dependencies]

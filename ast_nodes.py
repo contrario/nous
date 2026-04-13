@@ -67,13 +67,7 @@ class LawInt(NousNode):
     value: int
 
 
-class LawCurrency(NousNode):
-    kind: str = "currency"
-    amount: float
-    currency: str = "USD"
-
-
-LawExpr = Union[LawCost, LawDuration, LawConstitutional, LawBool, LawInt, LawCurrency]
+LawExpr = Union[LawCost, LawDuration, LawConstitutional, LawBool, LawInt]
 
 
 class LawNode(NousNode):
@@ -364,64 +358,27 @@ class PerceptionNode(NousNode):
 # PROGRAM (ROOT)
 # ═══════════════════════════════════════════
 
-# ═══════════════════════════════════════════
-# TOPOLOGY
-# ═══════════════════════════════════════════
 
-class TopologyServerNode(NousNode):
-    name: str
-    host: str
-    config: dict[str, Any] = Field(default_factory=dict)
+# ═══ NOESIS — Symbolic Intelligence ═══
+class NoesisConfigNode(NousNode):
+    lattice_path: Optional[str] = None
+    oracle_threshold: float = 0.3
+    auto_learn: bool = True
+    auto_evolve: bool = False
+    gap_tracking: bool = True
 
-
-class TopologyNode(NousNode):
-    servers: list[TopologyServerNode] = Field(default_factory=list)
-
-
-# ═══════════════════════════════════════════
-# TEST
-# ═══════════════════════════════════════════
-
-class TestAssertNode(NousNode):
-    kind: str
-    expr: Any = None
-    soul: Optional[str] = None
-    field: Optional[str] = None
-    op: Optional[str] = None
-    expected: Any = None
-    message_type: Optional[str] = None
-
-
-class TestMockNode(NousNode):
-    tool_name: str
-    returns: Any
-
-
-class TestRunNode(NousNode):
-    soul_name: str
-
-
-class TestNode(NousNode):
-    description: str
-    stmts: list[Any] = Field(default_factory=list)
-
-
-class ImportNode(NousNode):
-    path: str
-
-
-# ═══════════════════════════════════════════
-# PROGRAM (ROOT)
-# ═══════════════════════════════════════════
+class ResonateNode(NousNode):
+    query: Any = None
+    bind_name: Optional[str] = None
+    guard_field: Optional[str] = None
+    guard_threshold: Optional[float] = None
 
 class NousProgram(NousNode):
     """Root of the Living AST — the complete .nous program."""
+    noesis: Optional[NoesisConfigNode] = None
     world: Optional[WorldNode] = None
     messages: list[MessageNode] = Field(default_factory=list)
     souls: list[SoulNode] = Field(default_factory=list)
     nervous_system: Optional[NervousSystemNode] = None
     evolution: Optional[EvolutionNode] = None
     perception: Optional[PerceptionNode] = None
-    topology: Optional[TopologyNode] = None
-    tests: list[TestNode] = Field(default_factory=list)
-    imports: list[ImportNode] = Field(default_factory=list)

@@ -1,0 +1,55 @@
+# nous-stdlib/scheduler — Cron-Based Execution Soul
+# Usage: import scheduler
+
+message ScheduledTask {
+    task_id: string
+    schedule: string
+    payload: string
+    created_at: float
+}
+
+message TaskResult {
+    task_id: string
+    status: string
+    output: string
+    duration: float
+}
+
+soul Scheduler {
+    mind: claude-haiku @ Tier0A
+    senses: [cron_check, execute_task]
+
+    memory {
+        tasks: [ScheduledTask] = []
+        completed: int = 0
+        failed: int = 0
+        last_run: float = 0.0
+    }
+
+    instinct {
+        let due = sense cron_check(tasks: self.tasks)
+        for task in due {
+            let result = sense execute_task(
+                task_id: task.task_id,
+                payload: task.payload
+            )
+            speak TaskResult(
+                task_id: task.task_id,
+                status: result.status,
+                output: result.output,
+                duration: result.elapsed
+            )
+            if result.status == "success" {
+                remember completed += 1
+            } else {
+                remember failed += 1
+            }
+        }
+        remember last_run = now()
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on task_error => retry(1, fixed) then alert(ops)
+    }
+}

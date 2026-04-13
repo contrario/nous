@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-NOUS CLI — Νοῦς Command Line Interface v1.1
+NOUS CLI — Νοῦς Command Line Interface v2.0
 =============================================
 Usage:
     nous compile <file.nous> [-o output.py]
     nous run <file.nous>
     nous validate <file.nous>
+    nous typecheck <file.nous>
+    nous docker <file.nous> [--tag NAME] [--port PORT]
     nous ast <file.nous> [--json]
     nous evolve <file.nous> [--cycles N] [--save]
     nous nsp <text> [--compress]
@@ -17,16 +19,21 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import py_compile
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
+from typing import Optional
 
 from parser import parse_nous_file
 from validator import validate_program
 from codegen import generate_python
+from typechecker import typecheck_program
 
-VERSION = "1.8.0"
+VERSION = "2.0.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -38,36 +45,76 @@ BANNER = r"""
 """.format(version=VERSION)
 
 
+def _parse_and_validate(source: Path, typecheck: bool = True) -> tuple:
+    t0 = time.perf_counter()
+    print(f"[1/4] Parsing {source.name}...")
+    try:
+        program = parse_nous_file(source)
+    except Exception as e:
+        print(f"Parse error: {e}", file=sys.stderr)
+        return None, None, None, 1
+    world_name = program.world.name if program.world else "Unknown"
+    print(f"      World: {world_name} | {len(program.souls)} souls | {len(program.messages)} messages")
+
+    print("[2/4] Validating laws...")
+    vresult = validate_program(program)
+    for w in vresult.warnings:
+        print(f"      {w}")
+    if not vresult.ok:
+        for e in vresult.errors:
+            print(f"      {e}")
+        print(f"\nValidation FAILED: {len(vresult.errors)} errors")
+        return None, None, None, 1
+    print(f"      Validation PASS")
+
+    if typecheck:
+        print("[3/4] Type checking...")
+        tresult = typecheck_program(program)
+        for w in tresult.warnings:
+            print(f"      {w}")
+        if not tresult.ok:
+            for e in tresult.errors:
+                print(f"      {e}")
+            print(f"\nType check FAILED: {len(tresult.errors)} errors")
+            return None, None, None, 1
+        tc_info = f"{len(tresult.warnings)} warnings" if tresult.warnings else "clean"
+        print(f"      Type check PASS ({tc_info})")
+    else:
+        tresult = None
+
+    elapsed = time.perf_counter() - t0
+    return program, vresult, tresult, elapsed
+
+
 def cmd_compile(args: argparse.Namespace) -> int:
     source = Path(args.file)
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
-    t0 = time.perf_counter()
-    print(f"[1/3] Parsing {source.name}...")
-    try:
-        program = parse_nous_file(source)
-    except Exception as e:
-        print(f"Parse error: {e}", file=sys.stderr)
-        return 1
-    world_name = program.world.name if program.world else "Unknown"
-    print(f"      World: {world_name} | {len(program.souls)} souls | {len(program.messages)} messages")
-    print("[2/3] Validating laws...")
-    result = validate_program(program)
-    for w in result.warnings:
-        print(f"      {w}")
-    if not result.ok:
-        for e in result.errors:
-            print(f"      {e}")
-        print(f"\nValidation FAILED: {len(result.errors)} errors")
-        return 1
-    print(f"      Validation PASS")
-    print("[3/3] Generating Python...")
+
+    program, _, _, result = _parse_and_validate(source)
+    if program is None:
+        return result
+
+    print("[4/4] Generating Python...")
     code = generate_python(program)
     out_path = Path(args.output) if args.output else source.with_suffix(".py")
     out_path.write_text(code, encoding="utf-8")
-    elapsed = time.perf_counter() - t0
+
+    with tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False) as f:
+        f.write(code)
+        tmp = f.name
+    try:
+        py_compile.compile(tmp, doraise=True)
+        print(f"      py_compile PASS")
+    except py_compile.PyCompileError as e:
+        print(f"      py_compile FAIL: {e}")
+        return 1
+    finally:
+        os.unlink(tmp)
+
     print(f"      Output: {out_path} ({len(code.splitlines())} lines)")
+    elapsed = result if isinstance(result, float) else 0
     print(f"\n✓ Compiled in {elapsed:.2f}s")
     return 0
 
@@ -77,27 +124,16 @@ def cmd_run(args: argparse.Namespace) -> int:
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
-    t0 = time.perf_counter()
-    print(f"[1/3] Parsing {source.name}...")
-    try:
-        program = parse_nous_file(source)
-    except Exception as e:
-        print(f"Parse error: {e}", file=sys.stderr)
-        return 1
-    world_name = program.world.name if program.world else "Unknown"
-    print(f"      World: {world_name}")
-    print("[2/3] Validating laws...")
-    result = validate_program(program)
-    if not result.ok:
-        for e in result.errors:
-            print(f"      {e}")
-        return 1
-    print(f"      Validation PASS")
-    print("[3/3] Generating & executing...")
+
+    program, _, _, result = _parse_and_validate(source)
+    if program is None:
+        return result
+
+    print("[4/4] Generating & executing...")
     code = generate_python(program)
     tmp_path = source.with_suffix(".gen.py")
     tmp_path.write_text(code, encoding="utf-8")
-    print(f"      Compiled in {time.perf_counter() - t0:.2f}s")
+    world_name = program.world.name if program.world else "Unknown"
     print(f"      Running {world_name}...\n")
     print("=" * 50)
     try:
@@ -124,6 +160,199 @@ def cmd_validate(args: argparse.Namespace) -> int:
     result = validate_program(program)
     print(result.summary())
     return 0 if result.ok else 1
+
+
+def cmd_typecheck(args: argparse.Namespace) -> int:
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    try:
+        program = parse_nous_file(source)
+    except Exception as e:
+        print(f"Parse error: {e}", file=sys.stderr)
+        return 1
+    vresult = validate_program(program)
+    if not vresult.ok:
+        print("Validation FAILED — cannot type check")
+        for e in vresult.errors:
+            print(f"  {e}")
+        return 1
+    tresult = typecheck_program(program)
+    print(tresult.summary())
+    return 0 if tresult.ok else 1
+
+
+def cmd_docker(args: argparse.Namespace) -> int:
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+
+    program, _, _, result = _parse_and_validate(source)
+    if program is None:
+        return result
+
+    world_name = program.world.name if program.world else "nous_app"
+    tag = args.tag or world_name.lower().replace(" ", "_")
+    port = args.port or 8080
+
+    print("[4/4] Generating Docker artifacts...")
+    code = generate_python(program)
+    out_dir = source.parent / "docker"
+    out_dir.mkdir(exist_ok=True)
+
+    app_py = out_dir / "app.py"
+    app_py.write_text(code, encoding="utf-8")
+
+    soul_names = [s.name for s in program.souls]
+    soul_senses: list[str] = []
+    for s in program.souls:
+        soul_senses.extend(s.senses)
+    unique_senses = sorted(set(soul_senses))
+
+    env_vars: dict[str, str] = {}
+    if program.world and program.world.config:
+        for k, v in program.world.config.items():
+            env_vars[k.upper()] = str(v)
+
+    dockerfile = _generate_dockerfile(tag, port)
+    (out_dir / "Dockerfile").write_text(dockerfile, encoding="utf-8")
+
+    compose = _generate_compose(tag, port, env_vars)
+    (out_dir / "docker-compose.yml").write_text(compose, encoding="utf-8")
+
+    requirements = "pydantic>=2.0\nhttpx>=0.25\n"
+    (out_dir / "requirements.txt").write_text(requirements, encoding="utf-8")
+
+    healthcheck = _generate_healthcheck(port, world_name, soul_names)
+    (out_dir / "healthcheck.py").write_text(healthcheck, encoding="utf-8")
+
+    env_file = "\n".join(f"{k}={v}" for k, v in env_vars.items()) + "\n" if env_vars else ""
+    (out_dir / ".env").write_text(env_file, encoding="utf-8")
+
+    print(f"      Output: {out_dir}/")
+    print(f"        Dockerfile          (multi-stage)")
+    print(f"        docker-compose.yml  (tag: {tag})")
+    print(f"        app.py              ({len(code.splitlines())} lines)")
+    print(f"        requirements.txt")
+    print(f"        healthcheck.py")
+    if env_vars:
+        print(f"        .env                ({len(env_vars)} vars)")
+    print(f"\n✓ Docker artifacts generated")
+    print(f"\n  Build:  cd {out_dir} && docker compose build")
+    print(f"  Run:    cd {out_dir} && docker compose up -d")
+    print(f"  Health: curl http://localhost:{port}/health")
+    return 0
+
+
+def _generate_dockerfile(tag: str, port: int) -> str:
+    return f"""# NOUS Generated Dockerfile — {tag}
+# Multi-stage build for minimal runtime image
+
+# ── Stage 1: Dependencies ──
+FROM python:3.12-slim AS deps
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ── Stage 2: Runtime ──
+FROM python:3.12-slim AS runtime
+WORKDIR /app
+
+COPY --from=deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=deps /usr/local/bin /usr/local/bin
+
+COPY app.py .
+COPY healthcheck.py .
+
+ENV PYTHONUNBUFFERED=1
+ENV NOUS_PORT={port}
+
+EXPOSE {port}
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \\
+    CMD python healthcheck.py || exit 1
+
+CMD ["python", "app.py"]
+"""
+
+
+def _generate_compose(tag: str, port: int, env_vars: dict[str, str]) -> str:
+    env_section = ""
+    if env_vars:
+        env_lines = "\n".join(f"      {k}: ${{{k}}}" for k in env_vars)
+        env_section = f"\n    environment:\n{env_lines}"
+
+    return f"""# NOUS Generated docker-compose.yml
+version: "3.9"
+
+services:
+  nous-{tag}:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nous-{tag}
+    ports:
+      - "{port}:{port}"
+    restart: unless-stopped
+    env_file:
+      - .env{env_section}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+"""
+
+
+def _generate_healthcheck(port: int, world_name: str, soul_names: list[str]) -> str:
+    return f"""#!/usr/bin/env python3
+\"\"\"NOUS Health Check — {world_name}\"\"\"
+from __future__ import annotations
+
+import asyncio
+import json
+import os
+import sys
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+PORT = int(os.environ.get("NOUS_PORT", {port}))
+WORLD = "{world_name}"
+SOULS = {soul_names}
+
+
+class HealthHandler(BaseHTTPRequestHandler):
+    def do_GET(self) -> None:
+        if self.path == "/health":
+            body = json.dumps({{
+                "status": "healthy",
+                "world": WORLD,
+                "souls": SOULS,
+            }})
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(body.encode())
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def log_message(self, format: str, *args: object) -> None:
+        pass
+
+
+if __name__ == "__main__":
+    import urllib.request
+    try:
+        r = urllib.request.urlopen(f"http://localhost:{{PORT}}/health", timeout=5)
+        data = json.loads(r.read())
+        if data.get("status") == "healthy":
+            sys.exit(0)
+    except Exception:
+        pass
+    sys.exit(1)
+"""
 
 
 def cmd_ast(args: argparse.Namespace) -> int:
@@ -252,7 +481,6 @@ def cmd_info(args: argparse.Namespace) -> int:
     if program.nervous_system:
         print(f"\nNervous System ({len(program.nervous_system.routes)} routes):")
         for r in program.nervous_system.routes:
-            rtype = type(r).__name__.replace("Node", "")
             if hasattr(r, "source") and hasattr(r, "target"):
                 print(f"  {r.source} → {r.target}")
     if program.evolution:
@@ -285,118 +513,58 @@ def cmd_bridge(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_deploy(args: argparse.Namespace) -> int:
-    import asyncio as _asyncio
-    from topology import TopologyManager
+def cmd_debug(args: argparse.Namespace) -> int:
+    from debugger import debug_file
     source = Path(args.file)
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
-    t0 = time.perf_counter()
-    print(f"[1/4] Parsing {source.name}...")
-    try:
-        program = parse_nous_file(source)
-    except Exception as e:
-        print(f"Parse error: {e}", file=sys.stderr)
-        return 1
-    if not program.topology:
-        print("Error: no topology block found in .nous file", file=sys.stderr)
-        return 1
-    print(f"      Found {len(program.topology.servers)} servers")
-    print("[2/4] Validating...")
-    result = validate_program(program)
-    for w in result.warnings:
-        print(f"      {w}")
-    if not result.ok:
-        for e in result.errors:
-            print(f"      {e}")
-        print(f"\nValidation FAILED")
-        return 1
-    print("[3/4] Compiling...")
-    code = generate_python(program)
-    print(f"      {len(code.splitlines())} lines generated")
-    print("[4/4] Deploying to servers...")
-    mgr = TopologyManager(program, code)
-
-    async def _deploy() -> list:
-        return await mgr.deploy()
-
-    results = _asyncio.run(_deploy())
-    elapsed = time.perf_counter() - t0
-    print()
-    successes = 0
-    for r in results:
-        icon = "✓" if r.success else "✗"
-        print(f"  {icon} {r.server} ({r.host}): {r.message} [{r.elapsed:.2f}s]")
-        if r.success:
-            successes += 1
-    print(f"\nDeployed {successes}/{len(results)} servers in {elapsed:.2f}s")
-    return 0 if successes == len(results) else 1
+    debug_file(source)
+    return 0
 
 
-def cmd_topology(args: argparse.Namespace) -> int:
-    import asyncio as _asyncio
+def cmd_shell(args: argparse.Namespace) -> int:
+    from repl import start_repl
+    file_path = args.file if hasattr(args, "file") and args.file else None
+    start_repl(file_path)
+    return 0
+
+
+def cmd_test(args: argparse.Namespace) -> int:
+    from test_runner import cmd_test as _cmd_test
+    return _cmd_test(args.file)
+
+
+def cmd_watch(args: argparse.Namespace) -> int:
+    from watcher import watch_file
     source = Path(args.file)
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
-    try:
-        program = parse_nous_file(source)
-    except Exception as e:
-        print(f"Parse error: {e}", file=sys.stderr)
-        return 1
-    if not program.topology:
-        print("Error: no topology block found", file=sys.stderr)
-        return 1
+    output = Path(args.output) if args.output else None
+    watch_file(source, output=output, interval=args.interval)
+    return 0
 
-    if args.action == "show":
-        print(f"═══ Topology ═══")
-        for srv in program.topology.servers:
-            souls = srv.config.get("souls", [])
-            soul_list = ", ".join(str(s) for s in souls) if isinstance(souls, list) else str(souls)
-            port = srv.config.get("port", 9100)
-            print(f"  {srv.name}: {srv.host}")
-            print(f"    souls: [{soul_list}]")
-            print(f"    port:  {port}")
-        return 0
 
-    elif args.action == "status":
-        from topology import HealthMonitor, ServerSpec
-        servers = [ServerSpec.from_ast(s) for s in program.topology.servers]
-        monitor = HealthMonitor(servers)
+def cmd_profile(args: argparse.Namespace) -> int:
+    from profiler import cmd_profile as _cmd_profile
+    return _cmd_profile(args.file)
 
-        async def _check() -> dict:
-            return await monitor.check_all()
 
-        status = _asyncio.run(_check())
-        print(f"═══ Topology Status ═══")
-        for name, s in status.items():
-            icon = "🟢" if s.alive else "🔴"
-            pid_str = f"PID {s.pid}" if s.pid else "no PID"
-            uptime_str = f"uptime {s.uptime:.0f}s" if s.uptime else ""
-            souls_str = f"souls: {', '.join(s.souls_running)}" if s.souls_running else ""
-            parts = [p for p in [pid_str, uptime_str, souls_str] if p]
-            detail = " | ".join(parts)
-            err = f" — {s.error}" if s.error else ""
-            print(f"  {icon} {name} ({s.host}): {detail}{err}")
-        return 0
+def cmd_plugins(args: argparse.Namespace) -> int:
+    from plugin_manager import cmd_plugins as _cmd_plugins
+    plugin_args = [args.subcmd] if args.subcmd else ["list"]
+    if hasattr(args, "file") and args.file:
+        plugin_args.append(args.file)
+    return _cmd_plugins(plugin_args)
 
-    elif args.action == "stop":
-        from topology import SSHDeployer
-        code = generate_python(program)
-        deployer = SSHDeployer(program, code)
 
-        async def _stop() -> list:
-            return await deployer.stop_all()
-
-        results = _asyncio.run(_stop())
-        for r in results:
-            icon = "✓" if r.success else "✗"
-            print(f"  {icon} {r.server}: {r.message}")
-        return 0
-
-    print(f"Unknown topology action: {args.action}", file=sys.stderr)
-    return 1
+def cmd_pkg(args: argparse.Namespace) -> int:
+    from stdlib_manager import cmd_pkg as _cmd_pkg
+    pkg_args = [args.subcmd] if args.subcmd else []
+    if hasattr(args, "target") and args.target:
+        pkg_args.append(args.target)
+    return _cmd_pkg(pkg_args)
 
 
 def cmd_version(_args: argparse.Namespace) -> int:
@@ -404,91 +572,7 @@ def cmd_version(_args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_shell(args: argparse.Namespace) -> int:
-    from shell import run_shell
-    source = args.file if hasattr(args, "file") and args.file else None
-    run_shell(source)
-    return 0
-
-
-def cmd_test(args: argparse.Namespace) -> int:
-    from test_runner import run_tests, print_results
-    source = Path(args.file)
-    if not source.exists():
-        print(f"Error: file not found: {source}", file=sys.stderr)
-        return 1
-    suite = run_tests(str(source), verbose=args.verbose if hasattr(args, "verbose") else False)
-    print_results(suite)
-    return 0 if suite.ok else 1
-
-
-def cmd_pkg(args: argparse.Namespace) -> int:
-    from package_manager import cmd_install, cmd_uninstall, cmd_list, cmd_init, cmd_search
-    action = args.action
-    if action == "install":
-        if not args.pkg_name:
-            print("Usage: nous pkg install <name>", file=sys.stderr)
-            return 1
-        ver = args.pkg_version if hasattr(args, "pkg_version") and args.pkg_version else "latest"
-        return cmd_install(args.pkg_name, ver)
-    elif action == "uninstall":
-        if not args.pkg_name:
-            print("Usage: nous pkg uninstall <name>", file=sys.stderr)
-            return 1
-        return cmd_uninstall(args.pkg_name)
-    elif action == "list":
-        return cmd_list()
-    elif action == "init":
-        return cmd_init(args.pkg_name)
-    elif action == "search":
-        return cmd_search(args.pkg_name or "")
-    print(f"Unknown pkg action: {action}", file=sys.stderr)
-    return 1
-
-
-def cmd_docs(args: argparse.Namespace) -> int:
-    from docs_generator import generate_docs_file
-    source = Path(args.file)
-    if not source.exists():
-        print(f"Error: file not found: {source}", file=sys.stderr)
-        return 1
-    out = args.output if hasattr(args, "output") and args.output else None
-    try:
-        result = generate_docs_file(str(source), out)
-        print(f"✓ Documentation generated: {result}")
-        return 0
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-
-
-def cmd_profile(args: argparse.Namespace) -> int:
-    from profiler import profile, print_profile
-    source = Path(args.file)
-    if not source.exists():
-        print(f"Error: file not found: {source}", file=sys.stderr)
-        return 1
-    try:
-        result = profile(str(source))
-        print_profile(result)
-        return 0
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-
-
-def cmd_dashboard(args: argparse.Namespace) -> int:
-    from dashboard import start_dashboard
-    source = Path(args.file)
-    if not source.exists():
-        print(f"Error: file not found: {source}", file=sys.stderr)
-        return 1
-    port = args.port if hasattr(args, "port") else 8080
-    start_dashboard(str(source), port)
-    return 0
-
-
-def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
+def _print_ast(data: dict | list | object, indent: int = 0) -> None:
     prefix = "  " * indent
     if isinstance(data, dict):
         for k, v in data.items():
@@ -510,7 +594,7 @@ def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language")
+    ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language v2.0")
     sub = ap.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("compile", help="Compile .nous to Python")
@@ -521,6 +605,39 @@ def main() -> int:
 
     p = sub.add_parser("validate", help="Validate .nous file")
     p.add_argument("file")
+
+    p = sub.add_parser("typecheck", help="Type check .nous file")
+    p.add_argument("file")
+
+    p = sub.add_parser("docker", help="Generate Docker deployment")
+    p.add_argument("file")
+    p.add_argument("--tag", default=None, help="Docker image tag")
+    p.add_argument("--port", type=int, default=8080, help="Health check port")
+
+    p = sub.add_parser("debug", help="Interactive debugger")
+    p.add_argument("file")
+
+    p = sub.add_parser("shell", help="Interactive REPL v3")
+    p.add_argument("file", nargs="?", default=None, help=".nous file to load")
+
+    p = sub.add_parser("test", help="Run test blocks")
+    p.add_argument("file")
+
+    p = sub.add_parser("watch", help="Watch mode — auto-recompile on save")
+    p.add_argument("file")
+    p.add_argument("-o", "--output", default=None)
+    p.add_argument("--interval", type=float, default=1.0)
+
+    p = sub.add_parser("profile", help="Per-soul cost and performance analysis")
+    p.add_argument("file")
+
+    p = sub.add_parser("plugins", help="Plugin manager")
+    p.add_argument("subcmd", choices=["list", "check"], help="Subcommand")
+    p.add_argument("file", nargs="?", default=None, help=".nous file for check")
+
+    p = sub.add_parser("pkg", help="Package manager")
+    p.add_argument("subcmd", choices=["install", "list", "init", "uninstall"], help="Subcommand")
+    p.add_argument("target", nargs="?", default=None, help="Package path or name")
 
     p = sub.add_parser("ast", help="Print Living AST")
     p.add_argument("file"); p.add_argument("--json", action="store_true")
@@ -538,46 +655,16 @@ def main() -> int:
     p = sub.add_parser("bridge", help="Analyze Noosphere integration")
     p.add_argument("file")
 
-    p = sub.add_parser("deploy", help="Deploy topology to remote servers")
-    p.add_argument("file")
-
-    p = sub.add_parser("topology", help="Show/check/stop topology")
-    p.add_argument("file")
-    p.add_argument("action", choices=["show", "status", "stop"], nargs="?", default="show")
-
-    p = sub.add_parser("shell", help="Interactive REPL")
-    p.add_argument("file", nargs="?", default=None)
-
-    p = sub.add_parser("test", help="Run .nous test blocks")
-    p.add_argument("file")
-    p.add_argument("-v", "--verbose", action="store_true")
-
-    p = sub.add_parser("pkg", help="Package manager")
-    p.add_argument("action", choices=["install", "uninstall", "list", "init", "search"])
-    p.add_argument("pkg_name", nargs="?", default=None)
-    p.add_argument("pkg_version", nargs="?", default="latest")
-
-    p = sub.add_parser("docs", help="Generate HTML documentation")
-    p.add_argument("file")
-    p.add_argument("-o", "--output")
-
-    p = sub.add_parser("profile", help="Profile .nous program")
-    p.add_argument("file")
-
-    p = sub.add_parser("dashboard", help="Web monitoring dashboard")
-    p.add_argument("file")
-    p.add_argument("--port", type=int, default=8080)
-
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
     commands = {
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
+        "typecheck": cmd_typecheck, "docker": cmd_docker, "debug": cmd_debug,
+        "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
+        "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "deploy": cmd_deploy,
-        "topology": cmd_topology, "shell": cmd_shell, "test": cmd_test,
-        "pkg": cmd_pkg, "docs": cmd_docs, "profile": cmd_profile,
-        "dashboard": cmd_dashboard, "version": cmd_version,
+        "info": cmd_info, "bridge": cmd_bridge, "version": cmd_version,
     }
     return commands[args.command](args)
 

@@ -18,7 +18,6 @@ from ast_nodes import (
     EvolutionNode, PerceptionNode, LetNode, RememberNode,
     SpeakNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     GeneNode, LawCost, LawDuration, LawBool, LawInt, LawConstitutional,
-    LawCurrency,
 )
 
 
@@ -39,6 +38,8 @@ class NousCodeGen:
         self._emit_message_classes()
         self._emit_channel_registry()
         self._emit_blank()
+        if hasattr(self.program, 'noesis') and self.program.noesis:
+            self._emit_noesis_init()
         self._emit_soul_classes()
         self._emit_nervous_system()
         self._emit_world_runner()
@@ -96,6 +97,24 @@ class NousCodeGen:
         self._emit_blank()
         self._emit("log = logging.getLogger('nous.runtime')")
 
+    # ── Noesis ──
+
+    def _emit_noesis_init(self) -> None:
+        config = self.program.noesis
+        lattice = config.lattice_path or "noesis_lattice.json"
+        threshold = config.oracle_threshold
+        auto_learn = config.auto_learn
+        self._emit("# ═══ Noesis Symbolic Intelligence ═══")
+        self._emit("from noesis_engine import NoesisEngine")
+        self._emit("from pathlib import Path as _NoesisPath")
+        self._emit("_noesis_engine = NoesisEngine()")
+        self._emit(f'_noesis_lattice_path = _NoesisPath("{lattice}")')
+        self._emit("if _noesis_lattice_path.exists():")
+        self._emit("    _noesis_engine.load(_noesis_lattice_path)")
+        self._emit(f"_noesis_engine.oracle.confidence_threshold = {threshold}")
+        self._emit(f"_noesis_auto_learn = {auto_learn}")
+        self._emit_blank()
+
     # ── Laws ──
 
     def _emit_law_constants(self) -> None:
@@ -123,8 +142,6 @@ class NousCodeGen:
                 self._emit(f"{name} = {law.expr.value}")
             elif isinstance(law.expr, LawConstitutional):
                 self._emit(f"{name} = {law.expr.count}")
-            elif isinstance(law.expr, LawCurrency):
-                self._emit(f"{name} = {law.expr.amount}  # {law.expr.currency}")
 
     # ── Messages ──
 
@@ -301,6 +318,15 @@ class NousCodeGen:
                 if kind == "listen":
                     channel = f"{value['soul']}_{value['type']}"
                     self._emit(f"{stmt.name} = await channels.receive(\"{channel}\")")
+                    return
+                elif kind == "resonate":
+                    query = value.get("query", "")
+                    self._emit(f'{stmt.name} = _noesis_engine.think("{query}")')
+                    gf = value.get("guard_field")
+                    gt = value.get("guard_threshold")
+                    if gf and gt is not None:
+                        self._emit(f"if {stmt.name}.{gf} < {gt}:")
+                        self._emit(f"    pass  # guard: {gf} > {gt} failed")
                     return
                 elif kind == "sense_call":
                     tool = value.get("tool", "unknown")

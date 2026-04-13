@@ -1,6 +1,5 @@
-// nous.lark — EBNF Grammar for NOUS v1.8.0
+// nous.lark — EBNF Grammar for NOUS v1.0
 // The Living Language | Noosphere Project
-// Parser: LALR with keyword priority .2
 // Author: Hlias Staurou (Hlia) + Claude
 
 start: top_level+
@@ -14,18 +13,19 @@ top_level: world_decl
          | perception_decl
          | deploy_decl
          | topology_decl
-         | test_decl
-         | import_decl
+         | noesis_decl
 
 // ═══════════════════════════════════════════
-// IMPORT
 // ═══════════════════════════════════════════
-
-import_decl: IMPORT STRING
-           | IMPORT NAME
-IMPORT.2: "import"
-
+// NOESIS — Symbolic Intelligence
 // ═══════════════════════════════════════════
+noesis_decl: NOESIS "{" noesis_body* "}"
+noesis_body: "lattice" ":" STRING            -> noesis_lattice
+           | "oracle_threshold" ":" FLOAT    -> noesis_threshold
+           | "auto_learn" ":" BOOL            -> noesis_auto_learn
+           | "auto_evolve" ":" BOOL           -> noesis_auto_evolve
+           | "gap_tracking" ":" BOOL          -> noesis_gap_tracking
+
 // WORLD
 // ═══════════════════════════════════════════
 
@@ -38,7 +38,6 @@ law_expr: currency_lit PER CYCLE          -> law_cost
         | duration_lit                     -> law_duration
         | BOOL                            -> law_bool
         | INT                             -> law_int
-        | currency_lit                    -> law_currency
 
 heartbeat_decl: "heartbeat" "=" duration_lit
 timezone_decl: "timezone" "=" STRING
@@ -67,10 +66,7 @@ memory_block: MEMORY "{" field_decl* "}"
 field_decl: NAME ":" type_expr "=" expr
 
 // ── Instinct ──
-instinct_block: INSTINCT "{" stmt_body "}"
-
-// ── Shared statement body (CRITICAL: single rule for LALR) ──
-stmt_body: statement*
+instinct_block: INSTINCT "{" statement* "}"
 
 statement: let_stmt
          | remember_stmt
@@ -80,24 +76,29 @@ statement: let_stmt
          | if_stmt
          | for_stmt
          | sleep_stmt
+         | resonate_stmt
          | sense_call
          | expr
 
-let_stmt: LET NAME "=" expr
+let_stmt: "let" NAME "=" expr
 remember_stmt: REMEMBER NAME "=" expr
              | REMEMBER NAME "+=" expr
 
-speak_stmt: SPEAK NAME "(" arg_list? ")"
-listen_expr: LET NAME "=" LISTEN soul_ref "::" NAME
+speak_stmt: SPEAK message_construct
+listen_expr: "let" NAME "=" LISTEN soul_ref "::" NAME
 
 guard_stmt: GUARD expr
 
-if_stmt: IF expr "{" stmt_body "}" (ELSE "{" stmt_body "}")?
-for_stmt: FOR NAME IN expr "{" stmt_body "}"
+if_stmt: "if" expr "{" statement* "}" ("else" "{" statement* "}")?
+for_stmt: "for" NAME "in" expr "{" statement* "}"
 sleep_stmt: SLEEP INT CYCLE
 
+resonate_stmt: "let" NAME "=" RESONATE STRING                                -> resonate_bind
+             | "let" NAME "=" RESONATE STRING "with" NAME ">" FLOAT          -> resonate_bind_guarded
+             | RESONATE STRING                                              -> resonate_bare
+
 sense_call: SENSE NAME "(" arg_list? ")"
-          | LET NAME "=" SENSE NAME "(" arg_list? ")"
+          | "let" NAME "=" SENSE NAME "(" arg_list? ")"
 
 // ── DNA ──
 dna_block: DNA "{" gene_decl* "}"
@@ -105,7 +106,7 @@ gene_decl: NAME ":" expr "~" "[" expr ("," expr)+ "]"
 
 // ── Heal ──
 heal_block: HEAL "{" heal_rule* "}"
-heal_rule: ON NAME "=>" heal_action ("then" heal_action)*
+heal_rule: "on" NAME "=>" heal_action ("then" heal_action)*
 heal_action: "retry" "(" INT "," NAME ")"             -> heal_retry
            | "lower" "(" NAME "," expr ")"             -> heal_lower
            | "raise" "(" NAME "," expr ")"             -> heal_raise
@@ -144,7 +145,7 @@ nerve_stmt: route_stmt
 route_stmt: soul_ref "->" soul_ref                   -> route_linear
           | soul_ref "->" soul_ref "->" soul_ref     -> route_chain3
 
-match_route: soul_ref "->" MATCH "{" match_arm+ "}"
+match_route: soul_ref "->" "match" "{" match_arm+ "}"
 match_arm: expr "=>" soul_ref ","?                   -> match_arm_soul
          | "_" "=>" SILENCE ","?                     -> match_arm_silence
 
@@ -171,7 +172,7 @@ mutate_body: "strategy" ":" NAME "(" arg_list ")"       -> mutate_strategy
 // ═══════════════════════════════════════════
 
 perception_decl: PERCEPTION "{" perception_rule* "}"
-perception_rule: ON perception_trigger "=>" perception_action
+perception_rule: "on" perception_trigger "=>" perception_action
 
 perception_trigger: NAME "(" STRING ")"                  -> trigger_named
                   | NAME "(" STRING "," expr ")"         -> trigger_named_expr
@@ -192,18 +193,6 @@ deploy_body: NAME ":" expr
 topology_decl: "topology" "{" topo_server* "}"
 topo_server: NAME ":" STRING "{" topo_body* "}"
 topo_body: NAME ":" expr
-
-// ═══════════════════════════════════════════
-// TEST
-// ═══════════════════════════════════════════
-
-test_decl: TEST STRING "{" test_stmt* "}"
-test_stmt: test_assert | test_mock | test_run
-test_assert: "assert" expr                           -> test_assert_expr
-           | "assert" NAME "." NAME COMP_OP expr     -> test_assert_field
-           | "assert" "spoke" NAME                   -> test_assert_spoke
-test_mock: "mock" NAME "returns" expr                -> test_mock_tool
-test_run: "run" NAME                                 -> test_run_soul
 
 // ═══════════════════════════════════════════
 // EXPRESSIONS
@@ -240,12 +229,15 @@ MUL_OP: "*" | "/" | "%"
      | soul_ref "::" NAME                          -> soul_field_ref
      | NAME                                        -> name_ref
      | "[" expr_list? "]"                          -> list_lit
-     | "%{" kv_list? "}"                           -> map_lit
+     | "{" kv_list? "}"                            -> map_lit
+     | message_construct
      | inline_if
      | "(" expr ")"
 
-inline_if: IF expr "{" expr "}" ELSE "{" expr "}"
+inline_if: "if" expr "{" expr "}" "else" "{" expr "}"
 
+message_construct: NAME "(" kv_list? ")"           -> msg_positional
+                 | NAME "{" kv_list? "}"            -> msg_braced
 
 arg_list: arg ("," arg)*
 arg: (NAME ":")? expr
@@ -278,8 +270,8 @@ currency_lit: "$" FLOAT  -> currency_usd
             | "€" FLOAT  -> currency_eur
             | "€" INT    -> currency_eur
 
-duration_lit: DURATION_VAL
-DURATION_VAL: /\d+(ms|s|m|h|d)(?![a-zA-Z_])/
+duration_lit: INT DURATION_UNIT
+DURATION_UNIT: "s" | "m" | "h" | "d" | "ms"
 
 time_lit: INT ":" INT NAME    -> time_hm
 
@@ -287,43 +279,37 @@ time_lit: INT ":" INT NAME    -> time_hm
 // KEYWORDS (English + Greek bilingual)
 // ═══════════════════════════════════════════
 
-WORLD.2: "world" | "κόσμος"
-SOUL.2: "soul" | "ψυχή"
-MEMORY.2: "memory" | "μνήμη"
-INSTINCT.2: "instinct" | "ένστικτο"
-SENSE.2: "sense" | "αίσθηση"
-REMEMBER.2: "remember" | "θυμάμαι"
-SPEAK.2: "speak" | "λέω"
-LISTEN.2: "listen" | "ακούω"
-DNA.2: "dna" | "DNA"
-HEAL.2: "heal" | "θεραπεία"
-LAW.2: "law" | "νόμος"
-GUARD.2: "guard" | "φύλακας"
-SLEEP.2: "sleep" | "ύπνος"
-NERVOUS_SYSTEM.2: "nervous_system" | "νευρικό"
-EVOLUTION.2: "evolution" | "εξέλιξη"
-PERCEPTION.2: "perception" | "αντίληψη"
-MESSAGE.2: "message" | "μήνυμα"
-SILENCE.2: "silence" | "σιωπή"
-WAKE_ALL.2: "wake_all"
-CONSTITUTIONAL.2: "constitutional"
-PER.2: "per"
-CYCLE.2: "cycle"
-BOOL.2: "true" | "false"
-LET.2: "let"
-IF.2: "if"
-ELSE.2: "else"
-FOR.2: "for"
-IN.2: "in"
-ON.2: "on"
-MATCH.2: "match"
-TEST.2: "test"
-TIER.2: /Tier[0-3][A-B]?/
+WORLD: "world" | "κόσμος"
+SOUL: "soul" | "ψυχή"
+MEMORY: "memory" | "μνήμη"
+INSTINCT: "instinct" | "ένστικτο"
+NOESIS: "noesis" | "νόηση"
+RESONATE: "resonate" | "αντήχηση"
+SENSE: "sense" | "αίσθηση"
+REMEMBER: "remember" | "θυμάμαι"
+SPEAK: "speak" | "λέω"
+LISTEN: "listen" | "ακούω"
+DNA: "dna" | "DNA"
+HEAL: "heal" | "θεραπεία"
+LAW: "law" | "νόμος"
+GUARD: "guard" | "φύλακας"
+SLEEP: "sleep" | "ύπνος"
+NERVOUS_SYSTEM: "nervous_system" | "νευρικό"
+EVOLUTION: "evolution" | "εξέλιξη"
+PERCEPTION: "perception" | "αντίληψη"
+MESSAGE: "message" | "μήνυμα"
+SILENCE: "silence" | "σιωπή"
+WAKE_ALL: "wake_all"
+CONSTITUTIONAL: "constitutional"
+PER: "per"
+CYCLE: "cycle"
+TIER: /Tier[0-3][A-B]?/
 
 // ═══════════════════════════════════════════
 // PRIMITIVES
 // ═══════════════════════════════════════════
 
+BOOL: "true" | "false"
 COMP_OP: "==" | "!=" | ">=" | "<=" | ">" | "<"
 
 NAME: /[a-zA-Z_\u0370-\u03FF][a-zA-Z0-9_\u0370-\u03FF]*/

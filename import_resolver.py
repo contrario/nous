@@ -1,162 +1,233 @@
 """
-NOUS Import Resolver — Εισαγωγή (Eisagogi)
-=============================================
-Resolves import statements, merges multi-file projects.
-Supports: relative paths, absolute paths, installed packages.
+NOUS Import Resolver v2 — Εισαγωγή (Eisagogi)
+=================================================
+Resolves imports, detects cycles, merges programs,
+runs cross-file type checking.
 """
 from __future__ import annotations
 
-import logging
-import os
+import tomllib
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
-from ast_nodes import (
-    NousProgram, ImportNode, WorldNode, MessageNode, SoulNode,
-    NervousSystemNode, EvolutionNode, PerceptionNode, TopologyNode,
-    TestNode,
-)
-
-log = logging.getLogger("nous.import")
-
-PACKAGES_DIR = Path(os.environ.get("NOUS_HOME", Path.home() / ".nous")) / "packages"
+from ast_nodes import NousProgram, ImportNode, MessageNode, SoulNode
 
 
-class ImportError(Exception):
-    def __init__(self, path: str, reason: str, source_file: str = "") -> None:
-        self.import_path = path
-        self.reason = reason
-        self.source_file = source_file
-        loc = f" (from {source_file})" if source_file else ""
-        super().__init__(f"Import error: {path}{loc} — {reason}")
+PACKAGES_DIR = Path.home() / ".nous" / "packages"
+
+
+@dataclass
+class ImportError:
+    code: str
+    message: str
+    location: str = ""
+
+    def __str__(self) -> str:
+        prefix = f"[IMPORT] {self.code}"
+        if self.location:
+            prefix += f" @ {self.location}"
+        return f"{prefix}: {self.message}"
+
+
+@dataclass
+class ImportResult:
+    program: NousProgram
+    resolved_files: list[str] = field(default_factory=list)
+    errors: list[ImportError] = field(default_factory=list)
+    warnings: list[ImportError] = field(default_factory=list)
+
+    @property
+    def ok(self) -> bool:
+        return len(self.errors) == 0
 
 
 class ImportResolver:
-    def __init__(self, base_dir: Path | None = None) -> None:
-        self.base_dir = base_dir or Path.cwd()
+    """Resolves and merges imports for a NOUS program."""
+
+    def __init__(self, base_dir: Path, packages_dir: Optional[Path] = None) -> None:
+        self.base_dir = base_dir
+        self.packages_dir = packages_dir or PACKAGES_DIR
         self._resolved: dict[str, NousProgram] = {}
         self._resolving: set[str] = set()
+        self.errors: list[ImportError] = []
+        self.warnings: list[ImportError] = []
 
-    def resolve_program(self, program: NousProgram, source_path: Path | None = None) -> NousProgram:
-        if not program.imports:
-            return program
-
-        base = source_path.parent if source_path else self.base_dir
-        source_key = str(source_path) if source_path else "<inline>"
+    def resolve(self, program: NousProgram, source_path: Optional[Path] = None) -> ImportResult:
+        source_key = str(source_path) if source_path else "<main>"
+        self._resolved[source_key] = program
 
         for imp in program.imports:
-            resolved_path = self._resolve_path(imp.path, base)
-            if resolved_path is None:
-                log.warning(f"Cannot resolve import: {imp.path} (from {source_key})")
-                continue
+            self._resolve_import(imp, source_path or self.base_dir / "main.nous")
 
-            abs_key = str(resolved_path.resolve())
+        merged = self._merge_all(program)
+        return ImportResult(
+            program=merged,
+            resolved_files=list(self._resolved.keys()),
+            errors=list(self.errors),
+            warnings=list(self.warnings),
+        )
 
-            if abs_key in self._resolving:
-                log.warning(f"Circular import detected: {imp.path} (from {source_key})")
-                continue
+    def _resolve_import(self, imp: ImportNode, from_file: Path) -> None:
+        resolved_path = self._find_import(imp, from_file)
+        if resolved_path is None:
+            self.errors.append(ImportError(
+                "IM001",
+                f"Cannot resolve import: {imp.path}",
+                str(from_file),
+            ))
+            return
 
-            if abs_key in self._resolved:
-                imported = self._resolved[abs_key]
-            else:
-                self._resolving.add(abs_key)
-                try:
-                    imported = self._parse_and_resolve(resolved_path)
-                    self._resolved[abs_key] = imported
-                finally:
-                    self._resolving.discard(abs_key)
+        path_key = str(resolved_path)
 
-            self._merge(program, imported, imp.path)
+        if path_key in self._resolving:
+            self.errors.append(ImportError(
+                "IM002",
+                f"Circular import detected: {imp.path}",
+                str(from_file),
+            ))
+            return
 
-        program.imports = []
-        return program
+        if path_key in self._resolved:
+            return
 
-    def _resolve_path(self, import_path: str, base_dir: Path) -> Path | None:
-        if import_path.endswith(".nous"):
-            candidate = base_dir / import_path
-            if candidate.exists():
-                return candidate
-            candidate = Path(import_path)
-            if candidate.exists():
-                return candidate
+        self._resolving.add(path_key)
+        try:
+            imported_program = self._parse_file(resolved_path)
+            if imported_program is None:
+                return
+            self._resolved[path_key] = imported_program
+
+            for sub_imp in imported_program.imports:
+                self._resolve_import(sub_imp, resolved_path)
+        finally:
+            self._resolving.discard(path_key)
+
+    def _find_import(self, imp: ImportNode, from_file: Path) -> Optional[Path]:
+        if imp.is_package:
+            return self._find_package(imp.path)
         else:
-            candidate = base_dir / f"{import_path}.nous"
-            if candidate.exists():
-                return candidate
-            candidate = base_dir / import_path / "main.nous"
-            if candidate.exists():
-                return candidate
-            pkg_dir = PACKAGES_DIR / import_path
-            if pkg_dir.exists():
-                manifest = pkg_dir / "nous.toml"
-                if manifest.exists():
-                    import tomllib
-                    with open(manifest, "rb") as f:
-                        data = tomllib.load(f)
-                    entry = data.get("package", {}).get("entry", "main.nous")
-                    entry_path = pkg_dir / entry
-                    if entry_path.exists():
-                        return entry_path
-                for f in sorted(pkg_dir.glob("*.nous")):
-                    return f
+            return self._find_file(imp.path, from_file.parent)
 
+    def _find_file(self, path_str: str, rel_dir: Path) -> Optional[Path]:
+        candidate = rel_dir / path_str
+        if candidate.exists():
+            return candidate.resolve()
+        candidate = self.base_dir / path_str
+        if candidate.exists():
+            return candidate.resolve()
+        if not path_str.endswith(".nous"):
+            candidate = rel_dir / f"{path_str}.nous"
+            if candidate.exists():
+                return candidate.resolve()
         return None
 
-    def _parse_and_resolve(self, path: Path) -> NousProgram:
-        from parser import parse_nous_file
-        program = parse_nous_file(path)
-        return self.resolve_program(program, source_path=path)
+    def _find_package(self, name: str) -> Optional[Path]:
+        pkg_dir = self.packages_dir / name
+        if not pkg_dir.exists():
+            return None
+        toml_path = pkg_dir / "nous.toml"
+        if toml_path.exists():
+            try:
+                with open(toml_path, "rb") as f:
+                    data = tomllib.load(f)
+                entry = data.get("package", {}).get("entry", "main.nous")
+                entry_path = pkg_dir / entry
+                if entry_path.exists():
+                    return entry_path.resolve()
+            except Exception:
+                pass
+        main_path = pkg_dir / "main.nous"
+        if main_path.exists():
+            return main_path.resolve()
+        return None
 
-    def _merge(self, target: NousProgram, source: NousProgram, import_path: str) -> None:
-        existing_msg_names = {m.name for m in target.messages}
-        for msg in source.messages:
-            if msg.name not in existing_msg_names:
-                target.messages.append(msg)
-                existing_msg_names.add(msg.name)
-            else:
-                log.debug(f"Skipping duplicate message {msg.name} from {import_path}")
+    def _parse_file(self, path: Path) -> Optional[NousProgram]:
+        try:
+            from parser import parse_nous_file
+            return parse_nous_file(path)
+        except Exception as e:
+            self.errors.append(ImportError(
+                "IM003",
+                f"Parse error in imported file {path.name}: {e}",
+                str(path),
+            ))
+            return None
 
-        existing_soul_names = {s.name for s in target.souls}
-        for soul in source.souls:
-            if soul.name not in existing_soul_names:
-                target.souls.append(soul)
-                existing_soul_names.add(soul.name)
-            else:
-                log.debug(f"Skipping duplicate soul {soul.name} from {import_path}")
+    def _merge_all(self, main_program: NousProgram) -> NousProgram:
+        merged = NousProgram(
+            world=main_program.world,
+            nervous_system=main_program.nervous_system,
+            evolution=main_program.evolution,
+            perception=main_program.perception,
+            tests=list(main_program.tests),
+            imports=list(main_program.imports),
+        )
+        seen_messages: set[str] = set()
+        seen_souls: set[str] = set()
 
-        if source.nervous_system and not target.nervous_system:
-            target.nervous_system = source.nervous_system
-        elif source.nervous_system and target.nervous_system:
-            target.nervous_system.routes.extend(source.nervous_system.routes)
+        for msg in main_program.messages:
+            seen_messages.add(msg.name)
+            merged.messages.append(msg)
+        for soul in main_program.souls:
+            seen_souls.add(soul.name)
+            merged.souls.append(soul)
 
-        if source.evolution and not target.evolution:
-            target.evolution = source.evolution
+        for path_key, imported in self._resolved.items():
+            if path_key == str(self.base_dir / "main.nous") or imported is main_program:
+                continue
+            for msg in imported.messages:
+                if msg.name in seen_messages:
+                    self.warnings.append(ImportError(
+                        "IM004",
+                        f"Duplicate message '{msg.name}' from import, skipped",
+                        path_key,
+                    ))
+                    continue
+                seen_messages.add(msg.name)
+                merged.messages.append(msg)
 
-        if source.perception and not target.perception:
-            target.perception = source.perception
-        elif source.perception and target.perception:
-            target.perception.rules.extend(source.perception.rules)
+            for soul in imported.souls:
+                if soul.name in seen_souls:
+                    self.warnings.append(ImportError(
+                        "IM005",
+                        f"Duplicate soul '{soul.name}' from import, skipped",
+                        path_key,
+                    ))
+                    continue
+                seen_souls.add(soul.name)
+                merged.souls.append(soul)
 
-        if source.topology and not target.topology:
-            target.topology = source.topology
-        elif source.topology and target.topology:
-            existing_servers = {s.name for s in target.topology.servers}
-            for srv in source.topology.servers:
-                if srv.name not in existing_servers:
-                    target.topology.servers.append(srv)
-
-        target.tests.extend(source.tests)
-
-        log.info(f"Imported {import_path}: +{len(source.messages)} messages, +{len(source.souls)} souls")
+        return merged
 
 
-def resolve_imports(program: NousProgram, source_path: Path | None = None) -> NousProgram:
-    resolver = ImportResolver(base_dir=source_path.parent if source_path else None)
-    return resolver.resolve_program(program, source_path)
+def resolve_imports(program: NousProgram, source_path: Path) -> ImportResult:
+    resolver = ImportResolver(base_dir=source_path.parent)
+    return resolver.resolve(program, source_path)
 
 
-def parse_project(entry_path: str) -> NousProgram:
+def parse_project(path: Path) -> ImportResult:
     from parser import parse_nous_file
-    path = Path(entry_path)
     program = parse_nous_file(path)
-    return resolve_imports(program, source_path=path)
+    if not program.imports:
+        return ImportResult(
+            program=program,
+            resolved_files=[str(path)],
+        )
+    return resolve_imports(program, path)
+
+
+def cross_file_typecheck(result: ImportResult) -> list[str]:
+    if not result.ok:
+        return [str(e) for e in result.errors]
+    issues: list[str] = []
+    try:
+        from typechecker import typecheck_program
+        tc = typecheck_program(result.program)
+        for e in tc.errors:
+            issues.append(f"[TYPE] {e}")
+        for w in tc.warnings:
+            issues.append(f"[TYPE] {w}")
+    except Exception as e:
+        issues.append(f"[TYPE] Error: {e}")
+    return issues

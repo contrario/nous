@@ -1,430 +1,396 @@
 """
-NOUS Test Runner — Δοκιμή (Dokimi)
-====================================
-Parses .nous files, extracts test blocks, mocks tools, runs assertions.
+NOUS Test Runner v2 — Δοκιμή (Dokimi)
+========================================
+Executes test blocks from .nous files.
+Evaluates assertions, reports pass/fail with details.
 """
 from __future__ import annotations
 
-import asyncio
-import json
-import logging
-import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional
 
 from ast_nodes import (
-    NousProgram, TestNode, TestAssertNode, TestMockNode, TestRunNode,
-    SoulNode,
+    NousProgram, TestNode, TestAssertNode, TestSetupNode,
+    LawCost, LawDuration, LawBool, LawInt, LawConstitutional,
 )
-from parser import parse_nous_file
-from validator import validate_program
-from codegen import generate_python
 
-log = logging.getLogger("nous.test")
+
+@dataclass
+class AssertResult:
+    passed: bool
+    expr_repr: str
+    actual: Any = None
+    message: str = ""
 
 
 @dataclass
 class TestResult:
     name: str
-    passed: bool
-    duration: float = 0.0
-    assertions: int = 0
-    failures: list[str] = field(default_factory=list)
-    error: str = ""
+    assertions: list[AssertResult] = field(default_factory=list)
+    duration_ms: float = 0.0
+    error: Optional[str] = None
+
+    @property
+    def passed(self) -> bool:
+        if self.error:
+            return False
+        return all(a.passed for a in self.assertions)
+
+    @property
+    def pass_count(self) -> int:
+        return sum(1 for a in self.assertions if a.passed)
+
+    @property
+    def fail_count(self) -> int:
+        return sum(1 for a in self.assertions if not a.passed)
 
 
 @dataclass
 class TestSuiteResult:
-    file: str
     results: list[TestResult] = field(default_factory=list)
-    parse_ok: bool = True
-    validate_ok: bool = True
-    compile_ok: bool = True
-    parse_error: str = ""
-    validate_errors: list[str] = field(default_factory=list)
+    duration_ms: float = 0.0
 
     @property
-    def total(self) -> int:
+    def total_tests(self) -> int:
         return len(self.results)
 
     @property
-    def passed(self) -> int:
+    def passed_tests(self) -> int:
         return sum(1 for r in self.results if r.passed)
 
     @property
-    def failed(self) -> int:
+    def failed_tests(self) -> int:
         return sum(1 for r in self.results if not r.passed)
 
     @property
+    def total_assertions(self) -> int:
+        return sum(len(r.assertions) for r in self.results)
+
+    @property
+    def passed_assertions(self) -> int:
+        return sum(r.pass_count for r in self.results)
+
+    @property
     def ok(self) -> bool:
-        return self.parse_ok and self.validate_ok and self.compile_ok and self.failed == 0
+        return self.failed_tests == 0
 
 
-class MockToolRegistry:
-    def __init__(self) -> None:
-        self._mocks: dict[str, Any] = {}
+class TestEnv:
+    """Evaluation environment for test assertions."""
 
-    def register(self, tool_name: str, returns: Any) -> None:
-        self._mocks[tool_name] = returns
-
-    def get(self, tool_name: str) -> Any:
-        return self._mocks.get(tool_name)
-
-    def has(self, tool_name: str) -> bool:
-        return tool_name in self._mocks
-
-    def clear(self) -> None:
-        self._mocks.clear()
-
-
-class SoulState:
-    def __init__(self, soul: SoulNode) -> None:
-        self.soul = soul
-        self.name = soul.name
-        self.memory: dict[str, Any] = {}
-        self.spoke: list[str] = []
-        self.cycle_count = 0
-
-        if soul.memory:
-            for f in soul.memory.fields:
-                self.memory[f.name] = f.default
-
-    def get_field(self, field_name: str) -> Any:
-        return self.memory.get(field_name)
-
-
-class TestExecutor:
     def __init__(self, program: NousProgram) -> None:
         self.program = program
-        self.mocks = MockToolRegistry()
-        self.soul_states: dict[str, SoulState] = {}
-        self._spoke_messages: list[str] = []
+        self.variables: dict[str, Any] = {}
+        self._build_context()
 
-        for soul in program.souls:
-            self.soul_states[soul.name] = SoulState(soul)
+    def _build_context(self) -> None:
+        if self.program.world:
+            w = self.program.world
+            self.variables["world_name"] = w.name
+            self.variables["world_heartbeat"] = w.heartbeat
+            self.variables["soul_count"] = len(self.program.souls)
+            self.variables["message_count"] = len(self.program.messages)
+            for law in w.laws:
+                key = f"law_{law.name}"
+                if isinstance(law.expr, LawCost):
+                    self.variables[key] = law.expr.amount
+                elif isinstance(law.expr, LawDuration):
+                    self.variables[key] = law.expr.value
+                elif isinstance(law.expr, LawBool):
+                    self.variables[key] = law.expr.value
+                elif isinstance(law.expr, LawInt):
+                    self.variables[key] = law.expr.value
+                elif isinstance(law.expr, LawConstitutional):
+                    self.variables[key] = law.expr.count
 
-    def run_test(self, test: TestNode) -> TestResult:
-        t0 = time.perf_counter()
-        result = TestResult(name=test.description, passed=True)
-        self.mocks.clear()
-        self._spoke_messages.clear()
+        for soul in self.program.souls:
+            self.variables[f"soul_{soul.name}_exists"] = True
+            if soul.mind:
+                self.variables[f"soul_{soul.name}_model"] = soul.mind.model
+                self.variables[f"soul_{soul.name}_tier"] = soul.mind.tier.value
+            self.variables[f"soul_{soul.name}_senses"] = soul.senses
+            self.variables[f"soul_{soul.name}_sense_count"] = len(soul.senses)
+            if soul.memory:
+                self.variables[f"soul_{soul.name}_memory_count"] = len(soul.memory.fields)
+                for f in soul.memory.fields:
+                    self.variables[f"soul_{soul.name}_mem_{f.name}"] = f.default
+            if soul.dna:
+                self.variables[f"soul_{soul.name}_gene_count"] = len(soul.dna.genes)
+                for g in soul.dna.genes:
+                    self.variables[f"soul_{soul.name}_dna_{g.name}"] = g.value
+            if soul.heal:
+                self.variables[f"soul_{soul.name}_heal_count"] = len(soul.heal.rules)
+            if soul.instinct:
+                self.variables[f"soul_{soul.name}_stmt_count"] = len(soul.instinct.statements)
 
-        for soul_name, state in self.soul_states.items():
-            soul = next((s for s in self.program.souls if s.name == soul_name), None)
-            if soul:
-                self.soul_states[soul_name] = SoulState(soul)
+        for msg in self.program.messages:
+            self.variables[f"msg_{msg.name}_exists"] = True
+            self.variables[f"msg_{msg.name}_field_count"] = len(msg.fields)
+            for f in msg.fields:
+                self.variables[f"msg_{msg.name}_has_{f.name}"] = True
+                self.variables[f"msg_{msg.name}_type_{f.name}"] = f.type_expr
 
+        if self.program.nervous_system:
+            self.variables["route_count"] = len(self.program.nervous_system.routes)
+        if self.program.evolution:
+            self.variables["mutation_count"] = len(self.program.evolution.mutations)
+        if self.program.perception:
+            self.variables["perception_count"] = len(self.program.perception.rules)
+
+        self.variables["validation_pass"] = self._run_validation()
+        self.variables["typecheck_pass"] = self._run_typecheck()
+
+    def _run_validation(self) -> bool:
         try:
-            for stmt in test.stmts:
-                if isinstance(stmt, TestMockNode):
-                    self.mocks.register(stmt.tool_name, stmt.returns)
+            from validator import validate_program
+            return validate_program(self.program).ok
+        except Exception:
+            return False
 
-                elif isinstance(stmt, TestRunNode):
-                    self._simulate_soul(stmt.soul_name)
+    def _run_typecheck(self) -> bool:
+        try:
+            from typechecker import typecheck_program
+            return typecheck_program(self.program).ok
+        except Exception:
+            return False
 
-                elif isinstance(stmt, TestAssertNode):
-                    result.assertions += 1
-                    ok, msg = self._check_assert(stmt)
-                    if not ok:
-                        result.passed = False
-                        result.failures.append(msg)
+    def bind(self, name: str, value: Any) -> None:
+        self.variables[name] = value
 
-        except Exception as e:
-            result.passed = False
-            result.error = str(e)
-
-        result.duration = time.perf_counter() - t0
-        return result
-
-    def _simulate_soul(self, soul_name: str) -> None:
-        state = self.soul_states.get(soul_name)
-        if not state:
-            raise ValueError(f"Unknown soul: {soul_name}")
-
-        soul = state.soul
-        if not soul.instinct:
-            return
-
-        from ast_nodes import (
-            LetNode, RememberNode, SpeakNode, SenseCallNode,
-            IfNode, ForNode, GuardNode,
-        )
-
-        for stmt in soul.instinct.statements:
-            self._exec_stmt(stmt, state)
-
-        state.cycle_count += 1
-
-    def _exec_stmt(self, stmt: Any, state: SoulState) -> None:
-        from ast_nodes import (
-            LetNode, RememberNode, SpeakNode, SenseCallNode,
-            IfNode, ForNode, GuardNode,
-        )
-
-        if isinstance(stmt, LetNode):
-            if isinstance(stmt.value, dict):
-                kind = stmt.value.get("kind", "")
-                if kind == "sense_call":
-                    tool = stmt.value.get("tool", "")
-                    if self.mocks.has(tool):
-                        state.memory[stmt.name] = self.mocks.get(tool)
-                    else:
-                        state.memory[stmt.name] = None
-                elif kind == "listen":
-                    state.memory[stmt.name] = None
-                else:
-                    state.memory[stmt.name] = self._eval_expr(stmt.value, state)
-            else:
-                state.memory[stmt.name] = self._eval_expr(stmt.value, state)
-
-        elif isinstance(stmt, RememberNode):
-            val = self._eval_expr(stmt.value, state)
-            if stmt.op == "+=":
-                old = state.memory.get(stmt.name, 0)
-                state.memory[stmt.name] = old + val if isinstance(old, (int, float)) else val
-            else:
-                state.memory[stmt.name] = val
-
-        elif isinstance(stmt, SpeakNode):
-            state.spoke.append(stmt.message_type)
-            self._spoke_messages.append(stmt.message_type)
-
-        elif isinstance(stmt, SenseCallNode):
-            if self.mocks.has(stmt.tool_name):
-                result = self.mocks.get(stmt.tool_name)
-                if stmt.bind_name:
-                    state.memory[stmt.bind_name] = result
-
-        elif isinstance(stmt, IfNode):
-            cond = self._eval_expr(stmt.condition, state)
-            if cond:
-                for s in stmt.then_body:
-                    self._exec_stmt(s, state)
-            else:
-                for s in stmt.else_body:
-                    self._exec_stmt(s, state)
-
-        elif isinstance(stmt, ForNode):
-            iterable = self._eval_expr(stmt.iterable, state)
-            if isinstance(iterable, list):
-                for item in iterable:
-                    state.memory[stmt.var_name] = item
-                    for s in stmt.body:
-                        self._exec_stmt(s, state)
-
-    def _eval_expr(self, expr: Any, state: SoulState) -> Any:
+    def eval_expr(self, expr: Any) -> Any:
         if expr is None:
             return None
-        if isinstance(expr, (int, float, bool)):
+        if isinstance(expr, bool):
+            return expr
+        if isinstance(expr, (int, float)):
             return expr
         if isinstance(expr, str):
-            if expr == "self":
-                return state.name
-            if expr == "now()":
-                return time.time()
-            if expr in state.memory:
-                return state.memory[expr]
+            if expr == "true":
+                return True
+            if expr == "false":
+                return False
+            if expr in self.variables:
+                return self.variables[expr]
             return expr
         if isinstance(expr, list):
-            return [self._eval_expr(e, state) for e in expr]
+            return [self.eval_expr(e) for e in expr]
         if isinstance(expr, dict):
             kind = expr.get("kind", "")
             if kind == "binop":
-                left = self._eval_expr(expr["left"], state)
-                right = self._eval_expr(expr["right"], state)
-                op = expr["op"]
-                if op == "+":
-                    return (left or 0) + (right or 0)
-                elif op == "-":
-                    return (left or 0) - (right or 0)
-                elif op == "*":
-                    return (left or 0) * (right or 0)
-                elif op == "<":
-                    return (left or 0) < (right or 0)
-                elif op == ">":
-                    return (left or 0) > (right or 0)
-                elif op == "==":
-                    return left == right
-                elif op == "!=":
-                    return left != right
-                elif op == ">=":
-                    return (left or 0) >= (right or 0)
-                elif op == "<=":
-                    return (left or 0) <= (right or 0)
-                elif op == "&&":
-                    return left and right
-                elif op == "||":
-                    return left or right
+                return self._eval_binop(expr)
+            elif kind == "not":
+                return not self.eval_expr(expr.get("operand"))
             elif kind == "attr":
-                obj = self._eval_expr(expr["obj"], state)
-                attr = expr["attr"]
+                obj = self.eval_expr(expr.get("obj"))
+                attr = expr.get("attr", "")
                 if isinstance(obj, dict):
                     return obj.get(attr)
-                if hasattr(obj, attr):
-                    return getattr(obj, attr)
-                return None
-            elif kind == "not":
-                return not self._eval_expr(expr["operand"], state)
-            elif kind == "neg":
-                return -(self._eval_expr(expr["operand"], state) or 0)
-            elif kind == "inline_if":
-                cond = self._eval_expr(expr["condition"], state)
-                return self._eval_expr(expr["then"], state) if cond else self._eval_expr(expr["else"], state)
-            elif kind == "message_construct":
-                return {"_type": expr.get("type", ""), **{k: self._eval_expr(v, state) for k, v in expr.get("args", {}).items()}}
-            elif kind == "sense_call":
-                tool = expr.get("tool", "")
-                if self.mocks.has(tool):
-                    return self.mocks.get(tool)
-                return None
+                lookup = f"{obj}_{attr}" if isinstance(obj, str) else f"_{attr}"
+                return self.variables.get(lookup)
+            elif kind == "func_call":
+                func = expr.get("func", "")
+                args = expr.get("args", {})
+                return self._eval_func(func, args)
+            elif kind == "method_call":
+                obj = self.eval_expr(expr.get("obj"))
+                method = expr.get("method", "")
+                return self._eval_method(obj, method, expr.get("args", {}))
         return expr
 
-    def _check_assert(self, assertion: TestAssertNode) -> tuple[bool, str]:
-        if assertion.kind == "expr":
-            val = self._eval_expr_global(assertion.expr)
-            if val:
-                return True, ""
-            return False, f"assert failed: {assertion.expr}"
-
-        elif assertion.kind == "field":
-            soul_name = assertion.soul
-            field_name = assertion.field
-            state = self.soul_states.get(soul_name)
-            if not state:
-                return False, f"unknown soul: {soul_name}"
-            actual = state.memory.get(field_name)
-            expected = assertion.expected
-            if isinstance(expected, str) and expected in state.memory:
-                expected = state.memory[expected]
-            op = assertion.op or "=="
-            ok = self._compare(actual, op, expected)
-            if ok:
-                return True, ""
-            return False, f"{soul_name}.{field_name} {op} {expected} (actual: {actual})"
-
-        elif assertion.kind == "spoke":
-            msg_type = assertion.message_type
-            if msg_type in self._spoke_messages:
-                return True, ""
-            return False, f"expected spoke {msg_type}, but messages were: {self._spoke_messages}"
-
-        return False, f"unknown assertion kind: {assertion.kind}"
-
-    def _eval_expr_global(self, expr: Any) -> Any:
-        dummy = SoulState(self.program.souls[0]) if self.program.souls else None
-        if dummy:
-            dummy.memory.update({name: s.memory for name, s in self.soul_states.items()})
-            return self._eval_expr(expr, dummy)
-        return None
-
-    def _compare(self, actual: Any, op: str, expected: Any) -> bool:
+    def _eval_binop(self, expr: dict) -> Any:
+        op = expr.get("op", "")
+        left = self.eval_expr(expr.get("left"))
+        right = self.eval_expr(expr.get("right"))
         try:
             if op == "==":
-                return actual == expected
+                return left == right
             elif op == "!=":
-                return actual != expected
+                return left != right
             elif op == ">":
-                return actual > expected
+                return left > right
             elif op == "<":
-                return actual < expected
+                return left < right
             elif op == ">=":
-                return actual >= expected
+                return left >= right
             elif op == "<=":
-                return actual <= expected
-        except TypeError:
-            return False
+                return left <= right
+            elif op == "&&":
+                return bool(left) and bool(right)
+            elif op == "||":
+                return bool(left) or bool(right)
+            elif op == "+":
+                return left + right
+            elif op == "-":
+                return left - right
+            elif op == "*":
+                return left * right
+            elif op == "/":
+                return left / right if right else 0
+            elif op == "%":
+                return left % right if right else 0
+        except (TypeError, ValueError):
+            pass
         return False
 
+    def _eval_func(self, func: str, args: dict) -> Any:
+        if func == "len":
+            val = self.eval_expr(args.get("_pos_0"))
+            if isinstance(val, (list, str, dict)):
+                return len(val)
+            return 0
+        if func == "contains":
+            collection = self.eval_expr(args.get("_pos_0"))
+            item = self.eval_expr(args.get("_pos_1"))
+            if isinstance(collection, (list, str)):
+                return item in collection
+            return False
+        if func == "type_of":
+            val = self.eval_expr(args.get("_pos_0"))
+            return type(val).__name__
+        return None
 
-def run_tests(source_path: str, verbose: bool = False) -> TestSuiteResult:
-    path = Path(source_path)
-    suite = TestSuiteResult(file=str(path))
+    def _eval_method(self, obj: Any, method: str, args: dict) -> Any:
+        if isinstance(obj, list):
+            if method == "len" or method == "count":
+                return len(obj)
+            if method == "contains":
+                item = self.eval_expr(args.get("_pos_0"))
+                return item in obj
+        if isinstance(obj, str):
+            if method == "len":
+                return len(obj)
+        return None
 
-    try:
-        program = parse_nous_file(path)
-    except Exception as e:
-        suite.parse_ok = False
-        suite.parse_error = str(e)
+    def expr_to_str(self, expr: Any) -> str:
+        if expr is None:
+            return "None"
+        if isinstance(expr, (int, float, bool)):
+            return str(expr)
+        if isinstance(expr, str):
+            return expr
+        if isinstance(expr, dict):
+            kind = expr.get("kind", "")
+            if kind == "binop":
+                l = self.expr_to_str(expr.get("left"))
+                r = self.expr_to_str(expr.get("right"))
+                return f"{l} {expr.get('op')} {r}"
+            elif kind == "not":
+                return f"!{self.expr_to_str(expr.get('operand'))}"
+            elif kind == "attr":
+                return f"{self.expr_to_str(expr.get('obj'))}.{expr.get('attr')}"
+            elif kind == "func_call":
+                return f"{expr.get('func')}(...)"
+            elif kind == "method_call":
+                return f"{self.expr_to_str(expr.get('obj'))}.{expr.get('method')}(...)"
+        return str(expr)
+
+
+class NousTestRunner:
+    """Executes test blocks from a NousProgram."""
+
+    def __init__(self, program: NousProgram) -> None:
+        self.program = program
+
+    def run_all(self) -> TestSuiteResult:
+        suite = TestSuiteResult()
+        t0 = time.perf_counter()
+        for test in self.program.tests:
+            result = self._run_test(test)
+            suite.results.append(result)
+        suite.duration_ms = (time.perf_counter() - t0) * 1000
         return suite
 
-    result = validate_program(program)
-    if not result.ok:
-        suite.validate_ok = False
-        suite.validate_errors = [str(e) for e in result.errors]
+    def run_by_name(self, name: str) -> Optional[TestResult]:
+        for test in self.program.tests:
+            if test.name == name:
+                return self._run_test(test)
+        return None
 
-    try:
-        code = generate_python(program)
-        import py_compile
-        import tempfile
-        import os
-        with tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False) as f:
-            f.write(code)
-            tmp = f.name
+    def _run_test(self, test: TestNode) -> TestResult:
+        result = TestResult(name=test.name)
+        t0 = time.perf_counter()
+        env = TestEnv(self.program)
         try:
-            py_compile.compile(tmp, doraise=True)
-        finally:
-            os.unlink(tmp)
-    except Exception as e:
-        suite.compile_ok = False
+            for item in test.body:
+                if isinstance(item, TestSetupNode):
+                    val = env.eval_expr(item.value)
+                    env.bind(item.name, val)
+                elif isinstance(item, TestAssertNode):
+                    expr_str = env.expr_to_str(item.expr)
+                    try:
+                        val = env.eval_expr(item.expr)
+                        passed = bool(val)
+                        result.assertions.append(AssertResult(
+                            passed=passed,
+                            expr_repr=expr_str,
+                            actual=val,
+                            message="" if passed else f"evaluated to {val}",
+                        ))
+                    except Exception as e:
+                        result.assertions.append(AssertResult(
+                            passed=False,
+                            expr_repr=expr_str,
+                            actual=None,
+                            message=f"error: {e}",
+                        ))
+        except Exception as e:
+            result.error = str(e)
+        result.duration_ms = (time.perf_counter() - t0) * 1000
+        return result
 
-    if not program.tests:
-        return suite
 
-    executor = TestExecutor(program)
-    for test in program.tests:
-        test_result = executor.run_test(test)
-        suite.results.append(test_result)
-
-    return suite
+def run_tests(program: NousProgram) -> TestSuiteResult:
+    runner = NousTestRunner(program)
+    return runner.run_all()
 
 
 def print_results(suite: TestSuiteResult) -> None:
-    C_RESET = "\033[0m"
-    C_GREEN = "\033[92m"
-    C_RED = "\033[91m"
-    C_YELLOW = "\033[93m"
-    C_CYAN = "\033[96m"
-    C_DIM = "\033[2m"
-    C_BOLD = "\033[1m"
+    for result in suite.results:
+        status = "PASS" if result.passed else "FAIL"
+        icon = "✓" if result.passed else "✗"
+        print(f"\n  {icon} {result.name} [{status}] ({result.duration_ms:.1f}ms)")
+        if result.error:
+            print(f"    ERROR: {result.error}")
+        for a in result.assertions:
+            icon_a = "✓" if a.passed else "✗"
+            print(f"    {icon_a} assert {a.expr_repr}")
+            if not a.passed and a.message:
+                print(f"      → {a.message}")
 
-    if not sys.stdout.isatty():
-        C_RESET = C_GREEN = C_RED = C_YELLOW = C_CYAN = C_DIM = C_BOLD = ""
+    print(f"\n{'═' * 50}")
+    print(f"  Tests:      {suite.passed_tests}/{suite.total_tests} passed")
+    print(f"  Assertions: {suite.passed_assertions}/{suite.total_assertions} passed")
+    print(f"  Duration:   {suite.duration_ms:.1f}ms")
+    status = "PASS" if suite.ok else "FAIL"
+    print(f"  Result:     {status}")
 
-    print(f"\n{C_BOLD}═══ NOUS Test Runner ═══{C_RESET}")
-    print(f"File: {C_CYAN}{suite.file}{C_RESET}\n")
 
-    if not suite.parse_ok:
-        print(f"{C_RED}✗ Parse FAILED:{C_RESET} {suite.parse_error}")
-        return
-
-    if not suite.validate_ok:
-        print(f"{C_YELLOW}⚠ Validation warnings:{C_RESET}")
-        for e in suite.validate_errors:
+def cmd_test(file_path: str) -> int:
+    from parser import parse_nous_file
+    from validator import validate_program
+    source = Path(file_path)
+    if not source.exists():
+        print(f"Error: file not found: {source}")
+        return 1
+    try:
+        program = parse_nous_file(source)
+    except Exception as e:
+        print(f"Parse error: {e}")
+        return 1
+    vr = validate_program(program)
+    if not vr.ok:
+        print("Validation FAILED:")
+        for e in vr.errors:
             print(f"  {e}")
-        print()
-
-    if not suite.compile_ok:
-        print(f"{C_RED}✗ Compile FAILED{C_RESET}")
-        return
-
-    if not suite.results:
-        print(f"{C_DIM}No test blocks found.{C_RESET}")
-        return
-
-    for r in suite.results:
-        icon = f"{C_GREEN}✓{C_RESET}" if r.passed else f"{C_RED}✗{C_RESET}"
-        dur = f"{C_DIM}{r.duration*1000:.1f}ms{C_RESET}"
-        print(f"  {icon} {r.name} {dur} ({r.assertions} assertions)")
-        for f in r.failures:
-            print(f"    {C_RED}FAIL:{C_RESET} {f}")
-        if r.error:
-            print(f"    {C_RED}ERROR:{C_RESET} {r.error}")
-
-    print(f"\n{C_BOLD}Results:{C_RESET} {C_GREEN}{suite.passed} passed{C_RESET}, ", end="")
-    if suite.failed:
-        print(f"{C_RED}{suite.failed} failed{C_RESET}, ", end="")
-    print(f"{suite.total} total")
-    total_time = sum(r.duration for r in suite.results)
-    print(f"{C_DIM}Time: {total_time*1000:.1f}ms{C_RESET}\n")
+        return 1
+    if not program.tests:
+        print(f"No test blocks found in {source.name}")
+        return 0
+    world_name = program.world.name if program.world else "Unknown"
+    print(f"═══ NOUS Test Runner — {world_name} ═══")
+    print(f"File: {source.name} | {len(program.tests)} test blocks")
+    suite = run_tests(program)
+    print_results(suite)
+    return 0 if suite.ok else 1

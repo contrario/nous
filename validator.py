@@ -14,7 +14,6 @@ from ast_nodes import (
     LawBool, LawInt, LawConstitutional, RouteNode, MatchRouteNode,
     FanInNode, FanOutNode, FeedbackNode, LetNode, SpeakNode,
     RememberNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
-    TopologyNode, TopologyServerNode,
 )
 
 
@@ -77,7 +76,7 @@ class NousValidator:
         self._check_perception()
         self._check_speak_listen_types()
         self._check_nervous_system_cycles()
-        self._check_topology()
+        self._check_noesis()
         return self.result
 
     def _check_world_exists(self) -> None:
@@ -287,44 +286,28 @@ class NousValidator:
                     )
                     break
 
-    def _check_topology(self) -> None:
-        topo = self.program.topology
-        if topo is None:
-            return
-
-        all_assigned_souls: list[str] = []
-        server_names: set[str] = set()
-        hosts: set[str] = set()
-
-        for server in topo.servers:
-            loc = f"topology > {server.name}"
-
-            if server.name in server_names:
-                self.result.error("Y001", f"Duplicate server name: {server.name}", loc)
-            server_names.add(server.name)
-
-            if server.host in hosts:
-                self.result.warn("Y002", f"Duplicate host address: {server.host}", loc)
-            hosts.add(server.host)
-
-            souls_val = server.config.get("souls", [])
-            if isinstance(souls_val, list):
-                for soul_name in souls_val:
-                    s = str(soul_name)
-                    if s not in self.soul_names:
-                        self.result.error("Y003", f"Topology assigns undefined soul: {s}", loc)
-                    if s in all_assigned_souls:
-                        self.result.error("Y004", f"Soul {s} assigned to multiple servers", loc)
-                    all_assigned_souls.append(s)
-
-            port = server.config.get("port")
-            if port is not None and isinstance(port, int):
-                if port < 1024 or port > 65535:
-                    self.result.warn("Y005", f"Port {port} outside recommended range 1024-65535", loc)
-
-        unassigned = self.soul_names - set(all_assigned_souls)
-        if unassigned:
-            self.result.warn("Y006", f"Souls not assigned to any server: {', '.join(sorted(unassigned))}", "topology")
+    def _check_noesis(self) -> None:
+        has_noesis = hasattr(self.program, 'noesis') and self.program.noesis is not None
+        has_resonate = False
+        for soul in self.program.souls:
+            if not hasattr(soul, 'instinct') or not soul.instinct:
+                continue
+            stmts = getattr(soul.instinct, 'statements', [])
+            for stmt in stmts:
+                val = getattr(stmt, 'value', None)
+                if isinstance(val, dict) and val.get('kind') == 'resonate':
+                    has_resonate = True
+                    break
+        if has_resonate and not has_noesis:
+            self.result.warn(
+                "NS001",
+                "resonate keyword used without noesis block — will use default config",
+            )
+        if has_noesis and self.program.noesis.lattice_path:
+            from pathlib import Path
+            lp = Path(self.program.noesis.lattice_path)
+            if not lp.exists() and not lp.is_absolute():
+                pass
 
 
 def validate_program(program: NousProgram) -> ValidationResult:

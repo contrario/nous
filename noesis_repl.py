@@ -257,11 +257,11 @@ def run_repl(lattice_path: Path, bootstrap_path: Path | None, use_oracle: bool =
             print(f"  Reinforced ({tag}): {rparts[1]}\n")
 
         elif cmd == "mode":
-            if arg in ("compose", "reason", "direct"):
+            if arg in ("compose", "reason", "direct", "chain"):
                 current_mode = arg
                 print(f"  Mode: {current_mode}\n")
             else:
-                print("  Modes: compose, reason, direct\n")
+                print("  Modes: compose, reason, direct, chain\n")
 
         else:
             result = engine.think(raw, mode=current_mode, top_k=5, use_oracle=oracle_active)

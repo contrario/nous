@@ -1,4 +1,4 @@
-# gate_alpha_test.nous — Unit tests for GateAlpha
+# gate_alpha_test.nous — Tests for Gate Alpha
 
 world GateAlpha {
     law CostCeiling = $0.10 per cycle
@@ -9,57 +9,49 @@ world GateAlpha {
 
 message Signal {
     pair: string
-    rsi: float
-    volume: float
+    score: float
+    rsi: float?
+    source: SoulRef
 }
 
 message Decision {
     action: string
-    pair: string
-    confidence: float
+    size: float
+    risk: float
+    sl_pct: float
+    tp_pct: float
 }
 
 soul Scout {
     mind: deepseek-r1 @ Tier1
-    senses: [fetch_rsi, gate_alpha_scan]
-
+    senses: [gate_alpha_scan, fetch_rsi]
     memory {
         scan_count: int = 0
     }
-
     instinct {
-        let candidates = sense gate_alpha_scan()
-        for token in candidates {
-            let rsi = sense fetch_rsi(pair: token.pair)
-            if rsi < 30 {
-                speak Signal(pair: token.pair, rsi: rsi, volume: 1000.0)
-            }
-        }
-        remember scan_count = scan_count + 1
+        let tokens = sense gate_alpha_scan()
+        remember scan_count += 1
     }
-
+    dna {
+        volume_threshold: 50000 ~ [10000, 200000]
+        rsi_ceiling: 70 ~ [60, 80]
+    }
     heal {
-        on timeout => retry(3, exponential)
+        on timeout => retry(2, exponential)
     }
 }
 
 soul Quant {
-    mind: claude-haiku @ Tier2
-    senses: [fetch_rsi]
-
+    mind: claude-haiku @ Tier0A
+    senses: [calculate_kelly]
     memory {
-        decisions: int = 0
+        risk_score: float = 0.0
     }
-
     instinct {
         let signal = listen Scout::Signal
-        let action = if signal.rsi < 30 { "buy" } else { "sell" }
-        speak Decision(action: action, pair: signal.pair, confidence: 0.8)
-        remember decisions = decisions + 1
     }
-
     heal {
-        on timeout => retry
+        on timeout => retry(3, exponential)
     }
 }
 
@@ -67,29 +59,46 @@ nervous_system {
     Scout -> Quant
 }
 
-# ═══ Tests ═══
-
-test "Scout increments scan_count after cycle" {
-    mock gate_alpha_scan returns []
-    run Scout
-    assert Scout.scan_count == 1
+test "world configuration" {
+    assert soul_count == 2
+    assert message_count == 2
+    assert law_CostCeiling == 0.10
+    assert law_NoLiveTrading == true
 }
 
-test "Scout speaks Signal on low RSI" {
-    mock gate_alpha_scan returns [%{pair: "SOL/USDC", volume: 5000}]
-    mock fetch_rsi returns 25.0
-    run Scout
-    assert spoke Signal
-    assert Scout.scan_count == 1
+test "scout soul structure" {
+    assert soul_Scout_exists == true
+    assert soul_Scout_model == "deepseek-r1"
+    assert soul_Scout_tier == "Tier1"
+    assert soul_Scout_sense_count == 2
+    assert soul_Scout_gene_count == 2
+    assert soul_Scout_dna_volume_threshold == 50000
+    assert soul_Scout_dna_rsi_ceiling == 70
 }
 
-test "Scout skips high RSI tokens" {
-    mock gate_alpha_scan returns [%{pair: "BTC/USDC", volume: 3000}]
-    mock fetch_rsi returns 55.0
-    run Scout
-    assert Scout.scan_count == 1
+test "quant soul structure" {
+    assert soul_Quant_exists == true
+    assert soul_Quant_model == "claude-haiku"
+    assert soul_Quant_tier == "Tier0A"
+    assert soul_Quant_sense_count == 1
 }
 
-test "Validation passes" {
-    assert true
+test "message schemas" {
+    assert msg_Signal_exists == true
+    assert msg_Signal_field_count == 4
+    assert msg_Signal_has_pair == true
+    assert msg_Signal_type_pair == "string"
+    assert msg_Decision_field_count == 5
+}
+
+test "pipeline integrity" {
+    assert validation_pass == true
+    assert typecheck_pass == true
+    assert route_count == 1
+}
+
+test "law constraints" {
+    assert law_CostCeiling <= 1.0
+    assert law_CostCeiling > 0.0
+    assert law_MaxLatency == 30
 }
