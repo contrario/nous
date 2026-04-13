@@ -462,6 +462,21 @@ def cmd_docs(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_profile(args: argparse.Namespace) -> int:
+    from profiler import profile, print_profile
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    try:
+        result = profile(str(source))
+        print_profile(result)
+        return 0
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+
 def _print_ast(data: dict | list | Any, indent: int = 0) -> None:
     prefix = "  " * indent
     if isinstance(data, dict):
@@ -535,6 +550,9 @@ def main() -> int:
     p.add_argument("file")
     p.add_argument("-o", "--output")
 
+    p = sub.add_parser("profile", help="Profile .nous program")
+    p.add_argument("file")
+
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
@@ -543,7 +561,8 @@ def main() -> int:
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
         "info": cmd_info, "bridge": cmd_bridge, "deploy": cmd_deploy,
         "topology": cmd_topology, "shell": cmd_shell, "test": cmd_test,
-        "pkg": cmd_pkg, "docs": cmd_docs, "version": cmd_version,
+        "pkg": cmd_pkg, "docs": cmd_docs, "profile": cmd_profile,
+        "version": cmd_version,
     }
     return commands[args.command](args)
 
