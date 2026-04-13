@@ -1,6 +1,7 @@
 """
-NOUS Parser — Lark → Living AST (Ψυχόδενδρο)
-===============================================
+NOUS Parser v2.0 — LALR Lark → Living AST (Ψυχόδενδρο)
+========================================================
+LALR parser with global cache (~4ms cached parse).
 Transforms the Lark CST into Pydantic V2 AST nodes.
 """
 from __future__ import annotations
@@ -11,8 +12,8 @@ from typing import Any
 from lark import Lark, Transformer, Token, Tree
 
 from ast_nodes import (
-    NoesisConfigNode,
-    NousProgram, WorldNode, LawNode, LawCost, LawDuration,
+    NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
+    NousProgram, WorldNode, LawNode, LawCost, LawCurrency, LawDuration,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
     HealNode, HealRuleNode, HealActionNode, HealStrategy,
@@ -27,8 +28,21 @@ from ast_nodes import (
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
 
+_PARSER_CACHE: dict[str, Lark] = {}
+
+
+def _get_parser() -> Lark:
+    key = str(GRAMMAR_PATH)
+    if key not in _PARSER_CACHE:
+        grammar = GRAMMAR_PATH.read_text(encoding="utf-8")
+        _PARSER_CACHE[key] = Lark(grammar, parser="lalr", start="start")
+    return _PARSER_CACHE[key]
+
 
 class NousTransformer(Transformer):
+
+    def _strip(self, items: list) -> list:
+        return [i for i in items if not isinstance(i, Token)]
 
     # ── Primitives ──
 
@@ -42,7 +56,7 @@ class NousTransformer(Transformer):
         return str(tok)[1:-1]
 
     def BOOL(self, tok: Token) -> bool:
-        return tok == "true"
+        return str(tok) == "true"
 
     def NAME(self, tok: Token) -> str:
         return str(tok)
@@ -53,7 +67,13 @@ class NousTransformer(Transformer):
     def COMP_OP(self, tok: Token) -> str:
         return str(tok)
 
-    def DURATION_UNIT(self, tok: Token) -> str:
+    def DURATION_VAL(self, tok: Token) -> str:
+        return str(tok)
+
+    def ADD_OP(self, tok: Token) -> str:
+        return str(tok)
+
+    def MUL_OP(self, tok: Token) -> str:
         return str(tok)
 
     # ── Types ──
@@ -94,7 +114,7 @@ class NousTransformer(Transformer):
         return items[0]
 
     def duration_lit(self, items: list) -> str:
-        return f"{items[0]}{items[1]}"
+        return str(items[0])
 
     def time_hm(self, items: list) -> str:
         return f"{items[0]}:{items[1]:02d} {items[2]}"
@@ -125,9 +145,6 @@ class NousTransformer(Transformer):
     def dotted_name(self, items: list) -> str:
         return ".".join(str(i) for i in items)
 
-    def soul_ref(self, items: list) -> str:
-        return str(items[0])
-
     def soul_field_ref(self, items: list) -> dict:
         return {"kind": "soul_field", "soul": items[0], "field": items[1]}
 
@@ -145,9 +162,6 @@ class NousTransformer(Transformer):
     def not_expr(self, items: list) -> dict:
         return {"kind": "not", "operand": items[0]}
 
-    def neg_expr(self, items: list) -> dict:
-        return {"kind": "neg", "operand": items[0]}
-
     def or_expr(self, items: list) -> Any:
         if len(items) == 1:
             return items[0]
@@ -162,12 +176,6 @@ class NousTransformer(Transformer):
         if len(items) == 1:
             return items[0]
         return {"kind": "binop", "op": items[1], "left": items[0], "right": items[2]}
-
-    def ADD_OP(self, tok: Token) -> str:
-        return str(tok)
-
-    def MUL_OP(self, tok: Token) -> str:
-        return str(tok)
 
     def add_expr(self, items: list) -> Any:
         if len(items) == 1:
@@ -192,17 +200,8 @@ class NousTransformer(Transformer):
     def inline_if(self, items: list) -> dict:
         return {"kind": "inline_if", "condition": items[0], "then": items[1], "else": items[2]}
 
-    def msg_positional(self, items: list) -> dict:
-        return {"kind": "message_construct", "type": items[0], "args": items[1] if len(items) > 1 else {}}
-
-    def msg_braced(self, items: list) -> dict:
-        return {"kind": "message_construct", "type": items[0], "args": items[1] if len(items) > 1 else {}}
-
-    def message_construct(self, items: list) -> Any:
-        return items[0]
-
     def arg_list(self, items: list) -> dict:
-        result = {}
+        result: dict[str, Any] = {}
         for item in items:
             if isinstance(item, dict) and "arg_name" in item:
                 result[item["arg_name"]] = item["arg_value"]
@@ -212,13 +211,14 @@ class NousTransformer(Transformer):
                 result[f"_pos_{len(result)}"] = item
         return result
 
-    def arg(self, items: list) -> Any:
-        if len(items) == 2:
-            return {"arg_name": items[0], "arg_value": items[1]}
-        return items[0]
+    def named_arg(self, items: list) -> dict:
+        return {"arg_name": items[0], "arg_value": items[1]}
+
+    def positional_arg(self, items: list) -> dict:
+        return {"positional": items[0]}
 
     def kv_list(self, items: list) -> dict:
-        result = {}
+        result: dict[str, Any] = {}
         for item in items:
             if isinstance(item, dict) and "_kv" in item:
                 result[item["_kv"][0]] = item["_kv"][1]
@@ -227,29 +227,132 @@ class NousTransformer(Transformer):
     def kv_pair(self, items: list) -> dict:
         return {"_kv": (items[0], items[1])}
 
+    # ── Import ──
+
+    def import_file(self, items: list) -> ImportNode:
+        s = self._strip(items)
+        return ImportNode(path=s[0])
+
+    def import_package(self, items: list) -> ImportNode:
+        s = self._strip(items)
+        return ImportNode(package=s[0])
+
+    # ── Test ──
+
+    def test_block(self, items: list) -> TestNode:
+        s = self._strip(items)
+        name = s[0]
+        stmts = s[1:]
+        asserts = [i for i in stmts if isinstance(i, TestAssertNode)]
+        setups = [i for i in stmts if isinstance(i, TestSetupNode)]
+        return TestNode(name=name, asserts=asserts, setups=setups)
+
+    def test_assert(self, items: list) -> TestAssertNode:
+        return TestAssertNode(condition=items[0])
+
+    def test_setup(self, items: list) -> TestSetupNode:
+        return TestSetupNode(statements=list(items))
+
+    def test_stmt(self, items: list) -> Any:
+        return items[0]
+
+    # ── Noesis ──
+
+    def noesis_decl(self, items: list) -> NoesisConfigNode:
+        s = self._strip(items)
+        config = NoesisConfigNode()
+        for item in s:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(config, k):
+                        setattr(config, k, v)
+        return config
+
+    def noesis_lattice(self, items: list) -> dict:
+        return {"lattice_path": str(items[0])}
+
+    def noesis_threshold(self, items: list) -> dict:
+        return {"oracle_threshold": float(items[0])}
+
+    def noesis_auto_learn(self, items: list) -> dict:
+        return {"auto_learn": items[0] if isinstance(items[0], bool) else str(items[0]).lower() in ("true", "1", "yes")}
+
+    def noesis_auto_evolve(self, items: list) -> dict:
+        return {"auto_evolve": items[0] if isinstance(items[0], bool) else str(items[0]).lower() in ("true", "1", "yes")}
+
+    def noesis_gap_tracking(self, items: list) -> dict:
+        return {"gap_tracking": items[0] if isinstance(items[0], bool) else str(items[0]).lower() in ("true", "1", "yes")}
+
+    def noesis_body(self, items: list) -> Any:
+        return items[0]
+
+    # ── Resonate ──
+
+    def resonate_bind(self, items: list) -> LetNode:
+        s = self._strip(items)
+        return LetNode(name=s[0], value={"kind": "resonate", "query": s[1]})
+
+    def resonate_bind_guarded(self, items: list) -> LetNode:
+        s = self._strip(items)
+        return LetNode(name=s[0], value={
+            "kind": "resonate", "query": s[1],
+            "guard_field": s[2], "guard_threshold": float(s[3]),
+        })
+
+    def resonate_bare(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"kind": "resonate", "query": s[0]}
+    def resonate_bind_dynamic(self, items: list) -> LetNode:
+        s = self._strip(items)
+        return LetNode(name=s[0], value={"kind": "resonate", "query": s[1], "is_dynamic": True})
+    def resonate_bind_dynamic_guarded(self, items: list) -> LetNode:
+        s = self._strip(items)
+        return LetNode(name=s[0], value={
+            "kind": "resonate", "query": s[1], "is_dynamic": True,
+            "guard_field": s[2], "guard_threshold": float(s[3]),
+        })
+    def resonate_bare_dynamic(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"kind": "resonate", "query": s[0], "is_dynamic": True}
+    def resonate_stmt(self, items: list) -> Any:
+        return items[0]
+
     # ── Law ──
 
     def law_cost(self, items: list) -> LawCost:
-        c = items[0]
+        s = self._strip(items)
+        c = s[0]
         return LawCost(amount=c["amount"], currency=c.get("currency", "USD"))
 
+    def law_currency(self, items: list) -> LawCurrency:
+        s = self._strip(items)
+        c = s[0]
+        return LawCurrency(amount=c["amount"], currency=c.get("currency", "USD"))
+
     def law_constitutional(self, items: list) -> LawConstitutional:
-        return LawConstitutional(count=items[0])
+        s = self._strip(items)
+        return LawConstitutional(count=s[0])
 
     def law_duration(self, items: list) -> LawDuration:
-        d = items[0]
-        val = int(d[:-1]) if d[-1].isalpha() else int(d[:-2])
-        unit = d[-1] if d[-1].isalpha() else d[-2:]
-        return LawDuration(value=val, unit=unit)
+        s = self._strip(items)
+        d = s[0]
+        import re
+        m = re.match(r"(\d+)(ms|s|m|h|d)", d)
+        if m:
+            return LawDuration(value=int(m.group(1)), unit=m.group(2))
+        return LawDuration(value=0, unit="s")
 
     def law_bool(self, items: list) -> LawBool:
-        return LawBool(value=items[0])
+        s = self._strip(items)
+        return LawBool(value=s[0])
 
     def law_int(self, items: list) -> LawInt:
-        return LawInt(value=items[0])
+        s = self._strip(items)
+        return LawInt(value=s[0])
 
     def law_decl(self, items: list) -> LawNode:
-        return LawNode(name=items[1], expr=items[2])
+        s = self._strip(items)
+        return LawNode(name=s[0], expr=s[1])
 
     def law_expr(self, items: list) -> Any:
         return items[0]
@@ -269,9 +372,10 @@ class NousTransformer(Transformer):
         return items[0]
 
     def world_decl(self, items: list) -> WorldNode:
-        name = items[1]
+        s = self._strip(items)
+        name = s[0]
         node = WorldNode(name=name)
-        for item in items[2:]:
+        for item in s[1:]:
             if isinstance(item, LawNode):
                 node.laws.append(item)
             elif isinstance(item, dict):
@@ -289,6 +393,12 @@ class NousTransformer(Transformer):
     def model_name(self, items: list) -> str:
         return "-".join(str(i) for i in items)
 
+    def model_part(self, items: list) -> str:
+        return str(items[0])
+
+    def model_int_name(self, items: list) -> str:
+        return f"{items[0]}{items[1]}"
+
     def mind_decl(self, items: list) -> MindNode:
         return MindNode(model=items[0], tier=Tier(items[1]))
 
@@ -303,10 +413,15 @@ class NousTransformer(Transformer):
     # ── Memory ──
 
     def field_decl(self, items: list) -> FieldDeclNode:
-        return FieldDeclNode(name=items[0], type_expr=items[1], default=items[2])
+        return FieldDeclNode(
+            name=items[0],
+            type_expr=items[1],
+            default=items[2] if len(items) > 2 else None,
+        )
 
     def memory_block(self, items: list) -> MemoryNode:
-        fields = [i for i in items[1:] if isinstance(i, FieldDeclNode)]
+        s = self._strip(items)
+        fields = [i for i in s if isinstance(i, FieldDeclNode)]
         return MemoryNode(fields=fields)
 
     # ── Statements ──
@@ -314,87 +429,72 @@ class NousTransformer(Transformer):
     def let_stmt(self, items: list) -> LetNode:
         return LetNode(name=items[0], value=items[1])
 
-    def remember_stmt(self, items: list) -> RememberNode:
-        if len(items) == 3:
-            return RememberNode(name=items[1], op="+=", value=items[2])
-        return RememberNode(name=items[1], value=items[2])
+    def remember_assign(self, items: list) -> RememberNode:
+        s = self._strip(items)
+        return RememberNode(name=s[0], op="=", value=s[1])
 
-    def speak_stmt(self, items: list) -> SpeakNode:
-        msg = items[1]
-        if isinstance(msg, dict) and msg.get("kind") == "message_construct":
-            return SpeakNode(message_type=msg["type"], args=msg.get("args", {}))
-        return SpeakNode(message_type=str(msg))
+    def remember_accum(self, items: list) -> RememberNode:
+        s = self._strip(items)
+        return RememberNode(name=s[0], op="+=", value=s[1])
 
-    def listen_expr(self, items: list) -> LetNode:
-        bind_name = items[0]
-        soul = items[2]
-        msg_type = items[3]
-        return LetNode(name=bind_name, value={"kind": "listen", "soul": soul, "type": msg_type})
+    def speak_local(self, items: list) -> SpeakNode:
+        s = self._strip(items)
+        name = s[0]
+        args = s[1] if len(s) > 1 else {}
+        return SpeakNode(message_type=name, args=args)
+
+    def speak_cross(self, items: list) -> SpeakNode:
+        s = self._strip(items)
+        world = s[0]
+        msg_type = s[1]
+        args = s[2] if len(s) > 2 else {}
+        return SpeakNode(target_world=world, message_type=msg_type, args=args)
+
+    def speak_stmt(self, items: list) -> Any:
+        return items[0]
+
+    def listen_local(self, items: list) -> LetNode:
+        s = self._strip(items)
+        return LetNode(name=s[0], value={"kind": "listen", "soul": s[1], "type": s[2]})
+
+    def listen_cross(self, items: list) -> LetNode:
+        s = self._strip(items)
+        return LetNode(name=s[0], value={"kind": "listen", "world": s[1], "soul": s[2], "type": s[3]})
 
     def guard_stmt(self, items: list) -> GuardNode:
-        return GuardNode(condition=items[1])
+        s = self._strip(items)
+        return GuardNode(condition=s[0])
 
+    def sense_bare(self, items: list) -> SenseCallNode:
+        s = self._strip(items)
+        tool = s[0]
+        args = s[1] if len(s) > 1 else {}
+        return SenseCallNode(tool_name=tool, args=args if isinstance(args, dict) else {})
 
-    def noesis_decl(self, items: list) -> NoesisConfigNode:
-        config = NoesisConfigNode()
-        for item in items:
-            if isinstance(item, dict):
-                for k, v in item.items():
-                    if hasattr(config, k):
-                        setattr(config, k, v)
-        return config
-
-    def noesis_lattice(self, items: list) -> dict:
-        return {"lattice_path": str(items[0]).strip('"')}
-
-    def noesis_threshold(self, items: list) -> dict:
-        return {"oracle_threshold": float(items[0])}
-
-    def noesis_auto_learn(self, items: list) -> dict:
-        return {"auto_learn": str(items[0]).lower() in ("true", "1", "yes")}
-
-    def noesis_auto_evolve(self, items: list) -> dict:
-        return {"auto_evolve": str(items[0]).lower() in ("true", "1", "yes")}
-
-    def noesis_gap_tracking(self, items: list) -> dict:
-        return {"gap_tracking": str(items[0]).lower() in ("true", "1", "yes")}
-
-    def resonate_bind(self, items: list) -> LetNode:
-        filtered = [i for i in items if not (isinstance(i, Token) and i.type == "RESONATE")]
-        return LetNode(name=str(filtered[0]), value={"kind": "resonate", "query": str(filtered[1]).strip('"')})
-
-    def resonate_bind_guarded(self, items: list) -> LetNode:
-        filtered = [i for i in items if not (isinstance(i, Token) and i.type == "RESONATE")]
-        return LetNode(name=str(filtered[0]), value={
-            "kind": "resonate", "query": str(filtered[1]).strip('"'),
-            "guard_field": str(filtered[2]), "guard_threshold": float(filtered[3]),
-        })
-
-    def resonate_bare(self, items: list) -> dict:
-        filtered = [i for i in items if not (isinstance(i, Token) and i.type == "RESONATE")]
-        return {"kind": "resonate", "query": str(filtered[0]).strip('"')}
-
-    def sense_call(self, items: list) -> Any:
-        if isinstance(items[0], str) and items[0] == "let":
-            return LetNode(name=items[1], value={"kind": "sense_call", "tool": items[3], "args": items[4] if len(items) > 4 else {}})
-        filtered = [i for i in items if not isinstance(i, Token) or str(i) not in ("sense", "αίσθηση")]
-        if len(filtered) >= 1:
-            tool = filtered[0]
-            args = filtered[1] if len(filtered) > 1 else {}
-            return SenseCallNode(tool_name=tool, args=args if isinstance(args, dict) else {})
-        return SenseCallNode(tool_name=str(items[0]))
+    def sense_bind(self, items: list) -> LetNode:
+        s = self._strip(items)
+        bind_name = s[0]
+        tool = s[1]
+        args = s[2] if len(s) > 2 else {}
+        return LetNode(name=bind_name, value={"kind": "sense_call", "tool": tool, "args": args if isinstance(args, dict) else {}})
 
     def sleep_stmt(self, items: list) -> SleepNode:
-        return SleepNode(cycles=items[1])
+        s = self._strip(items)
+        dur = str(s[0])
+        import re
+        m = re.match(r"(\d+)", dur)
+        return SleepNode(cycles=int(m.group(1)) if m else 1)
 
     def if_stmt(self, items: list) -> IfNode:
         cond = items[0]
-        then_body = []
-        else_body = []
+        then_body: list[Any] = []
+        else_body: list[Any] = []
         collecting_else = False
         for item in items[1:]:
             if isinstance(item, Token) and str(item) == "else":
                 collecting_else = True
+                continue
+            if isinstance(item, Token):
                 continue
             if collecting_else:
                 else_body.append(item)
@@ -403,7 +503,8 @@ class NousTransformer(Transformer):
         return IfNode(condition=cond, then_body=then_body, else_body=else_body)
 
     def for_stmt(self, items: list) -> ForNode:
-        return ForNode(var_name=items[0], iterable=items[1], body=list(items[2:]))
+        s = self._strip(items)
+        return ForNode(var_name=s[0], iterable=s[1], body=list(s[2:]))
 
     def statement(self, items: list) -> Any:
         return items[0]
@@ -411,8 +512,8 @@ class NousTransformer(Transformer):
     # ── Instinct ──
 
     def instinct_block(self, items: list) -> InstinctNode:
-        stmts = [i for i in items[1:] if not isinstance(i, Token)]
-        return InstinctNode(statements=stmts)
+        s = self._strip(items)
+        return InstinctNode(statements=s)
 
     # ── DNA ──
 
@@ -423,7 +524,8 @@ class NousTransformer(Transformer):
         return GeneNode(name=name, value=value, range=range_vals)
 
     def dna_block(self, items: list) -> DnaNode:
-        genes = [i for i in items[1:] if isinstance(i, GeneNode)]
+        s = self._strip(items)
+        genes = [i for i in s if isinstance(i, GeneNode)]
         return DnaNode(genes=genes)
 
     # ── Heal ──
@@ -453,7 +555,10 @@ class NousTransformer(Transformer):
         return HealActionNode(strategy=HealStrategy.ALERT, params={"channel": items[0]})
 
     def heal_sleep(self, items: list) -> HealActionNode:
-        return HealActionNode(strategy=HealStrategy.SLEEP, params={"cycles": items[0]})
+        dur = str(items[0])
+        import re
+        m = re.match(r"(\d+)", dur)
+        return HealActionNode(strategy=HealStrategy.SLEEP, params={"cycles": int(m.group(1)) if m else 1})
 
     def heal_action(self, items: list) -> Any:
         return items[0]
@@ -464,7 +569,8 @@ class NousTransformer(Transformer):
         return HealRuleNode(error_type=error_type, actions=actions)
 
     def heal_block(self, items: list) -> HealNode:
-        rules = [i for i in items[1:] if isinstance(i, HealRuleNode)]
+        s = self._strip(items)
+        rules = [i for i in s if isinstance(i, HealRuleNode)]
         return HealNode(rules=rules)
 
     # ── Soul ──
@@ -473,9 +579,10 @@ class NousTransformer(Transformer):
         return items[0]
 
     def soul_decl(self, items: list) -> SoulNode:
-        name = items[1]
+        s = self._strip(items)
+        name = s[0]
         node = SoulNode(name=name)
-        for item in items[2:]:
+        for item in s[1:]:
             if isinstance(item, MindNode):
                 node.mind = item
             elif isinstance(item, list) and item and isinstance(item[0], str):
@@ -499,8 +606,9 @@ class NousTransformer(Transformer):
         return MessageFieldNode(name=name, type_expr=type_expr, default=default)
 
     def message_decl(self, items: list) -> MessageNode:
-        name = items[1]
-        fields = [i for i in items[2:] if isinstance(i, MessageFieldNode)]
+        s = self._strip(items)
+        name = s[0]
+        fields = [i for i in s[1:] if isinstance(i, MessageFieldNode)]
         return MessageNode(name=name, fields=fields)
 
     # ── Nervous System ──
@@ -535,11 +643,12 @@ class NousTransformer(Transformer):
         return items[0]
 
     def nervous_system_decl(self, items: list) -> NervousSystemNode:
-        routes: list = []
-        for item in items[1:]:
+        s = self._strip(items)
+        routes: list[Any] = []
+        for item in s:
             if isinstance(item, list):
                 routes.extend(item)
-            elif item is not None and not isinstance(item, Token):
+            elif item is not None:
                 routes.append(item)
         return NervousSystemNode(routes=routes)
 
@@ -574,8 +683,9 @@ class NousTransformer(Transformer):
         return items[0]
 
     def evolution_decl(self, items: list) -> EvolutionNode:
+        s = self._strip(items)
         node = EvolutionNode()
-        for item in items[1:]:
+        for item in s:
             if isinstance(item, str) and ":" in str(item):
                 node.schedule = item
             elif isinstance(item, MutateBlockNode):
@@ -620,8 +730,32 @@ class NousTransformer(Transformer):
         return PerceptionRuleNode(trigger=items[0], action=items[1])
 
     def perception_decl(self, items: list) -> PerceptionNode:
-        rules = [i for i in items[1:] if isinstance(i, PerceptionRuleNode)]
+        s = self._strip(items)
+        rules = [i for i in s if isinstance(i, PerceptionRuleNode)]
         return PerceptionNode(rules=rules)
+
+    # ── Deploy / Topology (passthrough) ──
+
+    def deploy_body(self, items: list) -> dict:
+        return {"deploy_field": (items[0], items[1])}
+
+    def deploy_decl(self, items: list) -> dict:
+        return {"kind": "deploy", "name": items[0], "fields": items[1:]}
+
+    def topo_body(self, items: list) -> dict:
+        return {"topo_field": (items[0], items[1])}
+
+    def topo_server(self, items: list) -> dict:
+        return {"server": items[0], "host": items[1], "config": items[2:]}
+
+    def topology_decl(self, items: list) -> dict:
+        return {"kind": "topology", "servers": items}
+
+    def nsp_field(self, items: list) -> dict:
+        return {"name": items[0], "type": items[1]}
+
+    def nsp_decl(self, items: list) -> dict:
+        return {"kind": "nsp", "fields": items}
 
     # ── Top-Level ──
 
@@ -645,19 +779,20 @@ class NousTransformer(Transformer):
                 program.noesis = item
             elif isinstance(item, PerceptionNode):
                 program.perception = item
+            elif isinstance(item, ImportNode):
+                program.imports.append(item)
+            elif isinstance(item, TestNode):
+                program.tests.append(item)
         return program
 
 
 def parse_nous(source: str) -> NousProgram:
-    """Parse a .nous source string into a Living AST."""
-    grammar = GRAMMAR_PATH.read_text()
-    lark_parser = Lark(grammar, parser="earley", start="start")
-    tree = lark_parser.parse(source)
+    parser = _get_parser()
+    tree = parser.parse(source)
     transformer = NousTransformer()
     return transformer.transform(tree)
 
 
 def parse_nous_file(path: str | Path) -> NousProgram:
-    """Parse a .nous file into a Living AST."""
     source = Path(path).read_text(encoding="utf-8")
     return parse_nous(source)

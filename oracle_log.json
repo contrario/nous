@@ -2,26 +2,13 @@
   {
     "tier": "DeepSeek",
     "model": "deepseek-chat",
-    "query": "What is an exoplanet?",
-    "response": "An exoplanet is a planet that orbits a star outside our solar system. They can be made of rock, gas, or ice, and vary greatly in size and temperature. Thousands have been discovered since the 1990s.",
-    "tokens_in": 66,
-    "tokens_out": 47,
-    "cost_usd": 2.2e-05,
-    "elapsed_ms": 3207.7,
-    "timestamp": 1776080364.3552296,
-    "success": true,
-    "error": ""
-  },
-  {
-    "tier": "DeepSeek",
-    "model": "deepseek-chat",
-    "query": "What is AutoGPT?",
-    "response": "AutoGPT is an experimental open-source application that demonstrates the capabilities of the GPT-4 language model by making it autonomous. It can be given a high-level goal, such as \"Develop a business plan,\" and will then break it down into sub-tasks, use the internet and other tools to research an",
+    "query": "/sb food cost restaurant",
+    "response": "Restaurant food cost typically refers to the percentage of revenue spent on ingredients, known as Cost of Goods Sold (COGS). A good target for full-service restaurants is often 28-35% of sales. This is calculated as (Total Cost of Ingredients / Total Food Sales) x 100.",
     "tokens_in": 64,
-    "tokens_out": 107,
-    "cost_usd": 3.9e-05,
-    "elapsed_ms": 5100.1,
-    "timestamp": 1776080399.3861394,
+    "tokens_out": 60,
+    "cost_usd": 2.6e-05,
+    "elapsed_ms": 2656.4,
+    "timestamp": 1776107449.0946722,
     "success": true,
     "error": ""
   }

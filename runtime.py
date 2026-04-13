@@ -1,670 +1,488 @@
 """
-NOUS Runtime — Ζωή (Zoi / Life)
-=================================
-Connects generated NOUS programs to the live Noosphere ecosystem.
-Dispatches sense calls to real tools, LLM calls to real providers,
-tracks costs against world laws, and runs perception triggers.
+NOUS Runtime v2 — Εκτέλεση (Ektelesi)
+========================================
+Event-driven execution engine for NOUS programs.
+Zero-cost sleep for listener souls. Circuit breaker for cost control.
+Sense caching for deduplication. Graceful shutdown.
 """
 from __future__ import annotations
 
 import asyncio
-import importlib
-import importlib.util
-import json
 import logging
+import signal
 import time
-import sys
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Any, Callable, Coroutine, Optional
 
-from pydantic import BaseModel, Field
+import httpx
 
 log = logging.getLogger("nous.runtime")
 
-NOOSPHERE_TOOLS_DIR = Path("/opt/aetherlang_agents/tools")
-NOOSPHERE_CORE_DIR = Path("/opt/aetherlang_agents/core")
-
-
-class DataProxy:
-    """Makes dict data accessible via dot notation."""
-
-    def __init__(self, data: Any) -> None:
-        object.__setattr__(self, "_data", data)
-
-    def __getattr__(self, name: str) -> Any:
-        d = object.__getattribute__(self, "_data")
-        if isinstance(d, dict) and name in d:
-            val = d[name]
-            if isinstance(val, dict):
-                return DataProxy(val)
-            return val
-        raise AttributeError(f"No field '{name}'")
-
-    def get(self, key: str, default: Any = None) -> Any:
-        d = object.__getattribute__(self, "_data")
-        if isinstance(d, dict):
-            return d.get(key, default)
-        return default
-
-    def __repr__(self) -> str:
-        return f"DataProxy({object.__getattribute__(self, '_data')})"
-
-    def __iter__(self):
-        d = object.__getattribute__(self, "_data")
-        if isinstance(d, (list, tuple)):
-            return iter(d)
-        return iter([])
-
-    def __len__(self) -> int:
-        d = object.__getattribute__(self, "_data")
-        if isinstance(d, (list, tuple, dict)):
-            return len(d)
-        return 0
-
-
-class ToolResult(BaseModel):
-    success: bool = True
-    data: Any = None
-    error: Optional[str] = None
-    cost: float = 0.0
-    latency_ms: float = 0.0
-
-    def __getattr__(self, name: str) -> Any:
-        if name.startswith("_") or name in ("success", "data", "error", "cost", "latency_ms", "model_fields", "model_config", "model_computed_fields"):
-            raise AttributeError(name)
-        if isinstance(self.data, dict) and name in self.data:
-            val = self.data[name]
-            if isinstance(val, dict):
-                return DataProxy(val)
-            return val
-        raise AttributeError(f"ToolResult has no field '{name}'")
-
-    def _primary_value(self) -> Any:
-        if isinstance(self.data, (int, float, str, bool)):
-            return self.data
-        if isinstance(self.data, dict):
-            for k, v in self.data.items():
-                if k in ("success", "error", "latency_ms", "cost", "count", "query"):
-                    continue
-                if isinstance(v, (int, float)):
-                    return v
-            return self.data
-        return self.data
-
-    def __lt__(self, other: Any) -> bool:
-        return self._primary_value() < other
-
-    def __le__(self, other: Any) -> bool:
-        return self._primary_value() <= other
-
-    def __gt__(self, other: Any) -> bool:
-        return self._primary_value() > other
-
-    def __ge__(self, other: Any) -> bool:
-        return self._primary_value() >= other
-
-    def __eq__(self, other: Any) -> bool:
-        if isinstance(other, ToolResult):
-            return self.data == other.data
-        return self._primary_value() == other
-
-    def __float__(self) -> float:
-        return float(self._primary_value())
-
-    def __int__(self) -> int:
-        return int(self._primary_value())
-
-    def __sub__(self, other: Any) -> float:
-        return float(self._primary_value()) - float(other)
-
-    def __rsub__(self, other: Any) -> float:
-        return float(other) - float(self._primary_value())
-
-    def __mul__(self, other: Any) -> float:
-        return float(self._primary_value()) * float(other)
-
-    def __rmul__(self, other: Any) -> float:
-        return float(other) * float(self._primary_value())
-
-    def filter(self, field: str, op: str, value: Any) -> list[Any]:
-        if not isinstance(self.data, list):
-            return []
-        ops = {
-            ">": lambda a, b: a > b,
-            "<": lambda a, b: a < b,
-            ">=": lambda a, b: a >= b,
-            "<=": lambda a, b: a <= b,
-            "==": lambda a, b: a == b,
-            "!=": lambda a, b: a != b,
-        }
-        fn = ops.get(op, lambda a, b: True)
-        result = []
-        for item in self.data:
-            if isinstance(item, dict):
-                val = item.get(field, 0)
-            elif hasattr(item, field):
-                val = getattr(item, field)
-            else:
-                continue
-            if fn(val, value):
-                result.append(DataProxy(item) if isinstance(item, dict) else item)
-        return result
-
-    def __iter__(self):
-        if isinstance(self.data, list):
-            return iter([DataProxy(item) if isinstance(item, dict) else item for item in self.data])
-        return iter([])
-
-    def __len__(self) -> int:
-        if isinstance(self.data, list):
-            return len(self.data)
-        return 0
-
-    def __bool__(self) -> bool:
-        return self.success
-
-
-class CostTracker:
-    def __init__(self, budget_per_cycle: float = 1.0) -> None:
-        self.budget_per_cycle = budget_per_cycle
-        self.current_cycle_cost = 0.0
-        self.total_cost = 0.0
-        self.cycle_count = 0
-        self._lock = asyncio.Lock()
-
-    async def record(self, cost: float, soul_name: str, operation: str) -> None:
-        async with self._lock:
-            self.current_cycle_cost += cost
-            self.total_cost += cost
-            log.debug(f"Cost: {soul_name}.{operation} = ${cost:.6f} (cycle total: ${self.current_cycle_cost:.6f})")
-
-    async def check_budget(self, soul_name: str) -> bool:
-        async with self._lock:
-            if self.current_cycle_cost >= self.budget_per_cycle:
-                log.warning(f"Budget exceeded for {soul_name}: ${self.current_cycle_cost:.4f} >= ${self.budget_per_cycle:.4f}")
-                return False
-            return True
-
-    def new_cycle(self) -> None:
-        self.cycle_count += 1
-        log.info(f"Cycle {self.cycle_count} cost: ${self.current_cycle_cost:.6f}")
-        self.current_cycle_cost = 0.0
-
-
-class ToolRegistry:
-    def __init__(self) -> None:
-        self._tools: dict[str, Any] = {}
-        self._stubs: dict[str, Callable[..., Coroutine[Any, Any, ToolResult]]] = {}
-
-    def scan_noosphere(self) -> int:
-        if not NOOSPHERE_TOOLS_DIR.exists():
-            log.warning(f"Tools directory not found: {NOOSPHERE_TOOLS_DIR}")
-            return 0
-
-        count = 0
-        for tool_file in sorted(NOOSPHERE_TOOLS_DIR.glob("*.py")):
-            if tool_file.name.startswith("_"):
-                continue
-            tool_name = tool_file.stem
-            try:
-                spec = importlib.util.spec_from_file_location(
-                    f"nous_tool_{tool_name}", str(tool_file)
-                )
-                if spec and spec.loader:
-                    module = importlib.util.module_from_spec(spec)
-                    spec.loader.exec_module(module)
-                    self._tools[tool_name] = module
-                    count += 1
-            except Exception as e:
-                log.debug(f"Skipped tool {tool_name}: {e}")
-
-        loaded = sorted(self._tools.keys())
-        log.info(f"Loaded {count} tools: {loaded}")
-        return count
-
-    def register_stub(self, name: str, func: Callable[..., Coroutine[Any, Any, ToolResult]]) -> None:
-        self._stubs[name] = func
-
-    async def call(self, tool_name: str, *args: Any, **kwargs: Any) -> ToolResult:
-        start = time.monotonic()
-
-        if tool_name in self._stubs:
-            try:
-                result = await self._stubs[tool_name](*args, **kwargs)
-                result.latency_ms = (time.monotonic() - start) * 1000
-                return result
-            except Exception as e:
-                return ToolResult(
-                    success=False,
-                    error=str(e),
-                    latency_ms=(time.monotonic() - start) * 1000,
-                )
-
-        module = self._tools.get(tool_name)
-        if module is None:
-            return ToolResult(
-                success=False,
-                error=f"Tool not found: {tool_name}. Available: {sorted(self._tools.keys())}",
-                latency_ms=(time.monotonic() - start) * 1000,
-            )
-
-        execute_fn = getattr(module, "execute", None)
-        if execute_fn is None:
-            tool_cls = None
-            for attr_name in dir(module):
-                attr = getattr(module, attr_name)
-                if isinstance(attr, type) and hasattr(attr, "execute"):
-                    tool_cls = attr
-                    break
-            if tool_cls:
-                instance = tool_cls()
-                execute_fn = instance.execute
-            else:
-                return ToolResult(
-                    success=False,
-                    error=f"Tool {tool_name} has no execute() function or class",
-                    latency_ms=(time.monotonic() - start) * 1000,
-                )
-
-        try:
-            if asyncio.iscoroutinefunction(execute_fn):
-                raw = await execute_fn(*args, **kwargs)
-            else:
-                raw = execute_fn(*args, **kwargs)
-
-            if isinstance(raw, ToolResult):
-                raw.latency_ms = (time.monotonic() - start) * 1000
-                return raw
-
-            if isinstance(raw, dict) and "data" in raw and isinstance(raw["data"], list):
-                return ToolResult(
-                    success=raw.get("success", True),
-                    data=raw["data"],
-                    latency_ms=(time.monotonic() - start) * 1000,
-                )
-
-            return ToolResult(
-                success=True,
-                data=raw,
-                latency_ms=(time.monotonic() - start) * 1000,
-            )
-        except Exception as e:
-            return ToolResult(
-                success=False,
-                error=f"{type(e).__name__}: {e}",
-                latency_ms=(time.monotonic() - start) * 1000,
-            )
-
-    @property
-    def available(self) -> list[str]:
-        return sorted(set(list(self._tools.keys()) + list(self._stubs.keys())))
-
-
-TIER_PROVIDERS: dict[str, dict[str, Any]] = {
-    "Tier0A": {
-        "provider": "anthropic",
-        "base_url": None,
-        "api_key_env": "ANTHROPIC_API_KEY",
-        "cost_per_1k_input": 0.003,
-        "cost_per_1k_output": 0.015,
-    },
-    "Tier0B": {
-        "provider": "openai",
-        "base_url": None,
-        "api_key_env": "OPENAI_API_KEY",
-        "cost_per_1k_input": 0.005,
-        "cost_per_1k_output": 0.015,
-    },
-    "Tier1": {
-        "provider": "openrouter",
-        "base_url": "https://openrouter.ai/api/v1",
-        "api_key_env": "OPENROUTER_API_KEY",
-        "cost_per_1k_input": 0.001,
-        "cost_per_1k_output": 0.002,
-    },
-    "Tier2": {
-        "provider": "openrouter",
-        "base_url": "https://openrouter.ai/api/v1",
-        "api_key_env": "OPENROUTER_API_KEY",
-        "cost_per_1k_input": 0.0,
-        "cost_per_1k_output": 0.0,
-    },
-    "Tier3": {
-        "provider": "ollama",
-        "base_url": "http://localhost:11434/v1",
-        "api_key_env": None,
-        "cost_per_1k_input": 0.0,
-        "cost_per_1k_output": 0.0,
-    },
+TIER_COSTS: dict[str, dict[str, float]] = {
+    "Tier0A": {"input_per_1k": 0.00025, "output_per_1k": 0.00125},
+    "Tier0B": {"input_per_1k": 0.0005, "output_per_1k": 0.0025},
+    "Tier1":  {"input_per_1k": 0.003, "output_per_1k": 0.015},
+    "Tier2":  {"input_per_1k": 0.005, "output_per_1k": 0.025},
+    "Tier3":  {"input_per_1k": 0.015, "output_per_1k": 0.075},
 }
 
 
-class LLMCaller:
+class CircuitBreakerTripped(Exception):
+    def __init__(self, soul_name: str, spent: float, ceiling: float) -> None:
+        self.soul_name = soul_name
+        self.spent = spent
+        self.ceiling = ceiling
+        super().__init__(
+            f"Circuit breaker: {soul_name} pushed cycle cost to ${spent:.6f}, "
+            f"ceiling is ${ceiling:.2f}"
+        )
+
+
+@dataclass
+class CycleMetrics:
+    cycle_id: int = 0
+    start_time: float = 0.0
+    end_time: float = 0.0
+    total_cost: float = 0.0
+    soul_costs: dict[str, float] = field(default_factory=dict)
+    sense_calls: int = 0
+    sense_cache_hits: int = 0
+    messages_sent: int = 0
+    circuit_broken: bool = False
+
+
+class CostTracker:
+    """Tracks cumulative cost within a single heartbeat cycle.
+    Shared across all souls that execute in the same cycle cascade."""
+
+    def __init__(self, ceiling: float) -> None:
+        self._ceiling = ceiling
+        self._spent = 0.0
+        self._soul_costs: dict[str, float] = {}
+        self._lock = asyncio.Lock()
+
+    @property
+    def spent(self) -> float:
+        return self._spent
+
+    @property
+    def ceiling(self) -> float:
+        return self._ceiling
+
+    @property
+    def remaining(self) -> float:
+        return max(0.0, self._ceiling - self._spent)
+
+    async def charge(self, soul_name: str, input_tokens: int, output_tokens: int, tier: str) -> float:
+        tier_info = TIER_COSTS.get(tier, TIER_COSTS["Tier1"])
+        cost = (
+            (input_tokens / 1000) * tier_info["input_per_1k"]
+            + (output_tokens / 1000) * tier_info["output_per_1k"]
+        )
+        async with self._lock:
+            self._spent += cost
+            self._soul_costs[soul_name] = self._soul_costs.get(soul_name, 0.0) + cost
+            if self._spent > self._ceiling:
+                raise CircuitBreakerTripped(soul_name, self._spent, self._ceiling)
+        return cost
+
+    async def pre_check(self, soul_name: str, est_input: int, est_output: int, tier: str) -> bool:
+        tier_info = TIER_COSTS.get(tier, TIER_COSTS["Tier1"])
+        est_cost = (
+            (est_input / 1000) * tier_info["input_per_1k"]
+            + (est_output / 1000) * tier_info["output_per_1k"]
+        )
+        async with self._lock:
+            return (self._spent + est_cost) <= self._ceiling
+
+    def reset(self) -> CycleMetrics:
+        metrics = CycleMetrics(
+            total_cost=self._spent,
+            soul_costs=dict(self._soul_costs),
+        )
+        self._spent = 0.0
+        self._soul_costs.clear()
+        return metrics
+
+
+class SenseCache:
+    """Deduplicates sense calls within a single instinct execution.
+    Key = (tool_name, frozenset(args)). Cleared after each instinct run."""
+
     def __init__(self) -> None:
-        self._http: Any = None
+        self._cache: dict[str, Any] = {}
+        self._hits = 0
+        self._misses = 0
 
-    async def _get_http(self) -> Any:
-        if self._http is None:
-            import httpx
-            self._http = httpx.AsyncClient(timeout=60.0)
-        return self._http
+    def _make_key(self, tool_name: str, args: dict[str, Any]) -> str:
+        sorted_args = tuple(sorted(
+            ((k, self._freeze(v)) for k, v in args.items()),
+            key=lambda x: x[0]
+        ))
+        return f"{tool_name}:{sorted_args}"
 
-    async def call(
-        self,
-        model: str,
-        tier: str,
-        prompt: str,
-        system: str = "",
-        temperature: float = 0.7,
-        max_tokens: int = 2000,
-    ) -> tuple[str, float]:
-        tier_config = TIER_PROVIDERS.get(tier, TIER_PROVIDERS["Tier1"])
-        provider = tier_config["provider"]
+    def _freeze(self, val: Any) -> Any:
+        if isinstance(val, dict):
+            return tuple(sorted(val.items()))
+        if isinstance(val, list):
+            return tuple(val)
+        return val
 
-        if provider == "anthropic":
-            return await self._call_anthropic(model, prompt, system, temperature, max_tokens, tier_config)
-        elif provider == "ollama":
-            return await self._call_openai_compat(model, prompt, system, temperature, max_tokens, tier_config)
-        else:
-            return await self._call_openai_compat(model, prompt, system, temperature, max_tokens, tier_config)
+    def get(self, tool_name: str, args: dict[str, Any]) -> tuple[bool, Any]:
+        key = self._make_key(tool_name, args)
+        if key in self._cache:
+            self._hits += 1
+            return True, self._cache[key]
+        self._misses += 1
+        return False, None
 
-    async def _call_anthropic(
-        self, model: str, prompt: str, system: str, temperature: float, max_tokens: int, config: dict[str, Any]
-    ) -> tuple[str, float]:
-        import os
-        http = await self._get_http()
-        api_key = os.environ.get(config["api_key_env"], "")
-        if not api_key:
-            raise RuntimeError(f"Missing env var: {config['api_key_env']}")
+    def put(self, tool_name: str, args: dict[str, Any], result: Any) -> None:
+        key = self._make_key(tool_name, args)
+        self._cache[key] = result
 
-        messages = [{"role": "user", "content": prompt}]
-        body: dict[str, Any] = {
-            "model": model,
-            "max_tokens": max_tokens,
-            "temperature": temperature,
-            "messages": messages,
-        }
-        if system:
-            body["system"] = system
+    def clear(self) -> tuple[int, int]:
+        hits, misses = self._hits, self._misses
+        self._cache.clear()
+        self._hits = 0
+        self._misses = 0
+        return hits, misses
 
-        resp = await http.post(
-            "https://api.anthropic.com/v1/messages",
-            headers={
-                "x-api-key": api_key,
-                "anthropic-version": "2023-06-01",
-                "content-type": "application/json",
-            },
-            json=body,
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        text = ""
-        for block in data.get("content", []):
-            if block.get("type") == "text":
-                text += block.get("text", "")
-        usage = data.get("usage", {})
-        input_tokens = usage.get("input_tokens", 0)
-        output_tokens = usage.get("output_tokens", 0)
-        cost = (
-            input_tokens / 1000 * config["cost_per_1k_input"]
-            + output_tokens / 1000 * config["cost_per_1k_output"]
-        )
-        return text, cost
 
-    async def _call_openai_compat(
-        self, model: str, prompt: str, system: str, temperature: float, max_tokens: int, config: dict[str, Any]
-    ) -> tuple[str, float]:
-        import os
-        http = await self._get_http()
-        base_url = config.get("base_url", "https://openrouter.ai/api/v1")
-        api_key = ""
-        if config.get("api_key_env"):
-            api_key = os.environ.get(config["api_key_env"], "")
+class Channel:
+    """Named async channel with backpressure."""
 
-        messages: list[dict[str, str]] = []
-        if system:
-            messages.append({"role": "system", "content": system})
-        messages.append({"role": "user", "content": prompt})
+    def __init__(self, name: str, maxsize: int = 100) -> None:
+        self.name = name
+        self._queue: asyncio.Queue[Any] = asyncio.Queue(maxsize=maxsize)
+        self._total_sent = 0
+        self._total_received = 0
 
-        headers: dict[str, str] = {"content-type": "application/json"}
-        if api_key:
-            headers["authorization"] = f"Bearer {api_key}"
+    async def send(self, message: Any, timeout: float = 5.0) -> None:
+        try:
+            await asyncio.wait_for(self._queue.put(message), timeout=timeout)
+            self._total_sent += 1
+            log.debug(f"Channel [{self.name}]: sent ({self._queue.qsize()} queued)")
+        except asyncio.TimeoutError:
+            log.warning(f"Channel [{self.name}]: backpressure — send timeout after {timeout}s")
+            raise
 
-        resp = await http.post(
-            f"{base_url}/chat/completions",
-            headers=headers,
-            json={
-                "model": model,
-                "messages": messages,
-                "temperature": temperature,
-                "max_tokens": max_tokens,
-            },
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        text = data["choices"][0]["message"]["content"]
-        usage = data.get("usage", {})
-        input_tokens = usage.get("prompt_tokens", 0)
-        output_tokens = usage.get("completion_tokens", 0)
-        cost = (
-            input_tokens / 1000 * config["cost_per_1k_input"]
-            + output_tokens / 1000 * config["cost_per_1k_output"]
-        )
-        return text, cost
+    async def receive(self, timeout: Optional[float] = None) -> Any:
+        try:
+            if timeout is not None:
+                msg = await asyncio.wait_for(self._queue.get(), timeout=timeout)
+            else:
+                msg = await self._queue.get()
+            self._total_received += 1
+            return msg
+        except asyncio.TimeoutError:
+            return None
 
-    async def close(self) -> None:
-        if self._http:
-            await self._http.aclose()
-            self._http = None
+    @property
+    def pending(self) -> int:
+        return self._queue.qsize()
 
 
 class ChannelRegistry:
-    def __init__(self, max_size: int = 100) -> None:
-        self._channels: dict[str, asyncio.Queue[Any]] = {}
-        self._max_size = max_size
-        self._stats: dict[str, dict[str, int]] = {}
+    """Thread-safe registry of named channels."""
 
-    def get(self, key: str) -> asyncio.Queue[Any]:
-        if key not in self._channels:
-            self._channels[key] = asyncio.Queue(maxsize=self._max_size)
-            self._stats[key] = {"sent": 0, "received": 0}
-        return self._channels[key]
+    def __init__(self, default_maxsize: int = 100) -> None:
+        self._channels: dict[str, Channel] = {}
+        self._default_maxsize = default_maxsize
+        self._lock = asyncio.Lock()
 
-    async def send(self, key: str, message: Any) -> None:
-        await self.get(key).put(message)
-        self._stats.setdefault(key, {"sent": 0, "received": 0})["sent"] += 1
-        log.debug(f"Channel {key}: sent #{self._stats[key]['sent']}")
+    async def get(self, name: str) -> Channel:
+        async with self._lock:
+            if name not in self._channels:
+                self._channels[name] = Channel(name, self._default_maxsize)
+            return self._channels[name]
 
-    async def receive(self, key: str, timeout: float = 30.0) -> Any:
-        try:
-            msg = await asyncio.wait_for(self.get(key).get(), timeout=timeout)
-            self._stats.setdefault(key, {"sent": 0, "received": 0})["received"] += 1
-            return msg
-        except asyncio.TimeoutError:
-            raise TimeoutError(f"Channel {key}: receive timeout after {timeout}s")
+    async def send(self, name: str, message: Any) -> None:
+        ch = await self.get(name)
+        await ch.send(message)
 
-    @property
-    def stats(self) -> dict[str, dict[str, int]]:
-        return dict(self._stats)
+    async def receive(self, name: str, timeout: Optional[float] = None) -> Any:
+        ch = await self.get(name)
+        return await ch.receive(timeout=timeout)
 
 
-class PerceptionEngine:
-    def __init__(self, souls: dict[str, Any], channels: ChannelRegistry) -> None:
-        self._souls = souls
-        self._channels = channels
-        self._cron_tasks: list[asyncio.Task[None]] = []
-        self._running = False
+class SenseExecutor:
+    """Executes sense calls via httpx or registered tool functions.
+    Integrates with SenseCache for deduplication."""
 
-    async def start(self, rules: list[dict[str, Any]]) -> None:
-        self._running = True
-        for rule in rules:
-            trigger = rule.get("trigger", {})
-            action = rule.get("action", {})
-            kind = trigger.get("kind", "")
+    def __init__(self, cache: SenseCache) -> None:
+        self._cache = cache
+        self._tools: dict[str, Callable[..., Coroutine[Any, Any, Any]]] = {}
+        self._http_client: Optional[httpx.AsyncClient] = None
 
-            if kind == "cron":
-                cron_expr = trigger.get("args", [""])[0] if trigger.get("args") else ""
-                task = asyncio.create_task(self._cron_loop(cron_expr, action))
-                self._cron_tasks.append(task)
-            elif kind == "telegram":
-                log.info(f"Perception: telegram trigger registered for {action}")
-            elif kind == "system_error":
-                log.info(f"Perception: system_error trigger registered → {action}")
+    def register_tool(self, name: str, func: Callable[..., Coroutine[Any, Any, Any]]) -> None:
+        self._tools[name] = func
 
-    async def _cron_loop(self, expr: str, action: dict[str, Any]) -> None:
-        interval = self._parse_cron_interval(expr)
-        while self._running:
-            await asyncio.sleep(interval)
-            await self._execute_action(action)
+    async def _get_http(self) -> httpx.AsyncClient:
+        if self._http_client is None or self._http_client.is_closed:
+            self._http_client = httpx.AsyncClient(timeout=30.0)
+        return self._http_client
 
-    async def _execute_action(self, action: dict[str, Any]) -> None:
-        kind = action.get("kind", "")
-        target = action.get("target")
+    async def call(self, tool_name: str, args: dict[str, Any]) -> Any:
+        cached, result = self._cache.get(tool_name, args)
+        if cached:
+            log.debug(f"Sense [{tool_name}]: cache hit")
+            return result
 
-        if kind == "wake" and target:
-            soul = self._souls.get(target)
-            if soul and hasattr(soul, "instinct"):
-                log.info(f"Perception: waking {target}")
-                asyncio.create_task(soul.instinct())
-        elif kind == "wake_all":
-            for name, soul in self._souls.items():
-                if hasattr(soul, "instinct"):
-                    log.info(f"Perception: waking {name}")
-                    asyncio.create_task(soul.instinct())
-        elif kind == "alert":
-            log.warning(f"Perception: alert → {target}")
+        if tool_name in self._tools:
+            result = await self._tools[tool_name](**args)
+        elif tool_name == "http_get":
+            client = await self._get_http()
+            url = args.get("url", args.get("_pos_0", ""))
+            resp = await client.get(str(url))
+            result = resp.json() if "json" in resp.headers.get("content-type", "") else resp.text
+        else:
+            log.warning(f"Sense [{tool_name}]: no handler registered, returning None")
+            result = None
 
-    @staticmethod
-    def _parse_cron_interval(expr: str) -> float:
-        parts = expr.split()
-        if len(parts) >= 1 and parts[0].startswith("*/"):
+        self._cache.put(tool_name, args, result)
+        return result
+
+    async def close(self) -> None:
+        if self._http_client and not self._http_client.is_closed:
+            await self._http_client.aclose()
+
+
+@dataclass
+class SoulWakeStrategy:
+    HEARTBEAT = "heartbeat"
+    LISTENER = "listener"
+
+
+class SoulRunner:
+    """Manages a single soul's lifecycle.
+    Entrypoint souls wake on heartbeat. Listener souls wake on message."""
+
+    def __init__(
+        self,
+        name: str,
+        wake_strategy: str,
+        instinct_fn: Callable[..., Coroutine[Any, Any, None]],
+        heal_fn: Callable[[Exception], Coroutine[Any, Any, bool]],
+        listen_channel: Optional[str] = None,
+        heartbeat_seconds: float = 300.0,
+        tier: str = "Tier1",
+        cost_tracker: Optional[CostTracker] = None,
+        sense_cache: Optional[SenseCache] = None,
+    ) -> None:
+        self.name = name
+        self.wake_strategy = wake_strategy
+        self._instinct = instinct_fn
+        self._heal = heal_fn
+        self._listen_channel = listen_channel
+        self._heartbeat = heartbeat_seconds
+        self._tier = tier
+        self._cost_tracker = cost_tracker
+        self._sense_cache = sense_cache
+        self._alive = True
+        self._cycle_count = 0
+        self._shutdown_event: Optional[asyncio.Event] = None
+
+    def set_shutdown_event(self, event: asyncio.Event) -> None:
+        self._shutdown_event = event
+
+    async def run(self, channels: ChannelRegistry) -> None:
+        log.info(f"Soul [{self.name}]: started ({self.wake_strategy})")
+        while self._alive:
+            if self._shutdown_event and self._shutdown_event.is_set():
+                log.info(f"Soul [{self.name}]: shutdown signal received")
+                break
+
             try:
-                return float(parts[0][2:]) * 60
-            except ValueError:
+                if self.wake_strategy == SoulWakeStrategy.HEARTBEAT:
+                    await self._run_heartbeat_cycle()
+                else:
+                    await self._run_listener_cycle(channels)
+            except CircuitBreakerTripped as cb:
+                log.warning(f"Soul [{self.name}]: {cb}")
+                if self.wake_strategy == SoulWakeStrategy.HEARTBEAT:
+                    await self._sleep_or_shutdown(self._heartbeat)
+            except asyncio.CancelledError:
+                log.info(f"Soul [{self.name}]: cancelled")
+                break
+            except Exception as e:
+                log.error(f"Soul [{self.name}]: fatal error in run loop: {e}")
+                recovered = await self._heal(e)
+                if not recovered:
+                    log.critical(f"Soul [{self.name}]: unrecoverable, stopping")
+                    self._alive = False
+
+        log.info(f"Soul [{self.name}]: stopped after {self._cycle_count} cycles")
+
+    async def _run_heartbeat_cycle(self) -> None:
+        if self._sense_cache:
+            self._sense_cache.clear()
+
+        await self._instinct()
+        self._cycle_count += 1
+        log.info(f"Soul [{self.name}]: cycle {self._cycle_count} complete")
+        await self._sleep_or_shutdown(self._heartbeat)
+
+    async def _run_listener_cycle(self, channels: ChannelRegistry) -> None:
+        if not self._listen_channel:
+            log.error(f"Soul [{self.name}]: listener with no channel, falling back to heartbeat")
+            await self._sleep_or_shutdown(self._heartbeat)
+            return
+
+        ch = await channels.get(self._listen_channel)
+        log.debug(f"Soul [{self.name}]: waiting on channel [{self._listen_channel}]")
+
+        msg = await ch.receive(timeout=self._heartbeat)
+        if msg is None:
+            return
+
+        if self._sense_cache:
+            self._sense_cache.clear()
+
+        if self._cost_tracker:
+            can_run = await self._cost_tracker.pre_check(self.name, 500, 200, self._tier)
+            if not can_run:
+                log.warning(f"Soul [{self.name}]: pre-check failed, budget exhausted, skipping")
+                return
+
+        await self._instinct()
+        self._cycle_count += 1
+        log.info(f"Soul [{self.name}]: cycle {self._cycle_count} complete (message-driven)")
+
+    async def _sleep_or_shutdown(self, seconds: float) -> None:
+        if self._shutdown_event:
+            try:
+                await asyncio.wait_for(self._shutdown_event.wait(), timeout=seconds)
+            except asyncio.TimeoutError:
                 pass
-        return 300.0
+        else:
+            await asyncio.sleep(seconds)
 
-    async def stop(self) -> None:
-        self._running = False
-        for task in self._cron_tasks:
-            task.cancel()
-        self._cron_tasks.clear()
-
-
-class BudgetExceededError(Exception):
-    pass
+    def stop(self) -> None:
+        self._alive = False
 
 
 class NousRuntime:
+    """Top-level runtime orchestrator.
+    Manages soul lifecycle, channels, cost tracking, graceful shutdown."""
+
     def __init__(
         self,
         world_name: str = "Unknown",
         heartbeat_seconds: float = 300.0,
-        budget_per_cycle: float = 1.0,
-        laws: Optional[dict[str, Any]] = None,
+        cost_ceiling: float = 0.10,
+        channel_maxsize: int = 100,
     ) -> None:
         self.world_name = world_name
         self.heartbeat_seconds = heartbeat_seconds
-        self.tools = ToolRegistry()
-        self.llm = LLMCaller()
-        self.channels = ChannelRegistry()
-        self.costs = CostTracker(budget_per_cycle)
-        self.perception: Optional[PerceptionEngine] = None
-        self.souls: dict[str, Any] = {}
-        self.laws = laws or {}
-        self._running = False
+        self.cost_ceiling = cost_ceiling
 
-    def boot(self) -> None:
-        log.info(f"Booting NOUS runtime: {self.world_name}")
-        tool_count = self.tools.scan_noosphere()
-        log.info(f"Runtime ready: {tool_count} tools loaded")
+        self.channels = ChannelRegistry(default_maxsize=channel_maxsize)
+        self.cost_tracker = CostTracker(ceiling=cost_ceiling)
+        self.sense_cache = SenseCache()
+        self.sense_executor = SenseExecutor(cache=self.sense_cache)
 
-    async def sense(self, soul_name: str, tool_name: str, *args: Any, **kwargs: Any) -> ToolResult:
-        if not await self.costs.check_budget(soul_name):
-            raise BudgetExceededError(
-                f"{soul_name}: budget exceeded (${self.costs.current_cycle_cost:.4f} >= ${self.costs.budget_per_cycle:.4f})"
-            )
+        self._runners: list[SoulRunner] = []
+        self._shutdown = asyncio.Event()
+        self._cycle_id = 0
+        self._metrics_history: list[CycleMetrics] = []
 
-        result = await self.tools.call(tool_name, *args, **kwargs)
+    def add_soul(self, runner: SoulRunner) -> None:
+        runner.set_shutdown_event(self._shutdown)
+        runner._cost_tracker = self.cost_tracker
+        runner._sense_cache = self.sense_cache
+        self._runners.append(runner)
 
-        if result.cost > 0:
-            await self.costs.record(result.cost, soul_name, f"sense:{tool_name}")
+    def register_sense(self, name: str, func: Callable[..., Coroutine[Any, Any, Any]]) -> None:
+        self.sense_executor.register_tool(name, func)
 
-        if not result.success:
-            log.error(f"{soul_name}.sense({tool_name}): {result.error}")
+    async def run(self) -> None:
+        log.info(f"═══ NOUS Runtime v2 — {self.world_name} ═══")
+        log.info(f"  Heartbeat:     {self.heartbeat_seconds}s")
+        log.info(f"  Cost ceiling:  ${self.cost_ceiling:.2f}/cycle")
+        log.info(f"  Souls:         {len(self._runners)}")
+        for r in self._runners:
+            log.info(f"    [{r.name}] strategy={r.wake_strategy}")
 
-        return result
-
-    async def think(
-        self,
-        soul_name: str,
-        model: str,
-        tier: str,
-        prompt: str,
-        system: str = "",
-        temperature: float = 0.7,
-    ) -> tuple[str, float]:
-        if not await self.costs.check_budget(soul_name):
-            raise BudgetExceededError(f"{soul_name}: budget exceeded")
-
-        text, cost = await self.llm.call(model, tier, prompt, system, temperature)
-        await self.costs.record(cost, soul_name, f"think:{model}")
-        return text, cost
-
-    def register_soul(self, name: str, soul: Any) -> None:
-        self.souls[name] = soul
-        if hasattr(soul, "_runtime"):
-            soul._runtime = self
-        log.info(f"Registered soul: {name}")
-
-    async def run(self, perception_rules: Optional[list[dict[str, Any]]] = None) -> None:
-        self._running = True
-        self.boot()
-
-        if perception_rules:
-            self.perception = PerceptionEngine(self.souls, self.channels)
-            await self.perception.start(perception_rules)
-
-        log.info(f"Starting {len(self.souls)} souls")
+        loop = asyncio.get_running_loop()
+        for sig_name in ("SIGINT", "SIGTERM"):
+            try:
+                loop.add_signal_handler(
+                    getattr(signal, sig_name),
+                    self._handle_shutdown,
+                )
+            except (NotImplementedError, AttributeError):
+                pass
 
         try:
             async with asyncio.TaskGroup() as tg:
-                for name, soul in self.souls.items():
-                    if hasattr(soul, "run"):
-                        tg.create_task(soul.run())
-                        log.info(f"Soul {name}: running")
-        except* Exception as eg:
+                for runner in self._runners:
+                    tg.create_task(runner.run(self.channels))
+                tg.create_task(self._heartbeat_cost_reset())
+        except* CircuitBreakerTripped as eg:
             for exc in eg.exceptions:
-                log.error(f"Soul crashed: {exc}")
+                log.warning(f"Circuit breaker ended cycle: {exc}")
+        except* asyncio.CancelledError:
+            log.info("Runtime cancelled")
         finally:
-            self._running = False
-            if self.perception:
-                await self.perception.stop()
-            await self.llm.close()
-            log.info(f"Runtime stopped. Total cost: ${self.costs.total_cost:.6f}")
+            await self.sense_executor.close()
+            log.info(f"═══ NOUS Runtime shutdown complete ═══")
+
+    async def _heartbeat_cost_reset(self) -> None:
+        while not self._shutdown.is_set():
+            try:
+                await asyncio.wait_for(self._shutdown.wait(), timeout=self.heartbeat_seconds)
+                break
+            except asyncio.TimeoutError:
+                metrics = self.cost_tracker.reset()
+                self._cycle_id += 1
+                metrics.cycle_id = self._cycle_id
+                self._metrics_history.append(metrics)
+                if len(self._metrics_history) > 1000:
+                    self._metrics_history = self._metrics_history[-500:]
+                hits, misses = self.sense_cache.clear()
+                log.info(
+                    f"Cycle {self._cycle_id} summary: "
+                    f"cost=${metrics.total_cost:.6f}/{self.cost_ceiling:.2f} "
+                    f"sense_cache={hits}hit/{misses}miss"
+                )
+
+    def _handle_shutdown(self) -> None:
+        log.info("Shutdown signal received")
+        self._shutdown.set()
+        for runner in self._runners:
+            runner.stop()
 
     async def shutdown(self) -> None:
-        self._running = False
-        for soul in self.souls.values():
-            if hasattr(soul, "_alive"):
-                soul._alive = False
-        if self.perception:
-            await self.perception.stop()
-        await self.llm.close()
+        self._handle_shutdown()
 
 
-_runtime: Optional[NousRuntime] = None
+def determine_wake_strategies(
+    souls: list[str],
+    routes: list[tuple[str, str]],
+) -> dict[str, str]:
+    """Analyze nervous_system routes to classify souls.
+    Souls with no incoming routes = entrypoint (heartbeat).
+    Souls with incoming routes = listener (message-driven)."""
+    has_incoming: set[str] = set()
+    for src, tgt in routes:
+        has_incoming.add(tgt)
+
+    strategies: dict[str, str] = {}
+    for soul in souls:
+        if soul in has_incoming:
+            strategies[soul] = SoulWakeStrategy.LISTENER
+        else:
+            strategies[soul] = SoulWakeStrategy.HEARTBEAT
+    return strategies
 
 
-def get_runtime() -> NousRuntime:
-    global _runtime
-    if _runtime is None:
-        _runtime = NousRuntime()
-    return _runtime
-
-
-def init_runtime(**kwargs: Any) -> NousRuntime:
-    global _runtime
-    _runtime = NousRuntime(**kwargs)
-    return _runtime
+def determine_listen_channels(
+    soul_name: str,
+    routes: list[tuple[str, str]],
+) -> Optional[str]:
+    """Find the primary listen channel for a listener soul.
+    Returns the first source that routes into this soul."""
+    for src, tgt in routes:
+        if tgt == soul_name:
+            return src
+    return None

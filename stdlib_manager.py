@@ -116,7 +116,7 @@ def get_package_entry(name: str) -> Optional[Path]:
 
 def cmd_pkg(args: list[str]) -> int:
     if not args:
-        print("Usage: nous pkg [install|list|init|uninstall]")
+        print("Usage: nous pkg [install|list|init|uninstall|publish|registry]")
         return 1
 
     subcmd = args[0]
@@ -132,11 +132,33 @@ def cmd_pkg(args: list[str]) -> int:
                 print(f"Error: invalid package at {source}")
                 return 1
         else:
-            installed = install_stdlib()
-            print(f"Installed {len(installed)} stdlib packages:")
-            for name in installed:
-                print(f"  ✓ {name}")
-            return 0
+            from registry import install_from_toml
+            toml_path = Path("nous.toml")
+            if toml_path.exists():
+                ok, msgs = install_from_toml(Path.cwd())
+                if ok:
+                    if msgs and msgs[0] == "No dependencies declared":
+                        print("No dependencies in nous.toml. Installing stdlib...")
+                        installed = install_stdlib()
+                        print(f"Installed {len(installed)} stdlib packages:")
+                        for name in installed:
+                            print(f"  ✓ {name}")
+                    else:
+                        print(f"Installed {len(msgs)} packages from nous.toml:")
+                        for m in msgs:
+                            print(f"  ✓ {m}")
+                else:
+                    print("Dependency resolution failed:")
+                    for m in msgs:
+                        print(f"  ✗ {m}")
+                    return 1
+                return 0
+            else:
+                installed = install_stdlib()
+                print(f"Installed {len(installed)} stdlib packages:")
+                for name in installed:
+                    print(f"  ✓ {name}")
+                return 0
 
     elif subcmd == "list":
         packages = list_packages()
@@ -176,6 +198,28 @@ author = ""
 """
         toml_path.write_text(content, encoding="utf-8")
         print("Created nous.toml")
+        return 0
+
+    elif subcmd == "publish":
+        from registry import publish
+        project_dir = Path(args[1]) if len(args) > 1 else Path.cwd()
+        ok, msg = publish(project_dir)
+        if ok:
+            print(f"✓ {msg}")
+            return 0
+        else:
+            print(f"✗ {msg}")
+            return 1
+
+    elif subcmd == "registry":
+        from registry import list_registry
+        packages = list_registry()
+        if not packages:
+            print("Registry is empty. Publish packages with: nous pkg publish")
+            return 0
+        print(f"Registry ({len(packages)} packages):")
+        for p in packages:
+            print(f"  {p['name']} v{p['latest']} ({len(p['versions'])} versions) — {p['description']}")
         return 0
 
     else:

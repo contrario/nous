@@ -1,13 +1,13 @@
 """
-NOUS CodeGen — Γέννηση (Genesis)
-=================================
+NOUS CodeGen v2 — Γέννηση (Genesis)
+=====================================
 Transforms the Living AST into production-grade Python 3.11+ asyncio code.
-Generated code uses Pydantic V2 for message types, asyncio.Queue for channels,
-and asyncio.TaskGroup for parallel execution.
+Event-driven architecture: entrypoint souls wake on heartbeat,
+listener souls wake on message. Circuit breaker enforces cost ceiling.
+Sense cache deduplicates API calls.
 """
 from __future__ import annotations
 
-import textwrap
 from typing import Any
 
 from ast_nodes import (
@@ -22,12 +22,49 @@ from ast_nodes import (
 
 
 class NousCodeGen:
-    """Generates Python 3.11+ asyncio code from a validated NousProgram."""
+    """Generates Python 3.11+ asyncio code with event-driven runtime."""
 
     def __init__(self, program: NousProgram) -> None:
         self.program = program
         self.indent_level = 0
         self.lines: list[str] = []
+        self._routes: list[tuple[str, str]] = []
+        self._incoming: dict[str, list[str]] = {}
+        self._outgoing: dict[str, list[str]] = {}
+        self._entrypoints: set[str] = set()
+        self._listeners: set[str] = set()
+        self._cost_ceiling: float = 0.10
+        self._heartbeat_seconds: int = 300
+        self._analyze_topology()
+
+    def _analyze_topology(self) -> None:
+        ns = self.program.nervous_system
+        if ns:
+            for route in ns.routes:
+                if isinstance(route, RouteNode):
+                    self._routes.append((route.source, route.target))
+                elif isinstance(route, FanInNode):
+                    for src in route.sources:
+                        self._routes.append((src, route.target))
+                elif isinstance(route, FanOutNode):
+                    for tgt in route.targets:
+                        self._routes.append((route.source, tgt))
+
+        for src, tgt in self._routes:
+            self._outgoing.setdefault(src, []).append(tgt)
+            self._incoming.setdefault(tgt, []).append(src)
+
+        soul_names = {s.name for s in self.program.souls}
+        self._listeners = soul_names & set(self._incoming.keys())
+        self._entrypoints = soul_names - self._listeners
+
+        if self.program.world:
+            hb = self.program.world.heartbeat
+            if hb:
+                self._heartbeat_seconds = self._duration_to_seconds(hb)
+            for law in self.program.world.laws:
+                if isinstance(law.expr, LawCost) and law.expr.per == "cycle":
+                    self._cost_ceiling = law.expr.amount
 
     def generate(self) -> str:
         self._emit_header()
@@ -36,17 +73,13 @@ class NousCodeGen:
         self._emit_law_constants()
         self._emit_blank()
         self._emit_message_classes()
-        self._emit_channel_registry()
         self._emit_blank()
         if hasattr(self.program, 'noesis') and self.program.noesis:
             self._emit_noesis_init()
         self._emit_soul_classes()
-        self._emit_nervous_system()
-        self._emit_world_runner()
+        self._emit_build_runtime()
         self._emit_main()
         return "\n".join(self.lines)
-
-    # ── Output helpers ──
 
     def _emit(self, text: str = "") -> None:
         if not text:
@@ -63,17 +96,13 @@ class NousCodeGen:
     def _dedent(self) -> None:
         self.indent_level = max(0, self.indent_level - 1)
 
-    # ── Header ──
-
     def _emit_header(self) -> None:
         world_name = self.program.world.name if self.program.world else "Unknown"
         self._emit(f'"""')
         self._emit(f"NOUS Generated Code — {world_name}")
         self._emit(f"Auto-generated from .nous source. Do not edit manually.")
-        self._emit(f"Runtime: Python 3.11+ asyncio")
+        self._emit(f"Runtime: Python 3.11+ asyncio | Event-Driven Architecture")
         self._emit(f'"""')
-
-    # ── Imports ──
 
     def _emit_imports(self) -> None:
         self._emit("from __future__ import annotations")
@@ -81,9 +110,7 @@ class NousCodeGen:
         self._emit("import asyncio")
         self._emit("import logging")
         self._emit("import time")
-        self._emit("from dataclasses import dataclass, field")
         self._emit("from typing import Any, Optional")
-        self._emit("from enum import Enum")
         self._emit_blank()
         self._emit("try:")
         self._indent()
@@ -91,13 +118,19 @@ class NousCodeGen:
         self._dedent()
         self._emit("except ImportError:")
         self._indent()
-        self._emit("BaseModel = object  # fallback")
+        self._emit("BaseModel = object")
         self._emit("def Field(**kw): return kw.get('default')")
         self._dedent()
         self._emit_blank()
+        self._emit("from runtime import (")
+        self._indent()
+        self._emit("NousRuntime, SoulRunner, SoulWakeStrategy,")
+        self._emit("CircuitBreakerTripped, CostTracker, SenseCache,")
+        self._emit("ChannelRegistry, SenseExecutor,")
+        self._dedent()
+        self._emit(")")
+        self._emit_blank()
         self._emit("log = logging.getLogger('nous.runtime')")
-
-    # ── Noesis ──
 
     def _emit_noesis_init(self) -> None:
         config = self.program.noesis
@@ -115,27 +148,22 @@ class NousCodeGen:
         self._emit(f"_noesis_auto_learn = {auto_learn}")
         self._emit_blank()
 
-    # ── Laws ──
-
     def _emit_law_constants(self) -> None:
         if not self.program.world:
             return
         self._emit("# ═══ World Laws ═══")
         self._emit_blank()
         world = self.program.world
-        self._emit(f"WORLD_NAME = \"{world.name}\"")
-        if world.heartbeat:
-            seconds = self._duration_to_seconds(world.heartbeat)
-            self._emit(f"HEARTBEAT_SECONDS = {seconds}")
-        else:
-            self._emit("HEARTBEAT_SECONDS = 300")
+        self._emit(f'WORLD_NAME = "{world.name}"')
+        self._emit(f"HEARTBEAT_SECONDS = {self._heartbeat_seconds}")
+        self._emit(f"COST_CEILING = {self._cost_ceiling}")
 
         for law in world.laws:
             name = f"LAW_{law.name.upper()}"
             if isinstance(law.expr, LawCost):
-                self._emit(f"{name} = {law.expr.amount}  # {law.expr.currency} per {law.expr.per}")
+                self._emit(f"{name} = {law.expr.amount}")
             elif isinstance(law.expr, LawDuration):
-                self._emit(f"{name} = {law.expr.value}  # {law.expr.unit}")
+                self._emit(f"{name} = {law.expr.value}")
             elif isinstance(law.expr, LawBool):
                 self._emit(f"{name} = {law.expr.value}")
             elif isinstance(law.expr, LawInt):
@@ -143,7 +171,11 @@ class NousCodeGen:
             elif isinstance(law.expr, LawConstitutional):
                 self._emit(f"{name} = {law.expr.count}")
 
-    # ── Messages ──
+        self._emit_blank()
+        ep_list = sorted(self._entrypoints)
+        ls_list = sorted(self._listeners)
+        self._emit(f"ENTRYPOINT_SOULS = {ep_list}")
+        self._emit(f"LISTENER_SOULS = {ls_list}")
 
     def _emit_message_classes(self) -> None:
         if not self.program.messages:
@@ -165,50 +197,6 @@ class NousCodeGen:
             self._dedent()
             self._emit_blank()
 
-    # ── Channels ──
-
-    def _emit_channel_registry(self) -> None:
-        self._emit("# ═══ Channel Registry ═══")
-        self._emit_blank()
-        self._emit("class ChannelRegistry:")
-        self._indent()
-        self._emit("def __init__(self) -> None:")
-        self._indent()
-        self._emit("self._channels: dict[str, asyncio.Queue] = {}")
-        self._dedent()
-        self._emit_blank()
-        self._emit("def get(self, key: str) -> asyncio.Queue:")
-        self._indent()
-        self._emit("if key not in self._channels:")
-        self._indent()
-        self._emit("self._channels[key] = asyncio.Queue(maxsize=100)")
-        self._dedent()
-        self._emit("return self._channels[key]")
-        self._dedent()
-        self._emit_blank()
-        self._emit("async def send(self, key: str, message: Any) -> None:")
-        self._indent()
-        self._emit("await self.get(key).put(message)")
-        self._emit("log.debug(f'Channel {key}: message sent')")
-        self._dedent()
-        self._emit_blank()
-        self._emit("async def receive(self, key: str, timeout: float = 30.0) -> Any:")
-        self._indent()
-        self._emit("try:")
-        self._indent()
-        self._emit("return await asyncio.wait_for(self.get(key).get(), timeout=timeout)")
-        self._dedent()
-        self._emit("except asyncio.TimeoutError:")
-        self._indent()
-        self._emit("raise TimeoutError(f'Channel {key}: receive timeout after {timeout}s')")
-        self._dedent()
-        self._dedent()
-        self._dedent()
-        self._emit_blank()
-        self._emit("channels = ChannelRegistry()")
-
-    # ── Souls ──
-
     def _emit_soul_classes(self) -> None:
         self._emit("# ═══ Soul Definitions ═══")
         for soul in self.program.souls:
@@ -216,29 +204,32 @@ class NousCodeGen:
             self._emit_soul(soul)
 
     def _emit_soul(self, soul: SoulNode) -> None:
+        is_listener = soul.name in self._listeners
+        wake = "LISTENER" if is_listener else "HEARTBEAT"
+
         self._emit(f"class Soul_{soul.name}:")
         self._indent()
-        self._emit(f'"""Soul: {soul.name}"""')
+        self._emit(f'"""Soul: {soul.name} | Wake: {wake}"""')
         self._emit_blank()
 
-        # __init__
-        self._emit("def __init__(self) -> None:")
+        self._emit("def __init__(self, runtime: NousRuntime) -> None:")
         self._indent()
-        self._emit(f"self.name = \"{soul.name}\"")
+        self._emit(f'self.name = "{soul.name}"')
+        self._emit("self._runtime = runtime")
         if soul.mind:
-            self._emit(f"self.model = \"{soul.mind.model}\"")
-            self._emit(f"self.tier = \"{soul.mind.tier.value}\"")
+            self._emit(f'self.model = "{soul.mind.model}"')
+            self._emit(f'self.tier = "{soul.mind.tier.value}"')
+        else:
+            self._emit('self.model = "unknown"')
+            self._emit('self.tier = "Tier1"')
         self._emit(f"self.senses = {soul.senses}")
         self._emit("self.cycle_count = 0")
-        self._emit("self._alive = True")
 
-        # Memory fields
         if soul.memory:
             for f in soul.memory.fields:
                 default = self._value_to_python(f.default)
                 self._emit(f"self.{f.name} = {default}")
 
-        # DNA
         if soul.dna:
             for gene in soul.dna.genes:
                 self._emit(f"self.dna_{gene.name} = {self._value_to_python(gene.value)}")
@@ -246,7 +237,12 @@ class NousCodeGen:
         self._dedent()
         self._emit_blank()
 
-        # instinct method
+        self._emit("async def _sense(self, tool_name: str, **kwargs: Any) -> Any:")
+        self._indent()
+        self._emit("return await self._runtime.sense_executor.call(tool_name, kwargs)")
+        self._dedent()
+        self._emit_blank()
+
         self._emit("async def instinct(self) -> None:")
         self._indent()
         self._emit(f'"""Instinct cycle for {soul.name}"""')
@@ -258,57 +254,26 @@ class NousCodeGen:
         self._dedent()
         self._emit_blank()
 
-        # heal method
         self._emit("async def heal(self, error: Exception) -> bool:")
         self._indent()
-        self._emit(f'"""Error recovery for {soul.name}"""')
         self._emit("error_type = type(error).__name__.lower()")
         if soul.heal and soul.heal.rules:
             for i, rule in enumerate(soul.heal.rules):
                 keyword = "if" if i == 0 else "elif"
-                self._emit(f"{keyword} error_type == \"{rule.error_type}\" or \"{rule.error_type}\" in str(error).lower():")
+                self._emit(f'{keyword} error_type == "{rule.error_type}" or "{rule.error_type}" in str(error).lower():')
                 self._indent()
                 for action in rule.actions:
                     self._emit_heal_action(action)
                 self._emit("return True")
                 self._dedent()
-            self._emit("log.warning(f'{self.name}: unhandled error: {error}')")
+            self._emit(f"log.warning(f'{{self.name}}: unhandled error: {{error}}')")
             self._emit("return False")
         else:
-            self._emit("log.warning(f'{self.name}: no heal rules, error: {error}')")
+            self._emit(f"log.warning(f'{{self.name}}: no heal rules, error: {{error}}')")
             self._emit("return False")
         self._dedent()
-        self._emit_blank()
-
-        # run loop
-        self._emit("async def run(self) -> None:")
-        self._indent()
-        self._emit(f'"""Main loop for {soul.name}"""')
-        self._emit("while self._alive:")
-        self._indent()
-        self._emit("try:")
-        self._indent()
-        self._emit("await self.instinct()")
-        self._emit("self.cycle_count += 1")
-        self._emit(f"log.info(f'{{self.name}}: cycle {{self.cycle_count}} complete')")
-        self._dedent()
-        self._emit("except Exception as e:")
-        self._indent()
-        self._emit(f"log.error(f'{{self.name}}: error in cycle {{self.cycle_count}}: {{e}}')")
-        self._emit("recovered = await self.heal(e)")
-        self._emit("if not recovered:")
-        self._indent()
-        self._emit(f"log.critical(f'{{self.name}}: unrecoverable error, stopping')")
-        self._emit("self._alive = False")
-        self._dedent()
-        self._dedent()
-        self._emit("await asyncio.sleep(HEARTBEAT_SECONDS)")
-        self._dedent()
-        self._dedent()
 
         self._dedent()
-
-    # ── Statement codegen ──
 
     def _emit_statement(self, stmt: Any, soul_name: str) -> None:
         if isinstance(stmt, LetNode):
@@ -316,23 +281,30 @@ class NousCodeGen:
             if isinstance(value, dict):
                 kind = value.get("kind", "")
                 if kind == "listen":
-                    channel = f"{value['soul']}_{value['type']}"
-                    self._emit(f"{stmt.name} = await channels.receive(\"{channel}\")")
+                    src_soul = value.get("soul", "")
+                    msg_type = value.get("type", "")
+                    channel = f"{src_soul}_{msg_type}"
+                    self._emit(f'{stmt.name} = await self._runtime.channels.receive("{channel}")')
                     return
                 elif kind == "resonate":
                     query = value.get("query", "")
-                    self._emit(f'{stmt.name} = _noesis_engine.think("{query}")')
+                    is_dynamic = value.get("is_dynamic", False)
+                    if is_dynamic:
+                        query_expr = self._expr_to_python(query)
+                        self._emit(f"{stmt.name} = _noesis_engine.think(str({query_expr}))")
+                    else:
+                        self._emit(f'{stmt.name} = _noesis_engine.think("{query}")')
                     gf = value.get("guard_field")
                     gt = value.get("guard_threshold")
                     if gf and gt is not None:
                         self._emit(f"if {stmt.name}.{gf} < {gt}:")
-                        self._emit(f"    pass  # guard: {gf} > {gt} failed")
+                        self._emit(f"    pass")
                     return
                 elif kind == "sense_call":
                     tool = value.get("tool", "unknown")
                     args = value.get("args", {})
-                    args_str = self._args_to_python(args)
-                    self._emit(f"{stmt.name} = await self._sense_{tool}({args_str})")
+                    args_str = self._sense_args_to_python(args)
+                    self._emit(f'{stmt.name} = await self._sense("{tool}", {args_str})')
                     return
             self._emit(f"{stmt.name} = {self._expr_to_python(value)}")
 
@@ -344,23 +316,26 @@ class NousCodeGen:
                 self._emit(f"self.{stmt.name} = {val}")
 
         elif isinstance(stmt, SpeakNode):
-            channel = f"{soul_name}_{stmt.message_type}"
+            if stmt.target_world:
+                channel = f"cross_{stmt.target_world}_{stmt.message_type}"
+            else:
+                channel = f"{soul_name}_{stmt.message_type}"
             args_str = self._kv_to_python(stmt.args)
-            self._emit(f"await channels.send(\"{channel}\", {stmt.message_type}({args_str}))")
+            self._emit(f'await self._runtime.channels.send("{channel}", {stmt.message_type}({args_str}))')
 
         elif isinstance(stmt, GuardNode):
             cond = self._expr_to_python(stmt.condition)
             self._emit(f"if not ({cond}):")
             self._indent()
-            self._emit("return  # guard failed")
+            self._emit("return")
             self._dedent()
 
         elif isinstance(stmt, SenseCallNode):
-            args_str = self._args_to_python(stmt.args)
+            args_str = self._sense_args_to_python(stmt.args)
             if stmt.bind_name:
-                self._emit(f"{stmt.bind_name} = await self._sense_{stmt.tool_name}({args_str})")
+                self._emit(f'{stmt.bind_name} = await self._sense("{stmt.tool_name}", {args_str})')
             else:
-                self._emit(f"await self._sense_{stmt.tool_name}({args_str})")
+                self._emit(f'await self._sense("{stmt.tool_name}", {args_str})')
 
         elif isinstance(stmt, SleepNode):
             self._emit(f"await asyncio.sleep(HEARTBEAT_SECONDS * {stmt.cycles})")
@@ -395,12 +370,8 @@ class NousCodeGen:
 
         elif isinstance(stmt, dict):
             kind = stmt.get("kind", "")
-            if kind == "method_call":
+            if kind in ("method_call", "func_call"):
                 self._emit(self._expr_to_python(stmt))
-            elif kind == "func_call":
-                self._emit(self._expr_to_python(stmt))
-
-    # ── Heal action codegen ──
 
     def _emit_heal_action(self, action: HealActionNode) -> None:
         if action.strategy == HealStrategy.RETRY:
@@ -444,74 +415,86 @@ class NousCodeGen:
             channel = action.params.get("channel", "")
             self._emit(f"log.warning(f'{{self.name}}: ALERT sent to {channel}')")
 
-    # ── Nervous System ──
-
-    def _emit_nervous_system(self) -> None:
-        ns = self.program.nervous_system
-        if not ns:
-            return
+    def _emit_build_runtime(self) -> None:
         self._emit_blank()
-        self._emit("# ═══ Nervous System ═══")
+        self._emit("# ═══ Runtime Builder ═══")
         self._emit_blank()
-        self._emit("def build_topology() -> dict[str, list[str]]:")
-        self._indent()
-        self._emit('"""Build the execution DAG from nervous_system declaration."""')
-        self._emit("graph: dict[str, list[str]] = {}")
-        for route in ns.routes:
-            if isinstance(route, RouteNode):
-                self._emit(f"graph.setdefault(\"{route.source}\", []).append(\"{route.target}\")")
-            elif isinstance(route, FanInNode):
-                for src in route.sources:
-                    self._emit(f"graph.setdefault(\"{src}\", []).append(\"{route.target}\")")
-            elif isinstance(route, FanOutNode):
-                for tgt in route.targets:
-                    self._emit(f"graph.setdefault(\"{route.source}\", []).append(\"{tgt}\")")
-        self._emit("return graph")
-        self._dedent()
-
-    # ── World runner ──
-
-    def _emit_world_runner(self) -> None:
-        self._emit_blank()
-        self._emit("# ═══ World Runner ═══")
-        self._emit_blank()
-        self._emit("async def run_world() -> None:")
+        self._emit("def build_runtime() -> NousRuntime:")
         self._indent()
         world_name = self.program.world.name if self.program.world else "Unknown"
-        self._emit(f'"""Boot and run world: {world_name}"""')
-        self._emit(f"log.info(f'Booting world: {world_name}')")
+        self._emit(f'"""Build event-driven runtime for {world_name}"""')
+        self._emit(f"rt = NousRuntime(")
+        self._indent()
+        self._emit(f'world_name="{world_name}",')
+        self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
+        self._emit(f"cost_ceiling=COST_CEILING,")
+        self._dedent()
+        self._emit(")")
         self._emit_blank()
 
-        # Instantiate souls
-        self._emit("# Spawn souls")
-        self._emit("souls = {}")
         for soul in self.program.souls:
-            self._emit(f"souls[\"{soul.name}\"] = Soul_{soul.name}()")
-            self._emit(f"log.info(f'Spawned soul: {soul.name}')")
-        self._emit_blank()
+            sname = soul.name
+            is_listener = sname in self._listeners
+            wake = "SoulWakeStrategy.LISTENER" if is_listener else "SoulWakeStrategy.HEARTBEAT"
+            tier = f'"{soul.mind.tier.value}"' if soul.mind else '"Tier1"'
 
-        # Build topology
-        if self.program.nervous_system:
-            self._emit("topology = build_topology()")
-            self._emit("log.info(f'Nervous system: {topology}')")
+            listen_ch = "None"
+            if is_listener:
+                sources = self._incoming.get(sname, [])
+                if sources:
+                    first_src = sources[0]
+                    first_src_soul = self._find_soul(first_src)
+                    if first_src_soul and first_src_soul.instinct:
+                        msg_type = self._find_speak_type(first_src_soul)
+                        if msg_type:
+                            listen_ch = f'"{first_src}_{msg_type}"'
+
+            self._emit(f"_soul_{sname.lower()} = Soul_{sname}(rt)")
+            self._emit(f"rt.add_soul(SoulRunner(")
+            self._indent()
+            self._emit(f'name="{sname}",')
+            self._emit(f"wake_strategy={wake},")
+            self._emit(f"instinct_fn=_soul_{sname.lower()}.instinct,")
+            self._emit(f"heal_fn=_soul_{sname.lower()}.heal,")
+            self._emit(f"listen_channel={listen_ch},")
+            self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
+            self._emit(f"tier={tier},")
+            self._dedent()
+            self._emit("))")
             self._emit_blank()
 
-        # Run all souls
-        self._emit("# Run all souls concurrently")
-        self._emit("async with asyncio.TaskGroup() as tg:")
-        self._indent()
-        for soul in self.program.souls:
-            self._emit(f"tg.create_task(souls[\"{soul.name}\"].run())")
+        self._emit("return rt")
         self._dedent()
 
-        self._dedent()
+    def _find_soul(self, name: str) -> SoulNode | None:
+        for s in self.program.souls:
+            if s.name == name:
+                return s
+        return None
 
-    # ── Main ──
+    def _find_speak_type(self, soul: SoulNode) -> str | None:
+        if not soul.instinct:
+            return None
+        for stmt in soul.instinct.statements:
+            if isinstance(stmt, SpeakNode):
+                return stmt.message_type
+            if isinstance(stmt, IfNode):
+                for s in stmt.then_body:
+                    if isinstance(s, SpeakNode):
+                        return s.message_type
+                for s in stmt.else_body:
+                    if isinstance(s, SpeakNode):
+                        return s.message_type
+            if isinstance(stmt, ForNode):
+                for s in stmt.body:
+                    if isinstance(s, SpeakNode):
+                        return s.message_type
+        return None
 
     def _emit_main(self) -> None:
         self._emit_blank()
         self._emit_blank()
-        self._emit("if __name__ == \"__main__\":")
+        self._emit('if __name__ == "__main__":')
         self._indent()
         self._emit("logging.basicConfig(")
         self._indent()
@@ -520,10 +503,9 @@ class NousCodeGen:
         self._emit("datefmt='%H:%M:%S',")
         self._dedent()
         self._emit(")")
-        self._emit("asyncio.run(run_world())")
+        self._emit("rt = build_runtime()")
+        self._emit("asyncio.run(rt.run())")
         self._dedent()
-
-    # ── Expression → Python ──
 
     def _expr_to_python(self, expr: Any) -> str:
         if expr is None:
@@ -539,10 +521,8 @@ class NousCodeGen:
                 return "time.time()"
             if expr.startswith('"') or expr.startswith("'"):
                 return expr
-            # Check if it looks like a variable/identifier
             if expr.replace("_", "").replace(".", "").isalnum() and expr[0:1].isalpha():
                 return expr
-            # Otherwise it's a string value that needs quoting
             escaped = expr.replace("\\", "\\\\").replace('"', '\\"')
             return f'"{escaped}"'
         if isinstance(expr, list):
@@ -578,7 +558,7 @@ class NousCodeGen:
                 path = expr.get("path", "")
                 return f"world_config.{path}"
             elif kind == "soul_field":
-                return f"souls[\"{expr['soul']}\"].{expr['field']}"
+                return f'souls["{expr["soul"]}"].{expr["field"]}'
             elif kind == "inline_if":
                 cond = self._expr_to_python(expr["condition"])
                 then = self._expr_to_python(expr["then"])
@@ -590,11 +570,11 @@ class NousCodeGen:
                 return f"{msg_type}({args})"
             elif kind == "listen":
                 channel = f"{expr['soul']}_{expr['type']}"
-                return f"await channels.receive(\"{channel}\")"
+                return f'await self._runtime.channels.receive("{channel}")'
             elif kind == "sense_call":
                 tool = expr.get("tool", "")
-                args = self._args_to_python(expr.get("args", {}))
-                return f"await self._sense_{tool}({args})"
+                args = self._sense_args_to_python(expr.get("args", {}))
+                return f'await self._sense("{tool}", {args})'
             else:
                 return str(expr)
         return str(expr)
@@ -632,6 +612,19 @@ class NousCodeGen:
             return ", ".join(parts)
         return str(args)
 
+    def _sense_args_to_python(self, args: Any) -> str:
+        if not args:
+            return ""
+        if isinstance(args, dict):
+            parts = []
+            for k, v in args.items():
+                if k.startswith("_pos_"):
+                    parts.append(f"_pos_{k.split('_')[-1]}={self._expr_to_python(v)}")
+                else:
+                    parts.append(f"{k}={self._expr_to_python(v)}")
+            return ", ".join(parts)
+        return str(args)
+
     def _kv_to_python(self, kv: Any) -> str:
         if not kv:
             return ""
@@ -650,15 +643,9 @@ class NousCodeGen:
             inner = self._type_to_python(type_expr[1:-1])
             return f"list[{inner}]"
         mapping = {
-            "string": "str",
-            "float": "float",
-            "int": "int",
-            "bool": "bool",
-            "timestamp": "float",
-            "duration": "float",
-            "currency": "float",
-            "SoulRef": "str",
-            "ToolRef": "str",
+            "string": "str", "float": "float", "int": "int", "bool": "bool",
+            "timestamp": "float", "duration": "float", "currency": "float",
+            "SoulRef": "str", "ToolRef": "str",
         }
         return mapping.get(type_expr, type_expr)
 
@@ -679,6 +666,5 @@ class NousCodeGen:
 
 
 def generate_python(program: NousProgram) -> str:
-    """Generate Python code from a validated NousProgram."""
     gen = NousCodeGen(program)
     return gen.generate()

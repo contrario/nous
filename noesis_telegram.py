@@ -250,6 +250,14 @@ COMMANDS: dict[str, str] = {
     "/stats": "Show Noesis statistics",
     "/evolve": "Run lattice evolution",
     "/save": "Save lattice to disk",
+    "/search": "Google search + learn",
+    "/pdf": "Ingest PDFs into lattice",
+    "/metrics": "Today's stats",
+    "/report": "Weekly report",
+    "/ratelimit": "Oracle rate limit status",
+    "/superbrain": "Hybrid search (Noesis + ChromaDB)",
+    "/sb": "Shortcut for /superbrain",
+    "/domains": "Superbrain domain list",
     "/help": "Show this help",
 }
 
@@ -469,6 +477,7 @@ def main() -> None:
     if args.lattice.exists():
         loaded = engine.load(args.lattice)
         print(f"  Loaded {loaded} atoms")
+        engine.init_autofeeding()
 
     extra = ExtraKnowledge(engine)
 

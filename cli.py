@@ -33,7 +33,7 @@ from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
 
-VERSION = "2.0.0"
+VERSION = "2.2.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -567,6 +567,144 @@ def cmd_pkg(args: argparse.Namespace) -> int:
     return _cmd_pkg(pkg_args)
 
 
+
+
+
+
+def cmd_crossworld(args: argparse.Namespace) -> int:
+    from cross_world import check_cross_world, print_cross_world_report
+    result = check_cross_world(args.files)
+    print_cross_world_report(result)
+    return 0 if result.ok else 1
+
+def cmd_bench(args: argparse.Namespace) -> int:
+    from benchmarks import bench_cli
+    return bench_cli(args.file, save_bl=args.save_baseline, json_out=args.json, runs=args.runs)
+
+def cmd_docs(args: argparse.Namespace) -> int:
+    from docs_generator import generate_docs_file
+    out = generate_docs_file(args.file, args.output)
+    print(f'Documentation generated: {out}')
+    return 0
+
+def cmd_fmt(args: argparse.Namespace) -> int:
+    from formatter import fmt_file
+    path = args.file
+    if args.check:
+        _, changed = fmt_file(path, check=True)
+        if changed:
+            print(f'Would reformat {path}')
+            return 1
+        print(f'{path} — already formatted')
+        return 0
+    formatted, changed = fmt_file(path, write=args.write)
+    if args.write:
+        if changed:
+            print(f'Reformatted {path}')
+        else:
+            print(f'{path} — no changes')
+    else:
+        print(formatted)
+    return 0
+
+
+def cmd_build(args: argparse.Namespace) -> int:
+    from workspace import open_workspace, Workspace, WorkspaceConfig, load_config, init_workspace, print_workspace_report
+    from codegen import generate_python
+    ws = open_workspace()
+    if ws is None:
+        print("Error: no nous.toml found. Run 'nous init' first.", file=sys.stderr)
+        return 1
+    result = ws.build()
+    print_workspace_report(result)
+    if not result.ok:
+        return 1
+    if result.merged:
+        code = generate_python(result.merged)
+        out_dir = ws.config.root / ws.config.output_dir
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / f"{ws.config.name.replace('-', '_')}.py"
+        out_path.write_text(code, encoding="utf-8")
+        import py_compile, tempfile, os
+        with tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False) as f:
+            f.write(code)
+            tmp = f.name
+        try:
+            py_compile.compile(tmp, doraise=True)
+            print(f"\n  py_compile PASS")
+        except py_compile.PyCompileError as e:
+            print(f"\n  py_compile FAIL: {e}")
+            return 1
+        finally:
+            os.unlink(tmp)
+        print(f"  Output: {out_path} ({len(code.splitlines())} lines)")
+    return 0
+
+
+def cmd_init(args: argparse.Namespace) -> int:
+    from workspace import init_workspace
+    target = Path(args.directory) if args.directory else Path.cwd()
+    name = args.name or target.name
+    entry = args.entry or None
+    toml_path = init_workspace(target, name=name, entry=entry)
+    print(f"Initialized NOUS workspace: {toml_path}")
+    return 0
+
+
+
+def cmd_migrate(args: argparse.Namespace) -> int:
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    if source.suffix == ".py":
+        from migrate_v2 import migrate_python, print_migration_report
+        output = Path(args.output) if args.output else source.with_suffix(".nous")
+        result = migrate_python(source, output)
+        print_migration_report(result)
+        if result.ok:
+            print(f"\nOutput: {output}")
+            return 0
+        return 1
+    else:
+        from migrate import migrate_file, migrate_directory
+        if source.is_dir():
+            output = Path(args.output) if args.output else None
+            report = migrate_directory(source, output)
+            print(report)
+        else:
+            soul = migrate_file(source)
+            if soul:
+                if args.output:
+                    Path(args.output).write_text(soul, encoding="utf-8")
+                    print(f"Written: {args.output}")
+                else:
+                    print(soul)
+            else:
+                print(f"Could not migrate: {source}")
+                return 1
+        return 0
+
+
+def cmd_viz(args: argparse.Namespace) -> int:
+    from visualizer import visualize_file, visualize_workspace
+    output = Path(args.output) if args.output else None
+    try:
+        if args.file:
+            source = Path(args.file)
+            if not source.exists():
+                print(f"Error: file not found: {source}", file=sys.stderr)
+                return 1
+            out = visualize_file(source, output)
+        else:
+            out = visualize_workspace(output)
+        print(f"Visualization generated: {out}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+
 def cmd_version(_args: argparse.Namespace) -> int:
     print(BANNER)
     return 0
@@ -592,6 +730,29 @@ def _print_ast(data: dict | list | object, indent: int = 0) -> None:
     else:
         print(f"{prefix}{data}")
 
+
+
+def cmd_noesis(args: argparse.Namespace) -> int:
+    sub_args = [sys.executable, str(Path(__file__).parent / "noesis_cli_noesis.py")]
+    sub_args.append(args.noesis_command)
+    if args.noesis_command == "search" and hasattr(args, "query"):
+        sub_args.append(args.query)
+        if hasattr(args, "top_k") and args.top_k:
+            sub_args.extend(["--top-k", str(args.top_k)])
+    elif args.noesis_command == "think" and hasattr(args, "query"):
+        sub_args.append(args.query)
+    elif args.noesis_command == "gaps" and hasattr(args, "limit") and args.limit:
+        sub_args.extend(["--limit", str(args.limit)])
+    elif args.noesis_command == "evolve" and hasattr(args, "save") and args.save:
+        sub_args.append("--save")
+    elif args.noesis_command == "export" and hasattr(args, "json_export") and args.json_export:
+        sub_args.append("--json")
+    try:
+        result = subprocess.run(sub_args, cwd=str(Path(__file__).parent))
+        return result.returncode
+    except FileNotFoundError:
+        print("Error: noesis_cli_noesis.py not found", file=sys.stderr)
+        return 1
 
 def main() -> int:
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language v2.0")
@@ -636,7 +797,7 @@ def main() -> int:
     p.add_argument("file", nargs="?", default=None, help=".nous file for check")
 
     p = sub.add_parser("pkg", help="Package manager")
-    p.add_argument("subcmd", choices=["install", "list", "init", "uninstall"], help="Subcommand")
+    p.add_argument("subcmd", choices=["install", "list", "init", "uninstall", "publish", "registry"], help="Subcommand")
     p.add_argument("target", nargs="?", default=None, help="Package path or name")
 
     p = sub.add_parser("ast", help="Print Living AST")
@@ -655,6 +816,49 @@ def main() -> int:
     p = sub.add_parser("bridge", help="Analyze Noosphere integration")
     p.add_argument("file")
 
+    p = sub.add_parser("crossworld", help="Cross-world type check")
+    p.add_argument("files", nargs="+")
+    p = sub.add_parser("bench", help="Run benchmarks")
+    p.add_argument("file"); p.add_argument("--save-baseline", action="store_true")
+    p.add_argument("--json", action="store_true"); p.add_argument("--runs", type=int, default=50)
+    p = sub.add_parser("docs", help="Generate HTML documentation")
+    p.add_argument("file"); p.add_argument("-o", "--output", help="Output path")
+    p = sub.add_parser("fmt", help="Format .nous file")
+    p.add_argument("file"); p.add_argument("-w", "--write", action="store_true", help="Write in-place")
+    p.add_argument("--check", action="store_true", help="Check only, exit 1 if would change")
+
+    p = sub.add_parser("noesis", help="Noesis intelligence engine")
+    noesis_sub = p.add_subparsers(dest="noesis_command", required=True)
+    noesis_sub.add_parser("stats", help="Lattice statistics")
+    ns_p = noesis_sub.add_parser("gaps", help="Knowledge gaps")
+    ns_p.add_argument("--limit", type=int, default=10)
+    noesis_sub.add_parser("topics", help="Topic discovery")
+    ns_p = noesis_sub.add_parser("evolve", help="Run evolution cycle")
+    ns_p.add_argument("--save", action="store_true")
+    ns_p = noesis_sub.add_parser("search", help="Search lattice")
+    ns_p.add_argument("query"); ns_p.add_argument("--top-k", type=int, default=5)
+    ns_p = noesis_sub.add_parser("think", help="Think with oracle fallback")
+    ns_p.add_argument("query")
+    noesis_sub.add_parser("feeds", help="Suggest feeds")
+    noesis_sub.add_parser("weaning", help="Oracle weaning status")
+    ns_p = noesis_sub.add_parser("export", help="Export lattice summary")
+    ns_p.add_argument("--json", dest="json_export", action="store_true")
+
+    p = sub.add_parser("build", help="Build entire workspace from nous.toml")
+
+    p = sub.add_parser("init", help="Initialize nous.toml in current directory")
+    p.add_argument("directory", nargs="?", default=None, help="Target directory")
+    p.add_argument("--name", default=None, help="Project name")
+    p.add_argument("--entry", default=None, help="Entry .nous file")
+
+    p = sub.add_parser("migrate", help="Migrate Python/YAML agents to .nous")
+    p.add_argument("file", help="Python file, YAML file, or directory")
+    p.add_argument("-o", "--output", default=None, help="Output .nous path")
+
+    p = sub.add_parser("viz", help="Visualize nervous system as HTML graph")
+    p.add_argument("file", nargs="?", default=None, help=".nous file (or omit for workspace)")
+    p.add_argument("-o", "--output", default=None, help="Output HTML path")
+
     sub.add_parser("version", help="Show version")
 
     args = ap.parse_args()
@@ -664,7 +868,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "version": cmd_version,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "version": cmd_version,
     }
     return commands[args.command](args)
 

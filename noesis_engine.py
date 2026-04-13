@@ -949,3 +949,37 @@ import noesis_reasoning_patch
 import noesis_scaling_patch
 import noesis_scaling_patch
 import noesis_autofeeding_patch
+import noesis_sources_patch      # Phase 7
+import noesis_hardening_patch    # Phase 8
+import noesis_superbrain
+
+# --- Weaning auto-init ---
+def _init_weaning_on_load(engine):
+    """Initialize weaner after lattice is loaded."""
+    original_load = engine.load
+    def patched_load(*args, **kwargs):
+        result = original_load(*args, **kwargs)
+        if hasattr(engine, 'weaner') and engine.weaner is not None:
+            try:
+                atom_count = len(engine.lattice.atoms) if hasattr(engine.lattice, 'atoms') else 0
+                engine.weaner.update_stats(atom_count)
+                engine.weaner.initialized = True
+            except Exception:
+                pass
+        elif hasattr(engine, 'init_autofeeding'):
+            try:
+                engine.init_autofeeding()
+            except Exception:
+                pass
+        return result
+    engine.load = patched_load
+
+try:
+    from noesis_engine import NoesisEngine as _WeanEngine
+    for _inst_name in list(vars().keys()):
+        _inst = vars().get(_inst_name)
+        if isinstance(_inst, _WeanEngine):
+            _init_weaning_on_load(_inst)
+except Exception:
+    pass
+         # Superbrain bridge

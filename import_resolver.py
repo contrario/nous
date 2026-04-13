@@ -104,10 +104,15 @@ class ImportResolver:
             self._resolving.discard(path_key)
 
     def _find_import(self, imp: ImportNode, from_file: Path) -> Optional[Path]:
-        if imp.is_package:
-            return self._find_package(imp.path)
-        else:
-            return self._find_file(imp.path, from_file.parent)
+        if imp.package:
+            return self._find_package(imp.package)
+        if imp.path:
+            found = self._find_file(imp.path, from_file.parent)
+            if found:
+                return found
+            stem = Path(imp.path).stem
+            return self._find_package(stem)
+        return None
 
     def _find_file(self, path_str: str, rel_dir: Path) -> Optional[Path]:
         candidate = rel_dir / path_str

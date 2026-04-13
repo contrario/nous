@@ -1,6 +1,6 @@
 """
-NOUS Living AST — Ψυχόδενδρο (Psychodendro)
-=============================================
+NOUS Living AST v2.0 — Ψυχόδενδρο (Psychodendro)
+===================================================
 Pydantic V2 nodes for the runtime-mutable AST.
 Every node is typed, validated, serializable.
 """
@@ -31,7 +31,6 @@ class HealStrategy(str, Enum):
 
 
 class NousNode(BaseModel):
-    """Base node for the Living AST."""
     model_config = {"extra": "forbid"}
 
 
@@ -44,6 +43,12 @@ class LawCost(NousNode):
     amount: float
     currency: str = "USD"
     per: str = "cycle"
+
+
+class LawCurrency(NousNode):
+    kind: str = "currency"
+    amount: float
+    currency: str = "USD"
 
 
 class LawDuration(NousNode):
@@ -67,7 +72,7 @@ class LawInt(NousNode):
     value: int
 
 
-LawExpr = Union[LawCost, LawDuration, LawConstitutional, LawBool, LawInt]
+LawExpr = Union[LawCost, LawCurrency, LawDuration, LawConstitutional, LawBool, LawInt]
 
 
 class LawNode(NousNode):
@@ -133,7 +138,6 @@ class MemoryNode(NousNode):
 # ═══════════════════════════════════════════
 
 class ExprNode(NousNode):
-    """Wrapper for any expression in the AST."""
     kind: str
     value: Any = None
     left: Optional[ExprNode] = None
@@ -161,6 +165,7 @@ class RememberNode(NousNode):
 class SpeakNode(NousNode):
     message_type: str
     args: dict[str, Any] = Field(default_factory=dict)
+    target_world: Optional[str] = None
 
 
 class ListenNode(NousNode):
@@ -355,11 +360,9 @@ class PerceptionNode(NousNode):
 
 
 # ═══════════════════════════════════════════
-# PROGRAM (ROOT)
+# NOESIS — Symbolic Intelligence
 # ═══════════════════════════════════════════
 
-
-# ═══ NOESIS — Symbolic Intelligence ═══
 class NoesisConfigNode(NousNode):
     lattice_path: Optional[str] = None
     oracle_threshold: float = 0.3
@@ -367,14 +370,46 @@ class NoesisConfigNode(NousNode):
     auto_evolve: bool = False
     gap_tracking: bool = True
 
+
 class ResonateNode(NousNode):
     query: Any = None
     bind_name: Optional[str] = None
     guard_field: Optional[str] = None
     guard_threshold: Optional[float] = None
 
+
+# ═══════════════════════════════════════════
+# IMPORT
+# ═══════════════════════════════════════════
+
+class ImportNode(NousNode):
+    path: Optional[str] = None
+    package: Optional[str] = None
+
+
+# ═══════════════════════════════════════════
+# TEST
+# ═══════════════════════════════════════════
+
+class TestAssertNode(NousNode):
+    condition: Any
+
+
+class TestSetupNode(NousNode):
+    statements: list[Any] = Field(default_factory=list)
+
+
+class TestNode(NousNode):
+    name: str
+    asserts: list[TestAssertNode] = Field(default_factory=list)
+    setups: list[TestSetupNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# PROGRAM (ROOT)
+# ═══════════════════════════════════════════
+
 class NousProgram(NousNode):
-    """Root of the Living AST — the complete .nous program."""
     noesis: Optional[NoesisConfigNode] = None
     world: Optional[WorldNode] = None
     messages: list[MessageNode] = Field(default_factory=list)
@@ -382,3 +417,5 @@ class NousProgram(NousNode):
     nervous_system: Optional[NervousSystemNode] = None
     evolution: Optional[EvolutionNode] = None
     perception: Optional[PerceptionNode] = None
+    imports: list[ImportNode] = Field(default_factory=list)
+    tests: list[TestNode] = Field(default_factory=list)
