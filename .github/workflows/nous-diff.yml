@@ -30,24 +30,33 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install NOUS
-        run: |
-          cd head
-          pip install -e . 2>/dev/null || pip install -r requirements.txt 2>/dev/null || true
+      - name: Install dependencies
+        run: pip install lark pydantic httpx
 
       - name: Find changed .nous files
         id: changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd head
-          git diff --name-only --diff-filter=ACMR \
-            ${{ github.event.pull_request.base.sha }} \
-            ${{ github.event.pull_request.head.sha }} \
-            -- '*.nous' > /tmp/changed_nous_files.txt
-          echo "count=$(wc -l < /tmp/changed_nous_files.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files?per_page=100" \
+            | python3 -c "
+          import json, sys
+          files = json.load(sys.stdin)
+          nous = [f['filename'] for f in files if f['filename'].endswith('.nous') and f['status'] != 'removed']
+          with open('/tmp/changed_nous_files.txt', 'w') as fh:
+              fh.write('\n'.join(nous))
+          print(f'Found {len(nous)} changed .nous files')
+          "
+          count=$(grep -c . /tmp/changed_nous_files.txt 2>/dev/null || echo 0)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
           cat /tmp/changed_nous_files.txt
 
       - name: Run NOUS diff
         if: steps.changed.outputs.count != '0'
+        env:
+          PYTHONPATH: ${{ github.workspace }}/head
         run: |
           mkdir -p /tmp/nous_diffs
           while IFS= read -r file; do
@@ -56,7 +65,7 @@ jobs:
             head_file="head/$file"
             slug=$(echo "$file" | tr '/' '_' | sed 's/\.nous$//')
             if [ -f "$base_file" ] && [ -f "$head_file" ]; then
-              nous diff "$base_file" "$head_file" --json > "/tmp/nous_diffs/${slug}.json" 2>&1 || true
+              python head/cli.py diff "$base_file" "$head_file" --json > "/tmp/nous_diffs/${slug}.json" 2>&1 || true
             elif [ -f "$head_file" ]; then
               echo '{"status":"new_file","file":"'"$file"'"}' > "/tmp/nous_diffs/${slug}.json"
             fi

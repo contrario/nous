@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nous-lang"
-version = "1.3.0"
+version = "3.1.0"
 description = "NOUS (Νοῦς) — The Living Language for Agentic AI Systems"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.11"
 authors = [
-    {name = "Hlias Staurou", email = "hlia@contrario.dev"},
+    {name = "Hlias Staurou", email = "support@nous-lang.org"},
 ]
 keywords = ["ai", "agents", "language", "compiler", "evolution", "multi-agent"]
 classifiers = [
@@ -19,6 +19,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Compilers",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
@@ -30,17 +31,28 @@ dependencies = [
 
 [project.optional-dependencies]
 lsp = ["pygls>=1.3.0", "lsprotocol>=2024.0.0"]
-evolution = ["langfuse>=2.0.0"]
-all = ["nous-lang[lsp,evolution]"]
+all = ["nous-lang[lsp]"]
 
 [project.urls]
-Homepage = "https://nous-lang.dev"
+Homepage = "https://nous-lang.org"
 Repository = "https://github.com/contrario/nous"
-Documentation = "https://github.com/contrario/nous/wiki"
+Documentation = "https://nous-lang.org/docs"
 
 [project.scripts]
-nous = "nous.cli:main"
+nous = "cli:main"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["nous*"]
+[tool.setuptools]
+py-modules = [
+    "cli", "parser", "ast_nodes", "validator", "typechecker",
+    "codegen", "codegen_js", "runtime", "bridge", "nsp",
+    "formatter", "profiler", "debugger", "repl", "test_runner",
+    "plugin_manager", "registry", "workspace", "import_resolver",
+    "cross_world", "error_recovery", "watcher", "benchmarks",
+    "docs_generator", "visualizer", "distributed", "wasm_builder",
+    "self_compiler", "compiler_senses", "verifier", "natural_lang",
+    "lsp_server", "behavioral_diff", "cost_oracle", "mcp_bridge",
+    "migrate_v2",
+]
+
+[tool.setuptools.package-data]
+"*" = ["*.lark", "*.nous"]
