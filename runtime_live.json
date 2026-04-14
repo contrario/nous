@@ -1,0 +1,80 @@
+[
+  {
+    "type": "soul_registered",
+    "soul": "Scout",
+    "model": "qwen2.5-7b",
+    "tier": "Free",
+    "timestamp": 1776175684.784168,
+    "time": "14:08:04"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Quant",
+    "model": "qwen2.5-7b",
+    "tier": "Free",
+    "timestamp": 1776175684.7841725,
+    "time": "14:08:04"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Hunter",
+    "model": "qwen2.5-7b",
+    "tier": "Free",
+    "timestamp": 1776175684.784175,
+    "time": "14:08:04"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Monitor",
+    "model": "qwen2.5-7b",
+    "tier": "Free",
+    "timestamp": 1776175684.7841763,
+    "time": "14:08:04"
+  },
+  {
+    "type": "llm_call",
+    "mode": "live",
+    "soul": "Scout",
+    "query": "You are a crypto trading scout. Analyze BTC/USDT current conditions. What is the RSI trend and volum",
+    "response": "The RSI for BTC/USDT is hovering in the low‑60s and has been trending upward over the past few sessions, signaling modest bullish momentum. Volume has been increasing on price advances and tapering du",
+    "tier": "Nemotron-120B",
+    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+    "tokens_in": 68,
+    "tokens_out": 174,
+    "cost": 0.0,
+    "elapsed_ms": 25650.9,
+    "timestamp": 1776175711.631689,
+    "time": "14:08:31"
+  },
+  {
+    "type": "speak",
+    "soul": "Scout",
+    "channel": "Scout_Signal",
+    "message": "The RSI for BTC/USDT is hovering in the low‑60s and has been trending upward over the past few sessi",
+    "timestamp": 1776175711.6408443,
+    "time": "14:08:31"
+  },
+  {
+    "type": "llm_call",
+    "mode": "live",
+    "soul": "Quant",
+    "query": "You are a quantitative analyst. Given this signal: The RSI for BTC/USDT is hovering in the low‑60s a",
+    "response": "Given the RSI in the low‑60s with a rising trend and increasing volume on up‑moves, the market shows modest bullish momentum, supporting a **BUY** signal. A moderate position size of **around 0.3 BTC*",
+    "tier": "Nemotron-120B",
+    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+    "tokens_in": 124,
+    "tokens_out": 133,
+    "cost": 0.0,
+    "elapsed_ms": 3533.2,
+    "timestamp": 1776175715.3882616,
+    "time": "14:08:35"
+  },
+  {
+    "type": "speak",
+    "soul": "Quant",
+    "channel": "Quant_Decision",
+    "message": "Given the RSI in the low‑60s with a rising trend and increasing volume on up‑moves, the market shows",
+    "timestamp": 1776175715.3969674,
+    "time": "14:08:35"
+  }
+]

@@ -984,3 +984,5 @@ except Exception:
     pass
          # Superbrain bridge
 import noesis_embeddings_patch
+import noesis_domain_patch
+import noesis_domain_oracle_patch

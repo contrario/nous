@@ -166,6 +166,9 @@ mitosis_field: "trigger" ":" expr              -> mitosis_trigger
              | "cooldown" ":" duration_lit     -> mitosis_cooldown
              | "clone_tier" ":" TIER           -> mitosis_clone_tier
              | "verify" ":" BOOL              -> mitosis_verify
+             | "retire_trigger" ":" expr       -> mitosis_retire_trigger
+             | "retire_cooldown" ":" duration_lit -> mitosis_retire_cooldown
+             | "min_clones" ":" INT            -> mitosis_min_clones
 
 
 

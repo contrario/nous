@@ -652,6 +652,15 @@ class NousTransformer(Transformer):
         val = items[0]
         return {"verify": val if isinstance(val, bool) else str(val).lower() == "true"}
 
+    def mitosis_retire_trigger(self, items: list) -> dict:
+        return {"retire_trigger": items[0]}
+
+    def mitosis_retire_cooldown(self, items: list) -> dict:
+        return {"retire_cooldown": str(items[0])}
+
+    def mitosis_min_clones(self, items: list) -> dict:
+        return {"min_clones": int(items[0])}
+
     def mitosis_field(self, items: list) -> Any:
         return items[0]
 

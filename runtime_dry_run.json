@@ -1,0 +1,250 @@
+[
+  {
+    "type": "soul_registered",
+    "soul": "Scout",
+    "model": "deepseek-r1",
+    "tier": "Tier1",
+    "timestamp": 1776174748.487468,
+    "time": "13:52:28"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Quant",
+    "model": "qwen2.5-7b",
+    "tier": "Free",
+    "timestamp": 1776174748.4874725,
+    "time": "13:52:28"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Hunter",
+    "model": "deepseek-r1",
+    "tier": "Tier1",
+    "timestamp": 1776174748.4874752,
+    "time": "13:52:28"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Monitor",
+    "model": "qwen2.5-7b",
+    "tier": "Free",
+    "timestamp": 1776174748.4874775,
+    "time": "13:52:28"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Scout",
+    "query": "Scan top crypto pairs by volume and RSI. Which pairs show buying opportunity?",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174749.435949,
+    "time": "13:52:29"
+  },
+  {
+    "type": "speak",
+    "soul": "Scout",
+    "channel": "Scout_Signal",
+    "message": "{'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}",
+    "timestamp": 1776174749.4360814,
+    "time": "13:52:29"
+  },
+  {
+    "type": "listen",
+    "soul": "Quant",
+    "channel": "Scout_Signal",
+    "message": "{'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}",
+    "timestamp": 1776174749.4361835,
+    "time": "13:52:29"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Quant",
+    "query": "Analyze signal: {'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}. Calculate Kelly criterion and risk.",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174749.4420545,
+    "time": "13:52:29"
+  },
+  {
+    "type": "speak",
+    "soul": "Quant",
+    "channel": "Quant_Decision",
+    "message": "{'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "timestamp": 1776174749.4421442,
+    "time": "13:52:29"
+  },
+  {
+    "type": "listen",
+    "soul": "Hunter",
+    "channel": "Quant_Decision",
+    "message": "{'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "timestamp": 1776174749.4422345,
+    "time": "13:52:29"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Hunter",
+    "query": "Execute paper trade: {'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174749.4471586,
+    "time": "13:52:29"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Monitor",
+    "query": "Log cycle 1 signal: [DRY-RUN] Scout would answer: Scan top crypto pairs by volume and RSI. Which pai",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174749.4522252,
+    "time": "13:52:29"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Scout",
+    "query": "Scan top crypto pairs by volume and RSI. Which pairs show buying opportunity?",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174750.4602232,
+    "time": "13:52:30"
+  },
+  {
+    "type": "speak",
+    "soul": "Scout",
+    "channel": "Scout_Signal",
+    "message": "{'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}",
+    "timestamp": 1776174750.4602947,
+    "time": "13:52:30"
+  },
+  {
+    "type": "listen",
+    "soul": "Quant",
+    "channel": "Scout_Signal",
+    "message": "{'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}",
+    "timestamp": 1776174750.4603555,
+    "time": "13:52:30"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Quant",
+    "query": "Analyze signal: {'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}. Calculate Kelly criterion and risk.",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174750.465017,
+    "time": "13:52:30"
+  },
+  {
+    "type": "speak",
+    "soul": "Quant",
+    "channel": "Quant_Decision",
+    "message": "{'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "timestamp": 1776174750.4650815,
+    "time": "13:52:30"
+  },
+  {
+    "type": "listen",
+    "soul": "Hunter",
+    "channel": "Quant_Decision",
+    "message": "{'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "timestamp": 1776174750.4651334,
+    "time": "13:52:30"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Hunter",
+    "query": "Execute paper trade: {'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174750.4689295,
+    "time": "13:52:30"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Monitor",
+    "query": "Log cycle 2 signal: [DRY-RUN] Scout would answer: Scan top crypto pairs by volume and RSI. Which pai",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174750.4726622,
+    "time": "13:52:30"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Scout",
+    "query": "Scan top crypto pairs by volume and RSI. Which pairs show buying opportunity?",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174751.4789758,
+    "time": "13:52:31"
+  },
+  {
+    "type": "speak",
+    "soul": "Scout",
+    "channel": "Scout_Signal",
+    "message": "{'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}",
+    "timestamp": 1776174751.479047,
+    "time": "13:52:31"
+  },
+  {
+    "type": "listen",
+    "soul": "Quant",
+    "channel": "Scout_Signal",
+    "message": "{'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}",
+    "timestamp": 1776174751.4791205,
+    "time": "13:52:31"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Quant",
+    "query": "Analyze signal: {'pair': 'BTC/USDT', 'score': 0.85, 'rsi': 42}. Calculate Kelly criterion and risk.",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174751.4831605,
+    "time": "13:52:31"
+  },
+  {
+    "type": "speak",
+    "soul": "Quant",
+    "channel": "Quant_Decision",
+    "message": "{'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "timestamp": 1776174751.4832118,
+    "time": "13:52:31"
+  },
+  {
+    "type": "listen",
+    "soul": "Hunter",
+    "channel": "Quant_Decision",
+    "message": "{'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "timestamp": 1776174751.4832535,
+    "time": "13:52:31"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Hunter",
+    "query": "Execute paper trade: {'action': 'BUY', 'size': 0.1, 'risk': 0.3}",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174751.4867947,
+    "time": "13:52:31"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Monitor",
+    "query": "Log cycle 3 signal: [DRY-RUN] Scout would answer: Scan top crypto pairs by volume and RSI. Which pai",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776174751.4907517,
+    "time": "13:52:31"
+  }
+]

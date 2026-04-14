@@ -325,6 +325,17 @@ class TelegramBot:
             self.send("\n".join(lines), chat_id)
             return
 
+
+        if text == "/lattice":
+            ds = self.engine.domain_stats()
+            lines = ["🏛️ *Νόηση — Domain Lattice*\n"]
+            for domain, info in ds["domains"].items():
+                icon = {"tax": "🏦", "tech": "💻", "cooking": "🍳", "science": "🔬", "finance": "📈", "general": "📚"}.get(domain, "📁")
+                lines.append(f"{icon} {domain}: {info['count']} ({info['pct']}%)")
+            lines.append(f"\nTotal: {ds['total_atoms']} atoms")
+            self.send("\n".join(lines), chat_id)
+            return
+
         if text == "/stats":
             s = self.engine.stats()
             msg = (
@@ -500,6 +511,8 @@ def main() -> None:
         return
 
     bot = TelegramBot(token=token, chat_id=chat_id, engine=engine, extra=extra)
+    from noesis_streaming_patch import apply_streaming
+    apply_streaming(bot, oracle)
     bot.run()
 
 

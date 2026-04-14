@@ -105,7 +105,7 @@ class VerificationResult:
         categories: dict[str, list[VerificationItem]] = {}
         for item in self.items:
             categories.setdefault(item.category, []).append(item)
-        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "mitosis", "immune", "dream"]:
+        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "mitosis", "retirement", "immune", "dream"]:
             if cat not in categories:
                 continue
             cat_label = cat.replace("_", " ").title()
@@ -147,6 +147,7 @@ class NousVerifier:
         self._verify_memory_safety()
         self._verify_topology()
         self._verify_mitosis()
+        self._verify_retirement()
         self._verify_immune()
         self._verify_dream()
         return self.result
@@ -647,6 +648,53 @@ class NousVerifier:
             "VMI005", "mitosis",
             f"Mitosis capacity: {len(mitosis_souls)} soul(s) can spawn up to {total_max_clones} clones (max {total_souls} total)",
         )
+
+    def _verify_retirement(self) -> None:
+        mitosis_souls = [s for s in self.program.souls if s.mitosis is not None]
+        if not mitosis_souls:
+            return
+
+        retire_souls = [s for s in mitosis_souls if s.mitosis.retire_trigger is not None]
+
+        for soul in retire_souls:
+            m = soul.mitosis
+            loc = f"soul {soul.name}"
+
+            retire_window = m.max_clones - m.min_clones
+            self.result.prove(
+                "VRT001", "retirement",
+                f"Soul {soul.name} retirement policy: min_clones={m.min_clones}, "
+                f"max_clones={m.max_clones}, retire window={retire_window}",
+                loc,
+            )
+
+            if m.min_clones < m.max_clones:
+                self.result.prove(
+                    "VRT002", "retirement",
+                    f"Soul {soul.name} retirement feasible: min_clones ({m.min_clones}) < max_clones ({m.max_clones})",
+                    loc,
+                )
+            else:
+                self.result.warning(
+                    "VRT002", "retirement",
+                    f"Soul {soul.name} retirement impossible: min_clones ({m.min_clones}) >= max_clones ({m.max_clones})",
+                    loc,
+                )
+
+        if mitosis_souls:
+            coverage = len(retire_souls)
+            total = len(mitosis_souls)
+            if coverage == total:
+                self.result.prove(
+                    "VRT003", "retirement",
+                    f"Retirement coverage: {coverage}/{total} mitosis souls have retirement policy",
+                )
+            else:
+                without = [s.name for s in mitosis_souls if s.mitosis.retire_trigger is None]
+                self.result.warning(
+                    "VRT003", "retirement",
+                    f"Retirement coverage: {coverage}/{total} — souls without retirement: {', '.join(without)}",
+                )
 
 
 

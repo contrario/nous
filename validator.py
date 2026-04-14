@@ -198,6 +198,18 @@ class NousValidator:
         if soul.heal is None:
             self.result.warn("MT005", f"Soul {soul.name} has mitosis but no heal block. Clones inherit heal rules.", loc)
 
+        if m.min_clones < 0:
+            self.result.error("RT001", f"Mitosis min_clones must be >= 0, got {m.min_clones}", loc)
+
+        if m.min_clones >= m.max_clones:
+            self.result.error("RT002", f"Mitosis min_clones ({m.min_clones}) must be < max_clones ({m.max_clones})", loc)
+
+        if m.retire_trigger is not None and m.trigger is None:
+            self.result.warn("RT003", f"Soul {soul.name} has retire_trigger but no spawn trigger. Clones never spawn.", loc)
+
+        if m.trigger is not None and m.retire_trigger is None:
+            self.result.warn("RT004", f"Soul {soul.name} has mitosis but no retire_trigger. Clones never die — potential resource leak.", loc)
+
         if m.clone_tier:
             valid_tiers = {"Tier0A", "Tier0B", "Tier1", "Tier2", "Tier3", "Groq", "Together", "Fireworks", "Cerebras"}
             if m.clone_tier not in valid_tiers:

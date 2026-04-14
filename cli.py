@@ -33,7 +33,7 @@ from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
 
-VERSION = "3.1.0"
+VERSION = "3.5.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -143,30 +143,19 @@ def cmd_run(args: argparse.Namespace) -> int:
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
-
-    program, _, _, result = _parse_and_validate(source)
-    if program is None:
-        return result
-
-    print("[4/4] Generating & executing...")
-    code = generate_python(program)
-    tmp_path = source.with_suffix(".gen.py")
-    tmp_path.write_text(code, encoding="utf-8")
-    world_name = program.world.name if program.world else "Unknown"
-    print(f"      Running {world_name}...\n")
-    print("=" * 50)
+    mode = getattr(args, "mode", "dry-run")
+    cycles = getattr(args, "cycles", 3)
+    budget = getattr(args, "budget", 0.33)
     try:
-        run_cmd = [sys.executable, str(tmp_path)]
-        if hasattr(args, "node") and args.node:
-            run_cmd.append(f"--node={args.node}")
-        proc = subprocess.run(run_cmd, cwd=str(source.parent))
-        return proc.returncode
+        from nous_ast_runner import run_program
+        run_program(str(source), mode=mode, max_cycles=cycles, daily_budget=budget)
+        return 0
     except KeyboardInterrupt:
         print("\n\nWorld stopped by user.")
         return 0
-    finally:
-        if tmp_path.exists() and not args.keep:
-            tmp_path.unlink()
+    except Exception as e:
+        print(f"Runtime error: {e}", file=sys.stderr)
+        return 1
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
@@ -954,6 +943,60 @@ def cmd_immune(args: argparse.Namespace) -> int:
     return 1 if errors else 0
 
 
+
+
+def cmd_retire(args: Any) -> None:
+    """Show clone retirement analysis for a .nous program."""
+    from parser import parse_nous
+    from validator import NousValidator
+    from verifier import NousVerifier
+
+    source = Path(args.file).read_text()
+    pass
+    program = parse_nous(source)
+
+    validator = NousValidator(program)
+    val_result = validator.validate()
+    for e in val_result.errors:
+        print(f"  ERROR [{e.code}] {e.message}")
+    for w in val_result.warnings:
+        print(f"  WARN  [{w.code}] {w.message}")
+
+    verifier = NousVerifier(program)
+    ver_result = verifier.verify()
+
+    print("")
+    print("  ═══ NOUS Clone Retirement Analysis ═══")
+    print("")
+
+    mitosis_souls = [s for s in program.souls if s.mitosis is not None]
+    if not mitosis_souls:
+        print("  No souls with mitosis found.")
+        return
+
+    for soul in mitosis_souls:
+        m = soul.mitosis
+        has_retire = m.retire_trigger is not None
+        print(f"  ── {soul.name} ──")
+        print(f"  Max clones:       {m.max_clones}")
+        print(f"  Min clones:       {m.min_clones}")
+        print(f"  Spawn cooldown:   {m.cooldown}")
+        print(f"  Retirement:       {'ENABLED' if has_retire else 'DISABLED — clones never die'}")
+        if has_retire:
+            print(f"  Retire cooldown:  {m.retire_cooldown}")
+            print(f"  Retire window:    {m.max_clones - m.min_clones} clones can be retired")
+        print("")
+
+    retire_proofs = [p for p in ver_result.proven if "VRT" in str(getattr(p, 'code', ''))]
+    retire_warns = [w for w in ver_result.warnings if "VRT" in str(getattr(w, 'code', ''))]
+    for p in retire_proofs:
+        print(f"  ✓ [{p.code}] {p.message}")
+    for w in retire_warns:
+        print(f"  ⚠ [{w.code}] {w.message}")
+
+    print("")
+    print("  ══════════════════════════════════════")
+
 def cmd_mitosis(args: argparse.Namespace) -> int:
     """Mitosis analysis — show self-replication config and verification."""
     source = Path(args.file)
@@ -1034,6 +1077,9 @@ def main() -> int:
     p = sub.add_parser("run", help="Compile and execute")
     p.add_argument("file"); p.add_argument("--keep", action="store_true")
     p.add_argument("--node", default=None, help="Node name for distributed execution")
+    p.add_argument("--mode", default="dry-run", choices=["dry-run", "live"], help="Runtime mode")
+    p.add_argument("--cycles", type=int, default=3, help="Max cycles")
+    p.add_argument("--budget", type=float, default=0.33, help="Daily budget USD")
 
     p = sub.add_parser("validate", help="Validate .nous file")
     p.add_argument("file")
@@ -1168,6 +1214,8 @@ def main() -> int:
     p = sub.add_parser("mitosis", help="Mitosis analysis — self-replication config")
     p.add_argument("file", help=".nous file to analyze")
 
+    p = sub.add_parser("retire", help="Clone retirement analysis")
+    p.add_argument("file", help=".nous file to analyze")
     p = sub.add_parser("diff", help="Behavioral diff between two .nous files")
 
     p.add_argument("file", help="Original .nous file")
@@ -1181,7 +1229,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire,
     }
     return commands[args.command](args)
 

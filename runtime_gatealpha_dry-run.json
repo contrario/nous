@@ -1,0 +1,157 @@
+[
+  {
+    "type": "soul_registered",
+    "soul": "Scout",
+    "model": "deepseek-r1",
+    "tier": "Tier1",
+    "timestamp": 1776178075.624985,
+    "time": "14:47:55"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Quant",
+    "model": "claude-haiku",
+    "tier": "Tier0A",
+    "timestamp": 1776178075.6249902,
+    "time": "14:47:55"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Hunter",
+    "model": "deepseek-r1",
+    "tier": "Tier1",
+    "timestamp": 1776178075.6249933,
+    "time": "14:47:55"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Monitor",
+    "model": "gemini-flash",
+    "tier": "Tier2",
+    "timestamp": 1776178075.624995,
+    "time": "14:47:55"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Scout",
+    "query": "Execute your instinct cycle 1. Analyze current state and report.",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776178076.5619235,
+    "time": "14:47:56"
+  },
+  {
+    "type": "speak",
+    "soul": "Scout",
+    "channel": "Scout_output",
+    "message": "{'from': 'Scout', 'data': '[DRY-RUN] Scout would answer: Execute your instinct cycle 1. Analyze curr",
+    "timestamp": 1776178076.5619602,
+    "time": "14:47:56"
+  },
+  {
+    "type": "speak",
+    "soul": "Scout",
+    "channel": "Scout_output",
+    "message": "{'from': 'Scout', 'data': '[DRY-RUN] Scout would answer: Execute your instinct cycle 1. Analyze curr",
+    "timestamp": 1776178076.5619695,
+    "time": "14:47:56"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Quant",
+    "channel": "Scout_Signal",
+    "timestamp": 1776178078.5626347,
+    "time": "14:47:58"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Quant",
+    "channel": "Scout_Decision",
+    "timestamp": 1776178080.5643146,
+    "time": "14:48:00"
+  },
+  {
+    "type": "listen",
+    "soul": "Quant",
+    "channel": "Scout_output",
+    "message": "{'from': 'Scout', 'data': '[DRY-RUN] Scout would answer: Execute your instinct cycle 1. Analyze curr",
+    "timestamp": 1776178080.564402,
+    "time": "14:48:00"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Quant",
+    "query": "Process incoming from Scout: {'from': 'Scout', 'data': '[DRY-RUN] Scout would answer: Execute your i",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776178080.5777652,
+    "time": "14:48:00"
+  },
+  {
+    "type": "speak",
+    "soul": "Quant",
+    "channel": "Quant_Decision",
+    "message": "{'from': 'Quant', 'type': 'Decision', 'data': \"[DRY-RUN] Quant would answer: Process incoming from S",
+    "timestamp": 1776178080.5778046,
+    "time": "14:48:00"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Hunter",
+    "channel": "Quant_Signal",
+    "timestamp": 1776178082.5782468,
+    "time": "14:48:02"
+  },
+  {
+    "type": "listen",
+    "soul": "Hunter",
+    "channel": "Quant_Decision",
+    "message": "{'from': 'Quant', 'type': 'Decision', 'data': \"[DRY-RUN] Quant would answer: Process incoming from S",
+    "timestamp": 1776178082.5783179,
+    "time": "14:48:02"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Hunter",
+    "query": "Process incoming from Quant: {'from': 'Quant', 'type': 'Decision', 'data': \"[DRY-RUN] Quant would an",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776178082.5915363,
+    "time": "14:48:02"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Monitor",
+    "channel": "Scout_Signal",
+    "timestamp": 1776178084.593162,
+    "time": "14:48:04"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Monitor",
+    "channel": "Scout_Decision",
+    "timestamp": 1776178086.5951583,
+    "time": "14:48:06"
+  },
+  {
+    "type": "listen",
+    "soul": "Monitor",
+    "channel": "Scout_output",
+    "message": "{'from': 'Scout', 'data': '[DRY-RUN] Scout would answer: Execute your instinct cycle 1. Analyze curr",
+    "timestamp": 1776178086.5951934,
+    "time": "14:48:06"
+  },
+  {
+    "type": "llm_call",
+    "mode": "dry-run",
+    "soul": "Monitor",
+    "query": "Process incoming from Scout: {'from': 'Scout', 'data': '[DRY-RUN] Scout would answer: Execute your i",
+    "tier": "would-use-first-available",
+    "cost": 0.0,
+    "timestamp": 1776178086.602311,
+    "time": "14:48:06"
+  }
+]

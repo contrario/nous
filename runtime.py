@@ -425,6 +425,16 @@ class NousRuntime:
         runner._immune_engine = self._immune_engine
         self._runners.append(runner)
 
+    def remove_soul(self, name: str) -> bool:
+        for i, runner in enumerate(self._runners):
+            if runner.name == name:
+                runner.stop()
+                self._runners.pop(i)
+                log.info(f"Soul [{name}]: removed from runtime ({len(self._runners)} remaining)")
+                return True
+        log.warning(f"Soul [{name}]: not found in runtime for removal")
+        return False
+
     def register_sense(self, name: str, func: Callable[..., Coroutine[Any, Any, Any]]) -> None:
         self.sense_executor.register_tool(name, func)
 

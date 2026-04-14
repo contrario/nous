@@ -1,0 +1,177 @@
+[
+  {
+    "type": "soul_registered",
+    "soul": "Scout",
+    "model": "deepseek-r1",
+    "tier": "Tier1",
+    "timestamp": 1776176504.7539291,
+    "time": "14:21:44"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Quant",
+    "model": "claude-haiku",
+    "tier": "Tier0A",
+    "timestamp": 1776176504.7539346,
+    "time": "14:21:44"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Hunter",
+    "model": "deepseek-r1",
+    "tier": "Tier1",
+    "timestamp": 1776176504.7539377,
+    "time": "14:21:44"
+  },
+  {
+    "type": "soul_registered",
+    "soul": "Monitor",
+    "model": "gemini-flash",
+    "tier": "Tier2",
+    "timestamp": 1776176504.7539396,
+    "time": "14:21:44"
+  },
+  {
+    "type": "llm_call",
+    "mode": "live",
+    "soul": "Scout",
+    "query": "Execute your instinct cycle 1. Analyze current state and report.",
+    "response": "{\n  \"tool\": \"gate_alpha_scan\",\n  \"arguments\": {}\n}\n\n{\n  \"tool\": \"gate_alpha_scan\",\n  \"arguments\": {}\n}\n\n{\n  \"tool\": \"gate_alpha_scan\",\n  \"arguments\": {}\n}\n\n{\n  \"tool\": \"gate_alpha_scan\",\n  \"arguments\"",
+    "tier": "Nemotron-120B",
+    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+    "tokens_in": 75,
+    "tokens_out": 300,
+    "cost": 0.0,
+    "elapsed_ms": 7719.0,
+    "timestamp": 1776176513.9538755,
+    "time": "14:21:53"
+  },
+  {
+    "type": "speak",
+    "soul": "Scout",
+    "channel": "Scout_output",
+    "message": "{'from': 'Scout', 'data': '{\\n  \"tool\": \"gate_alpha_scan\",\\n  \"arguments\": {}\\n}\\n\\n{\\n  \"tool\": \"ga",
+    "timestamp": 1776176513.9559507,
+    "time": "14:21:53"
+  },
+  {
+    "type": "speak",
+    "soul": "Scout",
+    "channel": "Scout_output",
+    "message": "{'from': 'Scout', 'data': '{\\n  \"tool\": \"gate_alpha_scan\",\\n  \"arguments\": {}\\n}\\n\\n{\\n  \"tool\": \"ga",
+    "timestamp": 1776176513.956112,
+    "time": "14:21:53"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Quant",
+    "channel": "Scout_Signal",
+    "timestamp": 1776176515.957624,
+    "time": "14:21:55"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Quant",
+    "channel": "Scout_Decision",
+    "timestamp": 1776176517.9601858,
+    "time": "14:21:57"
+  },
+  {
+    "type": "listen",
+    "soul": "Quant",
+    "channel": "Scout_output",
+    "message": "{'from': 'Scout', 'data': '{\\n  \"tool\": \"gate_alpha_scan\",\\n  \"arguments\": {}\\n}\\n\\n{\\n  \"tool\": \"ga",
+    "timestamp": 1776176517.960232,
+    "time": "14:21:57"
+  },
+  {
+    "type": "llm_call",
+    "mode": "live",
+    "soul": "Quant",
+    "query": "Process incoming from Scout: {'from': 'Scout', 'data': '{\\n  \"tool\": \"gate_alpha_scan\",\\n  \"argument",
+    "response": "I’m unable to run the gate_alpha_scan tool because it isn’t among the available functions (only calculate_kelly and backtest_pair are accessible). If you’d like me to analyze a pair using Kelly sizing",
+    "tier": "Nemotron-120B",
+    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+    "tokens_in": 148,
+    "tokens_out": 252,
+    "cost": 0.0,
+    "elapsed_ms": 17962.2,
+    "timestamp": 1776176537.0350502,
+    "time": "14:22:17"
+  },
+  {
+    "type": "speak",
+    "soul": "Quant",
+    "channel": "Quant_Decision",
+    "message": "{'from': 'Quant', 'type': 'Decision', 'data': 'I’m unable to run the\\u202fgate_alpha_scan\\u202ftool ",
+    "timestamp": 1776176537.0495493,
+    "time": "14:22:17"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Hunter",
+    "channel": "Quant_Signal",
+    "timestamp": 1776176539.0504508,
+    "time": "14:22:19"
+  },
+  {
+    "type": "listen",
+    "soul": "Hunter",
+    "channel": "Quant_Decision",
+    "message": "{'from': 'Quant', 'type': 'Decision', 'data': 'I’m unable to run the\\u202fgate_alpha_scan\\u202ftool ",
+    "timestamp": 1776176539.0505102,
+    "time": "14:22:19"
+  },
+  {
+    "type": "llm_call",
+    "mode": "live",
+    "soul": "Hunter",
+    "query": "Process incoming from Quant: {'from': 'Quant', 'type': 'Decision', 'data': 'I’m unable to run the\\u2",
+    "response": "I’m unable to perform the requested gate‑alpha scan analysis because the necessary tool isn’t available in my current toolset (I only have execute_paper_trade and check_balance). To proceed, you’d nee",
+    "tier": "Nemotron-120B",
+    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+    "tokens_in": 137,
+    "tokens_out": 229,
+    "cost": 0.0,
+    "elapsed_ms": 5487.1,
+    "timestamp": 1776176544.8187537,
+    "time": "14:22:24"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Monitor",
+    "channel": "Scout_Signal",
+    "timestamp": 1776176546.8350098,
+    "time": "14:22:26"
+  },
+  {
+    "type": "listen_timeout",
+    "soul": "Monitor",
+    "channel": "Scout_Decision",
+    "timestamp": 1776176548.837168,
+    "time": "14:22:28"
+  },
+  {
+    "type": "listen",
+    "soul": "Monitor",
+    "channel": "Scout_output",
+    "message": "{'from': 'Scout', 'data': '{\\n  \"tool\": \"gate_alpha_scan\",\\n  \"arguments\": {}\\n}\\n\\n{\\n  \"tool\": \"ga",
+    "timestamp": 1776176548.8372138,
+    "time": "14:22:28"
+  },
+  {
+    "type": "llm_call",
+    "mode": "live",
+    "soul": "Monitor",
+    "query": "Process incoming from Scout: {'from': 'Scout', 'data': '{\\n  \"tool\": \"gate_alpha_scan\",\\n  \"argument",
+    "response": "Received three gate_alpha_scan requests from Scout. Since I don’t have a direct scan tool, I’ll acknowledge the inputs and stand by for further instructions. Let me know if you’d like me to check curr",
+    "tier": "Nemotron-120B",
+    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+    "tokens_in": 149,
+    "tokens_out": 185,
+    "cost": 0.0,
+    "elapsed_ms": 14122.0,
+    "timestamp": 1776176563.1717703,
+    "time": "14:22:43"
+  }
+]

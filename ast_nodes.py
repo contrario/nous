@@ -299,6 +299,9 @@ class MitosisNode(NousNode):
     cooldown: str = "60s"
     clone_tier: Optional[str] = None
     verify: bool = True
+    retire_trigger: Any = None
+    retire_cooldown: str = "120s"
+    min_clones: int = 0
 
 
 # ═══════════════════════════════════════════

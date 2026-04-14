@@ -2,13 +2,13 @@
   {
     "tier": "DeepSeek",
     "model": "deepseek-chat",
-    "query": "/sb food cost restaurant",
-    "response": "Restaurant food cost typically refers to the percentage of revenue spent on ingredients, known as Cost of Goods Sold (COGS). A good target for full-service restaurants is often 28-35% of sales. This is calculated as (Total Cost of Ingredients / Total Food Sales) x 100.",
-    "tokens_in": 64,
-    "tokens_out": 60,
-    "cost_usd": 2.6e-05,
-    "elapsed_ms": 2656.4,
-    "timestamp": 1776107449.0946722,
+    "query": "How to sear a steak properly?",
+    "response": "Heat a heavy skillet (cast iron is ideal) over high heat until smoking hot. Pat the steak completely dry, season generously with salt just before cooking, and add to the pan with a high-smoke-point oil. Sear without moving for 2-3 minutes per side to form a deep brown crust. Avoid overcrowding the p",
+    "tokens_in": 12,
+    "tokens_out": 132,
+    "cost_usd": 0.0,
+    "elapsed_ms": 0.0,
+    "timestamp": 1776171059.3304935,
     "success": true,
     "error": ""
   }

@@ -1,0 +1,87 @@
+world Hive {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 30s
+}
+
+message ScanResult {
+    url: str
+    status: int
+}
+
+message AnalysisResult {
+    summary: str
+    score: float
+}
+
+soul Scanner {
+    mind: deepseek-chat @ Tier0A
+    senses: [http_get]
+    memory {
+        scan_count: int = 0
+        total_urls: int = 0
+    }
+    mitosis {
+        trigger: scan_count > 50 || queue_depth > 10
+        max_clones: 3
+        cooldown: 60s
+        clone_tier: Groq
+        verify: true
+        retire_trigger: queue_depth < 3 && cycle_count > 10
+        retire_cooldown: 120s
+        min_clones: 1
+    }
+    instinct {
+        remember scan_count += 1
+        let result = sense http_get(url: "https://api.github.com/zen")
+        speak ScanResult(url: "test", status: 200)
+    }
+    heal {
+        on error => retry
+        on timeout => fallback(cached_scan)
+    }
+}
+
+soul Analyzer {
+    mind: deepseek-chat @ Tier0A
+    senses: [http_get]
+    memory {
+        analysis_count: int = 0
+    }
+    mitosis {
+        trigger: analysis_count > 100
+        max_clones: 2
+        cooldown: 90s
+        clone_tier: Cerebras
+        verify: true
+        retire_trigger: queue_depth < 2
+        retire_cooldown: 180s
+        min_clones: 0
+    }
+    instinct {
+        listen ScanResult
+        remember analysis_count += 1
+        speak AnalysisResult(summary: "done", score: 0.9)
+    }
+    heal {
+        on error => retry
+    }
+}
+
+soul Reporter {
+    mind: deepseek-chat @ Tier0B
+    memory {
+        report_count: int = 0
+    }
+    instinct {
+        listen AnalysisResult
+        remember report_count += 1
+    }
+    heal {
+        on error => retry
+    }
+}
+
+nervous_system {
+    Scanner -> Analyzer
+    Analyzer -> Reporter
+}
