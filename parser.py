@@ -32,10 +32,20 @@ GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
 _PARSER_CACHE: dict[str, Lark] = {}
 
 
+def _load_grammar() -> str:
+    if GRAMMAR_PATH.exists():
+        return GRAMMAR_PATH.read_text(encoding="utf-8")
+    try:
+        from grammar_data import get_grammar
+        return get_grammar()
+    except ImportError:
+        raise FileNotFoundError(f"Grammar not found: {GRAMMAR_PATH} (and grammar_data.py missing)")
+
+
 def _get_parser() -> Lark:
     key = str(GRAMMAR_PATH)
     if key not in _PARSER_CACHE:
-        grammar = GRAMMAR_PATH.read_text(encoding="utf-8")
+        grammar = _load_grammar()
         _PARSER_CACHE[key] = Lark(grammar, parser="lalr", start="start")
     return _PARSER_CACHE[key]
 
