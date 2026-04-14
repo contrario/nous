@@ -37,12 +37,20 @@ jobs:
 
       - name: Find changed .nous files
         id: changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd head
-          git diff --name-only --diff-filter=ACMR \
-            ${{ github.event.pull_request.base.sha }} \
-            ${{ github.event.pull_request.head.sha }} \
-            -- '*.nous' > /tmp/changed_nous_files.txt
+          curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files?per_page=100" \
+            | python3 -c "
+          import json, sys
+          files = json.load(sys.stdin)
+          nous = [f['filename'] for f in files if f['filename'].endswith('.nous') and f['status'] != 'removed']
+          with open('/tmp/changed_nous_files.txt', 'w') as fh:
+              fh.write('\n'.join(nous))
+          print(f'Found {len(nous)} changed .nous files')
+          " 
           echo "count=$(wc -l < /tmp/changed_nous_files.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
           cat /tmp/changed_nous_files.txt
 
