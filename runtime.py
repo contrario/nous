@@ -288,6 +288,7 @@ class SoulRunner:
         self._immune_engine: Optional[Any] = None
         self._dream_engine: Optional[Any] = None
         self._telemetry_engine: Optional[Any] = None
+        self._hot_reload_engine: Optional[Any] = None
         self._shutdown_event: Optional[asyncio.Event] = None
 
     def set_shutdown_event(self, event: asyncio.Event) -> None:
@@ -501,6 +502,8 @@ class NousRuntime:
                     tg.create_task(self._dream_engine.run())
                 if self._telemetry_engine:
                     tg.create_task(self._telemetry_engine.run())
+                if self._hot_reload_engine:
+                    tg.create_task(self._hot_reload_engine.run())
         except* CircuitBreakerTripped as eg:
             for exc in eg.exceptions:
                 log.warning(f"Circuit breaker ended cycle: {exc}")
@@ -540,6 +543,8 @@ class NousRuntime:
             self._dream_engine.stop()
         if self._telemetry_engine:
             self._telemetry_engine.stop()
+        if self._hot_reload_engine:
+            self._hot_reload_engine.stop()
         for runner in self._runners:
             runner.stop()
 

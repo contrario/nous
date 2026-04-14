@@ -33,7 +33,7 @@ from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
 
-VERSION = "3.6.0"
+VERSION = "3.7.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -143,9 +143,12 @@ def cmd_run(args: argparse.Namespace) -> int:
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
         return 1
+    hot = getattr(args, "hot", False)
     mode = getattr(args, "mode", "dry-run")
     cycles = getattr(args, "cycles", 3)
     budget = getattr(args, "budget", 0.33)
+    if hot:
+        return _run_hot_reload(source)
     try:
         from nous_ast_runner import run_program
         run_program(str(source), mode=mode, max_cycles=cycles, daily_budget=budget)
@@ -156,6 +159,73 @@ def cmd_run(args: argparse.Namespace) -> int:
     except Exception as e:
         print(f"Runtime error: {e}", file=sys.stderr)
         return 1
+
+
+def _run_hot_reload(source: Path) -> int:
+    """Run with hot reload: watches source, swaps souls on change."""
+    import asyncio
+    from parser import parse_nous
+    from validator import NousValidator
+    from codegen import NousCodeGen
+    import importlib.util
+    import tempfile
+    import py_compile as _pyc
+
+    print(f"\n  ═══ NOUS Hot Reload Mode ═══")
+    print(f"  Source:  {source}")
+    print(f"  Edit {source.name}, save, and souls swap live.")
+    print(f"  Press Ctrl+C to stop.\n")
+
+    src_text = source.read_text(encoding="utf-8")
+    program = parse_nous(src_text)
+    v = NousValidator(program)
+    vr = v.validate()
+    if not vr.ok:
+        for e in vr.errors:
+            print(f"  ERROR: {e}")
+        return 1
+
+    cg = NousCodeGen(program)
+    code = cg.generate()
+
+    tmp = tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False,
+                                      dir=str(source.parent), prefix="_hot_init_")
+    tmp.write(code)
+    tmp.close()
+    tmp_path = Path(tmp.name)
+
+    try:
+        _pyc.compile(str(tmp_path), doraise=True)
+    except _pyc.PyCompileError as e:
+        print(f"  Compile FAILED: {e}")
+        tmp_path.unlink(missing_ok=True)
+        return 1
+
+    spec = importlib.util.spec_from_file_location("_hot_init", str(tmp_path))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    tmp_path.unlink(missing_ok=True)
+
+    if not hasattr(mod, 'build_runtime'):
+        print("  Error: generated code has no build_runtime()")
+        return 1
+
+    rt = mod.build_runtime()
+
+    from hot_reload_engine import HotReloadEngine
+    hr = HotReloadEngine(rt, source, poll_interval=2.0)
+    rt._hot_reload_engine = hr
+
+    world_name = program.world.name if program.world else "Unknown"
+    print(f"  World:   {world_name}")
+    print(f"  Souls:   {len(program.souls)}")
+    print(f"  Hot reload active (polling every 2s)\n")
+
+    try:
+        asyncio.run(rt.run())
+    except KeyboardInterrupt:
+        print("\n\n  World stopped by user.")
+    return 0
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
@@ -1146,6 +1216,7 @@ def main() -> int:
     p.add_argument("--cycles", type=int, default=3, help="Max cycles")
     p.add_argument("--budget", type=float, default=0.33, help="Daily budget USD")
 
+    p.add_argument("--hot", action="store_true", help="Enable hot reload — swap souls on save")
     p = sub.add_parser("validate", help="Validate .nous file")
     p.add_argument("file")
 
