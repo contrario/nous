@@ -69,6 +69,7 @@ class NousValidator:
 
     def validate(self) -> ValidationResult:
         self._check_world_exists()
+        self._check_telemetry()
         self._collect_names()
         self._check_souls()
         self._check_nervous_system()
@@ -94,6 +95,25 @@ class NousValidator:
                 self.result.error("M001", f"Duplicate message name: {msg.name}", f"message {msg.name}")
             self.message_names.add(msg.name)
             self.message_fields[msg.name] = [f.name for f in msg.fields]
+
+    def _check_telemetry(self) -> None:
+        if not self.program.world or not self.program.world.telemetry:
+            return
+        t = self.program.world.telemetry
+        loc = "world > telemetry"
+
+        valid_exporters = {"console", "jsonl", "http", "langfuse", "otlp"}
+        if t.exporter not in valid_exporters:
+            self.result.error("TL001", f"Invalid telemetry exporter: {t.exporter}. Valid: {', '.join(sorted(valid_exporters))}", loc)
+
+        if t.exporter in ("http", "langfuse", "otlp") and not t.endpoint:
+            self.result.error("TL002", f"Telemetry exporter '{t.exporter}' requires an endpoint URL.", loc)
+
+        if not (0.0 < t.sample_rate <= 1.0):
+            self.result.error("TL003", f"Telemetry sample_rate must be in (0.0, 1.0], got {t.sample_rate}", loc)
+
+        if t.buffer_size < 10:
+            self.result.warn("TL004", f"Telemetry buffer_size={t.buffer_size} is very small. Recommended >= 100.", loc)
 
     def _check_souls(self) -> None:
         for soul in self.program.souls:

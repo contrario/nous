@@ -12,7 +12,7 @@ from typing import Any
 from lark import Lark, Transformer, Token, Tree
 
 from ast_nodes import (
-    NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
+    TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
     NousProgram, WorldNode, LawNode, LawCost, LawCurrency, LawDuration,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
@@ -358,6 +358,41 @@ class NousTransformer(Transformer):
     def law_expr(self, items: list) -> Any:
         return items[0]
 
+    # ── Telemetry ──
+    def telemetry_enabled(self, items: list) -> dict:
+        return {"enabled": items[0] if isinstance(items[0], bool) else str(items[0]).lower() == "true"}
+
+    def telemetry_exporter(self, items: list) -> dict:
+        return {"exporter": str(items[0])}
+
+    def telemetry_endpoint(self, items: list) -> dict:
+        return {"endpoint": str(items[0])}
+
+    def telemetry_sample_rate(self, items: list) -> dict:
+        return {"sample_rate": float(items[0])}
+
+    def telemetry_trace_senses(self, items: list) -> dict:
+        return {"trace_senses": items[0] if isinstance(items[0], bool) else str(items[0]).lower() == "true"}
+
+    def telemetry_trace_llm(self, items: list) -> dict:
+        return {"trace_llm": items[0] if isinstance(items[0], bool) else str(items[0]).lower() == "true"}
+
+    def telemetry_buffer_size(self, items: list) -> dict:
+        return {"buffer_size": int(items[0])}
+
+    def telemetry_field(self, items: list):
+        return items[0]
+
+    def telemetry_block(self, items: list) -> dict:
+        s = self._strip(items)
+        node = TelemetryNode()
+        for item in s:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(node, k):
+                        setattr(node, k, v)
+        return {"telemetry": node}
+
     # ── World ──
 
     def heartbeat_decl(self, items: list) -> dict:
@@ -384,6 +419,8 @@ class NousTransformer(Transformer):
                     node.heartbeat = item["heartbeat"]
                 elif "timezone" in item:
                     node.timezone = item["timezone"]
+                elif "telemetry" in item:
+                    node.telemetry = item["telemetry"]
                 elif "config" in item:
                     k, v = item["config"]
                     node.config[k] = v

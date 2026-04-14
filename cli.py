@@ -33,7 +33,7 @@ from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
 
-VERSION = "3.5.0"
+VERSION = "3.6.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -945,6 +945,71 @@ def cmd_immune(args: argparse.Namespace) -> int:
 
 
 
+
+
+def cmd_telemetry(args: Any) -> None:
+    """Show telemetry configuration for a .nous program."""
+    from parser import parse_nous
+    from validator import NousValidator
+    from verifier import NousVerifier
+
+    source = Path(args.file).read_text()
+    program = parse_nous(source)
+
+    validator = NousValidator(program)
+    val_result = validator.validate()
+    for e in val_result.errors:
+        print(f"  ERROR [{e.code}] {e.message}")
+    for w in val_result.warnings:
+        print(f"  WARN  [{w.code}] {w.message}")
+
+    verifier = NousVerifier(program)
+    ver_result = verifier.verify()
+
+    print("")
+    print("  ═══ NOUS Telemetry Analysis ═══")
+    print("")
+
+    if not program.world or not program.world.telemetry:
+        print("  No telemetry block found in world declaration.")
+        print("  Add: telemetry { enabled: true exporter: console }")
+        return
+
+    t = program.world.telemetry
+    print(f"  Enabled:        {t.enabled}")
+    print(f"  Exporter:       {t.exporter}")
+    if t.endpoint:
+        print(f"  Endpoint:       {t.endpoint}")
+    print(f"  Sample rate:    {t.sample_rate}")
+    print(f"  Trace senses:   {t.trace_senses}")
+    print(f"  Trace LLM:      {t.trace_llm}")
+    print(f"  Buffer size:    {t.buffer_size}")
+    print("")
+
+    soul_count = len(program.souls)
+    print(f"  Souls monitored: {soul_count}")
+    for soul in program.souls:
+        subsystems = []
+        if soul.mitosis:
+            subsystems.append("mitosis")
+        if soul.immune_system:
+            subsystems.append("immune")
+        if soul.dream_system:
+            subsystems.append("dream")
+        sub_str = ", ".join(subsystems) if subsystems else "—"
+        print(f"    {soul.name}: {sub_str}")
+    print("")
+
+    tl_proofs = [p for p in ver_result.proven if "VTL" in str(getattr(p, 'code', ''))]
+    tl_warns = [w for w in ver_result.warnings if "VTL" in str(getattr(w, 'code', ''))]
+    for p in tl_proofs:
+        print(f"  ✓ [{p.code}] {p.message}")
+    for w in tl_warns:
+        print(f"  ⚠ [{w.code}] {w.message}")
+
+    print("")
+    print("  ══════════════════════════════════════")
+
 def cmd_retire(args: Any) -> None:
     """Show clone retirement analysis for a .nous program."""
     from parser import parse_nous
@@ -1214,6 +1279,8 @@ def main() -> int:
     p = sub.add_parser("mitosis", help="Mitosis analysis — self-replication config")
     p.add_argument("file", help=".nous file to analyze")
 
+    p = sub.add_parser("telemetry", help="Telemetry configuration analysis")
+    p.add_argument("file", help=".nous file to analyze")
     p = sub.add_parser("retire", help="Clone retirement analysis")
     p.add_argument("file", help=".nous file to analyze")
     p = sub.add_parser("diff", help="Behavioral diff between two .nous files")
@@ -1229,7 +1296,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry,
     }
     return commands[args.command](args)
 

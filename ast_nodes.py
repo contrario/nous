@@ -88,11 +88,22 @@ class LawNode(NousNode):
 # WORLD
 # ═══════════════════════════════════════════
 
+class TelemetryNode(NousNode):
+    enabled: bool = True
+    exporter: str = "console"
+    endpoint: Optional[str] = None
+    sample_rate: float = 1.0
+    trace_senses: bool = True
+    trace_llm: bool = True
+    buffer_size: int = 1000
+
+
 class WorldNode(NousNode):
     name: str
     laws: list[LawNode] = Field(default_factory=list)
     heartbeat: Optional[str] = None
     timezone: Optional[str] = None
+    telemetry: Optional[TelemetryNode] = None
     config: dict[str, Any] = Field(default_factory=dict)
 
 

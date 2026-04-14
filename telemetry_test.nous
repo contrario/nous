@@ -1,0 +1,85 @@
+world Observatory {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 30s
+    telemetry {
+        enabled: true
+        exporter: jsonl
+        sample_rate: 1.0
+        trace_senses: true
+        trace_llm: true
+        buffer_size: 500
+    }
+}
+
+message ScanResult {
+    url: str
+    status: int
+}
+
+message Report {
+    summary: str
+}
+
+soul Scanner {
+    mind: deepseek-chat @ Tier0A
+    senses: [http_get]
+    memory {
+        scan_count: int = 0
+    }
+    mitosis {
+        trigger: scan_count > 100
+        max_clones: 2
+        cooldown: 60s
+        verify: true
+        retire_trigger: queue_depth < 2
+        retire_cooldown: 120s
+        min_clones: 0
+    }
+    instinct {
+        remember scan_count += 1
+        let result = sense http_get(url: "https://api.github.com/zen")
+        speak ScanResult(url: "test", status: 200)
+    }
+    heal {
+        on error => retry
+    }
+    immune_system {
+        adaptive_recovery: true
+        share_with_clones: true
+        antibody_lifespan: 3600s
+    }
+}
+
+soul Analyzer {
+    mind: deepseek-chat @ Tier0B
+    memory {
+        count: int = 0
+    }
+    instinct {
+        listen ScanResult
+        remember count += 1
+        speak Report(summary: "analyzed")
+    }
+    heal {
+        on error => retry
+    }
+}
+
+soul Reporter {
+    mind: deepseek-chat @ Tier0B
+    memory {
+        reports: int = 0
+    }
+    instinct {
+        listen Report
+        remember reports += 1
+    }
+    heal {
+        on error => retry
+    }
+}
+
+nervous_system {
+    Scanner -> Analyzer
+    Analyzer -> Reporter
+}

@@ -287,6 +287,7 @@ class SoulRunner:
         self._last_latency_ms: float = 0.0
         self._immune_engine: Optional[Any] = None
         self._dream_engine: Optional[Any] = None
+        self._telemetry_engine: Optional[Any] = None
         self._shutdown_event: Optional[asyncio.Event] = None
 
     def set_shutdown_event(self, event: asyncio.Event) -> None:
@@ -344,6 +345,18 @@ class SoulRunner:
         self._cycle_count += 1
         self._last_latency_ms = _latency_ms
         log.info(f"Soul [{self.name}]: cycle {self._cycle_count} complete ({_latency_ms:.0f}ms)")
+        if hasattr(self, '_telemetry_engine') and self._telemetry_engine and self._telemetry_engine.enabled:
+            _tspan = self._telemetry_engine.start_span(
+                kind=__import__('telemetry_engine').SpanKind.CYCLE,
+                soul_name=self.name,
+                cycle_count=self._cycle_count,
+                latency_ms=round(_latency_ms, 2),
+                wake_strategy=self.wake_strategy,
+            )
+            _tspan.end_time = time.time()
+            _tspan.start_time = _t0
+            import asyncio as _aio
+            _aio.ensure_future(self._telemetry_engine.record(_tspan))
         if hasattr(self, '_dream_engine') and self._dream_engine:
             self._dream_engine.mark_active(self.name)
         await self._sleep_or_shutdown(self._heartbeat)
@@ -417,12 +430,14 @@ class NousRuntime:
         self._mitosis_engine: Optional[Any] = None
         self._immune_engine: Optional[Any] = None
         self._dream_engine: Optional[Any] = None
+        self._telemetry_engine: Optional[Any] = None
 
     def add_soul(self, runner: SoulRunner) -> None:
         runner.set_shutdown_event(self._shutdown)
         runner._cost_tracker = self.cost_tracker
         runner._sense_cache = self.sense_cache
         runner._immune_engine = self._immune_engine
+        runner._telemetry_engine = self._telemetry_engine
         self._runners.append(runner)
 
     def remove_soul(self, name: str) -> bool:
@@ -484,6 +499,8 @@ class NousRuntime:
                     tg.create_task(self._immune_engine.run())
                 if self._dream_engine:
                     tg.create_task(self._dream_engine.run())
+                if self._telemetry_engine:
+                    tg.create_task(self._telemetry_engine.run())
         except* CircuitBreakerTripped as eg:
             for exc in eg.exceptions:
                 log.warning(f"Circuit breaker ended cycle: {exc}")
@@ -521,6 +538,8 @@ class NousRuntime:
             self._immune_engine.stop()
         if self._dream_engine:
             self._dream_engine.stop()
+        if self._telemetry_engine:
+            self._telemetry_engine.stop()
         for runner in self._runners:
             runner.stop()
 

@@ -105,7 +105,7 @@ class VerificationResult:
         categories: dict[str, list[VerificationItem]] = {}
         for item in self.items:
             categories.setdefault(item.category, []).append(item)
-        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "mitosis", "retirement", "immune", "dream"]:
+        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "telemetry", "mitosis", "retirement", "immune", "dream"]:
             if cat not in categories:
                 continue
             cat_label = cat.replace("_", " ").title()
@@ -146,6 +146,7 @@ class NousVerifier:
         self._verify_reachability()
         self._verify_memory_safety()
         self._verify_topology()
+        self._verify_telemetry()
         self._verify_mitosis()
         self._verify_retirement()
         self._verify_immune()
@@ -561,6 +562,66 @@ class NousVerifier:
                     "topology",
                 )
 
+
+    def _verify_telemetry(self) -> None:
+        if not self.program.world or not self.program.world.telemetry:
+            return
+
+        t = self.program.world.telemetry
+        loc = "world > telemetry"
+
+        if not t.enabled:
+            self.result.info("VTL001", "telemetry", "Telemetry declared but disabled", loc)
+            return
+
+        self.result.prove(
+            "VTL001", "telemetry",
+            f"Telemetry enabled: exporter={t.exporter}, sample_rate={t.sample_rate}",
+            loc,
+        )
+
+        if t.trace_senses and t.trace_llm:
+            self.result.prove(
+                "VTL002", "telemetry",
+                "Full observability: senses and LLM calls traced",
+                loc,
+            )
+        elif t.trace_senses:
+            self.result.info(
+                "VTL002", "telemetry",
+                "Partial observability: senses traced, LLM calls not traced",
+                loc,
+            )
+        elif t.trace_llm:
+            self.result.info(
+                "VTL002", "telemetry",
+                "Partial observability: LLM calls traced, senses not traced",
+                loc,
+            )
+        else:
+            self.result.warning(
+                "VTL002", "telemetry",
+                "Telemetry enabled but neither senses nor LLM calls are traced",
+                loc,
+            )
+
+        soul_count = len(self.program.souls)
+        has_mitosis = any(s.mitosis for s in self.program.souls)
+        has_immune = any(s.immune_system for s in self.program.souls)
+        has_dream = any(s.dream_system for s in self.program.souls)
+        subsystems = []
+        if has_mitosis:
+            subsystems.append("mitosis")
+        if has_immune:
+            subsystems.append("immune")
+        if has_dream:
+            subsystems.append("dream")
+        sub_str = ", ".join(subsystems) if subsystems else "none"
+        self.result.prove(
+            "VTL003", "telemetry",
+            f"Telemetry covers {soul_count} soul(s), subsystems: {sub_str}",
+            loc,
+        )
 
     def _verify_mitosis(self) -> None:
         mitosis_souls = [s for s in self.program.souls if s.mitosis is not None]
