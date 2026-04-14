@@ -33,7 +33,7 @@ from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
 
-VERSION = "3.0.0"
+VERSION = "3.1.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
