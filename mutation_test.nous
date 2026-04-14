@@ -1,0 +1,37 @@
+world MutationLab {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 15s
+}
+
+message CleanData {
+    key: string
+    value: float
+    valid: bool = true
+}
+
+soul DataMutant {
+    mind: deepseek-chat @ Tier1
+    senses: [bad_data_source]
+    memory {
+        attempts: int = 0
+        recoveries: int = 0
+    }
+    immune_system {
+        adaptive_recovery: true
+        share_with_clones: true
+        antibody_lifespan: 3600s
+    }
+    instinct {
+        let raw = sense bad_data_source()
+        let price = raw.get("price")
+        let clean = price.strip()
+        remember attempts += 1
+        speak CleanData(key: "btc", value: clean, valid: true)
+    }
+    heal {
+        on timeout => retry(2, exponential)
+    }
+}
+
+nervous_system {
+}

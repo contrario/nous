@@ -114,6 +114,15 @@ class NousValidator:
             if soul.dna:
                 self._check_dna_ranges(soul)
 
+            if soul.mitosis:
+                self._check_mitosis(soul)
+
+            if soul.immune_system:
+                self._check_immune(soul)
+
+            if soul.dream_system:
+                self._check_dream(soul)
+
     def _check_dna_ranges(self, soul: SoulNode) -> None:
         if self.program.world is None or soul.dna is None:
             return
@@ -132,6 +141,67 @@ class NousValidator:
                 if isinstance(gene.value, (int, float)):
                     if gene.value < min_val or gene.value > max_val:
                         self.result.error("D002", f"Gene {gene.name} value {gene.value} is outside range [{min_val}, {max_val}].", loc)
+
+
+
+
+    def _check_dream(self, soul: SoulNode) -> None:
+        loc = f"soul {soul.name} > dream_system"
+        ds = soul.dream_system
+        if ds.trigger_idle_sec < 5:
+            self.result.error("DR001", f"Dream trigger_idle_sec={ds.trigger_idle_sec} too short (min 5s).", loc)
+        if ds.max_cache < 1:
+            self.result.error("DR002", f"Dream max_cache must be >= 1.", loc)
+        if ds.max_cache > 100:
+            self.result.warn("DR003", f"Dream max_cache={ds.max_cache} is very large. Memory impact.", loc)
+        if ds.speculation_depth < 1 or ds.speculation_depth > 10:
+            self.result.warn("DR004", f"Dream speculation_depth={ds.speculation_depth} outside recommended range [1-10].", loc)
+        if ds.dream_mind and soul.mind:
+            if ds.dream_mind.tier == soul.mind.tier:
+                self.result.warn("DR005", f"Dream mind uses same tier as primary mind. Use a cheaper tier for dreams.", loc)
+
+    def _check_immune(self, soul: SoulNode) -> None:
+        loc = f"soul {soul.name} > immune_system"
+        im = soul.immune_system
+
+        if im.adaptive_recovery and soul.heal is None:
+            self.result.warn("IM001", f"Soul {soul.name} has immune_system but no heal block. Heal runs before immune recovery.", loc)
+
+        if im.share_with_clones and (soul.mitosis is None):
+            self.result.warn("IM002", f"Soul {soul.name} has share_with_clones=true but no mitosis block. No clones to share with.", loc)
+
+        import re
+        m = re.match(r"(\d+)(ms|s|m|h|d)", im.antibody_lifespan)
+        if m:
+            val = int(m.group(1))
+            unit = m.group(2)
+            seconds = {"ms": val / 1000, "s": val, "m": val * 60, "h": val * 3600, "d": val * 86400}.get(unit, val)
+            if seconds < 10:
+                self.result.error("IM003", f"Antibody lifespan {im.antibody_lifespan} is too short (min 10s).", loc)
+
+    def _check_mitosis(self, soul: SoulNode) -> None:
+        loc = f"soul {soul.name} > mitosis"
+        m = soul.mitosis
+
+        if m.max_clones < 1:
+            self.result.error("MT001", f"Mitosis max_clones must be >= 1, got {m.max_clones}", loc)
+
+        if m.max_clones > 10:
+            self.result.warn("MT002", f"Mitosis max_clones={m.max_clones} is very high. Consider resource impact.", loc)
+
+        if m.trigger is None:
+            self.result.error("MT003", "Mitosis trigger condition is required.", loc)
+
+        if soul.mind is None:
+            self.result.error("MT004", f"Soul {soul.name} has mitosis but no mind. Clones need a mind.", loc)
+
+        if soul.heal is None:
+            self.result.warn("MT005", f"Soul {soul.name} has mitosis but no heal block. Clones inherit heal rules.", loc)
+
+        if m.clone_tier:
+            valid_tiers = {"Tier0A", "Tier0B", "Tier1", "Tier2", "Tier3", "Groq", "Together", "Fireworks", "Cerebras"}
+            if m.clone_tier not in valid_tiers:
+                self.result.error("MT006", f"Invalid clone_tier: {m.clone_tier}", loc)
 
     def _check_nervous_system(self) -> None:
         ns = self.program.nervous_system

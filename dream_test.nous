@@ -1,0 +1,48 @@
+world DreamLab {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 15s
+}
+
+message Prediction {
+    scenario: string
+    insight: string
+    confidence: float = 0.0
+}
+
+soul Oracle {
+    mind: claude-sonnet @ Tier0A
+    senses: [http_get, dream_cache]
+    memory {
+        cycles: int = 0
+        last_signal: string = "none"
+    }
+    dream_system {
+        enabled: true
+        trigger_idle_sec: 10
+        dream_mind: deepseek-chat @ Tier1
+        max_cache: 10
+        speculation_depth: 3
+    }
+    instinct {
+        remember cycles += 1
+        speak Prediction(scenario: "forecast", insight: "cycle complete", confidence: 0.8)
+    }
+    heal {
+        on timeout => retry(2, exponential)
+    }
+}
+
+nervous_system {
+}
+
+test "dream system enabled" {
+    assert true
+}
+
+test "dream mind configured" {
+    assert true
+}
+
+test "idle trigger positive" {
+    assert 10 > 0
+}

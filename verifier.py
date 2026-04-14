@@ -105,7 +105,7 @@ class VerificationResult:
         categories: dict[str, list[VerificationItem]] = {}
         for item in self.items:
             categories.setdefault(item.category, []).append(item)
-        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology"]:
+        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "mitosis", "immune", "dream"]:
             if cat not in categories:
                 continue
             cat_label = cat.replace("_", " ").title()
@@ -146,6 +146,9 @@ class NousVerifier:
         self._verify_reachability()
         self._verify_memory_safety()
         self._verify_topology()
+        self._verify_mitosis()
+        self._verify_immune()
+        self._verify_dream()
         return self.result
 
     def _collect_metadata(self) -> None:
@@ -556,6 +559,248 @@ class NousVerifier:
                     f"Cross-node route: {src}@{src_node} → {tgt}@{tgt_node} (requires TCP channel)",
                     "topology",
                 )
+
+
+    def _verify_mitosis(self) -> None:
+        mitosis_souls = [s for s in self.program.souls if s.mitosis is not None]
+        if not mitosis_souls:
+            return
+
+        for soul in mitosis_souls:
+            m = soul.mitosis
+            loc = f"soul {soul.name}"
+
+            tier = soul.mind.tier.value if soul.mind else "Tier1"
+            tier_info = TIER_COSTS.get(tier, TIER_COSTS["Tier1"])
+            clone_tier_str = m.clone_tier or tier
+            clone_tier_info = TIER_COSTS.get(clone_tier_str, TIER_COSTS["Tier1"])
+
+            sense_count = self._count_sense_calls(soul)
+            est_input = EST_TOKENS_PER_INSTINCT_BASE + (sense_count * EST_TOKENS_PER_SENSE)
+            base_cost = (
+                (est_input / 1000) * tier_info["input_per_1k"]
+                + (EST_TOKENS_OUTPUT / 1000) * tier_info["output_per_1k"]
+            )
+            clone_cost = (
+                (est_input / 1000) * clone_tier_info["input_per_1k"]
+                + (EST_TOKENS_OUTPUT / 1000) * clone_tier_info["output_per_1k"]
+            )
+            worst_case = base_cost + (clone_cost * m.max_clones)
+
+            if worst_case > self._cost_ceiling:
+                self.result.warning(
+                    "VMI001", "mitosis",
+                    f"Soul {soul.name} with {m.max_clones} clones: worst-case ${worst_case:.6f} exceeds ceiling ${self._cost_ceiling:.2f}",
+                    loc,
+                    f"Parent=${base_cost:.6f} + {m.max_clones}×clone=${clone_cost:.6f}",
+                )
+            else:
+                ratio = worst_case / self._cost_ceiling if self._cost_ceiling > 0 else 0
+                self.result.prove(
+                    "VMI001", "mitosis",
+                    f"Soul {soul.name} mitosis cost bounded: ${worst_case:.6f} ≤ ${self._cost_ceiling:.2f} ({ratio:.0%})",
+                    loc,
+                )
+
+            if m.verify:
+                self.result.prove(
+                    "VMI002", "mitosis",
+                    f"Soul {soul.name} clones require verification gate before deployment",
+                    loc,
+                )
+            else:
+                self.result.warning(
+                    "VMI002", "mitosis",
+                    f"Soul {soul.name} clones skip verification — unverified agents in production",
+                    loc,
+                )
+
+            if m.clone_tier and m.clone_tier != tier:
+                parent_rate = tier_info["input_per_1k"] + tier_info["output_per_1k"]
+                clone_rate = clone_tier_info["input_per_1k"] + clone_tier_info["output_per_1k"]
+                if clone_rate < parent_rate:
+                    savings = ((parent_rate - clone_rate) / parent_rate) * 100
+                    self.result.prove(
+                        "VMI003", "mitosis",
+                        f"Soul {soul.name} clones use cheaper tier {m.clone_tier} ({savings:.0f}% savings)",
+                        loc,
+                    )
+                else:
+                    self.result.warning(
+                        "VMI003", "mitosis",
+                        f"Soul {soul.name} clone_tier {m.clone_tier} is not cheaper than parent tier {tier}",
+                        loc,
+                    )
+
+            is_listener = soul.name in self._incoming
+            if is_listener and m.max_clones > 1:
+                self.result.info(
+                    "VMI004", "mitosis",
+                    f"Listener {soul.name} with mitosis: clones will share the same input channel",
+                    loc,
+                    "Multiple consumers on one channel provides load balancing",
+                )
+
+        total_max_clones = sum(s.mitosis.max_clones for s in mitosis_souls)
+        total_souls = len(self.program.souls) + total_max_clones
+        self.result.info(
+            "VMI005", "mitosis",
+            f"Mitosis capacity: {len(mitosis_souls)} soul(s) can spawn up to {total_max_clones} clones (max {total_souls} total)",
+        )
+
+
+
+    def _verify_dream(self) -> None:
+        dream_souls = [s for s in self.program.souls if s.dream_system is not None]
+        if not dream_souls:
+            return
+
+        for soul in dream_souls:
+            ds = soul.dream_system
+            loc = f"soul {soul.name}"
+
+            if not ds.enabled:
+                self.result.info("VDR001", "dream", f"Soul {soul.name} has dream_system but disabled", loc)
+                continue
+
+            if ds.dream_mind:
+                dream_tier = ds.dream_mind.tier.value
+                primary_tier = soul.mind.tier.value if soul.mind else "Tier1"
+                dream_cost = TIER_COSTS.get(dream_tier, TIER_COSTS["Tier1"])
+                primary_cost = TIER_COSTS.get(primary_tier, TIER_COSTS["Tier1"])
+                dream_rate = dream_cost["input_per_1k"] + dream_cost["output_per_1k"]
+                primary_rate = primary_cost["input_per_1k"] + primary_cost["output_per_1k"]
+                if dream_rate < primary_rate:
+                    savings = ((primary_rate - dream_rate) / primary_rate) * 100
+                    self.result.prove(
+                        "VDR001", "dream",
+                        f"Soul {soul.name} dream_mind {dream_tier} is {savings:.0f}% cheaper than primary {primary_tier}",
+                        loc,
+                    )
+                else:
+                    self.result.warning(
+                        "VDR001", "dream",
+                        f"Soul {soul.name} dream_mind {dream_tier} is not cheaper than primary {primary_tier}",
+                        loc,
+                    )
+
+            worst_dreams = ds.speculation_depth
+            dream_tier_info = TIER_COSTS.get(
+                ds.dream_mind.tier.value if ds.dream_mind else "Tier1",
+                TIER_COSTS["Tier1"]
+            )
+            dream_cost_per = (200 / 1000) * dream_tier_info["input_per_1k"] + (200 / 1000) * dream_tier_info["output_per_1k"]
+            total_dream_cost = dream_cost_per * worst_dreams
+            if total_dream_cost < self._cost_ceiling * 0.1:
+                self.result.prove(
+                    "VDR002", "dream",
+                    f"Soul {soul.name} dream cost ${total_dream_cost:.6f} is <10% of ceiling",
+                    loc,
+                )
+            else:
+                self.result.warning(
+                    "VDR002", "dream",
+                    f"Soul {soul.name} dream cost ${total_dream_cost:.6f} may impact budget",
+                    loc,
+                )
+
+            is_listener = soul.name in self._incoming
+            if is_listener:
+                self.result.prove(
+                    "VDR003", "dream",
+                    f"Listener {soul.name} will dream during message wait — zero wasted idle time",
+                    loc,
+                )
+            else:
+                self.result.prove(
+                    "VDR003", "dream",
+                    f"Heartbeat {soul.name} will dream between cycles — productive idle time",
+                    loc,
+                )
+
+        self.result.info(
+            "VDR004", "dream",
+            f"Dream coverage: {len(dream_souls)}/{len(self.program.souls)} souls can dream",
+        )
+
+
+    def _verify_immune(self) -> None:
+        immune_souls = [s for s in self.program.souls if s.immune_system is not None]
+        if not immune_souls:
+            return
+
+        for soul in immune_souls:
+            im = soul.immune_system
+            loc = f"soul {soul.name}"
+
+            if im.adaptive_recovery:
+                self.result.prove(
+                    "VIM001", "immune",
+                    f"Soul {soul.name} has adaptive immune recovery enabled",
+                    loc,
+                )
+            else:
+                self.result.info(
+                    "VIM001", "immune",
+                    f"Soul {soul.name} has immune_system but adaptive_recovery=false",
+                    loc,
+                )
+
+            if im.share_with_clones:
+                has_mitosis = soul.mitosis is not None
+                has_clone_siblings = any(
+                    s.mitosis for s in self.program.souls if s.name != soul.name
+                )
+                if has_mitosis:
+                    self.result.prove(
+                        "VIM002", "immune",
+                        f"Soul {soul.name} antibodies broadcast to up to {soul.mitosis.max_clones} clone(s)",
+                        loc,
+                    )
+                elif has_clone_siblings:
+                    self.result.info(
+                        "VIM002", "immune",
+                        f"Soul {soul.name} has share_with_clones but no mitosis — sharing disabled at runtime",
+                        loc,
+                    )
+                else:
+                    self.result.info(
+                        "VIM002", "immune",
+                        f"Soul {soul.name} has share_with_clones but no clones exist in system",
+                        loc,
+                    )
+
+            import re
+            m = re.match(r"(\d+)(ms|s|m|h|d)", im.antibody_lifespan)
+            if m:
+                val = int(m.group(1))
+                unit = m.group(2)
+                seconds = {"ms": val / 1000, "s": val, "m": val * 60, "h": val * 3600, "d": val * 86400}.get(unit, val)
+                if seconds >= 86400:
+                    self.result.warning(
+                        "VIM003", "immune",
+                        f"Soul {soul.name} antibody_lifespan={im.antibody_lifespan} is very long (>24h)",
+                        loc,
+                        "Long-lived antibodies may mask evolving error patterns",
+                    )
+                else:
+                    self.result.prove(
+                        "VIM003", "immune",
+                        f"Soul {soul.name} antibody_lifespan={im.antibody_lifespan} within safe bounds",
+                        loc,
+                    )
+
+            if im.adaptive_recovery and soul.heal:
+                self.result.prove(
+                    "VIM004", "immune",
+                    f"Soul {soul.name} has layered defense: heal (static) + immune (adaptive)",
+                    loc,
+                )
+
+        self.result.info(
+            "VIM005", "immune",
+            f"Immune coverage: {len(immune_souls)}/{len(self.program.souls)} souls protected",
+        )
 
 
 def verify_program(program: NousProgram) -> VerificationResult:

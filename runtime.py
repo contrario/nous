@@ -284,6 +284,9 @@ class SoulRunner:
         self._sense_cache = sense_cache
         self._alive = True
         self._cycle_count = 0
+        self._last_latency_ms: float = 0.0
+        self._immune_engine: Optional[Any] = None
+        self._dream_engine: Optional[Any] = None
         self._shutdown_event: Optional[asyncio.Event] = None
 
     def set_shutdown_event(self, event: asyncio.Event) -> None:
@@ -311,6 +314,20 @@ class SoulRunner:
             except Exception as e:
                 log.error(f"Soul [{self.name}]: fatal error in run loop: {e}")
                 recovered = await self._heal(e)
+                if not recovered and self._immune_engine:
+                    log.info(f"Soul [{self.name}]: heal failed, trying immune system")
+                    try:
+                        immune_ok, immune_result = await self._immune_engine.handle_error(
+                            self.name, e, {"cycle_count": self._cycle_count}
+                        )
+                        if immune_ok:
+                            self._immune_recoveries = getattr(self, '_immune_recoveries', 0) + 1
+                            backoff = min(2 ** self._immune_recoveries, self._heartbeat)
+                            log.info(f"Soul [{self.name}]: immune recovery succeeded — backoff {backoff}s before retry")
+                            await self._sleep_or_shutdown(backoff)
+                            recovered = True
+                    except Exception as ie:
+                        log.error(f"Soul [{self.name}]: immune engine error: {ie}")
                 if not recovered:
                     log.critical(f"Soul [{self.name}]: unrecoverable, stopping")
                     self._alive = False
@@ -321,9 +338,14 @@ class SoulRunner:
         if self._sense_cache:
             self._sense_cache.clear()
 
+        _t0 = time.time()
         await self._instinct()
+        _latency_ms = (time.time() - _t0) * 1000
         self._cycle_count += 1
-        log.info(f"Soul [{self.name}]: cycle {self._cycle_count} complete")
+        self._last_latency_ms = _latency_ms
+        log.info(f"Soul [{self.name}]: cycle {self._cycle_count} complete ({_latency_ms:.0f}ms)")
+        if hasattr(self, '_dream_engine') and self._dream_engine:
+            self._dream_engine.mark_active(self.name)
         await self._sleep_or_shutdown(self._heartbeat)
 
     async def _run_listener_cycle(self, channels: ChannelRegistry) -> None:
@@ -348,9 +370,12 @@ class SoulRunner:
                 log.warning(f"Soul [{self.name}]: pre-check failed, budget exhausted, skipping")
                 return
 
+        _t0 = time.time()
         await self._instinct()
+        _latency_ms = (time.time() - _t0) * 1000
         self._cycle_count += 1
-        log.info(f"Soul [{self.name}]: cycle {self._cycle_count} complete (message-driven)")
+        self._last_latency_ms = _latency_ms
+        log.info(f"Soul [{self.name}]: cycle {self._cycle_count} complete (message-driven, {_latency_ms:.0f}ms)")
 
     async def _sleep_or_shutdown(self, seconds: float) -> None:
         if self._shutdown_event:
@@ -389,11 +414,15 @@ class NousRuntime:
         self._shutdown = asyncio.Event()
         self._cycle_id = 0
         self._metrics_history: list[CycleMetrics] = []
+        self._mitosis_engine: Optional[Any] = None
+        self._immune_engine: Optional[Any] = None
+        self._dream_engine: Optional[Any] = None
 
     def add_soul(self, runner: SoulRunner) -> None:
         runner.set_shutdown_event(self._shutdown)
         runner._cost_tracker = self.cost_tracker
         runner._sense_cache = self.sense_cache
+        runner._immune_engine = self._immune_engine
         self._runners.append(runner)
 
     def register_sense(self, name: str, func: Callable[..., Coroutine[Any, Any, Any]]) -> None:
@@ -417,11 +446,34 @@ class NousRuntime:
             except (NotImplementedError, AttributeError):
                 pass
 
+        for runner in self._runners:
+            if self._immune_engine and runner._immune_engine is None:
+                runner._immune_engine = self._immune_engine
+
+        if self._dream_engine:
+            async def _check_dream_cache(**kwargs):
+                soul_name = kwargs.get("soul", "")
+                query = kwargs.get("query", "")
+                if not self._dream_engine or not soul_name:
+                    return ""
+                insight = self._dream_engine.check_cache(soul_name, query)
+                if insight:
+                    return insight.precomputed_result
+                return ""
+            self.sense_executor.register_tool("check_dream_cache", _check_dream_cache)
+            self.sense_executor.register_tool("dream_cache", _check_dream_cache)
+
         try:
             async with asyncio.TaskGroup() as tg:
                 for runner in self._runners:
                     tg.create_task(runner.run(self.channels))
                 tg.create_task(self._heartbeat_cost_reset())
+                if self._mitosis_engine:
+                    tg.create_task(self._mitosis_engine.run())
+                if self._immune_engine:
+                    tg.create_task(self._immune_engine.run())
+                if self._dream_engine:
+                    tg.create_task(self._dream_engine.run())
         except* CircuitBreakerTripped as eg:
             for exc in eg.exceptions:
                 log.warning(f"Circuit breaker ended cycle: {exc}")
@@ -453,6 +505,12 @@ class NousRuntime:
     def _handle_shutdown(self) -> None:
         log.info("Shutdown signal received")
         self._shutdown.set()
+        if self._mitosis_engine:
+            self._mitosis_engine.stop()
+        if self._immune_engine:
+            self._immune_engine.stop()
+        if self._dream_engine:
+            self._dream_engine.stop()
         for runner in self._runners:
             runner.stop()
 

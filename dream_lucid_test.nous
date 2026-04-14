@@ -1,0 +1,39 @@
+world LucidLab {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 20s
+}
+
+message Report {
+    source: string
+    data: string
+}
+
+soul Dreamer {
+    mind: claude-sonnet @ Tier0A
+    senses: [check_dream_cache]
+    memory {
+        cycles: int = 0
+        dream_hits: int = 0
+    }
+    dream_system {
+        enabled: true
+        trigger_idle_sec: 8
+        dream_mind: deepseek-chat @ Tier1
+        max_cache: 10
+        speculation_depth: 3
+    }
+    instinct {
+        let cached = sense check_dream_cache(query: "optimization")
+        if cached != "" {
+            remember dream_hits += 1
+        }
+        remember cycles += 1
+        speak Report(source: "dreamer", data: "cycle done")
+    }
+    heal {
+        on timeout => retry(2, exponential)
+    }
+}
+
+nervous_system {
+}

@@ -134,6 +134,15 @@ class NousCodeGen:
         self._emit("ChannelRegistry, SenseExecutor, DistributedRuntime,")
         self._dedent()
         self._emit(")")
+        has_mitosis = any(s.mitosis for s in self.program.souls)
+        if has_mitosis:
+            self._emit("from mitosis_engine import MitosisEngine, MitosisConfig")
+        has_immune = any(s.immune_system for s in self.program.souls)
+        if has_immune:
+            self._emit("from immune_engine import ImmuneEngine, ImmuneConfig")
+        has_dream = any(s.dream_system for s in self.program.souls)
+        if has_dream:
+            self._emit("from dream_engine import DreamEngine, DreamConfig")
         self._emit_blank()
         self._emit("log = logging.getLogger('nous.runtime')")
 
@@ -278,9 +287,53 @@ class NousCodeGen:
             self._emit("return False")
         self._dedent()
 
+
+        if soul.mitosis:
+            self._emit_blank()
+            self._emit_mitosis_methods(soul)
+
         self._dedent()
 
-    def _emit_statement(self, stmt: Any, soul_name: str) -> None:
+    def _emit_mitosis_methods(self, soul: SoulNode) -> None:
+        m = soul.mitosis
+        self._emit("def _mitosis_check(self, _metrics=None) -> bool:")
+        self._indent()
+        self._emit("metrics = {")
+        self._indent()
+        self._emit(f'"cycle_count": self.cycle_count,')
+        self._emit(f'"queue_depth": getattr(self, "_queue_depth", 0),')
+        self._emit(f'"latency": getattr(self, "_last_latency", 0.0),')
+        self._emit(f'"error_count": getattr(self, "_error_count", 0),')
+        if soul.memory:
+            for f in soul.memory.fields:
+                self._emit(f'"{f.name}": self.{f.name},')
+        self._dedent()
+        self._emit("}")
+        trigger_code = self._expr_to_python(m.trigger)
+        trigger_code = trigger_code.replace("scan_count", 'metrics.get("scan_count", 0)')
+        trigger_code = trigger_code.replace("queue_depth", 'metrics.get("queue_depth", 0)')
+        trigger_code = trigger_code.replace("latency", 'metrics.get("latency", 0)')
+        trigger_code = trigger_code.replace("error_count", 'metrics.get("error_count", 0)')
+        trigger_code = trigger_code.replace("cycle_count", 'metrics.get("cycle_count", 0)')
+        if soul.memory:
+            for f in soul.memory.fields:
+                if f.name not in ("scan_count", "queue_depth", "latency", "error_count", "cycle_count"):
+                    trigger_code = trigger_code.replace(f.name, f'metrics.get("{f.name}", 0)')
+        self._emit(f"return {trigger_code}")
+        self._dedent()
+        self._emit_blank()
+
+        self._emit("@classmethod")
+        self._emit("def clone_factory(cls, clone_name: str, clone_tier: str | None, runtime: NousRuntime) -> 'Soul_" + soul.name + "':")
+        self._indent()
+        self._emit(f"clone = cls(runtime)")
+        self._emit(f"clone.name = clone_name")
+        if soul.mind:
+            self._emit(f'clone.tier = clone_tier or "{soul.mind.tier.value}"')
+        self._emit(f"return clone")
+        self._dedent()
+
+    def _emit_statement(self, stmt: Any, soul_name: str) -> None:  # dream_cache_inject
         if isinstance(stmt, LetNode):
             value = stmt.value
             if isinstance(value, dict):
@@ -308,6 +361,8 @@ class NousCodeGen:
                 elif kind == "sense_call":
                     tool = value.get("tool", "unknown")
                     args = value.get("args", {})
+                    if tool in ("check_dream_cache", "dream_cache"):
+                        args["soul"] = f'"{soul_name}"'
                     args_str = self._sense_args_to_python(args)
                     self._emit(f'{stmt.name} = await self._sense("{tool}", {args_str})')
                     return
@@ -337,6 +392,11 @@ class NousCodeGen:
 
         elif isinstance(stmt, SenseCallNode):
             args_str = self._sense_args_to_python(stmt.args)
+            if stmt.tool_name in ("check_dream_cache", "dream_cache"):
+                if args_str:
+                    args_str = f'soul="{soul_name}", {args_str}'
+                else:
+                    args_str = f'soul="{soul_name}"'
             if stmt.bind_name:
                 self._emit(f'{stmt.bind_name} = await self._sense("{stmt.tool_name}", {args_str})')
             else:
@@ -466,6 +526,101 @@ class NousCodeGen:
             self._emit(f"tier={tier},")
             self._dedent()
             self._emit("))")
+            self._emit_blank()
+
+        has_mitosis = any(s.mitosis for s in self.program.souls)
+        if has_mitosis:
+            self._emit_blank()
+            self._emit("# ═══ Mitosis Engine ═══")
+            self._emit("mitosis = MitosisEngine(rt, check_interval=HEARTBEAT_SECONDS / 3)")
+            for soul in self.program.souls:
+                if soul.mitosis:
+                    m = soul.mitosis
+                    sn = soul.name
+                    cooldown_s = self._duration_to_seconds(m.cooldown)
+                    tier_str = f'"{m.clone_tier}"' if m.clone_tier else "None"
+                    self._emit(f"mitosis.register(")
+                    self._indent()
+                    self._emit(f'"{sn}",')
+                    self._emit(f"MitosisConfig(")
+                    self._indent()
+                    self._emit(f"trigger_fn=_soul_{sn.lower()}._mitosis_check,")
+                    self._emit(f'trigger_expr="",')
+                    self._emit(f"max_clones={m.max_clones},")
+                    self._emit(f"cooldown_seconds={cooldown_s},")
+                    self._emit(f"clone_tier={tier_str},")
+                    self._emit(f"verify={m.verify},")
+                    self._dedent()
+                    self._emit(f"),")
+                    self._emit(f"clone_factory=lambda name, tier, rt=rt: Soul_{sn}.clone_factory(name, tier, rt),")
+                    self._dedent()
+                    self._emit(")")
+            self._emit("rt._mitosis_engine = mitosis")
+            self._emit_blank()
+
+        has_dream = any(s.dream_system for s in self.program.souls)
+        if has_dream:
+            self._emit_blank()
+            self._emit("# ═══ Dream Engine ═══")
+            self._emit("dream = DreamEngine(rt)")
+            for soul in self.program.souls:
+                if soul.dream_system:
+                    ds = soul.dream_system
+                    sn = soul.name
+                    dm_model = ds.dream_mind.model if ds.dream_mind else "deepseek-chat"
+                    dm_tier = ds.dream_mind.tier.value if ds.dream_mind else "Tier1"
+                    self._emit(f"dream.register(")
+                    self._indent()
+                    self._emit(f'"{sn}",')
+                    self._emit(f"DreamConfig(")
+                    self._indent()
+                    self._emit(f"enabled={ds.enabled},")
+                    self._emit(f"trigger_idle_sec={ds.trigger_idle_sec},")
+                    self._emit(f'dream_mind_model="{dm_model}",')
+                    self._emit(f'dream_mind_tier="{dm_tier}",')
+                    self._emit(f"max_cache={ds.max_cache},")
+                    self._emit(f"speculation_depth={ds.speculation_depth},")
+                    self._dedent()
+                    self._emit(f"),")
+                    self._dedent()
+                    self._emit(")")
+            self._emit("rt._dream_engine = dream")
+            self._emit("")
+            self._emit("async def dream_cache_sense(**kwargs):")
+            self._emit("    soul_name = kwargs.get('soul', '')")
+            self._emit("    query = kwargs.get('query', '')")
+            self._emit("    if not dream or not soul_name:")
+            self._emit("        return None")
+            self._emit("    insight = dream.check_cache(soul_name, query)")
+            self._emit("    if insight:")
+            self._emit("        return insight.precomputed_result")
+            self._emit("    return None")
+            self._emit("rt.sense_executor.register_tool('dream_cache', dream_cache_sense)")
+            self._emit_blank()
+
+        has_immune = any(s.immune_system for s in self.program.souls)
+        if has_immune:
+            self._emit_blank()
+            self._emit("# ═══ Immune Engine ═══")
+            self._emit("immune = ImmuneEngine(rt)")
+            for soul in self.program.souls:
+                if soul.immune_system:
+                    im = soul.immune_system
+                    sn = soul.name
+                    self._emit(f"immune.register(")
+                    self._indent()
+                    self._emit(f'"{sn}",')
+                    self._emit(f"ImmuneConfig(")
+                    self._indent()
+                    self._emit(f"adaptive_recovery={im.adaptive_recovery},")
+                    self._emit(f"share_with_clones={im.share_with_clones},")
+                    lifespan_s = self._duration_to_seconds(im.antibody_lifespan)
+                    self._emit(f"antibody_lifespan_seconds={lifespan_s},")
+                    self._dedent()
+                    self._emit(f"),")
+                    self._dedent()
+                    self._emit(")")
+            self._emit("rt._immune_engine = immune")
             self._emit_blank()
 
         self._emit("return rt")

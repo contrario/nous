@@ -259,6 +259,48 @@ class MindNode(NousNode):
     tier: Tier
 
 
+
+
+
+# ═══════════════════════════════════════════
+# DREAM SYSTEM — Speculative Pre-computation
+# ═══════════════════════════════════════════
+
+class DreamMindNode(NousNode):
+    model: str
+    tier: Tier
+
+
+class DreamSystemNode(NousNode):
+    enabled: bool = True
+    trigger_idle_sec: int = 30
+    dream_mind: Optional[DreamMindNode] = None
+    max_cache: int = 20
+    speculation_depth: int = 3
+
+
+# ═══════════════════════════════════════════
+# IMMUNE SYSTEM — Adaptive Recovery
+# ═══════════════════════════════════════════
+
+class ImmuneSystemNode(NousNode):
+    adaptive_recovery: bool = True
+    share_with_clones: bool = True
+    antibody_lifespan: str = "3600s"
+
+
+# ═══════════════════════════════════════════
+# MITOSIS — Self-Replication
+# ═══════════════════════════════════════════
+
+class MitosisNode(NousNode):
+    trigger: Any = None
+    max_clones: int = 3
+    cooldown: str = "60s"
+    clone_tier: Optional[str] = None
+    verify: bool = True
+
+
 # ═══════════════════════════════════════════
 # SOUL
 # ═══════════════════════════════════════════
@@ -271,6 +313,9 @@ class SoulNode(NousNode):
     instinct: Optional[InstinctNode] = None
     dna: Optional[DnaNode] = None
     heal: Optional[HealNode] = None
+    mitosis: Optional[MitosisNode] = None
+    immune_system: Optional[ImmuneSystemNode] = None
+    dream_system: Optional[DreamSystemNode] = None
 
 
 # ═══════════════════════════════════════════

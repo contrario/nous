@@ -859,6 +859,155 @@ def cmd_noesis(args: argparse.Namespace) -> int:
         print("Error: noesis_cli_noesis.py not found", file=sys.stderr)
         return 1
 
+def cmd_dream(args: argparse.Namespace) -> int:
+    """Dream system analysis."""
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    program, _, _, result = _parse_and_validate(source)
+    if program is None:
+        return result
+    dream_souls = [s for s in program.souls if s.dream_system is not None]
+    if not dream_souls:
+        print("No souls with dream_system blocks found.")
+        return 0
+    world_name = program.world.name if program.world else "Unknown"
+    print(f"\n  \u2550\u2550\u2550 NOUS Dream Analysis \u2014 {world_name} \u2550\u2550\u2550")
+    print()
+    from verifier import verify_program
+    vresult = verify_program(program)
+    for soul in dream_souls:
+        ds = soul.dream_system
+        dm = f"{ds.dream_mind.model}@{ds.dream_mind.tier.value}" if ds.dream_mind else "default"
+        print(f"  \u2500\u2500 {soul.name} \u2500\u2500")
+        print(f"  Enabled:          {ds.enabled}")
+        print(f"  Dream mind:       {dm}")
+        print(f"  Idle trigger:     {ds.trigger_idle_sec}s")
+        print(f"  Max cache:        {ds.max_cache}")
+        print(f"  Depth:            {ds.speculation_depth}")
+        print()
+    dream_items = [i for i in vresult.items if i.category == "dream"]
+    if dream_items:
+        print("  \u2500\u2500 Verification \u2500\u2500")
+        for item in dream_items:
+            icon = {"PROVEN": "\u2713", "WARNING": "\u26a0", "INFO": "\u2139", "ERROR": "\u2717"}.get(item.severity, "?")
+            print(f"  {icon} [{item.code}] {item.message}")
+        print()
+    proven = len([i for i in dream_items if i.severity == "PROVEN"])
+    errors = len([i for i in dream_items if i.severity == "ERROR"])
+    print(f"  \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550")
+    print(f"  {len(dream_souls)} soul(s) with dream system | {proven} proven, {errors} errors")
+    return 1 if errors else 0
+
+
+def cmd_immune(args: argparse.Namespace) -> int:
+    """Immune system analysis — show adaptive recovery config."""
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    program, _, _, result = _parse_and_validate(source)
+    if program is None:
+        return result
+
+    immune_souls = [s for s in program.souls if s.immune_system is not None]
+    if not immune_souls:
+        print("No souls with immune_system blocks found.")
+        return 0
+
+    world_name = program.world.name if program.world else "Unknown"
+    print(f"\n  ═══ NOUS Immune Analysis — {world_name} ═══")
+    print()
+
+    from verifier import verify_program
+    vresult = verify_program(program)
+
+    for soul in immune_souls:
+        im = soul.immune_system
+        has_mitosis = soul.mitosis is not None
+        has_heal = soul.heal is not None
+        print(f"  ── {soul.name} ──")
+        print(f"  Adaptive recovery:   {im.adaptive_recovery}")
+        print(f"  Share with clones:   {im.share_with_clones}")
+        print(f"  Antibody lifespan:   {im.antibody_lifespan}")
+        print(f"  Has heal block:      {has_heal}")
+        print(f"  Has mitosis:         {has_mitosis}")
+        if has_mitosis:
+            print(f"  Max clones:          {soul.mitosis.max_clones}")
+        print()
+
+    immune_items = [i for i in vresult.items if i.category == "immune"]
+    if immune_items:
+        print("  ── Verification ──")
+        for item in immune_items:
+            icon = {"ERROR": "\u2717", "WARNING": "\u26a0", "INFO": "\u2139", "PROVEN": "\u2713"}.get(item.severity, "?")
+            print(f"  {icon} [{item.code}] {item.message}")
+        print()
+
+    proven = len([i for i in immune_items if i.severity == "PROVEN"])
+    errors = len([i for i in immune_items if i.severity == "ERROR"])
+    warnings = len([i for i in immune_items if i.severity == "WARNING"])
+    print(f"  ══════════════════════════════════════")
+    print(f"  {len(immune_souls)} soul(s) with immune system")
+    print(f"  Verification: {proven} proven, {warnings} warnings, {errors} errors")
+    return 1 if errors else 0
+
+
+def cmd_mitosis(args: argparse.Namespace) -> int:
+    """Mitosis analysis — show self-replication config and verification."""
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    program, _, _, result = _parse_and_validate(source)
+    if program is None:
+        return result
+
+    mitosis_souls = [s for s in program.souls if s.mitosis is not None]
+    if not mitosis_souls:
+        print("No souls with mitosis blocks found.")
+        return 0
+
+    world_name = program.world.name if program.world else "Unknown"
+    print(f"\n  ═══ NOUS Mitosis Analysis — {world_name} ═══")
+    print()
+
+    from verifier import verify_program, TIER_COSTS
+    vresult = verify_program(program)
+
+    for soul in mitosis_souls:
+        m = soul.mitosis
+        tier = soul.mind.tier.value if soul.mind else "Tier1"
+        clone_tier = m.clone_tier or tier
+        print(f"  ── {soul.name} ──")
+        print(f"  Parent tier:     {tier}")
+        print(f"  Clone tier:      {clone_tier}")
+        print(f"  Max clones:      {m.max_clones}")
+        print(f"  Cooldown:        {m.cooldown}")
+        print(f"  Verify clones:   {m.verify}")
+        print(f"  Trigger:         {m.trigger}")
+        print()
+
+    # Print mitosis-specific verification results
+    mitosis_items = [i for i in vresult.items if i.category == "mitosis"]
+    if mitosis_items:
+        print("  ── Verification ──")
+        for item in mitosis_items:
+            icon = {"ERROR": "✗", "WARNING": "⚠", "INFO": "ℹ", "PROVEN": "✓"}.get(item.severity, "?")
+            print(f"  {icon} [{item.code}] {item.message}")
+        print()
+
+    proven = len([i for i in mitosis_items if i.severity == "PROVEN"])
+    errors = len([i for i in mitosis_items if i.severity == "ERROR"])
+    warnings = len([i for i in mitosis_items if i.severity == "WARNING"])
+    total_clones = sum(s.mitosis.max_clones for s in mitosis_souls)
+    print(f"  ══════════════════════════════════════")
+    print(f"  {len(mitosis_souls)} soul(s) with mitosis | {total_clones} max clones")
+    print(f"  Verification: {proven} proven, {warnings} warnings, {errors} errors")
+    return 1 if errors else 0
+
+
 def cmd_diff(args: argparse.Namespace) -> int:
     """Behavioral diff between two .nous files."""
     from behavioral_diff import diff_files
@@ -1010,6 +1159,15 @@ def main() -> int:
 
     sub.add_parser("version", help="Show version")
 
+    p = sub.add_parser("dream", help="Dream system analysis")
+    p.add_argument("file", help=".nous file to analyze")
+
+    p = sub.add_parser("immune", help="Immune system analysis")
+    p.add_argument("file", help=".nous file to analyze")
+
+    p = sub.add_parser("mitosis", help="Mitosis analysis — self-replication config")
+    p.add_argument("file", help=".nous file to analyze")
+
     p = sub.add_parser("diff", help="Behavioral diff between two .nous files")
 
     p.add_argument("file", help="Original .nous file")
@@ -1023,7 +1181,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream,
     }
     return commands[args.command](args)
 

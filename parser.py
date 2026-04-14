@@ -23,7 +23,8 @@ from ast_nodes import (
     PerceptionNode, PerceptionRuleNode, PerceptionTriggerNode,
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
-    Tier, TopologyNode, ServerNode,
+    Tier, TopologyNode, ServerNode, MitosisNode, ImmuneSystemNode,
+    DreamSystemNode, DreamMindNode,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
@@ -99,7 +100,7 @@ class NousTransformer(Transformer):
         return items[0]
 
     def string_lit(self, items: list) -> Any:
-        return items[0]
+        return f'"{items[0]}"'  
 
     def bool_lit(self, items: list) -> Any:
         return items[0]
@@ -573,6 +574,97 @@ class NousTransformer(Transformer):
         rules = [i for i in s if isinstance(i, HealRuleNode)]
         return HealNode(rules=rules)
 
+
+
+
+    # ── Dream System ──
+
+    def dream_enabled(self, items: list) -> dict:
+        val = items[0]
+        return {"enabled": val if isinstance(val, bool) else str(val).lower() == "true"}
+
+    def dream_idle_sec(self, items: list) -> dict:
+        return {"trigger_idle_sec": int(items[0])}
+
+    def dream_mind(self, items: list) -> dict:
+        return {"dream_mind": DreamMindNode(model=items[0], tier=Tier(items[1]))}
+
+    def dream_max_cache(self, items: list) -> dict:
+        return {"max_cache": int(items[0])}
+
+    def dream_depth(self, items: list) -> dict:
+        return {"speculation_depth": int(items[0])}
+
+    def dream_field(self, items: list) -> Any:
+        return items[0]
+
+    def dream_system_block(self, items: list) -> "DreamSystemNode":
+        s = self._strip(items)
+        node = DreamSystemNode()
+        for item in s:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(node, k):
+                        setattr(node, k, v)
+        return node
+
+    # ── Immune System ──
+
+    def immune_adaptive(self, items: list) -> dict:
+        val = items[0]
+        return {"adaptive_recovery": val if isinstance(val, bool) else str(val).lower() == "true"}
+
+    def immune_share(self, items: list) -> dict:
+        val = items[0]
+        return {"share_with_clones": val if isinstance(val, bool) else str(val).lower() == "true"}
+
+    def immune_lifespan(self, items: list) -> dict:
+        return {"antibody_lifespan": str(items[0])}
+
+    def immune_field(self, items: list) -> Any:
+        return items[0]
+
+    def immune_system_block(self, items: list) -> "ImmuneSystemNode":
+        s = self._strip(items)
+        node = ImmuneSystemNode()
+        for item in s:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(node, k):
+                        setattr(node, k, v)
+        return node
+
+    # ── Mitosis ──
+
+    def mitosis_trigger(self, items: list) -> dict:
+        return {"trigger": items[0]}
+
+    def mitosis_max_clones(self, items: list) -> dict:
+        return {"max_clones": int(items[0])}
+
+    def mitosis_cooldown(self, items: list) -> dict:
+        return {"cooldown": str(items[0])}
+
+    def mitosis_clone_tier(self, items: list) -> dict:
+        return {"clone_tier": str(items[0])}
+
+    def mitosis_verify(self, items: list) -> dict:
+        val = items[0]
+        return {"verify": val if isinstance(val, bool) else str(val).lower() == "true"}
+
+    def mitosis_field(self, items: list) -> Any:
+        return items[0]
+
+    def mitosis_block(self, items: list) -> MitosisNode:
+        s = self._strip(items)
+        node = MitosisNode()
+        for item in s:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(node, k):
+                        setattr(node, k, v)
+        return node
+
     # ── Soul ──
 
     def soul_body(self, items: list) -> Any:
@@ -595,6 +687,12 @@ class NousTransformer(Transformer):
                 node.dna = item
             elif isinstance(item, HealNode):
                 node.heal = item
+            elif isinstance(item, MitosisNode):
+                node.mitosis = item
+            elif isinstance(item, ImmuneSystemNode):
+                node.immune_system = item
+            elif isinstance(item, DreamSystemNode):
+                node.dream_system = item
         return node
 
     # ── Message ──

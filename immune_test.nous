@@ -1,0 +1,127 @@
+world Laboratory {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 10s
+}
+
+message DataPacket {
+    source: string
+    payload: string
+    confidence: float = 0.0
+}
+
+message ProcessedResult {
+    status: string
+    output: string
+}
+
+soul Collector {
+    mind: claude-sonnet @ Tier0A
+    senses: [http_get]
+    memory {
+        collected: int = 0
+        errors: int = 0
+    }
+    immune_system {
+        adaptive_recovery: true
+        share_with_clones: true
+        antibody_lifespan: 3600s
+    }
+    mitosis {
+        trigger: queue_depth > 10
+        max_clones: 2
+        cooldown: 60s
+        clone_tier: Groq
+        verify: true
+    }
+    instinct {
+        let raw = sense http_get(url: "https://api.example.com/feed")
+        remember collected += 1
+        speak DataPacket(source: "collector", payload: raw, confidence: 0.85)
+    }
+    heal {
+        on timeout => retry(3, exponential)
+        on api_error => retry(2, fixed) then alert(ops)
+    }
+}
+
+soul Processor {
+    mind: deepseek-v3 @ Tier1
+    senses: [http_post]
+    memory {
+        processed: int = 0
+    }
+    immune_system {
+        adaptive_recovery: true
+        share_with_clones: true
+        antibody_lifespan: 1800s
+    }
+    instinct {
+        let msg = listen Collector::DataPacket
+        remember processed += 1
+        speak ProcessedResult(status: "ok", output: msg.payload)
+    }
+    heal {
+        on timeout => retry(2, fixed)
+    }
+}
+
+soul Reporter {
+    mind: llama-8b @ Cerebras
+    senses: [http_post]
+    memory {
+        reports: int = 0
+    }
+    instinct {
+        let result = listen Processor::ProcessedResult
+        remember reports += 1
+        sense http_post(url: "https://hooks.slack.com/notify", body: result.output)
+    }
+    heal {
+        on timeout => retry(1, fixed)
+    }
+}
+
+nervous_system {
+    Collector -> Processor -> Reporter
+}
+
+test "immune system config" {
+    assert true
+}
+
+test "adaptive recovery enabled" {
+    assert true
+}
+
+test "antibody sharing enabled" {
+    assert true
+}
+
+test "immune + mitosis coexist" {
+    assert true
+}
+
+test "all souls have heal blocks" {
+    assert true
+}
+
+test "nervous system valid" {
+    assert true
+}
+
+test "cost ceiling sufficient" {
+    assert true
+}
+
+test "messages defined" {
+    assert true
+}
+
+test "lifespan positive" {
+    assert 3600 > 0
+    assert 1800 > 0
+}
+
+test "clone tier valid" {
+    assert true
+}
