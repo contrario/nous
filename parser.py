@@ -12,7 +12,7 @@ from typing import Any
 from lark import Lark, Transformer, Token, Tree
 
 from ast_nodes import (
-    MetabolismNode, SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
+    ConsciousnessNode, MetabolismNode, SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
     NousProgram, WorldNode, LawNode, LawCost, LawCurrency, LawDuration,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
@@ -367,6 +367,37 @@ class NousTransformer(Transformer):
 
     def law_expr(self, items: list) -> Any:
         return items[0]
+
+    # ── Consciousness ──
+    def consciousness_goals(self, items: list) -> dict:
+        s = self._strip(items)
+        names = s[0] if s and isinstance(s[0], list) else s
+        return {"goals": [str(n) for n in names]}
+
+    def consciousness_reflect_every(self, items: list) -> dict:
+        return {"reflect_every": int(items[0])}
+
+    def consciousness_self_model(self, items: list) -> dict:
+        return {"self_model": items[0] if isinstance(items[0], bool) else str(items[0]).lower() == "true"}
+
+    def consciousness_goal_threshold(self, items: list) -> dict:
+        return {"goal_threshold": float(items[0])}
+
+    def consciousness_introspection_depth(self, items: list) -> dict:
+        return {"introspection_depth": int(items[0])}
+
+    def consciousness_field(self, items: list):
+        return items[0]
+
+    def consciousness_block(self, items: list) -> 'ConsciousnessNode':
+        s = self._strip(items)
+        node = ConsciousnessNode()
+        for item in s:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(node, k):
+                        setattr(node, k, v)
+        return node
 
     # ── Metabolism ──
     def metabolism_max_energy(self, items: list) -> dict:
@@ -815,6 +846,8 @@ class NousTransformer(Transformer):
                 node.symbiosis = item
             elif isinstance(item, MetabolismNode):
                 node.metabolism = item
+            elif isinstance(item, ConsciousnessNode):
+                node.consciousness = item
         return node
 
     # ── Message ──

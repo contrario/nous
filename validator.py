@@ -134,6 +134,8 @@ class NousValidator:
             if soul.dna:
                 self._check_dna_ranges(soul)
 
+            if soul.consciousness:
+                self._check_consciousness(soul)
             if soul.metabolism:
                 self._check_metabolism(soul)
             if soul.symbiosis:
@@ -202,6 +204,22 @@ class NousValidator:
             seconds = {"ms": val / 1000, "s": val, "m": val * 60, "h": val * 3600, "d": val * 86400}.get(unit, val)
             if seconds < 10:
                 self.result.error("IM003", f"Antibody lifespan {im.antibody_lifespan} is too short (min 10s).", loc)
+
+    def _check_consciousness(self, soul: SoulNode) -> None:
+        loc = f"soul {soul.name} > consciousness"
+        c = soul.consciousness
+        if not c.goals:
+            self.result.error("CS001", f"Consciousness goals list is empty.", loc)
+        if c.reflect_every < 1:
+            self.result.error("CS002", f"reflect_every must be >= 1, got {c.reflect_every}", loc)
+        if not (0.0 < c.goal_threshold <= 1.0):
+            self.result.error("CS003", f"goal_threshold must be in (0, 1], got {c.goal_threshold}", loc)
+        if c.introspection_depth < 1 or c.introspection_depth > 10:
+            self.result.warn("CS004", f"introspection_depth {c.introspection_depth} outside recommended [1, 10]", loc)
+        if soul.mind is None:
+            self.result.error("CS005", f"Consciousness requires a mind for self-reflection.", loc)
+        if soul.memory is None:
+            self.result.warn("CS006", f"Consciousness without memory — no state to reflect on.", loc)
 
     def _check_metabolism(self, soul: SoulNode) -> None:
         loc = f"soul {soul.name} > metabolism"

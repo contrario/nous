@@ -70,6 +70,7 @@ soul_body: mind_decl
          | dream_system_block
          | symbiosis_block
          | metabolism_block
+         | consciousness_block
 
 mind_decl: "mind" ":" model_name "@" TIER
 model_name: NAME ("-" model_part)*
@@ -177,6 +178,14 @@ telemetry_field: "enabled" ":" BOOL                -> telemetry_enabled
                | "buffer_size" ":" INT             -> telemetry_buffer_size
 
 
+
+
+consciousness_block: CONSCIOUSNESS "{" consciousness_field* "}"
+consciousness_field: "goals" ":" "[" name_list "]"            -> consciousness_goals
+                   | "reflect_every" ":" INT                  -> consciousness_reflect_every
+                   | "self_model" ":" BOOL                    -> consciousness_self_model
+                   | "goal_threshold" ":" (FLOAT | INT)       -> consciousness_goal_threshold
+                   | "introspection_depth" ":" INT            -> consciousness_introspection_depth
 
 metabolism_block: METABOLISM "{" metabolism_field* "}"
 metabolism_field: "max_energy" ":" INT                    -> metabolism_max_energy
@@ -382,6 +391,7 @@ SPEAK.2: "speak" | "λέω"
 LISTEN.2: "listen" | "ακούω"
 DNA.2: "dna" | "DNA"
 HEAL.2: "heal" | "θεραπεία"
+CONSCIOUSNESS.2: "consciousness" | "συνείδηση"
 METABOLISM.2: "metabolism" | "μεταβολισμός"
 SYMBIOSIS.2: "symbiosis" | "συμβίωση"
 TELEMETRY.2: "telemetry" | "τηλεμετρία"

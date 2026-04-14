@@ -1,0 +1,79 @@
+world Noosphere {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 30s
+}
+
+message Discovery {
+    topic: str
+    confidence: float
+}
+
+message Insight {
+    summary: str
+}
+
+soul Explorer {
+    mind: deepseek-chat @ Tier0A
+    senses: [http_get]
+    memory {
+        discoveries: int = 0
+        accuracy: float = 0.0
+    }
+    consciousness {
+        goals: [maximize_discoveries, improve_accuracy, reduce_cost]
+        reflect_every: 5
+        self_model: true
+        goal_threshold: 0.8
+        introspection_depth: 3
+    }
+    instinct {
+        remember discoveries += 1
+        let data = sense http_get(url: "https://api.github.com/zen")
+        speak Discovery(topic: "test", confidence: 0.9)
+    }
+    heal {
+        on error => retry
+    }
+}
+
+soul Philosopher {
+    mind: deepseek-chat @ Tier0B
+    memory {
+        reflections: int = 0
+        wisdom: float = 0.0
+    }
+    consciousness {
+        goals: [synthesize_knowledge, find_patterns]
+        reflect_every: 10
+        self_model: true
+        goal_threshold: 0.7
+        introspection_depth: 5
+    }
+    instinct {
+        listen Discovery
+        remember reflections += 1
+        speak Insight(summary: "reflected")
+    }
+    heal {
+        on error => retry
+    }
+}
+
+soul Scribe {
+    mind: deepseek-chat @ Tier0B
+    memory {
+        records: int = 0
+    }
+    instinct {
+        listen Insight
+        remember records += 1
+    }
+    heal {
+        on error => retry
+    }
+}
+
+nervous_system {
+    Explorer -> Philosopher
+    Philosopher -> Scribe
+}

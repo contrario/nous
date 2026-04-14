@@ -304,6 +304,14 @@ class ImmuneSystemNode(NousNode):
 # MITOSIS — Self-Replication
 # ═══════════════════════════════════════════
 
+class ConsciousnessNode(NousNode):
+    goals: list[str] = Field(default_factory=list)
+    reflect_every: int = 10
+    self_model: bool = True
+    goal_threshold: float = 0.7
+    introspection_depth: int = 3
+
+
 class MetabolismNode(NousNode):
     max_energy: int = 100
     energy_per_cycle: float = 5.0
@@ -348,6 +356,7 @@ class SoulNode(NousNode):
     dream_system: Optional[DreamSystemNode] = None
     symbiosis: Optional[SymbiosisNode] = None
     metabolism: Optional[MetabolismNode] = None
+    consciousness: Optional[ConsciousnessNode] = None
 
 
 # ═══════════════════════════════════════════

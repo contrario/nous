@@ -105,7 +105,7 @@ class VerificationResult:
         categories: dict[str, list[VerificationItem]] = {}
         for item in self.items:
             categories.setdefault(item.category, []).append(item)
-        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "telemetry", "symbiosis", "metabolism", "mitosis", "retirement", "immune", "dream"]:
+        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "telemetry", "symbiosis", "metabolism", "consciousness", "mitosis", "retirement", "immune", "dream"]:
             if cat not in categories:
                 continue
             cat_label = cat.replace("_", " ").title()
@@ -149,6 +149,7 @@ class NousVerifier:
         self._verify_telemetry()
         self._verify_symbiosis()
         self._verify_metabolism()
+        self._verify_consciousness()
         self._verify_mitosis()
         self._verify_retirement()
         self._verify_immune()
@@ -663,6 +664,27 @@ class NousVerifier:
                             stack.append(neighbor)
                 cluster_count += 1
         self.result.prove("VSY004", "symbiosis", f"Symbiosis coverage: {len(sym_souls)} soul(s) in {cluster_count} cluster(s)")
+
+    def _verify_consciousness(self) -> None:
+        con_souls = [s for s in self.program.souls if s.consciousness is not None]
+        if not con_souls:
+            return
+        for soul in con_souls:
+            c = soul.consciousness
+            loc = f"soul {soul.name}"
+            self.result.prove("VCS001", "consciousness", f"Soul {soul.name} has {len(c.goals)} goal(s): {', '.join(c.goals)}", loc)
+            self.result.prove("VCS002", "consciousness", f"Soul {soul.name} reflects every {c.reflect_every} cycles (depth={c.introspection_depth})", loc)
+            if c.self_model:
+                self.result.prove("VCS003", "consciousness", f"Soul {soul.name} maintains self-model for behavioral adaptation", loc)
+            else:
+                self.result.info("VCS003", "consciousness", f"Soul {soul.name} self-model disabled", loc)
+            has_mem = soul.memory is not None
+            has_mind = soul.mind is not None
+            if has_mem and has_mind:
+                self.result.prove("VCS004", "consciousness", f"Soul {soul.name} has mind + memory for full introspection", loc)
+            elif has_mind:
+                self.result.warning("VCS004", "consciousness", f"Soul {soul.name} can reflect but has no memory to examine", loc)
+        self.result.prove("VCS005", "consciousness", f"Consciousness coverage: {len(con_souls)}/{len(self.program.souls)} soul(s) are self-aware")
 
     def _verify_metabolism(self) -> None:
         metab_souls = [s for s in self.program.souls if s.metabolism is not None]
