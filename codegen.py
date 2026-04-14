@@ -18,6 +18,7 @@ from ast_nodes import (
     EvolutionNode, PerceptionNode, LetNode, RememberNode,
     SpeakNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     GeneNode, LawCost, LawDuration, LawBool, LawInt, LawConstitutional,
+    TopologyNode, ServerNode,
 )
 
 
@@ -66,7 +67,8 @@ class NousCodeGen:
                 if isinstance(law.expr, LawCost) and law.expr.per == "cycle":
                     self._cost_ceiling = law.expr.amount
 
-    def generate(self) -> str:
+    def generate(self, node_filter: str | None = None) -> str:
+        self._node_filter = node_filter
         self._emit_header()
         self._emit_imports()
         self._emit_blank()
@@ -77,7 +79,10 @@ class NousCodeGen:
         if hasattr(self.program, 'noesis') and self.program.noesis:
             self._emit_noesis_init()
         self._emit_soul_classes()
-        self._emit_build_runtime()
+        if self.program.topology and self.program.topology.servers:
+            self._emit_build_distributed_runtime()
+        else:
+            self._emit_build_runtime()
         self._emit_main()
         return "\n".join(self.lines)
 
@@ -126,7 +131,7 @@ class NousCodeGen:
         self._indent()
         self._emit("NousRuntime, SoulRunner, SoulWakeStrategy,")
         self._emit("CircuitBreakerTripped, CostTracker, SenseCache,")
-        self._emit("ChannelRegistry, SenseExecutor,")
+        self._emit("ChannelRegistry, SenseExecutor, DistributedRuntime,")
         self._dedent()
         self._emit(")")
         self._emit_blank()
@@ -466,6 +471,125 @@ class NousCodeGen:
         self._emit("return rt")
         self._dedent()
 
+    def _emit_build_distributed_runtime(self) -> None:
+        self._emit_blank()
+        self._emit("# ═══ Topology ═══")
+        self._emit_blank()
+        self._emit("TOPOLOGY = [")
+        self._indent()
+        speak_map: dict[str, str] = {}
+        for soul in self.program.souls:
+            msg_type = self._find_speak_type(soul)
+            if msg_type:
+                speak_map[soul.name] = f"{soul.name}_{msg_type}"
+        for srv in self.program.topology.servers:
+            self._emit(f'{{"name": "{srv.name}", "host": "{srv.host}", "port": {srv.port}, "souls": {srv.souls}}},')
+        self._dedent()
+        self._emit("]")
+        self._emit_blank()
+        speak_dict_str = ", ".join(f'"{k}": "{v}"' for k, v in speak_map.items())
+        self._emit(f"SPEAK_CHANNELS = {{{speak_dict_str}}}")
+        routes_str = ", ".join(f'("{src}", "{tgt}")' for src, tgt in self._routes)
+        self._emit(f"ROUTES = [{routes_str}]")
+        self._emit_blank()
+
+        self._emit_blank()
+        self._emit("# ═══ Runtime Builder ═══")
+        self._emit_blank()
+        self._emit("def build_runtime(node_name: str = \"\") -> NousRuntime:")
+        self._indent()
+        world_name = self.program.world.name if self.program.world else "Unknown"
+        self._emit(f'"""Build runtime for {world_name} — auto-selects distributed if topology present."""')
+        self._emit("if not node_name:")
+        self._indent()
+        self._emit("import sys, os")
+        self._emit("node_name = os.environ.get(\"NOUS_NODE\", \"\")")
+        self._emit("for arg in sys.argv:")
+        self._indent()
+        self._emit("if arg.startswith(\"--node=\"):")
+        self._indent()
+        self._emit("node_name = arg.split(\"=\", 1)[1]")
+        self._dedent()
+        self._dedent()
+        self._dedent()
+        self._emit_blank()
+        self._emit("node_info = None")
+        self._emit("for n in TOPOLOGY:")
+        self._indent()
+        self._emit("if n[\"name\"] == node_name:")
+        self._indent()
+        self._emit("node_info = n")
+        self._emit("break")
+        self._dedent()
+        self._dedent()
+        self._emit_blank()
+        self._emit("if node_info:")
+        self._indent()
+        self._emit(f"rt = DistributedRuntime(")
+        self._indent()
+        self._emit(f'world_name="{world_name}",')
+        self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
+        self._emit(f"cost_ceiling=COST_CEILING,")
+        self._emit(f"node_name=node_name,")
+        self._emit(f'node_host=node_info["host"],')
+        self._emit(f'node_port=node_info["port"],')
+        self._emit(f"topology=TOPOLOGY,")
+        self._emit(f'local_souls=node_info["souls"],')
+        self._dedent()
+        self._emit(")")
+        self._emit("rt.set_route_map(ROUTES, SPEAK_CHANNELS)")
+        self._emit("local_set = set(node_info[\"souls\"])")
+        self._dedent()
+        self._emit("else:")
+        self._indent()
+        self._emit(f"rt = NousRuntime(")
+        self._indent()
+        self._emit(f'world_name="{world_name}",')
+        self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
+        self._emit(f"cost_ceiling=COST_CEILING,")
+        self._dedent()
+        self._emit(")")
+        self._emit("local_set = None")
+        self._dedent()
+        self._emit_blank()
+
+        for soul in self.program.souls:
+            sname = soul.name
+            is_listener = sname in self._listeners
+            wake = "SoulWakeStrategy.LISTENER" if is_listener else "SoulWakeStrategy.HEARTBEAT"
+            tier = f'"{soul.mind.tier.value}"' if soul.mind else '"Tier1"'
+
+            listen_ch = "None"
+            if is_listener:
+                sources = self._incoming.get(sname, [])
+                if sources:
+                    first_src = sources[0]
+                    first_src_soul = self._find_soul(first_src)
+                    if first_src_soul and first_src_soul.instinct:
+                        msg_type = self._find_speak_type(first_src_soul)
+                        if msg_type:
+                            listen_ch = f'"{first_src}_{msg_type}"'
+
+            self._emit(f"if local_set is None or \"{sname}\" in local_set:")
+            self._indent()
+            self._emit(f"_soul_{sname.lower()} = Soul_{sname}(rt)")
+            self._emit(f"rt.add_soul(SoulRunner(")
+            self._indent()
+            self._emit(f'name="{sname}",')
+            self._emit(f"wake_strategy={wake},")
+            self._emit(f"instinct_fn=_soul_{sname.lower()}.instinct,")
+            self._emit(f"heal_fn=_soul_{sname.lower()}.heal,")
+            self._emit(f"listen_channel={listen_ch},")
+            self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
+            self._emit(f"tier={tier},")
+            self._dedent()
+            self._emit("))")
+            self._dedent()
+            self._emit_blank()
+
+        self._emit("return rt")
+        self._dedent()
+
     def _find_soul(self, name: str) -> SoulNode | None:
         for s in self.program.souls:
             if s.name == name:
@@ -665,6 +789,6 @@ class NousCodeGen:
         return val
 
 
-def generate_python(program: NousProgram) -> str:
+def generate_python(program: NousProgram, node_filter: str | None = None) -> str:
     gen = NousCodeGen(program)
-    return gen.generate()
+    return gen.generate(node_filter=node_filter)

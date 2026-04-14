@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOUS IDE — v3.0.0</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0f172a; color: #e2e8f0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+.app { max-width: 960px; margin: 0 auto; padding: 20px; }
+.header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.header h1 { font-size: 22px; font-weight: 600; color: #60a5fa; }
+.header .ver { font-size: 11px; color: #64748b; background: #1e293b; padding: 2px 10px; border-radius: 6px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.stat { background: #1e293b; border-radius: 8px; padding: 10px; text-align: center; }
+.stat .label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat .val { font-size: 20px; font-weight: 600; margin-top: 2px; }
+.tabs { display: flex; gap: 2px; background: #1e293b; border-radius: 8px; padding: 3px; margin-bottom: 16px; }
+.tab { flex: 1; padding: 8px; font-size: 13px; border: none; cursor: pointer; border-radius: 6px; background: transparent; color: #94a3b8; font-family: inherit; }
+.tab.active { background: #0f172a; color: #e2e8f0; font-weight: 500; }
+.tab:hover { color: #e2e8f0; }
+textarea { width: 100%; background: #1e293b; color: #e2e8f0; border: 1px solid #334155; border-radius: 8px; padding: 12px; font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 13px; line-height: 1.6; resize: vertical; outline: none; }
+textarea:focus { border-color: #60a5fa; }
+.btn { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 13px; transition: all 0.15s; }
+.btn:hover { background: #334155; border-color: #60a5fa; }
+.btn:active { transform: scale(0.98); }
+.btn.primary { background: #2563eb; border-color: #2563eb; }
+.btn.primary:hover { background: #3b82f6; }
+.btn.danger { background: #dc2626; border-color: #dc2626; }
+.error-item { font-size: 13px; padding: 6px 10px; margin-bottom: 4px; border-radius: 6px; background: #3b1111; color: #fca5a5; border-left: 3px solid #dc2626; }
+.warn-item { font-size: 13px; padding: 6px 10px; margin-bottom: 4px; border-radius: 6px; background: #3b2e11; color: #fcd34d; border-left: 3px solid #f59e0b; }
+.proof-ok { font-size: 13px; padding: 8px 12px; margin-bottom: 4px; border-radius: 6px; background: #0b3b1e; color: #6ee7b7; display: flex; align-items: center; gap: 8px; }
+.proof-fail { font-size: 13px; padding: 8px 12px; margin-bottom: 4px; border-radius: 6px; background: #3b1111; color: #fca5a5; display: flex; align-items: center; gap: 8px; }
+.proof-cat { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; margin: 12px 0 6px; letter-spacing: 0.5px; }
+.result-bar { margin-top: 12px; padding: 12px; border-radius: 8px; text-align: center; font-size: 15px; font-weight: 600; }
+.result-bar.pass { background: #0b3b1e; color: #6ee7b7; }
+.result-bar.fail { background: #3b1111; color: #fca5a5; }
+.soul-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
+.soul-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 12px 16px; }
+.soul-card.heartbeat { border-left: 3px solid #2563eb; }
+.soul-card.listener { border-left: 3px solid #059669; }
+.soul-card .name { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.soul-card .detail { font-size: 12px; color: #94a3b8; line-height: 1.8; }
+.graph-box { background: #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.legend { display: flex; gap: 16px; margin-bottom: 12px; font-size: 12px; color: #94a3b8; }
+.legend-dot { width: 12px; height: 12px; border-radius: 2px; display: inline-block; vertical-align: middle; margin-right: 4px; }
+select { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; padding: 6px 10px; border-radius: 6px; font-family: inherit; font-size: 13px; outline: none; }
+select:focus { border-color: #60a5fa; }
+.organism-container { position: relative; height: 120px; background: linear-gradient(135deg, #0f172a 0%, #1a1033 50%, #0f172a 100%); border-radius: 12px; margin-bottom: 16px; overflow: hidden; border: 1px solid #1e293b; }
+.organism-canvas { width: 100%; height: 100%; }
+.organism-pulse { position: absolute; bottom: 8px; right: 12px; font-size: 11px; color: #059669; display: flex; align-items: center; gap: 6px; }
+.organism-pulse .dot { width: 8px; height: 8px; background: #059669; border-radius: 50%; animation: pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100% { opacity: 0.3; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+.organism-label { position: absolute; top: 8px; left: 12px; font-size: 10px; color: #4a5568; text-transform: uppercase; letter-spacing: 1px; }
+.template-btn { display: block; width: 100%; text-align: left; background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 13px; margin-bottom: 6px; transition: all 0.15s; }
+.template-btn:hover { background: #334155; color: #e2e8f0; border-color: #60a5fa; }
+.actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.nl-input { min-height: 100px; font-family: inherit; font-size: 14px; }
+.empty { font-size: 14px; color: #64748b; padding: 2rem; text-align: center; }
+.compile-output { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-top: 16px; max-height: 400px; overflow-y: auto; }
+.compile-output pre { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #e2e8f0; white-space: pre-wrap; word-break: break-all; }
+.compile-header { font-size: 13px; color: #60a5fa; font-weight: 600; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+const SAMPLES = {
+"Trading Pipeline": `world TradingPipeline {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 30s
+}
+
+message Signal {
+    source: string
+    data: string
+    confidence: float = 0.0
+}
+
+message Analysis {
+    result: string
+    score: float = 0.0
+    action: string = "hold"
+}
+
+message Order {
+    symbol: string
+    side: string
+    quantity: int = 0
+}
+
+soul Scanner {
+    mind: claude-sonnet @ Tier0A
+    senses: [http_get]
+    memory {
+        scan_count: int = 0
+        last_signal: string = ""
+    }
+    instinct {
+        let raw = sense http_get(url: "https://api.market.com/prices")
+        remember scan_count += 1
+        speak Signal(source: "scanner", data: raw, confidence: 0.85)
+    }
+    heal {
+        on timeout => retry(3, exponential)
+        on api_error => retry(2, exponential)
+    }
+}
+
+soul Analyzer {
+    mind: claude-sonnet @ Tier0A
+    memory {
+        analyses: int = 0
+    }
+    instinct {
+        let msg = listen Scanner::Signal
+        guard msg.confidence > 0.5
+        remember analyses += 1
+        speak Analysis(result: "bullish", score: 0.9, action: "buy")
+    }
+    heal {
+        on timeout => retry(3, exponential)
+        on api_error => retry(2, exponential)
+    }
+}
+
+soul Executor {
+    mind: claude-sonnet @ Tier0A
+    senses: [http_post]
+    memory {
+        trades: int = 0
+    }
+    instinct {
+        let cmd = listen Analyzer::Analysis
+        guard cmd.action != "hold"
+        remember trades += 1
+        sense http_post(url: "https://api.broker.com/order", body: cmd)
+        speak Order(symbol: "BTC", side: cmd.action, quantity: 1)
+    }
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => retry(2, exponential)
+    }
+}
+
+nervous_system {
+    Scanner -> Analyzer
+    Analyzer -> Executor
+}`,
+
+"Distributed System": `world DistributedPipeline {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 30s
+}
+
+message Signal {
+    source: string
+    data: string
+    confidence: float = 0.0
+}
+
+message Analysis {
+    result: string
+    score: float = 0.0
+}
+
+soul Scanner {
+    mind: claude-sonnet @ Tier0A
+    senses: [http_get]
+    memory {
+        scan_count: int = 0
+    }
+    instinct {
+        let raw = sense http_get(url: "https://api.example.com/data")
+        remember scan_count += 1
+        speak Signal(source: "scanner", data: raw, confidence: 0.85)
+    }
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}
+
+soul Analyzer {
+    mind: claude-sonnet @ Tier0A
+    memory {
+        analyses: int = 0
+    }
+    instinct {
+        let msg = listen Scanner::Signal
+        remember analyses += 1
+        speak Analysis(result: "analyzed", score: 0.9)
+    }
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}
+
+nervous_system {
+    Scanner -> Analyzer
+}
+
+topology {
+    node_alpha: "192.168.1.10:9100" {
+        souls: [Scanner]
+    }
+    node_beta: "192.168.1.20:9100" {
+        souls: [Analyzer]
+    }
+}`,
+
+"Self-Hosting Compiler": `world NousCompiler {
+    law cost_ceiling = $1.00 per cycle
+    heartbeat = 60s
+}
+
+message SourceBundle {
+    path: string
+    source: string
+    lines: int = 0
+}
+
+message AnalysisResult {
+    path: string
+    source: string
+    valid: bool = false
+    errors: string = ""
+    target: string = "python"
+}
+
+message CompileResult {
+    path: string
+    success: bool = false
+    code_lines: int = 0
+}
+
+soul Reader {
+    mind: claude-sonnet @ Tier0A
+    senses: [file_read, file_list]
+    memory {
+        files_read: int = 0
+    }
+    instinct {
+        let listing = sense file_list(directory: ".", pattern: "*.nous")
+        for f in listing.files {
+            let result = sense file_read(path: f)
+            if result.ok == true {
+                remember files_read += 1
+                speak SourceBundle(path: f, source: result.content, lines: result.lines)
+            }
+        }
+    }
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}
+
+soul Analyzer {
+    mind: claude-sonnet @ Tier0A
+    senses: [nous_parse, nous_validate]
+    memory {
+        analyzed: int = 0
+    }
+    instinct {
+        let bundle = listen Reader::SourceBundle
+        let parsed = sense nous_parse(source: bundle.source)
+        remember analyzed += 1
+        speak AnalysisResult(path: bundle.path, source: bundle.source, valid: parsed.ok, target: "python")
+    }
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}
+
+soul Emitter {
+    mind: claude-sonnet @ Tier0A
+    senses: [nous_codegen, file_write]
+    memory {
+        emitted: int = 0
+    }
+    instinct {
+        let analysis = listen Analyzer::AnalysisResult
+        guard analysis.valid == true
+        let gen = sense nous_codegen(source: analysis.source, target: analysis.target)
+        if gen.ok == true {
+            sense file_write(path: analysis.path, content: gen.code)
+            remember emitted += 1
+            speak CompileResult(path: analysis.path, success: true, code_lines: gen.lines)
+        }
+    }
+    heal {
+        on timeout => retry(2, exponential)
+    }
+}
+
+nervous_system {
+    Reader -> Analyzer
+    Analyzer -> Emitter
+}`,
+
+"Empty Project": `world MyWorld {
+    law cost_ceiling = $0.10 per cycle
+    heartbeat = 5m
+}
+
+message Ping {
+    ts: float = 0.0
+}
+
+soul Worker {
+    mind: claude-sonnet @ Tier0A
+    senses: [http_get]
+    memory {
+        count: int = 0
+    }
+    instinct {
+        remember count += 1
+        speak Ping(ts: now())
+    }
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}`
+};
+
+const TIER_COSTS = { Tier0A: 0.00025, Tier0B: 0.0005, Tier1: 0.003, Tier2: 0.005, Tier3: 0.015 };
+
+function parseNous(src) {
+  const r = { world: null, souls: [], messages: [], routes: [], topology: [], errors: [], warnings: [] };
+  try {
+    const wm = src.match(/world\s+(\w+)\s*\{/);
+    if (wm) {
+      const cm = src.match(/law\s+\w+\s*=\s*\$([0-9.]+)\s*per\s*cycle/);
+      const hm = src.match(/heartbeat\s*=\s*(\w+)/);
+      r.world = { name: wm[1], cost_ceiling: cm ? parseFloat(cm[1]) : 0.1, heartbeat: hm ? hm[1] : "5m" };
+    } else r.errors.push({ code: "W001", msg: "No world declaration found" });
+
+    const sr = /soul\s+(\w+)\s*\{/g; let m;
+    while ((m = sr.exec(src)) !== null) {
+      const nm = m[1], si = m.index; let d=0, se=si;
+      for (let i=si;i<src.length;i++){if(src[i]==='{')d++;if(src[i]==='}'){d--;if(d===0){se=i;break;}}}
+      const sb = src.substring(si, se+1);
+      const mm = sb.match(/mind:\s*([\w-]+)\s*@\s*(Tier\w+)/);
+      const sm = sb.match(/senses:\s*\[([^\]]*)\]/);
+      const sp = [...sb.matchAll(/speak\s+(\w+)\(/g)].map(x=>x[1]);
+      const li = [...sb.matchAll(/listen\s+(\w+)::(\w+)/g)].map(x=>({soul:x[1],type:x[2]}));
+      const sc = [...sb.matchAll(/sense\s+(\w+)\(/g)].length;
+      const mf = [...sb.matchAll(/remember\s+(\w+)/g)].map(x=>x[1]);
+      const hh = /heal\s*\{/.test(sb);
+      const hi = /instinct\s*\{/.test(sb);
+      r.souls.push({ name:nm, mind:mm?{model:mm[1],tier:mm[2]}:null,
+        senses:sm?sm[1].split(',').map(s=>s.trim()).filter(Boolean):[],
+        speaks:sp, listens:li, senseCalls:sc, hasHeal:hh, hasInstinct:hi, memFields:mf });
+      if(!mm) r.errors.push({code:"S002",msg:`Soul ${nm} has no mind`});
+      if(!hh) r.errors.push({code:"S003",msg:`Soul ${nm} has no heal block`});
+      if(!hi) r.warnings.push({code:"S004",msg:`Soul ${nm} has no instinct`});
+      if(!sm) r.warnings.push({code:"S005",msg:`Soul ${nm} has no senses`});
+    }
+    const mr = /message\s+(\w+)\s*\{([^}]*)\}/g;
+    while((m=mr.exec(src))!==null){
+      const fl=[...m[2].matchAll(/(\w+):\s*(\w+\??)/g)].map(f=>({name:f[1],type:f[2]}));
+      r.messages.push({name:m[1],fields:fl});
+    }
+    const ns = src.match(/nervous_system\s*\{([^}]*)\}/s);
+    if(ns){ const rr=/(\w+)\s*->\s*(\w+)/g; while((m=rr.exec(ns[1]))!==null) r.routes.push({source:m[1],target:m[2]}); }
+    const tp = src.match(/topology\s*\{([^}]*(?:\{[^}]*\}[^}]*)*)\}/s);
+    if(tp){ const nr=/(\w+):\s*"([^"]+)"\s*\{([^}]*)\}/g;
+      while((m=nr.exec(tp[1]))!==null){
+        const sl=m[3].match(/souls:\s*\[([^\]]*)\]/);
+        r.topology.push({name:m[1],host:m[2],souls:sl?sl[1].split(',').map(s=>s.trim()):[]});
+    }}
+    const sn=new Set(r.souls.map(s=>s.name)), mn=new Set(r.messages.map(m=>m.name));
+    r.routes.forEach(rt=>{
+      if(!sn.has(rt.source))r.errors.push({code:"N002",msg:`Undefined soul: ${rt.source}`});
+      if(!sn.has(rt.target))r.errors.push({code:"N002",msg:`Undefined soul: ${rt.target}`});
+    });
+    r.souls.forEach(s=>s.speaks.forEach(msg=>{if(!mn.has(msg))r.errors.push({code:"T001",msg:`Undefined message: ${msg}`});}));
+  } catch(e) { r.errors.push({code:"PARSE",msg:e.message}); }
+  return r;
+}
+
+function verify(p) {
+  const proofs=[], ceil=p.world?.cost_ceiling||0.1;
+  p.souls.forEach(s=>{
+    const t=s.mind?.tier||"Tier1", rate=TIER_COSTS[t]||0.003;
+    const est=(300+s.senseCalls*500)/1000*rate+200/1000*(rate*5);
+    const pct=Math.round(est/ceil*100);
+    proofs.push(est>ceil?{ok:false,code:"VR001",cat:"Resource bound",msg:`${s.name}: $${est.toFixed(6)} exceeds $${ceil.toFixed(2)}`}
+      :{ok:true,code:"VR001",cat:"Resource bound",msg:`${s.name}: $${est.toFixed(6)} ≤ $${ceil.toFixed(2)} (${pct}%)`});
+  });
+  const g={}; p.souls.forEach(s=>{g[s.name]=[];}); p.routes.forEach(r=>{if(g[r.source])g[r.source].push(r.target);});
+  const vis=new Set(),rs=new Set(); let cyc=false;
+  function dfs(n){vis.add(n);rs.add(n);for(const nb of(g[n]||[])){if(!vis.has(nb)){if(dfs(nb))return true;}else if(rs.has(nb))return true;}rs.delete(n);return false;}
+  for(const n of Object.keys(g)){if(!vis.has(n)&&dfs(n)){cyc=true;break;}}
+  if(cyc)proofs.push({ok:false,code:"VD001",cat:"Deadlock",msg:"Circular dependency detected"});
+  else if(p.routes.length>0)proofs.push({ok:true,code:"VD001",cat:"Deadlock",msg:`No circular dependencies (${p.routes.length} routes)`});
+  p.souls.forEach(s=>s.listens.forEach(l=>{if(l.soul===s.name)proofs.push({ok:false,code:"VD002",cat:"Deadlock",msg:`${s.name} listens to itself`});}));
+  const inc={}; p.routes.forEach(r=>{inc[r.target]=true;});
+  const entries=p.souls.filter(s=>!inc[s.name]);
+  if(entries.length===0&&p.souls.length>0&&p.routes.length>0)proofs.push({ok:false,code:"VL002",cat:"Liveness",msg:"No entrypoint souls"});
+  else if(entries.length>0)proofs.push({ok:true,code:"VL002",cat:"Liveness",msg:`${entries.length} entrypoint(s): ${entries.map(e=>e.name).join(", ")}`});
+  if(p.routes.length>0){
+    const reach=new Set(); function walk(n){if(reach.has(n))return;reach.add(n);(g[n]||[]).forEach(walk);}
+    entries.forEach(e=>walk(e.name));
+    const unr=p.souls.filter(s=>!reach.has(s.name));
+    proofs.push(unr.length===0?{ok:true,code:"VE001",cat:"Reachability",msg:`All ${p.souls.length} souls reachable`}
+      :{ok:false,code:"VE001",cat:"Reachability",msg:`Unreachable: ${unr.map(u=>u.name).join(", ")}`});
+  }
+  if(p.topology.length>0){
+    const asgn=new Set(); p.topology.forEach(n=>n.souls.forEach(s=>asgn.add(s)));
+    const un=p.souls.filter(s=>!asgn.has(s.name));
+    proofs.push(un.length===0?{ok:true,code:"VT001",cat:"Topology",msg:`All souls assigned to ${p.topology.length} node(s)`}
+      :{ok:false,code:"VT002",cat:"Topology",msg:`Unassigned: ${un.map(u=>u.name).join(", ")}`});
+  }
+  return proofs;
+}
+
+let state = { tab: 0, source: SAMPLES["Trading Pipeline"], parsed: null, proofs: [], nl: "", compileOut: null, compileTarget: null };
+
+function render() {
+  state.parsed = parseNous(state.source);
+  state.proofs = verify(state.parsed);
+  const p=state.parsed, pr=state.proofs;
+  const pOk=pr.filter(x=>x.ok).length, pFail=pr.filter(x=>!x.ok).length;
+  const inc={}; p.routes.forEach(r=>{inc[r.target]=true;});
+  const tabs=["Editor","Verify","Graph","Create"];
+  const nodeMap={}; p.topology.forEach(n=>n.souls.forEach(s=>{nodeMap[s]=n.name;}));
+
+  let html = `
+<div class="header">
+  <h1>NOUS IDE</h1><span class="ver">v3.0.0</span>
+  <div style="margin-left:auto">
+    <select onchange="loadSample(this.value)">
+      <option value="">Load example...</option>
+      ${Object.keys(SAMPLES).map(k=>`<option value="${k}">${k}</option>`).join('')}
+    </select>
+  </div>
+</div>
+<div class="stats">
+  ${[{l:"Souls",v:p.souls.length,c:"#60a5fa"},{l:"Messages",v:p.messages.length,c:"#a78bfa"},{l:"Routes",v:p.routes.length,c:"#34d399"},{l:"Errors",v:p.errors.length,c:p.errors.length?"#f87171":"#34d399"},{l:"Proofs",v:`${pOk}/${pr.length}`,c:pFail?"#fbbf24":"#34d399"}].map(s=>
+    `<div class="stat"><div class="label">${s.l}</div><div class="val" style="color:${s.c}">${s.v}</div></div>`).join('')}
+</div>
+<div class="organism-container" id="organism-box">
+  <div class="organism-label">Ψυχόδενδρο — Living AST</div>
+  <canvas class="organism-canvas" id="organism-canvas"></canvas>
+  <div class="organism-pulse"><div class="dot"></div> ${p.souls.length} souls alive${p.errors.length===0?' — healthy':' — needs attention'}</div>
+</div>
+<div class="tabs">
+  ${tabs.map((t,i)=>`<div class="tab${state.tab===i?' active':''}" onclick="setTab(${i})">${t}</div>`).join('')}
+</div>`;
+
+  if (state.tab === 0) {
+    html += `<textarea style="min-height:360px" oninput="updateSource(this.value)">${esc(state.source)}</textarea>`;
+    if (p.errors.length||p.warnings.length) {
+      html += `<div style="margin-top:12px">`;
+      p.errors.forEach(e=>{html+=`<div class="error-item">[${e.code}] ${e.msg}</div>`;});
+      p.warnings.forEach(w=>{html+=`<div class="warn-item">[${w.code}] ${w.msg}</div>`;});
+      html += `</div>`;
+    }
+    html += `<div class="actions">
+      <button class="btn primary" onclick="compileTo('python')">Compile to Python</button>
+      <button class="btn primary" onclick="compileTo('js')">Compile to JS</button>
+      <button class="btn" onclick="downloadNous()">Download .nous</button>
+    </div>`;
+    if (state.compileOut) {
+      html += `<div class="compile-output">
+        <div class="compile-header">${state.compileTarget === 'python' ? 'Python' : 'JavaScript'} output — ${state.compileOut.split('\\n').length} lines</div>
+        <div class="actions" style="margin-bottom:12px"><button class="btn" onclick="downloadCompiled()">Download</button><button class="btn" onclick="clearCompile()">Close</button></div>
+        <pre>${esc(state.compileOut)}</pre>
+      </div>`;
+    }
+  }
+
+  else if (state.tab === 1) {
+    if(p.world) html += `<div style="font-size:14px;color:#94a3b8;margin-bottom:12px">Verifying <b style="color:#e2e8f0">${p.world.name}</b> — ${p.souls.length} souls, ceiling $${p.world.cost_ceiling}</div>`;
+    const cats={}; pr.forEach(x=>{cats[x.cat]=(cats[x.cat]||[]).concat(x);});
+    Object.entries(cats).forEach(([cat,items])=>{
+      html+=`<div class="proof-cat">${cat}</div>`;
+      items.forEach(x=>{html+=`<div class="${x.ok?'proof-ok':'proof-fail'}"><b>${x.ok?'✓':'✗'}</b>[${x.code}] ${x.msg}</div>`;});
+    });
+    html+=`<div class="result-bar ${pFail===0?'pass':'fail'}">${pFail===0?`VERIFIED: ${pOk} proven, 0 errors`:`FAILED: ${pOk} proven, ${pFail} errors`}</div>`;
+  }
+
+  else if (state.tab === 2) {
+    if(p.souls.length>0) {
+      const W=Math.max(p.souls.length*180,400), H=p.topology.length>0?220:140;
+      html+=`<div class="graph-box"><div class="legend">
+        <span><span class="legend-dot" style="background:#2563eb"></span> Heartbeat</span>
+        <span><span class="legend-dot" style="background:#059669;border-radius:6px"></span> Listener</span>
+        ${p.topology.length>0?'<span><span class="legend-dot" style="background:#dc2626"></span> Cross-node</span>':''}
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">
+        <defs><marker id="arr" viewBox="0 0 10 7" refX="10" refY="3.5" markerWidth="8" markerHeight="6" orient="auto-start-reverse"><polygon points="0 0,10 3.5,0 7" fill="#94a3b8"/></marker></defs>`;
+      if(p.topology.length>0) p.topology.forEach((n,ni)=>{
+        html+=`<rect x="${ni*220+20}" y="10" width="200" height="180" rx="8" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="4 2"/>
+          <text x="${ni*220+120}" y="28" text-anchor="middle" font-size="11" fill="#64748b">${n.name}</text>`;
+      });
+      const pos={}; p.souls.forEach((s,i)=>{
+        const isL=inc[s.name]; const col=isL?"#059669":"#2563eb"; const rad=isL?20:4;
+        let cx,cy;
+        if(p.topology.length>0){const ni=p.topology.findIndex(n=>n.souls.includes(s.name));const nx=ni>=0?ni*220+20:i*180+20;
+          const pi=ni>=0?p.topology[ni].souls.indexOf(s.name):0;cx=nx+100;cy=60+pi*55;}
+        else{cx=i*160+90;cy=70;}
+        pos[s.name]={cx,cy};
+        html+=`<rect x="${cx-60}" y="${cy-22}" width="120" height="44" rx="${rad}" fill="${col}18" stroke="${col}" stroke-width="1.5"/>
+          <text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="13" font-weight="500" fill="#e2e8f0">${s.name}</text>
+          <text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="10" fill="#94a3b8">${s.mind?s.mind.model:'no mind'}</text>`;
+      });
+      p.routes.forEach(rt=>{
+        const s=pos[rt.source],t=pos[rt.target]; if(!s||!t)return;
+        const cross=p.topology.length>0&&nodeMap[rt.source]!==nodeMap[rt.target];
+        html+=`<line x1="${s.cx+60}" y1="${s.cy}" x2="${t.cx-60}" y2="${t.cy}" stroke="${cross?'#dc2626':'#94a3b8'}" stroke-width="${cross?2:1.5}" ${cross?'stroke-dasharray="6 3"':''} marker-end="url(#arr)"/>`;
+      });
+      html+=`</svg></div>`;
+      html+=`<div class="soul-grid">`;
+      p.souls.forEach(s=>{
+        const isL=inc[s.name];
+        html+=`<div class="soul-card ${isL?'listener':'heartbeat'}">
+          <div class="name">${s.name}</div><div class="detail">
+          Wake: ${isL?'LISTENER':'HEARTBEAT'}<br>
+          Mind: ${s.mind?`${s.mind.model} @ ${s.mind.tier}`:'none'}<br>
+          Senses: ${s.senses.length?s.senses.join(', '):'none'}<br>
+          Speaks: ${s.speaks.length?s.speaks.join(', '):'none'}<br>
+          Listens: ${s.listens.length?s.listens.map(l=>`${l.soul}::${l.type}`).join(', '):'none'}
+          </div></div>`;
+      });
+      html+=`</div>`;
+    } else html+=`<div class="empty">No souls to visualize</div>`;
+  }
+
+  else if (state.tab === 3) {
+    html+=`<div style="font-size:14px;color:#94a3b8;margin-bottom:12px">Describe your agent system in plain language</div>
+      <textarea class="nl-input" placeholder="A pipeline with a Scanner that monitors crypto prices..." oninput="state.nl=this.value">${esc(state.nl)}</textarea>
+      <div class="actions"><button class="btn primary" onclick="generateFromNL()">Generate .nous</button></div>
+      <div style="margin-top:24px"><div class="proof-cat">Quick templates</div>`;
+    ["A web scraper that monitors prices and sends alerts",
+     "A 3-stage pipeline: collect data, analyze trends, execute trades",
+     "A distributed system with Scanner on node A and Processor on node B",
+     "A chatbot that summarizes documents and answers questions"
+    ].forEach(d=>{html+=`<div class="template-btn" onclick="setNL('${d}')">${d}</div>`;});
+    html+=`</div>`;
+  }
+
+  document.getElementById('app').innerHTML = html;
+  animateOrganism();
+}
+
+let _orgAnim = null;
+function animateOrganism() {
+  if (_orgAnim) cancelAnimationFrame(_orgAnim);
+  const canvas = document.getElementById('organism-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const box = canvas.parentElement;
+  canvas.width = box.clientWidth;
+  canvas.height = box.clientHeight;
+  const W = canvas.width, H = canvas.height;
+  const p = state.parsed;
+  if (!p) return;
+
+  const souls = p.souls.map((s, i) => {
+    const cols = Math.min(p.souls.length, 6);
+    const spacing = W / (cols + 1);
+    const row = Math.floor(i / cols);
+    return {
+      name: s.name,
+      x: spacing * ((i % cols) + 1),
+      y: 35 + row * 45,
+      r: 6 + Math.min(s.senses.length, 6),
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.5 + Math.random() * 1.5,
+      healthy: p.errors.length === 0
+    };
+  });
+
+  const edges = p.routes.map(r => {
+    const src = souls.find(s => s.name === r.source);
+    const tgt = souls.find(s => s.name === r.target);
+    return src && tgt ? { src, tgt, particles: [], phase: Math.random() * 100 } : null;
+  }).filter(Boolean);
+
+  let t = 0;
+  function draw() {
+    t += 0.016;
+    ctx.clearRect(0, 0, W, H);
+
+    // draw edges with flowing particles
+    edges.forEach(e => {
+      const dx = e.tgt.x - e.src.x, dy = e.tgt.y - e.src.y;
+      const grad = ctx.createLinearGradient(e.src.x, e.src.y, e.tgt.x, e.tgt.y);
+      grad.addColorStop(0, 'rgba(96, 165, 250, 0.15)');
+      grad.addColorStop(1, 'rgba(52, 211, 153, 0.15)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(e.src.x, e.src.y);
+      ctx.lineTo(e.tgt.x, e.tgt.y);
+      ctx.stroke();
+
+      // flowing particle
+      const speed = 0.4;
+      const pt = ((t * speed + e.phase) % 3) / 3;
+      const px = e.src.x + dx * pt;
+      const py = e.src.y + dy * pt;
+      const glow = ctx.createRadialGradient(px, py, 0, px, py, 6);
+      glow.addColorStop(0, 'rgba(96, 165, 250, 0.8)');
+      glow.addColorStop(1, 'rgba(96, 165, 250, 0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // draw souls as pulsing nodes
+    souls.forEach(s => {
+      const pulse = Math.sin(t * s.speed + s.phase) * 0.3 + 1;
+      const r = s.r * pulse;
+
+      // outer glow
+      const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, r * 3);
+      glow.addColorStop(0, s.healthy ? 'rgba(52, 211, 153, 0.12)' : 'rgba(248, 113, 113, 0.12)');
+      glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, r * 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // core
+      const core = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, r);
+      core.addColorStop(0, s.healthy ? '#34d399' : '#f87171');
+      core.addColorStop(0.6, s.healthy ? '#059669' : '#dc2626');
+      core.addColorStop(1, s.healthy ? 'rgba(5, 150, 105, 0.3)' : 'rgba(220, 38, 38, 0.3)');
+      ctx.fillStyle = core;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      // name
+      ctx.fillStyle = 'rgba(226, 232, 240, 0.5)';
+      ctx.font = '9px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(s.name, s.x, s.y + r + 12);
+    });
+
+    // heartbeat line at bottom
+    ctx.strokeStyle = 'rgba(52, 211, 153, 0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = 0; x < W; x++) {
+      const beat = Math.sin(x * 0.05 - t * 3) * 4 * Math.exp(-Math.pow((x % 80 - 40) / 15, 2));
+      ctx.lineTo(x, H - 18 + beat);
+    }
+    ctx.stroke();
+
+    _orgAnim = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function setTab(i){state.tab=i;state.compileOut=null;render();}
+function loadSample(k){if(SAMPLES[k]){state.source=SAMPLES[k];state.compileOut=null;render();}}
+function updateSource(v){state.source=v;state.compileOut=null;render();}
+function setNL(d){state.nl=d;render();}
+function clearCompile(){state.compileOut=null;render();}
+
+function compileTo(target) {
+  state.compileTarget = target;
+  try {
+    state.compileOut = `// NOUS Generated — ${state.parsed?.world?.name || 'Unknown'}\n// Target: ${target === 'python' ? 'Python 3.11+ asyncio' : 'JavaScript ES2022'}\n// Compile this on server: nous compile file.nous --target ${target}\n//\n// To compile, run on your NOUS server:\n//   nous compile your_file.nous --target ${target}\n//\n// This IDE preview shows structure only.\n// Full codegen requires the server-side compiler.\n\n`;
+    if (target === 'python') {
+      state.compileOut += `from __future__ import annotations\nimport asyncio\nimport logging\nfrom runtime import NousRuntime, SoulRunner, SoulWakeStrategy\n\nlog = logging.getLogger('nous.runtime')\n\n`;
+      state.compileOut += `WORLD_NAME = "${state.parsed?.world?.name || 'Unknown'}"\nHEARTBEAT_SECONDS = 300\nCOST_CEILING = ${state.parsed?.world?.cost_ceiling || 0.1}\n\n`;
+      state.parsed.messages.forEach(m => {
+        state.compileOut += `class ${m.name}(BaseModel):\n`;
+        m.fields.forEach(f => { state.compileOut += `    ${f.name}: ${f.type === 'string' ? 'str' : f.type}\n`; });
+        state.compileOut += `\n`;
+      });
+      const inc = {}; state.parsed.routes.forEach(r=>{inc[r.target]=true;});
+      state.parsed.souls.forEach(s => {
+        state.compileOut += `class Soul_${s.name}:\n    """Soul: ${s.name} | Wake: ${inc[s.name]?'LISTENER':'HEARTBEAT'}"""\n\n`;
+        state.compileOut += `    def __init__(self, runtime):\n        self.name = "${s.name}"\n        self._runtime = runtime\n\n`;
+        state.compileOut += `    async def instinct(self):\n        pass  # Full codegen on server\n\n`;
+        state.compileOut += `    async def heal(self, error):\n        return False\n\n`;
+      });
+    } else {
+      state.compileOut += `const WORLD_NAME = "${state.parsed?.world?.name || 'Unknown'}";\nconst HEARTBEAT_MS = 30000;\nconst COST_CEILING = ${state.parsed?.world?.cost_ceiling || 0.1};\n\n`;
+      state.parsed.messages.forEach(m => {
+        state.compileOut += `class ${m.name} {\n  constructor({${m.fields.map(f=>f.name).join(', ')}} = {}) {\n`;
+        m.fields.forEach(f => { state.compileOut += `    this.${f.name} = ${f.name};\n`; });
+        state.compileOut += `  }\n}\n\n`;
+      });
+      state.parsed.souls.forEach(s => {
+        state.compileOut += `class Soul_${s.name} {\n  constructor(runtime) {\n    this.name = "${s.name}";\n    this._rt = runtime;\n  }\n\n`;
+        state.compileOut += `  async instinct() { /* Full codegen on server */ }\n  async heal(error) { return false; }\n}\n\n`;
+      });
+    }
+  } catch(e) { state.compileOut = `// Error: ${e.message}`; }
+  render();
+}
+
+function downloadNous() {
+  const name = (state.parsed?.world?.name || 'program').toLowerCase().replace(/\s+/g, '_');
+  download(name + '.nous', state.source);
+}
+
+function downloadCompiled() {
+  const name = (state.parsed?.world?.name || 'program').toLowerCase().replace(/\s+/g, '_');
+  const ext = state.compileTarget === 'python' ? '.py' : '.mjs';
+  download(name + ext, state.compileOut);
+}
+
+function download(filename, content) {
+  const blob = new Blob([content], {type: 'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function generateFromNL() {
+  if (!state.nl.trim()) return;
+  const desc = state.nl;
+  const worldName = (desc.match(/[A-Z][a-z]+/g) || ['My']).slice(0,2).join('') || 'MyWorld';
+  const roles = [];
+  const kw = {scan:'Scanner',monitor:'Monitor',analyz:'Analyzer',process:'Processor',execut:'Executor',
+    fetch:'Fetcher',filter:'Filter',trade:'Trader',alert:'Alerter',collect:'Collector',
+    summariz:'Summarizer',chat:'ChatBot',write:'Writer',read:'Reader',watch:'Watcher'};
+  const dl = desc.toLowerCase();
+  Object.entries(kw).forEach(([k,v])=>{if(dl.includes(k))roles.push(v);});
+  if(roles.length===0) roles.push('Agent');
+  if(roles.length===1 && (dl.includes('pipeline')||dl.includes('then')||dl.includes('and'))) {
+    const n=roles[0]; roles.length=0; roles.push(n+'Input',n+'Logic',n+'Output');
+  }
+  let code = `world ${worldName}World {\n    law cost_ceiling = $0.50 per cycle\n    heartbeat = 5m\n}\n\n`;
+  for(let i=0;i<roles.length-1;i++){
+    code+=`message ${roles[i]}Output {\n    data: string = ""\n    timestamp: float = 0.0\n    confidence: float = 0.0\n}\n\n`;
+  }
+  roles.forEach((r,i)=>{
+    code+=`soul ${r} {\n    mind: claude-sonnet @ Tier0A\n`;
+    if(i===0) code+=`    senses: [http_get]\n`;
+    if(dl.includes('post')||dl.includes('write')||dl.includes('execute')) if(i===roles.length-1) code+=`    senses: [http_post]\n`;
+    code+=`    memory {\n        cycle_count: int = 0\n    }\n    instinct {\n        remember cycle_count += 1\n`;
+    if(i>0) code+=`        let input = listen ${roles[i-1]}::${roles[i-1]}Output\n`;
+    if(i<roles.length-1) code+=`        speak ${roles[i]}Output(data: "", timestamp: 0, confidence: 0)\n`;
+    code+=`    }\n    heal {\n        on timeout => retry(3, exponential)\n        on api_error => retry(2, exponential)\n    }\n}\n\n`;
+  });
+  if(roles.length>1){
+    code+=`nervous_system {\n`;
+    for(let i=0;i<roles.length-1;i++) code+=`    ${roles[i]} -> ${roles[i+1]}\n`;
+    code+=`}\n`;
+  }
+  state.source = code;
+  state.tab = 0;
+  state.compileOut = null;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

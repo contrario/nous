@@ -1,0 +1,29 @@
+soul Broken {
+    senses: [http_get]
+    memory {
+        count: int = 0
+    }
+    instinct {
+        remember count += 1
+        remember missing_field = 42
+        speak FakeMessage(data: "hello")
+        speak Signal(sourc: "test", data: "x", confidence: 0.5)
+    }
+}
+
+soul Receiver {
+    mind: claude-sonnet @ Tier0A
+    instinct {
+        let msg = listen Broken::FakeMessage
+    }
+}
+
+message Signal {
+    source: string
+    data: string
+    confidence: float = 0.0
+}
+
+nervous_system {
+    Broken -> Reciver
+}

@@ -1,0 +1,98 @@
+# mcp_example.nous — MCP Bridge Demo
+
+world MCPDemo {
+    law cost_ceiling = $0.30 per cycle
+    heartbeat = 5m
+}
+
+message DocResult {
+    title: string
+    content: string
+    relevance: float
+    source: SoulRef
+}
+
+message Summary {
+    topic: string
+    text: string
+}
+
+soul Finder {
+    mind: claude-sonnet @ Tier0A
+    senses: [mcp_discover, mcp_call]
+
+    memory {
+        docs_found: int = 0
+    }
+
+    instinct {
+        let gdrive = sense mcp_discover(server: "https://mcp.google.com/drive/sse")
+
+        let results = sense mcp_call(
+            server: "https://mcp.google.com/drive/sse",
+            tool: "search_files",
+            query: "Q4 revenue report"
+        )
+
+        guard results.ok == true
+        remember docs_found += 1
+        speak DocResult(title: "Q4 Report", content: results.text, relevance: 0.9, source: self)
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => retry(1, exponential)
+    }
+}
+
+soul Summarizer {
+    mind: claude-sonnet @ Tier0A
+    senses: [mcp_call]
+
+    memory {
+        summaries: int = 0
+    }
+
+    instinct {
+        let doc = listen Finder::DocResult
+        guard doc.relevance > 0.7
+        speak Summary(topic: doc.title, text: doc.content)
+        remember summaries += 1
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+    }
+}
+
+soul Publisher {
+    mind: gemini-flash @ Tier2
+    senses: [mcp_call]
+
+    memory {
+        posted: int = 0
+    }
+
+    instinct {
+        let summary = listen Summarizer::Summary
+
+        let slack = sense mcp_call(
+            server: "https://mcp.slack.com/sse",
+            tool: "send_message",
+            channel: "#research",
+            text: summary.text
+        )
+
+        guard slack.ok == true
+        remember posted += 1
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => retry(1, exponential)
+    }
+}
+
+nervous_system {
+    Finder -> Summarizer -> Publisher
+}

@@ -33,7 +33,7 @@ from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
 
-VERSION = "2.2.0"
+VERSION = "3.0.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -96,6 +96,25 @@ def cmd_compile(args: argparse.Namespace) -> int:
     if program is None:
         return result
 
+    target = getattr(args, "target", "python")
+    if target in ("js", "wasm"):
+        print(f"[4/4] Generating JavaScript...")
+        from codegen_js import generate_javascript
+        code = generate_javascript(program)
+        out_path = Path(args.output) if args.output else source.with_suffix(".mjs" if target == "js" else ".html")
+        if target == "wasm":
+            from wasm_builder import build_html
+            out_path_final = Path(args.output) if args.output else None
+            result_path = build_html(program, out_path_final)
+            print(f"      Output: {result_path}")
+            elapsed = result if isinstance(result, float) else 0
+            print(f"\n\u2713 Built in {elapsed:.2f}s")
+            return 0
+        out_path.write_text(code, encoding="utf-8")
+        print(f"      Output: {out_path} ({len(code.splitlines())} lines)")
+        elapsed = result if isinstance(result, float) else 0
+        print(f"\n\u2713 Compiled in {elapsed:.2f}s")
+        return 0
     print("[4/4] Generating Python...")
     code = generate_python(program)
     out_path = Path(args.output) if args.output else source.with_suffix(".py")
@@ -137,7 +156,10 @@ def cmd_run(args: argparse.Namespace) -> int:
     print(f"      Running {world_name}...\n")
     print("=" * 50)
     try:
-        proc = subprocess.run([sys.executable, str(tmp_path)], cwd=str(source.parent))
+        run_cmd = [sys.executable, str(tmp_path)]
+        if hasattr(args, "node") and args.node:
+            run_cmd.append(f"--node={args.node}")
+        proc = subprocess.run(run_cmd, cwd=str(source.parent))
         return proc.returncode
     except KeyboardInterrupt:
         print("\n\nWorld stopped by user.")
@@ -705,6 +727,89 @@ def cmd_viz(args: argparse.Namespace) -> int:
         return 1
 
 
+def cmd_create(args: argparse.Namespace) -> int:
+    from natural_lang import generate_from_description, print_generation_report
+    description = args.description
+    use_llm = not args.template_only
+    result = generate_from_description(description, use_llm=use_llm)
+    print_generation_report(result)
+    if result.ok:
+        print(f"\n  Generated source:\n")
+        for line in result.source.splitlines():
+            print(f"    {line}")
+        if args.output:
+            out = Path(args.output)
+            out.write_text(result.source, encoding="utf-8")
+            print(f"\n  Written to: {out}")
+    return 0 if result.ok else 1
+
+
+def cmd_verify(args: argparse.Namespace) -> int:
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    program, _, _, result = _parse_and_validate(source)
+    if program is None:
+        return result
+    from verifier import verify_program, print_verification_report
+    world_name = program.world.name if program.world else "Unknown"
+    vresult = verify_program(program)
+    print_verification_report(vresult, world_name)
+    return 0 if vresult.ok else 1
+
+
+def cmd_selfcompile(args: argparse.Namespace) -> int:
+    from self_compiler import cmd_self_compile
+    sc_args = list(args.files)
+    if args.target:
+        sc_args.extend(["--target", args.target])
+    if args.output:
+        sc_args.extend(["-o", args.output])
+    return cmd_self_compile(sc_args)
+
+
+def cmd_wasm(args: argparse.Namespace) -> int:
+    from wasm_builder import build_wasm_target
+    source = Path(args.file)
+    if not source.exists():
+        print(f"Error: file not found: {source}", file=sys.stderr)
+        return 1
+    output = Path(args.output) if args.output else None
+    target = args.target or "html"
+    try:
+        out = build_wasm_target(source, output, target=target)
+        print(f"WASM build complete: {out}")
+        return 0
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+
+def cmd_lsp(args: argparse.Namespace) -> int:
+    if hasattr(args, "subcmd") and args.subcmd == "check":
+        target = args.target if hasattr(args, "target") and args.target else None
+        if not target:
+            print("Usage: nous lsp check <file.nous>", file=sys.stderr)
+            return 1
+        from lsp_server import check_file
+        diags, actions = check_file(target)
+        print(f"Diagnostics ({len(diags)}):")
+        for d in diags:
+            sev = {1: "ERROR", 2: "WARN", 3: "INFO", 4: "HINT"}.get(d["severity"], "?")
+            line = d["range"]["start"]["line"] + 1
+            print(f"  line {line:3d} [{sev:5s}] {d['code']}: {d['message']}")
+        print(f"\nCode Actions ({len(actions)}):")
+        for a in actions:
+            print(f"  → {a['title']}")
+        errors = [d for d in diags if d["severity"] == 1]
+        return 1 if errors else 0
+    else:
+        from lsp_server import run_lsp
+        run_lsp()
+        return 0
+
+
 def cmd_version(_args: argparse.Namespace) -> int:
     print(BANNER)
     return 0
@@ -754,15 +859,32 @@ def cmd_noesis(args: argparse.Namespace) -> int:
         print("Error: noesis_cli_noesis.py not found", file=sys.stderr)
         return 1
 
+def cmd_diff(args: argparse.Namespace) -> int:
+    """Behavioral diff between two .nous files."""
+    from behavioral_diff import diff_files
+    output = diff_files(args.file, args.target, output_json=getattr(args, 'json_output', False))
+    print(output)
+    return 0
+
+def cmd_cost(args: argparse.Namespace) -> int:
+    """Cost Oracle — predictive cost analysis."""
+    from cost_oracle import oracle_file
+    output = oracle_file(args.file, period_days=getattr(args, 'period', 30), output_json=getattr(args, 'json_output', False))
+    print(output)
+    return 0
+
 def main() -> int:
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language v2.0")
     sub = ap.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("compile", help="Compile .nous to Python")
     p.add_argument("file"); p.add_argument("-o", "--output")
+    p.add_argument("--node", default=None, help="Node filter for distributed compilation")
+    p.add_argument("--target", default="python", choices=["python", "js", "wasm"], help="Compilation target")
 
     p = sub.add_parser("run", help="Compile and execute")
     p.add_argument("file"); p.add_argument("--keep", action="store_true")
+    p.add_argument("--node", default=None, help="Node name for distributed execution")
 
     p = sub.add_parser("validate", help="Validate .nous file")
     p.add_argument("file")
@@ -859,7 +981,40 @@ def main() -> int:
     p.add_argument("file", nargs="?", default=None, help=".nous file (or omit for workspace)")
     p.add_argument("-o", "--output", default=None, help="Output HTML path")
 
+    p = sub.add_parser("lsp", help="Language Server Protocol / code check")
+    p.add_argument("subcmd", nargs="?", default=None, choices=["check"], help="Subcommand")
+    p.add_argument("target", nargs="?", default=None, help=".nous file for check mode")
+
+    p = sub.add_parser("create", help="Generate .nous from natural language description")
+    p.add_argument("description", help="Natural language description of the agent system")
+    p.add_argument("-o", "--output", default=None, help="Output .nous file path")
+    p.add_argument("--template-only", action="store_true", help="Use template engine only (no LLM)")
+
+    p = sub.add_parser("verify", help="Formal verification of .nous program")
+    p.add_argument("file")
+
+    p = sub.add_parser("self-compile", help="Self-hosting: compile .nous via compiler.nous")
+    p.add_argument("files", nargs="+", help=".nous files to compile")
+    p.add_argument("--target", default="python", choices=["python", "js"])
+    p.add_argument("-o", "--output", default=None, help="Output directory")
+
+    p = sub.add_parser("wasm", help="Build browser-ready WASM/JS bundle")
+    p.add_argument("file", help=".nous source file")
+    p.add_argument("-o", "--output", default=None, help="Output path")
+    p.add_argument("--target", default="html", choices=["html", "js", "mjs"], help="Output format")
+
+    p = sub.add_parser("cost", help="Cost Oracle - predictive cost analysis")
+    p.add_argument("file", help=".nous file to analyze")
+    p.add_argument("--period", type=int, default=30, help="Projection period in days")
+    p.add_argument("--json-output", action="store_true", dest="json_output", help="JSON output")
+
     sub.add_parser("version", help="Show version")
+
+    p = sub.add_parser("diff", help="Behavioral diff between two .nous files")
+
+    p.add_argument("file", help="Original .nous file")
+    p.add_argument("target", help="Modified .nous file")
+    p.add_argument("--json", action="store_true", help="Output as JSON")
 
     args = ap.parse_args()
     commands = {
@@ -868,10 +1023,14 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "version": cmd_version,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost,
     }
     return commands[args.command](args)
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+
+

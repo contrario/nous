@@ -17,6 +17,10 @@ class Tier(str, Enum):
     TIER1 = "Tier1"
     TIER2 = "Tier2"
     TIER3 = "Tier3"
+    GROQ = "Groq"
+    TOGETHER = "Together"
+    FIREWORKS = "Fireworks"
+    CEREBRAS = "Cerebras"
 
 
 class HealStrategy(str, Enum):
@@ -405,6 +409,23 @@ class TestNode(NousNode):
     setups: list[TestSetupNode] = Field(default_factory=list)
 
 
+
+
+# ═══════════════════════════════════════════
+# TOPOLOGY — Distributed Deployment
+# ═══════════════════════════════════════════
+
+class ServerNode(NousNode):
+    name: str
+    host: str
+    port: int = 9100
+    souls: list[str] = Field(default_factory=list)
+    config: dict[str, Any] = Field(default_factory=dict)
+
+
+class TopologyNode(NousNode):
+    servers: list[ServerNode] = Field(default_factory=list)
+
 # ═══════════════════════════════════════════
 # PROGRAM (ROOT)
 # ═══════════════════════════════════════════
@@ -417,5 +438,6 @@ class NousProgram(NousNode):
     nervous_system: Optional[NervousSystemNode] = None
     evolution: Optional[EvolutionNode] = None
     perception: Optional[PerceptionNode] = None
+    topology: Optional[TopologyNode] = None
     imports: list[ImportNode] = Field(default_factory=list)
     tests: list[TestNode] = Field(default_factory=list)

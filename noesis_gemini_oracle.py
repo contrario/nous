@@ -20,7 +20,7 @@ import httpx
 logger = logging.getLogger("noesis.gemini")
 
 GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta"
-GEMINI_DEFAULT_MODEL = "gemini-2.0-flash"
+GEMINI_DEFAULT_MODEL = "gemini-2.5-flash"
 
 
 class GeminiOracle:

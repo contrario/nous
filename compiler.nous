@@ -1,0 +1,137 @@
+# ═══════════════════════════════════════════
+# NOUS Self-Hosting Compiler — Αυτομεταγλώττιση
+# A NOUS program that compiles other NOUS programs.
+# Three souls: Reader, Analyzer, Emitter.
+# ═══════════════════════════════════════════
+
+world NousCompiler {
+    law cost_ceiling = $1.00 per cycle
+    heartbeat = 60s
+}
+
+message SourceBundle {
+    path: string
+    source: string
+    lines: int = 0
+}
+
+message AnalysisResult {
+    path: string
+    source: string
+    world_name: string = "Unknown"
+    soul_count: int = 0
+    message_count: int = 0
+    route_count: int = 0
+    valid: bool = false
+    type_ok: bool = false
+    errors: string = ""
+    target: string = "python"
+}
+
+message CompileResult {
+    path: string
+    output_path: string = ""
+    target: string = "python"
+    success: bool = false
+    code_lines: int = 0
+    compile_check: bool = false
+    error: string = ""
+}
+
+soul Reader {
+    mind: claude-sonnet @ Tier0A
+    senses: [file_read, file_list]
+    memory {
+        files_read: int = 0
+        last_file: string = ""
+        target: string = "python"
+    }
+    instinct {
+        let listing = sense file_list(directory: ".", pattern: "*.nous")
+        let files = listing.files
+        guard files != null
+        for f in files {
+            let result = sense file_read(path: f)
+            if result.ok == true {
+                remember files_read += 1
+                remember last_file = f
+                speak SourceBundle(path: f, source: result.content, lines: result.lines)
+            }
+        }
+    }
+    heal {
+        on timeout => retry(3, exponential)
+        on api_error => retry(2, exponential)
+    }
+}
+
+soul Analyzer {
+    mind: claude-sonnet @ Tier0A
+    senses: [nous_parse, nous_validate, nous_typecheck]
+    memory {
+        analyzed: int = 0
+        valid_count: int = 0
+        invalid_count: int = 0
+    }
+    instinct {
+        let bundle = listen Reader::SourceBundle
+        let parsed = sense nous_parse(source: bundle.source)
+        if parsed.ok == false {
+            remember invalid_count += 1
+            speak AnalysisResult(path: bundle.path, source: bundle.source, valid: false, errors: parsed.error)
+        }
+        if parsed.ok == true {
+            let validated = sense nous_validate(source: bundle.source)
+            if validated.ok == false {
+                remember invalid_count += 1
+                speak AnalysisResult(path: bundle.path, source: bundle.source, valid: false, errors: validated.errors)
+            }
+            if validated.ok == true {
+                let typed = sense nous_typecheck(source: bundle.source)
+                remember analyzed += 1
+                remember valid_count += 1
+                speak AnalysisResult(path: bundle.path, source: bundle.source, world_name: parsed.world, soul_count: parsed.soul_count, message_count: parsed.message_count, route_count: parsed.route_count, valid: true, type_ok: typed.ok, target: "python")
+            }
+        }
+    }
+    heal {
+        on timeout => retry(3, exponential)
+        on api_error => retry(2, exponential)
+    }
+}
+
+soul Emitter {
+    mind: claude-sonnet @ Tier0A
+    senses: [nous_codegen, file_write]
+    memory {
+        emitted: int = 0
+        errors: int = 0
+        total_lines: int = 0
+    }
+    instinct {
+        let analysis = listen Analyzer::AnalysisResult
+        guard analysis.valid == true
+        let gen = sense nous_codegen(source: analysis.source, target: analysis.target)
+        if gen.ok == true {
+            let out_path = analysis.path
+            let written = sense file_write(path: out_path, content: gen.code)
+            if written.ok == true {
+                remember emitted += 1
+                remember total_lines += gen.lines
+                speak CompileResult(path: analysis.path, output_path: out_path, target: analysis.target, success: true, code_lines: gen.lines, compile_check: gen.compile_check)
+            }
+        }
+        if gen.ok == false {
+            remember errors += 1
+            speak CompileResult(path: analysis.path, success: false, error: gen.error)
+        }
+    }
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => retry(2, exponential)
+    }
+}
+
+nervous_system {
+    Reader -> Analyzer -> Emitter
+}

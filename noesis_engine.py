@@ -983,3 +983,4 @@ try:
 except Exception:
     pass
          # Superbrain bridge
+import noesis_embeddings_patch

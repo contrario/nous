@@ -23,7 +23,11 @@ TIER_COSTS: dict[str, dict[str, float]] = {
     "Tier0B": {"input_per_1k": 0.0005, "output_per_1k": 0.0025},
     "Tier1":  {"input_per_1k": 0.003, "output_per_1k": 0.015},
     "Tier2":  {"input_per_1k": 0.005, "output_per_1k": 0.025},
-    "Tier3":  {"input_per_1k": 0.015, "output_per_1k": 0.075},
+    "Tier3":     {"input_per_1k": 0.015, "output_per_1k": 0.075},
+    "Groq":      {"input_per_1k": 0.0003, "output_per_1k": 0.001},
+    "Together":  {"input_per_1k": 0.0005, "output_per_1k": 0.002},
+    "Fireworks": {"input_per_1k": 0.0002, "output_per_1k": 0.0008},
+    "Cerebras":  {"input_per_1k": 0.0001, "output_per_1k": 0.0004},
 }
 
 
@@ -486,3 +490,135 @@ def determine_listen_channels(
         if tgt == soul_name:
             return src
     return None
+
+
+class DistributedChannelBridge:
+    """Wraps DistributedChannelRegistry with the same interface as ChannelRegistry.
+    SoulRunner calls .get(), .send(), .receive() — this bridges to TCP transport."""
+
+    def __init__(self, dist_registry: Any) -> None:
+        self._dist = dist_registry
+        self._local_channels: dict[str, Channel] = {}
+        self._lock = asyncio.Lock()
+
+    async def get(self, name: str) -> Channel:
+        async with self._lock:
+            if name not in self._local_channels:
+                ch = Channel(name)
+                self._local_channels[name] = ch
+            return self._local_channels[name]
+
+    async def send(self, name: str, message: Any) -> None:
+        await self._dist.send(name, message)
+
+    async def receive(self, name: str, timeout: Optional[float] = None) -> Any:
+        return await self._dist.receive(name, timeout=timeout)
+
+
+class DistributedRuntime(NousRuntime):
+    """NousRuntime subclass for multi-machine execution.
+    Replaces local ChannelRegistry with TCP-backed DistributedChannelRegistry."""
+
+    def __init__(
+        self,
+        world_name: str = "Unknown",
+        heartbeat_seconds: float = 300.0,
+        cost_ceiling: float = 0.10,
+        channel_maxsize: int = 100,
+        node_name: str = "local",
+        node_host: str = "0.0.0.0",
+        node_port: int = 9100,
+        topology: Optional[list[Any]] = None,
+        local_souls: Optional[list[str]] = None,
+    ) -> None:
+        super().__init__(
+            world_name=world_name,
+            heartbeat_seconds=heartbeat_seconds,
+            cost_ceiling=cost_ceiling,
+            channel_maxsize=channel_maxsize,
+        )
+        self.node_name = node_name
+        self.node_host = node_host
+        self.node_port = node_port
+        self._topology_nodes = topology or []
+        self._local_soul_names = local_souls or []
+        self._dist_registry: Optional[Any] = None
+        self._bridge: Optional[DistributedChannelBridge] = None
+
+    def _build_dist_registry(self) -> None:
+        from distributed import DistributedChannelRegistry, NodeInfo
+        nodes = []
+        for n in self._topology_nodes:
+            if isinstance(n, dict):
+                nodes.append(NodeInfo(
+                    name=n["name"],
+                    host=n["host"],
+                    port=n.get("port", 9100),
+                    souls=n.get("souls", []),
+                ))
+            elif isinstance(n, NodeInfo):
+                nodes.append(n)
+            else:
+                nodes.append(n)
+        self._dist_registry = DistributedChannelRegistry(
+            local_node=self.node_name,
+            local_souls=self._local_soul_names,
+            topology=nodes,
+        )
+        self._bridge = DistributedChannelBridge(self._dist_registry)
+        self.channels = self._bridge
+
+    def set_route_map(self, routes: list[tuple[str, str]], speak_channels: dict[str, str]) -> None:
+        if self._dist_registry:
+            self._dist_registry.set_route_map(routes, speak_channels)
+
+    async def run(self) -> None:
+        self._build_dist_registry()
+
+        log.info(f"═══ NOUS Distributed Runtime — {self.world_name} ═══")
+        log.info(f"  Node:          {self.node_name}")
+        log.info(f"  Listen:        {self.node_host}:{self.node_port}")
+        log.info(f"  Heartbeat:     {self.heartbeat_seconds}s")
+        log.info(f"  Cost ceiling:  ${self.cost_ceiling:.2f}/cycle")
+        log.info(f"  Local souls:   {self._local_soul_names}")
+        log.info(f"  Cluster nodes: {len(self._topology_nodes)}")
+
+        await self._dist_registry.start(self.node_host, self.node_port)
+
+        loop = asyncio.get_running_loop()
+        for sig_name in ("SIGINT", "SIGTERM"):
+            try:
+                loop.add_signal_handler(
+                    getattr(signal, sig_name),
+                    self._handle_shutdown,
+                )
+            except (NotImplementedError, AttributeError):
+                pass
+
+        connection_results = await self._dist_registry.connect_all()
+        for name, ok in connection_results.items():
+            status = "connected" if ok else "FAILED"
+            log.info(f"  → {name}: {status}")
+
+        try:
+            async with asyncio.TaskGroup() as tg:
+                for runner in self._runners:
+                    tg.create_task(runner.run(self.channels))
+                tg.create_task(self._heartbeat_cost_reset())
+        except* CircuitBreakerTripped as eg:
+            for exc in eg.exceptions:
+                log.warning(f"Circuit breaker ended cycle: {exc}")
+        except* asyncio.CancelledError:
+            log.info("Runtime cancelled")
+        finally:
+            await self._dist_registry.stop()
+            await self.sense_executor.close()
+            log.info(f"═══ NOUS Distributed Runtime shutdown complete ═══")
+
+    async def shutdown(self) -> None:
+        self._handle_shutdown()
+
+    async def health(self) -> dict[str, Any]:
+        if self._dist_registry:
+            return await self._dist_registry.health()
+        return {"node": self.node_name, "status": "not_started"}

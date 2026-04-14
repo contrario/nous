@@ -23,7 +23,7 @@ from ast_nodes import (
     PerceptionNode, PerceptionRuleNode, PerceptionTriggerNode,
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
-    Tier,
+    Tier, TopologyNode, ServerNode,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
@@ -743,13 +743,37 @@ class NousTransformer(Transformer):
         return {"kind": "deploy", "name": items[0], "fields": items[1:]}
 
     def topo_body(self, items: list) -> dict:
-        return {"topo_field": (items[0], items[1])}
+        return {items[0]: items[1]}
 
-    def topo_server(self, items: list) -> dict:
-        return {"server": items[0], "host": items[1], "config": items[2:]}
+    def topo_server(self, items: list) -> "ServerNode":
+        s = self._strip(items)
+        name = s[0]
+        host_str = s[1]
+        host = host_str
+        port = 9100
+        if ":" in host_str:
+            parts = host_str.rsplit(":", 1)
+            try:
+                port = int(parts[1])
+                host = parts[0]
+            except ValueError:
+                pass
+        souls: list[str] = []
+        config: dict = {}
+        for item in s[2:]:
+            if isinstance(item, dict):
+                if "souls" in item:
+                    val = item["souls"]
+                    if isinstance(val, list):
+                        souls = [str(v) for v in val]
+                else:
+                    config.update(item)
+        return ServerNode(name=name, host=host, port=port, souls=souls, config=config)
 
-    def topology_decl(self, items: list) -> dict:
-        return {"kind": "topology", "servers": items}
+    def topology_decl(self, items: list) -> "TopologyNode":
+        s = self._strip(items)
+        servers = [i for i in s if isinstance(i, ServerNode)]
+        return TopologyNode(servers=servers)
 
     def nsp_field(self, items: list) -> dict:
         return {"name": items[0], "type": items[1]}
@@ -783,6 +807,8 @@ class NousTransformer(Transformer):
                 program.imports.append(item)
             elif isinstance(item, TestNode):
                 program.tests.append(item)
+            elif isinstance(item, TopologyNode):
+                program.topology = item
         return program
 
 

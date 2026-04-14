@@ -1,0 +1,72 @@
+world DistributedPipeline {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 30s
+}
+
+message Signal {
+    source: string
+    data: string
+    confidence: float = 0.0
+}
+
+message Analysis {
+    result: string
+    score: float = 0.0
+}
+
+soul Scanner {
+    mind: claude-sonnet @ Tier0A
+    senses: [http_get]
+    memory {
+        scan_count: int = 0
+    }
+    instinct {
+        let raw = sense http_get(url: "https://api.example.com/data")
+        remember scan_count += 1
+        speak Signal(source: "scanner", data: raw, confidence: 0.85)
+    }
+    heal {
+        on timeout => retry(3, exponential)
+    }
+}
+
+soul Analyzer {
+    mind: claude-sonnet @ Tier0A
+    memory {
+        analyses: int = 0
+    }
+    instinct {
+        let msg = listen Scanner::Signal
+        remember analyses += 1
+        speak Analysis(result: "analyzed", score: 0.9)
+    }
+}
+
+soul Executor {
+    mind: claude-sonnet @ Tier0A
+    senses: [http_post]
+    memory {
+        executions: int = 0
+    }
+    instinct {
+        let cmd = listen Analyzer::Analysis
+        remember executions += 1
+        sense http_post(url: "https://api.example.com/execute", body: cmd)
+    }
+    heal {
+        on api_error => retry(2, exponential)
+    }
+}
+
+nervous_system {
+    Scanner -> Analyzer -> Executor
+}
+
+topology {
+    node_alpha: "192.168.1.10:9100" {
+        souls: [Scanner]
+    }
+    node_beta: "192.168.1.20:9100" {
+        souls: [Analyzer, Executor]
+    }
+}

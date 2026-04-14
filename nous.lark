@@ -330,7 +330,7 @@ WAKE_ALL.2: "wake_all"
 CONSTITUTIONAL.2: "constitutional"
 PER.2: "per"
 CYCLE.2: "cycle"
-TIER: /Tier[0-3][A-B]?/
+TIER: /Tier[0-3][A-B]?|Groq|Together|Fireworks|Cerebras/
 
 // ═══════════════════════════════════════════
 // PRIMITIVES
