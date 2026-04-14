@@ -12,7 +12,7 @@ from typing import Any
 from lark import Lark, Transformer, Token, Tree
 
 from ast_nodes import (
-    TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
+    SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
     NousProgram, WorldNode, LawNode, LawCost, LawCurrency, LawDuration,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
@@ -357,6 +357,36 @@ class NousTransformer(Transformer):
 
     def law_expr(self, items: list) -> Any:
         return items[0]
+
+    # ── Symbiosis ──
+    def symbiosis_bond(self, items: list) -> dict:
+        s = self._strip(items)
+        names = s[0] if s and isinstance(s[0], list) else s
+        return {"bond_with": [str(n) for n in names]}
+
+    def symbiosis_shared_memory(self, items: list) -> dict:
+        s = self._strip(items)
+        names = s[0] if s and isinstance(s[0], list) else s
+        return {"shared_memory": [str(n) for n in names]}
+
+    def symbiosis_sync_interval(self, items: list) -> dict:
+        return {"sync_interval": str(items[0])}
+
+    def symbiosis_evolve_together(self, items: list) -> dict:
+        return {"evolve_together": items[0] if isinstance(items[0], bool) else str(items[0]).lower() == "true"}
+
+    def symbiosis_field(self, items: list):
+        return items[0]
+
+    def symbiosis_block(self, items: list) -> SymbiosisNode:
+        s = self._strip(items)
+        node = SymbiosisNode()
+        for item in s:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(node, k):
+                        setattr(node, k, v)
+        return node
 
     # ── Telemetry ──
     def telemetry_enabled(self, items: list) -> dict:
@@ -739,6 +769,8 @@ class NousTransformer(Transformer):
                 node.immune_system = item
             elif isinstance(item, DreamSystemNode):
                 node.dream_system = item
+            elif isinstance(item, SymbiosisNode):
+                node.symbiosis = item
         return node
 
     # ── Message ──

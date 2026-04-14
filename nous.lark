@@ -68,6 +68,7 @@ soul_body: mind_decl
          | mitosis_block
          | immune_system_block
          | dream_system_block
+         | symbiosis_block
 
 mind_decl: "mind" ":" model_name "@" TIER
 model_name: NAME ("-" model_part)*
@@ -173,6 +174,13 @@ telemetry_field: "enabled" ":" BOOL                -> telemetry_enabled
                | "trace_senses" ":" BOOL           -> telemetry_trace_senses
                | "trace_llm" ":" BOOL              -> telemetry_trace_llm
                | "buffer_size" ":" INT             -> telemetry_buffer_size
+
+
+symbiosis_block: SYMBIOSIS "{" symbiosis_field* "}"
+symbiosis_field: "bond_with" ":" "[" name_list "]"        -> symbiosis_bond
+               | "shared_memory" ":" "[" name_list "]"    -> symbiosis_shared_memory
+               | "sync_interval" ":" duration_lit         -> symbiosis_sync_interval
+               | "evolve_together" ":" BOOL               -> symbiosis_evolve_together
 
 mitosis_block: MITOSIS "{" mitosis_field* "}"
 mitosis_field: "trigger" ":" expr              -> mitosis_trigger
@@ -364,6 +372,7 @@ SPEAK.2: "speak" | "λέω"
 LISTEN.2: "listen" | "ακούω"
 DNA.2: "dna" | "DNA"
 HEAL.2: "heal" | "θεραπεία"
+SYMBIOSIS.2: "symbiosis" | "συμβίωση"
 TELEMETRY.2: "telemetry" | "τηλεμετρία"
 MITOSIS.2: "mitosis" | "μίτωση"
 IMMUNE_SYSTEM.2: "immune_system" | "ανοσία"

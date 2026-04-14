@@ -1,0 +1,78 @@
+world Colony {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 30s
+}
+
+message ScanData {
+    url: str
+    score: float
+}
+
+message Summary {
+    text: str
+}
+
+soul Scout {
+    mind: deepseek-chat @ Tier0A
+    senses: [http_get]
+    memory {
+        discovered: int = 0
+        shared_score: float = 0.0
+    }
+    symbiosis {
+        bond_with: [Analyst]
+        shared_memory: [shared_score]
+        sync_interval: 10s
+        evolve_together: false
+    }
+    instinct {
+        remember discovered += 1
+        let data = sense http_get(url: "https://api.github.com/zen")
+        speak ScanData(url: "test", score: 0.95)
+    }
+    heal {
+        on error => retry
+    }
+}
+
+soul Analyst {
+    mind: deepseek-chat @ Tier0A
+    memory {
+        analyzed: int = 0
+        shared_score: float = 0.0
+        consensus: float = 0.0
+    }
+    symbiosis {
+        bond_with: [Scout]
+        shared_memory: [shared_score, consensus]
+        sync_interval: 10s
+        evolve_together: false
+    }
+    instinct {
+        listen ScanData
+        remember analyzed += 1
+        speak Summary(text: "done")
+    }
+    heal {
+        on error => retry
+    }
+}
+
+soul Reporter {
+    mind: deepseek-chat @ Tier0B
+    memory {
+        reports: int = 0
+    }
+    instinct {
+        listen Summary
+        remember reports += 1
+    }
+    heal {
+        on error => retry
+    }
+}
+
+nervous_system {
+    Scout -> Analyst
+    Analyst -> Reporter
+}

@@ -304,6 +304,13 @@ class ImmuneSystemNode(NousNode):
 # MITOSIS — Self-Replication
 # ═══════════════════════════════════════════
 
+class SymbiosisNode(NousNode):
+    bond_with: list[str] = Field(default_factory=list)
+    shared_memory: list[str] = Field(default_factory=list)
+    sync_interval: str = "10s"
+    evolve_together: bool = False
+
+
 class MitosisNode(NousNode):
     trigger: Any = None
     max_clones: int = 3
@@ -330,6 +337,7 @@ class SoulNode(NousNode):
     mitosis: Optional[MitosisNode] = None
     immune_system: Optional[ImmuneSystemNode] = None
     dream_system: Optional[DreamSystemNode] = None
+    symbiosis: Optional[SymbiosisNode] = None
 
 
 # ═══════════════════════════════════════════

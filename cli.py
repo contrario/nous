@@ -33,7 +33,7 @@ from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
 
-VERSION = "3.7.0"
+VERSION = "3.8.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -1017,6 +1017,54 @@ def cmd_immune(args: argparse.Namespace) -> int:
 
 
 
+
+def cmd_symbiosis(args: Any) -> None:
+    """Show symbiosis bonds and shared memory analysis."""
+    from parser import parse_nous
+    from validator import NousValidator
+    from verifier import NousVerifier
+
+    source = Path(args.file).read_text()
+    program = parse_nous(source)
+
+    validator = NousValidator(program)
+    val_result = validator.validate()
+    for e in val_result.errors:
+        print(f"  ERROR [{e.code}] {e.message}")
+    for w in val_result.warnings:
+        print(f"  WARN  [{w.code}] {w.message}")
+
+    verifier = NousVerifier(program)
+    ver_result = verifier.verify()
+
+    print("")
+    print("  ═══ NOUS Symbiosis Analysis ═══")
+    print("")
+
+    sym_souls = [s for s in program.souls if s.symbiosis is not None]
+    if not sym_souls:
+        print("  No souls with symbiosis found.")
+        return
+
+    for soul in sym_souls:
+        sym = soul.symbiosis
+        print(f"  ── {soul.name} ──")
+        print(f"  Bonds:            {', '.join(sym.bond_with)}")
+        print(f"  Shared memory:    {', '.join(sym.shared_memory) if sym.shared_memory else '—'}")
+        print(f"  Sync interval:    {sym.sync_interval}")
+        print(f"  Evolve together:  {sym.evolve_together}")
+        print("")
+
+    sy_proofs = [p for p in ver_result.proven if "VSY" in str(getattr(p, 'code', ''))]
+    sy_warns = [w for w in ver_result.warnings if "VSY" in str(getattr(w, 'code', ''))]
+    for p in sy_proofs:
+        print(f"  \u2713 [{p.code}] {p.message}")
+    for w in sy_warns:
+        print(f"  \u26a0 [{w.code}] {w.message}")
+
+    print("")
+    print("  \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550")
+
 def cmd_telemetry(args: Any) -> None:
     """Show telemetry configuration for a .nous program."""
     from parser import parse_nous
@@ -1350,6 +1398,8 @@ def main() -> int:
     p = sub.add_parser("mitosis", help="Mitosis analysis — self-replication config")
     p.add_argument("file", help=".nous file to analyze")
 
+    p = sub.add_parser("symbiosis", help="Symbiosis bond analysis")
+    p.add_argument("file", help=".nous file to analyze")
     p = sub.add_parser("telemetry", help="Telemetry configuration analysis")
     p.add_argument("file", help=".nous file to analyze")
     p = sub.add_parser("retire", help="Clone retirement analysis")
@@ -1367,7 +1417,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis,
     }
     return commands[args.command](args)
 

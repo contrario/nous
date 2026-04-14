@@ -105,7 +105,7 @@ class VerificationResult:
         categories: dict[str, list[VerificationItem]] = {}
         for item in self.items:
             categories.setdefault(item.category, []).append(item)
-        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "telemetry", "mitosis", "retirement", "immune", "dream"]:
+        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "telemetry", "symbiosis", "mitosis", "retirement", "immune", "dream"]:
             if cat not in categories:
                 continue
             cat_label = cat.replace("_", " ").title()
@@ -147,6 +147,7 @@ class NousVerifier:
         self._verify_memory_safety()
         self._verify_topology()
         self._verify_telemetry()
+        self._verify_symbiosis()
         self._verify_mitosis()
         self._verify_retirement()
         self._verify_immune()
@@ -622,6 +623,45 @@ class NousVerifier:
             f"Telemetry covers {soul_count} soul(s), subsystems: {sub_str}",
             loc,
         )
+
+    def _verify_symbiosis(self) -> None:
+        sym_souls = [s for s in self.program.souls if s.symbiosis is not None]
+        if not sym_souls:
+            return
+        bonds = {}
+        for soul in sym_souls:
+            bonds[soul.name] = list(soul.symbiosis.bond_with)
+        for soul in sym_souls:
+            sym = soul.symbiosis
+            loc = f"soul {soul.name}"
+            mutual = [b for b in sym.bond_with if b in bonds and soul.name in bonds[b]]
+            if mutual:
+                self.result.prove("VSY001", "symbiosis", f"Soul {soul.name} has mutual bonds with: {', '.join(mutual)}", loc)
+            else:
+                self.result.warning("VSY001", "symbiosis", f"Soul {soul.name} bonds are one-directional", loc)
+            if sym.shared_memory:
+                self.result.prove("VSY002", "symbiosis", f"Soul {soul.name} shares {len(sym.shared_memory)} field(s): {', '.join(sym.shared_memory)}", loc)
+            if sym.evolve_together:
+                has_dna = soul.dna is not None
+                if has_dna:
+                    self.result.prove("VSY003", "symbiosis", f"Soul {soul.name} co-evolution viable", loc)
+                else:
+                    self.result.warning("VSY003", "symbiosis", f"Soul {soul.name} co-evolution: missing dna", loc)
+        visited = set()
+        cluster_count = 0
+        for soul_name in bonds:
+            if soul_name not in visited:
+                stack = [soul_name]
+                while stack:
+                    n = stack.pop()
+                    if n in visited:
+                        continue
+                    visited.add(n)
+                    for neighbor in bonds.get(n, []):
+                        if neighbor in bonds:
+                            stack.append(neighbor)
+                cluster_count += 1
+        self.result.prove("VSY004", "symbiosis", f"Symbiosis coverage: {len(sym_souls)} soul(s) in {cluster_count} cluster(s)")
 
     def _verify_mitosis(self) -> None:
         mitosis_souls = [s for s in self.program.souls if s.mitosis is not None]

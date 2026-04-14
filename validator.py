@@ -134,6 +134,8 @@ class NousValidator:
             if soul.dna:
                 self._check_dna_ranges(soul)
 
+            if soul.symbiosis:
+                self._check_symbiosis(soul)
             if soul.mitosis:
                 self._check_mitosis(soul)
 
@@ -198,6 +200,28 @@ class NousValidator:
             seconds = {"ms": val / 1000, "s": val, "m": val * 60, "h": val * 3600, "d": val * 86400}.get(unit, val)
             if seconds < 10:
                 self.result.error("IM003", f"Antibody lifespan {im.antibody_lifespan} is too short (min 10s).", loc)
+
+    def _check_symbiosis(self, soul: SoulNode) -> None:
+        loc = f"soul {soul.name} > symbiosis"
+        sym = soul.symbiosis
+        soul_names = {s.name for s in self.program.souls}
+        if not sym.bond_with:
+            self.result.error("SY001", f"Symbiosis bond_with is empty.", loc)
+        for bond_name in sym.bond_with:
+            if bond_name not in soul_names:
+                self.result.error("SY002", f"Bond target '{bond_name}' does not exist.", loc)
+            if bond_name == soul.name:
+                self.result.error("SY003", f"Soul cannot bond with itself.", loc)
+        if sym.shared_memory:
+            if soul.memory is None:
+                self.result.error("SY004", f"Shared memory fields declared but soul has no memory block.", loc)
+            else:
+                mem_fields = {f.name for f in soul.memory.fields}
+                for field_name in sym.shared_memory:
+                    if field_name not in mem_fields:
+                        self.result.error("SY005", f"Shared field '{field_name}' not in soul memory.", loc)
+        if sym.evolve_together and soul.dna is None:
+            self.result.warn("SY007", f"evolve_together=true but soul has no dna block.", loc)
 
     def _check_mitosis(self, soul: SoulNode) -> None:
         loc = f"soul {soul.name} > mitosis"
