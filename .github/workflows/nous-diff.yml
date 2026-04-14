@@ -1,0 +1,78 @@
+name: NOUS Behavioral Diff
+
+on:
+  pull_request:
+    paths:
+      - '**.nous'
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  nous-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: head
+
+      - name: Checkout base branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install NOUS
+        run: |
+          cd head
+          pip install -e . 2>/dev/null || pip install -r requirements.txt 2>/dev/null || true
+
+      - name: Find changed .nous files
+        id: changed
+        run: |
+          cd head
+          git diff --name-only --diff-filter=ACMR \
+            ${{ github.event.pull_request.base.sha }} \
+            ${{ github.event.pull_request.head.sha }} \
+            -- '*.nous' > /tmp/changed_nous_files.txt
+          echo "count=$(wc -l < /tmp/changed_nous_files.txt | tr -d ' ')" >> "$GITHUB_OUTPUT"
+          cat /tmp/changed_nous_files.txt
+
+      - name: Run NOUS diff
+        if: steps.changed.outputs.count != '0'
+        run: |
+          mkdir -p /tmp/nous_diffs
+          while IFS= read -r file; do
+            [ -z "$file" ] && continue
+            base_file="base/$file"
+            head_file="head/$file"
+            slug=$(echo "$file" | tr '/' '_' | sed 's/\.nous$//')
+            if [ -f "$base_file" ] && [ -f "$head_file" ]; then
+              nous diff "$base_file" "$head_file" --json > "/tmp/nous_diffs/${slug}.json" 2>&1 || true
+            elif [ -f "$head_file" ]; then
+              echo '{"status":"new_file","file":"'"$file"'"}' > "/tmp/nous_diffs/${slug}.json"
+            fi
+          done < /tmp/changed_nous_files.txt
+
+      - name: Generate PR comment
+        if: steps.changed.outputs.count != '0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          python head/.github/scripts/pr_comment_generator.py \
+            --diff-dir /tmp/nous_diffs \
+            --changed-files /tmp/changed_nous_files.txt
+
+      - name: No .nous changes
+        if: steps.changed.outputs.count == '0'
+        run: echo "No .nous files changed."
