@@ -290,6 +290,7 @@ class SoulRunner:
         self._telemetry_engine: Optional[Any] = None
         self._hot_reload_engine: Optional[Any] = None
         self._symbiosis_engine: Optional[Any] = None
+        self._metabolism_engine: Optional[Any] = None
         self._shutdown_event: Optional[asyncio.Event] = None
 
     def set_shutdown_event(self, event: asyncio.Event) -> None:
@@ -503,6 +504,8 @@ class NousRuntime:
                     tg.create_task(self._dream_engine.run())
                 if self._telemetry_engine:
                     tg.create_task(self._telemetry_engine.run())
+                if self._metabolism_engine:
+                    tg.create_task(self._metabolism_engine.run())
                 if self._symbiosis_engine:
                     tg.create_task(self._symbiosis_engine.run())
                 if self._hot_reload_engine:
@@ -546,6 +549,8 @@ class NousRuntime:
             self._dream_engine.stop()
         if self._telemetry_engine:
             self._telemetry_engine.stop()
+        if self._metabolism_engine:
+            self._metabolism_engine.stop()
         if self._symbiosis_engine:
             self._symbiosis_engine.stop()
         if self._hot_reload_engine:

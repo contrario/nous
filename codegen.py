@@ -144,6 +144,9 @@ class NousCodeGen:
         has_telemetry = self.program.world and self.program.world.telemetry and self.program.world.telemetry.enabled
         if has_telemetry:
             self._emit("from telemetry_engine import TelemetryEngine, TelemetryConfig, SpanKind, SpanStatus")
+        has_metabolism = any(s.metabolism for s in self.program.souls)
+        if has_metabolism:
+            self._emit("from metabolism_engine import MetabolismEngine, MetabolismConfig")
         has_symbiosis = any(s.symbiosis for s in self.program.souls)
         if has_symbiosis:
             self._emit("from symbiosis_engine import SymbiosisEngine, BondConfig")

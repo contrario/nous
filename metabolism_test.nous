@@ -1,0 +1,77 @@
+world BioLab {
+    law cost_ceiling = $0.50 per cycle
+    heartbeat = 30s
+}
+
+message ScanData {
+    url: str
+}
+
+message Report {
+    text: str
+}
+
+soul Worker {
+    mind: deepseek-chat @ Tier0A
+    senses: [http_get]
+    memory {
+        tasks_done: int = 0
+    }
+    metabolism {
+        max_energy: 100
+        energy_per_cycle: 8
+        recovery_rate: 3
+        fatigue_tier: Cerebras
+        hibernate_threshold: 15
+        recovery_idle_sec: 20
+    }
+    instinct {
+        remember tasks_done += 1
+        let r = sense http_get(url: "https://api.github.com/zen")
+        speak ScanData(url: "done")
+    }
+    heal {
+        on error => retry
+    }
+}
+
+soul Supervisor {
+    mind: deepseek-chat @ Tier0B
+    memory {
+        reports: int = 0
+    }
+    metabolism {
+        max_energy: 200
+        energy_per_cycle: 3
+        recovery_rate: 5
+        hibernate_threshold: 10
+        recovery_idle_sec: 15
+    }
+    instinct {
+        listen ScanData
+        remember reports += 1
+        speak Report(text: "supervised")
+    }
+    heal {
+        on error => retry
+    }
+}
+
+soul Logger {
+    mind: deepseek-chat @ Tier0B
+    memory {
+        logs: int = 0
+    }
+    instinct {
+        listen Report
+        remember logs += 1
+    }
+    heal {
+        on error => retry
+    }
+}
+
+nervous_system {
+    Worker -> Supervisor
+    Supervisor -> Logger
+}

@@ -33,7 +33,7 @@ from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
 
-VERSION = "3.8.0"
+VERSION = "3.9.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -1018,6 +1018,50 @@ def cmd_immune(args: argparse.Namespace) -> int:
 
 
 
+
+def cmd_metabolism(args: Any) -> None:
+    """Show metabolism/energy analysis for a .nous program."""
+    from parser import parse_nous
+    from validator import NousValidator
+    from verifier import NousVerifier
+    source = Path(args.file).read_text()
+    program = parse_nous(source)
+    validator = NousValidator(program)
+    val_result = validator.validate()
+    for e in val_result.errors:
+        print(f"  ERROR [{e.code}] {e.message}")
+    for w in val_result.warnings:
+        print(f"  WARN  [{w.code}] {w.message}")
+    verifier = NousVerifier(program)
+    ver_result = verifier.verify()
+    print("")
+    print("  \u2550\u2550\u2550 NOUS Metabolism Analysis \u2550\u2550\u2550")
+    print("")
+    metab_souls = [s for s in program.souls if s.metabolism is not None]
+    if not metab_souls:
+        print("  No souls with metabolism found.")
+        return
+    for soul in metab_souls:
+        mb = soul.metabolism
+        cycles = mb.max_energy / mb.energy_per_cycle if mb.energy_per_cycle > 0 else 0
+        print(f"  \u2500\u2500 {soul.name} \u2500\u2500")
+        print(f"  Max energy:       {mb.max_energy}")
+        print(f"  Drain per cycle:  {mb.energy_per_cycle}")
+        print(f"  Recovery rate:    {mb.recovery_rate}/s")
+        print(f"  Cycles to empty:  {cycles:.0f}")
+        print(f"  Hibernate below:  {mb.hibernate_threshold}")
+        if mb.fatigue_tier:
+            print(f"  Fatigue tier:     {mb.fatigue_tier}")
+        print("")
+    mb_proofs = [p for p in ver_result.proven if "VMB" in str(getattr(p, 'code', ''))]
+    mb_warns = [w for w in ver_result.warnings if "VMB" in str(getattr(w, 'code', ''))]
+    for p in mb_proofs:
+        print(f"  \u2713 [{p.code}] {p.message}")
+    for w in mb_warns:
+        print(f"  \u26a0 [{w.code}] {w.message}")
+    print("")
+    print("  \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550")
+
 def cmd_symbiosis(args: Any) -> None:
     """Show symbiosis bonds and shared memory analysis."""
     from parser import parse_nous
@@ -1398,6 +1442,8 @@ def main() -> int:
     p = sub.add_parser("mitosis", help="Mitosis analysis — self-replication config")
     p.add_argument("file", help=".nous file to analyze")
 
+    p = sub.add_parser("metabolism", help="Metabolism/energy analysis")
+    p.add_argument("file", help=".nous file to analyze")
     p = sub.add_parser("symbiosis", help="Symbiosis bond analysis")
     p.add_argument("file", help=".nous file to analyze")
     p = sub.add_parser("telemetry", help="Telemetry configuration analysis")
@@ -1417,7 +1463,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis, "metabolism": cmd_metabolism,
     }
     return commands[args.command](args)
 

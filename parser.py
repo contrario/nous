@@ -12,7 +12,7 @@ from typing import Any
 from lark import Lark, Transformer, Token, Tree
 
 from ast_nodes import (
-    SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
+    MetabolismNode, SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
     NousProgram, WorldNode, LawNode, LawCost, LawCurrency, LawDuration,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
@@ -367,6 +367,38 @@ class NousTransformer(Transformer):
 
     def law_expr(self, items: list) -> Any:
         return items[0]
+
+    # ── Metabolism ──
+    def metabolism_max_energy(self, items: list) -> dict:
+        return {"max_energy": int(items[0])}
+
+    def metabolism_energy_per_cycle(self, items: list) -> dict:
+        return {"energy_per_cycle": float(items[0])}
+
+    def metabolism_recovery_rate(self, items: list) -> dict:
+        return {"recovery_rate": float(items[0])}
+
+    def metabolism_fatigue_tier(self, items: list) -> dict:
+        return {"fatigue_tier": str(items[0])}
+
+    def metabolism_hibernate_threshold(self, items: list) -> dict:
+        return {"hibernate_threshold": int(items[0])}
+
+    def metabolism_recovery_idle(self, items: list) -> dict:
+        return {"recovery_idle_sec": int(items[0])}
+
+    def metabolism_field(self, items: list):
+        return items[0]
+
+    def metabolism_block(self, items: list) -> 'MetabolismNode':
+        s = self._strip(items)
+        node = MetabolismNode()
+        for item in s:
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    if hasattr(node, k):
+                        setattr(node, k, v)
+        return node
 
     # ── Symbiosis ──
     def symbiosis_bond(self, items: list) -> dict:
@@ -781,6 +813,8 @@ class NousTransformer(Transformer):
                 node.dream_system = item
             elif isinstance(item, SymbiosisNode):
                 node.symbiosis = item
+            elif isinstance(item, MetabolismNode):
+                node.metabolism = item
         return node
 
     # ── Message ──

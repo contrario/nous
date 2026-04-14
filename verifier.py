@@ -105,7 +105,7 @@ class VerificationResult:
         categories: dict[str, list[VerificationItem]] = {}
         for item in self.items:
             categories.setdefault(item.category, []).append(item)
-        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "telemetry", "symbiosis", "mitosis", "retirement", "immune", "dream"]:
+        for cat in ["resource_bound", "deadlock", "protocol", "liveness", "reachability", "memory_safety", "topology", "telemetry", "symbiosis", "metabolism", "mitosis", "retirement", "immune", "dream"]:
             if cat not in categories:
                 continue
             cat_label = cat.replace("_", " ").title()
@@ -148,6 +148,7 @@ class NousVerifier:
         self._verify_topology()
         self._verify_telemetry()
         self._verify_symbiosis()
+        self._verify_metabolism()
         self._verify_mitosis()
         self._verify_retirement()
         self._verify_immune()
@@ -662,6 +663,27 @@ class NousVerifier:
                             stack.append(neighbor)
                 cluster_count += 1
         self.result.prove("VSY004", "symbiosis", f"Symbiosis coverage: {len(sym_souls)} soul(s) in {cluster_count} cluster(s)")
+
+    def _verify_metabolism(self) -> None:
+        metab_souls = [s for s in self.program.souls if s.metabolism is not None]
+        if not metab_souls:
+            return
+        for soul in metab_souls:
+            m = soul.metabolism
+            loc = f"soul {soul.name}"
+            cycles = m.max_energy / m.energy_per_cycle if m.energy_per_cycle > 0 else float('inf')
+            self.result.prove("VMB001", "metabolism", f"Soul {soul.name} energy budget: {m.max_energy}, {m.energy_per_cycle}/cycle, exhausts in {cycles:.0f} cycles", loc)
+            if m.recovery_rate >= m.energy_per_cycle:
+                self.result.prove("VMB002", "metabolism", f"Soul {soul.name} sustainable: recovery ({m.recovery_rate}/s) >= drain ({m.energy_per_cycle}/cycle)", loc)
+            else:
+                self.result.warning("VMB002", "metabolism", f"Soul {soul.name} will fatigue: recovery ({m.recovery_rate}/s) < drain ({m.energy_per_cycle}/cycle)", loc)
+            if m.fatigue_tier:
+                primary = soul.mind.tier.value if soul.mind else "Tier1"
+                if m.fatigue_tier != primary:
+                    self.result.prove("VMB003", "metabolism", f"Soul {soul.name} downgrades to {m.fatigue_tier} when fatigued (primary: {primary})", loc)
+                else:
+                    self.result.warning("VMB003", "metabolism", f"Soul {soul.name} fatigue_tier same as primary", loc)
+        self.result.prove("VMB004", "metabolism", f"Metabolism coverage: {len(metab_souls)}/{len(self.program.souls)} soul(s) have energy management")
 
     def _verify_mitosis(self) -> None:
         mitosis_souls = [s for s in self.program.souls if s.mitosis is not None]

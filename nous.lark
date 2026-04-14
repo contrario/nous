@@ -69,6 +69,7 @@ soul_body: mind_decl
          | immune_system_block
          | dream_system_block
          | symbiosis_block
+         | metabolism_block
 
 mind_decl: "mind" ":" model_name "@" TIER
 model_name: NAME ("-" model_part)*
@@ -175,6 +176,15 @@ telemetry_field: "enabled" ":" BOOL                -> telemetry_enabled
                | "trace_llm" ":" BOOL              -> telemetry_trace_llm
                | "buffer_size" ":" INT             -> telemetry_buffer_size
 
+
+
+metabolism_block: METABOLISM "{" metabolism_field* "}"
+metabolism_field: "max_energy" ":" INT                    -> metabolism_max_energy
+               | "energy_per_cycle" ":" (FLOAT | INT)    -> metabolism_energy_per_cycle
+               | "recovery_rate" ":" (FLOAT | INT)       -> metabolism_recovery_rate
+               | "fatigue_tier" ":" TIER                 -> metabolism_fatigue_tier
+               | "hibernate_threshold" ":" INT           -> metabolism_hibernate_threshold
+               | "recovery_idle_sec" ":" INT             -> metabolism_recovery_idle
 
 symbiosis_block: SYMBIOSIS "{" symbiosis_field* "}"
 symbiosis_field: "bond_with" ":" "[" name_list "]"        -> symbiosis_bond
@@ -372,6 +382,7 @@ SPEAK.2: "speak" | "λέω"
 LISTEN.2: "listen" | "ακούω"
 DNA.2: "dna" | "DNA"
 HEAL.2: "heal" | "θεραπεία"
+METABOLISM.2: "metabolism" | "μεταβολισμός"
 SYMBIOSIS.2: "symbiosis" | "συμβίωση"
 TELEMETRY.2: "telemetry" | "τηλεμετρία"
 MITOSIS.2: "mitosis" | "μίτωση"

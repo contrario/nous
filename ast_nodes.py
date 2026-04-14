@@ -304,6 +304,15 @@ class ImmuneSystemNode(NousNode):
 # MITOSIS — Self-Replication
 # ═══════════════════════════════════════════
 
+class MetabolismNode(NousNode):
+    max_energy: int = 100
+    energy_per_cycle: float = 5.0
+    recovery_rate: float = 2.0
+    fatigue_tier: Optional[str] = None
+    hibernate_threshold: int = 10
+    recovery_idle_sec: int = 30
+
+
 class SymbiosisNode(NousNode):
     bond_with: list[str] = Field(default_factory=list)
     shared_memory: list[str] = Field(default_factory=list)
@@ -338,6 +347,7 @@ class SoulNode(NousNode):
     immune_system: Optional[ImmuneSystemNode] = None
     dream_system: Optional[DreamSystemNode] = None
     symbiosis: Optional[SymbiosisNode] = None
+    metabolism: Optional[MetabolismNode] = None
 
 
 # ═══════════════════════════════════════════

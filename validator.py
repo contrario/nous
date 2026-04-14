@@ -134,6 +134,8 @@ class NousValidator:
             if soul.dna:
                 self._check_dna_ranges(soul)
 
+            if soul.metabolism:
+                self._check_metabolism(soul)
             if soul.symbiosis:
                 self._check_symbiosis(soul)
             if soul.mitosis:
@@ -200,6 +202,26 @@ class NousValidator:
             seconds = {"ms": val / 1000, "s": val, "m": val * 60, "h": val * 3600, "d": val * 86400}.get(unit, val)
             if seconds < 10:
                 self.result.error("IM003", f"Antibody lifespan {im.antibody_lifespan} is too short (min 10s).", loc)
+
+    def _check_metabolism(self, soul: SoulNode) -> None:
+        loc = f"soul {soul.name} > metabolism"
+        m = soul.metabolism
+        if m.max_energy < 10:
+            self.result.error("MB001", f"max_energy must be >= 10, got {m.max_energy}", loc)
+        if m.energy_per_cycle <= 0:
+            self.result.error("MB002", f"energy_per_cycle must be > 0, got {m.energy_per_cycle}", loc)
+        if m.energy_per_cycle > m.max_energy:
+            self.result.error("MB003", f"energy_per_cycle ({m.energy_per_cycle}) > max_energy ({m.max_energy})", loc)
+        if m.recovery_rate <= 0:
+            self.result.error("MB004", f"recovery_rate must be > 0, got {m.recovery_rate}", loc)
+        if m.hibernate_threshold < 0 or m.hibernate_threshold >= m.max_energy:
+            self.result.error("MB005", f"hibernate_threshold must be in [0, max_energy), got {m.hibernate_threshold}", loc)
+        if m.fatigue_tier:
+            valid_tiers = {"Tier0A", "Tier0B", "Tier1", "Tier2", "Tier3", "Groq", "Together", "Fireworks", "Cerebras"}
+            if m.fatigue_tier not in valid_tiers:
+                self.result.error("MB006", f"Invalid fatigue_tier: {m.fatigue_tier}", loc)
+        if soul.mind is None:
+            self.result.warn("MB007", f"Soul {soul.name} has metabolism but no mind.", loc)
 
     def _check_symbiosis(self, soul: SoulNode) -> None:
         loc = f"soul {soul.name} > symbiosis"
