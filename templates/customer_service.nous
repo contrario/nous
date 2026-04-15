@@ -1,0 +1,109 @@
+world CustomerService {
+    law cost_ceiling = $1.00 per cycle
+    heartbeat = 15s
+    telemetry {
+        enabled: true
+        exporter: jsonl
+        sample_rate: 1.0
+        trace_llm: true
+    }
+}
+
+message Ticket {
+    customer_id: string
+    query: string
+    priority: string
+}
+
+message Resolution {
+    ticket_id: string
+    response: string
+    resolved: bool
+}
+
+message Escalation {
+    ticket_id: string
+    reason: string
+}
+
+soul Triage {
+    mind: deepseek-chat @ Tier1
+    senses: [http_get]
+
+    memory {
+        tickets_processed: int = 0
+    }
+
+    instinct {
+        guard message != null else sleep 5s
+        speak Ticket(customer_id: "c1", query: message, priority: "normal")
+        remember tickets_processed = tickets_processed + 1
+    }
+
+    heal {
+        on api_error => retry(2, api_error)
+    }
+
+    immune_system {
+        antibody_lifespan: 2h
+    }
+
+    consciousness {
+        goals: [fast_response, accuracy]
+        reflect_every: 10
+        self_model: true
+        goal_threshold: 0.8
+        introspection_depth: 3
+    }
+}
+
+soul Resolver {
+    mind: claude-3-haiku @ Tier0A
+    senses: [http_get]
+
+    memory {
+        resolved_count: int = 0
+    }
+
+    instinct {
+        let ticket = listen Triage::Ticket
+        guard ticket != null else sleep 3s
+        speak Resolution(ticket_id: ticket.customer_id, response: "Resolved", resolved: true)
+        remember resolved_count = resolved_count + 1
+    }
+
+    heal {
+        on timeout => retry(3, timeout)
+    }
+
+    metabolism {
+        max_energy: 100
+        energy_per_cycle: 6
+        recovery_rate: 4
+        fatigue_tier: Cerebras
+        hibernate_threshold: 10
+    }
+}
+
+soul Escalator {
+    mind: deepseek-chat @ Tier1
+
+    memory {
+        escalations: int = 0
+    }
+
+    instinct {
+        let result = listen Resolver::Resolution
+        guard result.resolved == false else sleep 5s
+        speak Escalation(ticket_id: result.ticket_id, reason: "Unresolved")
+        remember escalations = escalations + 1
+    }
+
+    heal {
+        on error => retry(2, error)
+    }
+}
+
+nervous_system {
+    Triage -> Resolver -> Escalator
+}

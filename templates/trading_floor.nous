@@ -1,0 +1,180 @@
+world TradingFloor {
+    law cost_ceiling = $5.00 per cycle
+    heartbeat = 15s
+    telemetry {
+        enabled: true
+        exporter: jsonl
+        sample_rate: 1.0
+        trace_senses: true
+        trace_llm: true
+        buffer_size: 2000
+    }
+}
+message PriceSnapshot {
+    symbol: string
+    price: float
+    volume: float
+    change_pct: float
+    timestamp: string
+}
+message TradeSignal {
+    symbol: string
+    action: string
+    confidence: float
+    reason: string
+}
+message TradeOrder {
+    symbol: string
+    side: string
+    quantity: float
+    price: float
+    order_type: string
+}
+message RiskAlert {
+    level: string
+    message: string
+    exposure: float
+    drawdown: float
+}
+soul Watcher {
+    mind: deepseek-chat @ Tier1
+    senses: [http_get]
+    memory {
+        ticks_collected: int = 0
+        last_price: float = 0.0
+        price_history: string = ""
+    }
+    instinct {
+        let data = sense http_get(url: "https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT")
+        remember last_price = 0.0
+        remember ticks_collected = ticks_collected + 1
+        speak PriceSnapshot(symbol: "BTCUSDT", price: last_price, volume: 0.0, change_pct: 0.0, timestamp: "now")
+    }
+    dna {
+        poll_interval: 15 ~ [5, 120]
+        batch_size: 3 ~ [1, 10]
+    }
+    heal {
+        on api_error => retry(3, api_error)
+    }
+    mitosis {
+        trigger: queue_depth > 10
+        max_clones: 3
+        clone_tier: Cerebras
+        retire_trigger: queue_depth < 3
+        retire_cooldown: 120s
+        min_clones: 1
+    }
+    immune_system {
+        antibody_lifespan: 30m
+        share_with_clones: true
+    }
+    dream_system {
+        enabled: true
+        trigger_idle_sec: 45
+        dream_mind: deepseek-chat @ Cerebras
+        max_cache: 50
+    }
+}
+soul Strategist {
+    mind: claude-3-haiku @ Tier0A
+    senses: [http_get]
+    memory {
+        signals_generated: int = 0
+        win_rate: float = 0.0
+        shared_exposure: float = 0.0
+    }
+    instinct {
+        let snapshot = listen Watcher::PriceSnapshot
+        guard snapshot != null else sleep 5s
+        speak TradeSignal(symbol: snapshot.symbol, action: "HOLD", confidence: 0.65, reason: "awaiting confirmation")
+        remember signals_generated = signals_generated + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+    }
+    symbiosis {
+        bond_with: [RiskGuard]
+        shared_memory: [shared_exposure]
+        sync_interval: 10s
+    }
+    metabolism {
+        max_energy: 120
+        energy_per_cycle: 8
+        recovery_rate: 4
+        fatigue_tier: Tier1
+        hibernate_threshold: 20
+        recovery_idle_sec: 30
+    }
+    consciousness {
+        goals: [accuracy, profit_optimization]
+        reflect_every: 5
+        self_model: true
+        goal_threshold: 0.7
+        introspection_depth: 3
+    }
+}
+soul Executor {
+    mind: deepseek-chat @ Tier1
+    memory {
+        orders_placed: int = 0
+        total_volume: float = 0.0
+    }
+    instinct {
+        let signal = listen Strategist::TradeSignal
+        guard signal.confidence > 0.7 else sleep 10s
+        speak TradeOrder(symbol: signal.symbol, side: signal.action, quantity: 0.001, price: 0.0, order_type: "LIMIT")
+        remember orders_placed = orders_placed + 1
+    }
+    heal {
+        on api_error => retry(2, api_error)
+    }
+    metabolism {
+        max_energy: 80
+        energy_per_cycle: 12
+        recovery_rate: 6
+        fatigue_tier: Cerebras
+        hibernate_threshold: 10
+        recovery_idle_sec: 20
+    }
+}
+soul RiskGuard {
+    mind: claude-3-haiku @ Tier0A
+    memory {
+        alerts_fired: int = 0
+        max_drawdown: float = 0.0
+        shared_exposure: float = 0.0
+    }
+    instinct {
+        let order = listen Executor::TradeOrder
+        guard order != null else sleep 15s
+        remember shared_exposure = shared_exposure + order.quantity
+        guard shared_exposure < 1.0 else speak RiskAlert(level: "HIGH", message: "exposure limit", exposure: shared_exposure, drawdown: max_drawdown)
+        remember alerts_fired = alerts_fired + 1
+    }
+    heal {
+        on error => retry(1, error)
+    }
+    symbiosis {
+        bond_with: [Strategist]
+        shared_memory: [shared_exposure]
+        sync_interval: 10s
+    }
+    consciousness {
+        goals: [risk_minimization, capital_preservation]
+        reflect_every: 3
+        self_model: true
+        goal_threshold: 0.9
+        introspection_depth: 5
+    }
+    immune_system {
+        antibody_lifespan: 1h
+        share_with_clones: false
+    }
+}
+nervous_system {
+    Watcher -> Strategist
+    Strategist -> Executor
+    Executor -> RiskGuard
+    RiskGuard::alerts_fired -> Strategist::memory.shared_exposure
+}

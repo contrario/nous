@@ -28,3 +28,9 @@ noesis_pdf_hashes.json
 paper_portfolio.json
 topology_test.html
 gate_alpha.html
+*.bak*
+patch_*.py
+nohup.out
+backups/
+noesis_lattice*.json
+fullstack_builders.nous

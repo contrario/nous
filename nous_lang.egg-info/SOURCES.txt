@@ -10,6 +10,8 @@ codegen.py
 codegen_js.py
 compiler.nous
 compiler_senses.py
+consciousness_engine.py
+consciousness_test.nous
 cost_oracle.py
 cross_world.py
 cross_world_command.nous
@@ -35,6 +37,8 @@ infra_monitor.nous
 lsp_server.py
 mcp_bridge.py
 mcp_example.nous
+metabolism_engine.py
+metabolism_test.nous
 migrate_v2.py
 mitosis_engine.py
 mitosis_test.nous
@@ -45,6 +49,7 @@ noesis_integration_test.nous
 noesis_phase9_test.nous
 noosphere_migrated.nous
 nous.lark
+nous_api.py
 nous_ast_runner.py
 nous_runtime.py
 nsp.py

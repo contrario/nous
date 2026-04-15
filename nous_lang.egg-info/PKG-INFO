@@ -1,13 +1,13 @@
 Metadata-Version: 2.4
 Name: nous-lang
-Version: 3.8.0
+Version: 4.0.0
 Summary: NOUS (Νοῦς) — The Living Language for Agentic AI Systems
 Author-email: Hlias Staurou <support@nous-lang.org>
 License: MIT
 Project-URL: Homepage, https://nous-lang.org
 Project-URL: Repository, https://github.com/contrario/nous
 Project-URL: Documentation, https://nous-lang.org/docs
-Keywords: ai,agents,language,compiler,evolution,multi-agent,soul,mitosis,symbiosis
+Keywords: ai,agents,language,compiler,evolution,multi-agent,soul,mitosis,symbiosis,metabolism,consciousness
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License

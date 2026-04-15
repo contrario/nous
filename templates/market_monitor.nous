@@ -1,0 +1,117 @@
+world MarketMonitor {
+    law cost_ceiling = $3.00 per cycle
+    heartbeat = 20s
+    telemetry {
+        enabled: true
+        exporter: jsonl
+        sample_rate: 1.0
+        trace_senses: true
+        trace_llm: true
+    }
+}
+
+message MarketData {
+    symbol: string
+    price: float
+    change_pct: float
+}
+
+message Analysis {
+    symbol: string
+    signal: string
+    confidence: float
+}
+
+message Alert {
+    symbol: string
+    signal: string
+    urgency: string
+}
+
+soul Scanner {
+    mind: deepseek-chat @ Tier1
+    senses: [http_get]
+
+    memory {
+        scans_done: int = 0
+    }
+
+    instinct {
+        let data = sense http_get(url: "https://api.binance.com/api/v3/ticker/24hr")
+        speak MarketData(symbol: "BTCUSDT", price: 0.0, change_pct: 0.0)
+        remember scans_done = scans_done + 1
+    }
+
+    dna {
+        scan_interval: 10 ~ [5, 60]
+    }
+
+    heal {
+        on api_error => retry(3, api_error)
+    }
+
+    mitosis {
+        trigger: queue_depth > 8
+        max_clones: 4
+        clone_tier: Cerebras
+        retire_trigger: queue_depth < 2
+        retire_cooldown: 60s
+        min_clones: 1
+    }
+
+    immune_system {
+        antibody_lifespan: 30m
+        share_with_clones: true
+    }
+}
+
+soul Analyzer {
+    mind: claude-3-haiku @ Tier0A
+
+    memory {
+        analyses_done: int = 0
+    }
+
+    instinct {
+        let market = listen Scanner::MarketData
+        guard market != null else sleep 5s
+        speak Analysis(symbol: market.symbol, signal: "HOLD", confidence: 0.75)
+        remember analyses_done = analyses_done + 1
+    }
+
+    heal {
+        on timeout => retry(2, timeout)
+    }
+
+    metabolism {
+        max_energy: 100
+        energy_per_cycle: 10
+        recovery_rate: 5
+        fatigue_tier: Cerebras
+        hibernate_threshold: 15
+        recovery_idle_sec: 15
+    }
+}
+
+soul Alerter {
+    mind: deepseek-chat @ Tier1
+
+    memory {
+        alerts_sent: int = 0
+    }
+
+    instinct {
+        let analysis = listen Analyzer::Analysis
+        guard analysis.confidence > 0.8 else sleep 10s
+        speak Alert(symbol: analysis.symbol, signal: analysis.signal, urgency: "normal")
+        remember alerts_sent = alerts_sent + 1
+    }
+
+    heal {
+        on error => retry(1, error)
+    }
+}
+
+nervous_system {
+    Scanner -> Analyzer -> Alerter
+}

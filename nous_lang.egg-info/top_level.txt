@@ -6,6 +6,7 @@ cli
 codegen
 codegen_js
 compiler_senses
+consciousness_engine
 cost_oracle
 cross_world
 debugger
@@ -20,9 +21,11 @@ immune_engine
 import_resolver
 lsp_server
 mcp_bridge
+metabolism_engine
 migrate_v2
 mitosis_engine
 natural_lang
+nous_api
 nous_ast_runner
 nous_runtime
 nsp

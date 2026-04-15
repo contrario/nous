@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nous-lang"
-version = "3.8.0"
+version = "4.1.0"
 description = "NOUS (Νοῦς) — The Living Language for Agentic AI Systems"
 readme = "README.md"
 license = {text = "MIT"}
@@ -12,7 +12,7 @@ requires-python = ">=3.11"
 authors = [
     {name = "Hlias Staurou", email = "support@nous-lang.org"},
 ]
-keywords = ["ai", "agents", "language", "compiler", "evolution", "multi-agent", "soul", "mitosis", "symbiosis"]
+keywords = ["ai", "agents", "language", "compiler", "evolution", "multi-agent", "soul", "mitosis", "symbiosis", "metabolism", "consciousness"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -54,8 +54,9 @@ py-modules = [
     "migrate_v2",
     "mitosis_engine", "immune_engine", "dream_engine",
     "telemetry_engine", "hot_reload_engine", "symbiosis_engine",
+    "metabolism_engine", "consciousness_engine",
     "nous_runtime", "nous_ast_runner",
-    "grammar_data",
+    "nous_api", "grammar_data",
 ]
 
 [tool.setuptools.package-data]

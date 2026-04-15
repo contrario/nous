@@ -1,0 +1,109 @@
+world ContentPipeline {
+    law cost_ceiling = $2.00 per cycle
+    heartbeat = 30s
+    telemetry {
+        enabled: true
+        exporter: console
+        sample_rate: 1.0
+    }
+}
+
+message Topic {
+    title: string
+    keywords: string
+}
+
+message Draft {
+    title: string
+    body: string
+    word_count: int
+}
+
+message Review {
+    title: string
+    score: float
+    feedback: string
+}
+
+soul Researcher {
+    mind: deepseek-chat @ Tier1
+    senses: [http_get]
+
+    memory {
+        topics_found: int = 0
+        shared_score: float = 0.0
+    }
+
+    instinct {
+        let results = sense http_get(url: "https://news.ycombinator.com/rss")
+        speak Topic(title: "AI Update", keywords: "artificial intelligence")
+        remember topics_found = topics_found + 1
+    }
+
+    heal {
+        on api_error => retry(3, api_error)
+    }
+
+    symbiosis {
+        bond_with: [Writer]
+        shared_memory: [shared_score]
+        sync_interval: 15s
+    }
+
+    metabolism {
+        max_energy: 80
+        energy_per_cycle: 5
+        recovery_rate: 3
+        fatigue_tier: Cerebras
+        hibernate_threshold: 10
+    }
+}
+
+soul Writer {
+    mind: claude-3-haiku @ Tier0A
+
+    memory {
+        articles_written: int = 0
+        shared_score: float = 0.0
+    }
+
+    instinct {
+        let topic = listen Researcher::Topic
+        guard topic != null else sleep 10s
+        speak Draft(title: topic.title, body: "Article content", word_count: 800)
+        remember articles_written = articles_written + 1
+    }
+
+    heal {
+        on timeout => retry(2, timeout)
+    }
+
+    symbiosis {
+        bond_with: [Researcher]
+        shared_memory: [shared_score]
+        sync_interval: 15s
+    }
+}
+
+soul Editor {
+    mind: deepseek-chat @ Tier1
+
+    memory {
+        reviews_done: int = 0
+    }
+
+    instinct {
+        let draft = listen Writer::Draft
+        guard draft != null else sleep 10s
+        speak Review(title: draft.title, score: 0.85, feedback: "Good structure")
+        remember reviews_done = reviews_done + 1
+    }
+
+    heal {
+        on error => retry(2, error)
+    }
+}
+
+nervous_system {
+    Researcher -> Writer -> Editor
+}
