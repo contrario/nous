@@ -208,6 +208,115 @@ class RuntimeTier:
         }
 
 
+    async def stream_call(self, system_prompt: str, user_prompt: str):
+        """Async generator yielding (event_type, data) for SSE streaming.
+        event_type: 'token' | 'done' | 'error'
+        """
+        if not self.available:
+            yield ("error", {"error": f"No key: {self.api_key_env}"})
+            return
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}",
+        }
+        if self.headers_fn:
+            headers = self.headers_fn(self.api_key)
+
+        is_anthropic = "anthropic" in self.base_url
+        if is_anthropic:
+            body = {
+                "model": self.model,
+                "max_tokens": 300,
+                "stream": True,
+                "system": system_prompt,
+                "messages": [{"role": "user", "content": user_prompt}],
+            }
+        else:
+            body = {
+                "model": self.model,
+                "max_tokens": 300,
+                "stream": True,
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt},
+                ],
+            }
+
+        t0 = time.perf_counter()
+        full_text = ""
+        tok_in = 0
+        tok_out = 0
+
+        try:
+            stream_timeout = httpx.Timeout(connect=10.0, read=60.0, write=10.0, pool=10.0)
+            async with httpx.AsyncClient(timeout=stream_timeout) as client:
+                async with client.stream("POST", self.base_url, headers=headers, json=body) as resp:
+                    resp.raise_for_status()
+                    current_event = ""
+                    async for raw_line in resp.aiter_lines():
+                        line = raw_line.strip()
+                        if not line:
+                            current_event = ""
+                            continue
+                        if line.startswith("event: "):
+                            current_event = line[7:]
+                            continue
+                        if not line.startswith("data: "):
+                            continue
+                        payload = line[6:]
+                        if payload.strip() == "[DONE]":
+                            break
+                        try:
+                            chunk = json.loads(payload)
+                        except json.JSONDecodeError:
+                            continue
+
+                        if is_anthropic:
+                            evt_type = chunk.get("type", current_event)
+                            if evt_type == "content_block_delta":
+                                token = chunk.get("delta", {}).get("text", "")
+                                if token:
+                                    full_text += token
+                                    yield ("token", token)
+                            elif evt_type == "message_start":
+                                usage = chunk.get("message", {}).get("usage", {})
+                                tok_in = usage.get("input_tokens", 0)
+                            elif evt_type == "message_delta":
+                                usage = chunk.get("usage", {})
+                                tok_out = usage.get("output_tokens", 0)
+                        else:
+                            choices = chunk.get("choices", [])
+                            if choices:
+                                delta = choices[0].get("delta", {})
+                                token = delta.get("content", "")
+                                if token:
+                                    full_text += token
+                                    yield ("token", token)
+                            usage = chunk.get("usage")
+                            if usage:
+                                tok_in = usage.get("prompt_tokens", tok_in)
+                                tok_out = usage.get("completion_tokens", tok_out)
+
+        except Exception as e:
+            ms = (time.perf_counter() - t0) * 1000
+            yield ("error", {"error": str(e), "elapsed_ms": ms})
+            return
+
+        ms = (time.perf_counter() - t0) * 1000
+        cost = (tok_in / 1000 * self.cost_per_1k_in) + (tok_out / 1000 * self.cost_per_1k_out)
+
+        yield ("done", {
+            "text": full_text,
+            "tokens_in": tok_in,
+            "tokens_out": tok_out,
+            "cost": cost,
+            "elapsed_ms": ms,
+            "tier": self.name,
+            "model": self.model,
+        })
+
+
 def _anthropic_headers(api_key: str) -> dict[str, str]:
     return {
         "Content-Type": "application/json",

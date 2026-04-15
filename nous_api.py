@@ -23,7 +23,7 @@ from typing import Any, Optional
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
@@ -577,6 +577,136 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
         "turns": len([m for m in sess["history"] if m["role"] == "user"]),
         "mode": body.mode,
     }
+
+
+
+# ── SSE Streaming Chat ──
+
+@app.post("/v1/chat/stream")
+@limiter.limit("30/minute")
+async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[str] = Header(None)):
+    require_api_key(x_api_key)
+    _cleanup_sessions()
+
+    session_id = body.session_id or str(uuid.uuid4())
+
+    if session_id in _chat_sessions:
+        sess = _chat_sessions[session_id]
+    else:
+        template_path = TEMPLATES_DIR / f"{body.world}.nous"
+        if not template_path.exists():
+            raise HTTPException(status_code=404, detail={
+                "error": f"World \'{body.world}\' not found", "code": "CHAT001",
+            })
+        source = template_path.read_text(encoding="utf-8")
+        try:
+            from parser import parse_nous
+            program = parse_nous(source)
+        except Exception as e:
+            raise HTTPException(status_code=422, detail={
+                "error": f"Parse error: {e}", "code": "CHAT002",
+            })
+        soul_configs = _get_soul_configs(program)
+        if not soul_configs:
+            raise HTTPException(status_code=422, detail={
+                "error": "No souls found in template", "code": "CHAT002",
+            })
+        sess = {
+            "world": body.world,
+            "soul_configs": soul_configs,
+            "history": [],
+            "total_cost": 0.0,
+            "created": time.time(),
+            "last_active": time.time(),
+        }
+        _chat_sessions[session_id] = sess
+
+    sess["last_active"] = time.time()
+    chosen_soul = _pick_soul(sess["soul_configs"], getattr(body, "soul", None), body.message)
+    soul_cfg = sess["soul_configs"].get(chosen_soul, {})
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"])
+
+    history_text = ""
+    for h in sess["history"][-20:]:
+        history_text += f"{h['role']}: {h['content']}\n"
+    user_prompt = f"{history_text}user: {body.message}\nassistant:"
+
+    sess["history"].append({"role": "user", "content": body.message})
+
+    if body.mode == "dry-run":
+        async def _dry_gen():
+            reply = f"[dry-run] {chosen_soul} acknowledges: {body.message}"
+            yield f"event: start\ndata: {json.dumps({'soul': chosen_soul, 'tier': 'dry-run', 'session_id': session_id})}\n\n"
+            yield f"event: token\ndata: {json.dumps({'t': reply})}\n\n"
+            sess["history"].append({"role": "assistant", "content": reply})
+            turns = len([m for m in sess["history"] if m["role"] == "user"])
+            done_data = json.dumps({"soul": chosen_soul, "world": sess["world"], "session_id": session_id, "elapsed_ms": 0, "cost": 0, "total_cost": round(sess["total_cost"], 6), "tokens": {"in": 0, "out": 0}, "turns": turns, "tier": "dry-run", "mode": "dry-run"})
+            yield f"event: done\ndata: {done_data}\n\n"
+        return StreamingResponse(
+            _dry_gen(),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connection": "keep-alive"},
+        )
+
+    async def _stream_gen():
+        from nous_runtime import RUNTIME_TIERS
+        nonlocal chosen_soul
+
+        for tier in RUNTIME_TIERS:
+            if not tier.available:
+                continue
+
+            gen = tier.stream_call(system_prompt, user_prompt)
+            first_event = None
+            try:
+                first_event = await anext(gen)
+            except StopAsyncIteration:
+                continue
+
+            if first_event[0] == "error":
+                logger.warning(f"stream tier {tier.name} failed: {first_event[1].get('error', '?')}")
+                await gen.aclose()
+                continue
+
+            yield f"event: start\ndata: {json.dumps({'soul': chosen_soul, 'tier': tier.name, 'session_id': session_id})}\n\n"
+
+            if first_event[0] == "token":
+                yield f"event: token\ndata: {json.dumps({'t': first_event[1]})}\n\n"
+
+            full_text = first_event[1] if first_event[0] == "token" else ""
+            result_data = {}
+
+            if first_event[0] == "done":
+                result_data = first_event[1]
+                full_text = result_data.get("text", "")
+            else:
+                async for evt_type, evt_data in gen:
+                    if evt_type == "token":
+                        yield f"event: token\ndata: {json.dumps({'t': evt_data})}\n\n"
+                    elif evt_type == "done":
+                        result_data = evt_data
+                        full_text = evt_data.get("text", "")
+                    elif evt_type == "error":
+                        logger.warning(f"stream tier {tier.name} mid-stream error: {evt_data.get('error', '?')}")
+                        yield f"event: error\ndata: {json.dumps({'error': evt_data.get('error', 'Stream interrupted'), 'tier': tier.name})}\n\n"
+                        return
+
+            sess["history"].append({"role": "assistant", "content": full_text})
+            cost = result_data.get("cost", 0.0)
+            sess["total_cost"] += cost
+            turns = len([m for m in sess["history"] if m["role"] == "user"])
+
+            done_data = json.dumps({"soul": chosen_soul, "world": sess["world"], "session_id": session_id, "elapsed_ms": round(result_data.get("elapsed_ms", 0), 1), "cost": round(cost, 6), "total_cost": round(sess["total_cost"], 6), "tokens": {"in": result_data.get("tokens_in", 0), "out": result_data.get("tokens_out", 0)}, "turns": turns, "tier": result_data.get("tier", tier.name), "mode": "live"})
+            yield f"event: done\ndata: {done_data}\n\n"
+            return
+
+        yield f"event: error\ndata: {json.dumps({'error': 'All LLM tiers failed', 'code': 'CHAT003'})}\n\n"
+
+    return StreamingResponse(
+        _stream_gen(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connection": "keep-alive"},
+    )
 
 
 @app.get("/v1/templates")
