@@ -129,6 +129,7 @@ async def lifespan(app: FastAPI):
     logger.info("NOUS API shutting down")
 
 app = FastAPI(
+    root_path="/api",
     title="NOUS API",
     version=VERSION,
     description="HTTP API for the NOUS programming language",
