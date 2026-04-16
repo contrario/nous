@@ -29,6 +29,8 @@ class NousCodeGen:
         self.program = program
         self.indent_level = 0
         self.lines: list[str] = []
+        self._current_memory_fields: set[str] = set()
+        self._current_locals: set[str] = set()
         self._routes: list[tuple[str, str]] = []
         self._incoming: dict[str, list[str]] = {}
         self._outgoing: dict[str, list[str]] = {}
@@ -315,6 +317,12 @@ class NousCodeGen:
         is_listener = soul.name in self._listeners
         wake = "LISTENER" if is_listener else "HEARTBEAT"
 
+        self._current_memory_fields = set()
+        if soul.memory and soul.memory.fields:
+            for _f in soul.memory.fields:
+                _fname = _f.name if hasattr(_f, 'name') else str(_f)
+                self._current_memory_fields.add(_fname)
+        self._current_locals = set()
         self._emit(f"class Soul_{soul.name}:")
         self._indent()
         self._emit(f'"""Soul: {soul.name} | Wake: {wake}"""')
@@ -491,6 +499,7 @@ class NousCodeGen:
                     args_str = self._sense_args_to_python(args)
                     self._emit(f'{stmt.name} = await self._sense("{tool}", {args_str})')
                     return
+            self._current_locals.add(stmt.name)
             self._emit(f"{stmt.name} = {self._expr_to_python(value)}")
 
         elif isinstance(stmt, RememberNode):
@@ -523,6 +532,7 @@ class NousCodeGen:
                 else:
                     args_str = f'soul="{soul_name}"'
             if stmt.bind_name:
+                self._current_locals.add(stmt.bind_name)
                 self._emit(f'{stmt.bind_name} = await self._sense("{stmt.tool_name}", {args_str})')
             else:
                 self._emit(f'await self._sense("{stmt.tool_name}", {args_str})')
@@ -968,6 +978,9 @@ class NousCodeGen:
             if expr.startswith('"') or expr.startswith("'"):
                 return expr
             if expr.replace("_", "").replace(".", "").isalnum() and expr[0:1].isalpha():
+                # Prefix with self. if it is a memory field and not a local/let binding
+                if expr in self._current_memory_fields and expr not in self._current_locals:
+                    return f"self.{expr}"
                 return expr
             escaped = expr.replace("\\", "\\\\").replace('"', '\\"')
             return f'"{escaped}"'
