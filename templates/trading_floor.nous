@@ -38,7 +38,7 @@ message RiskAlert {
 }
 soul Watcher {
     mind: deepseek-chat @ Tier1
-    senses: [http_get]
+    senses: [http_get, superbrain_search]
     memory {
         ticks_collected: int = 0
         last_price: float = 0.0

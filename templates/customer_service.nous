@@ -28,7 +28,7 @@ message Escalation {
 
 soul Triage {
     mind: deepseek-chat @ Tier1
-    senses: [http_get]
+    senses: [http_get, superbrain_search]
 
     memory {
         tickets_processed: int = 0

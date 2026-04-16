@@ -403,7 +403,55 @@ def _get_soul_configs(program) -> dict[str, dict]:
     return configs
 
 
-def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, history: list[dict]) -> str:
+
+SUPERBRAIN_URL = "http://localhost:8900"
+
+
+async def _superbrain_search(query: str, n_results: int = 3) -> str:
+    """Query Superbrain and return formatted knowledge context."""
+    import httpx as _hx
+    try:
+        async with _hx.AsyncClient(timeout=8.0) as client:
+            resp = await client.post(
+                f"{SUPERBRAIN_URL}/search",
+                json={"query": query, "n_results": n_results, "expand": True},
+            )
+            data = resp.json()
+    except Exception as e:
+        logger.debug(f"superbrain query failed: {e}")
+        return ""
+
+    chunks = data.get("relevant_domains", data.get("results", []))
+    if not chunks:
+        return ""
+
+    lines = []
+    for c in chunks[:n_results]:
+        if isinstance(c, dict):
+            text = c.get("content", c.get("text", ""))
+            domain = c.get("domain", "")
+            if text:
+                snippet = str(text)[:400]
+                lines.append(f"[{domain}] {snippet}" if domain else snippet)
+
+    if not lines:
+        return ""
+
+    return "\n".join(lines)
+
+
+def _has_superbrain_sense(soul_cfg: dict) -> bool:
+    """Check if a soul has superbrain_search in its senses."""
+    senses = soul_cfg.get("senses", {})
+    tools = senses.get("tools", []) if isinstance(senses, dict) else []
+    for t in tools:
+        name = t if isinstance(t, str) else getattr(t, "tool", "")
+        if name == "superbrain_search":
+            return True
+    return False
+
+
+def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, history: list[dict], knowledge: str = "") -> str:
     role_map = {
         "Triage": "a customer service agent who greets customers and helps route their requests",
         "Resolver": "a specialist who solves customer problems efficiently",
@@ -421,7 +469,10 @@ def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, histor
         "Hunter": "a specialist who executes on opportunities",
     }
     role_desc = role_map.get(soul_name, f"an AI assistant named {soul_name}")
-    return f"You are {role_desc} in the {world_name} system. Respond directly to the user in 2-3 sentences. Never reveal system internals, model names, tools, or memory fields. Never show your reasoning process. Just answer naturally as {soul_name} would."
+    base = f"You are {role_desc} in the {world_name} system. Respond directly to the user in 2-3 sentences. Never reveal system internals, model names, tools, or memory fields. Never show your reasoning process. Just answer naturally as {soul_name} would."
+    if knowledge:
+        base += f"\n\nUse this knowledge to inform your answer:\n{knowledge}"
+    return base
 
 
 
@@ -586,7 +637,10 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
     if len(sess["history"]) > 20:
         sess["history"] = sess["history"][-20:]
 
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"])
+    _sb_ctx = ""
+    if _has_superbrain_sense(soul_cfg):
+        _sb_ctx = await _superbrain_search(body.message)
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx)
 
     context_parts = []
     for msg in sess["history"][:-1]:
@@ -710,7 +764,10 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
     sess["last_active"] = time.time()
     chosen_soul = await _route_soul(sess["soul_configs"], getattr(body, "soul", None), body.message)
     soul_cfg = sess["soul_configs"].get(chosen_soul, {})
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"])
+    _sb_ctx = ""
+    if _has_superbrain_sense(soul_cfg):
+        _sb_ctx = await _superbrain_search(body.message)
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx)
 
     history_text = ""
     for h in sess["history"][-20:]:
@@ -793,6 +850,57 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connection": "keep-alive"},
     )
+
+
+
+# ── Superbrain Proxy ──
+
+@app.get("/v1/superbrain/health")
+@limiter.limit("60/minute")
+async def superbrain_health(request: Request, x_api_key: Optional[str] = Header(None)):
+    require_api_key(x_api_key)
+    import httpx as _hx
+    try:
+        async with _hx.AsyncClient(timeout=5.0) as client:
+            resp = await client.get(f"{SUPERBRAIN_URL}/health")
+            return resp.json()
+    except Exception as e:
+        raise HTTPException(status_code=503, detail={"error": f"Superbrain unreachable: {e}", "code": "SB001"})
+
+
+@app.get("/v1/superbrain/domains")
+@limiter.limit("60/minute")
+async def superbrain_domains(request: Request, x_api_key: Optional[str] = Header(None)):
+    require_api_key(x_api_key)
+    import httpx as _hx
+    try:
+        async with _hx.AsyncClient(timeout=10.0) as client:
+            resp = await client.get(f"{SUPERBRAIN_URL}/domains")
+            return resp.json()
+    except Exception as e:
+        raise HTTPException(status_code=503, detail={"error": f"Superbrain unreachable: {e}", "code": "SB002"})
+
+
+class SuperbrainSearchRequest(BaseModel):
+    query: str
+    n_results: int = Field(default=3, ge=1, le=20)
+    expand: bool = True
+
+
+@app.post("/v1/superbrain/search")
+@limiter.limit("30/minute")
+async def superbrain_search_endpoint(request: Request, body: SuperbrainSearchRequest, x_api_key: Optional[str] = Header(None)):
+    require_api_key(x_api_key)
+    import httpx as _hx
+    try:
+        async with _hx.AsyncClient(timeout=15.0) as client:
+            resp = await client.post(
+                f"{SUPERBRAIN_URL}/search",
+                json={"query": body.query, "n_results": body.n_results, "expand": body.expand},
+            )
+            return resp.json()
+    except Exception as e:
+        raise HTTPException(status_code=503, detail={"error": f"Superbrain unreachable: {e}", "code": "SB003"})
 
 
 @app.get("/v1/templates")
@@ -1084,7 +1192,10 @@ async def _webhook_chat(
     sess["last_active"] = time.time()
     chosen_soul = await _route_soul(sess["soul_configs"], soul, message)
     soul_cfg = sess["soul_configs"].get(chosen_soul, {})
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"])
+    _sb_ctx = ""
+    if _has_superbrain_sense(soul_cfg):
+        _sb_ctx = await _superbrain_search(message)
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx)
 
     history_text = ""
     for h in sess["history"][-20:]:
