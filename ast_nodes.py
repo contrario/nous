@@ -98,12 +98,26 @@ class TelemetryNode(NousNode):
     buffer_size: int = 1000
 
 
+
+# ═══════════════════════════════════════════
+# REPLAY — deterministic event sourcing
+# ═══════════════════════════════════════════
+class ReplayConfigNode(NousNode):
+    enabled: bool = False
+    mode: str = "off"
+    store_type: str = "jsonl"
+    path: Optional[str] = None
+    fsync: str = "every_event"
+    seed_base: int = 0
+    capture: list[str] = Field(default_factory=lambda: ["sense", "memory", "clock", "random"])
+
 class WorldNode(NousNode):
     name: str
     laws: list[LawNode] = Field(default_factory=list)
     heartbeat: Optional[str] = None
     timezone: Optional[str] = None
     telemetry: Optional[TelemetryNode] = None
+    replay: Optional[ReplayConfigNode] = None
     config: dict[str, Any] = Field(default_factory=dict)
 
 

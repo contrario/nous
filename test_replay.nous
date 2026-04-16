@@ -1,0 +1,38 @@
+world ReplayDemo {
+    law cost_ceiling = $1.00 per cycle
+    heartbeat = 30s
+
+    replay {
+        enabled: true
+        mode: record
+        store: jsonl
+        path: "/var/nous/replay_demo.jsonl"
+        fsync: every_event
+        seed_base: 42
+        capture: [sense, memory, clock, random]
+    }
+}
+
+sense price_feed {
+    description: "current BTC price"
+    http_get: "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
+    timeout: 10
+    returns: json
+    cache_ttl: 0
+}
+
+soul Watcher {
+    mind: deepseek-chat @ Tier1
+    senses: [price_feed]
+    memory {
+        observations: int = 0
+        last_price: float = 0.0
+    }
+    instinct {
+        let snap = sense price_feed()
+        remember observations = observations + 1
+    }
+    heal {
+        on api_error => retry(3, api_error)
+    }
+}

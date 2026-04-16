@@ -24,7 +24,7 @@ from ast_nodes import (
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     Tier, TopologyNode, ServerNode, MitosisNode, ImmuneSystemNode,
-    DreamSystemNode, DreamMindNode, CustomSenseNode, EmotionsNode,
+    DreamSystemNode, DreamMindNode, CustomSenseNode, EmotionsNode, ReplayConfigNode,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
@@ -517,6 +517,8 @@ class NousTransformer(Transformer):
         for item in s[1:]:
             if isinstance(item, LawNode):
                 node.laws.append(item)
+            elif isinstance(item, ReplayConfigNode):
+                node.replay = item
             elif isinstance(item, dict):
                 if "heartbeat" in item:
                     node.heartbeat = item["heartbeat"]
@@ -1114,6 +1116,37 @@ class NousTransformer(Transformer):
             if isinstance(part, dict):
                 fields.update(part)
         return EmotionsNode(**fields)
+
+
+    def replay_enabled(self, items: list) -> dict:
+        return {"enabled": bool(items[0])}
+
+    def replay_mode(self, items: list) -> dict:
+        return {"mode": str(items[0])}
+
+    def replay_store_type(self, items: list) -> dict:
+        return {"store_type": str(items[0])}
+
+    def replay_path(self, items: list) -> dict:
+        return {"path": str(items[0])}
+
+    def replay_fsync(self, items: list) -> dict:
+        return {"fsync": str(items[0])}
+
+    def replay_seed_base(self, items: list) -> dict:
+        return {"seed_base": int(items[0])}
+
+    def replay_capture(self, items: list) -> dict:
+        names = items[0] if items and isinstance(items[0], list) else []
+        return {"capture": [str(n) for n in names]}
+
+    def replay_block(self, items: list) -> ReplayConfigNode:
+        stripped = self._strip(items)
+        fields: dict[str, Any] = {}
+        for part in stripped:
+            if isinstance(part, dict):
+                fields.update(part)
+        return ReplayConfigNode(**fields)
 
     def top_level(self, items: list) -> Any:
         return items[0]

@@ -79,6 +79,7 @@ class NousValidator:
         self._check_nervous_system_cycles()
         self._check_noesis()
         self._check_custom_senses()
+        self._check_replay()
         return self.result
 
     def _check_world_exists(self) -> None:
@@ -477,6 +478,37 @@ class NousValidator:
                 pass
 
 
+
+
+    def _check_replay(self) -> None:
+        if not self.program.world or not getattr(self.program.world, "replay", None):
+            return
+        r = self.program.world.replay
+        loc = getattr(r, "loc", None)
+        if r.mode not in ("off", "record", "replay"):
+            self.result.error(
+                "R001",
+                f"Invalid replay.mode '{r.mode}'. Must be one of: off, record, replay.",
+                loc,
+            )
+        if r.enabled and r.mode != "off" and not r.path:
+            self.result.error(
+                "R002",
+                "replay.enabled=true requires replay.path to be set.",
+                loc,
+            )
+        if r.store_type not in ("jsonl", "sqlite"):
+            self.result.error(
+                "R003",
+                f"Invalid replay.store '{r.store_type}'. Must be one of: jsonl, sqlite.",
+                loc,
+            )
+        if r.fsync not in ("every_event", "every_second", "off"):
+            self.result.error(
+                "R004",
+                f"Invalid replay.fsync '{r.fsync}'. Must be one of: every_event, every_second, off.",
+                loc,
+            )
 
     def _check_custom_senses(self) -> None:
         builtin = {"http_get", "http_post", "superbrain_search", "shell_exec"}
