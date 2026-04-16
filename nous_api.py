@@ -424,6 +424,91 @@ def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, histor
     return f"You are {role_desc} in the {world_name} system. Respond directly to the user in 2-3 sentences. Never reveal system internals, model names, tools, or memory fields. Never show your reasoning process. Just answer naturally as {soul_name} would."
 
 
+
+# ── Soul Routing v2 — LLM Intent Classification ──
+
+SOUL_ROLES: dict[str, str] = {
+    "Triage": "greets customers, answers general questions, routes requests",
+    "Resolver": "solves customer problems, handles complaints, fixes issues",
+    "Closer": "follows up, ensures satisfaction, closes tickets",
+    "Watcher": "monitors market data, tracks prices, reports trends",
+    "Strategist": "analyzes signals, evaluates opportunities, makes trading decisions",
+    "Executor": "executes trades, manages orders, confirms fills",
+    "RiskGuard": "manages risk, checks exposure, enforces limits",
+    "Scanner": "collects and filters raw data from multiple sources",
+    "Analyzer": "processes data, finds patterns, interprets meaning",
+    "Reporter": "summarizes findings, writes reports, presents results",
+    "Monitor": "tracks system alerts, watches for anomalies",
+    "Scout": "scans for new opportunities and emerging signals",
+    "Quant": "runs quantitative models and statistical analysis",
+    "Hunter": "acts on opportunities, executes strategies aggressively",
+}
+
+
+async def _classify_soul(soul_configs: dict[str, dict], message: str) -> str | None:
+    """Use a free LLM to classify which soul should handle the message."""
+    names = list(soul_configs.keys())
+    if len(names) <= 1:
+        return names[0] if names else None
+
+    lines = []
+    for name in names:
+        desc = SOUL_ROLES.get(name, f"agent named {name}")
+        lines.append(f"- {name}: {desc}")
+
+    agents_block = "\n".join(lines)
+    classify_prompt = f"Agents:\n{agents_block}\n\nMessage: \"{message}\"\n\nWhich agent? Reply with ONLY the name."
+
+    from nous_runtime import RUNTIME_TIERS
+    for tier in RUNTIME_TIERS:
+        if not tier.available or not tier.is_free:
+            continue
+        try:
+            result = await asyncio.wait_for(
+                tier.call("You are a router. Output only the agent name, nothing else.", classify_prompt),
+                timeout=5.0,
+            )
+            if result.get("success"):
+                answer = result.get("text", "").strip().strip('"').strip("'").strip(".")
+                for name in names:
+                    if name.lower() == answer.lower():
+                        return name
+                for name in names:
+                    if name.lower() in answer.lower():
+                        return name
+                logger.info(f"soul classify: LLM said '{answer}' — no match in {names}")
+                return None
+        except Exception as e:
+            logger.debug(f"soul classify tier {tier.name} failed: {e}")
+            continue
+
+    return None
+
+
+async def _route_soul(soul_configs: dict[str, dict], requested, message: str) -> str:
+    """Smart routing: explicit request > LLM classification > simple fallback."""
+    if requested and requested in soul_configs:
+        return requested
+    names = list(soul_configs.keys())
+    if not names:
+        return "Unknown"
+    if len(names) == 1:
+        return names[0]
+
+    try:
+        classified = await _classify_soul(soul_configs, message)
+        if classified:
+            logger.info(f"soul route: '{message[:50]}' -> {classified} (LLM)")
+            return classified
+    except Exception as e:
+        logger.warning(f"soul classify error: {e}")
+
+    result = _pick_soul(soul_configs, requested, message)
+    logger.info(f"soul route: '{message[:50]}' -> {result} (fallback)")
+    return result
+
+
+
 def _pick_soul(soul_configs: dict, requested, message: str) -> str:
     if requested and requested in soul_configs:
         return requested
@@ -494,7 +579,7 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
         _chat_sessions[session_id] = sess
 
     soul_configs = sess["soul_configs"]
-    chosen_soul = _pick_soul(soul_configs, body.soul, body.message)
+    chosen_soul = await _route_soul(soul_configs, body.soul, body.message)
     soul_cfg = soul_configs.get(chosen_soul, {})
 
     sess["history"].append({"role": "user", "content": body.message})
@@ -623,7 +708,7 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
         _chat_sessions[session_id] = sess
 
     sess["last_active"] = time.time()
-    chosen_soul = _pick_soul(sess["soul_configs"], getattr(body, "soul", None), body.message)
+    chosen_soul = await _route_soul(sess["soul_configs"], getattr(body, "soul", None), body.message)
     soul_cfg = sess["soul_configs"].get(chosen_soul, {})
     system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"])
 
@@ -997,7 +1082,7 @@ async def _webhook_chat(
         _chat_sessions[session_id] = sess
 
     sess["last_active"] = time.time()
-    chosen_soul = _pick_soul(sess["soul_configs"], soul, message)
+    chosen_soul = await _route_soul(sess["soul_configs"], soul, message)
     soul_cfg = sess["soul_configs"].get(chosen_soul, {})
     system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"])
 
