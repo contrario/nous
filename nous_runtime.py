@@ -327,9 +327,9 @@ def _anthropic_headers(api_key: str) -> dict[str, str]:
 
 RUNTIME_TIERS: list[RuntimeTier] = [
     RuntimeTier(
-        name="HunterAlpha",
+        name="Hermes-405B",
         base_url="https://openrouter.ai/api/v1/chat/completions",
-        model="openrouter/hunter-alpha",
+        model="nousresearch/hermes-3-llama-3.1-405b:free",
         api_key_env="OPENROUTER_API_KEY",
         cost_per_1k_in=0.0,
         cost_per_1k_out=0.0,
