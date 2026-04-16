@@ -573,7 +573,17 @@ function setEditorCode(val) {
       'float': {d:'Floating-point number type',u:'price: float',c:'inside memory'},
       'bool': {d:'Boolean type (true/false)',u:'active: bool',c:'inside memory'},
       'list': {d:'Ordered collection type',u:'history: list',c:'inside memory'},
-      'map': {d:'Key-value collection type',u:'config: map',c:'inside memory'}
+      'map': {d:'Key-value collection type',u:'config: map',c:'inside memory'},
+      'sense': {d:'User-defined custom tool — HTTP/shell sense scoped to a world',u:'sense stock_price {|  description: "fetch crypto price"|  http_get: "https://api.binance.com/api/v3/ticker/price?symbol={symbol}"|  timeout: 10|  returns: json|  cache_ttl: 30|}',c:'top-level'},
+      'http_get': {d:'HTTP GET transport for a custom sense',u:'http_get: "https://api.example.com/{path}"',c:'inside sense'},
+      'http_post': {d:'HTTP POST transport for a custom sense',u:'http_post: "https://api.example.com/webhook"',c:'inside sense'},
+      'shell': {d:'Shell command transport (gated by NOUS_SENSE_SHELL_ENABLED)',u:'shell: "python3 /opt/scripts/check.py {arg}"',c:'inside sense'},
+      'timeout': {d:'Transport timeout in seconds',u:'timeout: 10',c:'inside sense'},
+      'returns': {d:'Expected return type for sense output',u:'returns: json  // or string, int, float, bool',c:'inside sense'},
+      'cache_ttl': {d:'Cache time-to-live in seconds (0 = disabled)',u:'cache_ttl: 30',c:'inside sense'},
+      'body_template': {d:'POST body template with {arg} placeholders',u:'body_template: "{\\"q\\": \\"{query}\\"}"',c:'inside sense'},
+      'headers': {d:'HTTP headers map (with env var + arg substitution)',u:'headers: %{Authorization: "Bearer ${API_TOKEN}"}',c:'inside sense'},
+      'description': {d:'Human-readable description shown to LLMs',u:'description: "fetch current stock price"',c:'inside sense'}
     };
 
     monaco.languages.registerHoverProvider('nous', {
@@ -670,6 +680,7 @@ function setEditorCode(val) {
           else if (/^\s*consciousness\s*\{/.test(ln)) blockStack.push('consciousness');
           else if (/^\s*telemetry\s*\{/.test(ln)) blockStack.push('telemetry');
           else if (/^\s*evolution\s*\{/.test(ln)) blockStack.push('evolution');
+          else if (/^\s*sense\s+\w+\s*\{/.test(ln)) blockStack.push('sense');
           var opens = (lines[li].match(/\{/g) || []).length;
           var closes = (lines[li].match(/\}/g) || []).length;
           braceDepth += opens - closes;
@@ -703,6 +714,23 @@ function setEditorCode(val) {
           kw('soul', 'Agent soul declaration');
           kw('message', 'Message type declaration');
           kw('nervous_system', 'Message routing topology');
+          snip('sense', 'sense ${1:name} {\n    description: "${2:tool description}"\n    http_get: "${3:https://api.example.com/path}"\n    timeout: ${4:10}\n    returns: ${5:json}\n    cache_ttl: ${6:30}\n}', 'Define a custom HTTP/shell sense (Senses v2)');
+          kw('sense', 'Custom sense (user-defined tool) declaration');
+          return { suggestions: suggestions };
+        }
+
+        // ── SENSE BLOCK (Senses v2) ──
+        if (ctx === 'sense') {
+          fld('description', 'description: "${1:tool description}"', 'Human-readable description for LLM prompt');
+          fld('http_get', 'http_get: "${1:https://api.example.com/{arg}}"', 'HTTP GET transport');
+          fld('http_post', 'http_post: "${1:https://api.example.com/webhook}"', 'HTTP POST transport');
+          fld('shell', 'shell: "${1:cmd {arg}}"', 'Shell command (requires NOUS_SENSE_SHELL_ENABLED=1)');
+          fld('timeout', 'timeout: ${1:10}', 'Transport timeout in seconds');
+          fld('returns', 'returns: ${1:json}', 'Return type: string, json, int, float, bool');
+          fld('cache_ttl', 'cache_ttl: ${1:30}', 'Cache TTL in seconds (0 disables)');
+          fld('headers', 'headers: %{${1:Authorization}: "${2:Bearer \\${TOKEN}}"}', 'HTTP headers map');
+          fld('body_template', 'body_template: "${1:{}}"', 'POST body template with {arg} placeholders');
+          fld('method', 'method: "${1:GET}"', 'Override HTTP method');
           return { suggestions: suggestions };
         }
 
