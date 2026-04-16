@@ -34,7 +34,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 NOUS_DIR = Path(__file__).parent
 TEMPLATES_DIR = NOUS_DIR / "templates"
 LOG_FILE = Path("/var/log/nous_api.log")
-VERSION = "4.1.1"
+VERSION = "4.3.0"
 START_TIME = time.time()
 
 API_KEYS: set[str] = set()

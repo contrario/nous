@@ -435,6 +435,10 @@ class NousRuntime:
         self._immune_engine: Optional[Any] = None
         self._dream_engine: Optional[Any] = None
         self._telemetry_engine: Optional[Any] = None
+        self._symbiosis_engine: Optional[Any] = None
+        self._metabolism_engine: Optional[Any] = None
+        self._consciousness_engine: Optional[Any] = None
+        self._hot_reload_engine: Optional[Any] = None
 
     def add_soul(self, runner: SoulRunner) -> None:
         runner.set_shutdown_event(self._shutdown)
