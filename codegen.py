@@ -47,6 +47,17 @@ class NousCodeGen:
         self._emit("# ═══ Custom Senses v2 — register registry-backed tools ═══")
         self._emit("from sense_registry import SenseDef, SenseRegistry")
         self._emit("_custom_sense_registry = SenseRegistry()")
+        self._emit("try:")
+        self._indent()
+        self._emit("if _telemetry is not None:")
+        self._indent()
+        self._emit("_custom_sense_registry.set_telemetry(_telemetry, \"runtime\")")
+        self._dedent()
+        self._dedent()
+        self._emit("except NameError:")
+        self._indent()
+        self._emit("pass")
+        self._dedent()
         for s in senses:
             parts: list[str] = [f"name={s.name!r}"]
             if s.description is not None:

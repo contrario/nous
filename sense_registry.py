@@ -141,6 +141,8 @@ class SenseRegistry:
     def __init__(self) -> None:
         self._senses: dict[str, SenseDef] = {}
         self._cache: dict[str, _CachedResult] = {}
+        self._telemetry_engine: Optional[Any] = None
+        self._telemetry_soul: str = "unknown"
 
     @classmethod
     def from_program(cls, program: Any) -> "SenseRegistry":
@@ -168,6 +170,10 @@ class SenseRegistry:
             raise SenseError(f"duplicate custom sense: {sense.name}")
         self._senses[sense.name] = sense
 
+    def set_telemetry(self, engine: Any, soul_name: str = "unknown") -> None:
+        self._telemetry_engine = engine
+        self._telemetry_soul = soul_name
+
     def has(self, name: str) -> bool:
         return name in self._senses
 
@@ -191,6 +197,19 @@ class SenseRegistry:
                 return hit.value
 
         start = time.time()
+        _span = None
+        if self._telemetry_engine is not None:
+            try:
+                from telemetry_engine import SpanKind
+                _span = self._telemetry_engine.start_span(
+                    SpanKind.SENSE,
+                    self._telemetry_soul,
+                    sense_name=name,
+                    transport=sense.transport,
+                    custom=True,
+                )
+            except Exception:
+                _span = None
         try:
             if sense.http_get is not None:
                 result = await self._invoke_http(sense, args, method="GET")
@@ -200,7 +219,14 @@ class SenseRegistry:
                 result = await self._invoke_shell(sense, args)
             else:
                 raise SenseError(f"sense {name} has no transport")
-        except SenseError:
+        except SenseError as _se:
+            if _span is not None and self._telemetry_engine is not None:
+                try:
+                    from telemetry_engine import SpanStatus
+                    _span.finish(SpanStatus.ERROR, error=str(_se))
+                    await self._telemetry_engine.record(_span)
+                except Exception:
+                    pass
             raise
         except Exception as exc:
             elapsed_ms = (time.time() - start) * 1000
@@ -208,6 +234,13 @@ class SenseRegistry:
                 "sense_invoke_failed name=%s elapsed_ms=%.1f error=%s",
                 name, elapsed_ms, exc,
             )
+            if _span is not None and self._telemetry_engine is not None:
+                try:
+                    from telemetry_engine import SpanStatus
+                    _span.finish(SpanStatus.ERROR, error=str(exc))
+                    await self._telemetry_engine.record(_span)
+                except Exception:
+                    pass
             raise SenseError(f"sense {name} execution failed: {exc}") from exc
 
         elapsed_ms = (time.time() - start) * 1000
@@ -215,6 +248,13 @@ class SenseRegistry:
             "sense_invoke_ok name=%s transport=%s elapsed_ms=%.1f",
             name, sense.transport, elapsed_ms,
         )
+        if _span is not None and self._telemetry_engine is not None:
+            try:
+                from telemetry_engine import SpanStatus
+                _span.finish(SpanStatus.OK, elapsed_ms=elapsed_ms)
+                await self._telemetry_engine.record(_span)
+            except Exception:
+                pass
 
         if cache_key is not None:
             self._cache[cache_key] = _CachedResult(
