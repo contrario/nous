@@ -38,6 +38,49 @@ class NousCodeGen:
         self._heartbeat_seconds: int = 300
         self._analyze_topology()
 
+
+    def _emit_custom_sense_registration(self) -> None:
+        senses = getattr(self.program, "custom_senses", None) or []
+        if not senses:
+            return
+        self._emit_blank()
+        self._emit("# ═══ Custom Senses v2 — register registry-backed tools ═══")
+        self._emit("from sense_registry import SenseDef, SenseRegistry")
+        self._emit("_custom_sense_registry = SenseRegistry()")
+        for s in senses:
+            parts: list[str] = [f"name={s.name!r}"]
+            if s.description is not None:
+                parts.append(f"description={s.description!r}")
+            if s.http_get is not None:
+                parts.append(f"http_get={s.http_get!r}")
+            if s.http_post is not None:
+                parts.append(f"http_post={s.http_post!r}")
+            if s.shell is not None:
+                parts.append(f"shell={s.shell!r}")
+            if s.method is not None:
+                parts.append(f"method={s.method!r}")
+            parts.append(f"timeout={s.timeout}")
+            if s.headers:
+                parts.append(f"headers={dict(s.headers)!r}")
+            if s.body_template is not None:
+                parts.append(f"body_template={s.body_template!r}")
+            parts.append(f"returns={s.returns!r}")
+            parts.append(f"cache_ttl={s.cache_ttl}")
+            self._emit(f"_custom_sense_registry.register(SenseDef({', '.join(parts)}))")
+        self._emit("def _make_custom_sense_tool(_reg, _name):")
+        self._indent()
+        self._emit("async def _fn(**kwargs):")
+        self._indent()
+        self._emit("return await _reg.invoke(_name, kwargs)")
+        self._dedent()
+        self._emit("return _fn")
+        self._dedent()
+        self._emit("for _sn in _custom_sense_registry.names():")
+        self._indent()
+        self._emit("rt.sense_executor.register_tool(_sn, _make_custom_sense_tool(_custom_sense_registry, _sn))")
+        self._dedent()
+        self._emit_blank()
+
     def _analyze_topology(self) -> None:
         ns = self.program.nervous_system
         if ns:
@@ -536,6 +579,7 @@ class NousCodeGen:
         self._emit(f"cost_ceiling=COST_CEILING,")
         self._dedent()
         self._emit(")")
+        self._emit_custom_sense_registration()
         has_telemetry = self.program.world and self.program.world.telemetry and self.program.world.telemetry.enabled
         if has_telemetry:
             t = self.program.world.telemetry
