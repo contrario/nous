@@ -356,6 +356,19 @@ class CustomSenseNode(NousNode):
     returns: str = "string"
     cache_ttl: int = 0
 
+
+# ═══════════════════════════════════════════
+# EMOTIONS — mood state subsystem
+# ═══════════════════════════════════════════
+class EmotionsNode(NousNode):
+    enabled: bool = True
+    valence: float = 0.5
+    arousal: float = 0.3
+    confidence: float = 0.7
+    fatigue: float = 0.0
+    decay_rate: float = 0.05
+    fatigue_per_cycle: float = 0.02
+
 # ═══════════════════════════════════════════
 # SOUL
 # ═══════════════════════════════════════════
@@ -374,6 +387,7 @@ class SoulNode(NousNode):
     symbiosis: Optional[SymbiosisNode] = None
     metabolism: Optional[MetabolismNode] = None
     consciousness: Optional[ConsciousnessNode] = None
+    emotions: Optional[EmotionsNode] = None
 
 
 # ═══════════════════════════════════════════

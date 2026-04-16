@@ -89,6 +89,7 @@ soul_body: mind_decl
          | symbiosis_block
          | metabolism_block
          | consciousness_block
+         | emotions_block
 
 mind_decl: "mind" ":" model_name "@" TIER
 model_name: NAME ("-" model_part)*
@@ -197,6 +198,15 @@ telemetry_field: "enabled" ":" BOOL                -> telemetry_enabled
 
 
 
+
+emotions_block: EMOTIONS "{" emotions_field* "}"
+emotions_field: "valence" ":" (FLOAT | INT)             -> emotions_valence
+              | "arousal" ":" (FLOAT | INT)             -> emotions_arousal
+              | "confidence" ":" (FLOAT | INT)          -> emotions_confidence
+              | "fatigue" ":" (FLOAT | INT)             -> emotions_fatigue
+              | "decay_rate" ":" (FLOAT | INT)          -> emotions_decay_rate
+              | "fatigue_per_cycle" ":" (FLOAT | INT)   -> emotions_fatigue_per_cycle
+              | "enabled" ":" BOOL                      -> emotions_enabled
 
 consciousness_block: CONSCIOUSNESS "{" consciousness_field* "}"
 consciousness_field: "goals" ":" "[" name_list "]"            -> consciousness_goals
@@ -410,6 +420,7 @@ LISTEN.2: "listen" | "ακούω"
 DNA.2: "dna" | "DNA"
 HEAL.2: "heal" | "θεραπεία"
 CONSCIOUSNESS.2: "consciousness" | "συνείδηση"
+EMOTIONS.2: "emotions" | "συναίσθημα"
 METABOLISM.2: "metabolism" | "μεταβολισμός"
 SYMBIOSIS.2: "symbiosis" | "συμβίωση"
 TELEMETRY.2: "telemetry" | "τηλεμετρία"

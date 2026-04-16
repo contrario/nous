@@ -1,0 +1,26 @@
+world EmotionsTest {
+    law cost_ceiling = $1.00 per cycle
+    heartbeat = 30s
+}
+
+soul Triage {
+    mind: deepseek-chat @ Tier1
+    senses: [http_get]
+    memory {
+        msg_count: int = 0
+    }
+    emotions {
+        valence: 0.7
+        arousal: 0.3
+        confidence: 0.8
+        fatigue: 0.0
+        decay_rate: 0.08
+        fatigue_per_cycle: 0.03
+    }
+    instinct {
+        remember msg_count = msg_count + 1
+    }
+    heal {
+        on api_error => retry(3, api_error)
+    }
+}

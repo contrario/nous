@@ -39,6 +39,32 @@ class NousCodeGen:
         self._analyze_topology()
 
 
+
+    def _emit_mood_engine_import(self) -> None:
+        has_emotions = any(s.emotions for s in self.program.souls)
+        if not has_emotions:
+            return
+        self._emit("from mood_engine import MoodEngine, MoodConfig, build_from_ast")
+
+    def _emit_mood_engine_init(self, emotions_node) -> None:
+        if emotions_node is None:
+            self._emit("self._mood = None")
+            return
+        if not getattr(emotions_node, "enabled", True):
+            self._emit("self._mood = None")
+            return
+        e = emotions_node
+        parts = [
+            "enabled=True",
+            f"valence={e.valence}",
+            f"arousal={e.arousal}",
+            f"confidence={e.confidence}",
+            f"fatigue={e.fatigue}",
+            f"decay_rate={e.decay_rate}",
+            f"fatigue_per_cycle={e.fatigue_per_cycle}",
+        ]
+        self._emit(f"self._mood = MoodEngine(MoodConfig({', '.join(parts)}))")
+
     def _emit_custom_sense_registration(self) -> None:
         senses = getattr(self.program, "custom_senses", None) or []
         if not senses:
@@ -201,6 +227,7 @@ class NousCodeGen:
         has_consciousness = any(s.consciousness for s in self.program.souls)
         if has_consciousness:
             self._emit("from consciousness_engine import ConsciousnessEngine, ConsciousnessConfig")
+        self._emit_mood_engine_import()
         has_metabolism = any(s.metabolism for s in self.program.souls)
         if has_metabolism:
             self._emit("from metabolism_engine import MetabolismEngine, MetabolismConfig")
@@ -297,6 +324,7 @@ class NousCodeGen:
         self._indent()
         self._emit(f'self.name = "{soul.name}"')
         self._emit("self._runtime = runtime")
+        self._emit_mood_engine_init(soul.emotions)
         if soul.mind:
             self._emit(f'self.model = "{soul.mind.model}"')
             self._emit(f'self.tier = "{soul.mind.tier.value}"')
@@ -327,6 +355,8 @@ class NousCodeGen:
         self._emit("async def instinct(self) -> None:")
         self._indent()
         self._emit(f'"""Instinct cycle for {soul.name}"""')
+        if soul.emotions is not None and soul.emotions.enabled:
+            self._emit("if self._mood: self._mood.on_cycle_start()")
         if soul.instinct and soul.instinct.statements:
             for stmt in soul.instinct.statements:
                 self._emit_statement(stmt, soul.name)

@@ -24,7 +24,7 @@ from ast_nodes import (
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     Tier, TopologyNode, ServerNode, MitosisNode, ImmuneSystemNode,
-    DreamSystemNode, DreamMindNode, CustomSenseNode,
+    DreamSystemNode, DreamMindNode, CustomSenseNode, EmotionsNode,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
@@ -848,6 +848,8 @@ class NousTransformer(Transformer):
                 node.metabolism = item
             elif isinstance(item, ConsciousnessNode):
                 node.consciousness = item
+            elif isinstance(item, EmotionsNode):
+                node.emotions = item
         return node
 
     # ── Message ──
@@ -1082,6 +1084,36 @@ class NousTransformer(Transformer):
             if isinstance(part, dict):
                 fields.update(part)
         return CustomSenseNode(name=name, **fields)
+
+
+    def emotions_enabled(self, items: list) -> dict:
+        return {"enabled": bool(items[0])}
+
+    def emotions_valence(self, items: list) -> dict:
+        return {"valence": float(items[0])}
+
+    def emotions_arousal(self, items: list) -> dict:
+        return {"arousal": float(items[0])}
+
+    def emotions_confidence(self, items: list) -> dict:
+        return {"confidence": float(items[0])}
+
+    def emotions_fatigue(self, items: list) -> dict:
+        return {"fatigue": float(items[0])}
+
+    def emotions_decay_rate(self, items: list) -> dict:
+        return {"decay_rate": float(items[0])}
+
+    def emotions_fatigue_per_cycle(self, items: list) -> dict:
+        return {"fatigue_per_cycle": float(items[0])}
+
+    def emotions_block(self, items: list) -> EmotionsNode:
+        stripped = self._strip(items)
+        fields: dict[str, Any] = {}
+        for part in stripped:
+            if isinstance(part, dict):
+                fields.update(part)
+        return EmotionsNode(**fields)
 
     def top_level(self, items: list) -> Any:
         return items[0]

@@ -68,6 +68,7 @@ if str(NOUS_DIR) not in sys.path:
 
 from parser import parse_nous
 from sense_registry import register_world as _register_sense_world
+from mood_engine import MoodEngine, build_from_ast as _build_mood_from_ast
 from validator import NousValidator
 from typechecker import typecheck_program
 from verifier import verify_program
@@ -416,6 +417,12 @@ def _get_soul_configs(program) -> dict[str, dict]:
         }
     if _custom:
         configs["__custom_senses__"] = _custom
+    _emotions: dict[str, object] = {}
+    for soul in (program.souls or []):
+        if getattr(soul, "emotions", None) is not None and soul.emotions.enabled:
+            _emotions[soul.name] = soul.emotions
+    if _emotions:
+        configs["__emotions__"] = _emotions
     return configs
 
 
@@ -467,7 +474,30 @@ def _has_superbrain_sense(soul_cfg: dict) -> bool:
     return False
 
 
-def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, history: list[dict], knowledge: str = "", custom_senses_info: dict | None = None) -> str:
+
+
+def _get_or_create_mood(sess: dict, soul_name: str, heartbeat_seconds: float = 30.0) -> Optional[MoodEngine]:
+    """Lazily create a MoodEngine per soul in the session; apply time-elapsed decay."""
+    emotions_map = sess.get("soul_configs", {}).get("__emotions__") or {}
+    emotions_node = emotions_map.get(soul_name)
+    if emotions_node is None:
+        return None
+    moods = sess.setdefault("_moods", {})
+    engine = moods.get(soul_name)
+    if engine is None:
+        engine = _build_mood_from_ast(emotions_node)
+        if engine is None:
+            return None
+        moods[soul_name] = engine
+        sess["_moods_last_tick"] = time.time()
+        return engine
+    last_tick = sess.get("_moods_last_tick") or time.time()
+    elapsed = max(0.0, time.time() - last_tick)
+    engine.advance_by_seconds(elapsed, heartbeat_seconds)
+    sess["_moods_last_tick"] = time.time()
+    return engine
+
+def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, history: list[dict], knowledge: str = "", custom_senses_info: dict | None = None, mood_hint: str = "") -> str:
     role_map = {
         "Triage": "a customer service agent who greets customers and helps route their requests",
         "Resolver": "a specialist who solves customer problems efficiently",
@@ -495,6 +525,8 @@ def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, histor
             _lines.append(f"- {_n} ({_info.get('transport','?')}) — {_desc}")
         if _lines:
             base += "\n\nCustom tools available in this world:\n" + "\n".join(_lines)
+    if mood_hint:
+        base += "\n\n" + mood_hint
     return base
 
 
@@ -663,7 +695,17 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
     _sb_ctx = ""
     if _has_superbrain_sense(soul_cfg):
         _sb_ctx = await _superbrain_search(body.message)
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"))
+    _mood_engine = _get_or_create_mood(sess, chosen_soul)
+    _mood_hint = _mood_engine.describe() if _mood_engine else ""
+    if _mood_engine is not None:
+        _msg_lower = body.message.lower() if hasattr(body, "message") else (message.lower() if "message" in dir() else "")
+        _positive_kw = ("thank", "thanks", "great", "awesome", "good job", "well done", "love")
+        _negative_kw = ("hate", "stupid", "useless", "bad", "wrong", "terrible", "frustrated", "annoy")
+        if any(k in _msg_lower for k in _positive_kw):
+            _mood_engine.record_event("positive_message")
+        elif any(k in _msg_lower for k in _negative_kw):
+            _mood_engine.record_event("negative_message")
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"), mood_hint=_mood_hint)
 
     context_parts = []
     for msg in sess["history"][:-1]:
@@ -790,7 +832,17 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
     _sb_ctx = ""
     if _has_superbrain_sense(soul_cfg):
         _sb_ctx = await _superbrain_search(body.message)
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"))
+    _mood_engine = _get_or_create_mood(sess, chosen_soul)
+    _mood_hint = _mood_engine.describe() if _mood_engine else ""
+    if _mood_engine is not None:
+        _msg_lower = body.message.lower() if hasattr(body, "message") else (message.lower() if "message" in dir() else "")
+        _positive_kw = ("thank", "thanks", "great", "awesome", "good job", "well done", "love")
+        _negative_kw = ("hate", "stupid", "useless", "bad", "wrong", "terrible", "frustrated", "annoy")
+        if any(k in _msg_lower for k in _positive_kw):
+            _mood_engine.record_event("positive_message")
+        elif any(k in _msg_lower for k in _negative_kw):
+            _mood_engine.record_event("negative_message")
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"), mood_hint=_mood_hint)
 
     history_text = ""
     for h in sess["history"][-20:]:
@@ -1218,7 +1270,17 @@ async def _webhook_chat(
     _sb_ctx = ""
     if _has_superbrain_sense(soul_cfg):
         _sb_ctx = await _superbrain_search(message)
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"))
+    _mood_engine = _get_or_create_mood(sess, chosen_soul)
+    _mood_hint = _mood_engine.describe() if _mood_engine else ""
+    if _mood_engine is not None:
+        _msg_lower = body.message.lower() if hasattr(body, "message") else (message.lower() if "message" in dir() else "")
+        _positive_kw = ("thank", "thanks", "great", "awesome", "good job", "well done", "love")
+        _negative_kw = ("hate", "stupid", "useless", "bad", "wrong", "terrible", "frustrated", "annoy")
+        if any(k in _msg_lower for k in _positive_kw):
+            _mood_engine.record_event("positive_message")
+        elif any(k in _msg_lower for k in _negative_kw):
+            _mood_engine.record_event("negative_message")
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"), mood_hint=_mood_hint)
 
     history_text = ""
     for h in sess["history"][-20:]:
