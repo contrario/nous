@@ -1,0 +1,41 @@
+world EmotionsFullTest {
+    law cost_ceiling = $1.00 per cycle
+    heartbeat = 30s
+}
+
+sense fake_ok {
+    description: "always succeeds"
+    http_get: "https://httpbin.org/status/200"
+    timeout: 5
+    returns: string
+}
+
+sense fake_fail {
+    description: "always 500s"
+    http_get: "https://httpbin.org/status/500"
+    timeout: 5
+    returns: string
+}
+
+soul Watcher {
+    mind: deepseek-chat @ Tier1
+    senses: [fake_ok]
+    memory {
+        cycles_done: int = 0
+    }
+    emotions {
+        valence: 0.5
+        arousal: 0.3
+        confidence: 0.7
+        fatigue: 0.0
+        decay_rate: 0.02
+        fatigue_per_cycle: 0.01
+    }
+    instinct {
+        let data = sense fake_ok()
+        remember cycles_done = cycles_done + 1
+    }
+    heal {
+        on api_error => retry(3, api_error)
+    }
+}

@@ -356,20 +356,44 @@ class NousCodeGen:
 
         self._emit("async def _sense(self, tool_name: str, **kwargs: Any) -> Any:")
         self._indent()
-        self._emit("return await self._runtime.sense_executor.call(tool_name, kwargs)")
+        if soul.emotions is not None and soul.emotions.enabled:
+            self._emit("try:")
+            self._indent()
+            self._emit("_result = await self._runtime.sense_executor.call(tool_name, kwargs)")
+            self._emit("if self._mood: self._mood.record_event(\"sense_ok\")")
+            self._emit("return _result")
+            self._dedent()
+            self._emit("except Exception:")
+            self._indent()
+            self._emit("if self._mood: self._mood.record_event(\"sense_error\")")
+            self._emit("raise")
+            self._dedent()
+        else:
+            self._emit("return await self._runtime.sense_executor.call(tool_name, kwargs)")
         self._dedent()
         self._emit_blank()
 
         self._emit("async def instinct(self) -> None:")
         self._indent()
         self._emit(f'"""Instinct cycle for {soul.name}"""')
-        if soul.emotions is not None and soul.emotions.enabled:
+        _has_mood = soul.emotions is not None and soul.emotions.enabled
+        if _has_mood:
             self._emit("if self._mood: self._mood.on_cycle_start()")
+            self._emit("try:")
+            self._indent()
         if soul.instinct and soul.instinct.statements:
             for stmt in soul.instinct.statements:
                 self._emit_statement(stmt, soul.name)
         else:
             self._emit("pass")
+        if _has_mood:
+            self._emit("if self._mood: self._mood.record_event(\"cycle_ok\")")
+            self._dedent()
+            self._emit("except Exception:")
+            self._indent()
+            self._emit("if self._mood: self._mood.record_event(\"cycle_failed\")")
+            self._emit("raise")
+            self._dedent()
         self._dedent()
         self._emit_blank()
 
