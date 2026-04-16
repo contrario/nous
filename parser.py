@@ -24,7 +24,7 @@ from ast_nodes import (
     PerceptionActionNode, LetNode, RememberNode, SpeakNode,
     ListenNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     Tier, TopologyNode, ServerNode, MitosisNode, ImmuneSystemNode,
-    DreamSystemNode, DreamMindNode,
+    DreamSystemNode, DreamMindNode, CustomSenseNode,
 )
 
 GRAMMAR_PATH = Path(__file__).parent / "nous.lark"
@@ -1036,6 +1036,53 @@ class NousTransformer(Transformer):
 
     # ── Top-Level ──
 
+
+    def sense_description(self, items: list) -> dict:
+        return {"description": items[0]}
+
+    def sense_http_get(self, items: list) -> dict:
+        return {"http_get": items[0]}
+
+    def sense_http_post(self, items: list) -> dict:
+        return {"http_post": items[0]}
+
+    def sense_shell(self, items: list) -> dict:
+        return {"shell": items[0]}
+
+    def sense_method(self, items: list) -> dict:
+        return {"method": items[0]}
+
+    def sense_timeout(self, items: list) -> dict:
+        return {"timeout": int(items[0])}
+
+    def sense_headers(self, items: list) -> dict:
+        raw = items[0] if items else {}
+        clean: dict[str, Any] = {}
+        for k, v in raw.items():
+            if isinstance(v, str) and len(v) >= 2 and v.startswith('"') and v.endswith('"'):
+                clean[k] = v[1:-1]
+            else:
+                clean[k] = v
+        return {"headers": clean}
+
+    def sense_body_template(self, items: list) -> dict:
+        return {"body_template": items[0]}
+
+    def sense_returns(self, items: list) -> dict:
+        return {"returns": str(items[0])}
+
+    def sense_cache_ttl(self, items: list) -> dict:
+        return {"cache_ttl": int(items[0])}
+
+    def sense_decl(self, items: list) -> CustomSenseNode:
+        stripped = self._strip(items)
+        name = str(stripped[0])
+        fields: dict[str, Any] = {}
+        for part in stripped[1:]:
+            if isinstance(part, dict):
+                fields.update(part)
+        return CustomSenseNode(name=name, **fields)
+
     def top_level(self, items: list) -> Any:
         return items[0]
 
@@ -1060,6 +1107,8 @@ class NousTransformer(Transformer):
                 program.imports.append(item)
             elif isinstance(item, TestNode):
                 program.tests.append(item)
+            elif isinstance(item, CustomSenseNode):
+                program.custom_senses.append(item)
             elif isinstance(item, TopologyNode):
                 program.topology = item
         return program

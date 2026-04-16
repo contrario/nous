@@ -339,6 +339,23 @@ class MitosisNode(NousNode):
     min_clones: int = 0
 
 
+
+# ═══════════════════════════════════════════
+# CUSTOM SENSE — user-defined tool (Senses v2)
+# ═══════════════════════════════════════════
+class CustomSenseNode(NousNode):
+    name: str
+    description: Optional[str] = None
+    http_get: Optional[str] = None
+    http_post: Optional[str] = None
+    shell: Optional[str] = None
+    method: Optional[str] = None
+    timeout: int = 10
+    headers: dict[str, Any] = Field(default_factory=dict)
+    body_template: Optional[str] = None
+    returns: str = "string"
+    cache_ttl: int = 0
+
 # ═══════════════════════════════════════════
 # SOUL
 # ═══════════════════════════════════════════
@@ -527,3 +544,4 @@ class NousProgram(NousNode):
     topology: Optional[TopologyNode] = None
     imports: list[ImportNode] = Field(default_factory=list)
     tests: list[TestNode] = Field(default_factory=list)
+    custom_senses: list[CustomSenseNode] = Field(default_factory=list)

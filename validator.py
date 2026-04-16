@@ -78,6 +78,7 @@ class NousValidator:
         self._check_speak_listen_types()
         self._check_nervous_system_cycles()
         self._check_noesis()
+        self._check_custom_senses()
         return self.result
 
     def _check_world_exists(self) -> None:
@@ -475,6 +476,41 @@ class NousValidator:
             if not lp.exists() and not lp.is_absolute():
                 pass
 
+
+
+    def _check_custom_senses(self) -> None:
+        builtin = {"http_get", "http_post", "superbrain_search", "shell_exec"}
+        seen: dict[str, object] = {}
+        for sense in getattr(self.program, "custom_senses", []):
+            loc = getattr(sense, "loc", None)
+            if sense.name in builtin:
+                self.result.error(
+                    "S020",
+                    f"Custom sense '{sense.name}' shadows builtin sense. Rename it.",
+                    loc,
+                )
+                continue
+            if sense.name in seen:
+                self.result.error(
+                    "S023",
+                    f"Duplicate custom sense declaration: '{sense.name}'.",
+                    loc,
+                )
+                continue
+            seen[sense.name] = sense
+            transports = [t for t in (sense.http_get, sense.http_post, sense.shell) if t]
+            if not transports:
+                self.result.error(
+                    "S021",
+                    f"Custom sense '{sense.name}' has no transport. Declare http_get, http_post, or shell.",
+                    loc,
+                )
+            elif len(transports) > 1:
+                self.result.error(
+                    "S022",
+                    f"Custom sense '{sense.name}' has multiple transports. Pick one: http_get, http_post, or shell.",
+                    loc,
+                )
 
 def validate_program(program: NousProgram) -> ValidationResult:
     """Validate a NousProgram. Returns ValidationResult."""

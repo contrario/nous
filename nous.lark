@@ -14,6 +14,7 @@ top_level: world_decl
          | deploy_decl
          | topology_decl
          | noesis_decl
+         | sense_decl
          | import_stmt
          | test_block
 
@@ -34,6 +35,23 @@ noesis_body: "lattice" ":" STRING            -> noesis_lattice
            | "auto_learn" ":" BOOL           -> noesis_auto_learn
            | "auto_evolve" ":" BOOL          -> noesis_auto_evolve
            | "gap_tracking" ":" BOOL         -> noesis_gap_tracking
+
+// ═══════════════════════════════════════════
+// CUSTOM SENSES — User-Defined Tool Definitions
+// ═══════════════════════════════════════════
+
+sense_decl: SENSE NAME "{" sense_body* "}"
+sense_body: "description" ":" STRING                   -> sense_description
+          | "http_get" ":" STRING                      -> sense_http_get
+          | "http_post" ":" STRING                     -> sense_http_post
+          | "shell" ":" STRING                         -> sense_shell
+          | "method" ":" STRING                        -> sense_method
+          | "timeout" ":" INT                          -> sense_timeout
+          | "headers" ":" "%{" kv_list? "}"            -> sense_headers
+          | "body_template" ":" STRING                 -> sense_body_template
+          | "returns" ":" NAME                         -> sense_returns
+          | "cache_ttl" ":" INT                        -> sense_cache_ttl
+
 
 // ═══════════════════════════════════════════
 // WORLD

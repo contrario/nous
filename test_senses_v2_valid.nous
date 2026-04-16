@@ -1,0 +1,41 @@
+world SensesV2Test {
+    law cost_ceiling = $1.00 per cycle
+    heartbeat = 60s
+}
+
+sense stock_price {
+    description: "fetch current price of a crypto symbol"
+    http_get: "https://api.binance.com/api/v3/ticker/price?symbol={symbol}"
+    timeout: 10
+    returns: json
+    cache_ttl: 30
+}
+
+sense weather_now {
+    description: "current weather for a city"
+    http_get: "https://wttr.in/{city}?format=3"
+    timeout: 8
+    returns: string
+    cache_ttl: 300
+}
+
+message PriceReport {
+    symbol: string
+    price: float
+}
+
+soul MarketSensor {
+    mind: deepseek-chat @ Tier1
+    senses: [stock_price, weather_now]
+    memory {
+        updates: int = 0
+    }
+    instinct {
+        let data = sense stock_price(symbol: "BTCUSDT")
+        remember updates = updates + 1
+        speak PriceReport(symbol: "BTCUSDT", price: 0.0)
+    }
+    heal {
+        on api_error => retry(3, api_error)
+    }
+}

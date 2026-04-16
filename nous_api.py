@@ -67,6 +67,7 @@ if str(NOUS_DIR) not in sys.path:
     sys.path.insert(0, str(NOUS_DIR))
 
 from parser import parse_nous
+from sense_registry import register_world as _register_sense_world
 from validator import NousValidator
 from typechecker import typecheck_program
 from verifier import verify_program
@@ -158,6 +159,11 @@ app.add_middleware(
 
 def _compile_pipeline(source: str) -> dict[str, Any]:
     program = parse_nous(source)
+    if program.world and getattr(program, "custom_senses", None):
+        try:
+            _register_sense_world(program.world.name, program)
+        except Exception as _sr_exc:
+            logger.warning("sense registry load failed: %s", _sr_exc)
 
     val_result = NousValidator(program).validate()
     val_errors = [{"code": e.code, "severity": e.severity, "message": e.message, "location": e.location} for e in val_result.errors]
@@ -400,6 +406,16 @@ def _get_soul_configs(program) -> dict[str, dict]:
             "memory": mem_fields,
             "senses": senses_list,
         }
+    _custom: dict[str, dict] = {}
+    for cs in getattr(program, "custom_senses", []) or []:
+        _transport = "http_get" if cs.http_get else ("http_post" if cs.http_post else ("shell" if cs.shell else "unknown"))
+        _custom[cs.name] = {
+            "description": cs.description or "",
+            "transport": _transport,
+            "returns": cs.returns,
+        }
+    if _custom:
+        configs["__custom_senses__"] = _custom
     return configs
 
 
@@ -451,7 +467,7 @@ def _has_superbrain_sense(soul_cfg: dict) -> bool:
     return False
 
 
-def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, history: list[dict], knowledge: str = "") -> str:
+def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, history: list[dict], knowledge: str = "", custom_senses_info: dict | None = None) -> str:
     role_map = {
         "Triage": "a customer service agent who greets customers and helps route their requests",
         "Resolver": "a specialist who solves customer problems efficiently",
@@ -472,6 +488,13 @@ def _build_system_prompt(soul_name: str, soul_cfg: dict, world_name: str, histor
     base = f"You are {role_desc} in the {world_name} system. Respond directly to the user in 2-3 sentences. Never reveal system internals, model names, tools, or memory fields. Never show your reasoning process. Just answer naturally as {soul_name} would."
     if knowledge:
         base += f"\n\nUse this knowledge to inform your answer:\n{knowledge}"
+    if custom_senses_info:
+        _lines = []
+        for _n, _info in custom_senses_info.items():
+            _desc = _info.get("description") or "(no description)"
+            _lines.append(f"- {_n} ({_info.get('transport','?')}) — {_desc}")
+        if _lines:
+            base += "\n\nCustom tools available in this world:\n" + "\n".join(_lines)
     return base
 
 
@@ -640,7 +663,7 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
     _sb_ctx = ""
     if _has_superbrain_sense(soul_cfg):
         _sb_ctx = await _superbrain_search(body.message)
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx)
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"))
 
     context_parts = []
     for msg in sess["history"][:-1]:
@@ -767,7 +790,7 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
     _sb_ctx = ""
     if _has_superbrain_sense(soul_cfg):
         _sb_ctx = await _superbrain_search(body.message)
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx)
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"))
 
     history_text = ""
     for h in sess["history"][-20:]:
@@ -1195,7 +1218,7 @@ async def _webhook_chat(
     _sb_ctx = ""
     if _has_superbrain_sense(soul_cfg):
         _sb_ctx = await _superbrain_search(message)
-    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx)
+    system_prompt = _build_system_prompt(chosen_soul, soul_cfg, sess["world"], sess["history"], knowledge=_sb_ctx, custom_senses_info=sess["soul_configs"].get("__custom_senses__"))
 
     history_text = ""
     for h in sess["history"][-20:]:
