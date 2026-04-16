@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOUS IDE — Νοῦς</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#05070e;--bg2:#0a0e1c;--card:rgba(10,14,28,0.85);
+--gold:#c9a554;--gold-d:rgba(201,165,84,0.15);--gold-b:rgba(201,165,84,0.25);--gold-t:rgba(201,165,84,0.08);
+--red:#e05252;--red-d:rgba(224,82,82,0.12);
+--green:#4ade80;--green-d:rgba(74,222,128,0.12);
+--amber:#f59e0b;--amber-d:rgba(245,158,11,0.12);
+--blue:#60a5fa;--blue-d:rgba(96,165,250,0.12);
+--purple:#a78bfa;--cyan:#22d3ee;
+--t:#e2e8f0;--td:#94a3b8;--t3:#64748b;
+--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'Playfair Display',serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--t);font-family:var(--sans);overflow:hidden}
+
+.ide-shell{display:flex;flex-direction:column;height:100vh}
+
+.ide-header{
+display:flex;align-items:center;justify-content:space-between;
+padding:0 20px;height:48px;min-height:48px;
+background:rgba(5,7,14,0.95);border-bottom:1px solid rgba(201,165,84,0.12);
+}
+.ide-logo{display:flex;align-items:center;gap:10px}
+.ide-logo-n{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--gold);letter-spacing:0.06em}
+.ide-logo-sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:0.04em}
+.ide-version{font-family:var(--mono);font-size:10px;color:var(--t3);background:rgba(255,255,255,0.04);padding:3px 8px;border-radius:4px}
+
+.tab-bar{
+display:flex;gap:0;padding:0 20px;height:38px;min-height:38px;
+background:rgba(5,7,14,0.9);border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.tab-btn{
+font-family:var(--mono);font-size:12px;letter-spacing:0.03em;
+padding:0 18px;height:38px;border:none;background:transparent;color:var(--td);
+cursor:pointer;position:relative;transition:color 0.2s;
+display:flex;align-items:center;gap:6px;
+}
+.tab-btn:hover{color:var(--t)}
+.tab-btn.active{color:var(--gold)}
+.tab-btn.active::after{
+content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+background:var(--gold);border-radius:2px 2px 0 0;
+}
+.tab-icon{font-size:13px;opacity:0.7}
+
+.tab-panels{flex:1;overflow:hidden;position:relative}
+.tab-panel{
+position:absolute;inset:0;overflow-y:auto;padding:24px;
+display:none;
+}
+.tab-panel.active{display:flex;flex-direction:column;height:100%}
+
+.placeholder{
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+height:100%;gap:16px;opacity:0.4;
+}
+.placeholder-icon{font-size:48px}
+.placeholder-text{font-family:var(--mono);font-size:14px;color:var(--td)}
+
+.editor-wrap{display:flex;gap:0;height:100%}
+.editor-area{flex:1;display:flex;flex-direction:column}
+.editor-toolbar{
+display:flex;align-items:center;gap:8px;padding:8px 12px;
+border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.editor-toolbar-btn{
+font-family:var(--mono);font-size:11px;padding:5px 12px;
+border:1px solid rgba(201,165,84,0.2);border-radius:4px;
+background:rgba(201,165,84,0.06);color:var(--gold);cursor:pointer;
+transition:all 0.2s;
+}
+.editor-toolbar-btn:hover{background:rgba(201,165,84,0.15);border-color:rgba(201,165,84,0.4)}
+.editor-file{font-family:var(--mono);font-size:11px;color:var(--td);margin-left:auto}
+#monaco-container{flex:1;width:100%;min-height:200px}
+.code-input{
+flex:1;width:100%;padding:16px;
+background:transparent;border:none;outline:none;resize:none;
+font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--t);
+tab-size:4;
+}
+.editor-output{
+width:340px;border-left:1px solid rgba(255,255,255,0.06);
+display:flex;flex-direction:column;
+}
+.output-header{
+font-family:var(--mono);font-size:11px;color:var(--td);
+padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.06);
+text-transform:uppercase;letter-spacing:0.06em;
+}
+.output-content{
+flex:1;padding:12px;font-family:var(--mono);font-size:12px;
+color:var(--green);overflow-y:auto;line-height:1.6;
+}
+
+.diff-wrap{max-width:1100px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:18px}
+
+.verdict{border-radius:12px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.verdict.brk{background:linear-gradient(135deg,rgba(224,82,82,0.08) 0%,rgba(10,14,28,0.95) 60%);border:1px solid rgba(224,82,82,0.3)}
+.verdict.safe{background:linear-gradient(135deg,rgba(74,222,128,0.08) 0%,rgba(10,14,28,0.95) 60%);border:1px solid rgba(74,222,128,0.3)}
+.v-title{font-family:var(--serif);font-size:19px;font-weight:700;margin-bottom:4px}
+.v-sub{font-family:var(--mono);font-size:12px;color:var(--td)}
+.pills{display:flex;gap:10px}
+.pill{border-radius:8px;padding:7px 14px;text-align:center;min-width:68px}
+.pill-n{font-size:20px;font-weight:700;font-family:var(--mono)}
+.pill-l{font-size:10px;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em}
+.pill-c{background:var(--red-d);border:1px solid rgba(224,82,82,0.2);color:var(--red)}
+.pill-w{background:var(--amber-d);border:1px solid rgba(245,158,11,0.2);color:var(--amber)}
+.pill-i{background:var(--blue-d);border:1px solid rgba(96,165,250,0.2);color:var(--blue)}
+
+.cards-row{display:flex;gap:18px;flex-wrap:wrap}
+.card{background:var(--card);border:1px solid var(--gold-b);border-radius:12px;padding:22px}
+.card-h{display:flex;align-items:center;gap:8px;margin-bottom:18px}
+.card-t{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--gold);letter-spacing:0.04em}
+
+.cost-big{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px;font-family:var(--mono)}
+.cost-old{font-size:26px;font-weight:700;color:var(--td);text-decoration:line-through;text-decoration-color:rgba(148,163,184,0.4)}
+.cost-new{font-size:30px;font-weight:700;color:var(--green)}
+.pct-badge{
+display:inline-flex;align-items:center;gap:5px;
+border-radius:6px;padding:3px 11px;margin-bottom:18px;font-family:var(--mono);
+}
+.pct-down{background:var(--green-d);border:1px solid rgba(74,222,128,0.2)}
+.pct-up{background:var(--red-d);border:1px solid rgba(224,82,82,0.2)}
+.minis{display:flex;gap:10px;flex-wrap:wrap;font-family:var(--mono)}
+.mini{background:rgba(255,255,255,0.03);border-radius:8px;padding:7px 12px;flex:1 1 100px}
+.mini-l{font-size:10px;color:var(--td);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px}
+.mini-v{font-size:12px;color:var(--t)}
+.mini-v .old{opacity:0.5;text-decoration:line-through}
+
+.bar-section{margin-top:18px}
+.bar-label{font-size:10px;color:var(--td);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
+.bar-row{margin-bottom:9px}
+.bar-top{display:flex;justify-content:space-between;margin-bottom:2px;font-family:var(--mono)}
+.bar-name{font-size:12px;color:var(--t)}
+.bar-vals{font-size:11px;color:var(--td)}
+.bar-track{position:relative;height:5px;background:rgba(255,255,255,0.04);border-radius:3px}
+.bar-bg{position:absolute;height:100%;border-radius:3px;background:rgba(148,163,184,0.2)}
+.bar-fg{position:absolute;height:100%;border-radius:3px;transition:width 1s cubic-bezier(0.16,1,0.3,1)}
+
+.tier-row{display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;font-family:var(--mono)}
+.tier-name{font-size:13px;color:var(--t);min-width:65px}
+.tier-pill{font-size:12px;font-weight:600;padding:3px 11px;border-radius:6px}
+.tier-arrow{color:var(--td);font-size:15px}
+.removed-pill{font-size:12px;color:var(--red);background:var(--red-d);padding:3px 10px;border-radius:4px;border:1px solid rgba(224,82,82,0.2)}
+
+.diff-line{display:flex;align-items:center;gap:9px;margin-bottom:9px;padding:5px 9px;border-radius:6px}
+.diff-icon{font-family:var(--mono);font-size:15px;font-weight:700;width:16px;text-align:center}
+.diff-name{font-family:var(--mono);font-size:13px;color:var(--t);font-weight:600}
+.diff-detail{font-size:11px;color:var(--td);margin-left:auto}
+
+.route-section{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06)}
+.route-label{font-size:10px;color:var(--td);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:7px}
+.route-item{font-family:var(--mono);font-size:12px;color:var(--td);margin-bottom:3px}
+.sep{height:1px;background:rgba(255,255,255,0.06);margin:10px 0}
+
+.findings-card{background:var(--card);border:1px solid var(--gold-b);border-radius:12px;padding:22px}
+.findings-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.filter-btns{display:flex;gap:3px}
+.filter-btn{
+background:transparent;border:1px solid rgba(255,255,255,0.08);border-radius:4px;
+padding:3px 9px;cursor:pointer;font-family:var(--mono);font-size:10px;color:var(--td);letter-spacing:0.04em;
+}
+.filter-btn.active{background:var(--gold-d);border-color:var(--gold-b);color:var(--gold)}
+.finding-row{
+display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:6px;
+background:rgba(255,255,255,0.02);margin-bottom:5px;flex-wrap:wrap;
+}
+.finding-row[data-sev="CRITICAL"]{border-left:3px solid var(--red)}
+.finding-row[data-sev="WARNING"]{border-left:3px solid var(--amber)}
+.finding-row[data-sev="INFO"]{border-left:3px solid var(--blue)}
+.sev-badge{
+display:inline-flex;align-items:center;gap:3px;padding:1px 8px;border-radius:4px;
+font-size:10px;font-weight:600;font-family:var(--mono);letter-spacing:0.04em;
+}
+.sev-c{background:var(--red-d);border:1px solid rgba(224,82,82,0.3);color:var(--red)}
+.sev-w{background:var(--amber-d);border:1px solid rgba(245,158,11,0.3);color:var(--amber)}
+.sev-i{background:var(--blue-d);border:1px solid rgba(96,165,250,0.3);color:var(--blue)}
+.f-code{font-family:var(--mono);font-size:11px;color:var(--td);min-width:58px}
+.f-cat{font-family:var(--mono);font-size:11px;color:var(--purple);min-width:68px}
+.f-msg{font-size:13px;color:var(--t);flex:1;min-width:200px}
+
+.diff-empty{
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+padding:60px 20px;text-align:center;gap:16px;
+}
+.diff-empty-icon{font-size:40px;opacity:0.3}
+.diff-empty-title{font-family:var(--serif);font-size:18px;color:var(--gold);opacity:0.6}
+.diff-empty-sub{font-family:var(--mono);font-size:12px;color:var(--td);max-width:400px;line-height:1.6}
+
+.diff-input-bar{
+display:flex;align-items:center;gap:10px;padding:12px 16px;
+background:var(--card);border:1px solid var(--gold-b);border-radius:10px;
+}
+.diff-input-label{font-family:var(--mono);font-size:11px;color:var(--td);white-space:nowrap}
+.diff-input-file{
+font-family:var(--mono);font-size:12px;color:var(--t);
+background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+border-radius:4px;padding:5px 10px;flex:1;min-width:0;outline:none;
+}
+.diff-input-file:focus{border-color:var(--gold-b)}
+.diff-input-vs{font-family:var(--mono);font-size:12px;color:var(--td)}
+.diff-run-btn{
+font-family:var(--mono);font-size:11px;font-weight:600;padding:6px 16px;
+border:1px solid rgba(201,165,84,0.3);border-radius:4px;
+background:rgba(201,165,84,0.1);color:var(--gold);cursor:pointer;
+transition:all 0.2s;white-space:nowrap;
+}
+.diff-run-btn:hover{background:rgba(201,165,84,0.2);border-color:rgba(201,165,84,0.5)}
+
+@media(max-width:768px){
+.editor-output{display:none}
+.tab-btn{padding:0 10px;font-size:11px}
+.cards-row{flex-direction:column}
+.verdict{flex-direction:column;text-align:center}
+.pills{justify-content:center}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.30.4/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+</head>
+<body>
+
+<div class="ide-shell">
+  <div class="ide-header">
+    <div class="ide-logo">
+      <span class="ide-logo-n">NOUS IDE</span>
+      <span class="ide-logo-sub">Νοῦς</span></div><a href="/" style="display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--td);text-decoration:none;padding:4px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:4px;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(201,165,84,0.3)';this.style.color='#c9a554'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#94a3b8'">2190 Home</a><div style="display:none">
+    </div>
+    <span class="ide-version">v4.0.0</span>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="editor"><span class="tab-icon">⌘</span>Editor</button>
+    <button class="tab-btn" data-tab="verify"><span class="tab-icon">✓</span>Verify</button>
+    <button class="tab-btn" data-tab="graph"><span class="tab-icon">◇</span>Graph</button>
+    <button class="tab-btn" data-tab="diff"><span class="tab-icon">⊿</span>Architecture Diff</button>
+    <button class="tab-btn" data-tab="chat"><span class="tab-icon">◉</span>Chat</button>
+  </div>
+
+  <div class="tab-panels">
+
+    <div class="tab-panel active" id="panel-editor">
+      <div class="editor-wrap">
+        <div class="editor-area">
+          <div class="editor-toolbar">
+            <button class="editor-toolbar-btn" id="btn-compile">▶ Compile</button>
+            <button class="editor-toolbar-btn" id="btn-verify">✓ Verify</button>
+            <button class="editor-toolbar-btn" id="btn-run">⚡ Run</button>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+<select id="tpl-select" style="background:#0a0e17;color:#94a3b8;border:1px solid #1a2235;border-radius:4px;padding:4px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;outline:none" onchange="loadTemplate(this.value)">
+<option value="">Load template…</option>
+</select>
+<button class="editor-toolbar-btn" id="btn-download-py" onclick="downloadPython()" style="opacity:0.4;cursor:default" disabled title="Compile first to enable download">⬇ Download .py</button>
+</div>
+<span class="editor-file" id="editor-filename">untitled.nous</span>
+          </div>
+          <div id="monaco-container"></div>
+        </div>
+        <div class="editor-output">
+          <div class="output-header">Output</div>
+          <div class="output-content" id="editor-output">Ready.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-verify">
+      <div class="placeholder">
+        <div class="placeholder-icon">✓</div>
+        <div class="placeholder-text">Write code in Editor, then click Verify</div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-graph" style="position:relative;overflow:hidden">
+      <div id="graph-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;padding:10px 16px;background:rgba(5,7,14,0.92);border-bottom:1px solid rgba(201,165,84,0.12);display:flex;align-items:center;gap:12px">
+        <button onclick="renderGraph()" style="background:#c9a554;color:#05070e;border:none;padding:5px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;cursor:pointer">RENDER</button>
+        <button onclick="graphFit()" style="background:transparent;color:#5a6a7e;border:1px solid #1a2235;padding:5px 10px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer">Fit</button>
+        <span id="graph-info" style="color:#5a6a7e;font-size:11px;font-family:'JetBrains Mono',monospace;margin-left:auto"></span>
+      </div>
+      <div id="cy-container" style="width:100%;height:calc(100vh - 140px);margin-top:42px;background:#05070e"></div>
+      <div id="cy-tip" style="display:none;position:absolute;z-index:20;background:rgba(10,15,26,0.95);border:1px solid rgba(201,165,84,0.25);border-radius:8px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;box-shadow:0 4px 20px rgba(0,0,0,0.5);max-width:300px;pointer-events:none"></div>
+      <div id="cy-empty" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;background:#05070e">
+        <div style="font-size:44px;color:rgba(201,165,84,0.15);margin-bottom:16px">◇</div>
+        <div style="color:#5a6a7e;font-size:13px;margin-bottom:20px">Write code with a <code style="color:#c9a554">nervous_system</code> block, then render</div>
+        <button onclick="renderGraph()" style="background:#c9a554;color:#05070e;border:none;padding:8px 20px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;cursor:pointer">RENDER GRAPH</button>
+        <button onclick="renderDemo()" style="background:transparent;color:#5a6a7e;border:1px solid #1a2235;padding:8px 20px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;margin-top:12px">DEMO (3 nodes)</button>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-diff">
+      <div class="diff-wrap" id="diff-container"></div>
+    </div>
+    <div class="tab-panel" id="panel-chat">
+      <div style="display:flex;flex-direction:column;height:100%;background:#05070e">
+        <div style="padding:8px 16px;display:flex;gap:8px;align-items:center;border-bottom:1px solid #1a1f35">
+          <select id="chat-world" style="background:#0a0e1c;color:#e2e8f0;border:1px solid #1a1f35;border-radius:4px;padding:4px 8px;font-size:12px;font-family:inherit"></select>
+          <select id="chat-soul" style="background:#0a0e1c;color:#e2e8f0;border:1px solid #1a1f35;border-radius:4px;padding:4px 8px;font-size:12px;font-family:inherit">
+            <option value="">Auto-route</option>
+          </select>
+          <span id="chat-status" style="font-size:11px;color:#4a5568;margin-left:auto"></span>
+          <button onclick="clearChat()" style="background:transparent;color:#4a5568;border:1px solid #1a1f35;border-radius:4px;padding:3px 10px;font-size:11px;cursor:pointer">Clear</button>
+        </div>
+        <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px"></div>
+        <div style="padding:10px 16px;border-top:1px solid #1a1f35;display:flex;gap:8px">
+          <input id="chat-input" type="text" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;background:#0a0e1c;color:#e2e8f0;border:1px solid #1a1f35;border-radius:6px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none">
+          <button id="btn-send-chat" onclick="sendChat()" style="background:linear-gradient(135deg,#c9a554,#b8943f);color:#05070e;border:none;border-radius:6px;padding:8px 20px;font-weight:600;font-size:13px;cursor:pointer">Send</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+
+// ═══ Monaco Editor Setup ═══
+var _monacoEditor = null;
+var _monacoReady = false;
+var _defaultCode = '// Write your NOUS program here...\n\nworld MyPipeline {\n    law cost_ceiling = $0.50 per cycle\n    heartbeat = 30s\n}\n\nmessage Signal {\n    source: string\n    data: string\n    confidence: float = 0.0\n}\n\nsoul Scanner {\n    mind: claude-sonnet @ Tier0A\n    senses: [http_get]\n    memory {\n        scan_count: int = 0\n    }\n    instinct {\n        let raw = sense http_get(url: "https://api.example.com/data")\n        remember scan_count += 1\n        speak Signal(source: "scanner", data: raw, confidence: 0.85)\n    }\n    heal {\n        on timeout => retry(3, exponential)\n    }\n}';
+
+window.getEditorCode = getEditorCode;
+window.setEditorCode = setEditorCode;
+function getEditorCode() {
+  if (_monacoEditor) return _monacoEditor.getValue();
+  var el = document.getElementById('code-editor');
+  return el ? el.value : '';
+}
+
+function setEditorCode(val) {
+  if (_monacoEditor) { _monacoEditor.setValue(val); return; }
+  var el = document.getElementById('code-editor');
+  if (el) el.value = val;
+}
+
+(function initMonaco() {
+  if (typeof require === 'undefined' || !require.config) {
+    console.warn('Monaco loader not available, falling back to textarea');
+    var container = document.getElementById('monaco-container');
+    if (container) {
+      var ta = document.createElement('textarea');
+      ta.id = 'code-editor';
+      ta.className = 'code-input';
+      ta.spellcheck = false;
+      ta.value = _defaultCode;
+      ta.style.cssText = 'flex:1;width:100%;padding:16px;background:transparent;border:none;outline:none;resize:none;font-family:var(--mono);font-size:13px;line-height:1.7;color:var(--t);tab-size:4';
+      container.parentNode.replaceChild(ta, container);
+    }
+    return;
+  }
+
+  require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' } });
+
+  require(['vs/editor/editor.main'], function() {
+    // Register NOUS language
+    monaco.languages.register({ id: 'nous' });
+
+    monaco.languages.setMonarchTokensProvider('nous', {
+      keywords: [
+        'world', 'soul', 'message', 'law', 'heartbeat',
+        'mind', 'senses', 'memory', 'instinct', 'heal',
+        'speak', 'listen', 'remember', 'guard', 'let', 'sense',
+        'nervous_system', 'evolution', 'perception', 'deploy', 'topology',
+        'dna', 'mitosis', 'immune_system', 'dream_system',
+        'symbiosis', 'metabolism', 'consciousness', 'telemetry',
+        'on', 'retry', 'else', 'sleep', 'if', 'return',
+        'trigger', 'max_clones', 'clone_tier', 'retire_trigger',
+        'retire_cooldown', 'min_clones', 'bond_with', 'shared_memory',
+        'sync_interval', 'max_energy', 'energy_per_cycle', 'recovery_rate',
+        'fatigue_tier', 'hibernate_threshold', 'recovery_idle_sec',
+        'goals', 'reflect_every', 'self_model', 'goal_threshold',
+        'introspection_depth', 'antibody_lifespan', 'share_with_clones',
+        'adaptive_recovery', 'enabled', 'exporter', 'endpoint',
+        'sample_rate', 'trace_senses', 'trace_llm', 'buffer_size',
+        'dream_mind', 'trigger_idle_sec', 'max_cache',
+        'mutate', 'strategy', 'survive_if', 'rollback_if',
+        'schedule', 'fitness', 'wake_all', 'wake', 'broadcast', 'alert'
+      ],
+      tiers: ['Tier0A', 'Tier0B', 'Tier1', 'Tier2', 'Tier3', 'Groq', 'Cerebras', 'Together', 'Fireworks'],
+      typeKeywords: ['string', 'int', 'float', 'bool', 'list', 'map', 'any'],
+      operators: ['->', '=>', '@', '~', '=', '>', '<', '>=', '<=', '!=', '==', '+', '-', '*', '/', '%', '&&', '||', '!', '::'],
+      symbols: /[=><!~?:&|+\-*/^%@]+/,
+      tokenizer: {
+        root: [
+          [/\/\/.*$/, 'comment'],
+          [/\/\*/, 'comment', '@comment'],
+          [/\$[0-9]+\.?[0-9]*/, 'number.currency'],
+          [/[0-9]+[smhd]/, 'number.duration'],
+          [/[0-9]+\.[0-9]+/, 'number.float'],
+          [/[0-9]+/, 'number'],
+          [/"[^"]*"/, 'string'],
+          [/[a-zA-Z_]\w*/, {
+            cases: {
+              '@keywords': 'keyword',
+              '@tiers': 'type.tier',
+              '@typeKeywords': 'type',
+              'true|false|null': 'keyword.constant',
+              'per|cycle': 'keyword.modifier',
+              '@default': 'identifier'
+            }
+          }],
+          [/->/, 'operator.arrow'],
+          [/=>/, 'operator.arrow'],
+          [/@/, 'operator.at'],
+          [/~/, 'operator.tilde'],
+          [/::/, 'operator.scope'],
+          [/@symbols/, 'operator'],
+          [/[{}()\[\]]/, '@brackets'],
+          [/[,;:]/, 'delimiter'],
+        ],
+        comment: [
+          [/[^/*]+/, 'comment'],
+          [/\*\//, 'comment', '@pop'],
+          [/[/*]/, 'comment']
+        ]
+      }
+    });
+
+    // Define NOUS theme matching the IDE dark aesthetic
+    monaco.editor.defineTheme('nous-dark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        { token: 'keyword', foreground: 'C9A554', fontStyle: 'bold' },
+        { token: 'keyword.constant', foreground: 'F59E0B' },
+        { token: 'keyword.modifier', foreground: '94A3B8' },
+        { token: 'type', foreground: '22D3EE' },
+        { token: 'type.tier', foreground: 'A78BFA', fontStyle: 'bold' },
+        { token: 'string', foreground: '4ADE80' },
+        { token: 'number', foreground: 'F59E0B' },
+        { token: 'number.currency', foreground: '4ADE80', fontStyle: 'bold' },
+        { token: 'number.duration', foreground: '60A5FA' },
+        { token: 'number.float', foreground: 'F59E0B' },
+        { token: 'comment', foreground: '4A5568', fontStyle: 'italic' },
+        { token: 'operator', foreground: '94A3B8' },
+        { token: 'operator.arrow', foreground: 'C9A554' },
+        { token: 'operator.at', foreground: 'A78BFA' },
+        { token: 'operator.tilde', foreground: '22D3EE' },
+        { token: 'operator.scope', foreground: 'C9A554' },
+        { token: 'identifier', foreground: 'E2E8F0' },
+        { token: 'delimiter', foreground: '64748B' },
+      ],
+      colors: {
+        'editor.background': '#05070e',
+        'editor.foreground': '#e2e8f0',
+        'editor.lineHighlightBackground': '#0a0e1c',
+        'editor.selectionBackground': '#c9a55430',
+        'editor.inactiveSelectionBackground': '#c9a55418',
+        'editorCursor.foreground': '#c9a554',
+        'editorLineNumber.foreground': '#2a3144',
+        'editorLineNumber.activeForeground': '#c9a554',
+        'editorIndentGuide.background': '#0f1525',
+        'editorIndentGuide.activeBackground': '#1a2235',
+        'editor.selectionHighlightBackground': '#c9a55415',
+        'editorBracketMatch.background': '#c9a55420',
+        'editorBracketMatch.border': '#c9a55440',
+        'editorGutter.background': '#05070e',
+        'scrollbar.shadow': '#00000000',
+        'scrollbarSlider.background': '#1a223580',
+        'scrollbarSlider.hoverBackground': '#c9a55430',
+        'scrollbarSlider.activeBackground': '#c9a55450',
+        'minimap.background': '#05070e',
+      }
+    });
+
+    var container = document.getElementById('monaco-container');
+    if (!container) return;
+
+    _monacoEditor = monaco.editor.create(container, {
+      value: _defaultCode,
+      language: 'nous',
+      theme: 'nous-dark',
+      fontFamily: "'JetBrains Mono', monospace",
+      fontSize: 13,
+      lineHeight: 22,
+      padding: { top: 16, bottom: 16 },
+      minimap: { enabled: false },
+      scrollBeyondLastLine: false,
+      automaticLayout: true,
+      tabSize: 4,
+      insertSpaces: true,
+      wordWrap: 'off',
+      renderLineHighlight: 'line',
+      cursorBlinking: 'smooth',
+      cursorSmoothCaretAnimation: 'on',
+      smoothScrolling: true,
+      bracketPairColorization: { enabled: true },
+      overviewRulerLanes: 0,
+      hideCursorInOverviewRuler: true,
+      overviewRulerBorder: false,
+      scrollbar: {
+        verticalScrollbarSize: 8,
+        horizontalScrollbarSize: 8,
+        useShadows: false,
+      },
+      contextmenu: true,
+      quickSuggestions: { other: true, comments: false, strings: false },
+      suggestOnTriggerCharacters: true,
+      suggest: { showKeywords: true, showSnippets: true, showFields: true },
+    });
+
+    // \u2500\u2500 NOUS Hover Tooltips \u2500\u2500
+    var _ND = {
+      'world': {d:'Top-level container defining agents, laws, and routing',u:'world TradingFloor {|  law max_souls = 4|  soul Watcher { ... }|}',c:'top-level'},
+      'soul': {d:'Autonomous agent with mind, senses, memory, and subsystems',u:'soul Watcher {|  mind: @Tier1 "deepseek-chat"|  senses: [http_get]|  memory { price: float }|  instinct { ... }|}',c:'inside world'},
+      'mind': {d:'LLM model and tier assignment for a soul',u:'mind: @Tier1 "deepseek-chat"',c:'inside soul'},
+      'senses': {d:'External tools and APIs the soul can use',u:'senses: [http_get, http_post, websocket, db_query]',c:'inside soul'},
+      'memory': {d:'Typed persistent state fields for the soul',u:'memory {|  price: float|  history: list|  active: bool|}',c:'inside soul'},
+      'instinct': {d:'Behavioral rules \u2014 reactions, guards, and actions',u:'instinct {|  on "price_alert" => speak "Alert!"|  guard balance > 100|}',c:'inside soul'},
+      'heal': {d:'Self-repair: retry logic and error recovery',u:'heal {|  on crash => retry 3 => sleep 5s|  on timeout => restart|}',c:'inside soul'},
+      'dna': {d:'Immutable traits defining soul identity and constraints',u:'dna {|  max_memory = 1000|  allowed_senses = [http_get]|}',c:'inside soul'},
+      'mitosis': {d:'Self-replication: auto-scaling by cloning under load',u:'mitosis {|  trigger load > 0.8|  max_clones 3|  clone_tier @Tier2|  retire_trigger load < 0.3|}',c:'inside soul'},
+      'immune_system': {d:'Threat detection and anomaly defense',u:'immune_system {|  antibody_lifespan 24h|  share_with_clones true|  adaptive_recovery true|}',c:'inside soul'},
+      'dream_system': {d:'Offline learning: consolidation during idle periods',u:'dream_system {|  dream_mind @Tier2|  trigger_idle_sec 300|  max_cache 50|}',c:'inside soul'},
+      'symbiosis': {d:'Inter-soul bonding: shared memory and sync',u:'symbiosis {|  bond_with "Strategist"|  shared_memory [signals, alerts]|  sync_interval 30s|}',c:'inside soul'},
+      'metabolism': {d:'Energy management: fatigue, recovery, hibernation',u:'metabolism {|  max_energy 100|  energy_per_cycle 2|  recovery_rate 5|  hibernate_threshold 10|}',c:'inside soul'},
+      'consciousness': {d:'Self-awareness: goals, reflection, introspection',u:'consciousness {|  goals ["maximize_profit"]|  reflect_every 100|  goal_threshold 0.7|}',c:'inside soul'},
+      'telemetry': {d:'Observability: metrics, tracing, and export',u:'telemetry {|  enabled true|  exporter "prometheus"|  sample_rate 0.1|}',c:'inside world or soul'},
+      'evolution': {d:'Genetic-style mutation and fitness selection',u:'evolution {|  mutate strategy|  fitness score > 0.8|  survive_if uptime > 24h|}',c:'inside soul'},
+      'nervous_system': {d:'Message routing between souls',u:'nervous_system {|  route Watcher -> Strategist|  route Strategist -> Executor|}',c:'inside world'},
+      'message': {d:'Inter-soul communication protocol',u:'message PriceAlert {|  symbol: string|  price: float|}',c:'inside world'},
+      'law': {d:'World-level constraint or configuration rule',u:'law max_souls = 8',c:'inside world'},
+      'heartbeat': {d:'Periodic cycle interval for the world',u:'heartbeat 5m',c:'inside world'},
+      'perception': {d:'External data source integration',u:'perception { source "market_feed"; interval 10s }',c:'inside world'},
+      'deploy': {d:'Deployment target configuration',u:'deploy { target "kubernetes"; replicas 3 }',c:'inside world'},
+      'topology': {d:'Network topology and placement rules',u:'topology { region "eu-west"; affinity "gpu" }',c:'inside world'},
+      'speak': {d:'Soul emits a message or response',u:'speak "Price alert: {symbol} at {price}"',c:'inside instinct'},
+      'listen': {d:'Soul listens for incoming messages',u:'listen "PriceAlert"',c:'inside instinct'},
+      'remember': {d:'Store a value in soul memory',u:'remember price = 42000.50',c:'inside instinct'},
+      'guard': {d:'Conditional gate before executing an action',u:'guard balance > 100',c:'inside instinct'},
+      'let': {d:'Local variable binding',u:'let threshold = 0.8',c:'inside instinct'},
+      'on': {d:'Event handler: react when something happens',u:'on "price_alert" => speak "Alert!"',c:'inside instinct or heal'},
+      'wake': {d:'Activation trigger for a soul',u:'wake on "market_open"',c:'inside instinct'},
+      'sleep': {d:'Pause execution for a duration',u:'sleep 5s',c:'inside instinct or heal'},
+      'broadcast': {d:'Send a message to all souls in the world',u:'broadcast "SystemAlert"',c:'inside instinct'},
+      'alert': {d:'Emit an urgent notification',u:'alert "Critical: margin call"',c:'inside instinct'},
+      'retry': {d:'Retry a failed operation N times',u:'on crash => retry 3 => sleep 5s',c:'inside heal'},
+      'trigger': {d:'Condition that activates a subsystem',u:'trigger load > 0.8',c:'inside mitosis'},
+      'max_clones': {d:'Maximum clones mitosis can create',u:'max_clones 3',c:'inside mitosis'},
+      'clone_tier': {d:'LLM tier for cloned souls',u:'clone_tier @Tier2',c:'inside mitosis'},
+      'retire_trigger': {d:'Condition to retire clones',u:'retire_trigger load < 0.3',c:'inside mitosis'},
+      'bond_with': {d:'Soul to form symbiotic bond with',u:'bond_with "Strategist"',c:'inside symbiosis'},
+      'shared_memory': {d:'Fields shared between bonded souls',u:'shared_memory [signals, alerts]',c:'inside symbiosis'},
+      'sync_interval': {d:'How often bonded souls synchronize',u:'sync_interval 30s',c:'inside symbiosis'},
+      'max_energy': {d:'Maximum energy capacity',u:'max_energy 100',c:'inside metabolism'},
+      'energy_per_cycle': {d:'Energy consumed per heartbeat',u:'energy_per_cycle 2',c:'inside metabolism'},
+      'recovery_rate': {d:'Energy recovered per idle cycle',u:'recovery_rate 5',c:'inside metabolism'},
+      'hibernate_threshold': {d:'Energy level that triggers hibernation',u:'hibernate_threshold 10',c:'inside metabolism'},
+      'mutate': {d:'Which aspect of the soul can evolve',u:'mutate strategy',c:'inside evolution'},
+      'fitness': {d:'Success metric for evolution selection',u:'fitness score > 0.8',c:'inside evolution'},
+      'survive_if': {d:'Condition for a mutation to survive',u:'survive_if uptime > 24h',c:'inside evolution'},
+      'rollback_if': {d:'Condition to rollback a mutation',u:'rollback_if errors > 10',c:'inside evolution'},
+      'goals': {d:'Objectives the conscious soul pursues',u:'goals ["maximize_profit", "minimize_risk"]',c:'inside consciousness'},
+      'reflect_every': {d:'Cycles between self-reflection',u:'reflect_every 100',c:'inside consciousness'},
+      'dream_mind': {d:'LLM tier used during dream processing',u:'dream_mind @Tier2',c:'inside dream_system'},
+      'antibody_lifespan': {d:'How long immune antibodies last',u:'antibody_lifespan 24h',c:'inside immune_system'},
+      'Tier0A': {d:'Free tier: Hermes-405B via OpenRouter ($0)',u:'mind: @Tier0A',c:'inside mind'},
+      'Tier0B': {d:'Free tier: Nemotron-120B via OpenRouter ($0)',u:'mind: @Tier0B',c:'inside mind'},
+      'Tier1': {d:'Primary paid tier: DeepSeek',u:'mind: @Tier1 "deepseek-chat"',c:'inside mind'},
+      'Tier2': {d:'Secondary paid tier',u:'mind: @Tier2 "model-name"',c:'inside mind'},
+      'Tier3': {d:'Tertiary / fallback paid tier',u:'mind: @Tier3 "model-name"',c:'inside mind'},
+      'string': {d:'Text data type',u:'name: string',c:'inside memory'},
+      'int': {d:'Integer number type',u:'count: int',c:'inside memory'},
+      'float': {d:'Floating-point number type',u:'price: float',c:'inside memory'},
+      'bool': {d:'Boolean type (true/false)',u:'active: bool',c:'inside memory'},
+      'list': {d:'Ordered collection type',u:'history: list',c:'inside memory'},
+      'map': {d:'Key-value collection type',u:'config: map',c:'inside memory'}
+    };
+
+    monaco.languages.registerHoverProvider('nous', {
+      provideHover: function(model, position) {
+        var word = model.getWordAtPosition(position);
+        if (!word) return null;
+        var doc = _ND[word.word];
+        if (!doc) return null;
+        var usage = doc.u.split('|').join('\n');
+        return {
+          range: new monaco.Range(position.lineNumber, word.startColumn, position.lineNumber, word.endColumn),
+          contents: [
+            {value: '**`' + word.word + '`** \u2014 ' + doc.d},
+            {value: '```nous\n' + usage + '\n```'},
+            {value: '*Context: ' + doc.c + '*'}
+          ]
+        };
+      }
+    });
+
+    // ── NOUS Autocomplete Provider ──
+    monaco.languages.registerCompletionItemProvider('nous', {
+      triggerCharacters: ['@', ':', '.', '[', ' '],
+      provideCompletionItems: function(model, position) {
+        var word = model.getWordUntilPosition(position);
+        var range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn
+        };
+        var lineContent = model.getLineContent(position.lineNumber);
+        var textBefore = model.getValueInRange({
+          startLineNumber: 1, startColumn: 1,
+          endLineNumber: position.lineNumber, endColumn: position.column
+        });
+
+        var Kind = monaco.languages.CompletionItemKind;
+        var Insert = monaco.languages.CompletionItemInsertTextRule;
+        var suggestions = [];
+
+        function snip(label, insert, doc, kind) {
+          suggestions.push({
+            label: label,
+            kind: kind || Kind.Snippet,
+            insertText: insert,
+            insertTextRules: Insert.InsertAsSnippet,
+            documentation: doc,
+            range: range
+          });
+        }
+        function kw(label, doc) {
+          suggestions.push({
+            label: label,
+            kind: Kind.Keyword,
+            insertText: label,
+            documentation: doc,
+            range: range
+          });
+        }
+        function fld(label, insert, doc) {
+          suggestions.push({
+            label: label,
+            kind: Kind.Field,
+            insertText: insert || label,
+            insertTextRules: insert ? Insert.InsertAsSnippet : undefined,
+            documentation: doc,
+            range: range
+          });
+        }
+
+        // Detect context by scanning backward for enclosing blocks
+        var ctx = 'top';
+        var braceDepth = 0;
+        var blockStack = [];
+        var lines = textBefore.split('\n');
+        for (var li = 0; li < lines.length; li++) {
+          var ln = lines[li].trim();
+          if (/^world\s+/.test(ln)) blockStack.push('world');
+          else if (/^soul\s+/.test(ln)) blockStack.push('soul');
+          else if (/^message\s+/.test(ln)) blockStack.push('message');
+          else if (/^nervous_system\s*\{/.test(ln)) blockStack.push('nervous_system');
+          else if (/^\s*mind\s*:/.test(ln) && blockStack[blockStack.length-1]==='soul') {}
+          else if (/^\s*senses\s*:/.test(ln) && blockStack[blockStack.length-1]==='soul') {}
+          else if (/^\s*instinct\s*\{/.test(ln)) blockStack.push('instinct');
+          else if (/^\s*memory\s*\{/.test(ln)) blockStack.push('memory');
+          else if (/^\s*heal\s*\{/.test(ln)) blockStack.push('heal');
+          else if (/^\s*dna\s*\{/.test(ln)) blockStack.push('dna');
+          else if (/^\s*mitosis\s*\{/.test(ln)) blockStack.push('mitosis');
+          else if (/^\s*immune_system\s*\{/.test(ln)) blockStack.push('immune_system');
+          else if (/^\s*dream_system\s*\{/.test(ln)) blockStack.push('dream_system');
+          else if (/^\s*symbiosis\s*\{/.test(ln)) blockStack.push('symbiosis');
+          else if (/^\s*metabolism\s*\{/.test(ln)) blockStack.push('metabolism');
+          else if (/^\s*consciousness\s*\{/.test(ln)) blockStack.push('consciousness');
+          else if (/^\s*telemetry\s*\{/.test(ln)) blockStack.push('telemetry');
+          else if (/^\s*evolution\s*\{/.test(ln)) blockStack.push('evolution');
+          var opens = (lines[li].match(/\{/g) || []).length;
+          var closes = (lines[li].match(/\}/g) || []).length;
+          braceDepth += opens - closes;
+          while (braceDepth < blockStack.length && blockStack.length > 0) blockStack.pop();
+        }
+        ctx = blockStack.length > 0 ? blockStack[blockStack.length - 1] : 'top';
+
+        // ── After @ → tiers ──
+        if (lineContent.substring(0, position.column - 1).match(/@\s*$/)) {
+          ['Tier0A','Tier0B','Tier1','Tier2','Tier3','Groq','Cerebras','Together','Fireworks'].forEach(function(t) {
+            suggestions.push({ label: t, kind: Kind.EnumMember, insertText: t, documentation: 'LLM tier: ' + t, range: range });
+          });
+          return { suggestions: suggestions };
+        }
+
+        // ── After senses: [ → tool names ──
+        if (lineContent.match(/senses\s*:\s*\[/) && position.column > lineContent.indexOf('[')) {
+          ['http_get','http_post','file_read','file_write','db_query','shell_exec','websocket','mqtt','redis_get','redis_set','email_send','slack_post','webhook'].forEach(function(s) {
+            suggestions.push({ label: s, kind: Kind.Function, insertText: s, documentation: 'Sense tool: ' + s, range: range });
+          });
+          return { suggestions: suggestions };
+        }
+
+        // ── TOP LEVEL ──
+        if (ctx === 'top') {
+          snip('world', 'world ${1:Name} {\n    law ${2:budget} = \\$${3:5.00} per cycle\n    heartbeat = ${4:30s}\n}', 'Define a new world');
+          snip('soul', 'soul ${1:Name} {\n    mind: ${2:deepseek-chat} @ ${3:Tier1}\n    senses: [${4:http_get}]\n    memory {\n        ${5:field}: ${6:string} = ${7:""}\n    }\n    instinct {\n        ${0}\n    }\n}', 'Define a new soul');
+          snip('message', 'message ${1:Name} {\n    ${2:field}: ${3:string}\n}', 'Define a message type');
+          snip('nervous_system', 'nervous_system {\n    ${1:SoulA} -> ${2:SoulB}\n}', 'Define routing topology');
+          kw('world', 'Top-level world declaration');
+          kw('soul', 'Agent soul declaration');
+          kw('message', 'Message type declaration');
+          kw('nervous_system', 'Message routing topology');
+          return { suggestions: suggestions };
+        }
+
+        // ── WORLD BLOCK ──
+        if (ctx === 'world') {
+          snip('law', 'law ${1:name} = \\$${2:5.00} per cycle', 'Cost ceiling law');
+          snip('heartbeat', 'heartbeat = ${1:30s}', 'World heartbeat interval');
+          snip('telemetry', 'telemetry {\n    enabled: true\n    exporter: ${1:jsonl}\n    sample_rate: ${2:1.0}\n    trace_senses: ${3:true}\n    trace_llm: ${4:true}\n    buffer_size: ${5:1000}\n}', 'Telemetry configuration');
+          kw('law', 'Cost law declaration');
+          kw('heartbeat', 'Heartbeat interval');
+          kw('telemetry', 'Observability subsystem');
+          return { suggestions: suggestions };
+        }
+
+        // ── SOUL BLOCK ──
+        if (ctx === 'soul') {
+          snip('mind', 'mind: ${1:deepseek-chat} @ ${2:Tier1}', 'LLM model and tier');
+          snip('senses', 'senses: [${1:http_get}]', 'Available tools');
+          snip('memory {}', 'memory {\n    ${1:field}: ${2:string} = ${3:""}\n}', 'Memory fields');
+          snip('instinct {}', 'instinct {\n    ${0}\n}', 'Core behavior loop');
+          snip('heal {}', 'heal {\n    on ${1:error} => retry(${2:3}, ${3:error})\n}', 'Error recovery');
+          snip('dna {}', 'dna {\n    ${1:param}: ${2:10} ~ [${3:1}, ${4:100}]\n}', 'Evolvable parameters');
+          snip('mitosis {}', 'mitosis {\n    trigger: ${1:queue_depth} > ${2:10}\n    max_clones: ${3:3}\n    clone_tier: ${4:Cerebras}\n    retire_trigger: ${5:queue_depth} < ${6:3}\n    retire_cooldown: ${7:120s}\n    min_clones: ${8:1}\n}', 'Auto-scaling');
+          snip('immune_system {}', 'immune_system {\n    antibody_lifespan: ${1:30m}\n    share_with_clones: ${2:true}\n}', 'Immune defense');
+          snip('dream_system {}', 'dream_system {\n    enabled: true\n    trigger_idle_sec: ${1:60}\n    dream_mind: ${2:deepseek-chat} @ ${3:Cerebras}\n    max_cache: ${4:50}\n}', 'Idle-time dreaming');
+          snip('symbiosis {}', 'symbiosis {\n    bond_with: [${1:SoulName}]\n    shared_memory: [${2:field}]\n    sync_interval: ${3:10s}\n}', 'Soul bonding');
+          snip('metabolism {}', 'metabolism {\n    max_energy: ${1:100}\n    energy_per_cycle: ${2:10}\n    recovery_rate: ${3:5}\n    fatigue_tier: ${4:Tier1}\n    hibernate_threshold: ${5:15}\n    recovery_idle_sec: ${6:30}\n}', 'Energy management');
+          snip('consciousness {}', 'consciousness {\n    goals: [${1:accuracy}]\n    reflect_every: ${2:5}\n    self_model: ${3:true}\n    goal_threshold: ${4:0.7}\n    introspection_depth: ${5:3}\n}', 'Self-reflection');
+          snip('evolution {}', 'evolution {\n    mutate: [${1:dna.param}]\n    strategy: ${2:hill_climb}\n    survive_if: fitness > ${3:0.6}\n    rollback_if: fitness < ${4:0.3}\n    schedule: every ${5:50} cycles\n    fitness: ${6:accuracy}\n}', 'Self-evolution');
+          return { suggestions: suggestions };
+        }
+
+        // ── INSTINCT BLOCK ──
+        if (ctx === 'instinct') {
+          snip('let', 'let ${1:data} = sense ${2:http_get}(${3:url: "https://"})', 'Sense call');
+          snip('let listen', 'let ${1:msg} = listen ${2:Soul}::${3:Message}', 'Listen for message');
+          snip('speak', 'speak ${1:Message}(${2:field}: ${3:value})', 'Send a message');
+          snip('remember', 'remember ${1:field} = ${2:value}', 'Update memory');
+          snip('guard', 'guard ${1:condition} else ${2:sleep 5s}', 'Guard clause');
+          snip('guard speak', 'guard ${1:condition} else speak ${2:Message}(${3:field}: ${4:value})', 'Guard with message');
+          kw('let', 'Variable binding');
+          kw('sense', 'Call a sense tool');
+          kw('listen', 'Listen for incoming message');
+          kw('speak', 'Emit a message');
+          kw('remember', 'Write to memory');
+          kw('guard', 'Guard clause');
+          kw('sleep', 'Sleep duration');
+          kw('wake', 'Wake a soul');
+          kw('wake_all', 'Wake all souls');
+          kw('broadcast', 'Broadcast message');
+          kw('alert', 'Raise alert');
+          return { suggestions: suggestions };
+        }
+
+        // ── MEMORY BLOCK ──
+        if (ctx === 'memory') {
+          snip('string field', '${1:name}: string = "${2:}"', 'String memory field');
+          snip('int field', '${1:name}: int = ${2:0}', 'Integer memory field');
+          snip('float field', '${1:name}: float = ${2:0.0}', 'Float memory field');
+          snip('bool field', '${1:name}: bool = ${2:false}', 'Boolean memory field');
+          snip('list field', '${1:name}: list = ${2:[]}', 'List memory field');
+          snip('map field', '${1:name}: map = ${2:{}}', 'Map memory field');
+          ['string','int','float','bool','list','map','any'].forEach(function(t) {
+            suggestions.push({ label: t, kind: Kind.TypeParameter, insertText: t, documentation: 'Type: ' + t, range: range });
+          });
+          return { suggestions: suggestions };
+        }
+
+        // ── HEAL BLOCK ──
+        if (ctx === 'heal') {
+          snip('on => retry', 'on ${1:error} => retry(${2:3}, ${3:error})', 'Retry on error');
+          snip('on timeout', 'on timeout => retry(${1:2}, timeout)', 'Retry on timeout');
+          snip('on api_error', 'on api_error => retry(${1:3}, api_error)', 'Retry on API error');
+          kw('on', 'Error handler');
+          kw('retry', 'Retry strategy');
+          return { suggestions: suggestions };
+        }
+
+        // ── DNA BLOCK ──
+        if (ctx === 'dna') {
+          snip('parameter', '${1:name}: ${2:10} ~ [${3:1}, ${4:100}]', 'Evolvable parameter with range');
+          return { suggestions: suggestions };
+        }
+
+        // ── MITOSIS BLOCK ──
+        if (ctx === 'mitosis') {
+          fld('trigger', 'trigger: ${1:queue_depth} > ${2:10}', 'Clone trigger condition');
+          fld('max_clones', 'max_clones: ${1:3}', 'Maximum clone count');
+          fld('clone_tier', 'clone_tier: ${1:Cerebras}', 'Tier for clones');
+          fld('retire_trigger', 'retire_trigger: ${1:queue_depth} < ${2:3}', 'Clone retirement condition');
+          fld('retire_cooldown', 'retire_cooldown: ${1:120s}', 'Cooldown before retirement');
+          fld('min_clones', 'min_clones: ${1:1}', 'Minimum clone count');
+          return { suggestions: suggestions };
+        }
+
+        // ── IMMUNE BLOCK ──
+        if (ctx === 'immune_system') {
+          fld('antibody_lifespan', 'antibody_lifespan: ${1:30m}', 'How long antibodies persist');
+          fld('share_with_clones', 'share_with_clones: ${1:true}', 'Share immunity with clones');
+          return { suggestions: suggestions };
+        }
+
+        // ── DREAM BLOCK ──
+        if (ctx === 'dream_system') {
+          fld('enabled', 'enabled: ${1:true}', 'Enable dreaming');
+          fld('trigger_idle_sec', 'trigger_idle_sec: ${1:60}', 'Idle seconds before dream');
+          fld('dream_mind', 'dream_mind: ${1:deepseek-chat} @ ${2:Cerebras}', 'Dream LLM model and tier');
+          fld('max_cache', 'max_cache: ${1:50}', 'Max cached dream results');
+          return { suggestions: suggestions };
+        }
+
+        // ── SYMBIOSIS BLOCK ──
+        if (ctx === 'symbiosis') {
+          fld('bond_with', 'bond_with: [${1:SoulName}]', 'Bonded soul names');
+          fld('shared_memory', 'shared_memory: [${1:field}]', 'Shared memory fields');
+          fld('sync_interval', 'sync_interval: ${1:10s}', 'Sync frequency');
+          return { suggestions: suggestions };
+        }
+
+        // ── METABOLISM BLOCK ──
+        if (ctx === 'metabolism') {
+          fld('max_energy', 'max_energy: ${1:100}', 'Maximum energy pool');
+          fld('energy_per_cycle', 'energy_per_cycle: ${1:10}', 'Energy consumed per cycle');
+          fld('recovery_rate', 'recovery_rate: ${1:5}', 'Energy recovered per idle tick');
+          fld('fatigue_tier', 'fatigue_tier: ${1:Tier1}', 'Downgrade tier when fatigued');
+          fld('hibernate_threshold', 'hibernate_threshold: ${1:15}', 'Energy level to hibernate');
+          fld('recovery_idle_sec', 'recovery_idle_sec: ${1:30}', 'Idle seconds to recover');
+          return { suggestions: suggestions };
+        }
+
+        // ── CONSCIOUSNESS BLOCK ──
+        if (ctx === 'consciousness') {
+          fld('goals', 'goals: [${1:accuracy}]', 'Soul goals for self-reflection');
+          fld('reflect_every', 'reflect_every: ${1:5}', 'Reflect every N cycles');
+          fld('self_model', 'self_model: ${1:true}', 'Enable self-modeling');
+          fld('goal_threshold', 'goal_threshold: ${1:0.7}', 'Goal achievement threshold');
+          fld('introspection_depth', 'introspection_depth: ${1:3}', 'Depth of self-analysis');
+          return { suggestions: suggestions };
+        }
+
+        // ── TELEMETRY BLOCK ──
+        if (ctx === 'telemetry') {
+          fld('enabled', 'enabled: ${1:true}', 'Enable telemetry');
+          fld('exporter', 'exporter: ${1:jsonl}', 'Export format (jsonl, otlp, prometheus)');
+          fld('endpoint', 'endpoint: "${1:http://localhost:4318}"', 'Telemetry endpoint URL');
+          fld('sample_rate', 'sample_rate: ${1:1.0}', 'Sampling rate 0.0-1.0');
+          fld('trace_senses', 'trace_senses: ${1:true}', 'Trace sense calls');
+          fld('trace_llm', 'trace_llm: ${1:true}', 'Trace LLM calls');
+          fld('buffer_size', 'buffer_size: ${1:1000}', 'Telemetry buffer size');
+          return { suggestions: suggestions };
+        }
+
+        // ── EVOLUTION BLOCK ──
+        if (ctx === 'evolution') {
+          fld('mutate', 'mutate: [${1:dna.param}]', 'Parameters to mutate');
+          fld('strategy', 'strategy: ${1:hill_climb}', 'Evolution strategy');
+          fld('survive_if', 'survive_if: fitness > ${1:0.6}', 'Survival condition');
+          fld('rollback_if', 'rollback_if: fitness < ${1:0.3}', 'Rollback condition');
+          fld('schedule', 'schedule: every ${1:50} cycles', 'Evolution frequency');
+          fld('fitness', 'fitness: ${1:accuracy}', 'Fitness metric');
+          return { suggestions: suggestions };
+        }
+
+        // ── MESSAGE BLOCK ──
+        if (ctx === 'message') {
+          snip('string field', '${1:name}: string', 'String field');
+          snip('int field', '${1:name}: int', 'Integer field');
+          snip('float field', '${1:name}: float', 'Float field');
+          snip('bool field', '${1:name}: bool', 'Boolean field');
+          ['string','int','float','bool','list','map','any'].forEach(function(t) {
+            suggestions.push({ label: t, kind: Kind.TypeParameter, insertText: t, documentation: 'Type: ' + t, range: range });
+          });
+          return { suggestions: suggestions };
+        }
+
+        // ── NERVOUS SYSTEM ──
+        if (ctx === 'nervous_system') {
+          snip('route', '${1:SoulA} -> ${2:SoulB}', 'Direct route between souls');
+          snip('feedback', '${1:SoulA}::${2:field} -> ${3:SoulB}::${4:memory.field}', 'Feedback loop');
+          return { suggestions: suggestions };
+        }
+
+        return { suggestions: suggestions };
+      }
+    });
+
+
+    _monacoReady = true;
+    console.log('Monaco NOUS editor initialized');
+  });
+})();
+
+
+const tabs = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.tab-panel');
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabs.forEach(b => b.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    var panel = document.getElementById('panel-' + btn.dataset.tab);
+    panel.classList.add('active');
+    if (btn.dataset.tab === 'graph') {
+      setTimeout(function() { if (window.graphResize) window.graphResize(); }, 150);
+    }
+    if (btn.dataset.tab === 'verify') {
+      var vp = document.getElementById('panel-verify');
+      if (vp && (vp.innerHTML.indexOf('placeholder') >= 0 || vp.innerHTML.indexOf('Write code') >= 0)) {
+        var code = getEditorCode();
+        if (code && code.trim()) {
+          setTimeout(function() { document.getElementById('btn-verify').click(); }, 50);
+        }
+      }
+    }
+  });
+});
+
+const MOCK_DIFF = {
+  source: "gate_alpha.nous",
+  target: "gate_alpha_v2.nous",
+  verdict: { critical: 1, warning: 4, info: 4 },
+  topology: {
+    added: [],
+    removed: ["Monitor"],
+    modified: ["Scout"],
+    route_changes: [
+      { from: "Scanner\u2192Monitor", to: null, type: "removed" }
+    ]
+  },
+  cost: {
+    souls: [
+      { name: "Scout", before: 0.0045, after: 0.00035, tier_before: "Tier1", tier_after: "Groq" },
+      { name: "Hunter", before: 0.0045, after: 0.0045, tier_before: "Tier1", tier_after: "Tier1" },
+      { name: "Quant", before: 0.000375, after: 0.000375, tier_before: "Tier2", tier_after: "Tier2" },
+      { name: "Monitor", before: 0.0075, after: null, tier_before: "Tier2", tier_after: null }
+    ],
+    total_before: 0.016875,
+    total_after: 0.005225,
+    daily_before: 4.86,
+    daily_after: 1.50,
+    monthly_before: 145.80,
+    monthly_after: 45.14
+  },
+  protocol: {
+    messages_added: [],
+    messages_removed: ["MonitorAlert"],
+    mismatches: []
+  },
+  performance: {
+    heartbeat_changes: [],
+    wake_strategy_changes: [
+      { soul: "Scout", from: "LISTENER", to: "HEARTBEAT" }
+    ]
+  },
+  capabilities: {
+    senses_added: [{ soul: "Scout", sense: "mcp_call" }],
+    senses_removed: [{ soul: "Monitor", sense: "http_get" }]
+  },
+  memory: {
+    fields_added: [{ soul: "Scout", field: "last_mcp_call", type: "timestamp" }],
+    fields_removed: [{ soul: "Monitor", field: "alert_count", type: "int" }]
+  },
+  findings: [
+    { severity: "CRITICAL", code: "BD-C001", category: "Cost", message: "Total cost change: -69.0%" },
+    { severity: "WARNING", code: "BD-W001", category: "Topology", message: "Soul removed: Monitor" },
+    { severity: "WARNING", code: "BD-W002", category: "Cost", message: "Soul Scout: tier changed Tier1 \u2192 Groq" },
+    { severity: "WARNING", code: "BD-W003", category: "Protocol", message: "Message type removed: MonitorAlert" },
+    { severity: "WARNING", code: "BD-W004", category: "Capability", message: "Soul Monitor: sense removed http_get" },
+    { severity: "INFO", code: "BD-I001", category: "Topology", message: "Soul modified: Scout" },
+    { severity: "INFO", code: "BD-I002", category: "Performance", message: "Scout: wake strategy LISTENER \u2192 HEARTBEAT" },
+    { severity: "INFO", code: "BD-I003", category: "Capability", message: "Scout: sense added mcp_call" },
+    { severity: "INFO", code: "BD-I004", category: "Memory", message: "Scout: field added last_mcp_call (timestamp)" }
+  ]
+};
+
+function tierColor(t) {
+  if (!t) return '#94a3b8';
+  if (t.includes('0A')) return '#a78bfa';
+  if (t.includes('0B')) return '#60a5fa';
+  if (t === 'Tier1') return '#34d399';
+  if (t === 'Tier2') return '#fbbf24';
+  if (t === 'Tier3') return '#94a3b8';
+  if (t === 'Groq') return '#f97316';
+  if (t === 'Cerebras') return '#22d3ee';
+  if (t === 'Together') return '#a78bfa';
+  if (t === 'Fireworks') return '#ef4444';
+  return '#c9a554';
+}
+
+function renderDiff(data) {
+  if (!data) { 
+renderEmpty(); return; }
+  const d = data;
+  const c = d.cost;
+  const pct = ((c.total_after - c.total_before) / c.total_before * 100);
+  const isDown = pct < 0;
+  const monthSaved = c.monthly_before - c.monthly_after;
+  const breaking = d.verdict.critical > 0;
+  const maxCost = Math.max(...c.souls.filter(s => s.before !== null).map(s => s.before));
+  const tierChanges = c.souls.filter(s => s.tier_before !== s.tier_after && s.tier_after !== null);
+  const tierRemoved = c.souls.filter(s => s.tier_after === null);
+
+  let html = '';
+
+  html += '<div class="diff-input-bar">';
+  html += '<span class="diff-input-label">Original:</span>';
+  html += '<input class="diff-input-file" value="' + d.source + '" readonly>';
+  html += '<span class="diff-input-vs">vs</span>';
+  html += '<input class="diff-input-file" value="' + d.target + '" readonly>';
+  html += '<button class="diff-run-btn" onclick="loadDemoData()">&#9654; Run Diff</button>';
+  html += '</div>';
+
+  html += '<div class="verdict ' + (breaking ? 'brk' : 'safe') + '">';
+  html += '<div>';
+  html += '<div class="v-title" style="color:' + (breaking ? 'var(--red)' : 'var(--green)') + '">';
+  html += breaking ? 'BREAKING CHANGES DETECTED' : 'SAFE TO DEPLOY';
+  html += '</div>';
+  html += '<div class="v-sub">' + d.source + ' \u2192 ' + d.target + ' \u00B7 ' + d.findings.length + ' findings</div>';
+  html += '</div><div class="pills">';
+  if (d.verdict.critical > 0) html += '<div class="pill pill-c"><div class="pill-n">' + d.verdict.critical + '</div><div class="pill-l">Critical</div></div>';
+  if (d.verdict.warning > 0) html += '<div class="pill pill-w"><div class="pill-n">' + d.verdict.warning + '</div><div class="pill-l">Warning</div></div>';
+  if (d.verdict.info > 0) html += '<div class="pill pill-i"><div class="pill-n">' + d.verdict.info + '</div><div class="pill-l">Info</div></div>';
+  html += '</div></div>';
+
+  html += '<div class="cards-row">';
+
+  html += '<div class="card" style="flex:1 1 340px;min-width:300px">';
+  html += '<div class="card-h"><span style="font-size:17px">\u25CE</span><span class="card-t">Cost impact</span></div>';
+  html += '<div class="cost-big"><span class="cost-old">$' + c.monthly_before.toFixed(2) + '</span>';
+  html += '<span style="font-size:18px;color:var(--td)">\u2192</span>';
+  html += '<span class="cost-new" id="cost-anim">$' + c.monthly_after.toFixed(2) + '</span>';
+  html += '<span style="font-size:13px;color:var(--td)">/month</span></div>';
+  html += '<div class="pct-badge ' + (isDown ? 'pct-down' : 'pct-up') + '">';
+  html += '<span style="font-size:15px;color:' + (isDown ? 'var(--green)' : 'var(--red)') + '">' + (isDown ? '\u2193' : '\u2191') + '</span>';
+  html += '<span style="font-size:13px;font-weight:600;color:' + (isDown ? 'var(--green)' : 'var(--red)') + '">' + Math.abs(pct).toFixed(1) + '%</span>';
+  if (monthSaved > 0) html += '<span style="font-size:11px;color:var(--green);opacity:0.8">\u00B7 saving $' + monthSaved.toFixed(2) + '/mo</span>';
+  html += '</div>';
+
+  html += '<div class="minis">';
+  html += '<div class="mini"><div class="mini-l">Per cycle</div><div class="mini-v"><span class="old">$' + c.total_before.toFixed(4) + '</span> \u2192 <span style="color:' + (c.total_after < c.total_before ? 'var(--green)' : 'var(--red)') + '">$' + c.total_after.toFixed(4) + '</span></div></div>';
+  html += '<div class="mini"><div class="mini-l">Daily</div><div class="mini-v"><span class="old">$' + c.daily_before.toFixed(2) + '</span> \u2192 <span style="color:' + (c.daily_after < c.daily_before ? 'var(--green)' : 'var(--red)') + '">$' + c.daily_after.toFixed(2) + '</span></div></div>';
+  html += '</div>';
+
+  html += '<div class="bar-section"><div class="bar-label">Per-soul breakdown</div>';
+  c.souls.filter(s => s.before !== null).forEach(s => {
+    const wB = (s.before / maxCost * 100).toFixed(0);
+    const wA = s.after !== null ? (s.after / maxCost * 100).toFixed(0) : '0';
+    const col = s.after === null ? 'var(--red)' : (s.after < s.before ? 'var(--green)' : 'var(--gold)');
+    const valAfter = s.after !== null ? '$' + (s.after * 1000).toFixed(2) : 'removed';
+    html += '<div class="bar-row"><div class="bar-top"><span class="bar-name">' + s.name + '</span><span class="bar-vals">$' + (s.before * 1000).toFixed(2) + ' \u2192 ' + valAfter + '</span></div>';
+    html += '<div class="bar-track"><div class="bar-bg" style="width:' + wB + '%"></div><div class="bar-fg" style="width:' + wA + '%;background:' + col + '"></div></div></div>';
+  });
+  html += '</div></div>';
+
+  if (tierChanges.length > 0 || tierRemoved.length > 0) {
+    html += '<div class="card" style="flex:1 1 280px;min-width:260px">';
+    html += '<div class="card-h"><span style="font-size:17px">\u2B21</span><span class="card-t">Mind / tier changes</span></div>';
+    tierChanges.forEach(s => {
+      const cB = tierColor(s.tier_before), cA = tierColor(s.tier_after);
+      html += '<div class="tier-row"><span class="tier-name">' + s.name + '</span>';
+      html += '<span class="tier-pill" style="color:' + cB + '88;background:' + cB + '0a;border:1px solid ' + cB + '22;opacity:0.6">' + s.tier_before + '</span>';
+      html += '<span class="tier-arrow">\u2192</span>';
+      html += '<span class="tier-pill" style="color:' + cA + ';background:' + cA + '18;border:1px solid ' + cA + '44">' + s.tier_after + '</span>';
+      html += '</div>';
+    });
+    tierRemoved.forEach(s => {
+      const cB = tierColor(s.tier_before);
+      html += '<div class="tier-row"><span class="tier-name" style="text-decoration:line-through;color:var(--td)">' + s.name + '</span>';
+      html += '<span class="tier-pill" style="color:' + cB + '88;background:' + cB + '0a;border:1px solid ' + cB + '22;opacity:0.6">' + s.tier_before + '</span>';
+      html += '<span class="tier-arrow">\u2192</span>';
+      html += '<span class="removed-pill">REMOVED</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '</div>';
+
+  const topo = d.topology;
+  const caps = d.capabilities;
+  const mem = d.memory;
+  const hasTopo = topo.added.length > 0 || topo.removed.length > 0 || topo.modified.length > 0;
+  const hasCaps = caps.senses_added.length > 0 || caps.senses_removed.length > 0 || mem.fields_added.length > 0 || mem.fields_removed.length > 0;
+
+  if (hasTopo || hasCaps) {
+    html += '<div class="cards-row">';
+    if (hasTopo) {
+      html += '<div class="card" style="flex:1 1 260px;min-width:240px">';
+      html += '<div class="card-h"><span style="font-size:17px">\u25C7</span><span class="card-t">Topology</span></div>';
+      topo.removed.forEach(s => { html += diffLine('\u2212', 'var(--red)', s, 'Soul removed', 'var(--red-d)'); });
+      topo.added.forEach(s => { html += diffLine('+', 'var(--green)', s, 'Soul added', 'var(--green-d)'); });
+      topo.modified.forEach(s => { html += diffLine('~', 'var(--amber)', s, 'Modified', 'var(--amber-d)'); });
+      if (topo.route_changes.length > 0) {
+        html += '<div class="route-section"><div class="route-label">Route changes</div>';
+        topo.route_changes.forEach(r => {
+          const col = r.type === 'removed' ? 'var(--red)' : 'var(--green)';
+          const sym = r.type === 'removed' ? '\u2212' : '+';
+          html += '<div class="route-item"><span style="color:' + col + '">' + sym + '</span> ' + (r.from || r.to) + '</div>';
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    if (hasCaps) {
+      html += '<div class="card" style="flex:1 1 260px;min-width:240px">';
+      html += '<div class="card-h"><span style="font-size:17px">\u2394</span><span class="card-t">Capabilities &amp; memory</span></div>';
+      caps.senses_added.forEach(s => { html += diffLine('+', 'var(--green)', s.soul + '.' + s.sense, 'sense added', 'rgba(74,222,128,0.06)'); });
+      caps.senses_removed.forEach(s => { html += diffLine('\u2212', 'var(--red)', s.soul + '.' + s.sense, 'sense removed', 'rgba(224,82,82,0.06)'); });
+      if ((caps.senses_added.length > 0 || caps.senses_removed.length > 0) && (mem.fields_added.length > 0 || mem.fields_removed.length > 0)) {
+        html += '<div class="sep"></div>';
+      }
+      mem.fields_added.forEach(f => { html += diffLine('+', 'var(--cyan)', f.soul + '.' + f.field, f.type, 'rgba(34,211,238,0.06)'); });
+      mem.fields_removed.forEach(f => { html += diffLine('\u2212', 'var(--red)', f.soul + '.' + f.field, f.type, 'rgba(224,82,82,0.06)'); });
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  html += '<div class="findings-card">';
+  html += '<div class="findings-top">';
+  html += '<div class="card-h" style="margin-bottom:0"><span style="font-size:17px">\u229E</span><span class="card-t">All findings</span></div>';
+  html += '<div class="filter-btns" id="diff-filters">';
+  html += '<button class="filter-btn active" data-f="ALL">ALL</button>';
+  html += '<button class="filter-btn" data-f="CRITICAL">CRITICAL</button>';
+  html += '<button class="filter-btn" data-f="WARNING">WARNING</button>';
+  html += '<button class="filter-btn" data-f="INFO">INFO</button>';
+  html += '</div></div>';
+
+  d.findings.forEach(f => {
+    const sc = f.severity === 'CRITICAL' ? 'c' : (f.severity === 'WARNING' ? 'w' : 'i');
+    const icon = f.severity === 'CRITICAL' ? '\u2717' : (f.severity === 'WARNING' ? '\u26A0' : '\u2139');
+    html += '<div class="finding-row" data-sev="' + f.severity + '">';
+    html += '<span class="sev-badge sev-' + sc + '">' + icon + ' ' + f.severity + '</span>';
+    html += '<span class="f-code">' + f.code + '</span>';
+    html += '<span class="f-cat">' + f.category + '</span>';
+    html += '<span class="f-msg">' + f.message + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  document.getElementById('diff-container').innerHTML = html;
+
+  document.querySelectorAll('#diff-filters .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#diff-filters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.f;
+      document.querySelectorAll('.finding-row').forEach(row => {
+        row.style.display = (f === 'ALL' || row.dataset.sev === f) ? 'flex' : 'none';
+      });
+    });
+  });
+
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fg').forEach(el => {
+      const w = el.style.width;
+      el.style.width = '0%';
+      requestAnimationFrame(() => { el.style.width = w; });
+    });
+  }, 100);
+}
+
+function diffLine(icon, color, label, detail, bg) {
+  return '<div class="diff-line" style="background:' + (bg || 'transparent') + '">' +
+    '<span class="diff-icon" style="color:' + color + '">' + icon + '</span>' +
+    '<span class="diff-name">' + label + '</span>' +
+    '<span class="diff-detail">' + detail + '</span></div>';
+}
+
+function renderEmpty() {
+  document.getElementById('diff-container').innerHTML =
+    '<div class="diff-input-bar">' +
+    '<span class="diff-input-label">Original:</span>' +
+    '<span class="diff-input-hint" style="color:var(--text-dim);font-size:12px;font-family:\'JetBrains Mono\',monospace">\u2190 uses Editor tab code</span>' +
+    '<span class="diff-input-vs">vs</span>' +
+    '<span class="diff-input-label">Modified:</span>' +
+    '<span class="diff-input-hint" style="color:var(--text-dim);font-size:12px;font-family:\'JetBrains Mono\',monospace">\u2193 paste below</span>' +
+    '<button class="diff-run-btn" onclick="runLiveDiff()" id="btn-run-diff">&#9654; Run Diff</button>' +
+    '<button class="diff-run-btn" onclick="loadDemoData()" style="background:transparent;color:#5a6a7e;border:1px solid #1a2235;margin-left:8px;font-size:11px">DEMO</button>' +
+    '</div>' +
+    '<textarea id="diff-modified-code" style="width:100%;height:180px;background:var(--bg-code,#0a0e17);color:var(--text,#e0e6ed);border:1px solid var(--border,#1a2235);border-radius:8px;padding:14px;font-family:\'JetBrains Mono\',monospace;font-size:13px;resize:vertical;margin-bottom:16px;outline:none;tab-size:2" placeholder="Paste your MODIFIED .nous code here...\n\nThe original code is taken from the Editor tab.\nBoth programs are sent to the NOUS compiler for semantic diff analysis."></textarea>' +
+    '<div class="diff-empty">' +
+    '<div class="diff-empty-icon">\u2206</div>' +
+    '<div class="diff-empty-title">Architecture Diff</div>' +
+    '<div class="diff-empty-sub">Write your original .nous program in the Editor tab, paste the modified version above, then click Run Diff for live semantic impact analysis.</div>' +
+    '</div>';
+}
+
+window.loadDemoData = function() {
+  renderDiff(MOCK_DIFF);
+};
+window.runLiveDiff = function() {
+  var original = getEditorCode();
+  var modifiedEl = document.getElementById('diff-modified-code');
+  var modified = modifiedEl ? modifiedEl.value : '';
+  if (!original.trim()) {
+    alert('Write your original .nous code in the Editor tab first.');
+    return;
+  }
+  if (!modified.trim()) {
+    alert('Paste the modified .nous code in the textarea above.');
+    return;
+  }
+  var btn = document.getElementById('btn-run-diff');
+  if (btn) { btn.textContent = '\u23F3 Analyzing...'; btn.disabled = true; }
+  fetch('/api/v1/diff', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ original: original, modified: modified })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (btn) { btn.innerHTML = '&#9654; Run Diff'; btn.disabled = false; }
+    if (data.ok && data.diff) {
+      renderDiff(data.diff);
+    } else {
+      var errMsg = data.detail || 'Diff failed';
+      document.getElementById('diff-container').innerHTML =
+        '<div class="diff-empty"><div class="diff-empty-icon" style="color:var(--red)">\u2717</div>' +
+        '<div class="diff-empty-title" style="color:var(--red)">Diff Error</div>' +
+        '<div class="diff-empty-sub" style="color:var(--text-dim)">' + errMsg + '</div></div>';
+    }
+  })
+  .catch(function(err) {
+    if (btn) { btn.innerHTML = '&#9654; Run Diff'; btn.disabled = false; }
+    document.getElementById('diff-container').innerHTML =
+      '<div class="diff-empty"><div class="diff-empty-icon" style="color:var(--red)">\u2717</div>' +
+      '<div class="diff-empty-title" style="color:var(--red)">Connection Error</div>' +
+      '<div class="diff-empty-sub" style="color:var(--text-dim)">' + err.message + '</div></div>';
+  });
+};
+
+var _lastCompiledPython = null;
+var _lastWorldName = 'untitled';
+
+window.loadTemplate = loadTemplate;
+function loadTemplate(name) {
+  if (!name) return;
+  var sel = document.getElementById('tpl-select');
+  var fname = document.getElementById('editor-filename');
+  sel.disabled = true;
+  fetch('/api/v1/templates/' + name)
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    sel.disabled = false;
+    if (data.source) {
+      setEditorCode(data.source);
+      fname.textContent = data.name || (name + '.nous');
+      _lastCompiledPython = null;
+      _updateDownloadBtn(false);
+      document.getElementById('editor-output').textContent = 'Template loaded: ' + name;
+    } else {
+      document.getElementById('editor-output').textContent = 'Error: ' + (data.detail || 'template not found');
+    }
+  })
+  .catch(function(err) {
+    sel.disabled = false;
+    document.getElementById('editor-output').textContent = 'Error loading template: ' + err.message;
+  });
+  sel.value = '';
+}
+
+function _updateDownloadBtn(enabled) {
+  var btn = document.getElementById('btn-download-py');
+  if (btn) {
+    btn.disabled = !enabled;
+    btn.style.opacity = enabled ? '1' : '0.4';
+    btn.style.cursor = enabled ? 'pointer' : 'default';
+    btn.title = enabled ? 'Download compiled Python file' : 'Compile first to enable download';
+  }
+}
+
+window.downloadPython = downloadPython;
+function downloadPython() {
+  if (!_lastCompiledPython) { alert('Compile your .nous program first.'); return; }
+  var blob = new Blob([_lastCompiledPython], { type: 'text/x-python' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = _lastWorldName + '_generated.py';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+(function loadTemplateList() {
+  fetch('/api/v1/templates')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var sel = document.getElementById('tpl-select');
+    if (data.templates) {
+      data.templates.forEach(function(t) {
+        var opt = document.createElement('option');
+        opt.value = t.name;
+        opt.textContent = t.name + ' (' + t.souls + ' souls, ' + t.lines + ' lines)';
+        sel.appendChild(opt);
+      });
+    }
+  })
+  .catch(function() {});
+})();
+
+renderEmpty();
+
+document.getElementById('btn-compile').addEventListener('click', function() {
+  var out = document.getElementById('editor-output');
+  var code = getEditorCode();
+  if (!code.trim()) { out.innerHTML = '<span style="color:var(--amber)">No code.</span>'; return; }
+  out.innerHTML = '<span style="color:var(--gold)">Compiling...</span>';
+  fetch('/api/v1/compile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source:code})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok && d.python){_lastCompiledPython=d.python;_lastWorldName=d.world||'untitled';_updateDownloadBtn(true);}else{_lastCompiledPython=null;_updateDownloadBtn(false);}
+    if(d.ok){
+      var h='\u2713 Compiled successfully\n\n';
+      h+='Target:   Python 3.11+ asyncio\n';
+      h+='World:    '+(d.world||'\u2014')+'\n';
+      h+='Souls:    '+d.souls+'\n';
+      h+='Messages: '+d.messages+'\n';
+      h+='Output:   '+d.lines+' lines\n';
+      if((d.warnings||[]).length){h+='\n\u26a0 '+d.warnings.length+' warning(s):\n';d.warnings.forEach(function(w){h+='  ['+w.code+'] '+(w.message||'')+'\n';});}
+      h+='\n\u2500\u2500\u2500 Generated Python \u2500\u2500\u2500\n'+(d.python||'').substring(0,5000);
+      out.textContent=h;
+    } else {
+      var h='\u2717 Compilation failed\nStage: '+(d.stage||'unknown')+'\n\n';
+      (d.errors||[]).forEach(function(e){h+=(e.message||e.error||JSON.stringify(e))+'\n';});
+      if(d.detail){h+=(typeof d.detail==='string'?d.detail:(d.detail.error||JSON.stringify(d.detail)))+'\n';}
+      out.textContent=h;
+    }
+  }).catch(function(e){out.textContent='\u2717 Error: '+e.message;});
+});
+
+document.getElementById('btn-verify').addEventListener('click', function() {
+  var code = getEditorCode();
+  if (!code.trim()) return;
+  tabs.forEach(function(b){b.classList.remove('active');});
+  panels.forEach(function(p){p.classList.remove('active');});
+  document.querySelector('[data-tab="verify"]').classList.add('active');
+  var vp = document.getElementById('panel-verify');
+  vp.classList.add('active');
+  vp.innerHTML = '<pre style="padding:24px;font-family:var(--mono);font-size:13px;color:var(--gold);white-space:pre-wrap">Verifying...</pre>';
+  fetch('/api/v1/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source:code})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    var t = '';
+    if(d.ok!==false&&(d.proven||[]).length>0){
+      t += '\u2550\u2550\u2550 VERIFIED \u2550\u2550\u2550\n\n';
+      t += d.proven.length+' proven \u00b7 '+(d.warnings||[]).length+' warnings \u00b7 '+(d.errors||[]).length+' errors\n\n';
+      var cats={};(d.proven||[]).forEach(function(p){var c=p.category||'General';if(!cats[c])cats[c]=[];cats[c].push(p);});
+      Object.keys(cats).forEach(function(c){
+        t += '\u2500\u2500 '+c+' \u2500\u2500\n';
+        cats[c].forEach(function(p){t += '\u2713 ['+p.code+'] '+(p.message||'Proven')+'\n';});
+        t += '\n';
+      });
+      if((d.warnings||[]).length){t += '\u2500\u2500 Warnings \u2500\u2500\n';(d.warnings||[]).forEach(function(w){t += '\u26a0 ['+w.code+'] '+(w.message||'')+'\n';});t += '\n';}
+      t += 'RESULT: '+d.proven.length+' proven, '+(d.errors||[]).length+' errors';
+    } else {
+      t += '\u2550\u2550\u2550 VERIFICATION FAILED \u2550\u2550\u2550\n\nStage: '+(d.stage||'unknown')+'\n\n';
+      (d.errors||[]).forEach(function(e){t += '\u2717 '+(e.message||e.error||JSON.stringify(e))+'\n';});
+      if(d.detail){t += (typeof d.detail==='string'?d.detail:(d.detail.error||JSON.stringify(d.detail)))+'\n';}
+    }
+    vp.innerHTML = '<pre style="padding:24px;font-family:var(--mono);font-size:13px;color:var(--green);white-space:pre-wrap;line-height:1.8">'+t.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</pre>';
+  }).catch(function(e){vp.innerHTML='<pre style="padding:24px;font-family:var(--mono);color:var(--red)">Error: '+e.message+'</pre>';});
+});
+
+document.getElementById('btn-run').addEventListener('click', function() {
+  var out = document.getElementById('editor-output');
+  var code = getEditorCode();
+  if (!code.trim()) { out.textContent = 'No code.'; return; }
+  out.textContent = 'Running (dry-run)...';
+  fetch('/api/v1/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({source:code,mode:'dry-run',max_cycles:3})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok){out.textContent='\u2713 '+d.output+'\n\nMode: '+d.mode+'\nSouls: '+(d.souls||0)+'\nLines: '+(d.lines||0);}
+    else{out.textContent='\u2717 Failed at '+(d.stage||'unknown');}
+  }).catch(function(e){out.textContent='\u2717 Error: '+e.message;});
+});
+
+})();
+</script>
+
+<script>
+// ═══ NOUS Graph — Standalone (outside IIFE) ═══
+(function initNousGraph() {
+  if (typeof cytoscape === 'undefined') {
+    console.error('Cytoscape not loaded');
+    return;
+  }
+
+  var cyInst = null;
+  var cyPulse = null;
+
+  function parseSouls(code) {
+    var nodes = [], edges = [];
+    var ns = code.match(/nervous_system\s*\{([^}]*)\}/s);
+    if (ns) {
+      ns[1].split('\n').forEach(function(ln) {
+        ln = ln.replace(/#.*$/, '').trim();
+        if (ln.indexOf('->') < 0) return;
+        var parts = ln.split(/\s*->\s*/);
+        for (var i = 0; i < parts.length; i++) {
+          var n = parts[i].trim();
+          if (n && /^\w+$/.test(n)) {
+            if (nodes.indexOf(n) < 0) nodes.push(n);
+            if (i > 0) { var prev = parts[i-1].trim(); if (/^\w+$/.test(prev)) edges.push({s:prev,t:n}); }
+          }
+        }
+      });
+    }
+    if (nodes.length === 0) {
+      (code.match(/soul\s+(\w+)/g) || []).forEach(function(m) {
+        var name = m.replace(/^soul\s+/, '');
+        if (nodes.indexOf(name) < 0) nodes.push(name);
+      });
+    }
+    console.log('NOUS Graph parsed:', nodes.length, 'nodes,', edges.length, 'edges', {nodes:nodes, edges:edges});
+    return {nodes: nodes, edges: edges};
+  }
+
+  function getMeta(code, name) {
+    var re = new RegExp('soul\\s+' + name + '\\s*\\{([\\s\\S]*?)\\n\\}', 'm');
+    var m = code.match(re);
+    if (!m) return {model:'',tier:'',senses:[],feat:[]};
+    var b = m[1];
+    var mind = b.match(/mind\s*:\s*([\w\-]+)\s*@\s*(\w+)/);
+    var sens = b.match(/senses\s*:\s*\[([^\]]*)\]/);
+    var feat = [];
+    if (/heal\s*\{/.test(b)) feat.push('heal');
+    if (/mitosis\s*\{/.test(b)) feat.push('mitosis');
+    if (/immune_system\s*\{/.test(b)) feat.push('immune');
+    if (/dream_system\s*\{/.test(b)) feat.push('dream');
+    if (/symbiosis\s*\{/.test(b)) feat.push('symbiosis');
+    if (/metabolism\s*\{/.test(b)) feat.push('metabolism');
+    if (/consciousness\s*\{/.test(b)) feat.push('consciousness');
+    return {
+      model: mind ? mind[1] : '',
+      tier: mind ? mind[2] : '',
+      senses: sens ? sens[1].split(',').map(function(s){return s.trim();}).filter(Boolean) : [],
+      feat: feat
+    };
+  }
+
+  function tc(tier) {
+    return {Tier0A:'#a78bfa',Tier0B:'#60a5fa',Tier1:'#34d399',Tier2:'#fbbf24',Tier3:'#94a3b8',Groq:'#f97316',Cerebras:'#22d3ee',Together:'#a78bfa',Fireworks:'#ef4444'}[tier] || '#c9a554';
+  }
+
+  function doRender(code) {
+    var p = parseSouls(code);
+    var box = document.getElementById('cy-container');
+    var empty = document.getElementById('cy-empty');
+    var info = document.getElementById('graph-info');
+    var tip = document.getElementById('cy-tip');
+    if (!box) { console.error('cy-container not found'); return; }
+    if (p.nodes.length === 0) {
+      if (empty) empty.style.display = 'flex';
+      box.style.display = 'none';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+    box.style.display = 'block';
+
+    var inD = {};
+    p.nodes.forEach(function(n) { inD[n] = 0; });
+    p.edges.forEach(function(e) { inD[e.t] = (inD[e.t]||0) + 1; });
+
+    var els = [];
+    p.nodes.forEach(function(name) {
+      var m = getMeta(code, name);
+      var isE = (inD[name]||0) === 0 && p.edges.length > 0;
+      els.push({ data: { id: name, label: name + (m.tier ? '\n@ '+m.tier : ''), tc: tc(m.tier), isE: isE, meta: m } });
+    });
+    p.edges.forEach(function(e, i) {
+      els.push({ data: { id: 'e'+i, source: e.s, target: e.t } });
+    });
+
+    if (cyInst) { cyInst.destroy(); cyInst = null; }
+    if (cyPulse) { clearInterval(cyPulse); cyPulse = null; }
+
+    cyInst = cytoscape({
+      container: box,
+      elements: els,
+      style: [
+        { selector: 'node', style: {
+          'label': 'data(label)', 'text-wrap': 'wrap', 'text-valign': 'center', 'text-halign': 'center',
+          'font-family': 'JetBrains Mono, monospace', 'font-size': '14px', 'color': '#e2e8f0',
+          'background-color': '#0a0e17', 'border-width': 1.5, 'border-color': 'data(tc)',
+          'shape': 'roundrectangle', 'width': 200, 'height': 70, 'overlay-opacity': 0
+        }},
+        { selector: 'node[?isE]', style: {
+          'border-width': 3, 'border-color': '#c9a554', 'background-color': 'rgba(201,165,84,0.1)'
+        }},
+        { selector: 'edge', style: {
+          'width': 2, 'line-color': 'rgba(201,165,84,0.3)', 'target-arrow-color': 'rgba(201,165,84,0.6)',
+          'target-arrow-shape': 'triangle', 'arrow-scale': 0.8, 'curve-style': 'bezier', 'overlay-opacity': 0
+        }},
+        { selector: '.bright', style: { 'border-width': 2.5 } },
+        { selector: '.dim', style: { 'border-width': 1 } },
+        { selector: '.epulse', style: { 'line-color': 'rgba(201,165,84,0.6)', 'width': 3, 'target-arrow-color': '#c9a554' } }
+      ],
+      layout: {
+        name: p.edges.length > 0 ? 'dagre' : 'grid',
+        rankDir: 'TB', nodeSep: 120, rankSep: 160,
+        animate: true, animationDuration: 500, fit: true, padding: 80
+      },
+      minZoom: 0.3, maxZoom: 3
+    });
+
+    // Heartbeat
+    var beat = false;
+    cyPulse = setInterval(function() {
+      if (!cyInst) return;
+      beat = !beat;
+      cyInst.nodes().forEach(function(n, i) {
+        setTimeout(function() { n.removeClass(beat?'dim':'bright'); n.addClass(beat?'bright':'dim'); }, i*60);
+      });
+      cyInst.edges().forEach(function(e, i) {
+        setTimeout(function() { e.addClass('epulse'); setTimeout(function(){e.removeClass('epulse');},500); }, i*120+100);
+      });
+    }, 2200);
+
+    // Tooltip
+    if (tip) {
+      cyInst.on('tap', 'node', function(evt) {
+        var d = evt.target.data(), m = d.meta, pos = evt.renderedPosition;
+        var h = '<div style="color:#c9a554;font-weight:700;margin-bottom:6px">' + d.id + '</div>';
+        h += '<div style="color:#e2e8f0">' + (m.model||'\u2014') + ' <span style="color:'+tc(m.tier)+'">@ '+(m.tier||'\u2014')+'</span></div>';
+        if (m.senses.length) h += '<div style="color:#45d1c8;margin-top:4px">senses: '+m.senses.join(', ')+'</div>';
+        if (m.feat.length) h += '<div style="margin-top:4px;color:#b8c4d4">'+m.feat.join(' \u00b7 ')+'</div>';
+        if (d.isE) h += '<div style="margin-top:4px;color:#c9a554;font-size:9px">\u25b6 ENTRYPOINT</div>';
+        tip.innerHTML = h; tip.style.display = 'block';
+        var r = box.getBoundingClientRect();
+        tip.style.left = Math.min(pos.x+16, r.width-320)+'px';
+        tip.style.top = Math.min(pos.y+16, r.height-180)+'px';
+      });
+      cyInst.on('tap', function(e) { if (e.target === cyInst) tip.style.display = 'none'; });
+    }
+
+    if (info) info.textContent = p.nodes.length + ' souls \u00b7 ' + p.edges.length + ' routes';
+    console.log('NOUS Graph rendered:', p.nodes.length, 'nodes,', p.edges.length, 'edges');
+  }
+
+  // ═══ Global functions for onclick ═══
+  window.renderGraph = function() {
+    var code = getEditorCode();
+    console.log('renderGraph called, code length:', code.length);
+    doRender(code);
+  };
+
+  window.graphFit = function() {
+    if (cyInst) cyInst.fit(undefined, 50);
+  };
+
+  window.graphResize = function() {
+    if (cyInst) { cyInst.resize(); cyInst.fit(undefined, 80); }
+  };
+
+  window.renderDemo = function() {
+    console.log('renderDemo called');
+    var demo = 'world Demo { law cost_ceiling = $1.00 per cycle\nheartbeat = 10s }\n' +
+      'soul Alpha { mind: test @ Tier0A\ninstinct { let x = 1 }\nheal { on e => retry(1,e) } }\n' +
+      'soul Beta { mind: test @ Tier1\ninstinct { let y = 2 }\nheal { on e => retry(1,e) }\nmetabolism { max_energy: 100\nenergy_per_cycle: 5\nrecovery_rate: 3\nfatigue_tier: Cerebras\nhibernate_threshold: 10 } }\n' +
+      'soul Gamma { mind: test @ Cerebras\ninstinct { let z = 3 }\nheal { on e => retry(1,e) }\nconsciousness { goals: [accuracy]\nreflect_every: 5\nself_model: true\ngoal_threshold: 0.8 } }\n' +
+      'nervous_system { Alpha -> Beta -> Gamma }';
+    doRender(demo);
+  };
+
+  // Auto-render on Graph tab click
+  var gt = document.querySelector('[data-tab="graph"]');
+  if (gt) {
+    gt.addEventListener('click', function() {
+      setTimeout(function() {
+        if (cyInst) { cyInst.resize(); cyInst.fit(undefined, 50); }
+      }, 200);
+    });
+  }
+
+  console.log('NOUS Graph module loaded');
+
+// Auto-verify handled by btn-verify click handler
+
+})();
+
+// === CHAT TAB ===
+var _chatSessionId = null;
+var _chatTotalCost = 0;
+
+window.clearChat = function() {
+  _chatSessionId = null;
+  _chatTotalCost = 0;
+  var el = document.getElementById('chat-messages');
+  if (el) el.innerHTML = '<div style="text-align:center;color:#4a5568;padding:40px;font-size:13px">Select a world and start chatting with NOUS souls.<br>Messages are routed to the right soul automatically.</div>';
+  var st = document.getElementById('chat-status');
+  if (st) st.textContent = '';
+};
+
+function _chatBubble(role, text, meta) {
+  var isUser = role === 'user';
+  var div = document.createElement('div');
+  div.style.cssText = 'max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5;word-wrap:break-word;' +
+    (isUser
+      ? 'align-self:flex-end;background:#1a1f35;color:#e2e8f0;border-bottom-right-radius:4px'
+      : 'align-self:flex-start;background:#0f1524;color:#e2e8f0;border:1px solid #1a1f35;border-bottom-left-radius:4px');
+  div.textContent = text;
+  if (!isUser && meta) {
+    var info = document.createElement('div');
+    info.style.cssText = 'font-size:10px;color:#4a5568;margin-top:6px';
+    info.textContent = meta;
+    div.appendChild(info);
+  }
+  return div;
+}
+
+window.sendChat = async function() {
+  var input = document.getElementById('chat-input');
+  var msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  var container = document.getElementById('chat-messages');
+  var welcome = container.querySelector('div[style*="text-align:center"]');
+  if (welcome) welcome.remove();
+
+  container.appendChild(_chatBubble('user', msg));
+  container.scrollTop = container.scrollHeight;
+
+  var worldSel = document.getElementById('chat-world');
+  var soulSel = document.getElementById('chat-soul');
+  var world = worldSel ? worldSel.value : 'customer_service';
+  var soul = soulSel ? soulSel.value : '';
+
+  var statusEl = document.getElementById('chat-status');
+  if (statusEl) statusEl.textContent = 'Connecting...';
+  var btn = document.getElementById('btn-send-chat');
+  if (btn) btn.disabled = true;
+
+  var payload = {message: msg, world: world, mode: 'live'};
+  if (_chatSessionId) payload.session_id = _chatSessionId;
+  if (soul) payload.soul = soul;
+
+  var bubble = document.createElement('div');
+  bubble.style.cssText = 'max-width:80%;padding:10px 14px;border-radius:12px;font-size:13px;line-height:1.5;word-wrap:break-word;align-self:flex-start;background:#0f1524;color:#e2e8f0;border:1px solid #1a1f35;border-bottom-left-radius:4px';
+  var textSpan = document.createElement('span');
+  textSpan.textContent = '\u2758';
+  bubble.appendChild(textSpan);
+  container.appendChild(bubble);
+  container.scrollTop = container.scrollHeight;
+
+  var textSoFar = '';
+  var streamDone = false;
+
+  try {
+    var response = await fetch('/api/v1/chat/stream', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      var errData = await response.json().catch(function() { return {}; });
+      var errMsg = errData.detail ? (typeof errData.detail === 'string' ? errData.detail : errData.detail.error || 'Request failed') : 'HTTP ' + response.status;
+      textSpan.textContent = '\u274c ' + errMsg;
+      if (statusEl) statusEl.textContent = 'Error';
+      if (btn) btn.disabled = false;
+      return;
+    }
+
+    var reader = response.body.getReader();
+    var decoder = new TextDecoder();
+    var sseBuffer = '';
+    var currentEvent = '';
+
+    while (true) {
+      var chunk = await reader.read();
+      if (chunk.done) break;
+      sseBuffer += decoder.decode(chunk.value, {stream: true});
+
+      var lines = sseBuffer.split('\n');
+      sseBuffer = lines.pop();
+
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (!line) { currentEvent = ''; continue; }
+        if (line.indexOf('event: ') === 0) {
+          currentEvent = line.slice(7);
+          continue;
+        }
+        if (line.indexOf('data: ') !== 0) continue;
+        var raw = line.slice(6);
+
+        try { var d = JSON.parse(raw); } catch(e) { continue; }
+
+        if (currentEvent === 'start') {
+          if (statusEl) statusEl.textContent = 'Streaming \u00b7 ' + (d.tier || '');
+        } else if (currentEvent === 'token') {
+          textSoFar += (d.t || '');
+          textSpan.textContent = textSoFar + '\u2758';
+          container.scrollTop = container.scrollHeight;
+        } else if (currentEvent === 'done') {
+          streamDone = true;
+          _chatSessionId = d.session_id;
+          _chatTotalCost += (d.cost || 0);
+          textSpan.textContent = textSoFar;
+          var meta = (d.soul || '') + ' \u00b7 ' + (d.tier || '') + ' \u00b7 ' + (d.elapsed_ms != null ? Number(d.elapsed_ms).toFixed(0) : '0') + 'ms \u00b7 $' + (d.cost || 0).toFixed(4);
+          var info = document.createElement('div');
+          info.style.cssText = 'font-size:10px;color:#4a5568;margin-top:6px';
+          info.textContent = meta;
+          bubble.appendChild(info);
+          if (statusEl) statusEl.textContent = 'Turn ' + (d.turns || '') + ' \u00b7 Total: $' + _chatTotalCost.toFixed(4);
+
+          if (soulSel && d.soul) {
+            var exists = false;
+            for (var j = 0; j < soulSel.options.length; j++) {
+              if (soulSel.options[j].value === d.soul) { exists = true; break; }
+            }
+            if (!exists) {
+              var opt = document.createElement('option');
+              opt.value = d.soul;
+              opt.textContent = d.soul;
+              soulSel.appendChild(opt);
+            }
+          }
+        } else if (currentEvent === 'error') {
+          textSpan.textContent = textSoFar ? textSoFar + '\n\u274c ' + (d.error || 'Stream error') : '\u274c ' + (d.error || 'Stream error');
+          if (statusEl) statusEl.textContent = 'Error';
+        }
+      }
+    }
+
+    if (!streamDone && textSoFar) {
+      textSpan.textContent = textSoFar;
+    } else if (!streamDone && !textSoFar) {
+      textSpan.textContent = '\u274c No response received';
+      if (statusEl) statusEl.textContent = 'Error';
+    }
+
+  } catch (err) {
+    textSpan.textContent = textSoFar ? textSoFar + '\n\u274c ' + err.message : '\u274c Connection error: ' + err.message;
+    if (statusEl) statusEl.textContent = 'Offline';
+  }
+
+  if (btn) btn.disabled = false;
+  container.scrollTop = container.scrollHeight;
+};
+
+(function _initChatWorlds() {
+  fetch('/api/v1/templates')
+  .then(function(r) { return r.json(); })
+  .then(function(templates) {
+    var sel = document.getElementById('chat-world');
+    if (!sel) return;
+    sel.innerHTML = '';
+    (templates.templates || templates || []).forEach(function(t) {
+      var opt = document.createElement('option');
+      opt.value = t.name;
+      opt.textContent = t.name + ' (' + t.souls + ' souls)';
+      sel.appendChild(opt);
+    });
+  })
+  .catch(function() {});
+  window.clearChat();
+})();
+
+</script>
+
+</body>
+</html>

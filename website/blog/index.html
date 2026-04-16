@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — NOUS (Νοῦς)</title>
+<meta name="description" content="Updates, deep dives, and announcements from the NOUS programming language project.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://nous-lang.org/blog">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05070e;--bg2:#0a0f1a;--card:#0c1019;--border:#1a2235;--text:#b8c4d4;--dim:#5a6a7e;--bright:#e2e8f0;--gold:#c9a554;--blue:#4d9eff;--green:#38d97a;--purple:#a78bfa;--cyan:#45d1c8;--red:#f04848;--orange:#f59e0b}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+::selection{background:rgba(201,165,84,0.2);color:var(--bright)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,7,14,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center}
+.nav-inner{max-width:1140px;margin:0 auto;width:100%;display:flex;align-items:center;gap:16px}
+.nav-logo{font-size:20px;font-weight:600;color:var(--gold);font-family:'Playfair Display',serif;letter-spacing:3px;text-decoration:none}
+.nav-logo:hover{text-decoration:none}
+.nav-sep{width:1px;height:20px;background:var(--border)}
+.nav-label{color:var(--dim);font-size:13px}
+.nav-right{margin-left:auto;display:flex;gap:16px;align-items:center}
+.nav-link{color:var(--dim);font-size:13px;transition:color 0.2s;text-decoration:none}.nav-link:hover{color:var(--bright);text-decoration:none}
+.container{max-width:760px;margin:0 auto;padding:0 24px}
+.page-header{padding:100px 0 48px;text-align:center}
+.page-tag{display:inline-block;padding:5px 16px;margin-bottom:16px;border:1px solid rgba(201,165,84,0.19);border-radius:20px;font-size:11px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;background:rgba(201,165,84,0.05)}
+.page-title{font-size:44px;font-weight:300;font-family:'Playfair Display',serif;color:var(--bright);margin:0 0 14px}
+.page-sub{color:var(--dim);font-size:16px}
+/* Post List */
+.post-list{padding-bottom:40px}
+.post-card{display:block;padding:32px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:20px;transition:border-color 0.25s;text-decoration:none;color:inherit}
+.post-card:hover{border-color:rgba(201,165,84,0.3);text-decoration:none}
+.post-meta{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.post-date{color:var(--dim);font-size:12px;font-family:'JetBrains Mono',monospace;letter-spacing:1px}
+.post-tag{padding:2px 10px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.post-title{color:var(--bright);font-size:22px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:10px;line-height:1.3}
+.post-excerpt{color:var(--dim);font-size:14px;line-height:1.65}
+.post-read{color:var(--gold);font-size:13px;margin-top:14px;display:inline-block;letter-spacing:0.3px}
+/* Full Post */
+.post-full{display:none;padding-bottom:100px}
+.post-full.active{display:block}
+.post-back{color:var(--dim);font-size:13px;display:inline-flex;align-items:center;gap:6px;margin-bottom:32px;cursor:pointer;padding:6px 0;transition:color 0.2s;text-decoration:none;border:none;background:none;font-family:inherit}
+.post-back:hover{color:var(--bright);text-decoration:none}
+.post-full-title{font-size:36px;font-weight:400;font-family:'Playfair Display',serif;color:var(--bright);margin:0 0 12px;line-height:1.25}
+.post-full-meta{display:flex;align-items:center;gap:12px;margin-bottom:40px;flex-wrap:wrap}
+.post-full-date{color:var(--dim);font-size:13px;font-family:'JetBrains Mono',monospace}
+.post-full-author{color:var(--dim);font-size:13px}
+.post-body h2{font-size:22px;font-weight:500;font-family:'Playfair Display',serif;color:var(--bright);margin:40px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.post-body h3{font-size:17px;font-weight:500;color:var(--bright);margin:28px 0 12px}
+.post-body p{margin:0 0 18px;font-size:15px;line-height:1.8;color:var(--text)}
+.post-body ul,.post-body ol{margin:0 0 18px;padding-left:24px}
+.post-body li{margin-bottom:8px;font-size:15px;line-height:1.7;color:var(--text)}
+.post-body strong{color:var(--bright)}
+.post-body pre{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:16px 0 22px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75}
+.post-body pre code{background:none;padding:0;font-size:inherit;color:var(--text)}
+.post-body blockquote{border-left:3px solid var(--gold);padding:12px 20px;margin:16px 0 22px;background:rgba(201,165,84,0.04);border-radius:0 8px 8px 0}
+.post-body blockquote p{margin:0;color:var(--text);font-style:italic}
+.callout{padding:16px 20px;border-radius:8px;margin:16px 0 22px;font-size:14px;line-height:1.65}
+.callout-gold{background:rgba(201,165,84,0.06);border:1px solid rgba(201,165,84,0.12)}
+.callout-green{background:rgba(56,217,122,0.06);border:1px solid rgba(56,217,122,0.12)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 28px}
+.stat-box{text-align:center;padding:16px 8px;background:var(--bg2);border:1px solid var(--border);border-radius:8px}
+.stat-val{font-size:28px;font-weight:300;color:var(--gold);font-family:'Playfair Display',serif}
+.stat-lbl{color:var(--dim);font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+.kw{color:var(--blue)}.ty{color:var(--cyan)}.st{color:var(--green)}.cm{color:var(--dim)}.sp{color:var(--gold)}
+/* Share */
+.post-share{margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;gap:16px}
+.post-share-label{color:var(--dim);font-size:13px}
+.share-btn{padding:6px 16px;border:1px solid var(--border);border-radius:6px;color:var(--dim);font-size:12px;cursor:pointer;background:none;font-family:inherit;transition:all 0.2s}
+.share-btn:hover{border-color:var(--gold);color:var(--bright)}
+/* Footer */
+.footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;margin-top:60px}
+.footer a{color:var(--dim);font-size:13px;margin:0 12px;text-decoration:none}.footer a:hover{color:var(--gold)}
+@media(max-width:600px){.page-title{font-size:32px}.post-full-title{font-size:28px}.stat-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">ΝΟΥΣ</a>
+    <div class="nav-sep"></div>
+    <span class="nav-label">Blog</span>
+    <div class="nav-right">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/docs" class="nav-link">Docs</a>
+      <a href="/examples" class="nav-link">Examples</a>
+      <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header" id="blogHeader">
+    <div class="page-tag">Updates</div>
+    <h1 class="page-title">Blog</h1>
+    <p class="page-sub">Announcements, deep dives, and dispatches from the NOUS project.</p>
+  </div>
+
+  <!-- POST LIST -->
+  <div class="post-list" id="postList">
+    <a class="post-card" href="#" onclick="showPost('v40-consciousness');return false">
+      <div class="post-meta">
+        <span class="post-date">15 APR 2026</span>
+        <span class="post-tag" style="background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.2);color:#e05252">World First</span>
+      </div>
+      <div class="post-title">NOUS v4.0.0 &mdash; Soul Consciousness: The Living Architecture is Complete</div>
+      <div class="post-excerpt">Clone retirement, telemetry, hot reload, symbiosis, metabolism, and consciousness. 12 soul subsystems. 8 runtime engines. 43 CLI commands. The living agent architecture is complete.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+
+    <a class="post-card" href="#" onclick="showPost('v34-biology');return false">
+      <div class="post-meta">
+        <span class="post-date">14 APR 2026</span>
+        <span class="post-tag" style="background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.2);color:#e05252">World First</span>
+      </div>
+      <div class="post-title">NOUS v3.4.0 — Soul Biology: Mitosis, Immunity, and Dreams</div>
+      <div class="post-excerpt">Souls that clone themselves under load, generate their own error patches via LLM, and pre-compute future scenarios while idle. Three biological systems, zero precedent.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+    <a class="post-card" href="#" onclick="showPost('v3-release');return false">
+      <div class="post-meta">
+        <span class="post-date">14 APR 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v3.0.0 — The Living Language is Complete</div>
+      <div class="post-excerpt">30 priorities delivered. 259 tests passing. A compiler that compiles itself. The journey from kitchen to code, and what comes next.</div>
+      <span class="post-read">Read post →</span>
+    </a>
+
+    <a class="post-card" href="#" onclick="showPost('self-hosting');return false">
+      <div class="post-meta">
+        <span class="post-date">14 APR 2026</span>
+        <span class="post-tag" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:var(--purple)">Deep Dive</span>
+      </div>
+      <div class="post-title">How NOUS Compiles Itself</div>
+      <div class="post-excerpt">Inside compiler.nous: three souls, nine senses, and the bootstrap proof. A technical walkthrough of self-hosting in an agentic language.</div>
+      <span class="post-read">Read post →</span>
+    </a>
+
+    <a class="post-card" href="#" onclick="showPost('verification');return false">
+      <div class="post-meta">
+        <span class="post-date">14 APR 2026</span>
+        <span class="post-tag" style="background:rgba(56,217,122,0.1);border:1px solid rgba(56,217,122,0.2);color:var(--green)">Deep Dive</span>
+      </div>
+      <div class="post-title">Formally Verified AI Agents: Why and How</div>
+      <div class="post-excerpt">NOUS proves your agents won't deadlock, won't exceed budgets, and won't have protocol mismatches — before they run. Here's how the 7 proof categories work.</div>
+      <span class="post-read">Read post →</span>
+    </a>
+
+  </div>
+
+    <!-- POST: v4.0.0 Soul Consciousness -->
+  <div class="post-full" id="post-v40-consciousness">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v4.0.0 &mdash; Soul Consciousness: The Living Architecture is Complete</h1>
+    <div class="post-full-meta">
+      <span class="post-full-date">15 April 2026</span>
+      <span class="post-full-author">by Hlias Staurou</span>
+      <span class="post-tag" style="background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.2);color:#e05252">World First</span>
+    </div>
+    <div class="post-body">
+      <p>NOUS v4.0.0 marks the completion of the living agent architecture. Seven features built across five point releases &mdash; from clone retirement to soul consciousness &mdash; bringing the total to <strong>12 soul subsystems</strong>, <strong>8 runtime engines</strong>, and <strong>43 CLI commands</strong>.</p>
+
+      <h2>Clone Retirement (v3.5.0)</h2>
+      <p>Clones now die gracefully when load drops. LIFO order with configurable cooldown and minimum clone floor. Verified: VRT001&ndash;003.</p>
+      <pre><code>mitosis {
+    retire_trigger: queue_depth &lt; 3 &amp;&amp; cycle_count &gt; 10
+    retire_cooldown: 120s
+    min_clones: 1
+}</code></pre>
+
+      <h2>Telemetry (v3.6.0)</h2>
+      <p>Built-in observability with 5 exporters: console, JSONL, HTTP, Langfuse, OTLP. Sample rate control, LLM tracing, buffered span export. Verified: VTL001&ndash;003.</p>
+      <pre><code>world Production {
+    telemetry {
+        enabled: true
+        exporter: langfuse
+        sample_rate: 1.0
+        trace_senses: true
+        trace_llm: true
+    }
+}</code></pre>
+
+      <h2>Hot Reload (v3.7.0)</h2>
+      <p>Live soul swapping with zero downtime. <code>nous run program.nous --hot</code> polls source every 2s. On change: reparse &rarr; validate &rarr; compile &rarr; diff &rarr; swap live.</p>
+
+      <h2>Soul Symbiosis (v3.8.0)</h2>
+      <p>Souls form bonds with shared memory pools. Async-safe synchronization with configurable intervals. Optional co-evolution propagates DNA mutations across bonded souls. Verified: VSY001&ndash;004.</p>
+      <pre><code>symbiosis {
+    bond_with: [Analyst]
+    shared_memory: [shared_score, consensus]
+    sync_interval: 10s
+    evolve_together: false
+}</code></pre>
+
+      <h2>Agent Metabolism (v3.9.0)</h2>
+      <p>Energy budget per soul. Depletes per cycle. Low energy triggers automatic tier downgrade. Critical energy triggers hibernation with recovery. Verified: VMB001&ndash;004.</p>
+      <pre><code>metabolism {
+    max_energy: 100
+    energy_per_cycle: 8
+    recovery_rate: 3
+    fatigue_tier: Cerebras
+    hibernate_threshold: 15
+}</code></pre>
+
+      <h2>Soul Consciousness (v4.0.0)</h2>
+      <p>The crown of the architecture. Agents set goals, track progress, self-reflect periodically, and adjust their own behavior based on introspection. Verified: VCS001&ndash;005.</p>
+      <pre><code>consciousness {
+    goals: [maximize_discoveries, improve_accuracy, reduce_cost]
+    reflect_every: 5
+    self_model: true
+    goal_threshold: 0.8
+    introspection_depth: 3
+}</code></pre>
+
+      <h2>Complete Soul Architecture</h2>
+      <pre><code>Soul
+&#9500;&#9472;&#9472; mind              &mdash; LLM assignment (model @ Tier)
+&#9500;&#9472;&#9472; senses            &mdash; external tools
+&#9500;&#9472;&#9472; memory            &mdash; persistent state
+&#9500;&#9472;&#9472; instinct          &mdash; execution logic
+&#9500;&#9472;&#9472; dna               &mdash; evolvable parameters
+&#9500;&#9472;&#9472; heal              &mdash; static error recovery (Layer 1)
+&#9500;&#9472;&#9472; mitosis           &mdash; self-replication + retirement
+&#9500;&#9472;&#9472; immune_system     &mdash; adaptive recovery (Layer 2)
+&#9500;&#9472;&#9472; dream_system      &mdash; speculative pre-computation
+&#9500;&#9472;&#9472; symbiosis         &mdash; shared memory + co-evolution
+&#9500;&#9472;&#9472; metabolism        &mdash; energy/fatigue/hibernation
+&#9492;&#9472;&#9472; consciousness     &mdash; goals + self-reflection</code></pre>
+
+      <h2>By the Numbers</h2>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0">
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">12</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:4px">Soul Subsystems</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">8</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:4px">Runtime Engines</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">43</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:4px">CLI Commands</div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center">
+          <div style="font-size:28px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">50+</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:4px">Proofs</div>
+        </div>
+      </div>
+
+      <h2>Install</h2>
+      <pre><code>pip install nous-lang
+nous version  # &rarr; 4.0.0</code></pre>
+      <p style="color:var(--dim);margin-top:20px"><a href="https://pypi.org/project/nous-lang/" style="color:var(--gold)">PyPI</a> &middot; <a href="https://github.com/contrario/nous" style="color:var(--gold)">GitHub</a> &middot; <a href="/docs" style="color:var(--gold)">Documentation</a></p>
+      <p style="color:var(--dim)"><em>28 new validation rules. 19 new verification proofs. 8 new files. Zero regressions.</em></p>
+    </div>
+  </div>
+
+<!-- POST: v3.4.0 Soul Biology -->
+  <div class="post-full" id="post-v34-biology">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v3.4.0 &mdash; Soul Biology: Mitosis, Immunity, and Dreams</h1>
+    <div class="post-full-meta">
+      <span class="post-full-date">14 April 2026</span>
+      <span class="post-full-author">by Hlias Staurou</span>
+      <span class="post-tag" style="background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.2);color:#e05252">World First</span>
+    </div>
+    <div class="post-body">
+      <p>NOUS agents are not functions. They are living organisms. Today, v3.4.0 makes that literal with three biological systems that no other framework has ever attempted.</p>
+
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-val">38</div><div class="stat-lbl">CLI Commands</div></div>
+        <div class="stat-box"><div class="stat-val">31+</div><div class="stat-lbl">Formal Proofs</div></div>
+        <div class="stat-box"><div class="stat-val">9</div><div class="stat-lbl">Soul Subsystems</div></div>
+        <div class="stat-box"><div class="stat-val">3</div><div class="stat-lbl">Biological Systems</div></div>
+      </div>
+
+      <h2>Soul Mitosis &mdash; Self-Replicating Agents</h2>
+      <p>When a soul detects overload &mdash; queue too deep, latency too high, cycles piling up &mdash; it splits. A clone is spawned, formally verified against the world's cost ceiling and deadlock constraints, and deployed into the nervous system. The clone shares the parent's listen channel, providing automatic load balancing. One keyword block:</p>
+      <pre><code>mitosis {
+    trigger: queue_depth > 10
+    max_clones: 3
+    cooldown: 60s
+    clone_tier: Groq
+    verify: true
+}</code></pre>
+      <p>The verification gate is the breakthrough. No clone enters production without passing VR001 (resource bounds), VD001 (deadlock), and VP003 (protocol consistency). This is <em>verified self-replication</em>.</p>
+
+      <h2>Agent Immune System &mdash; Adaptive Error Recovery</h2>
+      <p>NOUS already had <code>heal {}</code> for static error recovery (retry, fallback, hibernate). The immune system adds a second defense layer: when heal fails, the engine intercepts the error, checks an antibody cache, and if no cached fix exists, calls the soul's LLM to generate a dynamic Python patch.</p>
+      <pre><code>immune_system {
+    adaptive_recovery: true
+    share_with_clones: true
+    antibody_lifespan: 3600s
+}</code></pre>
+      <p>Generated antibodies execute in a sandboxed environment (restricted builtins, no imports, 5-second timeout). If the patch works, it's cached with a configurable lifespan. The real power: <code>share_with_clones: true</code> broadcasts the antibody to every mitosis clone instantly. One soul learns to survive an error; all clones become immune.</p>
+      <p>Seven builtin antibodies handle common failures (DNS, timeout, rate limiting, auth, server errors, connection, parse errors) without any LLM call. For unknown errors, DeepSeek generates custom patches &mdash; we verified this in production with antibody <code>ff044de8d4e0baca</code> for an <code>AttributeError</code>.</p>
+
+      <h2>Agent Dreaming &mdash; Speculative Pre-computation</h2>
+      <p>Idle time is wasted time. When a soul has no messages and its heartbeat isn't due, it enters a REM state. A cheap <code>dream_mind</code> (typically a faster, cheaper LLM tier) speculatively pre-computes likely future scenarios based on the soul's current memory state.</p>
+      <pre><code>dream_system {
+    enabled: true
+    trigger_idle_sec: 30
+    dream_mind: llama-8b @ Cerebras
+    max_cache: 20
+    speculation_depth: 3
+}</code></pre>
+      <p>Insights are cached. When the soul wakes up, a <code>sense check_dream_cache(query: "optimization")</code> returns pre-computed results instantly &mdash; zero primary LLM cost. We observed <code>CACHE HIT</code> with confidence 0.80 within 4 seconds of dream completion.</p>
+
+      <h2>The Defense Architecture</h2>
+      <p>NOUS souls now have a complete biological defense stack:</p>
+      <pre><code>heal {}       &rarr; Static recovery (retry, fallback)
+immune {}     &rarr; LLM-generated patches, broadcast to clones
+dream {}      &rarr; Pre-computed insights for instant response
+mitosis {}    &rarr; Self-replication under load</code></pre>
+      <p>Every system is formally verified. Every system was tested in production with live LLM calls. Every system is a world first.</p>
+
+      <h2>What's Next</h2>
+      <p>Clone retirement (auto-kill when load drops), telemetry sense (built-in observability), hot reload (swap souls without restart), and soul symbiosis (shared memory evolution). The living language keeps evolving.</p>
+    </div>
+  </div>
+
+  <!-- POST: v3.0.0 Release -->
+  <div class="post-full" id="post-v3-release">
+    <button class="post-back" onclick="showList()">← All posts</button>
+    <h1 class="post-full-title">NOUS v3.0.0 — The Living Language is Complete</h1>
+    <div class="post-full-meta">
+      <span class="post-full-date">14 April 2026</span>
+      <span class="post-full-author">by Hlias Staurou</span>
+      <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+    </div>
+    <div class="post-body">
+      <p>Today I'm releasing NOUS v3.0.0 — the version where the language becomes complete. Not finished, because a living language is never finished, but complete: every system I envisioned when I started building NOUS in November 2025 now exists and works.</p>
+
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-val">30</div><div class="stat-lbl">Priorities</div></div>
+        <div class="stat-box"><div class="stat-val">259</div><div class="stat-lbl">Tests</div></div>
+        <div class="stat-box"><div class="stat-val">32</div><div class="stat-lbl">CLI Commands</div></div>
+        <div class="stat-box"><div class="stat-val">7</div><div class="stat-lbl">Proof Categories</div></div>
+      </div>
+
+      <h2>What is NOUS</h2>
+      <p>NOUS (Νοῦς — Greek for "mind/intellect") is a programming language purpose-built for agentic AI systems. You define autonomous agents as <strong>Souls</strong> with memory, instincts, senses, and healing ability. The compiler generates production-ready Python, JavaScript, or browser HTML.</p>
+      <p>This is not a framework bolted onto Python. NOUS has its own grammar (15.3 KB EBNF), its own LALR parser (~1.8ms), its own type system (18 inference rules), its own formal verifier (7 proof categories), and its own runtime (asyncio event-driven). It is a language.</p>
+
+      <h2>The Breakthrough Session</h2>
+      <p>Session 16 was where everything came together. In a single context window, we built:</p>
+      <ul>
+        <li><strong>Distributed Runtime</strong> — TCP-based channel transport for multi-machine deployments</li>
+        <li><strong>WASM/Browser Target</strong> — compile .nous to self-contained HTML with a dashboard</li>
+        <li><strong>Self-Hosting Bootstrap</strong> — compiler.nous compiles itself (289 lines, py_compile pass)</li>
+        <li><strong>Formal Verification</strong> — 16 proof codes across 7 categories</li>
+        <li><strong>Natural Language Interface</strong> — describe agents in English, get valid .nous code</li>
+        <li><strong>LSP Server</strong> — 12 auto-fix code actions for VS Code</li>
+      </ul>
+      <p>Six priorities in one session. That's when I knew the language had reached critical mass.</p>
+
+      <h2>Bilingual by Design</h2>
+      <p>Every NOUS keyword has a Greek equivalent. <code>soul</code> is <code>ψυχή</code>. <code>instinct</code> is <code>ένστικτο</code>. <code>remember</code> is <code>θυμάμαι</code>. Both compile identically. This isn't a gimmick — it's a statement that programming languages don't have to be English-only.</p>
+
+      <h2>The Story</h2>
+      <p>I spent 23 years as a professional cook. I have no CS degree. I have no coding background. I built NOUS entirely through conversation with Claude — every command pasted into a terminal, one session at a time.</p>
+      <p>People will ask: can you build a real programming language without knowing how to code? The answer is sitting at <a href="https://github.com/contrario/nous" target="_blank">github.com/contrario/nous</a>.</p>
+
+      <blockquote><p>Νοῦς — the intellect that grasps truth directly, without the mediation of sensory experience. — Aristotle</p></blockquote>
+
+      <h2>What's Next</h2>
+      <p>v3.0.0 is the foundation. What comes next:</p>
+      <ul>
+        <li><strong>Package ecosystem</strong> — sharing and installing soul templates</li>
+        <li><strong>Visual debugger</strong> — step through instinct blocks with state visualization</li>
+        <li><strong>Cloud deployment</strong> — one-command deploy to any cloud provider</li>
+        <li><strong>Community</strong> — opening up for contributions and feedback</li>
+      </ul>
+
+      <div class="callout callout-gold"><strong>Try it now:</strong> <code>git clone https://github.com/contrario/nous.git</code> — or explore the <a href="/docs">documentation</a>, <a href="/examples">examples</a>, and <a href="/ide">playground</a>.</div>
+
+      <div class="post-share">
+        <span class="post-share-label">Share:</span>
+        <button class="share-btn" onclick="navigator.clipboard.writeText('https://nous-lang.org/blog#v3-release');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy link',2000)">Copy link</button>
+        <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?text=NOUS%20v3.0.0%20—%20The%20Living%20Language%20for%20Agentic%20AI%20Systems&url=https://nous-lang.org','_blank')">Twitter / X</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST: Self-Hosting -->
+  <div class="post-full" id="post-self-hosting">
+    <button class="post-back" onclick="showList()">← All posts</button>
+    <h1 class="post-full-title">How NOUS Compiles Itself</h1>
+    <div class="post-full-meta">
+      <span class="post-full-date">14 April 2026</span>
+      <span class="post-full-author">by Hlias Staurou</span>
+      <span class="post-tag" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:var(--purple)">Deep Dive</span>
+    </div>
+    <div class="post-body">
+      <p>A self-hosting compiler is a compiler written in the language it compiles. It's a rite of passage for any serious programming language. NOUS achieved this with <code>compiler.nous</code> — a 3-soul agentic compiler that processes .nous files through the full pipeline.</p>
+
+      <h2>The Architecture</h2>
+      <p>The compiler is itself a NOUS program — three souls working in a pipeline:</p>
+
+      <pre><code><span class="cm"># compiler.nous — Three souls, one pipeline</span>
+
+<span class="kw">soul</span> Reader {
+    <span class="kw">senses</span>: [file_read, file_list]
+    <span class="cm"># Scans directory for .nous files</span>
+    <span class="cm"># Outputs: SourceBundle messages</span>
+}
+
+<span class="kw">soul</span> Analyzer {
+    <span class="kw">senses</span>: [nous_parse, nous_validate, nous_typecheck]
+    <span class="cm"># Parses, validates, typechecks each file</span>
+    <span class="cm"># Outputs: AnalysisResult messages</span>
+}
+
+<span class="kw">soul</span> Emitter {
+    <span class="kw">senses</span>: [nous_codegen, file_write]
+    <span class="cm"># Generates Python/JS, writes output</span>
+    <span class="cm"># Outputs: CompileResult messages</span>
+}
+
+<span class="kw">nervous_system</span> {
+    Reader -> Analyzer -> Emitter
+}</code></pre>
+
+      <h2>The Nine Senses</h2>
+      <p>The compiler uses 9 custom senses that provide file I/O and compiler introspection:</p>
+      <ul>
+        <li><code>file_read</code> / <code>file_write</code> / <code>file_list</code> — filesystem access</li>
+        <li><code>nous_parse</code> — invoke the LALR parser on source code</li>
+        <li><code>nous_validate</code> — run the 14-rule law checker</li>
+        <li><code>nous_typecheck</code> — run the 9-rule type inference engine</li>
+        <li><code>nous_codegen</code> — generate Python or JavaScript output</li>
+        <li><code>nous_format</code> — format .nous source through the AST</li>
+        <li><code>nous_info</code> — extract program metadata</li>
+      </ul>
+
+      <h2>The Bootstrap Proof</h2>
+      <p>The bootstrap works like this:</p>
+      <ol>
+        <li><code>compiler.nous</code> is fed to the Python-based NOUS compiler</li>
+        <li>The compiler generates <code>compiler_selfcompiled.py</code> — 289 lines of asyncio Python</li>
+        <li><code>py_compile</code> verifies the output is valid Python</li>
+        <li>The generated Python, when run, can compile other .nous files</li>
+      </ol>
+      <p>This is the proof: NOUS is expressive enough to describe its own compilation process. The language can eat its own tail.</p>
+
+      <div class="callout callout-green"><strong>Result:</strong> <code>compiler.nous</code> → <code>compiler_selfcompiled.py</code> (289 lines, py_compile PASS)</div>
+
+      <h2>Why It Matters</h2>
+      <p>Self-hosting isn't just a party trick. It proves three things:</p>
+      <ul>
+        <li><strong>Expressiveness</strong> — the language can model complex, multi-stage workflows</li>
+        <li><strong>Correctness</strong> — the compiler is robust enough to process its own syntax</li>
+        <li><strong>Maturity</strong> — the tool chain (parser, validator, typechecker, codegen) is production-grade</li>
+      </ul>
+      <p>View the full source: <a href="/examples">compiler.nous in the examples gallery</a>.</p>
+
+      <div class="post-share">
+        <span class="post-share-label">Share:</span>
+        <button class="share-btn" onclick="navigator.clipboard.writeText('https://nous-lang.org/blog#self-hosting');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy link',2000)">Copy link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST: Verification -->
+  <div class="post-full" id="post-verification">
+    <button class="post-back" onclick="showList()">← All posts</button>
+    <h1 class="post-full-title">Formally Verified AI Agents: Why and How</h1>
+    <div class="post-full-meta">
+      <span class="post-full-date">14 April 2026</span>
+      <span class="post-full-author">by Hlias Staurou</span>
+      <span class="post-tag" style="background:rgba(56,217,122,0.1);border:1px solid rgba(56,217,122,0.2);color:var(--green)">Deep Dive</span>
+    </div>
+    <div class="post-body">
+      <p>Most agent frameworks test with unit tests. NOUS goes further: it <strong>proves</strong> properties about your agent system before it runs. Not probabilistically — mathematically.</p>
+
+      <h2>The Problem</h2>
+      <p>Multi-agent systems fail in ways that are hard to test for:</p>
+      <ul>
+        <li>Agent A waits for Agent B, which waits for Agent A → <strong>deadlock</strong></li>
+        <li>Agent burns through your LLM budget in a runaway loop → <strong>cost overrun</strong></li>
+        <li>Agent speaks a message type that no one listens to → <strong>dead letter</strong></li>
+        <li>Agent listens for a message that no one speaks → <strong>starvation</strong></li>
+      </ul>
+      <p>You can write tests to catch some of these. But NOUS can prove they don't exist.</p>
+
+      <h2>The Seven Categories</h2>
+
+      <h3>1. Resource Bound (VR001–VR002)</h3>
+      <p>Every soul has an estimated per-cycle cost based on its mind tier. The verifier checks that each soul's cost, and the total cascade cost through the nervous system, stays within the world's <code>cost_ceiling</code>.</p>
+
+      <h3>2. Deadlock Freedom (VD001–VD002)</h3>
+      <p>The verifier analyzes the nervous system graph for circular dependencies. Explicit feedback loops (marked in the topology) are excluded. It also checks that no soul listens to its own messages.</p>
+
+      <h3>3. Protocol Safety (VP001–VP003)</h3>
+      <p>Every <code>listen</code> must reference a soul that actually <code>speak</code>s that message type. Every route's source must speak what its target listens for. All speak calls must reference defined message types.</p>
+
+      <h3>4. Liveness (VL001–VL002)</h3>
+      <p>Every listener soul must have at least one producer. The pipeline must have at least one entrypoint (heartbeat soul) — otherwise nothing ever starts.</p>
+
+      <h3>5. Reachability (VE001)</h3>
+      <p>Starting from all heartbeat (entrypoint) souls, the verifier traverses the nervous system graph to ensure every soul is reachable. Unreachable souls are dead code.</p>
+
+      <h3>6. Memory Safety (VM001–VM002)</h3>
+      <p>Every <code>remember</code> statement must target a field that exists in the soul's memory block. Every memory field must have a valid type and default value.</p>
+
+      <h3>7. Topology (VT001–VT004)</h3>
+      <p>In distributed mode: every soul must be assigned to exactly one node. No unassigned souls. No soul on multiple nodes. Cross-node routes are identified for TCP channel setup.</p>
+
+      <h2>What Verification Looks Like</h2>
+      <pre><code>═══ NOUS Formal Verification — GateAlpha ═══
+
+── Resource Bound ──
+<span class="st">✓ [VR001]</span> Soul Scout: $0.006 ≤ $0.10 (7%)
+<span class="st">✓ [VR002]</span> Total cascade $0.021 ≤ $0.10
+
+── Deadlock ──
+<span class="st">✓ [VD001]</span> No circular dependencies
+
+── Protocol ──
+<span class="st">✓ [VP003]</span> All speak refs valid
+
+── Liveness ──
+<span class="st">✓ [VL002]</span> Pipeline has 1 entrypoint
+
+── Reachability ──
+<span class="st">✓ [VE001]</span> All 4 souls reachable
+
+── Memory Safety ──
+<span class="st">✓ [VM001]</span> All 6 fields validated
+
+══════════════════════════════
+<span class="st">VERIFIED: 10 proven, 0 warnings, 0 errors</span></code></pre>
+
+      <h2>The Principle</h2>
+      <p>Testing tells you what happened. Verification tells you what can't happen. For autonomous AI agents managing real resources, that distinction matters.</p>
+      <p>Full proof code reference: <a href="/docs#proof-codes">documentation</a>.</p>
+
+      <div class="post-share">
+        <span class="post-share-label">Share:</span>
+        <button class="share-btn" onclick="navigator.clipboard.writeText('https://nous-lang.org/blog#verification');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy link',2000)">Copy link</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <a href="/">Home</a>
+  <a href="/docs">Documentation</a>
+  <a href="/examples">Examples</a>
+  <a href="/ide">Playground</a>
+  <a href="https://github.com/contrario/nous" target="_blank" rel="noopener">GitHub</a>
+</footer>
+
+<script>
+function showPost(id) {
+  document.getElementById('postList').style.display = 'none';
+  document.getElementById('blogHeader').style.display = 'none';
+  document.querySelectorAll('.post-full').forEach(p => p.classList.remove('active'));
+  document.getElementById('post-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+  history.pushState(null, '', '#' + id);
+}
+
+function showList() {
+  document.getElementById('postList').style.display = 'block';
+  document.getElementById('blogHeader').style.display = 'block';
+  document.querySelectorAll('.post-full').forEach(p => p.classList.remove('active'));
+  window.scrollTo(0, 0);
+  history.pushState(null, '', '/blog');
+}
+
+// Handle hash on load
+if (window.location.hash) {
+  const id = window.location.hash.slice(1);
+  const post = document.getElementById('post-' + id);
+  if (post) showPost(id);
+}
+
+window.addEventListener('popstate', () => {
+  if (window.location.hash) {
+    const id = window.location.hash.slice(1);
+    if (document.getElementById('post-' + id)) showPost(id);
+  } else {
+    showList();
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation — NOUS (Νοῦς)</title>
+<meta name="description" content="Complete language reference for NOUS — syntax, types, runtime, verification, CLI commands.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://nous-lang.org/docs">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05070e;--bg2:#0a0f1a;--card:#0c1019;--border:#1a2235;--text:#b8c4d4;--dim:#5a6a7e;--bright:#e2e8f0;--gold:#c9a554;--blue:#4d9eff;--green:#38d97a;--purple:#a78bfa;--cyan:#45d1c8;--red:#f04848;--orange:#f59e0b;--sidebar-w:280px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;scroll-padding-top:70px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7}
+::selection{background:rgba(201,165,84,0.2);color:var(--bright)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+code{font-family:'JetBrains Mono',monospace;font-size:0.9em;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)}
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,7,14,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center}
+.nav-inner{max-width:1400px;margin:0 auto;width:100%;display:flex;align-items:center;gap:16px}
+.nav-logo{font-size:20px;font-weight:600;color:var(--gold);font-family:'Playfair Display',serif;letter-spacing:3px;text-decoration:none}
+.nav-sep-v{width:1px;height:20px;background:var(--border)}
+.nav-label{color:var(--dim);font-size:13px;letter-spacing:0.5px}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+.nav-link{color:var(--dim);font-size:13px;transition:color 0.2s;text-decoration:none}
+.nav-link:hover{color:var(--bright);text-decoration:none}
+.search-box{position:relative}
+.search-input{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:7px 14px 7px 34px;color:var(--text);font-size:13px;width:220px;font-family:inherit;outline:none;transition:border-color 0.2s}
+.search-input:focus{border-color:var(--gold)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:14px}
+/* LAYOUT */
+.layout{display:flex;padding-top:60px;min-height:100vh}
+.sidebar{width:var(--sidebar-w);position:fixed;top:60px;left:0;bottom:0;overflow-y:auto;border-right:1px solid var(--border);padding:24px 0;background:var(--bg)}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.main{margin-left:var(--sidebar-w);flex:1;max-width:860px;padding:40px 48px 120px}
+/* SIDEBAR NAV */
+.sb-section{margin-bottom:8px}
+.sb-title{padding:6px 24px;font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim);font-weight:600;margin-bottom:4px}
+.sb-link{display:block;padding:6px 24px 6px 28px;font-size:13px;color:var(--dim);transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;line-height:1.5}
+.sb-link:hover{color:var(--bright);background:rgba(255,255,255,0.02);text-decoration:none}
+.sb-link.active{color:var(--gold);border-left-color:var(--gold);background:rgba(201,165,84,0.04)}
+.sb-sub{padding-left:16px}
+.sb-sub .sb-link{font-size:12.5px;padding:4px 24px 4px 44px}
+/* CONTENT */
+.doc-section{margin-bottom:64px;scroll-margin-top:80px}
+h1{font-size:34px;font-weight:400;font-family:'Playfair Display',serif;color:var(--bright);margin:0 0 8px;line-height:1.2}
+.doc-updated{color:var(--dim);font-size:12px;margin-bottom:32px}
+h2{font-size:24px;font-weight:400;font-family:'Playfair Display',serif;color:var(--bright);margin:48px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--border);scroll-margin-top:80px}
+h3{font-size:17px;font-weight:500;color:var(--bright);margin:32px 0 12px;scroll-margin-top:80px}
+h4{font-size:14px;font-weight:600;color:var(--gold);margin:24px 0 8px;letter-spacing:1px;text-transform:uppercase}
+p{margin:0 0 16px;font-size:14.5px;line-height:1.75;color:var(--text)}
+ul,ol{margin:0 0 16px;padding-left:24px}
+li{margin-bottom:6px;font-size:14.5px;color:var(--text)}
+/* TABLES */
+.doc-table{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:13px}
+.doc-table th{text-align:left;padding:10px 14px;background:var(--bg2);color:var(--gold);font-weight:600;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;border-bottom:2px solid var(--border)}
+.doc-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+.doc-table tr:hover td{background:rgba(255,255,255,0.01)}
+.doc-table code{font-size:12px}
+/* CODE BLOCKS */
+pre{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin:12px 0 20px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75}
+pre code{background:none;padding:0;font-size:inherit;color:inherit}
+.kw{color:var(--blue)}.ty{color:var(--cyan)}.st{color:var(--green)}.cm{color:var(--dim)}.sp{color:var(--gold)}.nu{color:var(--purple)}
+/* CALLOUTS */
+.callout{padding:16px 20px;border-radius:8px;margin:16px 0 20px;font-size:13.5px;line-height:1.65}
+.callout-info{background:rgba(77,158,255,0.06);border:1px solid rgba(77,158,255,0.12);color:var(--text)}
+.callout-warn{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.12);color:var(--text)}
+.callout-success{background:rgba(56,217,122,0.06);border:1px solid rgba(56,217,122,0.12);color:var(--text)}
+.callout strong{color:var(--bright)}
+/* BADGE */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:600;letter-spacing:0.5px}
+.badge-blue{background:rgba(77,158,255,0.1);color:var(--blue);border:1px solid rgba(77,158,255,0.2)}
+.badge-green{background:rgba(56,217,122,0.1);color:var(--green);border:1px solid rgba(56,217,122,0.2)}
+.badge-gold{background:rgba(201,165,84,0.1);color:var(--gold);border:1px solid rgba(201,165,84,0.2)}
+/* SEARCH RESULTS */
+.search-results{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-top:4px;max-height:400px;overflow-y:auto;z-index:200;box-shadow:0 12px 40px rgba(0,0,0,0.5)}
+.search-results.show{display:block}
+.sr-item{padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s}
+.sr-item:hover{background:rgba(201,165,84,0.05)}
+.sr-item:last-child{border-bottom:none}
+.sr-title{color:var(--bright);font-size:13px;font-weight:500}
+.sr-section{color:var(--dim);font-size:11px;margin-top:2px}
+/* RESPONSIVE */
+@media(max-width:960px){
+  .sidebar{display:none}
+  .main{margin-left:0;padding:24px 20px 80px}
+  h1{font-size:28px}h2{font-size:20px}
+  .search-input{width:160px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">ΝΟΥΣ</a>
+    <div class="nav-sep-v"></div>
+    <span class="nav-label">Documentation</span>
+    <div class="nav-right">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input type="text" class="search-input" placeholder="Search docs..." id="searchInput" autocomplete="off">
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <a href="/" class="nav-link">Home</a>
+      <a href="/examples" class="nav-link">Examples</a>
+      <a href="/ide" class="nav-link">Playground</a>
+      <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+  <div class="sb-section">
+    <div class="sb-title">Getting Started</div>
+    <a href="#overview" class="sb-link active">Overview</a>
+    <a href="#installation" class="sb-link">Installation</a>
+    <a href="#first-program" class="sb-link">First Program</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-title">Language</div>
+    <a href="#concepts" class="sb-link">Core Concepts</a>
+    <a href="#world" class="sb-link">World</a>
+    <a href="#soul" class="sb-link">Soul</a>
+    <a href="#message" class="sb-link">Message</a>
+    <a href="#nervous-system" class="sb-link">Nervous System</a>
+    <a href="#types" class="sb-link">Type System</a>
+    <a href="#wake" class="sb-link">Wake Strategies</a>
+    <a href="#bilingual" class="sb-link">Bilingual Keywords</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-title">Compiler</div>
+    <a href="#pipeline" class="sb-link">Pipeline</a>
+    <a href="#validation" class="sb-link">Law Validation</a>
+    <a href="#typechecker" class="sb-link">Type Checker</a>
+    <a href="#codegen" class="sb-link">Code Generation</a>
+    <a href="#targets" class="sb-link">Multi-Target</a>
+    <a href="#self-hosting" class="sb-link">Self-Hosting</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-title">Runtime</div>
+    <a href="#runtime" class="sb-link">Event-Driven Runtime</a>
+    <a href="#distributed" class="sb-link">Distributed Runtime</a>
+    <a href="#topology" class="sb-link">Topology</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-title">Verification</div>
+    <a href="#verification" class="sb-link">Formal Verification</a>
+    <a href="#proof-codes" class="sb-link">Proof Codes</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-title">Tools</div>
+    <a href="#cli" class="sb-link">CLI Commands</a>
+    <a href="#ide" class="sb-link">IDE</a>
+    <a href="#lsp" class="sb-link">LSP Server</a>
+    <a href="#nl-interface" class="sb-link">Natural Language</a>
+    <a href="#debugger" class="sb-link">Debugger & REPL</a>
+    <a href="#arch-diff" class="sb-link">Architecture Diff</a>
+    <a href="#cost-oracle" class="sb-link">Cost Oracle</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-title">Soul Biology</div>
+    <a href="#mitosis" class="sb-link">Soul Mitosis</a>
+    <a href="#immune-system" class="sb-link">Immune System</a>
+    <a href="#dream-system" class="sb-link">Agent Dreaming</a>
+    <a href="#retirement" class="sb-link">Clone Retirement</a>
+    <a href="#telemetry-section" class="sb-link">Telemetry</a>
+    <a href="#hot-reload" class="sb-link">Hot Reload</a>
+    <a href="#symbiosis-section" class="sb-link">Symbiosis</a>
+    <a href="#metabolism-section" class="sb-link">Metabolism</a>
+    <a href="#consciousness-section" class="sb-link">Consciousness</a>
+  </div>
+  <div class="sb-section">
+    <div class="sb-title">Reference</div>
+    <a href="#files" class="sb-link">File Inventory</a>
+    <a href="#tests" class="sb-link">Test Suites</a>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- OVERVIEW -->
+<div class="doc-section" id="overview">
+<h1>NOUS Language Reference</h1>
+<p class="doc-updated">v4.0.0 · Last updated 14 April 2026</p>
+<p>NOUS (Νοῦς — Greek for "mind/intellect") is a self-evolving programming language purpose-built for agentic AI systems. It is not a framework, not a library, not a wrapper. It is a complete language with its own grammar, parser, type system, compiler, runtime, and IDE.</p>
+<div class="callout callout-info"><strong>The core insight:</strong> AI agents are not functions. They are living systems with memory, instincts, senses, healing ability, and evolution. NOUS models them as such.</div>
+<p>NOUS lets you describe multi-agent AI systems in a declarative, human-readable syntax. You define <strong>Souls</strong> (autonomous agents), <strong>Messages</strong> (typed data contracts), a <strong>Nervous System</strong> (routing between souls), and <strong>World Laws</strong> (constraints like cost ceilings). The compiler generates production-ready Python or JavaScript.</p>
+</div>
+
+<!-- INSTALLATION -->
+<div class="doc-section" id="installation">
+<h2>Installation</h2>
+<pre><code><span class="cm"># Clone the repository</span>
+$ git clone https://github.com/contrario/nous.git
+$ cd nous
+
+<span class="cm"># Install dependencies</span>
+$ pip install -r requirements.txt
+
+<span class="cm"># Verify installation</span>
+$ python cli.py version
+NOUS v4.0.0 — The Living Language</code></pre>
+</div>
+
+<!-- FIRST PROGRAM -->
+<div class="doc-section" id="first-program">
+<h2>First Program</h2>
+<p>Create a file <code>hello.nous</code>:</p>
+<pre><code><span class="kw">world</span> HelloWorld {
+    <span class="kw">law</span> cost_ceiling = <span class="sp">$0.10 per cycle</span>
+    <span class="kw">heartbeat</span> = <span class="nu">30s</span>
+}
+
+<span class="kw">message</span> Greeting {
+    text: <span class="ty">string</span>
+}
+
+<span class="kw">soul</span> Greeter {
+    <span class="kw">mind</span>: claude-sonnet @ Tier0A
+    <span class="kw">senses</span>: [http_get]
+    <span class="kw">memory</span> {
+        count: <span class="ty">int</span> = <span class="nu">0</span>
+    }
+    <span class="kw">instinct</span> {
+        <span class="kw">remember</span> count += <span class="nu">1</span>
+        <span class="kw">speak</span> Greeting(text: <span class="st">"Hello from NOUS!"</span>)
+    }
+    <span class="kw">heal</span> {
+        <span class="kw">on</span> timeout => <span class="sp">retry</span>(<span class="nu">3</span>, <span class="sp">exponential</span>)
+    }
+}
+
+<span class="kw">nervous_system</span> {
+    Greeter -> Greeter::Greeting
+}</code></pre>
+<p>Then compile, verify, and run:</p>
+<pre><code>$ python cli.py compile hello.nous
+$ python cli.py verify hello.nous
+$ python cli.py run hello.nous</code></pre>
+</div>
+
+<!-- CORE CONCEPTS -->
+<div class="doc-section" id="concepts">
+<h2>Core Concepts</h2>
+<table class="doc-table">
+<thead><tr><th>Concept</th><th>Keyword</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><strong>World</strong></td><td><code>world</code></td><td>Environment — laws, heartbeat, timezone</td></tr>
+<tr><td><strong>Soul</strong></td><td><code>soul</code></td><td>Autonomous agent with mind, senses, memory, instinct, heal, DNA</td></tr>
+<tr><td><strong>Message</strong></td><td><code>message</code></td><td>Typed data contract for inter-soul communication</td></tr>
+<tr><td><strong>Nervous System</strong></td><td><code>nervous_system</code></td><td>Routing topology — message flow between souls</td></tr>
+<tr><td><strong>Mind</strong></td><td><code>mind:</code></td><td>LLM assignment: <code>mind: claude-sonnet @ Tier0A</code></td></tr>
+<tr><td><strong>Senses</strong></td><td><code>senses:</code></td><td>External tools: <code>senses: [http_get, http_post]</code></td></tr>
+<tr><td><strong>Memory</strong></td><td><code>memory {}</code></td><td>Persistent state fields with types and defaults</td></tr>
+<tr><td><strong>Instinct</strong></td><td><code>instinct {}</code></td><td>Execution logic — runs on heartbeat or message arrival</td></tr>
+<tr><td><strong>Heal</strong></td><td><code>heal {}</code></td><td>Error recovery: retry, hibernate, fallback, alert</td></tr>
+<tr><td><strong>DNA</strong></td><td><code>dna {}</code></td><td>Evolvable parameters: <code>threshold: 0.7 ~ [0.1, 0.99]</code></td></tr>
+<tr><td><strong>Speak</strong></td><td><code>speak</code></td><td>Send a message: <code>speak Signal(data: "hello")</code></td></tr>
+<tr><td><strong>Listen</strong></td><td><code>listen</code></td><td>Receive: <code>let msg = listen Scanner::Signal</code></td></tr>
+<tr><td><strong>Guard</strong></td><td><code>guard</code></td><td>Early return if condition is false</td></tr>
+<tr><td><strong>Remember</strong></td><td><code>remember</code></td><td>Update memory: <code>remember count += 1</code></td></tr>
+<tr><td><strong>Sense</strong></td><td><code>sense</code></td><td>Call tool: <code>sense http_get(url: "...")</code></td></tr>
+</tbody>
+<tr><td><code>retire</code></td><td>Analyze retire configuration</td><td><code>nous retire file.nous</code></td></tr>
+</table>
+</div>
+
+<!-- WORLD -->
+<div class="doc-section" id="world">
+<h2>World</h2>
+<p>A <code>world</code> defines the environment in which souls operate. It sets global constraints and parameters.</p>
+<pre><code><span class="kw">world</span> TradingPipeline {
+    <span class="kw">law</span> cost_ceiling = <span class="sp">$0.50 per cycle</span>
+    <span class="kw">law</span> max_retries = <span class="nu">5</span>
+    <span class="kw">heartbeat</span> = <span class="nu">30s</span>
+    timezone = <span class="st">"UTC"</span>
+}</code></pre>
+<h4>Laws</h4>
+<p>Laws are constraints enforced at compile-time and runtime. <code>cost_ceiling</code> sets the maximum LLM spend per cycle — the circuit breaker trips automatically if exceeded. <code>max_retries</code> caps retry attempts in heal blocks.</p>
+<h4>Heartbeat</h4>
+<p>The <code>heartbeat</code> interval determines how often heartbeat souls wake up. Supports: <code>s</code> (seconds), <code>m</code> (minutes), <code>h</code> (hours).</p>
+</div>
+
+<!-- SOUL -->
+<div class="doc-section" id="soul">
+<h2>Soul</h2>
+<p>A <code>soul</code> is an autonomous agent. It is the fundamental unit of computation in NOUS.</p>
+<pre><code><span class="kw">soul</span> Scanner {
+    <span class="kw">mind</span>: claude-sonnet @ Tier0A
+    <span class="kw">senses</span>: [http_get, http_post]
+
+    <span class="kw">memory</span> {
+        scan_count: <span class="ty">int</span> = <span class="nu">0</span>
+        last_result: <span class="ty">string</span> = <span class="st">""</span>
+    }
+
+    <span class="kw">instinct</span> {
+        <span class="kw">let</span> raw = <span class="kw">sense</span> http_get(url: <span class="st">"https://api.example.com/data"</span>)
+        <span class="kw">remember</span> scan_count += <span class="nu">1</span>
+        <span class="kw">remember</span> last_result = raw
+        <span class="kw">speak</span> Signal(source: <span class="st">"scanner"</span>, data: raw)
+    }
+
+    <span class="kw">heal</span> {
+        <span class="kw">on</span> timeout => <span class="sp">retry</span>(<span class="nu">3</span>, <span class="sp">exponential</span>)
+        <span class="kw">on</span> api_error => <span class="sp">hibernate</span>(<span class="nu">60s</span>)
+    }
+
+    <span class="kw">dna</span> {
+        threshold: <span class="nu">0.7</span> ~ [<span class="nu">0.1</span>, <span class="nu">0.99</span>]
+        batch_size: <span class="nu">10</span> ~ [<span class="nu">1</span>, <span class="nu">100</span>]
+    }
+}</code></pre>
+<h4>Mind</h4>
+<p>The <code>mind</code> assigns an LLM with a cost tier: <code>Tier0A</code> (cheapest), <code>Tier0B</code>, <code>Tier1A</code>, <code>Tier1B</code> (most expensive). The cost tracker uses these tiers to estimate per-cycle cost.</p>
+<h4>Senses</h4>
+<p>Senses are external tools the soul can invoke: <code>http_get</code>, <code>http_post</code>, <code>file_read</code>, <code>file_write</code>, or custom plugin-registered tools.</p>
+<h4>Heal</h4>
+<p>Error recovery strategies: <code>retry(n, strategy)</code> with <code>exponential</code> or <code>linear</code> backoff; <code>hibernate(duration)</code> to pause; <code>fallback(soul)</code> to delegate; <code>alert(channel)</code> to notify.</p>
+<h4>DNA</h4>
+<p>Evolvable parameters with mutation ranges. The evolution engine (<code>nous evolve</code>) mutates DNA values within specified bounds to optimize performance metrics.</p>
+</div>
+
+<!-- MESSAGE -->
+<div class="doc-section" id="message">
+<h2>Message</h2>
+<p>Messages are typed data contracts for inter-soul communication.</p>
+<pre><code><span class="kw">message</span> Signal {
+    source: <span class="ty">string</span>
+    data: <span class="ty">string</span>
+    confidence: <span class="ty">float</span> = <span class="nu">0.0</span>
+    tags: [<span class="ty">string</span>] = []
+    metadata: {<span class="ty">string</span>: <span class="ty">string</span>}?
+}</code></pre>
+<p>Fields can have default values. Optional fields use <code>type?</code> syntax. The type checker validates all speak/listen calls against message definitions.</p>
+</div>
+
+<!-- NERVOUS SYSTEM -->
+<div class="doc-section" id="nervous-system">
+<h2>Nervous System</h2>
+<p>The nervous system defines message routing topology.</p>
+<pre><code><span class="kw">nervous_system</span> {
+    Scanner -> Analyzer::Signal
+    Analyzer -> Executor::Decision
+    Executor -> Scanner::Feedback  <span class="cm"># feedback loop</span>
+}</code></pre>
+<p>Routes determine wake strategies automatically. Souls with no incoming routes become <strong>HEARTBEAT</strong> souls. Souls with incoming routes become <strong>LISTENER</strong> souls.</p>
+<div class="callout callout-info"><strong>Deadlock prevention:</strong> The verifier checks for circular dependencies (excluding explicit feedback loops) and ensures no soul listens to itself.</div>
+</div>
+
+<!-- TYPE SYSTEM -->
+<div class="doc-section" id="types">
+<h2>Type System</h2>
+<h4>Primitive Types</h4>
+<table class="doc-table">
+<thead><tr><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>string</code></td><td>UTF-8 text</td><td><code>"hello"</code></td></tr>
+<tr><td><code>int</code></td><td>Integer</td><td><code>42</code></td></tr>
+<tr><td><code>float</code></td><td>Floating point</td><td><code>3.14</code></td></tr>
+<tr><td><code>bool</code></td><td>Boolean</td><td><code>true</code>, <code>false</code></td></tr>
+<tr><td><code>timestamp</code></td><td>ISO 8601 datetime</td><td><code>2026-04-14T00:00:00Z</code></td></tr>
+<tr><td><code>duration</code></td><td>Time duration</td><td><code>30s</code>, <code>5m</code>, <code>1h</code></td></tr>
+<tr><td><code>currency</code></td><td>Monetary value</td><td><code>$0.50</code></td></tr>
+<tr><td><code>SoulRef</code></td><td>Reference to a soul</td><td>—</td></tr>
+<tr><td><code>ToolRef</code></td><td>Reference to a sense</td><td>—</td></tr>
+</tbody>
+</table>
+<h4>Composite Types</h4>
+<table class="doc-table">
+<thead><tr><th>Syntax</th><th>Type</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><code>[type]</code></td><td>List</td><td><code>[string]</code>, <code>[int]</code></td></tr>
+<tr><td><code>{key: value}</code></td><td>Map</td><td><code>{string: float}</code></td></tr>
+<tr><td><code>type?</code></td><td>Optional</td><td><code>string?</code></td></tr>
+</tbody>
+</table>
+<h4>Type Inference</h4>
+<p>The type checker (18 rules, TC001–TC009) performs full inference across soul instinct blocks, tracking message field types through listen/speak chains. Errors are reported with file, line, and rule code.</p>
+</div>
+
+<!-- WAKE STRATEGIES -->
+<div class="doc-section" id="wake">
+<h2>Wake Strategies</h2>
+<table class="doc-table">
+<thead><tr><th>Strategy</th><th>Trigger</th><th>Cost</th></tr></thead>
+<tbody>
+<tr><td><span class="badge badge-blue">HEARTBEAT</span></td><td>Timer (heartbeat interval)</td><td>Zero between cycles</td></tr>
+<tr><td><span class="badge badge-green">LISTENER</span></td><td>Message arrival</td><td>Zero while waiting — no polling</td></tr>
+</tbody>
+</table>
+<p>Wake strategy is determined automatically from the nervous system topology. Souls with no incoming routes are HEARTBEAT. Souls with incoming routes are LISTENER.</p>
+</div>
+
+<!-- BILINGUAL -->
+<div class="doc-section" id="bilingual">
+<h2>Bilingual Keywords</h2>
+<p>Every NOUS keyword has a Greek equivalent. Both compile identically:</p>
+<table class="doc-table">
+<thead><tr><th>English</th><th>Greek</th></tr></thead>
+<tbody>
+<tr><td><code>world</code></td><td><code>κόσμος</code></td></tr>
+<tr><td><code>soul</code></td><td><code>ψυχή</code></td></tr>
+<tr><td><code>message</code></td><td><code>μήνυμα</code></td></tr>
+<tr><td><code>instinct</code></td><td><code>ένστικτο</code></td></tr>
+<tr><td><code>memory</code></td><td><code>μνήμη</code></td></tr>
+<tr><td><code>speak</code></td><td><code>λέω</code></td></tr>
+<tr><td><code>listen</code></td><td><code>ακούω</code></td></tr>
+<tr><td><code>remember</code></td><td><code>θυμάμαι</code></td></tr>
+<tr><td><code>heal</code></td><td><code>θεραπεία</code></td></tr>
+<tr><td><code>mind</code></td><td><code>νους</code></td></tr>
+<tr><td><code>senses</code></td><td><code>αισθήσεις</code></td></tr>
+<tr><td><code>law</code></td><td><code>νόμος</code></td></tr>
+<tr><td><code>heartbeat</code></td><td><code>παλμός</code></td></tr>
+</tbody>
+</table>
+<pre><code><span class="kw">ψυχή</span> Scanner {           <span class="cm"># soul Scanner</span>
+    <span class="kw">ένστικτο</span> {            <span class="cm"># instinct</span>
+        <span class="kw">θυμάμαι</span> count += <span class="nu">1</span>  <span class="cm"># remember</span>
+        <span class="kw">λέω</span> Signal(...)     <span class="cm"># speak</span>
+    }
+    <span class="kw">θεραπεία</span> {            <span class="cm"># heal</span>
+        <span class="kw">on</span> timeout => <span class="sp">retry</span>(<span class="nu">3</span>, <span class="sp">exponential</span>)
+    }
+}</code></pre>
+</div>
+
+<!-- PIPELINE -->
+<div class="doc-section" id="pipeline">
+<h2>Compiler Pipeline</h2>
+<p>The NOUS compiler processes source in 8 stages, completing in ~40ms:</p>
+<table class="doc-table">
+<thead><tr><th>Stage</th><th>Component</th><th>Performance</th></tr></thead>
+<tbody>
+<tr><td>1. Parse</td><td>LALR Parser (Lark EBNF)</td><td>~1.8ms cached</td></tr>
+<tr><td>2. AST</td><td>Living AST (Pydantic V2)</td><td>Strict validation</td></tr>
+<tr><td>3. Imports</td><td>Import Resolution</td><td>Cycle detection</td></tr>
+<tr><td>4. Laws</td><td>Law Validation (14 rules)</td><td>W001–P002</td></tr>
+<tr><td>5. Types</td><td>Type Checking (9 rules)</td><td>Full inference</td></tr>
+<tr><td>6. Verify</td><td>Formal Verification (7 cat.)</td><td>16 proof codes</td></tr>
+<tr><td>7. CodeGen</td><td>Python / JS / HTML</td><td>Multi-target</td></tr>
+<tr><td>8. Check</td><td>py_compile / structural</td><td>Output verified</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- VALIDATION -->
+<div class="doc-section" id="validation">
+<h2>Law Validation</h2>
+<p>14 rules checked at compile time:</p>
+<table class="doc-table">
+<thead><tr><th>Code</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td><code>W001</code></td><td>Program must have a world declaration</td></tr>
+<tr><td><code>S001</code></td><td>Program must have at least one soul</td></tr>
+<tr><td><code>S002</code></td><td>Soul must have a mind assignment</td></tr>
+<tr><td><code>S003</code></td><td>Soul must have a heal block</td></tr>
+<tr><td><code>S004</code></td><td>Soul must have an instinct block</td></tr>
+<tr><td><code>S005</code></td><td>Soul must have senses declared</td></tr>
+<tr><td><code>M001</code></td><td>Message must have at least one field</td></tr>
+<tr><td><code>N001</code></td><td>Program must have a nervous_system</td></tr>
+<tr><td><code>N002</code></td><td>Routes must reference defined souls</td></tr>
+<tr><td><code>N003</code></td><td>Routes must reference defined messages</td></tr>
+<tr><td><code>T001</code></td><td>Speak must reference a defined message</td></tr>
+<tr><td><code>T002</code></td><td>Listen must reference a defined message</td></tr>
+<tr><td><code>D001</code></td><td>DNA values must be within range</td></tr>
+<tr><td><code>D002</code></td><td>DNA ranges must be valid</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- TYPE CHECKER -->
+<div class="doc-section" id="typechecker">
+<h2>Type Checker</h2>
+<p>9 rules with full inference (TC001–TC009):</p>
+<table class="doc-table">
+<thead><tr><th>Code</th><th>Check</th></tr></thead>
+<tbody>
+<tr><td><code>TC001</code></td><td>Undefined memory field in remember</td></tr>
+<tr><td><code>TC002</code></td><td>Type mismatch in memory assignment</td></tr>
+<tr><td><code>TC003</code></td><td>Listen references undefined message</td></tr>
+<tr><td><code>TC004</code></td><td>Missing required fields in speak</td></tr>
+<tr><td><code>TC005</code></td><td>Unknown field in speak call</td></tr>
+<tr><td><code>TC006</code></td><td>Type mismatch in speak field</td></tr>
+<tr><td><code>TC007</code></td><td>Guard condition must be boolean</td></tr>
+<tr><td><code>TC008</code></td><td>Sense call argument type mismatch</td></tr>
+<tr><td><code>TC009</code></td><td>Variable used before assignment</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- CODEGEN -->
+<div class="doc-section" id="codegen">
+<h2>Code Generation</h2>
+<p>NOUS generates production-ready asyncio Python from the Living AST. Each soul becomes an async function, channels use <code>asyncio.Queue</code>, and the runtime manages lifecycle, cost tracking, and error recovery.</p>
+</div>
+
+<!-- TARGETS -->
+<div class="doc-section" id="targets">
+<h2>Multi-Target Compilation</h2>
+<table class="doc-table">
+<thead><tr><th>Target</th><th>Command</th><th>Output</th><th>Runtime</th></tr></thead>
+<tbody>
+<tr><td>Python</td><td><code>nous compile file.nous</code></td><td><code>.py</code></td><td>asyncio, server/CLI</td></tr>
+<tr><td>JavaScript</td><td><code>nous compile file.nous --target js</code></td><td><code>.mjs</code></td><td>Node.js, Deno</td></tr>
+<tr><td>Browser</td><td><code>nous wasm file.nous</code></td><td><code>.html</code></td><td>Self-contained, any browser</td></tr>
+</tbody>
+</table>
+<p>The browser target includes a dark-theme dashboard with soul cards, runtime log, cycle counter, and stop button.</p>
+</div>
+
+<!-- SELF-HOSTING -->
+<div class="doc-section" id="self-hosting">
+<h2>Self-Hosting Compiler</h2>
+<p>NOUS can compile itself. <code>compiler.nous</code> is a 3-soul agentic compiler:</p>
+<table class="doc-table">
+<thead><tr><th>Soul</th><th>Senses</th><th>Output</th></tr></thead>
+<tbody>
+<tr><td><strong>Reader</strong></td><td>file_read, file_list</td><td>SourceBundle</td></tr>
+<tr><td><strong>Analyzer</strong></td><td>nous_parse, nous_validate, nous_typecheck</td><td>AnalysisResult</td></tr>
+<tr><td><strong>Emitter</strong></td><td>nous_codegen, file_write</td><td>CompileResult</td></tr>
+</tbody>
+</table>
+<p>9 compiler senses provide file I/O and compiler introspection. Bootstrap proof: <code>compiler.nous</code> → <code>compiler_selfcompiled.py</code> (289 lines, py_compile PASS).</p>
+</div>
+
+<!-- RUNTIME -->
+<div class="doc-section" id="runtime">
+<h2>Event-Driven Runtime</h2>
+<p>The NOUS runtime is built on <code>asyncio</code>. It is a true event-driven system:</p>
+<ul>
+<li><strong>SoulRunner</strong> — manages a soul's lifecycle. Heartbeat souls sleep between cycles. Listeners block on channel receive.</li>
+<li><strong>ChannelRegistry</strong> — named async channels with backpressure (max queue 100).</li>
+<li><strong>CostTracker</strong> — shared across all souls. Trips circuit breaker if cost exceeds ceiling.</li>
+<li><strong>SenseCache</strong> — deduplicates identical sense calls within a single instinct execution.</li>
+<li><strong>SenseExecutor</strong> — routes sense calls to registered tool functions or HTTP endpoints.</li>
+</ul>
+</div>
+
+<!-- DISTRIBUTED -->
+<div class="doc-section" id="distributed">
+<h2>Distributed Runtime</h2>
+<p>For multi-machine deployment, NOUS adds TCP-based channel transport:</p>
+<ul>
+<li><strong>ChannelServer</strong> — <code>asyncio.start_server</code> listening for JSON-line protocol messages</li>
+<li><strong>RemoteChannelClient</strong> — auto-reconnect with exponential backoff (max 10 attempts)</li>
+<li><strong>DistributedChannelRegistry</strong> — routes to local queues or remote nodes based on topology</li>
+</ul>
+<p>Envelope protocol: newline-delimited JSON:</p>
+<pre><code>{"op":"send","channel":"Scanner_Signal","data":{...},"node":"alpha"}\n</code></pre>
+</div>
+
+<!-- TOPOLOGY -->
+<div class="doc-section" id="topology">
+<h2>Topology</h2>
+<pre><code><span class="kw">topology</span> {
+    node_alpha: <span class="st">"192.168.1.10:9100"</span> {
+        souls: [Scanner]
+    }
+    node_beta: <span class="st">"192.168.1.20:9100"</span> {
+        souls: [Analyzer, Executor]
+    }
+}</code></pre>
+<p>Node selection: <code>--node node_alpha</code> flag, <code>NOUS_NODE</code> env var, or no node for local-only runtime.</p>
+</div>
+
+<!-- VERIFICATION -->
+<div class="doc-section" id="verification">
+<h2>Formal Verification</h2>
+<p>NOUS provides mathematical guarantees before execution. 7 proof categories, 16 verification codes:</p>
+<pre><code>═══ NOUS Formal Verification — GateAlpha ═══
+
+── Resource Bound ──
+<span class="st">✓ [VR001]</span> Soul Scout: $0.006900 ≤ $0.10 (7% of ceiling)
+<span class="st">✓ [VR002]</span> Total cascade cost $0.021750 ≤ $0.10
+
+── Deadlock ──
+<span class="st">✓ [VD001]</span> No circular dependencies (3 routes checked)
+
+── Protocol ──
+<span class="st">✓ [VP003]</span> All 2 speak calls reference defined message types
+
+── Liveness ──
+<span class="st">✓ [VL002]</span> Pipeline has 1 entrypoint(s): Scout
+
+── Reachability ──
+<span class="st">✓ [VE001]</span> All 4 souls reachable from entrypoints
+
+── Memory Safety ──
+<span class="st">✓ [VM001]</span> All 6 memory fields validated for type-safe access
+
+══════════════════════════════
+VERIFIED: 10 proven, 0 warnings, 0 errors</code></pre>
+</div>
+
+<!-- PROOF CODES -->
+<div class="doc-section" id="proof-codes">
+<h2>Proof Codes</h2>
+<table class="doc-table">
+<thead><tr><th>Code</th><th>Category</th><th>What It Proves</th></tr></thead>
+<tbody>
+<tr><td><code>VR001</code></td><td>Resource Bound</td><td>Each soul's estimated max cost ≤ ceiling</td></tr>
+<tr><td><code>VR002</code></td><td>Resource Bound</td><td>Total cascade cost ≤ ceiling</td></tr>
+<tr><td><code>VD001</code></td><td>Deadlock</td><td>No circular dependencies (excl. explicit feedback)</td></tr>
+<tr><td><code>VD002</code></td><td>Deadlock</td><td>No soul listens to itself</td></tr>
+<tr><td><code>VP001</code></td><td>Protocol</td><td>Every listen references a soul that speaks that type</td></tr>
+<tr><td><code>VP002</code></td><td>Protocol</td><td>Route source speaks what target listens for</td></tr>
+<tr><td><code>VP003</code></td><td>Protocol</td><td>All speak calls reference defined message types</td></tr>
+<tr><td><code>VL001</code></td><td>Liveness</td><td>Every listener soul has a producer</td></tr>
+<tr><td><code>VL002</code></td><td>Liveness</td><td>Pipeline has at least one entrypoint</td></tr>
+<tr><td><code>VE001</code></td><td>Reachability</td><td>All souls reachable from entrypoints</td></tr>
+<tr><td><code>VM001</code></td><td>Memory Safety</td><td>All memory fields validated for type-safe access</td></tr>
+<tr><td><code>VM002</code></td><td>Memory Safety</td><td>No remember targets undefined field</td></tr>
+<tr><td><code>VT001</code></td><td>Topology</td><td>All souls assigned to exactly one node</td></tr>
+<tr><td><code>VT002</code></td><td>Topology</td><td>No unassigned souls</td></tr>
+<tr><td><code>VT003</code></td><td>Topology</td><td>No soul assigned to multiple nodes</td></tr>
+<tr><td><code>VT004</code></td><td>Topology</td><td>Cross-node routes identified</td></tr>
+</tbody>
+</table>
+<h3>Mitosis Proofs (VMI)</h3>
+<pre><code>VMI001  Mitosis cost bounded (parent + max clones &le; ceiling)
+VMI002  Verification gate enabled/disabled
+VMI003  Clone tier cost savings
+VMI004  Listener clones share channel
+VMI005  Total mitosis capacity</code></pre>
+
+<h3>Immune Proofs (VIM)</h3>
+<pre><code>VIM001  Adaptive recovery enabled
+VIM002  Clone antibody broadcast
+VIM003  Antibody lifespan bounds
+VIM004  Layered defense (heal + immune)
+VIM005  Immune coverage</code></pre>
+
+<h3>Dream Proofs (VDR)</h3>
+<pre><code>VDR001  Dream mind tier cost
+VDR002  Dream cost within budget
+VDR003  Productive idle time
+VDR004  Dream coverage</code></pre>
+
+</div>
+
+<!-- CLI -->
+<div class="doc-section" id="cli">
+<h2>CLI Commands</h2>
+<table class="doc-table">
+<thead><tr><th>Command</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><code>compile [--target py|js|wasm]</code></td><td>Compile .nous to target</td></tr>
+<tr><td><code>run [--node]</code></td><td>Compile and execute</td></tr>
+<tr><td><code>validate</code></td><td>Validate laws</td></tr>
+<tr><td><code>typecheck</code></td><td>Type check</td></tr>
+<tr><td><code>verify</code></td><td>Formal verification (7 proofs)</td></tr>
+<tr><td><code>test</code></td><td>Run test blocks</td></tr>
+<tr><td><code>watch</code></td><td>Auto-recompile on save</td></tr>
+<tr><td><code>debug</code></td><td>Interactive debugger</td></tr>
+<tr><td><code>shell</code></td><td>REPL v3</td></tr>
+<tr><td><code>profile</code></td><td>Per-soul cost analysis</td></tr>
+<tr><td><code>docker</code></td><td>Generate Dockerfile + compose</td></tr>
+<tr><td><code>plugins [list|check]</code></td><td>Plugin manager</td></tr>
+<tr><td><code>pkg [install|list|publish]</code></td><td>Package manager</td></tr>
+<tr><td><code>ast [--json]</code></td><td>Print Living AST</td></tr>
+<tr><td><code>evolve [--cycles N]</code></td><td>Run evolution cycles</td></tr>
+<tr><td><code>nsp [--compress]</code></td><td>Neural Signal Protocol</td></tr>
+<tr><td><code>info</code></td><td>Program summary</td></tr>
+<tr><td><code>bridge</code></td><td>Noosphere analysis</td></tr>
+<tr><td><code>version</code></td><td>Show version</td></tr>
+<tr><td><code>crossworld</code></td><td>Cross-world type check</td></tr>
+<tr><td><code>bench [--save-baseline]</code></td><td>Benchmarks</td></tr>
+<tr><td><code>docs [-o output]</code></td><td>Generate HTML docs</td></tr>
+<tr><td><code>fmt [-w] [--check]</code></td><td>Format .nous source</td></tr>
+<tr><td><code>noesis [stats|search|think]</code></td><td>Noesis engine</td></tr>
+<tr><td><code>build</code></td><td>Build workspace from nous.toml</td></tr>
+<tr><td><code>init [--name]</code></td><td>Initialize nous.toml</td></tr>
+<tr><td><code>migrate [-o output]</code></td><td>Migrate Python → .nous</td></tr>
+<tr><td><code>viz [-o output]</code></td><td>Visualize nervous system</td></tr>
+<tr><td><code>lsp [check]</code></td><td>Language Server Protocol</td></tr>
+<tr><td><code>wasm [--target html|js]</code></td><td>Build browser bundle</td></tr>
+<tr><td><code>self-compile</code></td><td>Self-hosting compiler</td></tr>
+<tr><td><code>create [--template-only]</code></td><td>Natural language → .nous</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- IDE -->
+<div class="doc-section" id="ide">
+<h2>IDE</h2>
+<p>The NOUS IDE is a self-contained HTML file with 4 tabs:</p>
+<ul>
+<li><strong>Editor</strong> — syntax-aware code editor with live validation and compile buttons</li>
+<li><strong>Verify</strong> — real-time formal verification with proof results</li>
+<li><strong>Graph</strong> — visual nervous system diagram with HEARTBEAT/LISTENER nodes</li>
+<li><strong>Create</strong> — natural language input with quick templates</li>
+</ul>
+<p>Access at <a href="/ide">/ide</a> or <a href="/playground">/playground</a>.</p>
+</div>
+
+<!-- LSP -->
+<div class="doc-section" id="lsp">
+<h2>LSP Server</h2>
+<p>12 auto-fix code actions mapped to validator/typechecker error codes. Communicates via JSON-RPC 2.0 over stdin/stdout, compatible with VS Code and any LSP client.</p>
+<table class="doc-table">
+<thead><tr><th>Error</th><th>Auto-Fix</th></tr></thead>
+<tbody>
+<tr><td><code>W001</code></td><td>Insert world declaration</td></tr>
+<tr><td><code>S002</code></td><td>Insert mind assignment</td></tr>
+<tr><td><code>S003</code></td><td>Insert heal block</td></tr>
+<tr><td><code>S004</code></td><td>Insert instinct block</td></tr>
+<tr><td><code>S005</code></td><td>Insert senses</td></tr>
+<tr><td><code>N001</code></td><td>Insert nervous_system</td></tr>
+<tr><td><code>N002</code></td><td>"Did you mean?" (Levenshtein)</td></tr>
+<tr><td><code>T001</code>/<code>T002</code></td><td>Create message type</td></tr>
+<tr><td><code>TC001</code></td><td>Add memory field</td></tr>
+<tr><td><code>TC004</code></td><td>Add missing speak fields</td></tr>
+<tr><td><code>TC005</code></td><td>Replace with closest match</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- NL INTERFACE -->
+<div class="doc-section" id="nl-interface">
+<h2>Natural Language Interface</h2>
+<p>Two modes:</p>
+<h4>Template Mode (offline)</h4>
+<pre><code>$ python cli.py create <span class="st">"A scanner that monitors an API"</span> --template-only</code></pre>
+<p>Extracts soul names via keyword matching, generates world/messages/souls/nervous_system, validates through parser.</p>
+<h4>LLM Mode (requires ANTHROPIC_API_KEY)</h4>
+<pre><code>$ python cli.py create <span class="st">"A trading pipeline with scanner, analyzer, and executor"</span></code></pre>
+<p>Sends description + full NOUS grammar reference as system prompt. Claude generates valid .nous code. Auto-retries up to 3 times if validation fails.</p>
+</div>
+
+<!-- DEBUGGER -->
+<div class="doc-section" id="debugger">
+<h2>Debugger & REPL</h2>
+<p>Interactive debugger with breakpoints, step-through, and state inspection:</p>
+<pre><code>$ python cli.py debug file.nous</code></pre>
+<p>REPL v3 for live experimentation:</p>
+<pre><code>$ python cli.py shell</code></pre>
+</div>
+
+<div class="doc-section" id="arch-diff">
+<h2>Architecture Diff</h2>
+<p>The <code>nous diff</code> command performs semantic impact analysis when you change a <code>.nous</code> file. Unlike text-based diffs (git diff), NOUS understands your agent architecture and reports meaningful behavioral changes — not line-by-line character differences.</p>
+
+<h3>Usage</h3>
+<pre><code>$ nous diff original.nous modified.nous
+$ nous diff original.nous modified.nous --json</code></pre>
+
+<h3>What It Analyzes</h3>
+<p>The diff engine inspects 12 categories of change across two versions of a program:</p>
+<pre><code>Topology        Souls added, removed, or modified
+Routes          Nervous system route changes
+Protocol        Message types added or removed
+Cost            Per-soul cost delta, total change, daily/monthly projections
+Deadlock        New circular dependencies introduced
+Liveness        Lost entrypoints, unreachable souls
+Reachability    Souls that become unreachable
+Wake Strategy   HEARTBEAT / LISTENER changes
+Capability      Senses added or removed per soul
+Memory          Memory fields added or removed
+Evolution       DNA genes added or removed</code></pre>
+
+<h3>Severity Levels</h3>
+<pre><code>CRITICAL  Breaking changes. Deployment may fail or behave incorrectly.
+WARNING   Risky changes. Review before deploying.
+INFO      Safe changes. No action required.</code></pre>
+
+<h3>Example Output</h3>
+<pre><code>NOUS Behavioral Diff
+gate_alpha.nous to gate_alpha_v2.nous
+
+Topology:  Soul removed: Monitor | Soul modified: Scout
+Cost:      $145.80 to $45.14/month (-69.0%)
+Findings:  1 critical, 4 warnings, 4 info
+BREAKING</code></pre>
+
+<h3>JSON Output</h3>
+<p>Use <code>--json</code> for machine-readable output consumed by CI/CD pipelines or the <a href="/ide" style="color:#c9a554">NOUS IDE</a>. The JSON payload includes: <code>verdict</code>, <code>topology</code>, <code>cost</code>, <code>protocol</code>, <code>performance</code>, <code>capabilities</code>, <code>memory</code>, and <code>findings</code>.</p>
+
+<h3>IDE Integration</h3>
+<p>The Architecture Diff is available as an interactive tab in the <a href="/ide" style="color:#c9a554">NOUS IDE</a>. The IDE renders diff data as visual impact cards with cost bars, tier change pills, topology mutations, and a filterable findings log.</p>
+
+<h3>File</h3>
+<p><code>behavioral_diff.py</code> at <code>/opt/aetherlang_agents/nous/</code></p>
+</div>
+
+<div class="doc-section" id="cost-oracle">
+<h2>Cost Oracle</h2>
+<p>The <code>nous cost</code> command provides predictive cost analysis for a NOUS program. It projects per-cycle, daily, and monthly costs, shows per-soul breakdowns, and generates automatic optimization suggestions.</p>
+
+<h3>Usage</h3>
+<pre><code>$ nous cost file.nous</code></pre>
+
+<h3>What It Projects</h3>
+<pre><code>Per-cycle cost      Estimated LLM cost for one full cycle
+Daily cost          Per-cycle x cycles per day (based on heartbeat)
+Monthly cost        Daily x 30
+Ceiling headroom    Budget remaining before circuit breaker trips
+Per-soul breakdown  Visual bar chart of cost distribution</code></pre>
+
+<h3>Optimization Suggestions</h3>
+<p>The Cost Oracle identifies savings by analyzing each soul tier assignment and suggesting cheaper alternatives. Each suggestion includes the soul, current and suggested tier, savings per day/month, and risk rating (low/medium/high).</p>
+
+<h3>Example Output</h3>
+<pre><code>NOUS Cost Oracle - GateAlpha
+
+Per cycle:  $0.016875
+Daily:      $4.86
+Monthly:    $145.80
+Ceiling:    $0.1/cycle (83% headroom)
+
+Monitor     $2.16/day  44%
+Scout       $1.30/day  27%
+Hunter      $1.30/day  27%
+Quant       $0.11/day   2%
+
+Suggestion: Monitor Tier2 to Cerebras
+Save: $2.12/day ($63.68/month) Risk: low
+
+Total saveable: $141.31/month</code></pre>
+
+<h3>File</h3>
+<p><code>cost_oracle.py</code> at <code>/opt/aetherlang_agents/nous/</code></p>
+</div>
+
+
+<!-- SOUL BIOLOGY -->
+
+<!-- MITOSIS -->
+<div class="doc-section" id="mitosis">
+<h2>Soul Mitosis</h2>
+<p>Self-replicating agents with formal verification gate. When a soul detects overload, it spawns a clone of itself. The clone is formally verified before deployment, and the nervous system rewires automatically. No other framework has this.</p>
+
+<h3>Syntax</h3>
+<pre><code><span class="kw">soul</span> Scanner {
+    <span class="kw">mind</span>: claude-sonnet @ Tier0A
+    <span class="kw">mitosis</span> {
+        trigger: scan_count > <span class="nu">50</span> || queue_depth > <span class="nu">10</span>
+        max_clones: <span class="nu">3</span>
+        cooldown: <span class="nu">60s</span>
+        clone_tier: Groq
+        verify: <span class="nu">true</span>
+    }
+}</code></pre>
+
+<h3>Fields</h3>
+<pre><code>trigger          Expression using memory fields + built-in metrics
+                 Built-in: cycle_count, queue_depth, latency, error_count
+max_clones       Maximum clones per soul (default: 3)
+cooldown         Minimum time between mitosis events (default: 60s)
+clone_tier       LLM tier for clones (default: parent tier)
+verify           Run formal verification before deploy (default: true)</code></pre>
+
+<h3>How It Works</h3>
+<pre><code>Soul instinct runs &rarr; metrics updated
+  &darr;
+MitosisEngine checks trigger condition
+  &darr; triggered + cooldown passed + max not reached
+Build temporary NousProgram with clone
+  &darr;
+Run NousVerifier (resource bounds, deadlock, protocol)
+  &darr; PASS
+Deploy clone as new SoulRunner
+  &darr;
+Listener clones share input channel (load balancing)</code></pre>
+
+<h3>Validation Rules</h3>
+<pre><code>MT001  ERROR   max_clones must be &gt;= 1
+MT002  WARN    max_clones &gt; 10 is very high
+MT003  ERROR   trigger condition is required
+MT004  ERROR   soul with mitosis must have a mind
+MT005  WARN    heal block recommended for mitosis souls
+MT006  ERROR   clone_tier must be a valid tier</code></pre>
+
+<h3>Verification Proofs</h3>
+<pre><code>VMI001  Worst-case cost (parent + clones) &le; ceiling
+VMI002  Verification gate enabled/disabled status
+VMI003  Clone tier cost vs parent tier
+VMI004  Listener clones share channel (load balancing)
+VMI005  Total mitosis capacity across system</code></pre>
+
+<h3>CLI</h3>
+<pre><code>$ nous mitosis file.nous    # Analyze mitosis configuration
+$ nous verify file.nous     # Includes VMI001-VMI005 proofs</code></pre>
+
+<h3>Files</h3>
+<p><code>mitosis_engine.py</code> at <code>/opt/aetherlang_agents/nous/</code></p>
+</div>
+
+<!-- IMMUNE SYSTEM -->
+<div class="doc-section" id="immune-system">
+<h2>Immune System</h2>
+<p>Adaptive error recovery with LLM-generated antibodies. When <code>heal</code> fails, the immune system intercepts the error, generates a dynamic Python patch via the soul's LLM, caches it, and broadcasts to all clones. Defense layers: <code>heal</code> (static) &rarr; <code>immune</code> (adaptive) &rarr; death.</p>
+
+<h3>Syntax</h3>
+<pre><code><span class="kw">soul</span> Collector {
+    <span class="kw">mind</span>: claude-sonnet @ Tier0A
+    <span class="kw">immune_system</span> {
+        adaptive_recovery: <span class="nu">true</span>
+        share_with_clones: <span class="nu">true</span>
+        antibody_lifespan: <span class="nu">3600s</span>
+    }
+}</code></pre>
+
+<h3>Fields</h3>
+<pre><code>adaptive_recovery    Enable LLM-generated fallback functions (default: true)
+share_with_clones    Broadcast antibodies to mitosis clones (default: true)
+antibody_lifespan    How long antibodies remain active (default: 3600s)</code></pre>
+
+<h3>How It Works</h3>
+<pre><code>Error occurs in soul instinct
+  &darr;
+[1] heal {} &mdash; static rules (retry, fallback, hibernate)
+  &darr; heal fails
+[2] Check AntibodyCache &mdash; signature match?
+  &darr; YES &rarr; apply cached fallback &rarr; done (zero LLM cost)
+  &darr; NO
+[3] Try 7 builtin antibodies (DNS, timeout, rate limit, auth, etc.)
+  &darr; no match
+[4] LLM generates async fallback function
+  &darr;
+[5] Sanitize code (strip imports, eval, exec, os, sys)
+[6] Compile in restricted sandbox
+[7] Execute with 5s timeout
+  &darr; SUCCESS
+[8] Cache antibody (with lifespan + effectiveness tracking)
+[9] Broadcast to all clones via MitosisEngine clone groups</code></pre>
+
+<h3>Builtin Antibodies</h3>
+<pre><code>DNS resolution errors       (no address, getaddrinfo)
+Timeout errors              (timed out, read timeout)
+Connection errors           (refused, reset)
+Rate limiting               (429, too many requests)
+Authentication errors       (401, 403, unauthorized)
+Server errors               (500, 502, 503, 504)
+Parse errors                (json, decode, invalid)</code></pre>
+
+<h3>Security</h3>
+<p>Generated antibodies execute in a restricted sandbox: limited <code>__builtins__</code> (no <code>open</code>, <code>os</code>, <code>sys</code>, <code>subprocess</code>, <code>eval</code>, <code>exec</code>). Code sanitization strips dangerous imports. 5-second timeout on execution. Ineffective antibodies auto-removed when success rate drops below 50%.</p>
+
+<h3>Validation Rules</h3>
+<pre><code>IM001  WARN    immune_system without heal block
+IM002  WARN    share_with_clones without mitosis
+IM003  ERROR   antibody_lifespan too short (&lt; 10s)</code></pre>
+
+<h3>Verification Proofs</h3>
+<pre><code>VIM001  Adaptive recovery enabled/disabled
+VIM002  Clone broadcast: antibodies reach N clones
+VIM003  Antibody lifespan within safe bounds (&lt; 24h)
+VIM004  Layered defense: heal (static) + immune (adaptive)
+VIM005  Immune coverage: N/M souls protected</code></pre>
+
+<h3>CLI</h3>
+<pre><code>$ nous immune file.nous     # Analyze immune system config
+$ nous verify file.nous     # Includes VIM001-VIM005 proofs</code></pre>
+
+<h3>Files</h3>
+<p><code>immune_engine.py</code> at <code>/opt/aetherlang_agents/nous/</code></p>
+</div>
+
+<!-- DREAM SYSTEM -->
+<div class="doc-section" id="dream-system">
+<h2>Agent Dreaming</h2>
+<p>Speculative pre-computation during idle time. When a soul has no work, it enters a REM state and uses a cheap <code>dream_mind</code> LLM to pre-compute likely future scenarios. On wake, a <code>check_dream_cache</code> sense provides instant access to pre-computed insights.</p>
+
+<h3>Syntax</h3>
+<pre><code><span class="kw">soul</span> Oracle {
+    <span class="kw">mind</span>: claude-sonnet @ Tier0A
+    <span class="kw">senses</span>: [check_dream_cache]
+    <span class="kw">dream_system</span> {
+        enabled: <span class="nu">true</span>
+        trigger_idle_sec: <span class="nu">30</span>
+        dream_mind: llama-8b @ Cerebras
+        max_cache: <span class="nu">20</span>
+        speculation_depth: <span class="nu">3</span>
+    }
+    <span class="kw">instinct</span> {
+        <span class="kw">let</span> cached = <span class="kw">sense</span> check_dream_cache(query: <span class="st">"optimization"</span>)
+        <span class="kw">if</span> cached != <span class="st">""</span> {
+            <span class="cm"># Use pre-computed insight &mdash; zero LLM cost</span>
+        }
+    }
+}</code></pre>
+
+<h3>Fields</h3>
+<pre><code>enabled             Enable/disable dreaming (default: true)
+trigger_idle_sec    Seconds idle before entering REM (default: 30)
+dream_mind          LLM for speculation (model @ Tier, use cheaper tier)
+max_cache           Maximum cached insights (default: 20)
+speculation_depth   Scenarios per dream cycle (default: 3)</code></pre>
+
+<h3>How It Works</h3>
+<pre><code>Soul completes instinct cycle
+  &darr;
+Idle for trigger_idle_sec
+  &darr;
+DreamEngine enters REM state
+  &darr;
+Generate scenarios from memory state:
+  "What is the most likely next input?"
+  "What errors might occur next?"
+  "What optimization could help?"
+  &darr;
+dream_mind LLM generates speculative insights
+  &darr;
+Cache insights with confidence scores
+  &darr;
+Soul wakes &rarr; sense check_dream_cache(query: "...")
+  &darr; CACHE HIT
+Use pre-computed result (zero primary LLM cost)</code></pre>
+
+<h3>Lucid Dreaming</h3>
+<p>The <code>check_dream_cache</code> sense allows souls to access dream insights from their instinct block. The soul name is auto-injected by the compiler. Returns the pre-computed result if a relevant insight matches the query, or empty string if no match.</p>
+
+<h3>Validation Rules</h3>
+<pre><code>DR001  ERROR   trigger_idle_sec too short (&lt; 5s)
+DR002  ERROR   max_cache must be &gt;= 1
+DR003  WARN    max_cache &gt; 100 (memory impact)
+DR004  WARN    speculation_depth outside 1-10
+DR005  WARN    dream_mind same tier as primary (use cheaper)</code></pre>
+
+<h3>Verification Proofs</h3>
+<pre><code>VDR001  Dream mind tier cost vs primary tier
+VDR002  Dream cost within budget (&lt; 10% of ceiling)
+VDR003  Productive idle: listener waits or heartbeat dreams
+VDR004  Dream coverage: N/M souls can dream</code></pre>
+
+<h3>CLI</h3>
+<pre><code>$ nous dream file.nous      # Analyze dream system config
+$ nous verify file.nous     # Includes VDR001-VDR004 proofs</code></pre>
+
+<h3>Files</h3>
+<p><code>dream_engine.py</code> at <code>/opt/aetherlang_agents/nous/</code></p>
+</div>
+
+<!-- FILES -->
+
+<div class="doc-section" id="retirement">
+<h2>Clone Retirement</h2>
+<p>When load drops, clones die gracefully. Retirement is configured inside the <code>mitosis</code> block using three new fields. Clones are retired in LIFO order (last spawned = first retired) with a configurable cooldown between retirements.</p>
+
+<h3>Syntax</h3>
+<pre><code><span style="color:#c9a554">mitosis</span> {
+    max_clones: 5
+    trigger: queue_depth &gt; 10
+    clone_tier: Cerebras
+    <span style="color:#45d1c8">retire_trigger</span>: queue_depth &lt; 3 &amp;&amp; cycle_count &gt; 10
+    <span style="color:#45d1c8">retire_cooldown</span>: 120s
+    <span style="color:#45d1c8">min_clones</span>: 1
+}</code></pre>
+
+<h3>Fields</h3>
+<table class="doc-table">
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>retire_trigger</code></td><td>Expression</td><td>Condition that triggers clone retirement (e.g., <code>queue_depth &lt; 3</code>)</td></tr>
+<tr><td><code>retire_cooldown</code></td><td>Duration</td><td>Minimum time between consecutive retirements</td></tr>
+<tr><td><code>min_clones</code></td><td>Integer</td><td>Floor — never retire below this count</td></tr>
+</table>
+
+<h3>Behavior</h3>
+<p>When <code>retire_trigger</code> evaluates to true, the MitosisEngine retires the most recently spawned clone. After retirement, a cooldown period prevents cascading retirements. The <code>min_clones</code> floor ensures a minimum number of clones remain active even when load is very low.</p>
+
+<h3>Validation Rules</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>Severity</th><th>Rule</th></tr>
+<tr><td>RT001</td><td>ERROR</td><td>retire_trigger must be a valid expression</td></tr>
+<tr><td>RT002</td><td>ERROR</td><td>retire_cooldown must be a positive duration</td></tr>
+<tr><td>RT003</td><td>ERROR</td><td>min_clones must be &gt;= 0</td></tr>
+<tr><td>RT004</td><td>WARN</td><td>min_clones &gt;= max_clones makes retirement impossible</td></tr>
+</table>
+
+<h3>Verification Proofs</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><td>VRT001</td><td>Retirement trigger is reachable from current state</td></tr>
+<tr><td>VRT002</td><td>min_clones floor is respected under all conditions</td></tr>
+<tr><td>VRT003</td><td>Cooldown prevents retirement oscillation</td></tr>
+</table>
+
+<h3>CLI</h3>
+<pre><code>$ nous retire program.nous
+Retirement analysis for program.nous:
+  Scout: retire when queue_depth &lt; 3 (cooldown: 120s, floor: 1)
+  ✓ VRT001 PASS — trigger reachable
+  ✓ VRT002 PASS — floor respected
+  ✓ VRT003 PASS — no oscillation</code></pre>
+
+<h3>Greek</h3>
+<p>No dedicated Greek keyword — retirement is part of <code>μίτωση</code> (mitosis).</p>
+</div>
+
+<div class="doc-section" id="telemetry-section">
+<h2>Telemetry</h2>
+<p>Built-in observability for NOUS worlds. Telemetry collects spans for every soul cycle, sense call, and LLM invocation. Five exporters are supported: console, JSONL file, HTTP POST, Langfuse, and OTLP.</p>
+
+<h3>Syntax</h3>
+<pre><code><span style="color:#c9a554">world</span> ProductionSystem {
+    <span style="color:#c9a554">telemetry</span> {
+        <span style="color:#45d1c8">enabled</span>: <span style="color:#38d97a">true</span>
+        <span style="color:#45d1c8">exporter</span>: jsonl
+        <span style="color:#45d1c8">endpoint</span>: "https://langfuse.example.com/api/public/ingestion"
+        <span style="color:#45d1c8">sample_rate</span>: <span style="color:#a78bfa">1.0</span>
+        <span style="color:#45d1c8">trace_senses</span>: <span style="color:#38d97a">true</span>
+        <span style="color:#45d1c8">trace_llm</span>: <span style="color:#38d97a">true</span>
+        <span style="color:#45d1c8">buffer_size</span>: <span style="color:#a78bfa">500</span>
+    }
+}</code></pre>
+
+<h3>Fields</h3>
+<table class="doc-table">
+<tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr><td><code>enabled</code></td><td>bool</td><td>false</td><td>Enable/disable telemetry collection</td></tr>
+<tr><td><code>exporter</code></td><td>enum</td><td>console</td><td>One of: <code>console</code>, <code>jsonl</code>, <code>http</code>, <code>langfuse</code>, <code>otlp</code></td></tr>
+<tr><td><code>endpoint</code></td><td>string</td><td>—</td><td>URL for http/langfuse/otlp exporters</td></tr>
+<tr><td><code>sample_rate</code></td><td>float</td><td>1.0</td><td>Sampling rate (0.0–1.0)</td></tr>
+<tr><td><code>trace_senses</code></td><td>bool</td><td>true</td><td>Include sense call spans</td></tr>
+<tr><td><code>trace_llm</code></td><td>bool</td><td>true</td><td>Include LLM invocation spans</td></tr>
+<tr><td><code>buffer_size</code></td><td>int</td><td>100</td><td>Span buffer size before flush</td></tr>
+</table>
+
+<h3>Exporters</h3>
+<p><strong>console</strong> — prints spans to stdout. <strong>jsonl</strong> — appends to a <code>.jsonl</code> file. <strong>http</strong> — POSTs span batches to the endpoint URL. <strong>langfuse</strong> — native Langfuse ingestion format. <strong>otlp</strong> — OpenTelemetry Protocol export.</p>
+
+<h3>Validation Rules</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>Severity</th><th>Rule</th></tr>
+<tr><td>TL001</td><td>ERROR</td><td>exporter must be a valid type</td></tr>
+<tr><td>TL002</td><td>ERROR</td><td>endpoint required for http/langfuse/otlp</td></tr>
+<tr><td>TL003</td><td>WARN</td><td>sample_rate outside 0.0–1.0</td></tr>
+<tr><td>TL004</td><td>WARN</td><td>buffer_size &lt; 10 causes frequent flushes</td></tr>
+</table>
+
+<h3>Verification Proofs</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><td>VTL001</td><td>Telemetry overhead &lt; 1% of cycle cost</td></tr>
+<tr><td>VTL002</td><td>Buffer flush frequency within acceptable bounds</td></tr>
+<tr><td>VTL003</td><td>Endpoint reachability (for http/langfuse/otlp)</td></tr>
+</table>
+
+<h3>CLI</h3>
+<pre><code>$ nous telemetry program.nous
+Telemetry configuration:
+  Exporter: jsonl
+  Sample rate: 1.0 (100%)
+  Trace senses: yes | Trace LLM: yes
+  Buffer: 500 spans
+  ✓ VTL001 PASS — overhead &lt; 1%</code></pre>
+
+<h3>Greek</h3>
+<p><code>τηλεμετρία</code> — can be used as a bilingual keyword in place of <code>telemetry</code>.</p>
+</div>
+
+<div class="doc-section" id="hot-reload">
+<h2>Hot Reload</h2>
+<p>Live soul swapping with zero downtime. The <code>--hot</code> flag enables the HotReloadEngine, which polls the source file every 2 seconds. On change: reparse → validate → compile → diff souls → swap live.</p>
+
+<h3>Usage</h3>
+<pre><code>$ nous run program.nous --hot
+[hot] Watching program.nous (poll: 2s)
+[hot] Change detected at 14:32:07
+[hot] Reparse OK → Validate OK → Compile OK
+[hot] Diff: Scout mind changed (Tier1 → Groq)
+[hot] Swapping 1 soul... done (0.04s)
+[hot] Live. No downtime.</code></pre>
+
+<h3>How It Works</h3>
+<p>The HotReloadEngine runs alongside the main event loop. When a file change is detected:</p>
+<p>1. The source is reparsed and validated. If validation fails, the change is rejected and the current version continues running.</p>
+<p>2. The new AST is compiled to Python. A structural diff identifies which souls changed.</p>
+<p>3. Only changed souls are swapped. Unchanged souls keep their state, memory, and active connections.</p>
+<p>4. The swap is atomic — there is no moment where the system is partially updated.</p>
+
+<h3>Limitations</h3>
+<p>Hot reload cannot change the <code>world</code> structure (laws, telemetry config). World-level changes require a full restart. Soul additions and removals are supported — only the nervous system routing is rebuilt.</p>
+</div>
+
+<div class="doc-section" id="symbiosis-section">
+<h2>Soul Symbiosis</h2>
+<p>Souls can form bonds with other souls, sharing memory fields and optionally co-evolving their DNA together. The SymbiosisEngine manages async-safe shared memory pools and bond cluster synchronization.</p>
+
+<h3>Syntax</h3>
+<pre><code><span style="color:#c9a554">soul</span> Researcher {
+    <span style="color:#c9a554">symbiosis</span> {
+        <span style="color:#45d1c8">bond_with</span>: [Analyst, Reviewer]
+        <span style="color:#45d1c8">shared_memory</span>: [shared_score, consensus]
+        <span style="color:#45d1c8">sync_interval</span>: 10s
+        <span style="color:#45d1c8">evolve_together</span>: <span style="color:#38d97a">false</span>
+    }
+}</code></pre>
+
+<h3>Fields</h3>
+<table class="doc-table">
+<tr><th>Field</th><th>Type</th><th>Description</th></tr>
+<tr><td><code>bond_with</code></td><td>name list</td><td>Other souls in this bond cluster</td></tr>
+<tr><td><code>shared_memory</code></td><td>name list</td><td>Memory fields shared across the bond</td></tr>
+<tr><td><code>sync_interval</code></td><td>duration</td><td>How often shared memory is synchronized</td></tr>
+<tr><td><code>evolve_together</code></td><td>bool</td><td>If true, DNA mutations propagate across the bond</td></tr>
+</table>
+
+<h3>SharedMemoryPool</h3>
+<p>The shared memory pool is async-safe (uses asyncio locks). Each bonded soul reads and writes to the same pool. Writes are versioned — the latest write wins, but all writes within a sync interval are batched.</p>
+
+<h3>Validation Rules</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>Severity</th><th>Rule</th></tr>
+<tr><td>SY001</td><td>ERROR</td><td>bond_with must reference existing souls</td></tr>
+<tr><td>SY002</td><td>ERROR</td><td>shared_memory fields must exist in all bonded souls</td></tr>
+<tr><td>SY003</td><td>ERROR</td><td>sync_interval must be a positive duration</td></tr>
+<tr><td>SY004</td><td>WARN</td><td>sync_interval &lt; 1s causes high contention</td></tr>
+<tr><td>SY005</td><td>WARN</td><td>evolve_together without dna block</td></tr>
+<tr><td>SY006</td><td>ERROR</td><td>circular bond dependencies</td></tr>
+<tr><td>SY007</td><td>WARN</td><td>bond cluster &gt; 5 souls (coordination overhead)</td></tr>
+</table>
+
+<h3>Verification Proofs</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><td>VSY001</td><td>All shared_memory fields exist in bonded souls</td></tr>
+<tr><td>VSY002</td><td>No circular bond dependencies</td></tr>
+<tr><td>VSY003</td><td>Sync interval provides adequate consistency</td></tr>
+<tr><td>VSY004</td><td>Bond cluster size within performance bounds</td></tr>
+</table>
+
+<h3>CLI</h3>
+<pre><code>$ nous symbiosis program.nous
+Bond clusters:
+  Cluster 1: Researcher ↔ Analyst ↔ Reviewer
+    Shared: [shared_score, consensus]
+    Sync: 10s | Co-evolve: no
+  ✓ VSY001–004 PASS</code></pre>
+
+<h3>Greek</h3>
+<p><code>συμβίωση</code> — can be used as a bilingual keyword in place of <code>symbiosis</code>.</p>
+</div>
+
+<div class="doc-section" id="metabolism-section">
+<h2>Agent Metabolism</h2>
+<p>Souls have an energy budget that depletes with each cycle. As energy drops, the MetabolismEngine automatically downgrades the LLM tier to conserve resources. At critical energy levels, the soul hibernates and recovers over time.</p>
+
+<h3>Syntax</h3>
+<pre><code><span style="color:#c9a554">soul</span> Worker {
+    <span style="color:#c9a554">metabolism</span> {
+        <span style="color:#45d1c8">max_energy</span>: <span style="color:#a78bfa">100</span>
+        <span style="color:#45d1c8">energy_per_cycle</span>: <span style="color:#a78bfa">8</span>
+        <span style="color:#45d1c8">recovery_rate</span>: <span style="color:#a78bfa">3</span>
+        <span style="color:#45d1c8">fatigue_tier</span>: Cerebras
+        <span style="color:#45d1c8">hibernate_threshold</span>: <span style="color:#a78bfa">15</span>
+        <span style="color:#45d1c8">recovery_idle_sec</span>: <span style="color:#a78bfa">20</span>
+    }
+}</code></pre>
+
+<h3>Fields</h3>
+<table class="doc-table">
+<tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr><td><code>max_energy</code></td><td>int</td><td>100</td><td>Maximum energy pool</td></tr>
+<tr><td><code>energy_per_cycle</code></td><td>float</td><td>10</td><td>Energy consumed per instinct cycle</td></tr>
+<tr><td><code>recovery_rate</code></td><td>float</td><td>5</td><td>Energy recovered per idle second</td></tr>
+<tr><td><code>fatigue_tier</code></td><td>tier</td><td>—</td><td>Cheaper LLM tier used when fatigued</td></tr>
+<tr><td><code>hibernate_threshold</code></td><td>int</td><td>10</td><td>Energy level that triggers hibernation</td></tr>
+<tr><td><code>recovery_idle_sec</code></td><td>int</td><td>30</td><td>Seconds of idle needed to exit hibernation</td></tr>
+</table>
+
+<h3>Energy Lifecycle</h3>
+<p><strong>FULL</strong> → normal operation at primary mind tier. <strong>LOW</strong> → automatic downgrade to <code>fatigue_tier</code> for cheaper inference. <strong>CRITICAL</strong> → soul enters hibernation, stops processing, recovers energy at <code>recovery_rate</code> per second. <strong>RECOVERED</strong> → soul wakes up, resumes at primary tier.</p>
+
+<h3>Validation Rules</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>Severity</th><th>Rule</th></tr>
+<tr><td>MB001</td><td>ERROR</td><td>max_energy must be &gt; 0</td></tr>
+<tr><td>MB002</td><td>ERROR</td><td>energy_per_cycle must be &gt; 0</td></tr>
+<tr><td>MB003</td><td>ERROR</td><td>recovery_rate must be &gt; 0</td></tr>
+<tr><td>MB004</td><td>ERROR</td><td>fatigue_tier must be a valid tier</td></tr>
+<tr><td>MB005</td><td>WARN</td><td>energy_per_cycle &gt; max_energy (depletes in one cycle)</td></tr>
+<tr><td>MB006</td><td>WARN</td><td>hibernate_threshold &gt; max_energy/2 (too eager)</td></tr>
+<tr><td>MB007</td><td>WARN</td><td>fatigue_tier same cost as primary (no savings)</td></tr>
+</table>
+
+<h3>Verification Proofs</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><td>VMB001</td><td>Energy depletion rate is sustainable (cycles before hibernation)</td></tr>
+<tr><td>VMB002</td><td>Recovery time is bounded (hibernation exit is reachable)</td></tr>
+<tr><td>VMB003</td><td>Fatigue tier provides cost savings vs primary tier</td></tr>
+<tr><td>VMB004</td><td>Metabolism overhead &lt; 5% of energy budget</td></tr>
+</table>
+
+<h3>CLI</h3>
+<pre><code>$ nous metabolism program.nous
+Metabolism analysis:
+  Worker: 100 energy, 8/cycle, recover 3/s
+    Fatigue tier: Cerebras | Hibernate at: 15
+    Cycles before fatigue: ~11 | Recovery: ~6s
+  ✓ VMB001–004 PASS</code></pre>
+
+<h3>Greek</h3>
+<p><code>μεταβολισμός</code> — can be used as a bilingual keyword in place of <code>metabolism</code>.</p>
+</div>
+
+<div class="doc-section" id="consciousness-section">
+<h2>Soul Consciousness</h2>
+<p>The highest-level soul subsystem. Consciousness gives agents goals, progress tracking, periodic self-reflection, and behavioral self-adjustment. The ConsciousnessEngine evaluates goal progress and triggers introspection cycles where the soul examines its own performance.</p>
+
+<h3>Syntax</h3>
+<pre><code><span style="color:#c9a554">soul</span> Scientist {
+    <span style="color:#c9a554">consciousness</span> {
+        <span style="color:#45d1c8">goals</span>: [maximize_discoveries, improve_accuracy, reduce_cost]
+        <span style="color:#45d1c8">reflect_every</span>: <span style="color:#a78bfa">5</span>
+        <span style="color:#45d1c8">self_model</span>: <span style="color:#38d97a">true</span>
+        <span style="color:#45d1c8">goal_threshold</span>: <span style="color:#a78bfa">0.8</span>
+        <span style="color:#45d1c8">introspection_depth</span>: <span style="color:#a78bfa">3</span>
+    }
+}</code></pre>
+
+<h3>Fields</h3>
+<table class="doc-table">
+<tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr><td><code>goals</code></td><td>name list</td><td>—</td><td>Named objectives the soul tracks</td></tr>
+<tr><td><code>reflect_every</code></td><td>int</td><td>10</td><td>Reflect after every N cycles</td></tr>
+<tr><td><code>self_model</code></td><td>bool</td><td>false</td><td>Enable self-model (soul observes its own behavior patterns)</td></tr>
+<tr><td><code>goal_threshold</code></td><td>float</td><td>0.7</td><td>Progress threshold — goal is "met" above this</td></tr>
+<tr><td><code>introspection_depth</code></td><td>int</td><td>1</td><td>How many past cycles to examine during reflection</td></tr>
+</table>
+
+<h3>Reflection Cycle</h3>
+<p>Every <code>reflect_every</code> cycles, the ConsciousnessEngine pauses normal operation and runs an introspection cycle:</p>
+<p>1. <strong>Measure</strong> — evaluate progress on each goal (0.0–1.0 scale).</p>
+<p>2. <strong>Reflect</strong> — if <code>self_model</code> is enabled, the soul uses its LLM to analyze its own recent behavior patterns.</p>
+<p>3. <strong>Adjust</strong> — if any goal is below <code>goal_threshold</code>, the soul modifies its strategy (prompt adjustments, memory prioritization, sense selection).</p>
+<p>4. <strong>Log</strong> — reflection results are recorded in telemetry (if enabled) and memory.</p>
+
+<h3>Validation Rules</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>Severity</th><th>Rule</th></tr>
+<tr><td>CS001</td><td>ERROR</td><td>goals list must not be empty</td></tr>
+<tr><td>CS002</td><td>ERROR</td><td>reflect_every must be &gt;= 1</td></tr>
+<tr><td>CS003</td><td>WARN</td><td>reflect_every &lt; 3 (reflection overhead)</td></tr>
+<tr><td>CS004</td><td>WARN</td><td>goal_threshold outside 0.0–1.0</td></tr>
+<tr><td>CS005</td><td>WARN</td><td>introspection_depth &gt; 10 (memory cost)</td></tr>
+<tr><td>CS006</td><td>WARN</td><td>self_model without mind block (needs LLM)</td></tr>
+</table>
+
+<h3>Verification Proofs</h3>
+<table class="doc-table">
+<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><td>VCS001</td><td>All goals are measurable (connected to observable state)</td></tr>
+<tr><td>VCS002</td><td>Reflection overhead &lt; 10% of cycle budget</td></tr>
+<tr><td>VCS003</td><td>Introspection depth memory cost is bounded</td></tr>
+<tr><td>VCS004</td><td>Self-model LLM cost is within ceiling</td></tr>
+<tr><td>VCS005</td><td>Goal convergence is reachable (threshold is achievable)</td></tr>
+</table>
+
+<h3>CLI</h3>
+<pre><code>$ nous consciousness program.nous
+Consciousness analysis:
+  Scientist: 3 goals, reflect every 5 cycles
+    Self-model: yes | Threshold: 0.8 | Depth: 3
+    Goals: maximize_discoveries, improve_accuracy, reduce_cost
+  ✓ VCS001–005 PASS</code></pre>
+
+<h3>Greek</h3>
+<p><code>συνείδηση</code> — can be used as a bilingual keyword in place of <code>consciousness</code>.</p>
+</div>
+
+<div class="doc-section" id="runtime-engines">
+<h2>Runtime Engines</h2>
+<p>NOUS v4.0 includes 8 specialized runtime engines that run alongside the main event loop. Each engine manages one aspect of soul lifecycle.</p>
+
+<table class="doc-table">
+<tr><th>Engine</th><th>Purpose</th><th>CLI</th></tr>
+<tr><td>MitosisEngine</td><td>Spawn + retire clones based on load</td><td><code>nous mitosis</code></td></tr>
+<tr><td>ImmuneEngine</td><td>Antibody generation + clone broadcast</td><td><code>nous immune</code></td></tr>
+<tr><td>DreamEngine</td><td>Speculative pre-computation during idle</td><td><code>nous dream</code></td></tr>
+<tr><td>TelemetryEngine</td><td>Span collection + 5 exporters</td><td><code>nous telemetry</code></td></tr>
+<tr><td>HotReloadEngine</td><td>Live soul swapping, zero downtime</td><td><code>nous run --hot</code></td></tr>
+<tr><td>SymbiosisEngine</td><td>Shared memory pools + bond clusters</td><td><code>nous symbiosis</code></td></tr>
+<tr><td>MetabolismEngine</td><td>Energy/fatigue/hibernation management</td><td><code>nous metabolism</code></td></tr>
+<tr><td>ConsciousnessEngine</td><td>Goals + self-model + reflection cycles</td><td><code>nous consciousness</code></td></tr>
+</table>
+</div>
+
+<div class="doc-section" id="files">
+<h2>File Inventory</h2>
+<h4>Core Compiler (7 files)</h4>
+<table class="doc-table">
+<thead><tr><th>File</th><th>Size</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>nous.lark</code></td><td>15.3 KB</td><td>LALR v2.0 grammar (EBNF)</td></tr>
+<tr><td><code>parser.py</code></td><td>27.1 KB</td><td>LALR parser + Lark Transformer</td></tr>
+<tr><td><code>ast_nodes.py</code></td><td>~13 KB</td><td>Living AST (Pydantic V2)</td></tr>
+<tr><td><code>validator.py</code></td><td>12.8 KB</td><td>Law checker (14 rules)</td></tr>
+<tr><td><code>typechecker.py</code></td><td>18.9 KB</td><td>Type inference (9 rules)</td></tr>
+<tr><td><code>codegen.py</code></td><td>~27 KB</td><td>AST → Python 3.11+</td></tr>
+<tr><td><code>error_recovery.py</code></td><td>9.7 KB</td><td>Enhanced error messages</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- TESTS -->
+<div class="doc-section" id="tests">
+<h2>Test Suites — 259 Tests</h2>
+<table class="doc-table">
+<thead><tr><th>Suite</th><th>Tests</th><th>Coverage</th></tr></thead>
+<tbody>
+<tr><td><code>test_self_compiler.py</code></td><td>58/58 ✓</td><td>Compiler senses, self-compilation, bootstrap</td></tr>
+<tr><td><code>test_lsp.py</code></td><td>48/48 ✓</td><td>Diagnostics, code actions, hover</td></tr>
+<tr><td><code>test_distributed_runtime.py</code></td><td>45/45 ✓</td><td>Topology, TCP transport, envelopes</td></tr>
+<tr><td><code>test_wasm.py</code></td><td>45/45 ✓</td><td>JS codegen, HTML builder, wake strategies</td></tr>
+<tr><td><code>test_natural_lang.py</code></td><td>45/45 ✓</td><td>Template generation, validation</td></tr>
+<tr><td><code>test_verifier.py</code></td><td>18/18 ✓</td><td>All 7 proof categories</td></tr>
+<tr><td><code>test_runtime_v2.py</code></td><td>9/9 ✓</td><td>Topology, cost tracker, sense cache</td></tr>
+<tr><td><code>test_workspace.py</code></td><td>8/8 ✓</td><td>Multi-file workspace, nous.toml</td></tr>
+<tr><td><code>test_cross_world.py</code></td><td>5/5 ✓</td><td>Cross-world type checking</td></tr>
+<tr><td><code>test_lalr_v2.py</code></td><td>4/4 ✓</td><td>LALR parser (~1.8ms)</td></tr>
+<tr><td><code>test_formatter.py</code></td><td>3/3 ✓</td><td>AST → formatted source</td></tr>
+</tbody>
+</table>
+</div>
+
+</main>
+</div>
+
+<script>
+// Search index
+const sections = [
+  {id:'overview',title:'Overview',keywords:'nous language overview introduction what is'},
+  {id:'installation',title:'Installation',keywords:'install setup clone pip requirements'},
+  {id:'first-program',title:'First Program',keywords:'hello world first program tutorial getting started'},
+  {id:'concepts',title:'Core Concepts',keywords:'concepts world soul message nervous system mind senses memory instinct heal dna speak listen guard remember sense'},
+  {id:'world',title:'World',keywords:'world law cost ceiling heartbeat timezone environment'},
+  {id:'soul',title:'Soul',keywords:'soul agent mind senses memory instinct heal dna autonomous'},
+  {id:'message',title:'Message',keywords:'message type contract fields speak listen communication'},
+  {id:'nervous-system',title:'Nervous System',keywords:'nervous system routing topology routes flow'},
+  {id:'types',title:'Type System',keywords:'type string int float bool timestamp duration currency list map optional inference'},
+  {id:'wake',title:'Wake Strategies',keywords:'wake heartbeat listener strategy timer message zero cost'},
+  {id:'bilingual',title:'Bilingual Keywords',keywords:'bilingual greek english keywords ψυχή κόσμος μήνυμα ένστικτο'},
+  {id:'pipeline',title:'Compiler Pipeline',keywords:'compiler pipeline parse ast validate typecheck codegen verify'},
+  {id:'validation',title:'Law Validation',keywords:'validation law rules W001 S001 S002 S003 S004 S005 M001 N001'},
+  {id:'typechecker',title:'Type Checker',keywords:'type checker inference TC001 TC002 TC003 TC004 TC005'},
+  {id:'codegen',title:'Code Generation',keywords:'codegen generation python asyncio output'},
+  {id:'targets',title:'Multi-Target',keywords:'target python javascript browser wasm html mjs'},
+  {id:'self-hosting',title:'Self-Hosting',keywords:'self hosting compiler.nous bootstrap reader analyzer emitter'},
+  {id:'runtime',title:'Event-Driven Runtime',keywords:'runtime asyncio event driven soul runner channel cost tracker sense cache'},
+  {id:'distributed',title:'Distributed Runtime',keywords:'distributed tcp remote channel multi machine node'},
+  {id:'topology',title:'Topology',keywords:'topology node distributed deployment multi machine'},
+  {id:'verification',title:'Formal Verification',keywords:'verification formal proofs mathematical guarantees resource deadlock protocol liveness'},
+  {id:'proof-codes',title:'Proof Codes',keywords:'proof codes VR001 VD001 VP001 VL001 VE001 VM001 VT001'},
+  {id:'cli',title:'CLI Commands',keywords:'cli commands compile run validate typecheck verify test watch debug shell profile docker'},
+  {id:'ide',title:'IDE',keywords:'ide editor verify graph create playground'},
+  {id:'lsp',title:'LSP Server',keywords:'lsp language server protocol code actions auto fix vscode'},
+  {id:'nl-interface',title:'Natural Language',keywords:'natural language create template llm english description'},
+  {id:'debugger',title:'Debugger & REPL',keywords:'debugger repl interactive breakpoints step'},
+  {id:'files',title:'File Inventory',keywords:'files inventory nous.lark parser.py ast_nodes.py validator.py codegen.py'},
+  {id:'tests',title:'Test Suites',keywords:'tests suites 259 test_self_compiler test_lsp test_distributed'},
+];
+
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+
+searchInput.addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  if (q.length < 2) { searchResults.classList.remove('show'); return; }
+  const matches = sections.filter(s => s.title.toLowerCase().includes(q) || s.keywords.includes(q));
+  if (matches.length === 0) { searchResults.classList.remove('show'); return; }
+  searchResults.innerHTML = matches.slice(0, 8).map(m =>
+    `<div class="sr-item" onclick="goTo('${m.id}')"><div class="sr-title">${m.title}</div><div class="sr-section">#${m.id}</div></div>`
+  ).join('');
+  searchResults.classList.add('show');
+});
+
+searchInput.addEventListener('blur', () => setTimeout(() => searchResults.classList.remove('show'), 200));
+
+function goTo(id) {
+  searchInput.value = '';
+  searchResults.classList.remove('show');
+  document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+  updateActive(id);
+}
+
+// Active sidebar link
+function updateActive(id) {
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  const link = document.querySelector(`.sb-link[href="#${id}"]`);
+  if (link) link.classList.add('active');
+}
+
+// Scroll spy
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) updateActive(e.target.id);
+  });
+}, {rootMargin:'-80px 0px -70% 0px'});
+
+document.querySelectorAll('.doc-section').forEach(s => observer.observe(s));
+
+// Sidebar click
+document.querySelectorAll('.sb-link').forEach(l => {
+  l.addEventListener('click', function(e) {
+    e.preventDefault();
+    const id = this.getAttribute('href').slice(1);
+    document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+    updateActive(id);
+  });
+});
+</script>
+</body>
+</html>
