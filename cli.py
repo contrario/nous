@@ -34,7 +34,7 @@ from codegen import generate_python
 from typechecker import typecheck_program
 from replay_cli import cmd_replay
 
-VERSION = "4.7.0"
+VERSION = "4.8.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -1334,6 +1334,26 @@ def cmd_cost(args: argparse.Namespace) -> int:
     print(output)
     return 0
 
+# __governance_cli_v1__
+def cmd_governance(args: Any) -> int:
+    """Governance inspector: policies, interventions, stats."""
+    sub = getattr(args, "gov_action", None)
+    if sub == "policies":
+        from governance import inspect_policies_cli
+        return inspect_policies_cli(args.source)
+    elif sub == "inspect":
+        from governance import inspect_log_cli
+        soul = getattr(args, "soul", None)
+        limit = getattr(args, "limit", 50)
+        return inspect_log_cli(args.log, soul=soul, limit=limit)
+    elif sub == "stats":
+        from governance import stats_log_cli
+        return stats_log_cli(args.log)
+    else:
+        print("Usage: nous governance {policies|inspect|stats}")
+        return 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language v2.0")
     sub = ap.add_subparsers(dest="command", required=True)
@@ -1524,6 +1544,22 @@ def main() -> int:
     p.add_argument("--verbose", action="store_true",
                    help="For --risk-report: include per-event triggered rows")
 
+
+    # __governance_cli_v1__ subparser
+    p_gov = sub.add_parser(
+        "governance",
+        help="Governance inspector: policies, interventions, stats",
+    )
+    gov_sub = p_gov.add_subparsers(dest="gov_action")
+    p_gov_pol = gov_sub.add_parser("policies", help="List policies in a .nous file")
+    p_gov_pol.add_argument("source", help="Path to .nous file")
+    p_gov_insp = gov_sub.add_parser("inspect", help="Show intervention events from a log")
+    p_gov_insp.add_argument("log", help="Path to JSONL event log")
+    p_gov_insp.add_argument("--soul", default=None, help="Filter by soul name")
+    p_gov_insp.add_argument("--limit", type=int, default=50, help="Max events to show")
+    p_gov_stats = gov_sub.add_parser("stats", help="Aggregated governance stats from a log")
+    p_gov_stats.add_argument("log", help="Path to JSONL event log")
+
     args = ap.parse_args()
     commands = {
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
@@ -1531,7 +1567,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis, "metabolism": cmd_metabolism, "consciousness": cmd_consciousness, "replay": cmd_replay,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis, "metabolism": cmd_metabolism, "consciousness": cmd_consciousness, "replay": cmd_replay, "governance": cmd_governance,
     }
     return commands[args.command](args)
 

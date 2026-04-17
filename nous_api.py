@@ -1630,6 +1630,113 @@ async def webhook(request: Request, channel: str, x_api_key: Optional[str] = Hea
 
 # 422 handler removed — let FastAPI show real errors
 
+
+# --- Phase G Layer 4: Governance Dashboard Endpoints ---
+# __governance_api_v1__
+
+@app.get("/v1/governance/policies")
+@limiter.limit("60/minute")
+async def governance_policies(request: Request, world: Optional[str] = None, x_api_key: Optional[str] = Header(None)):
+    """List active policies for a world template."""
+    require_api_key(x_api_key)
+    try:
+        from governance import PolicyInspector
+    except ImportError:
+        raise HTTPException(status_code=501, detail={"error": "governance module not available", "code": "GOV001"})
+
+    if world:
+        tpl_path = TEMPLATES_DIR / f"{world}.nous"
+        if not tpl_path.exists():
+            available = [f.stem for f in TEMPLATES_DIR.glob("*.nous")] if TEMPLATES_DIR.exists() else []
+            raise HTTPException(status_code=404, detail={
+                "error": f"World '{world}' not found",
+                "available": available,
+                "code": "GOV002",
+            })
+        policies = PolicyInspector.from_file(tpl_path)
+        return {"world": world, "policies": [p.to_dict() for p in policies]}
+
+    all_policies: dict[str, list[dict]] = {}
+    if TEMPLATES_DIR.exists():
+        for tpl in sorted(TEMPLATES_DIR.glob("*.nous")):
+            pols = PolicyInspector.from_file(tpl)
+            if pols:
+                all_policies[tpl.stem] = [p.to_dict() for p in pols]
+    return {"worlds": all_policies, "total_worlds": len(all_policies)}
+
+
+@app.get("/v1/governance/interventions")
+@limiter.limit("60/minute")
+async def governance_interventions(
+    request: Request,
+    log: str = "",
+    soul: Optional[str] = None,
+    action: Optional[str] = None,
+    since: Optional[float] = None,
+    limit: int = 100,
+    x_api_key: Optional[str] = Header(None),
+):
+    """Query intervention events from a replay log."""
+    require_api_key(x_api_key)
+    if not log:
+        raise HTTPException(status_code=422, detail={"error": "log parameter required (path to .jsonl event log)", "code": "GOV003"})
+    try:
+        from governance import GovernanceLog
+    except ImportError:
+        raise HTTPException(status_code=501, detail={"error": "governance module not available", "code": "GOV001"})
+
+    from pathlib import Path as _P
+    log_path = _P(log)
+    if not log_path.exists():
+        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "GOV004"})
+
+    try:
+        glog = GovernanceLog(log_path)
+        records = glog.query(soul=soul, action=action, since=since, limit=min(limit, 1000))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail={"error": f"failed to read log: {exc}", "code": "GOV005"})
+
+    return {
+        "log": log,
+        "total_in_log": glog.total_events,
+        "interventions_returned": len(records),
+        "interventions": [r.to_dict() for r in records],
+    }
+
+
+@app.get("/v1/governance/stats")
+@limiter.limit("60/minute")
+async def governance_stats(
+    request: Request,
+    log: str = "",
+    x_api_key: Optional[str] = Header(None),
+):
+    """Aggregated governance statistics from a replay log."""
+    require_api_key(x_api_key)
+    if not log:
+        raise HTTPException(status_code=422, detail={"error": "log parameter required (path to .jsonl event log)", "code": "GOV003"})
+    try:
+        from governance import GovernanceLog
+    except ImportError:
+        raise HTTPException(status_code=501, detail={"error": "governance module not available", "code": "GOV001"})
+
+    from pathlib import Path as _P
+    log_path = _P(log)
+    if not log_path.exists():
+        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "GOV004"})
+
+    try:
+        glog = GovernanceLog(log_path)
+        stats = glog.stats()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail={"error": f"failed to read log: {exc}", "code": "GOV005"})
+
+    return {
+        "log": log,
+        **stats.to_dict(),
+    }
+
+
 @app.exception_handler(500)
 async def internal_error_handler(request: Request, exc):
     logger.error(f"Internal error: {traceback.format_exc()}")

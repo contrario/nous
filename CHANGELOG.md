@@ -1,4 +1,18 @@
 # Changelog
+## [4.8.0] - 2026-04-17
+
+### Added - Phase G Layer 4: Governance Dashboard
+- `governance.py`: PolicyInspector, GovernanceLog, GovernanceStats, InterventionRecord
+- `GET /v1/governance/policies` - list active policies per world template
+- `GET /v1/governance/interventions` - query intervention events from replay logs
+- `GET /v1/governance/stats` - aggregated governance statistics
+- `nous governance policies <file.nous>` - CLI policy inspector
+- `nous governance inspect <log>` - CLI intervention event viewer
+- `nous governance stats <log>` - CLI governance stats
+- 30 governance dashboard tests (10 test functions, 30 assertions)
+- `_signal_to_str()` - human-readable signal rendering from AST
+
+
 
 ## [4.7.0] - 2026-04-17
 ### Added - Phase G Governance, Layer 3: Intervention Primitive + Runtime Hook
