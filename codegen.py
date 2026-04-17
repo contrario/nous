@@ -19,6 +19,7 @@ from ast_nodes import (
     SpeakNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
     GeneNode, LawCost, LawDuration, LawBool, LawInt, LawConstitutional,
     TopologyNode, ServerNode,
+    PolicyNode,
 )
 
 
@@ -163,6 +164,7 @@ class NousCodeGen:
         self._emit_blank()
         self._emit_law_constants()
         self._emit_blank()
+        self._emit_policy_constants()
         self._emit_message_classes()
         self._emit_blank()
         if hasattr(self.program, 'noesis') and self.program.noesis:
@@ -1239,6 +1241,66 @@ class NousCodeGen:
         elif unit == "d":
             return val * 86400
         return val
+
+
+
+    # __codegen_policy_v1__
+    def _emit_policy_constants(self) -> None:
+        world = self.program.world
+        if world is None:
+            return
+        policies = getattr(world, "policies", None) or []
+        if not policies:
+            return
+
+        self._emit("# \xe2\x95\x90\xe2\x95\x90\xe2\x95\x90 Governance Policies (Phase G Layer 2) \xe2\x95\x90\xe2\x95\x90\xe2\x95\x90")
+        self._emit("from risk_engine import RiskRule")
+        self._emit_blank()
+        self._emit("_POLICIES: list[RiskRule] = [")
+        self._indent()
+
+        saved_mem: set[str] = self._current_memory_fields
+        saved_loc: set[str] = self._current_locals
+        self._current_memory_fields = set()
+        self._current_locals = set()
+
+        for policy in policies:
+            predicate: str = self._expr_to_python(policy.signal)
+            kind_filter: tuple[str, ...] = (policy.kind,) if policy.kind else ()
+            name_lit: str = self._py_string(policy.name)
+            desc_lit: str = self._py_string(policy.description or "")
+            pred_lit: str = self._py_string(predicate)
+            self._emit("RiskRule(")
+            self._indent()
+            self._emit(f"name={name_lit},")
+            self._emit(f"description={desc_lit},")
+            self._emit(f"kind_filter={kind_filter!r},")
+            self._emit(f"predicate={pred_lit},")
+            self._emit(f"weight={float(policy.weight)!r},")
+            self._emit(f"window={int(policy.window)!r},")
+            self._emit(f"action={self._py_string(policy.action)},")
+            self._emit("),")
+            self._dedent()
+
+        self._current_memory_fields = saved_mem
+        self._current_locals = saved_loc
+
+        self._dedent()
+        self._emit("]")
+        self._emit_blank()
+        self._emit("_POLICY_ACTIONS: dict[str, str] = {")
+        self._indent()
+        for policy in policies:
+            name_lit2: str = self._py_string(policy.name)
+            action_lit: str = self._py_string(policy.action)
+            self._emit(f"{name_lit2}: {action_lit},")
+        self._dedent()
+        self._emit("}")
+        self._emit_blank()
+
+    def _py_string(self, value: str) -> str:
+        escaped: str = value.replace("\\", "\\\\").replace("\"", "\\\"")
+        return f'"{escaped}"'
 
 
 def generate_python(program: NousProgram, node_filter: str | None = None) -> str:

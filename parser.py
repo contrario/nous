@@ -14,6 +14,7 @@ from lark import Lark, Transformer, Token, Tree
 from ast_nodes import (
     ConsciousnessNode, MetabolismNode, SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
     NousProgram, WorldNode, LawNode, LawCost, LawCurrency, LawDuration,
+    PolicyNode,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
     HealNode, HealRuleNode, HealActionNode, HealStrategy,
@@ -517,6 +518,8 @@ class NousTransformer(Transformer):
         for item in s[1:]:
             if isinstance(item, LawNode):
                 node.laws.append(item)
+            elif isinstance(item, PolicyNode):
+                node.policies.append(item)
             elif isinstance(item, ReplayConfigNode):
                 node.replay = item
             elif isinstance(item, dict):
@@ -1177,6 +1180,81 @@ class NousTransformer(Transformer):
             elif isinstance(item, TopologyNode):
                 program.topology = item
         return program
+
+
+
+    # __policy_parser_v1__
+    def policy_decl(self, items: list) -> PolicyNode:
+        s = self._strip(items)
+        name = str(s[0])
+        clauses = s[1:]
+        kwargs: dict = {"name": name}
+        for c in clauses:
+            if not isinstance(c, dict):
+                continue
+            if "_policy_kind" in c:
+                kwargs["kind"] = c["_policy_kind"]
+            elif "_policy_signal" in c:
+                kwargs["signal"] = c["_policy_signal"]
+            elif "_policy_window" in c:
+                kwargs["window"] = c["_policy_window"]
+            elif "_policy_weight" in c:
+                kwargs["weight"] = c["_policy_weight"]
+            elif "_policy_action" in c:
+                kwargs["action"] = c["_policy_action"]
+            elif "_policy_description" in c:
+                kwargs["description"] = c["_policy_description"]
+        return PolicyNode(**kwargs)
+
+    def policy_body(self, items: list) -> Any:
+        return items[0] if items else None
+
+    def policy_kind_clause(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"_policy_kind": str(s[0])}
+
+    def policy_signal_clause(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"_policy_signal": s[0]}
+
+    def policy_window_clause(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"_policy_window": int(s[0])}
+
+    def policy_weight_clause(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"_policy_weight": float(s[0])}
+
+    def policy_description_clause(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"_policy_description": str(s[0])}
+
+    def policy_action_clause(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"_policy_action": s[0]}
+
+    def policy_number_int(self, items: list) -> float:
+        s = self._strip(items)
+        return float(s[0])
+
+    def policy_number_float(self, items: list) -> float:
+        s = self._strip(items)
+        return float(s[0])
+
+    def policy_action_log_only(self, items: list) -> str:
+        return "log_only"
+
+    def policy_action_intervene(self, items: list) -> str:
+        return "intervene"
+
+    def policy_action_block(self, items: list) -> str:
+        return "block"
+
+    def policy_action_inject(self, items: list) -> str:
+        return "inject_message"
+
+    def policy_action_abort(self, items: list) -> str:
+        return "abort_cycle"
 
 
 def parse_nous(source: str) -> NousProgram:

@@ -53,6 +53,8 @@ class RiskRule:
     weight: float
     window: int = 0
     extract: str = ""
+    # __policy_action_v1__
+    action: str = "log_only"
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> "RiskRule":
@@ -69,6 +71,7 @@ class RiskRule:
             weight=float(d.get("weight", 1.0)),
             window=int(d.get("window", 0)),
             extract=str(d.get("extract", "")),
+            action=str(d.get("action", "log_only")),
         )
 
 

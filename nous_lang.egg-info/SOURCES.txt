@@ -99,3 +99,6 @@ nous_lang.egg-info/entry_points.txt
 nous_lang.egg-info/requires.txt
 nous_lang.egg-info/top_level.txt
 tests/test_replay_e2e.py
+tests/test_replay_phase_c.py
+tests/test_replay_phase_d.py
+tests/test_risk_engine.py

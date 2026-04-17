@@ -7,7 +7,7 @@ Every node is typed, validated, serializable.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Literal
 from pydantic import BaseModel, Field
 
 
@@ -114,6 +114,7 @@ class ReplayConfigNode(NousNode):
 class WorldNode(NousNode):
     name: str
     laws: list[LawNode] = Field(default_factory=list)
+    policies: list["PolicyNode"] = Field(default_factory=list)
     heartbeat: Optional[str] = None
     timezone: Optional[str] = None
     telemetry: Optional[TelemetryNode] = None
@@ -573,3 +574,51 @@ class NousProgram(NousNode):
     imports: list[ImportNode] = Field(default_factory=list)
     tests: list[TestNode] = Field(default_factory=list)
     custom_senses: list[CustomSenseNode] = Field(default_factory=list)
+
+
+# ═══════════════════════════════════════════
+# POLICY (Phase G Layer 2 governance rules)
+# ═══════════════════════════════════════════
+# __policy_ast_v1__
+
+PolicyAction = Literal[
+    "log_only",
+    "intervene",
+    "block",
+    "inject_message",
+    "abort_cycle",
+]
+
+
+class PolicyKindClause(NousNode):
+    value: str
+
+
+class PolicySignalClause(NousNode):
+    expr: Any
+
+
+class PolicyWindowClause(NousNode):
+    value: int
+
+
+class PolicyWeightClause(NousNode):
+    value: float
+
+
+class PolicyActionClause(NousNode):
+    value: PolicyAction
+
+
+class PolicyDescriptionClause(NousNode):
+    value: str
+
+
+class PolicyNode(NousNode):
+    name: str
+    kind: Optional[str] = None
+    signal: Any = None
+    window: int = 0
+    weight: float = 1.0
+    action: PolicyAction = "log_only"
+    description: str = ""

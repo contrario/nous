@@ -1,5 +1,40 @@
 # Changelog
 
+## [4.6.0] - 2026-04-17
+### Added — Phase G Governance, Layer 2: Policy DSL
+- **Grammar extension** — `policy NAME { ... }` blocks inside `world`
+  - Keywords: `policy` | `πολιτική` (POLICY.2 terminal)
+  - Clauses: `kind`, `signal`, `window`, `weight`, `action`, `description`
+  - Actions: `log_only`, `intervene`, `block`, `inject_message`, `abort_cycle`
+  - **Native NOUS expressions** as signals — type-checked at parse time, not runtime strings
+- **AST nodes** — `PolicyNode` (Pydantic V2) with `PolicyAction` Literal enum
+  - Rejects invalid actions at construction time (compile-time type safety)
+  - `WorldNode.policies: list[PolicyNode]` default empty
+- **Validator** — `_check_policies()` with 5 error codes
+  - PL001 duplicate name, PL002 missing signal, PL003 weight range, PL004 negative window, PL005 empty kind
+- **Codegen emission** — `_emit_policy_constants()`
+  - Emits `_POLICIES: list[RiskRule] = [...]` + `_POLICY_ACTIONS: dict[str, str]`
+  - Imports `risk_engine.RiskRule` only when policies present
+  - Reuses `_expr_to_python` for signal → predicate translation (binop, not, compare)
+  - **Zero bytes emitted when no policies declared** → 40 regression templates byte-identical
+- **RiskRule** — extended with `action: str = "log_only"` field (backward compatible)
+  - `from_dict` reads optional `action` from YAML
+  - Existing YAML rules continue to work unchanged
+- **`tests/test_policy_grammar.py`** — 10/10 E2E
+  - Parse, AST typing, defaults, validator positive+negative, codegen emission, zero-output-without-policies, runtime RiskRule instantiation, py_compile
+
+### Stability
+- **40 regression templates remain byte-identical** — the critical gate
+- All previous tests green: Foundation 7/7, Phase C 10/10, Phase D 6/6, Risk 10/10
+- **43 total replay+governance tests** (7 + 10 + 6 + 10 + 10)
+
+### Why 4.6.0 (minor bump)
+Layer 2 closes the loop: policies now live in source code as first-class constructs,
+compiled into the same `RiskRule` runtime used by Layer 1. Rules written in `.nous`
+and rules loaded from YAML merge into a unified governance surface.
+Layer 3 (Intervention primitive + runtime hook) follows in 4.7.0.
+
+
 ## [4.5.0] - 2026-04-17
 ### Added — Phase G Governance, Layer 1: RiskEngine
 - **`risk_engine.py`** — runtime risk assessment over replay event logs

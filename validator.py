@@ -14,6 +14,7 @@ from ast_nodes import (
     LawBool, LawInt, LawConstitutional, RouteNode, MatchRouteNode,
     FanInNode, FanOutNode, FeedbackNode, LetNode, SpeakNode,
     RememberNode, GuardNode, SenseCallNode, SleepNode, IfNode, ForNode,
+    PolicyNode,
 )
 
 
@@ -70,6 +71,7 @@ class NousValidator:
     def validate(self) -> ValidationResult:
         self._check_world_exists()
         self._check_telemetry()
+        self._check_policies()
         self._collect_names()
         self._check_souls()
         self._check_nervous_system()
@@ -543,6 +545,51 @@ class NousValidator:
                     f"Custom sense '{sense.name}' has multiple transports. Pick one: http_get, http_post, or shell.",
                     loc,
                 )
+
+    # __policy_validator_v1__
+    def _check_policies(self) -> None:
+        if not self.program.world or not self.program.world.policies:
+            return
+        seen_names: set[str] = set()
+        for policy in self.program.world.policies:
+            loc: str = f"world > policy {policy.name}"
+
+            if policy.name in seen_names:
+                self.result.error(
+                    "PL001",
+                    f"Duplicate policy name: {policy.name}",
+                    loc,
+                )
+            seen_names.add(policy.name)
+
+            if policy.signal is None:
+                self.result.error(
+                    "PL002",
+                    f"Policy {policy.name} has no signal expression. Every policy MUST define a signal.",
+                    loc,
+                )
+
+            if not (0.0 < policy.weight <= 10.0):
+                self.result.error(
+                    "PL003",
+                    f"Policy {policy.name} weight must be in (0.0, 10.0], got {policy.weight}",
+                    loc,
+                )
+
+            if policy.window < 0:
+                self.result.error(
+                    "PL004",
+                    f"Policy {policy.name} window must be >= 0, got {policy.window}",
+                    loc,
+                )
+
+            if policy.kind is not None and policy.kind.strip() == "":
+                self.result.error(
+                    "PL005",
+                    f"Policy {policy.name} kind, if provided, must be a non-empty string.",
+                    loc,
+                )
+
 
 def validate_program(program: NousProgram) -> ValidationResult:
     """Validate a NousProgram. Returns ValidationResult."""
