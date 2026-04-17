@@ -622,3 +622,6 @@ class PolicyNode(NousNode):
     weight: float = 1.0
     action: PolicyAction = "log_only"
     description: str = ""
+    # __inject_message_grammar_v1__
+    inject_as: Optional[str] = None
+    message: Optional[str] = None

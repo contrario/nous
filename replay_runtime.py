@@ -108,7 +108,7 @@ class ReplayContext:
         cycle: int,
         kind: str,
         data: dict[str, Any],
-    ) -> None:
+    ) -> Any:
         """
         Run policy engine against a pending event. Record mode only.
 
@@ -162,8 +162,11 @@ class ReplayContext:
         except Exception:
             return
 
+        # __inject_message_replay_v1__
         if outcome.triggered:
             self._emit_intervention_audit(soul, cycle, outcome)
+            return outcome
+        return None
 
     def _emit_intervention_audit(
         self,
@@ -380,7 +383,12 @@ class ReplayContext:
                 "seed": seed,
                 "key": key,
             }
-            self._intervention_check(soul, cycle, "llm.request", _llm_probe_data)
+            _inject_outcome = self._intervention_check(soul, cycle, "llm.request", _llm_probe_data)
+            if _inject_outcome is not None and _inject_outcome.action == "inject_message":
+                _inject_role = getattr(_inject_outcome, "inject_role", "system")
+                _inject_content = getattr(_inject_outcome, "inject_content", "")
+                if _inject_content:
+                    messages.insert(0, {"role": _inject_role, "content": _inject_content})
             req_ev = self._store.append(
                 soul=soul, cycle=cycle, kind="llm.request",
                 parent_id=self._last_parent,

@@ -490,6 +490,8 @@ policy_body: policy_kind_clause
            | policy_weight_clause
            | policy_action_clause
            | policy_description_clause
+           | policy_inject_as_clause
+           | policy_message_clause
 policy_kind_clause:        "kind"        ":" STRING
 policy_signal_clause:      "signal"      ":" expr
 policy_window_clause:      "window"      ":" INT
@@ -503,3 +505,9 @@ policy_action_kind: "log_only"       -> policy_action_log_only
                   | "block"          -> policy_action_block
                   | "inject_message" -> policy_action_inject
                   | "abort_cycle"    -> policy_action_abort
+
+// __inject_message_grammar_v1__
+policy_inject_as_clause:   "inject_as" ":" policy_inject_role
+policy_message_clause:     "message"   ":" STRING
+policy_inject_role: "system" -> policy_inject_system
+                  | "user"   -> policy_inject_user

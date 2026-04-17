@@ -1204,6 +1204,10 @@ class NousTransformer(Transformer):
                 kwargs["action"] = c["_policy_action"]
             elif "_policy_description" in c:
                 kwargs["description"] = c["_policy_description"]
+            elif "_policy_inject_as" in c:
+                kwargs["inject_as"] = c["_policy_inject_as"]
+            elif "_policy_message" in c:
+                kwargs["message"] = c["_policy_message"]
         return PolicyNode(**kwargs)
 
     def policy_body(self, items: list) -> Any:
@@ -1255,6 +1259,21 @@ class NousTransformer(Transformer):
 
     def policy_action_abort(self, items: list) -> str:
         return "abort_cycle"
+
+    # __inject_message_grammar_v1__
+    def policy_inject_as_clause(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"_policy_inject_as": s[0]}
+
+    def policy_message_clause(self, items: list) -> dict:
+        s = self._strip(items)
+        return {"_policy_message": str(s[0])}
+
+    def policy_inject_system(self, items: list) -> str:
+        return "system"
+
+    def policy_inject_user(self, items: list) -> str:
+        return "user"
 
 
 def parse_nous(source: str) -> NousProgram:

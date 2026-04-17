@@ -583,6 +583,21 @@ class NousValidator:
                     loc,
                 )
 
+            # __inject_message_validator_v1__
+            if policy.action == "inject_message":
+                if not policy.message:
+                    self.result.error(
+                        "PL006",
+                        f"Policy {policy.name} uses action: inject_message but has no 'message' clause.",
+                        loc,
+                    )
+                if policy.inject_as is not None and policy.inject_as not in ("system", "user"):
+                    self.result.error(
+                        "PL007",
+                        f"Policy {policy.name} inject_as must be 'system' or 'user', got '{policy.inject_as}'.",
+                        loc,
+                    )
+
             if policy.kind is not None and policy.kind.strip() == "":
                 self.result.error(
                     "PL005",

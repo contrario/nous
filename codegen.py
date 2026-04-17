@@ -1303,7 +1303,23 @@ class NousCodeGen:
         self._emit_blank()
         # __intervention_codegen_v1__
         self._emit("from intervention import InterventionEngine")
-        self._emit("_INTERVENTION_ENGINE = InterventionEngine(_POLICIES, _POLICY_ACTIONS)")
+        # __inject_message_codegen_v1__
+        inject_policies = [p for p in policies if p.action == "inject_message"]
+        if inject_policies:
+            self._emit("_POLICY_INJECT_CONFIGS: dict[str, dict] = {")
+            self._indent()
+            for p in policies:
+                if p.action == "inject_message":
+                    role = getattr(p, "inject_as", None) or "system"
+                    msg = getattr(p, "message", None) or ""
+                    name_lit = self._py_string(p.name)
+                    self._emit(f"{name_lit}: {{\"role\": {self._py_string(role)}, \"content\": {self._py_string(msg)}}},")
+            self._dedent()
+            self._emit("}")
+            self._emit_blank()
+            self._emit("_INTERVENTION_ENGINE = InterventionEngine(_POLICIES, _POLICY_ACTIONS, _POLICY_INJECT_CONFIGS)")
+        else:
+            self._emit("_INTERVENTION_ENGINE = InterventionEngine(_POLICIES, _POLICY_ACTIONS)")
         self._emit_blank()
 
     # __intervention_codegen_v1__

@@ -50,6 +50,8 @@ class InterventionOutcome:
     reasons: tuple[str, ...]
     event_kind: str
     event_seq_id: int
+    inject_role: str = ""
+    inject_content: str = ""
 
     def to_audit_data(self) -> dict[str, Any]:
         """Serialise for governance.intervention event payload."""
@@ -59,6 +61,8 @@ class InterventionOutcome:
             "score": self.score,
             "reasons": list(self.reasons),
             "triggering_event_kind": self.event_kind,
+            "inject_role": self.inject_role,
+            "inject_content": self.inject_content,
             "triggering_event_seq_id": self.event_seq_id,
         }
 
@@ -102,9 +106,11 @@ class InterventionEngine:
         self,
         rules: Optional[list[Any]] = None,
         actions: Optional[dict[str, str]] = None,
+        inject_configs: Optional[dict[str, dict]] = None,
     ) -> None:
         self._rules: list[Any] = list(rules) if rules else []
         self._actions: dict[str, str] = dict(actions) if actions else {}
+        self._inject_configs: dict[str, dict] = dict(inject_configs) if inject_configs else {}
         self._engine: Optional[RiskEngine] = None
         if self._rules:
             self._engine = RiskEngine(self._rules)
@@ -140,6 +146,13 @@ class InterventionEngine:
         if not triggered_actions:
             return "log_only"
         return max(triggered_actions, key=lambda a: priority.get(a, -1))
+
+    def _resolve_inject(self, triggered_names: list[str]) -> dict:
+        for name in triggered_names:
+            if self.action_for(name) == "inject_message" and name in self._inject_configs:
+                cfg = self._inject_configs[name]
+                return {"role": cfg.get("role", "system"), "content": cfg.get("content", "")}
+        return {"role": "system", "content": ""}
 
     def check(self, event: Any) -> InterventionOutcome:
         """
@@ -195,10 +208,17 @@ class InterventionEngine:
         )
 
         if resolved == "inject_message":
-            logger.warning(
-                "intervention: inject_message not yet implemented in v4.7.0; "
-                "treating as log_only for policies=%s",
-                triggered_names,
+            inject_data = self._resolve_inject(triggered_names)
+            return InterventionOutcome(
+                triggered=True,
+                action=resolved,
+                policy_names=tuple(triggered_names),
+                score=float(assessment.score),
+                reasons=reasons_tuple,
+                event_kind=getattr(event, "kind", ""),
+                event_seq_id=int(getattr(event, "seq_id", 0)),
+                inject_role=inject_data.get("role", "system"),
+                inject_content=inject_data.get("content", ""),
             )
 
         if resolved == "block":
