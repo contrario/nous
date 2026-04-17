@@ -901,6 +901,8 @@ class NousCodeGen:
             self._emit("rt._immune_engine = immune")
             self._emit_blank()
 
+        # __intervention_codegen_v1__
+        self._emit_intervention_wiring()
         self._emit("return rt")
         self._dedent()
 
@@ -1038,6 +1040,8 @@ class NousCodeGen:
             self._dedent()
             self._emit_blank()
 
+        # __intervention_codegen_v1__
+        self._emit_intervention_wiring()
         self._emit("return rt")
         self._dedent()
 
@@ -1297,6 +1301,31 @@ class NousCodeGen:
         self._dedent()
         self._emit("}")
         self._emit_blank()
+        # __intervention_codegen_v1__
+        self._emit("from intervention import InterventionEngine")
+        self._emit("_INTERVENTION_ENGINE = InterventionEngine(_POLICIES, _POLICY_ACTIONS)")
+        self._emit_blank()
+
+    # __intervention_codegen_v1__
+    def _emit_intervention_wiring(self) -> None:
+        """Emit policies-guarded wiring block. No-op when no policies exist."""
+        world = self.program.world
+        if world is None:
+            return
+        policies = getattr(world, "policies", None) or []
+        if not policies:
+            return
+        self._emit("if _POLICIES:")
+        self._indent()
+        self._emit("try:")
+        self._indent()
+        self._emit("rt.replay_ctx.set_intervention_engine(_INTERVENTION_ENGINE)")
+        self._dedent()
+        self._emit("except AttributeError:")
+        self._indent()
+        self._emit("pass")
+        self._dedent()
+        self._dedent()
 
     def _py_string(self, value: str) -> str:
         escaped: str = value.replace("\\", "\\\\").replace("\"", "\\\"")

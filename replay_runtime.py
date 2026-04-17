@@ -83,16 +83,116 @@ class ReplayContext:
         store: Optional[EventStore] = None,
         mode: Mode = "off",
         seed_base: int = 0,
+        intervention_engine: Optional[Any] = None,
     ) -> None:
+        # __intervention_runtime_hook_v1__
         self._store = store
         self._mode = mode
         self._seed_base = seed_base
         self._fake_now: float = 0.0
         self._last_parent: int = -1
+        self._intervention_engine: Optional[Any] = intervention_engine
         if mode == "replay" and store is None:
             raise ValueError("replay mode requires a store")
         if mode == "record" and store is None:
             raise ValueError("record mode requires a store")
+
+    # __intervention_runtime_hook_v1__
+    def set_intervention_engine(self, engine: Optional[Any]) -> None:
+        """Attach or replace the InterventionEngine. Takes effect on next event."""
+        self._intervention_engine = engine
+
+    def _intervention_check(
+        self,
+        soul: str,
+        cycle: int,
+        kind: str,
+        data: dict[str, Any],
+    ) -> None:
+        """
+        Run policy engine against a pending event. Record mode only.
+
+        On triggered outcome, emits a governance.intervention audit event
+        to the store. For block/abort_cycle actions, re-raises the
+        corresponding InterventionError after the audit emission so the
+        caller never proceeds to the real side-effect.
+
+        Replay / off mode: no-op (determinism preserved; governance events
+        are reproduced from the recorded log).
+        """
+        engine = self._intervention_engine
+        if engine is None or not getattr(engine, "enabled", False):
+            return
+        if self._mode != "record":
+            return
+
+        try:
+            from intervention import (
+                InterventionBlocked,
+                InterventionAborted,
+                InterventionError,
+            )
+        except Exception:
+            return
+
+        class _ProbeEvent:
+            __slots__ = (
+                "seq_id", "parent_id", "soul", "cycle",
+                "kind", "timestamp", "data", "prev_hash", "hash",
+            )
+
+            def __init__(self, _soul: str, _cycle: int, _kind: str, _data: dict[str, Any]) -> None:
+                self.seq_id = 0
+                self.parent_id = -1
+                self.soul = _soul
+                self.cycle = _cycle
+                self.kind = _kind
+                self.timestamp = 0.0
+                self.data = _data
+                self.prev_hash = ""
+                self.hash = ""
+
+        probe = _ProbeEvent(soul, cycle, kind, data)
+
+        try:
+            outcome = engine.check(probe)
+        except InterventionError as exc:
+            self._emit_intervention_audit(soul, cycle, exc.outcome)
+            raise
+        except Exception:
+            return
+
+        if outcome.triggered:
+            self._emit_intervention_audit(soul, cycle, outcome)
+
+    def _emit_intervention_audit(
+        self,
+        soul: str,
+        cycle: int,
+        outcome: Any,
+    ) -> None:
+        """Append a governance.intervention event to the store (record mode only)."""
+        if self._mode != "record" or self._store is None:
+            return
+        try:
+            audit_data: dict[str, Any] = outcome.to_audit_data()
+        except Exception:
+            audit_data = {
+                "action": getattr(outcome, "action", "unknown"),
+                "policies": list(getattr(outcome, "policy_names", ())),
+                "score": float(getattr(outcome, "score", 0.0)),
+            }
+        try:
+            ev = self._store.append(
+                soul=soul,
+                cycle=cycle,
+                kind="governance.intervention",
+                parent_id=self._last_parent,
+                data=audit_data,
+            )
+            self._last_parent = ev.seq_id
+        except Exception:
+            return
 
     @property
     def mode(self) -> Mode:
@@ -188,6 +288,11 @@ class ReplayContext:
             return await execute()
         if self._mode == "record":
             assert self._store is not None
+            # __intervention_runtime_hook_v1__
+            self._intervention_check(
+                soul, cycle, "sense.invoke",
+                {"sense": sense_name, "args": args, "key": key},
+            )
             invoke_ev = self._store.append(
                 soul=soul, cycle=cycle, kind="sense.invoke",
                 parent_id=self._last_parent,
@@ -265,18 +370,21 @@ class ReplayContext:
                 if len(content) > 400:
                     content = content[:400] + "...<truncated>"
                 messages_preview.append({"role": role, "content": content})
+            # __intervention_runtime_hook_v1__
+            _llm_probe_data: dict[str, Any] = {
+                "provider": provider,
+                "model": model,
+                "prompt_hash": prompt_hash,
+                "messages_preview": messages_preview,
+                "temperature": float(temperature),
+                "seed": seed,
+                "key": key,
+            }
+            self._intervention_check(soul, cycle, "llm.request", _llm_probe_data)
             req_ev = self._store.append(
                 soul=soul, cycle=cycle, kind="llm.request",
                 parent_id=self._last_parent,
-                data={
-                    "provider": provider,
-                    "model": model,
-                    "prompt_hash": prompt_hash,
-                    "messages_preview": messages_preview,
-                    "temperature": float(temperature),
-                    "seed": seed,
-                    "key": key,
-                },
+                data=_llm_probe_data,
             )
             self._last_parent = req_ev.seq_id
             try:

@@ -236,7 +236,19 @@ class RiskEngine:
                     continue
 
             stats = self._rolling_stats(event.soul, rule)
+            # __risk_namespace_expand_v1__
+            # Expose event.data fields as bare names so that policy signals
+            # like `cost > 0.10` work without forcing `data.get(...)` idiom.
+            # Reserved names (event fields, stats, value) take precedence
+            # over data fields on collision -- data fields cannot shadow
+            # engine-internal identifiers.
+            data_fields: dict[str, Any] = {}
+            if isinstance(event.data, dict):
+                for _k, _v in event.data.items():
+                    if isinstance(_k, str) and _k.isidentifier() and not _k.startswith("_"):
+                        data_fields[_k] = _v
             namespace: dict[str, Any] = {
+                **data_fields,
                 "seq_id": event.seq_id,
                 "soul": event.soul,
                 "cycle": event.cycle,

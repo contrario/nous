@@ -34,7 +34,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 NOUS_DIR = Path(__file__).parent
 TEMPLATES_DIR = NOUS_DIR / "templates"
 LOG_FILE = Path("/var/log/nous_api.log")
-VERSION = "4.6.0"
+VERSION = "4.7.0"
 START_TIME = time.time()
 
 API_KEYS: set[str] = set()
@@ -825,6 +825,31 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
         except HTTPException:
             raise
         except Exception as e:
+            # __api_intervention_hook_v1__
+            try:
+                from intervention import InterventionBlocked, InterventionAborted
+                _is_blocked = isinstance(e, InterventionBlocked)
+                _is_aborted = isinstance(e, InterventionAborted)
+            except Exception:
+                _is_blocked = False
+                _is_aborted = False
+            if _is_blocked or _is_aborted:
+                _outcome = getattr(e, "outcome", None)
+                _code = "CHAT_INTERVENTION_BLOCKED" if _is_blocked else "CHAT_INTERVENTION_ABORTED"
+                _detail: dict[str, Any] = {
+                    "error": "intervention_blocked" if _is_blocked else "intervention_aborted",
+                    "code": _code,
+                    "action": getattr(_outcome, "action", "block" if _is_blocked else "abort_cycle"),
+                    "policies": list(getattr(_outcome, "policy_names", ()) or ()),
+                    "score": float(getattr(_outcome, "score", 0.0) or 0.0),
+                    "reasons": list(getattr(_outcome, "reasons", ()) or ()),
+                    "triggering_event_kind": getattr(_outcome, "event_kind", ""),
+                }
+                logger.warning(
+                    f"chat intervention {_detail['action']}: "
+                    f"policies={_detail['policies']} score={_detail['score']:.3f}"
+                )
+                raise HTTPException(status_code=422, detail=_detail)
             logger.error(f"chat LLM error: {e}")
             raise HTTPException(status_code=500, detail={"error": str(e), "code": "CHAT005"})
 

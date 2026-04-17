@@ -1,5 +1,39 @@
 # Changelog
 
+## [4.7.0] - 2026-04-17
+### Added - Phase G Governance, Layer 3: Intervention Primitive + Runtime Hook
+- **`intervention.py`** - new module with `InterventionEngine`, `InterventionOutcome`, `InterventionError`, `InterventionBlocked`, `InterventionAborted`
+  - Synchronous hot-path check with no-op mode when no rules loaded
+  - Action priority resolution: `abort_cycle > block > inject_message > intervene > log_only`
+  - `inject_message` stubbed to log_only for v4.7.0 (full semantics deferred to Layer 4)
+- **`replay_runtime.py`** - `ReplayContext` gains `intervention_engine` param + `set_intervention_engine()` setter
+  - Pre-emit hook at 3 sites: `sense.invoke`, `llm.request` (blocks cost before spend), `memory.write`
+  - `governance.intervention` audit event emitted on every triggering (record mode only)
+  - `block` raises `InterventionBlocked`, `abort_cycle` raises `InterventionAborted`
+  - Replay + off modes: zero intervention logic (determinism preserved)
+- **`risk_engine.py`** - predicate namespace expansion
+  - `event.data` string-identifier keys now exposed as bare names in predicate scope
+  - `cost > 0.10` works identically in `.nous` signals and YAML predicates
+  - Reserved names (event fields, stats, `value`) take precedence on collision
+  - Fully backward compatible - `data.get('cost', 0)` style YAML rules unchanged
+- **`codegen.py`** - runtime engine wiring
+  - Emits `from intervention import InterventionEngine` + `_INTERVENTION_ENGINE = InterventionEngine(_POLICIES, _POLICY_ACTIONS)` when policies exist
+  - Emits `rt.replay_ctx.set_intervention_engine(_INTERVENTION_ENGINE)` in both simple and distributed `build_runtime()` paths
+  - **Zero bytes emitted when no policies declared** - 40 regression templates byte-identical
+- **`nous_api.py`** - `/v1/chat` maps `InterventionBlocked`/`InterventionAborted` to HTTP 422
+  - Structured payload: `action`, `policies`, `score`, `reasons`, `triggering_event_kind`
+  - Codes: `CHAT_INTERVENTION_BLOCKED`, `CHAT_INTERVENTION_ABORTED`
+- **`tests/test_intervention.py`** - 10/10 E2E
+  - All 5 actions exercised (log_only, intervene, inject_message, block, abort_cycle)
+  - LLM block verified to prevent cost spend (execute() never runs)
+  - Action priority resolution, codegen emission, generated module load
+### Stability
+- **40 regression templates byte-identical** throughout all 8 patches (54, 54b, 55, 56, 57c, 58, 59, 60)
+- All 43 previous tests remain green
+- **53 total replay+governance tests** (43 previous + 10 Intervention)
+### Governance loop closed
+- Layer 1 (RiskEngine, v4.5.0) + Layer 2 (Policy DSL, v4.6.0) + Layer 3 (Runtime enforcement, v4.7.0)
+
 ## [4.6.0] - 2026-04-17
 ### Added — Phase G Governance, Layer 2: Policy DSL
 - **Grammar extension** — `policy NAME { ... }` blocks inside `world`
