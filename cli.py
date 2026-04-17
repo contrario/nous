@@ -34,7 +34,7 @@ from codegen import generate_python
 from typechecker import typecheck_program
 from replay_cli import cmd_replay
 
-VERSION = "4.8.3"
+VERSION = "4.9.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -1349,8 +1349,14 @@ def cmd_governance(args: Any) -> int:
     elif sub == "stats":
         from governance import stats_log_cli
         return stats_log_cli(args.log)
+    # __governance_lint_cli_v1__
+    elif sub == "lint":
+        from governance_lint import lint_cli
+        fmt = getattr(args, "format", "text")
+        strict = getattr(args, "strict", False)
+        return lint_cli(args.source, output_format=fmt, strict=strict)
     else:
-        print("Usage: nous governance {policies|inspect|stats}")
+        print("Usage: nous governance {policies|inspect|stats|lint}")
         return 1
 
 
@@ -1559,6 +1565,11 @@ def main() -> int:
     p_gov_insp.add_argument("--limit", type=int, default=50, help="Max events to show")
     p_gov_stats = gov_sub.add_parser("stats", help="Aggregated governance stats from a log")
     p_gov_stats.add_argument("log", help="Path to JSONL event log")
+    # __governance_lint_subparser_v1__
+    p_gov_lint = gov_sub.add_parser("lint", help="Static analysis for policies in a .nous file")
+    p_gov_lint.add_argument("source", help="Path to .nous file")
+    p_gov_lint.add_argument("--format", default="text", choices=["text", "json"], help="Output format")
+    p_gov_lint.add_argument("--strict", action="store_true", help="Exit 1 on warnings too")
 
     args = ap.parse_args()
     commands = {

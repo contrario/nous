@@ -1,4 +1,58 @@
 # Changelog
+
+## [4.9.0] - 2026-04-17
+
+### Added -- `nous governance lint` CLI
+
+Static analysis for NOUS policy declarations. New subcommand:
+
+    nous governance lint <file.nous> [--format text|json] [--strict]
+
+Rule catalog (L000-L100):
+
+- **L000** file not found
+- **L001** duplicate policy name
+- **L002** empty policy name
+- **L003** invalid action (must be log_only/intervene/block/abort_cycle/inject_message)
+- **L004** weight out of range (0.0, 10.0]
+- **L006** empty signal expression
+- **L007** unknown event kind (info)
+- **L008** `inject_message` policy missing `message` field
+- **L009** no policies in file (warn)
+- **L010** reserved name prefix `__` (warn)
+- **L011** negative window
+- **L012** literal `True`/`False` signal (always/never fires)
+- **L100** parse error
+
+Output: text (default) or machine-readable JSON. `--strict` promotes warnings to non-zero exit for CI pipelines.
+
+### Added -- Interactive Governance tab in IDE (`/ide`)
+
+Sixth tab alongside Editor/Verify/Graph/Architecture Diff/Chat. Two-column layout:
+
+- **Policies** (left): declared policies with color-coded action badges (red for block/abort_cycle, amber for intervene, purple for inject_message, blue for log_only), weight, kind, signal expression.
+- **Lint** (right): live static analysis with severity-coded issues (ERR / WARN / INFO), rule code, policy name, message.
+
+Auto-refreshes when the tab is clicked (debounced 150ms). Manual REFRESH button. Reads source via `monaco.editor.getEditors()[0].getValue()`.
+
+### Added -- New backend endpoint
+
+- **POST `/v1/governance/lint`**: exposes `GovernanceLinter.lint_source()`. Request `{source: str, strict: bool}`. Response: full `LintReport` as JSON plus `would_fail_strict` flag. API-key protected, rate-limited 60/min. Error codes LNT001 (module missing) / LNT002 (internal error).
+
+### Tests
+
+- 37 new tests in `tests/test_governance_lint.py`.
+- Total test count: **126 -> 163** (+37).
+- 52/52 regression templates remain byte-identical (zero codegen impact).
+
+### Architecture notes
+
+- Linter uses `parse_nous()` directly instead of `PolicyInspector` so it can inspect `inject_as`, `message`, `window`, `description` fields that `PolicyInfo` strips.
+- Empty/whitespace source short-circuits to L009 instead of L100 parse error for cleaner UX.
+- New files: `governance_lint.py`, `tests/test_governance_lint.py`.
+
+---
+
 ## [4.8.3] - 2026-04-17
 
 ### Fixed

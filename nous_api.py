@@ -34,7 +34,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 NOUS_DIR = Path(__file__).parent
 TEMPLATES_DIR = NOUS_DIR / "templates"
 LOG_FILE = Path("/var/log/nous_api.log")
-VERSION = "4.8.3"
+VERSION = "4.9.0"
 START_TIME = time.time()
 
 API_KEYS: set[str] = set()
@@ -1771,6 +1771,46 @@ async def governance_policies_preview(request: Request, body: _PolicyPreviewRequ
         "ok": True,
         "policies": [p.to_dict() for p in policies],
         "count": len(policies),
+    }
+
+
+# __governance_lint_api_v1__
+
+class _PolicyLintRequest(BaseModel):
+    source: str = Field(default="", max_length=200_000)
+    strict: bool = False
+
+
+@app.post("/v1/governance/lint")
+@limiter.limit("60/minute")
+async def governance_lint(request: Request, body: _PolicyLintRequest, x_api_key: Optional[str] = Header(None)):
+    """Run static analysis on .nous source.
+
+    Returns a structured lint report: errors, warnings, infos per rule.
+    Used by the IDE governance tab for live policy QA.
+    """
+    require_api_key(x_api_key)
+    try:
+        from governance_lint import GovernanceLinter
+    except ImportError:
+        raise HTTPException(
+            status_code=501,
+            detail={"error": "governance_lint module not available", "code": "LNT001"},
+        )
+    try:
+        linter = GovernanceLinter()
+        report = linter.lint_source(body.source, source_file="<editor>")
+    except Exception as exc:
+        return {
+            "ok": False,
+            "error": str(exc),
+            "code": "LNT002",
+            "report": None,
+        }
+    return {
+        "ok": True,
+        "report": report.to_dict(),
+        "would_fail_strict": bool(report.has_errors or (body.strict and report.has_warnings)),
     }
 
 
