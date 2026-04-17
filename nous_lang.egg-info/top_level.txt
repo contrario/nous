@@ -15,10 +15,12 @@ docs_generator
 dream_engine
 error_recovery
 formatter
+governance
 grammar_data
 hot_reload_engine
 immune_engine
 import_resolver
+intervention
 lsp_server
 mcp_bridge
 metabolism_engine
@@ -35,11 +37,14 @@ plugin_manager
 profiler
 registry
 repl
+replay_cli
 replay_runtime
 replay_store
+risk_engine
 runtime
 self_compiler
 sense_registry
+stdlib_manager
 symbiosis_engine
 telemetry_engine
 test_runner

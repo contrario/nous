@@ -307,6 +307,210 @@ def test_10_regression_no_inject_codegen_unchanged():
     shutil.rmtree(tmp, ignore_errors=True)
 
 
+
+
+# __inject_message_rehash_tests_v1__
+def test_11_llm_request_event_has_post_inject_hash():
+    """On inject_message, llm.request event data contains post-inject metadata."""
+    import asyncio
+    import json as _json
+    import hashlib as _hashlib
+    from replay_store import EventStore
+    from replay_runtime import ReplayContext
+    from intervention import InterventionEngine
+    from risk_engine import RiskRule
+
+    rules = [
+        RiskRule(
+            name="InjectLayer45",
+            description="rehash test",
+            kind_filter=("llm.request",),
+            predicate="temperature > 0.0",
+            weight=5.0,
+            action="inject_message",
+        ),
+    ]
+    actions = {"InjectLayer45": "inject_message"}
+    inject_configs = {"InjectLayer45": {"role": "system", "content": "Rehash me."}}
+    engine = InterventionEngine(rules, actions, inject_configs)
+
+    tmp = tempfile.mktemp(suffix=".jsonl")
+    store = EventStore.open(tmp, mode="record")
+    ctx = ReplayContext(store=store, mode="record")
+    ctx.set_intervention_engine(engine)
+
+    messages = [{"role": "user", "content": "Hello"}]
+    original_payload = {
+        "provider": "test",
+        "model": "model",
+        "messages": [{"role": "user", "content": "Hello"}],
+        "temperature": 0.7,
+    }
+    pre_inject_canonical = _json.dumps(
+        original_payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"),
+    )
+    pre_inject_hash = _hashlib.sha256(pre_inject_canonical.encode("utf-8")).hexdigest()
+
+    async def fake_execute():
+        return {
+            "text": "Hi", "cost": 0.01, "tier": "T0",
+            "tokens_in": 5, "tokens_out": 3, "elapsed_ms": 50.0,
+        }
+
+    asyncio.get_event_loop().run_until_complete(
+        ctx.record_or_replay_llm("S", 1, "test", "model", messages, 0.7, fake_execute)
+    )
+    store.close()
+
+    with open(tmp) as fh:
+        events = [_json.loads(line) for line in fh if line.strip()]
+    os.unlink(tmp)
+
+    req_events = [e for e in events if e.get("kind") == "llm.request"]
+    check("one llm.request event recorded", len(req_events) == 1,
+          f"got {len(req_events)}")
+    if len(req_events) == 1:
+        data = req_events[0].get("data", {})
+        check("original prompt_hash matches pre-inject",
+              data.get("prompt_hash") == pre_inject_hash)
+        check("event has prompt_hash_post_inject",
+              "prompt_hash_post_inject" in data)
+        check("post-inject hash differs from original",
+              data.get("prompt_hash_post_inject") != data.get("prompt_hash"))
+        check("injected_role recorded as system",
+              data.get("injected_role") == "system")
+        check("injected_policies recorded",
+              data.get("injected_policies") == ["InjectLayer45"])
+
+
+def test_12_no_inject_no_rehash_fields():
+    """Without inject_message (log_only action), event has no post-inject fields."""
+    import asyncio
+    import json as _json
+    from replay_store import EventStore
+    from replay_runtime import ReplayContext
+    from intervention import InterventionEngine
+    from risk_engine import RiskRule
+
+    rules = [
+        RiskRule(
+            name="LogOnly",
+            description="no inject",
+            kind_filter=("llm.request",),
+            predicate="temperature > 0.0",
+            weight=1.0,
+            action="log_only",
+        ),
+    ]
+    actions = {"LogOnly": "log_only"}
+    engine = InterventionEngine(rules, actions)
+
+    tmp = tempfile.mktemp(suffix=".jsonl")
+    store = EventStore.open(tmp, mode="record")
+    ctx = ReplayContext(store=store, mode="record")
+    ctx.set_intervention_engine(engine)
+
+    messages = [{"role": "user", "content": "Hi"}]
+
+    async def fake_execute():
+        return {
+            "text": "Hi", "cost": 0.01, "tier": "T0",
+            "tokens_in": 5, "tokens_out": 3, "elapsed_ms": 50.0,
+        }
+
+    asyncio.get_event_loop().run_until_complete(
+        ctx.record_or_replay_llm("S", 1, "test", "model", messages, 0.7, fake_execute)
+    )
+    store.close()
+
+    with open(tmp) as fh:
+        events = [_json.loads(line) for line in fh if line.strip()]
+    os.unlink(tmp)
+
+    req_events = [e for e in events if e.get("kind") == "llm.request"]
+    check("one llm.request event recorded", len(req_events) == 1)
+    if len(req_events) == 1:
+        data = req_events[0].get("data", {})
+        check("no prompt_hash_post_inject without inject",
+              "prompt_hash_post_inject" not in data)
+        check("no injected_role without inject",
+              "injected_role" not in data)
+        check("no injected_policies without inject",
+              "injected_policies" not in data)
+
+
+def test_13_post_inject_hash_matches_injected_messages():
+    """post_inject hash equals sha256 of canonical messages after injection."""
+    import asyncio
+    import json as _json
+    import hashlib as _hashlib
+    from replay_store import EventStore
+    from replay_runtime import ReplayContext
+    from intervention import InterventionEngine
+    from risk_engine import RiskRule
+
+    rules = [
+        RiskRule(
+            name="Verify",
+            description="verify hash",
+            kind_filter=("llm.request",),
+            predicate="temperature > 0.0",
+            weight=1.0,
+            action="inject_message",
+        ),
+    ]
+    actions = {"Verify": "inject_message"}
+    inject_configs = {"Verify": {"role": "system", "content": "Guarded."}}
+    engine = InterventionEngine(rules, actions, inject_configs)
+
+    tmp = tempfile.mktemp(suffix=".jsonl")
+    store = EventStore.open(tmp, mode="record")
+    ctx = ReplayContext(store=store, mode="record")
+    ctx.set_intervention_engine(engine)
+
+    messages = [{"role": "user", "content": "Question?"}]
+
+    async def fake_execute():
+        return {
+            "text": "Answer", "cost": 0.01, "tier": "T0",
+            "tokens_in": 2, "tokens_out": 1, "elapsed_ms": 10.0,
+        }
+
+    asyncio.get_event_loop().run_until_complete(
+        ctx.record_or_replay_llm("S", 1, "p", "m", messages, 0.7, fake_execute)
+    )
+    store.close()
+
+    expected_payload = {
+        "provider": "p",
+        "model": "m",
+        "messages": [
+            {"role": "system", "content": "Guarded."},
+            {"role": "user", "content": "Question?"},
+        ],
+        "temperature": 0.7,
+    }
+    expected_canonical = _json.dumps(
+        expected_payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"),
+    )
+    expected_hash = _hashlib.sha256(expected_canonical.encode("utf-8")).hexdigest()
+
+    with open(tmp) as fh:
+        events = [_json.loads(line) for line in fh if line.strip()]
+    os.unlink(tmp)
+
+    req_events = [e for e in events if e.get("kind") == "llm.request"]
+    check("one llm.request event recorded", len(req_events) == 1)
+    if len(req_events) == 1:
+        data = req_events[0].get("data", {})
+        actual = data.get("prompt_hash_post_inject", "")
+        check(
+            "post_inject hash matches recomputed canonical",
+            actual == expected_hash,
+            f"expected {expected_hash[:16]}... got {str(actual)[:16]}...",
+        )
+
+
 if __name__ == "__main__":
     print("=" * 60)
     print("INJECT_MESSAGE TESTS -- Phase G Layer 2.5")
@@ -321,6 +525,10 @@ if __name__ == "__main__":
     test_08_replay_context_injects_message()
     test_09_codegen_generated_module_loads()
     test_10_regression_no_inject_codegen_unchanged()
+    # __inject_message_rehash_tests_v1__
+    test_11_llm_request_event_has_post_inject_hash()
+    test_12_no_inject_no_rehash_fields()
+    test_13_post_inject_hash_matches_injected_messages()
     print("=" * 60)
     total = PASS + FAIL
     if FAIL == 0:

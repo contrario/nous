@@ -1,4 +1,37 @@
 # Changelog
+## [4.8.2] - 2026-04-17
+
+### Added — Phase G Layer 4.5: prompt-hash recompute on inject_message
+
+When an `inject_message` policy triggers and modifies the outgoing LLM
+messages, the `llm.request` event now carries three additional fields:
+
+- `prompt_hash_post_inject`: sha256 of the canonical payload after injection
+- `injected_role`: the role (`system` or `user`) that was injected
+- `injected_policies`: list of policy names that caused the injection
+
+The original `prompt_hash` (used as the replay match key) is unchanged, so
+all existing recorded logs remain playable. The new fields are emitted
+**only** when injection actually occurs, preserving byte-identical
+codegen output for every template without inject_message policies
+(52/52 regression templates verified).
+
+### Tests
+
+- New `test_11_llm_request_event_has_post_inject_hash`
+- New `test_12_no_inject_no_rehash_fields`
+- New `test_13_post_inject_hash_matches_injected_messages`
+- `tests/test_inject_message.py`: 27 -> 39 checks (all green)
+
+### Compliance
+
+This closes the audit gap where the recorded prompt hash did not reflect
+the actual content sent to the LLM after governance-driven injection.
+Auditors can now verify both what was requested and what was ultimately
+transmitted.
+
+---
+
 ## [4.8.0] - 2026-04-17
 
 ### Added - Phase G Layer 4: Governance Dashboard

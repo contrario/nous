@@ -28,6 +28,7 @@ formatter.py
 fullstack_builders.nous
 gate_alpha.nous
 gate_alpha_test.nous
+governance.py
 grammar_data.py
 hot_reload_engine.py
 immune_engine.py
@@ -35,6 +36,7 @@ immune_test.nous
 import_resolver.py
 import_test.nous
 infra_monitor.nous
+intervention.py
 kerberus.nous
 lsp_server.py
 mcp_bridge.py
@@ -62,14 +64,17 @@ profiler.py
 pyproject.toml
 registry.py
 repl.py
+replay_cli.py
 replay_runtime.py
 replay_store.py
 research_pipeline.nous
 retire_test.nous
+risk_engine.py
 runtime.py
 self_compiler.py
 sense_registry.py
 signals.nous
+stdlib_manager.py
 symbiosis_engine.py
 symbiosis_test.nous
 telemetry_engine.py
@@ -98,6 +103,10 @@ nous_lang.egg-info/dependency_links.txt
 nous_lang.egg-info/entry_points.txt
 nous_lang.egg-info/requires.txt
 nous_lang.egg-info/top_level.txt
+tests/test_governance_dashboard.py
+tests/test_inject_message.py
+tests/test_intervention.py
+tests/test_policy_grammar.py
 tests/test_replay_e2e.py
 tests/test_replay_phase_c.py
 tests/test_replay_phase_d.py

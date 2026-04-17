@@ -388,7 +388,26 @@ class ReplayContext:
                 _inject_role = getattr(_inject_outcome, "inject_role", "system")
                 _inject_content = getattr(_inject_outcome, "inject_content", "")
                 if _inject_content:
+                    # __inject_message_rehash_v1__
                     messages.insert(0, {"role": _inject_role, "content": _inject_content})
+                    _post_inject_payload = {
+                        "provider": provider,
+                        "model": model,
+                        "messages": messages,
+                        "temperature": float(temperature),
+                    }
+                    _post_inject_canonical = json.dumps(
+                        _post_inject_payload,
+                        sort_keys=True,
+                        ensure_ascii=False,
+                        separators=(",", ":"),
+                    )
+                    _post_inject_hash = hashlib.sha256(
+                        _post_inject_canonical.encode("utf-8")
+                    ).hexdigest()
+                    _llm_probe_data["prompt_hash_post_inject"] = _post_inject_hash
+                    _llm_probe_data["injected_role"] = _inject_role
+                    _llm_probe_data["injected_policies"] = list(_inject_outcome.policy_names)
             req_ev = self._store.append(
                 soul=soul, cycle=cycle, kind="llm.request",
                 parent_id=self._last_parent,
