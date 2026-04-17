@@ -1,4 +1,21 @@
 # Changelog
+## [4.8.3] - 2026-04-17
+
+### Fixed
+
+- **Missing dependency**: `pyyaml` was not declared in `pyproject.toml`
+  dependencies despite being required by `risk_engine.py` (since v4.5.0).
+  Fresh installs from PyPI failed with `ModuleNotFoundError: No module named 'yaml'`
+  when importing any governance module.
+- `pyyaml>=6.0` is now an explicit core dependency.
+
+### Notes
+
+No functional code changes. v4.8.2 is broken on PyPI for clean installs;
+users should install v4.8.3 or higher.
+
+---
+
 ## [4.8.2] - 2026-04-17
 
 ### Added — Phase G Layer 4.5: prompt-hash recompute on inject_message
