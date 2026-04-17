@@ -410,6 +410,57 @@ soul S {
 
 
 # ------------------------------------------------------------------
+# __intervention_memory_test_v1__
+def test_11_memory_write_block():
+    """memory.write intervention hook blocks before store.append."""
+    from replay_store import EventStore
+    from replay_runtime import ReplayContext
+    from intervention import InterventionEngine, InterventionBlocked
+    from risk_engine import RiskRule
+
+    rules = [
+        RiskRule(
+            name="BlockSensitiveField",
+            description="Block writes to secret field",
+            kind_filter=("memory.write",),
+            predicate="field == 'secret'",
+            weight=10.0,
+            window=0,
+        ),
+    ]
+    actions = {"BlockSensitiveField": "block"}
+    engine = InterventionEngine(rules, actions)
+
+    tmp = tempfile.mktemp(suffix=".jsonl")
+    store = EventStore.open(tmp, mode="record")
+    ctx = ReplayContext(store=store, mode="record")
+    ctx.set_intervention_engine(engine)
+
+    ctx.record_memory_write("S", 1, "counter", 0, 1)
+    ok_events = [ev for ev in store._load_events_for_verify() if ev.kind == "memory.write"]
+
+    blocked = False
+    try:
+        ctx.record_memory_write("S", 1, "secret", None, "password123")
+    except InterventionBlocked:
+        blocked = True
+
+    store.close()
+    all_events = EventStore.open(tmp, mode="replay")
+    mem_writes = [ev for ev in all_events if ev.kind == "memory.write"]
+    gov_events = [ev for ev in EventStore.open(tmp, mode="replay") if ev.kind == "governance.intervention"]
+    all_events.close()
+
+    import os
+    os.unlink(tmp)
+
+    _record("memory write to 'counter' allowed", len(ok_events) >= 1)
+    _record("memory write to 'secret' blocked", blocked)
+    _record("governance audit emitted for block", len(gov_events) >= 1)
+    if gov_events:
+        _record("audit action is block", gov_events[0].data.get("action") == "block")
+
+
 def main() -> int:
     logging.basicConfig(level=logging.WARNING)
     tests = [
@@ -423,6 +474,7 @@ def main() -> int:
         test_08_action_priority,
         test_09_codegen_emits_wiring,
         test_10_generated_module_loads_engine,
+        test_11_memory_write_block,
     ]
     print("========================================================")
     print("INTERVENTION E2E TESTS - Phase G Layer 3")

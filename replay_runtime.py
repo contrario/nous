@@ -444,6 +444,11 @@ class ReplayContext:
             return
         if self._mode == "record":
             assert self._store is not None
+            # __intervention_memory_hook_v1__
+            self._intervention_check(
+                soul, cycle, "memory.write",
+                {"field": field, "old": old_value, "new": new_value},
+            )
             self._store.append(
                 soul=soul, cycle=cycle, kind="memory.write",
                 parent_id=self._last_parent,
