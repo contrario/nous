@@ -59,6 +59,7 @@ py-modules = [
     "nous_api", "grammar_data",
     "sense_registry", "mood_engine",
     "replay_store", "replay_runtime",
+    "replay_cli", "risk_engine", "intervention", "governance", "stdlib_manager",
 ]
 
 [tool.setuptools.package-data]
