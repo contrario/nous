@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.9.1] - 2026-04-17
+
+### Fixed
+
+- **Missing module in wheel**: `governance_lint.py` was not listed in
+  `[tool.setuptools].py-modules` despite being introduced in v4.9.0.
+  Fresh PyPI installs of 4.9.0 raised `ImportError` when running
+  `nous governance lint` or calling `POST /v1/governance/lint`.
+- v4.9.0 is broken on PyPI; users should install v4.9.1 or higher.
+
+---
+
+
 ## [4.9.0] - 2026-04-17
 
 ### Added -- `nous governance lint` CLI
