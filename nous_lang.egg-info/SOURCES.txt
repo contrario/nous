@@ -29,6 +29,7 @@ fullstack_builders.nous
 gate_alpha.nous
 gate_alpha_test.nous
 governance.py
+governance_lint.py
 grammar_data.py
 hot_reload_engine.py
 immune_engine.py
@@ -104,6 +105,7 @@ nous_lang.egg-info/entry_points.txt
 nous_lang.egg-info/requires.txt
 nous_lang.egg-info/top_level.txt
 tests/test_governance_dashboard.py
+tests/test_governance_lint.py
 tests/test_inject_message.py
 tests/test_intervention.py
 tests/test_policy_grammar.py

@@ -1814,6 +1814,50 @@ async def governance_lint(request: Request, body: _PolicyLintRequest, x_api_key:
     }
 
 
+# __governance_simulate_api_v1__
+
+class _PolicySimulateRequest(BaseModel):
+    source: str = Field(default="", max_length=200_000)
+    event_kind: str = Field(default="", max_length=256)
+    event_data: dict[str, Any] = Field(default_factory=dict)
+
+
+@app.post("/v1/governance/simulate")
+@limiter.limit("60/minute")
+async def governance_simulate(request: Request, body: _PolicySimulateRequest, x_api_key: Optional[str] = Header(None)):
+    """Simulate an event against declared policies and return which fire.
+
+    Body:    {source, event_kind, event_data}
+    Returns: {ok, result} where result has matches[], fired_count, policy_count.
+    """
+    require_api_key(x_api_key)
+    if not body.event_kind:
+        raise HTTPException(
+            status_code=422,
+            detail={"error": "event_kind is required", "code": "SIM001"},
+        )
+    try:
+        from governance_simulator import simulate_event
+    except ImportError:
+        raise HTTPException(
+            status_code=501,
+            detail={"error": "governance_simulator module not available", "code": "SIM002"},
+        )
+    try:
+        result = simulate_event(body.source, body.event_kind, body.event_data)
+    except Exception as exc:
+        return {
+            "ok": False,
+            "error": str(exc),
+            "code": "SIM003",
+            "result": None,
+        }
+    return {
+        "ok": True,
+        "result": result.to_dict(),
+    }
+
+
 # __replay_api_v1__
 
 @app.get("/v1/replay/summary")

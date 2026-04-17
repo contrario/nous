@@ -453,6 +453,93 @@ def test_known_kinds_constant() -> None:
     )
 
 
+# __governance_lint_tests_error_on_v1__
+def test_parse_rule_codes_empty() -> None:
+    from governance_lint import _parse_rule_codes
+    _check("parse_empty", _parse_rule_codes("") == frozenset(), "empty")
+    _check("parse_none", _parse_rule_codes(None) == frozenset(), "none")
+
+
+def test_parse_rule_codes_single() -> None:
+    from governance_lint import _parse_rule_codes
+    got = _parse_rule_codes("L010")
+    _check("parse_single", got == frozenset({"L010"}), f"got={got}")
+
+
+def test_parse_rule_codes_multiple_with_whitespace() -> None:
+    from governance_lint import _parse_rule_codes
+    got = _parse_rule_codes(" L010 , L007 ")
+    _check("parse_multiple", got == frozenset({"L010", "L007"}), f"got={got}")
+
+
+def test_parse_rule_codes_lowercase_accepted() -> None:
+    from governance_lint import _parse_rule_codes
+    got = _parse_rule_codes("l012")
+    _check("parse_lower", got == frozenset({"L012"}), f"got={got}")
+
+
+def test_parse_rule_codes_invalid_raises() -> None:
+    from governance_lint import _parse_rule_codes
+    try:
+        _parse_rule_codes("L999")
+        _check("parse_invalid", False, "expected ValueError")
+    except ValueError:
+        _check("parse_invalid", True, "")
+
+
+def test_lint_cli_error_on_elevates_warning() -> None:
+    with tempfile.NamedTemporaryFile("w", suffix=".nous", delete=False) as fd:
+        fd.write("")
+        path = fd.name
+    try:
+        code_plain = lint_cli(path, output_format="text", strict=False)
+        code_elev = lint_cli(path, output_format="text", strict=False, error_on="L009")
+        _check("cli_elev_plain_zero", code_plain == 0, f"plain={code_plain}")
+        _check("cli_elev_promoted_one", code_elev == 1, f"elev={code_elev}")
+    finally:
+        Path(path).unlink()
+
+
+def test_lint_cli_error_on_no_match_exit_zero() -> None:
+    with tempfile.NamedTemporaryFile("w", suffix=".nous", delete=False) as fd:
+        fd.write("")
+        path = fd.name
+    try:
+        code = lint_cli(path, output_format="text", strict=False, error_on="L010")
+        _check("cli_elev_no_match", code == 0, f"code={code}")
+    finally:
+        Path(path).unlink()
+
+
+def test_lint_cli_error_on_invalid_code_exit_two() -> None:
+    with tempfile.NamedTemporaryFile("w", suffix=".nous", delete=False) as fd:
+        fd.write("")
+        path = fd.name
+    try:
+        code = lint_cli(path, output_format="text", strict=False, error_on="L999")
+        _check("cli_elev_invalid", code == 2, f"code={code}")
+    finally:
+        Path(path).unlink()
+
+
+def test_lint_cli_error_on_accepts_frozenset() -> None:
+    with tempfile.NamedTemporaryFile("w", suffix=".nous", delete=False) as fd:
+        fd.write("")
+        path = fd.name
+    try:
+        code = lint_cli(path, output_format="text", strict=False, error_on=frozenset({"L009"}))
+        _check("cli_elev_frozenset", code == 1, f"code={code}")
+    finally:
+        Path(path).unlink()
+
+
+def test_valid_rule_codes_constant() -> None:
+    from governance_lint import VALID_RULE_CODES
+    expected = {"L000", "L001", "L002", "L003", "L004", "L006", "L007",
+                "L008", "L009", "L010", "L011", "L012", "L100"}
+    _check("valid_rule_codes", set(VALID_RULE_CODES) == expected, f"got={set(VALID_RULE_CODES)}")
+
+
 def run_all() -> int:
     tests = [
         test_empty_file_warns,
@@ -491,6 +578,17 @@ def run_all() -> int:
         test_integration_parse_error_is_l100,
         test_valid_actions_constant,
         test_known_kinds_constant,
+        # __governance_lint_tests_run_all_error_on_v1__
+        test_parse_rule_codes_empty,
+        test_parse_rule_codes_single,
+        test_parse_rule_codes_multiple_with_whitespace,
+        test_parse_rule_codes_lowercase_accepted,
+        test_parse_rule_codes_invalid_raises,
+        test_lint_cli_error_on_elevates_warning,
+        test_lint_cli_error_on_no_match_exit_zero,
+        test_lint_cli_error_on_invalid_code_exit_two,
+        test_lint_cli_error_on_accepts_frozenset,
+        test_valid_rule_codes_constant,
     ]
     for t in tests:
         try:

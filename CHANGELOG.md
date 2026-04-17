@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.10.0] - 2026-04-17
+
+### Added
+- `--error-on CODES` CLI flag for `nous governance lint` — elevate non-error rules to failure (e.g. `--error-on L010,L007`). Exit 2 on invalid rule codes.
+- `nous verify` now runs governance lint after formal verification. Errors fail the build by default. New flags: `--no-lint`, `--lint-strict`, `--lint-error-on`.
+- LSP server emits lint diagnostics with source `nous.lint`. Visible as red/amber/blue squiggles in VS Code (L008 error, L010 warning, L007 info).
+- New module `governance_simulator.py` — safe-eval engine for what-if policy evaluation. Data fields become bare names in signal namespace.
+- New HTTP endpoint `POST /v1/governance/simulate` — simulate an event against declared policies. Error codes SIM001/SIM002/SIM003.
+- New IDE element: EVENT SIMULATION strip in Governance tab with kind/data inputs and color-coded fired/skipped matches.
+- New constant `VALID_RULE_CODES` and helper `_parse_rule_codes()` in `governance_lint`.
+- New template `governance_demo.nous` with 5 policies across 3 event kinds.
+
+### Changed
+- `lint_cli()` signature extended with optional `error_on: str | frozenset[str] | None = None`.
+- `cmd_verify()` behavior change: files with governance lint errors now fail the build. Use `--no-lint` to restore pre-4.10.0 behavior.
+
+### Stats
+- Tests: 163 -> 212 (+49)
+- Regression templates: 52/52 byte-identical
+- Codegen touch: zero
+- New modules: 1 (`governance_simulator`)
+- New tests files: 3 (`test_governance_simulator`, `test_verify_lint_integration`, `test_lsp_lint_integration`)
+
 ## [4.9.1] - 2026-04-17
 
 ### Fixed

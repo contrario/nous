@@ -16,6 +16,7 @@ dream_engine
 error_recovery
 formatter
 governance
+governance_lint
 grammar_data
 hot_reload_engine
 immune_engine

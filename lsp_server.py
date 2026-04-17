@@ -254,6 +254,31 @@ class NousDiagnostics:
                     message=warn.message,
                 ))
 
+        # __lint_diagnostics_v1__
+        try:
+            from governance_lint import GovernanceLinter
+            linter = GovernanceLinter()
+            report = linter.lint_source(source)
+            sev_map = {"error": SEVERITY_ERROR, "warning": SEVERITY_WARNING, "info": 3}
+            for issue in report.issues:
+                if issue.rule == "L100":
+                    continue
+                line = 0
+                if issue.policy:
+                    pat = re.compile(r"^\s*policy\s+" + re.escape(issue.policy) + r"\b", re.MULTILINE)
+                    m = pat.search(source)
+                    if m:
+                        line = source[:m.start()].count("\n")
+                diagnostics.append(Diagnostic(
+                    range=Range(Position(line, 0), Position(line, 200)),
+                    severity=sev_map.get(issue.severity, SEVERITY_WARNING),
+                    code=issue.rule,
+                    source="nous.lint",
+                    message=issue.message,
+                ))
+        except Exception as exc:
+            log.warning(f"Lint stage failed: {exc!r}")
+
         return diagnostics
 
 

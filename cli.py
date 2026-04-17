@@ -34,7 +34,7 @@ from codegen import generate_python
 from typechecker import typecheck_program
 from replay_cli import cmd_replay
 
-VERSION = "4.9.1"
+VERSION = "4.10.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -804,6 +804,7 @@ def cmd_create(args: argparse.Namespace) -> int:
     return 0 if result.ok else 1
 
 
+# __governance_lint_verify_integration_v1__
 def cmd_verify(args: argparse.Namespace) -> int:
     source = Path(args.file)
     if not source.exists():
@@ -816,7 +817,44 @@ def cmd_verify(args: argparse.Namespace) -> int:
     world_name = program.world.name if program.world else "Unknown"
     vresult = verify_program(program)
     print_verification_report(vresult, world_name)
-    return 0 if vresult.ok else 1
+    verify_ok = vresult.ok
+    skip_lint = getattr(args, "no_lint", False)
+    lint_strict = getattr(args, "lint_strict", False)
+    lint_error_on = getattr(args, "lint_error_on", None)
+    lint_ok = True
+    if not skip_lint:
+        from governance_lint import (
+            GovernanceLinter,
+            _parse_rule_codes,
+            render_text,
+        )
+        try:
+            elevated_codes = _parse_rule_codes(lint_error_on)
+        except ValueError as exc:
+            print(f"verify: {exc}", file=sys.stderr)
+            return 2
+        linter = GovernanceLinter()
+        report = linter.lint_file(str(source))
+        print()
+        print(render_text(report))
+        elevated = tuple(
+            i for i in report.issues
+            if i.severity != "error" and i.rule in elevated_codes
+        )
+        if elevated:
+            print()
+            print(f"Elevated: {len(elevated)} issue(s) promoted to error via --lint-error-on")
+            for i in elevated:
+                pol = f"[{i.policy}]" if i.policy else ""
+                print(f"  ELEV {i.rule} {pol} {i.message}")
+        lint_ok = (
+            not report.has_errors
+            and not elevated
+            and not (lint_strict and report.has_warnings)
+        )
+    if verify_ok and lint_ok:
+        return 0
+    return 1
 
 
 def cmd_selfcompile(args: argparse.Namespace) -> int:
@@ -1350,11 +1388,13 @@ def cmd_governance(args: Any) -> int:
         from governance import stats_log_cli
         return stats_log_cli(args.log)
     # __governance_lint_cli_v1__
+    # __governance_lint_cli_error_on_cmd_v1__
     elif sub == "lint":
         from governance_lint import lint_cli
         fmt = getattr(args, "format", "text")
         strict = getattr(args, "strict", False)
-        return lint_cli(args.source, output_format=fmt, strict=strict)
+        error_on = getattr(args, "error_on", None)
+        return lint_cli(args.source, output_format=fmt, strict=strict, error_on=error_on)
     else:
         print("Usage: nous governance {policies|inspect|stats|lint}")
         return 1
@@ -1483,6 +1523,10 @@ def main() -> int:
 
     p = sub.add_parser("verify", help="Formal verification of .nous program")
     p.add_argument("file")
+    # __governance_lint_verify_subparser_v1__
+    p.add_argument("--no-lint", action="store_true", help="Skip governance lint after verification")
+    p.add_argument("--lint-strict", action="store_true", help="Lint: fail on warnings too")
+    p.add_argument("--lint-error-on", default=None, metavar="CODES", help="Lint: elevate rules (e.g. L010,L007)")
 
     p = sub.add_parser("self-compile", help="Self-hosting: compile .nous via compiler.nous")
     p.add_argument("files", nargs="+", help=".nous files to compile")
@@ -1570,6 +1614,13 @@ def main() -> int:
     p_gov_lint.add_argument("source", help="Path to .nous file")
     p_gov_lint.add_argument("--format", default="text", choices=["text", "json"], help="Output format")
     p_gov_lint.add_argument("--strict", action="store_true", help="Exit 1 on warnings too")
+    # __governance_lint_error_on_arg_v1__
+    p_gov_lint.add_argument(
+        "--error-on",
+        default=None,
+        metavar="CODES",
+        help="Comma-separated rule codes to elevate to error (e.g. L010,L007)",
+    )
 
     args = ap.parse_args()
     commands = {

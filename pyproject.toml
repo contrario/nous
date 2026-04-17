@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nous-lang"
-version = "4.9.1"
+version = "4.10.0"
 description = "NOUS (Νοῦς) — The Living Language for Agentic AI Systems"
 readme = "README.md"
 license = {text = "MIT"}
@@ -60,7 +60,8 @@ py-modules = [
     "nous_api", "grammar_data",
     "sense_registry", "mood_engine",
     "replay_store", "replay_runtime",
-    "replay_cli", "risk_engine", "intervention", "governance", "governance_lint", "stdlib_manager",
+    "replay_cli", "risk_engine", "intervention", "governance", "governance_simulator",
+    "governance_lint", "stdlib_manager",
 ]
 
 [tool.setuptools.package-data]

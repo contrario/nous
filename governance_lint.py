@@ -49,6 +49,28 @@ KNOWN_KINDS: frozenset[str] = frozenset({
 })
 
 
+# __governance_lint_rule_codes_v1__
+VALID_RULE_CODES: frozenset[str] = frozenset({
+    "L000", "L001", "L002", "L003", "L004",
+    "L006", "L007", "L008", "L009", "L010",
+    "L011", "L012", "L100",
+})
+
+
+def _parse_rule_codes(spec: str | None) -> frozenset[str]:
+    """Parse comma-separated rule codes. Raises ValueError on invalid codes."""
+    if not spec:
+        return frozenset()
+    tokens = [t.strip().upper() for t in spec.split(",") if t.strip()]
+    invalid = [t for t in tokens if t not in VALID_RULE_CODES]
+    if invalid:
+        raise ValueError(
+            f"Invalid rule code(s): {', '.join(invalid)}. "
+            f"Valid codes: {', '.join(sorted(VALID_RULE_CODES))}"
+        )
+    return frozenset(tokens)
+
+
 @dataclass(frozen=True)
 class LintIssue:
     rule: str
@@ -324,15 +346,48 @@ def render_json(report: LintReport) -> str:
     return json.dumps(report.to_dict(), indent=2)
 
 
-def lint_cli(source_path: str, output_format: str = "text", strict: bool = False) -> int:
-    """CLI entrypoint. Returns exit code."""
+# __governance_lint_cli_error_on_v1__
+def lint_cli(
+    source_path: str,
+    output_format: str = "text",
+    strict: bool = False,
+    error_on: str | frozenset[str] | None = None,
+) -> int:
+    """CLI entrypoint. Returns exit code.
+
+    error_on: comma-separated rule codes (str) or a frozenset of codes
+    (e.g. "L010,L007"). Non-error issues matching these rules are
+    elevated to exit 1. Invalid spec -> exit 2.
+    """
+    if isinstance(error_on, str):
+        try:
+            elevated_codes = _parse_rule_codes(error_on)
+        except ValueError as exc:
+            print(f"lint: {exc}")
+            return 2
+    elif error_on is None:
+        elevated_codes = frozenset()
+    else:
+        elevated_codes = error_on
     linter = GovernanceLinter()
     report = linter.lint_file(source_path)
     if output_format == "json":
         print(render_json(report))
     else:
         print(render_text(report))
+    elevated = tuple(
+        i for i in report.issues
+        if i.severity != "error" and i.rule in elevated_codes
+    )
+    if output_format != "json" and elevated:
+        print()
+        print(f"Elevated: {len(elevated)} issue(s) promoted to error via --error-on")
+        for i in elevated:
+            pol = f"[{i.policy}]" if i.policy else ""
+            print(f"  ELEV {i.rule} {pol} {i.message}")
     if report.has_errors:
+        return 1
+    if elevated:
         return 1
     if strict and report.has_warnings:
         return 1

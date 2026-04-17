@@ -1,0 +1,88 @@
+world GovernanceDemo {
+    heartbeat = 10s
+    telemetry {
+        enabled: true
+        exporter: console
+        sample_rate: 1.0
+    }
+
+    policy HighCost {
+        kind: "llm.request"
+        signal: cost > 1.0
+        weight: 9.0
+        action: block
+    }
+
+    policy MediumCost {
+        kind: "llm.request"
+        signal: cost > 0.10
+        weight: 5.0
+        action: intervene
+    }
+
+    policy AllRequests {
+        kind: "llm.request"
+        signal: true
+        weight: 1.0
+        action: log_only
+    }
+
+    policy LargeMemory {
+        kind: "memory.write"
+        signal: size > 1024
+        weight: 4.0
+        action: intervene
+    }
+
+    policy SlowSense {
+        kind: "sense.invoke"
+        signal: latency > 500
+        weight: 3.0
+        action: log_only
+    }
+}
+
+message Query {
+    text: string
+}
+
+message Answer {
+    text: string
+    confidence: float
+}
+
+soul Analyst {
+    mind: deepseek-chat @ Tier1
+    senses: [http_get]
+    memory {
+        queries_seen: int = 0
+    }
+    instinct {
+        let q = listen Auditor::Query
+        guard q != null else sleep 5s
+        speak Answer(text: "analysis complete", confidence: 0.9)
+        remember queries_seen = queries_seen + 1
+    }
+    heal {
+        on timeout => retry(3, timeout)
+        on api_error => retry(2, api_error)
+    }
+}
+
+soul Auditor {
+    mind: claude-3-haiku @ Tier0A
+    senses: [http_get]
+    memory {
+        audits: int = 0
+    }
+    instinct {
+        speak Query(text: "check latest output")
+        let a = listen Analyst::Answer
+        guard a != null else sleep 5s
+        remember audits = audits + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+        on api_error => retry(2, api_error)
+    }
+}
