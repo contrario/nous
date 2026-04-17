@@ -222,6 +222,109 @@ class ReplayContext:
             )
         return follow.data.get("value")
 
+    # __replay_llm_wrap_v1__
+    async def record_or_replay_llm(
+        self,
+        soul: str,
+        cycle: int,
+        provider: str,
+        model: str,
+        messages: list[dict[str, Any]],
+        temperature: float,
+        execute: Callable[[], Awaitable[dict[str, Any]]],
+    ) -> dict[str, Any]:
+        """Wrap an LLM call. Record in record mode, replay in replay mode.
+
+        `execute` must be a zero-arg async callable that performs the real LLM
+        call and returns a dict with at least: text, cost, tier, tokens_in,
+        tokens_out, elapsed_ms. Extra keys are preserved in the event payload.
+
+        Match key is sha256(canonical(provider|model|messages|temperature))[:16].
+        In replay, the recorded response dict is returned verbatim.
+        """
+        payload = {
+            "provider": provider,
+            "model": model,
+            "messages": messages,
+            "temperature": float(temperature),
+        }
+        canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        prompt_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+        key = prompt_hash[:16]
+
+        if self._mode == "off":
+            return await execute()
+
+        if self._mode == "record":
+            assert self._store is not None
+            seed = self.llm_seed(soul=soul, cycle=cycle, prompt_hash=prompt_hash)
+            messages_preview: list[dict[str, str]] = []
+            for m in messages:
+                role = str(m.get("role", ""))
+                content = str(m.get("content", ""))
+                if len(content) > 400:
+                    content = content[:400] + "...<truncated>"
+                messages_preview.append({"role": role, "content": content})
+            req_ev = self._store.append(
+                soul=soul, cycle=cycle, kind="llm.request",
+                parent_id=self._last_parent,
+                data={
+                    "provider": provider,
+                    "model": model,
+                    "prompt_hash": prompt_hash,
+                    "messages_preview": messages_preview,
+                    "temperature": float(temperature),
+                    "seed": seed,
+                    "key": key,
+                },
+            )
+            self._last_parent = req_ev.seq_id
+            try:
+                result = await execute()
+                resp_data = {
+                    "text": str(result.get("text", "")),
+                    "cost": float(result.get("cost", 0.0)),
+                    "tier": str(result.get("tier", "")),
+                    "tokens_in": int(result.get("tokens_in", 0)),
+                    "tokens_out": int(result.get("tokens_out", 0)),
+                    "elapsed_ms": float(result.get("elapsed_ms", 0.0)),
+                    "key": key,
+                }
+                self._store.append(
+                    soul=soul, cycle=cycle, kind="llm.response",
+                    parent_id=self._last_parent,
+                    data=resp_data,
+                )
+                return result
+            except Exception as exc:
+                self._store.append(
+                    soul=soul, cycle=cycle, kind="llm.error",
+                    parent_id=self._last_parent,
+                    data={"error": repr(exc), "key": key},
+                )
+                raise
+
+        # replay
+        req = self._expect_event(soul, cycle, "llm.request", key=key)
+        self._last_parent = req.seq_id
+        follow = self._expect_one_of(
+            soul=soul, cycle=cycle, kinds=("llm.response", "llm.error"), key=key,
+        )
+        if follow.kind == "llm.error":
+            raise RuntimeError(
+                f"replay: llm call was an error in recorded run: "
+                f"{follow.data.get('error')}"
+            )
+        return {
+            "success": True,
+            "text": follow.data.get("text", ""),
+            "cost": float(follow.data.get("cost", 0.0)),
+            "tier": follow.data.get("tier", ""),
+            "tokens_in": int(follow.data.get("tokens_in", 0)),
+            "tokens_out": int(follow.data.get("tokens_out", 0)),
+            "elapsed_ms": float(follow.data.get("elapsed_ms", 0.0)),
+        }
+
     # ─────────────────────────────────────────────────────────
     # Memory write audit
     # ─────────────────────────────────────────────────────────

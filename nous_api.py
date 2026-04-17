@@ -34,7 +34,7 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 NOUS_DIR = Path(__file__).parent
 TEMPLATES_DIR = NOUS_DIR / "templates"
 LOG_FILE = Path("/var/log/nous_api.log")
-VERSION = "4.4.2"
+VERSION = "4.4.3"
 START_TIME = time.time()
 
 API_KEYS: set[str] = set()
@@ -94,6 +94,10 @@ class ChatRequest(BaseModel):
     soul: Optional[str] = None
     world: str = Field(default="customer_service", description="Template name to load")
     mode: str = Field(default="live", pattern="^(live|dry-run)$")
+    # __api_chat_request_replay_v1__
+    replay_mode: str = Field(default="off", pattern="^(off|record|replay)$")
+    replay_log: Optional[str] = Field(default=None, max_length=1024)
+    replay_seed_base: int = Field(default=0, ge=0)
 
 class WebhookPayload(BaseModel):
     data: Any = None
@@ -724,6 +728,7 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
         tokens_out = 0
         elapsed_ms = 0.0
     else:
+        # __api_chat_llm_replay_v1__
         try:
             from nous_runtime import RUNTIME_TIERS
             reply = ""
@@ -733,30 +738,87 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
             tokens_out = 0
             elapsed_ms = 0.0
 
-            for tier in RUNTIME_TIERS:
-                if not tier.available:
-                    continue
-                result = await asyncio.wait_for(
-                    tier.call(system_prompt, user_prompt),
-                    timeout=35.0,
-                )
-                if result.get("success"):
-                    reply = result.get("text", "")
-                    cost = result.get("cost", 0.0)
-                    tier_used = result.get("tier", tier.name)
-                    tokens_in = result.get("tokens_in", 0)
-                    tokens_out = result.get("tokens_out", 0)
-                    elapsed_ms = result.get("elapsed_ms", 0.0)
-                    break
-                else:
-                    logger.warning(f"chat tier {tier.name} failed: {result.get('error', '?')}")
-                    continue
+            _replay_mode = getattr(body, "replay_mode", "off")
+            _replay_log = getattr(body, "replay_log", None)
+            _replay_seed_base = getattr(body, "replay_seed_base", 0)
+            _replay_ctx = None
+            _replay_store = None
+            if _replay_mode != "off":
+                if not _replay_log:
+                    raise HTTPException(status_code=422, detail={
+                        "error": "replay_log is required when replay_mode != 'off'",
+                        "code": "CHAT006",
+                    })
+                try:
+                    from replay_runtime import ReplayContext
+                    from replay_store import EventStore
+                    _replay_store = EventStore.open(_replay_log, mode=_replay_mode)
+                    _replay_ctx = ReplayContext(
+                        store=_replay_store,
+                        mode=_replay_mode,
+                        seed_base=int(_replay_seed_base),
+                    )
+                except Exception as _rerr:
+                    logger.error(f"chat replay init failed: {_rerr}")
+                    raise HTTPException(status_code=500, detail={
+                        "error": f"replay init failed: {_rerr}",
+                        "code": "CHAT007",
+                    })
 
-            if not reply:
-                raise HTTPException(status_code=503, detail={
-                    "error": "All LLM tiers failed",
-                    "code": "CHAT003",
-                })
+            _turn_cycle = int(sess.get("_replay_turn", 0))
+            sess["_replay_turn"] = _turn_cycle + 1
+
+            try:
+                for tier in RUNTIME_TIERS:
+                    if not tier.available:
+                        continue
+
+                    async def _do_call(_t=tier) -> dict:
+                        return await asyncio.wait_for(
+                            _t.call(system_prompt, user_prompt),
+                            timeout=35.0,
+                        )
+
+                    if _replay_ctx is not None:
+                        _messages = [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ]
+                        result = await _replay_ctx.record_or_replay_llm(
+                            soul=chosen_soul,
+                            cycle=_turn_cycle,
+                            provider=tier.name,
+                            model=getattr(tier, "model", tier.name),
+                            messages=_messages,
+                            temperature=float(getattr(tier, "temperature", 0.0)),
+                            execute=_do_call,
+                        )
+                    else:
+                        result = await _do_call()
+
+                    if result.get("success"):
+                        reply = result.get("text", "")
+                        cost = result.get("cost", 0.0)
+                        tier_used = result.get("tier", tier.name)
+                        tokens_in = result.get("tokens_in", 0)
+                        tokens_out = result.get("tokens_out", 0)
+                        elapsed_ms = result.get("elapsed_ms", 0.0)
+                        break
+                    else:
+                        logger.warning(f"chat tier {tier.name} failed: {result.get('error', '?')}")
+                        continue
+
+                if not reply:
+                    raise HTTPException(status_code=503, detail={
+                        "error": "All LLM tiers failed",
+                        "code": "CHAT003",
+                    })
+            finally:
+                if _replay_store is not None:
+                    try:
+                        _replay_store.close()
+                    except Exception as _cerr:
+                        logger.warning(f"chat replay store close failed: {_cerr}")
 
         except asyncio.TimeoutError:
             raise HTTPException(status_code=504, detail={"error": "Chat timed out (35s)", "code": "CHAT004"})

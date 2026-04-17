@@ -1,5 +1,24 @@
 # Changelog
 
+## [4.4.3] - 2026-04-17
+### Added
+- **Phase D — LLM Replay in API** — chat endpoint now supports deterministic LLM replay
+- **`ReplayContext.record_or_replay_llm`** — coroutine wrap for any async LLM call
+  - Events: `llm.request`, `llm.response`, `llm.error`
+  - Match key: `sha256(provider | model | canonical(messages) | temperature)[:16]`
+  - Prompt hash mismatch raises `ReplayDivergence`
+  - Preserves cost, tokens_in, tokens_out, tier, elapsed_ms in recorded response
+- **`ChatRequest`** extended with three optional fields: `replay_mode` (off|record|replay), `replay_log`, `replay_seed_base`
+- **`tests/test_replay_phase_d.py`** — 6-step E2E harness (OFF passthrough, record roundtrip, replay hit, prompt-hash divergence, error record+replay, seed determinism)
+
+### Changed
+- `/v1/chat` handler wraps the tier-call loop under `ReplayContext` when `replay_mode != "off"`; default behavior unchanged
+
+### Stability
+- 40 regression templates remain byte-identical
+- Phase A foundation: 7/7, Phase C E2E: 10/10, Phase D E2E: 6/6 — all green
+
+
 ## [1.4.0] - 2026-04-12
 
 ### Added
