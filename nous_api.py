@@ -1737,6 +1737,233 @@ async def governance_stats(
     }
 
 
+# __policy_preview_api_v1__
+
+class _PolicyPreviewRequest(BaseModel):
+    source: str = Field(..., min_length=1, max_length=200_000)
+
+
+@app.post("/v1/governance/policies/preview")
+@limiter.limit("60/minute")
+async def governance_policies_preview(request: Request, body: _PolicyPreviewRequest, x_api_key: Optional[str] = Header(None)):
+    """Parse raw .nous source and return declared policies.
+
+    Used by the policies editor UI to live-preview policy declarations
+    without requiring a world template on disk.
+    """
+    require_api_key(x_api_key)
+    try:
+        from governance import PolicyInspector
+    except ImportError:
+        raise HTTPException(status_code=501, detail={"error": "governance module not available", "code": "GOV001"})
+
+    try:
+        policies = PolicyInspector.from_source(body.source, source_file="<editor>")
+    except Exception as exc:
+        return {
+            "ok": False,
+            "error": str(exc),
+            "code": "GOV006",
+            "policies": [],
+        }
+
+    return {
+        "ok": True,
+        "policies": [p.to_dict() for p in policies],
+        "count": len(policies),
+    }
+
+
+# __replay_api_v1__
+
+@app.get("/v1/replay/summary")
+@limiter.limit("60/minute")
+async def replay_summary(request: Request, log: str = "", x_api_key: Optional[str] = Header(None)):
+    """Summary of a replay log: event counts by kind, souls seen, time range, hash-chain head."""
+    require_api_key(x_api_key)
+    if not log:
+        raise HTTPException(status_code=422, detail={"error": "log parameter required", "code": "REP003"})
+    from pathlib import Path as _P
+    log_path = _P(log)
+    if not log_path.exists():
+        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "REP002"})
+    try:
+        import json as _json
+        by_kind: dict[str, int] = {}
+        souls: set[str] = set()
+        total = 0
+        first_ts: Optional[float] = None
+        last_ts: Optional[float] = None
+        last_hash: str = ""
+        last_seq: int = -1
+        with log_path.open("r", encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    ev = _json.loads(line)
+                except Exception:
+                    continue
+                total += 1
+                k = ev.get("kind", "")
+                if k:
+                    by_kind[k] = by_kind.get(k, 0) + 1
+                s = ev.get("soul", "")
+                if s:
+                    souls.add(s)
+                ts = ev.get("timestamp")
+                if ts is not None:
+                    try:
+                        ts_f = float(ts)
+                        if first_ts is None or ts_f < first_ts:
+                            first_ts = ts_f
+                        if last_ts is None or ts_f > last_ts:
+                            last_ts = ts_f
+                    except Exception:
+                        pass
+                h = ev.get("hash", "")
+                if h:
+                    last_hash = h
+                sq = ev.get("seq_id", -1)
+                try:
+                    sq_i = int(sq)
+                    if sq_i > last_seq:
+                        last_seq = sq_i
+                except Exception:
+                    pass
+        return {
+            "log": log,
+            "total_events": total,
+            "by_kind": by_kind,
+            "souls": sorted(souls),
+            "first_timestamp": first_ts,
+            "last_timestamp": last_ts,
+            "last_seq_id": last_seq if last_seq >= 0 else None,
+            "last_hash": last_hash,
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail={"error": f"failed to read log: {exc}", "code": "REP004"})
+
+
+@app.get("/v1/replay/events")
+@limiter.limit("60/minute")
+async def replay_events(
+    request: Request,
+    log: str = "",
+    kind: Optional[str] = None,
+    soul: Optional[str] = None,
+    since: Optional[float] = None,
+    limit: int = 100,
+    offset: int = 0,
+    x_api_key: Optional[str] = Header(None),
+):
+    """Return a filtered slice of events from a replay log. Events returned as-recorded."""
+    require_api_key(x_api_key)
+    if not log:
+        raise HTTPException(status_code=422, detail={"error": "log parameter required", "code": "REP003"})
+    from pathlib import Path as _P
+    log_path = _P(log)
+    if not log_path.exists():
+        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "REP002"})
+
+    try:
+        import json as _json
+        matched: list[dict] = []
+        skipped = 0
+        total_scanned = 0
+        max_limit = min(max(1, int(limit)), 1000)
+        max_offset = max(0, int(offset))
+        with log_path.open("r", encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                total_scanned += 1
+                try:
+                    ev = _json.loads(line)
+                except Exception:
+                    continue
+                if kind and ev.get("kind") != kind:
+                    continue
+                if soul and ev.get("soul") != soul:
+                    continue
+                if since is not None:
+                    try:
+                        if float(ev.get("timestamp", 0)) < float(since):
+                            continue
+                    except Exception:
+                        continue
+                if skipped < max_offset:
+                    skipped += 1
+                    continue
+                matched.append(ev)
+                if len(matched) >= max_limit:
+                    break
+        return {
+            "log": log,
+            "total_scanned": total_scanned,
+            "returned": len(matched),
+            "offset": max_offset,
+            "limit": max_limit,
+            "events": matched,
+        }
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail={"error": f"failed to read log: {exc}", "code": "REP004"})
+
+
+@app.get("/v1/replay/verify")
+@limiter.limit("30/minute")
+async def replay_verify(request: Request, log: str = "", x_api_key: Optional[str] = Header(None)):
+    """Verify SHA256 hash chain integrity. Returns first divergence if any, else OK."""
+    require_api_key(x_api_key)
+    if not log:
+        raise HTTPException(status_code=422, detail={"error": "log parameter required", "code": "REP003"})
+    from pathlib import Path as _P
+    log_path = _P(log)
+    if not log_path.exists():
+        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "REP002"})
+
+    try:
+        try:
+            from replay_store import EventStore
+        except ImportError:
+            raise HTTPException(status_code=501, detail={"error": "replay module not available", "code": "REP001"})
+
+        store = EventStore.open(log_path, mode="replay")
+        total = 0
+        last_seq = -1
+        last_hash = ""
+        try:
+            for ev in store:
+                total += 1
+                last_seq = getattr(ev, "seq_id", last_seq)
+                last_hash = getattr(ev, "hash", last_hash)
+        finally:
+            try:
+                store.close()
+            except Exception:
+                pass
+
+        return {
+            "log": log,
+            "status": "ok",
+            "verified_events": total,
+            "last_seq_id": last_seq if last_seq >= 0 else None,
+            "last_hash": last_hash,
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        # EventStore raises on chain mismatch. Report as verification failure, not 500.
+        return {
+            "log": log,
+            "status": "tampered",
+            "error": str(exc),
+            "code": "REP005",
+        }
+
+
 @app.exception_handler(500)
 async def internal_error_handler(request: Request, exc):
     logger.error(f"Internal error: {traceback.format_exc()}")
