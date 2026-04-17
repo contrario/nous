@@ -32,8 +32,9 @@ from parser import parse_nous_file
 from validator import validate_program
 from codegen import generate_python
 from typechecker import typecheck_program
+from replay_cli import cmd_replay
 
-VERSION = "4.4.1"
+VERSION = "4.4.2"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -1499,6 +1500,23 @@ def main() -> int:
     p.add_argument("target", help="Modified .nous file")
     p.add_argument("--json", action="store_true", help="Output as JSON")
 
+    # __cli_replay_register_v1__
+    p = sub.add_parser(
+        "replay",
+        help="Inspect/verify/diff/mutate a deterministic replay event log",
+    )
+    p.add_argument("log", help="Path to baseline event log (.jsonl)")
+    p.add_argument("--verify", action="store_true",
+                   help="Verify hash chain only (exit 2 if broken)")
+    p.add_argument("--diff", metavar="LOG2", default=None,
+                   help="Compare against a second event log structurally")
+    p.add_argument("--mutate", metavar="SRC_NOUS", default=None,
+                   help="Re-run modified .nous source against baseline log")
+    p.add_argument("--deep", action="store_true",
+                   help="For --diff: also compare event data payloads")
+    p.add_argument("--json", action="store_true",
+                   help="Emit machine-parseable JSON instead of text")
+
     args = ap.parse_args()
     commands = {
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
@@ -1506,7 +1524,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis, "metabolism": cmd_metabolism, "consciousness": cmd_consciousness,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis, "metabolism": cmd_metabolism, "consciousness": cmd_consciousness, "replay": cmd_replay,
     }
     return commands[args.command](args)
 

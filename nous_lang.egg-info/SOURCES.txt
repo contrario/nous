@@ -25,6 +25,7 @@ dream_lucid_test.nous
 dream_test.nous
 error_recovery.py
 formatter.py
+fullstack_builders.nous
 gate_alpha.nous
 gate_alpha_test.nous
 grammar_data.py
@@ -34,6 +35,7 @@ immune_test.nous
 import_resolver.py
 import_test.nous
 infra_monitor.nous
+kerberus.nous
 lsp_server.py
 mcp_bridge.py
 mcp_example.nous
@@ -42,6 +44,7 @@ metabolism_test.nous
 migrate_v2.py
 mitosis_engine.py
 mitosis_test.nous
+mood_engine.py
 mutation_test.nous
 natural_lang.py
 noesis_alpha.nous
@@ -59,10 +62,13 @@ profiler.py
 pyproject.toml
 registry.py
 repl.py
+replay_runtime.py
+replay_store.py
 research_pipeline.nous
 retire_test.nous
 runtime.py
 self_compiler.py
+sense_registry.py
 signals.nous
 symbiosis_engine.py
 symbiosis_test.nous
@@ -70,8 +76,13 @@ telemetry_engine.py
 telemetry_test.nous
 test_deploy_topology.nous
 test_distributed.nous
+test_emotions.nous
+test_emotions_full.nous
 test_lsp_errors.nous
+test_replay.nous
 test_runner.py
+test_senses_v2.nous
+test_senses_v2_valid.nous
 topology_test.nous
 typechecker.py
 validator.py
@@ -87,3 +98,4 @@ nous_lang.egg-info/dependency_links.txt
 nous_lang.egg-info/entry_points.txt
 nous_lang.egg-info/requires.txt
 nous_lang.egg-info/top_level.txt
+tests/test_replay_e2e.py

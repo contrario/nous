@@ -24,6 +24,7 @@ mcp_bridge
 metabolism_engine
 migrate_v2
 mitosis_engine
+mood_engine
 natural_lang
 nous_api
 nous_ast_runner
@@ -34,8 +35,11 @@ plugin_manager
 profiler
 registry
 repl
+replay_runtime
+replay_store
 runtime
 self_compiler
+sense_registry
 symbiosis_engine
 telemetry_engine
 test_runner

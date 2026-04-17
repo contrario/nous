@@ -1,0 +1,81 @@
+# kerberus.nous — Kerberus Security Platform
+world KerberusSecurity {
+    law CostCeiling = $0.50 per cycle
+    law PassiveOnly = true
+    law RequireAuthorization = true
+    heartbeat = 1h
+}
+
+message ScanFindings {
+    risk_score: float
+    findings: string
+    cve_ids: string
+    source: SoulRef
+}
+
+message SecurityReport {
+    executive_summary: string
+    risk_score: float
+    nis2_status: string
+    source: SoulRef
+}
+
+soul Recon {
+    mind: claude-sonnet-4-5 @ Tier0A
+    senses: [httpx_probe, ssl_analyze, shodan_internetdb,
+             email_security_check, secret_scanner, virustotal_lookup]
+    memory {
+        last_target: string = ""
+        scans_run: int = 0
+    }
+    instinct {
+        let http_data  = sense httpx_probe()
+        let ssl_data   = sense ssl_analyze()
+        let email_data = sense email_security_check()
+        let shodan     = sense shodan_internetdb()
+        remember scans_run += 1
+        speak ScanFindings(risk_score: 0.0, findings: http_data, cve_ids: "", source: self)
+    }
+    heal {
+        on timeout => retry(2, exponential)
+        on error   => sleep 1s
+    }
+    dna {
+        temperature: 0.1 ~ [0.05, 0.3]
+    }
+}
+
+soul Analyst {
+    mind: claude-haiku-4-5 @ Tier0A
+    senses: [nvd_cve_lookup]
+    memory {
+        reports_generated: int = 0
+    }
+    instinct {
+        let findings = listen Recon::ScanFindings
+        let cve_data = sense nvd_cve_lookup(findings.cve_ids)
+        remember reports_generated += 1
+        speak SecurityReport(executive_summary: "", risk_score: findings.risk_score, nis2_status: "pending", source: self)
+    }
+    heal {
+        on timeout => retry(1, exponential)
+    }
+}
+
+nervous_system {
+    Recon -> Analyst
+}
+
+evolution {
+    schedule: 3:00 AM
+    fitness: langfuse(quality_score)
+    mutate Recon.dna {
+        strategy: genetic(population: 3, generations: 2)
+        survive_if: fitness > parent.fitness
+        rollback_if: any_law_violated
+    }
+}
+
+perception {
+    on api_call("kerberus_scan") => wake Recon
+}
