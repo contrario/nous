@@ -111,12 +111,16 @@ class CostTracker:
 
 class SenseCache:
     """Deduplicates sense calls within a single instinct execution.
-    Key = (tool_name, frozenset(args)). Cleared after each instinct run."""
+    Key = (tool_name, frozenset(args)). Cleared after each instinct run.
+    # __sensecache_bypass_v1__
+    When bypass=True every get() reports a miss so callers re-execute
+    the underlying sense (required for deterministic replay capture)."""
 
-    def __init__(self) -> None:
+    def __init__(self, bypass: bool = False) -> None:
         self._cache: dict[str, Any] = {}
         self._hits = 0
         self._misses = 0
+        self._bypass = bool(bypass)
 
     def _make_key(self, tool_name: str, args: dict[str, Any]) -> str:
         sorted_args = tuple(sorted(
@@ -133,6 +137,9 @@ class SenseCache:
         return val
 
     def get(self, tool_name: str, args: dict[str, Any]) -> tuple[bool, Any]:
+        if self._bypass:
+            self._misses += 1
+            return (False, None)
         key = self._make_key(tool_name, args)
         if key in self._cache:
             self._hits += 1
@@ -417,14 +424,31 @@ class NousRuntime:
         heartbeat_seconds: float = 300.0,
         cost_ceiling: float = 0.10,
         channel_maxsize: int = 100,
+        replay_config: Optional[Any] = None,
     ) -> None:
+        # __replay_phase_b_wired__
         self.world_name = world_name
         self.heartbeat_seconds = heartbeat_seconds
         self.cost_ceiling = cost_ceiling
 
         self.channels = ChannelRegistry(default_maxsize=channel_maxsize)
         self.cost_tracker = CostTracker(ceiling=cost_ceiling)
-        self.sense_cache = SenseCache()
+
+        # Replay wiring — always create a context (mode="off" = no-op when disabled).
+        self.replay_config = replay_config
+        self.replay_ctx: Any = self._build_replay_ctx(replay_config)
+        _replay_active = bool(
+            replay_config is not None
+            and getattr(replay_config, "enabled", False)
+            and getattr(replay_config, "mode", "off") != "off"
+        )
+
+        # SenseCache bypass when replay is active so every sense call
+        # actually executes and produces a replay event.
+        if _replay_active:
+            self.sense_cache = SenseCache(bypass=True)
+        else:
+            self.sense_cache = SenseCache()
         self.sense_executor = SenseExecutor(cache=self.sense_cache)
 
         self._runners: list[SoulRunner] = []
@@ -439,6 +463,47 @@ class NousRuntime:
         self._metabolism_engine: Optional[Any] = None
         self._consciousness_engine: Optional[Any] = None
         self._hot_reload_engine: Optional[Any] = None
+
+    @staticmethod
+    def _build_replay_ctx(replay_config: Optional[Any]) -> Any:
+        """Build a ReplayContext; returns a no-op context when disabled or unavailable."""
+        try:
+            from replay_runtime import build_context
+        except Exception:
+            class _NullCtx:
+                mode = "off"
+                def now(self, soul: str = "runtime", cycle: int = 0) -> float:
+                    import time as _t
+                    return _t.time()
+                def rand(self, soul: str = "runtime", cycle: int = 0) -> float:
+                    import random as _r
+                    return _r.random()
+                def randint(self, low: int, high: int, soul: str = "runtime", cycle: int = 0) -> int:
+                    import random as _r
+                    return _r.randint(low, high)
+                def llm_seed(self, soul: str, cycle: int, prompt_hash: str) -> int:
+                    return 0
+                async def record_or_replay_sense(self, soul, cycle, sense_name, args, execute):
+                    return await execute()
+                def record_memory_write(self, soul, cycle, field, old, new) -> None:
+                    return None
+                def record_cycle_start(self, soul, cycle) -> None:
+                    return None
+                def record_cycle_end(self, soul, cycle, status: str = "ok") -> None:
+                    return None
+                def close(self) -> None:
+                    return None
+            return _NullCtx()
+
+        if replay_config is None or not getattr(replay_config, "enabled", False):
+            return build_context(mode="off")
+
+        return build_context(
+            mode=getattr(replay_config, "mode", "off"),
+            path=getattr(replay_config, "path", None),
+            fsync=getattr(replay_config, "fsync", "every_event"),
+            seed_base=getattr(replay_config, "seed_base", 0),
+        )
 
     def add_soul(self, runner: SoulRunner) -> None:
         runner.set_shutdown_event(self._shutdown)

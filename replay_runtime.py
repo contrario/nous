@@ -249,6 +249,7 @@ class ReplayContext:
     # Cycle boundaries (for grouping / indexing)
     # ─────────────────────────────────────────────────────────
     def record_cycle_start(self, soul: str, cycle: int) -> None:
+        # __replay_cycle_consume_v1__
         if self._mode == "record":
             assert self._store is not None
             ev = self._store.append(
@@ -256,6 +257,12 @@ class ReplayContext:
                 parent_id=self._last_parent, data={},
             )
             self._last_parent = ev.seq_id
+            return
+        if self._mode == "replay":
+            ev = self._expect_event(soul, cycle, "cycle.start", key=None)
+            self._last_parent = ev.seq_id
+            return
+        # mode == "off": no-op
 
     def record_cycle_end(self, soul: str, cycle: int, status: str = "ok") -> None:
         if self._mode == "record":
@@ -264,6 +271,11 @@ class ReplayContext:
                 soul=soul, cycle=cycle, kind="cycle.end",
                 parent_id=self._last_parent, data={"status": status},
             )
+            return
+        if self._mode == "replay":
+            self._expect_event(soul, cycle, "cycle.end", key=None)
+            return
+        # mode == "off": no-op
 
     # ─────────────────────────────────────────────────────────
     # Internal: replay event matching

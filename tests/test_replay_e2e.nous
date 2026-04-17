@@ -1,0 +1,39 @@
+world ReplayE2E {
+    law cost_ceiling = $1.00 per cycle
+    heartbeat = 10s
+
+    replay {
+        enabled: true
+        mode: record
+        store: jsonl
+        path: "/tmp/nous_replay_e2e.jsonl"
+        fsync: every_event
+        seed_base: 42
+        capture: [sense, memory, clock, random]
+    }
+}
+
+sense counter_tick {
+    description: "deterministic counter tick"
+    http_get: "http://unused.local/tick"
+    timeout: 5
+    returns: json
+    cache_ttl: 0
+}
+
+soul Ticker {
+    mind: deepseek-chat @ Tier1
+    senses: [counter_tick]
+    memory {
+        ticks: int = 0
+        last_value: int = 0
+    }
+    instinct {
+        let v = sense counter_tick()
+        remember ticks = ticks + 1
+        remember last_value = ticks
+    }
+    heal {
+        on api_error => retry(3, api_error)
+    }
+}

@@ -150,6 +150,13 @@ class NousCodeGen:
                     self._cost_ceiling = law.expr.amount
 
     def generate(self, node_filter: str | None = None) -> str:
+        # __codegen_replay_config_v1__
+        self._replay_on = bool(
+            self.program.world
+            and getattr(self.program.world, "replay", None)
+            and getattr(self.program.world.replay, "enabled", False)
+            and getattr(self.program.world.replay, "mode", "off") != "off"
+        )
         self._node_filter = node_filter
         self._emit_header()
         self._emit_imports()
@@ -239,6 +246,8 @@ class NousCodeGen:
         has_dream = any(s.dream_system for s in self.program.souls)
         if has_dream:
             self._emit("from dream_engine import DreamEngine, DreamConfig")
+        if getattr(self, "_replay_on", False):
+            self._emit("from types import SimpleNamespace as _ReplaySimpleNamespace")
         self._emit_blank()
         self._emit("log = logging.getLogger('nous.runtime')")
 
@@ -354,9 +363,41 @@ class NousCodeGen:
         self._dedent()
         self._emit_blank()
 
+        # __codegen_sense_wrap_v1__
         self._emit("async def _sense(self, tool_name: str, **kwargs: Any) -> Any:")
         self._indent()
-        if soul.emotions is not None and soul.emotions.enabled:
+        _replay_on = getattr(self, "_replay_on", False)
+        _has_mood = soul.emotions is not None and soul.emotions.enabled
+        if _replay_on:
+            # Route every sense call through replay_ctx. The lambda forms the
+            # real executor. Mood signals (if any) wrap the ctx call.
+            self._emit(f'_soul_name = "{soul.name}"')
+            self._emit("_exec = lambda: self._runtime.sense_executor.call(tool_name, kwargs)")
+            if _has_mood:
+                self._emit("try:")
+                self._indent()
+                self._emit("_result = await self._runtime.replay_ctx.record_or_replay_sense(")
+                self._indent()
+                self._emit("soul=_soul_name, cycle=self.cycle_count,")
+                self._emit("sense_name=tool_name, args=kwargs, execute=_exec,")
+                self._dedent()
+                self._emit(")")
+                self._emit("if self._mood: self._mood.record_event(\"sense_ok\")")
+                self._emit("return _result")
+                self._dedent()
+                self._emit("except Exception:")
+                self._indent()
+                self._emit("if self._mood: self._mood.record_event(\"sense_error\")")
+                self._emit("raise")
+                self._dedent()
+            else:
+                self._emit("return await self._runtime.replay_ctx.record_or_replay_sense(")
+                self._indent()
+                self._emit("soul=_soul_name, cycle=self.cycle_count,")
+                self._emit("sense_name=tool_name, args=kwargs, execute=_exec,")
+                self._dedent()
+                self._emit(")")
+        elif _has_mood:
             self._emit("try:")
             self._indent()
             self._emit("_result = await self._runtime.sense_executor.call(tool_name, kwargs)")
@@ -373,10 +414,17 @@ class NousCodeGen:
         self._dedent()
         self._emit_blank()
 
+        # __codegen_cycle_wrap_v1__
         self._emit("async def instinct(self) -> None:")
         self._indent()
         self._emit(f'"""Instinct cycle for {soul.name}"""')
         _has_mood = soul.emotions is not None and soul.emotions.enabled
+        _replay_on = getattr(self, "_replay_on", False)
+        if _replay_on:
+            self._emit("self.cycle_count += 1")
+            self._emit(f'self._runtime.replay_ctx.record_cycle_start("{soul.name}", self.cycle_count)')
+            self._emit("try:")
+            self._indent()
         if _has_mood:
             self._emit("if self._mood: self._mood.on_cycle_start()")
             self._emit("try:")
@@ -392,6 +440,14 @@ class NousCodeGen:
             self._emit("except Exception:")
             self._indent()
             self._emit("if self._mood: self._mood.record_event(\"cycle_failed\")")
+            self._emit("raise")
+            self._dedent()
+        if _replay_on:
+            self._emit(f'self._runtime.replay_ctx.record_cycle_end("{soul.name}", self.cycle_count, "ok")')
+            self._dedent()
+            self._emit("except Exception:")
+            self._indent()
+            self._emit(f'self._runtime.replay_ctx.record_cycle_end("{soul.name}", self.cycle_count, "error")')
             self._emit("raise")
             self._dedent()
         self._dedent()
@@ -527,11 +583,22 @@ class NousCodeGen:
             self._emit(f"{stmt.name} = {self._expr_to_python(value)}")
 
         elif isinstance(stmt, RememberNode):
+            # __codegen_memory_wrap_v1__
             val = self._expr_to_python(stmt.value)
+            _replay_on = getattr(self, "_replay_on", False)
+            if _replay_on:
+                self._emit(f"_old_{stmt.name} = self.{stmt.name}")
             if stmt.op == "+=":
                 self._emit(f"self.{stmt.name} += {val}")
             else:
                 self._emit(f"self.{stmt.name} = {val}")
+            if _replay_on:
+                self._emit(f'self._runtime.replay_ctx.record_memory_write(')
+                self._indent()
+                self._emit(f'"{soul_name}", self.cycle_count, "{stmt.name}",')
+                self._emit(f'_old_{stmt.name}, self.{stmt.name},')
+                self._dedent()
+                self._emit(")")
 
         elif isinstance(stmt, SpeakNode):
             if stmt.target_world:
@@ -639,6 +706,28 @@ class NousCodeGen:
             channel = action.params.get("channel", "")
             self._emit(f"log.warning(f'{{self.name}}: ALERT sent to {channel}')")
 
+
+    def _emit_replay_config_block(self) -> None:
+        """Emit `_replay_config = SimpleNamespace(...)` block.
+        Only called when self._replay_on is True.
+        The emitted object is duck-typed by NousRuntime._build_replay_ctx."""
+        r = self.program.world.replay
+        path_literal = "None" if r.path is None else repr(r.path)
+        capture_literal = repr(list(r.capture))
+        self._emit("# ═══ Deterministic Replay Config ═══")
+        self._emit("_replay_config = _ReplaySimpleNamespace(")
+        self._indent()
+        self._emit(f"enabled={bool(r.enabled)!r},")
+        self._emit(f"mode={r.mode!r},")
+        self._emit(f"store_type={getattr(r, 'store_type', 'jsonl')!r},")
+        self._emit(f"path={path_literal},")
+        self._emit(f"fsync={r.fsync!r},")
+        self._emit(f"seed_base={int(r.seed_base)},")
+        self._emit(f"capture={capture_literal},")
+        self._dedent()
+        self._emit(")")
+        self._emit_blank()
+
     def _emit_build_runtime(self) -> None:
         self._emit_blank()
         self._emit("# ═══ Runtime Builder ═══")
@@ -647,11 +736,15 @@ class NousCodeGen:
         self._indent()
         world_name = self.program.world.name if self.program.world else "Unknown"
         self._emit(f'"""Build event-driven runtime for {world_name}"""')
+        if getattr(self, "_replay_on", False):
+            self._emit_replay_config_block()
         self._emit(f"rt = NousRuntime(")
         self._indent()
         self._emit(f'world_name="{world_name}",')
         self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
         self._emit(f"cost_ceiling=COST_CEILING,")
+        if getattr(self, "_replay_on", False):
+            self._emit("replay_config=_replay_config,")
         self._dedent()
         self._emit(")")
         self._emit_custom_sense_registration()

@@ -1,0 +1,314 @@
+{
+  "compiler.nous": {
+    "error": null,
+    "hash": "72fc3bcc5f711aaddac46db9ddf84bc818cc5cfa52ef1b5868d13d7df75b53f2",
+    "replay_block": false,
+    "skipped": false
+  },
+  "consciousness_test.nous": {
+    "error": null,
+    "hash": "b65b70434add639a2de10a146d4fed1ff2652ec203b4b5d2a23e08274e9e0f9e",
+    "replay_block": false,
+    "skipped": false
+  },
+  "cross_world_command.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches 'a' in the current parser context, at line 28 col 42\n\n       let alert = listen @Radar::Alert as incoming\n                                        ^\nExpected one of: \n\t* \"::\"\n\nPrevious tokens: Token('NAME', 'Alert')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('NAME', 'as') at line 28, column 42.\nExpected one of: \n\t* \"::\"\nPrevious tokens: [Token('NAME', 'Alert')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "cross_world_test.nous": {
+    "error": null,
+    "hash": "76e39900621adcc370e37accc76e88d680359bccebcc2ab041540f5887075de4",
+    "replay_block": false,
+    "skipped": false
+  },
+  "customer_service.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '-' in the current parser context, at line 40 col 30\n\n        if sentiment.score < -0.5 {\n                             ^\nExpected one of: \n\t* BOOL\n\t* LPAR\n\t* DOLLAR\n\t* BANG\n\t* \"%{\"\n\t* STRING\n\t* FLOAT\n\t* DURATION_VAL\n\t* INT\n\t* \"€\"\n\t* LSQB\n\t* NAME\n\nPrevious tokens: Token('COMP_OP', '<')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('MINUS', '-') at line 40, column 30.\nExpected one of: \n\t* SELF\n\t* BOOL\n\t* LPAR\n\t* DOLLAR\n\t* BANG\n\t* NOW\n\t* \"%{\"\n\t* INT\n\t* \"€\"\n\t* \"world\"\n\t* STRING\n\t* DURATION_VAL\n\t* FLOAT\n\t* LSQB\n\t* NAME\n\t* IF\nPrevious tokens: [Token('COMP_OP', '<')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "dream_lucid_test.nous": {
+    "error": null,
+    "hash": "df75f25e72e748d609894dc130c36ee651845ba051acfbe868d286d80a6af7c5",
+    "replay_block": false,
+    "skipped": false
+  },
+  "dream_test.nous": {
+    "error": null,
+    "hash": "28ff15c68c7ac1f6786787f493b9b8687adf68a53e95fde5da1953cf71efe5c0",
+    "replay_block": false,
+    "skipped": false
+  },
+  "fullstack_builders.nous": {
+    "error": null,
+    "hash": "0a16a5d569eeef494202c8c64a9ba56c7c21424f17276f000d5b9d2a57cacbb6",
+    "replay_block": false,
+    "skipped": false
+  },
+  "gate_alpha.nous": {
+    "error": null,
+    "hash": "c7309e73bb5afe665a32253ffea2581b809b839e328f9f2d37cd4c4f808da46d",
+    "replay_block": false,
+    "skipped": false
+  },
+  "gate_alpha_test.nous": {
+    "error": null,
+    "hash": "a0218b07365b4237e0bb97766fd827bdf5ae4005f34447c91284be20d651d0f4",
+    "replay_block": false,
+    "skipped": false
+  },
+  "immune_test.nous": {
+    "error": null,
+    "hash": "82f3fefeecf9fa2f38883467eb06d3c4bc5dfdb834cb86e004fece58f6933b34",
+    "replay_block": false,
+    "skipped": false
+  },
+  "import_test.nous": {
+    "error": null,
+    "hash": "0d06b83595d29aef26bf6f7e762c9782a3574bdd8e27abce580aaa2e756dd73a",
+    "replay_block": false,
+    "skipped": false
+  },
+  "infra_monitor.nous": {
+    "error": null,
+    "hash": "74bdd8d8ca8b9b77beda6352bf941db2a759fdc4e3dedf31cfec4e57a5eaa206",
+    "replay_block": false,
+    "skipped": false
+  },
+  "kerberus.nous": {
+    "error": null,
+    "hash": "11e887480fc4b6016fe0a9963057ad94072d17bc345bdd8963659b33cdc250c4",
+    "replay_block": false,
+    "skipped": false
+  },
+  "mcp_example.nous": {
+    "error": null,
+    "hash": "e5da4ab0c091e1a9fd6a272bd3751ee9563b16a1b96452c53acf355e00c940f4",
+    "replay_block": false,
+    "skipped": false
+  },
+  "metabolism_test.nous": {
+    "error": null,
+    "hash": "92854c7a874ec3a6d4a2a18f47010f74921e586bcb41e01f8cfd6620373e9ace",
+    "replay_block": false,
+    "skipped": false
+  },
+  "mitosis_test.nous": {
+    "error": null,
+    "hash": "f1ba42fd1e28dfd0112262b45fd46e45f9c281dfea0e26bb1f55cbb3d9e4086e",
+    "replay_block": false,
+    "skipped": false
+  },
+  "mutation_test.nous": {
+    "error": null,
+    "hash": "e353323d399bc3b6a46e9d925da4bf94dea545a852e134e1adf012bcac6b7630",
+    "replay_block": false,
+    "skipped": false
+  },
+  "noesis_alpha.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '1' in the current parser context, at line 78 col 31\n\n        on api_error => sleep 1 cycle\n                              ^\nExpected one of: \n\t* DURATION_VAL\n\nPrevious tokens: Token('__ANON_4', 'sleep')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('INT', '1') at line 78, column 31.\nExpected one of: \n\t* DURATION_VAL\nPrevious tokens: [Token('__ANON_4', 'sleep')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "noesis_integration_test.nous": {
+    "error": null,
+    "hash": "b6afc958f1851254847bb20cba15604e2c44e80733d0939624811ff2adc2e53c",
+    "replay_block": false,
+    "skipped": false
+  },
+  "noesis_phase9_test.nous": {
+    "error": null,
+    "hash": "153ba61d288e3f31622359fb723de93e18030c8ec6d9dd066873dee81a899d40",
+    "replay_block": false,
+    "skipped": false
+  },
+  "noosphere_migrated.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '.' in the current parser context, at line 88 col 19\n\n    mind: claude-3.5-haiku @ Tier1\n                  ^\nExpected one of: \n\t* MINUS\n\t* NAME\n\t* AT\n\nPrevious tokens: Token('INT', '3')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('DOT', '.') at line 88, column 19.\nExpected one of: \n\t* MINUS\n\t* NAME\n\t* AT\nPrevious tokens: [Token('INT', '3')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "nous-v2.0/stdlib/aggregator/main.nous": {
+    "error": null,
+    "hash": "2e418bd299a52d22fede52bb974c7e08891199b5839f63969cf776c0e9cc11b6",
+    "replay_block": false,
+    "skipped": false
+  },
+  "nous-v2.0/stdlib/logger/main.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '1' in the current parser context, at line 52 col 33\n\n        on write_error => sleep 1 cycle\n                                ^\nExpected one of: \n\t* DURATION_VAL\n\nPrevious tokens: Token('__ANON_4', 'sleep')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('INT', '1') at line 52, column 33.\nExpected one of: \n\t* DURATION_VAL\nPrevious tokens: [Token('__ANON_4', 'sleep')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "nous-v2.0/stdlib/router/main.nous": {
+    "error": null,
+    "hash": "6284d07042470f338ccb0528088f055550a1f5181503ff06e4a699e1212be317",
+    "replay_block": false,
+    "skipped": false
+  },
+  "nous-v2.0/stdlib/scheduler/main.nous": {
+    "error": null,
+    "hash": "74295d3abc42e54f51d89a620b403067f0080f09d04a820d4f784fbfee21a986",
+    "replay_block": false,
+    "skipped": false
+  },
+  "nous-v2.0/stdlib/watcher/main.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '1' in the current parser context, at line 54 col 31\n\n        on api_error => sleep 1 cycle\n                              ^\nExpected one of: \n\t* DURATION_VAL\n\nPrevious tokens: Token('__ANON_4', 'sleep')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('INT', '1') at line 54, column 31.\nExpected one of: \n\t* DURATION_VAL\nPrevious tokens: [Token('__ANON_4', 'sleep')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "nous-v2.0/typecheck_test.nous": {
+    "error": null,
+    "hash": "b0644a32023a3759c18a2565cb6e8d51968fb9a7fa838858ab574585607a09a3",
+    "replay_block": false,
+    "skipped": false
+  },
+  "research_pipeline.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '1' in the current parser context, at line 59 col 32\n\n        on rate_limit => sleep 1 cycle\n                               ^\nExpected one of: \n\t* DURATION_VAL\n\nPrevious tokens: Token('__ANON_4', 'sleep')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('INT', '1') at line 59, column 32.\nExpected one of: \n\t* DURATION_VAL\nPrevious tokens: [Token('__ANON_4', 'sleep')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "retire_test.nous": {
+    "error": null,
+    "hash": "135983a598a0f21c25b267a8d56d6374bc39b89491a4cf846811ce32ab17d7bf",
+    "replay_block": false,
+    "skipped": false
+  },
+  "signals.nous": {
+    "error": null,
+    "hash": "423cfd978482bd1d2b8b26cf031fe363aa7fdd9a44efbce1bdcb969f08ce7a75",
+    "replay_block": false,
+    "skipped": false
+  },
+  "stdlib/aggregator/main.nous": {
+    "error": null,
+    "hash": "2e418bd299a52d22fede52bb974c7e08891199b5839f63969cf776c0e9cc11b6",
+    "replay_block": false,
+    "skipped": false
+  },
+  "stdlib/logger/main.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '1' in the current parser context, at line 52 col 33\n\n        on write_error => sleep 1 cycle\n                                ^\nExpected one of: \n\t* DURATION_VAL\n\nPrevious tokens: Token('__ANON_4', 'sleep')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('INT', '1') at line 52, column 33.\nExpected one of: \n\t* DURATION_VAL\nPrevious tokens: [Token('__ANON_4', 'sleep')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "stdlib/router/main.nous": {
+    "error": null,
+    "hash": "6284d07042470f338ccb0528088f055550a1f5181503ff06e4a699e1212be317",
+    "replay_block": false,
+    "skipped": false
+  },
+  "stdlib/scheduler/main.nous": {
+    "error": null,
+    "hash": "74295d3abc42e54f51d89a620b403067f0080f09d04a820d4f784fbfee21a986",
+    "replay_block": false,
+    "skipped": false
+  },
+  "stdlib/watcher/main.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '1' in the current parser context, at line 54 col 31\n\n        on api_error => sleep 1 cycle\n                              ^\nExpected one of: \n\t* DURATION_VAL\n\nPrevious tokens: Token('__ANON_4', 'sleep')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('INT', '1') at line 54, column 31.\nExpected one of: \n\t* DURATION_VAL\nPrevious tokens: [Token('__ANON_4', 'sleep')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  },
+  "symbiosis_test.nous": {
+    "error": null,
+    "hash": "bee60ba12e3571037594ebaf241f1a8e6b46f23001f95237892f9fe4aed17402",
+    "replay_block": false,
+    "skipped": false
+  },
+  "telemetry_test.nous": {
+    "error": null,
+    "hash": "0b53869c2a39487a4f8d78d86b370945a09296fa0fdb0fc07d412f918edd1504",
+    "replay_block": false,
+    "skipped": false
+  },
+  "templates/content_pipeline.nous": {
+    "error": null,
+    "hash": "1c9c920b13a591dabfb60d4cd4863d9c8976ef70415fbd6b82fa1e97e9943627",
+    "replay_block": false,
+    "skipped": false
+  },
+  "templates/customer_service.nous": {
+    "error": null,
+    "hash": "6ba2234cd6fbb53bd3c29af4e7fedcb4fc279b82184989a0f1a8da3f25218f93",
+    "replay_block": false,
+    "skipped": false
+  },
+  "templates/market_monitor.nous": {
+    "error": null,
+    "hash": "8799ad66311f0eea48943c75b07bfd8bceea25251c7115ef7aca2bb0a74e9867",
+    "replay_block": false,
+    "skipped": false
+  },
+  "templates/trading_floor.nous": {
+    "error": null,
+    "hash": "189b39b037f011ca54e7791ca84e78c099a75557e992938cf09cba794630ee57",
+    "replay_block": false,
+    "skipped": false
+  },
+  "test_deploy_topology.nous": {
+    "error": null,
+    "hash": "89f111b1e24929612e6590adea2eefb7db3ec4c9fb8ee3faf3be15ae9e2377c5",
+    "replay_block": false,
+    "skipped": false
+  },
+  "test_distributed.nous": {
+    "error": null,
+    "hash": "1bf5da34ae863f968214676b499b7827e1aae97652e39a1fcc4c28b7355e92f8",
+    "replay_block": false,
+    "skipped": false
+  },
+  "test_emotions.nous": {
+    "error": null,
+    "hash": "c51c3ab295224ba7272dd8ac992350951d93904b289ae9344d57ef4e29e5dbd0",
+    "replay_block": false,
+    "skipped": false
+  },
+  "test_emotions_full.nous": {
+    "error": null,
+    "hash": "6fbbab1ad2a313a915774f29b7ae75e3b1ea5178d7cffdd85dfe563e84bb51a3",
+    "replay_block": false,
+    "skipped": false
+  },
+  "test_lsp_errors.nous": {
+    "error": null,
+    "hash": "02b99ff5071e0a10c6c411d35a56ad5686b4176174701b008956eb7f833169c8",
+    "replay_block": false,
+    "skipped": false
+  },
+  "test_replay.nous": {
+    "error": null,
+    "hash": null,
+    "replay_block": true,
+    "skipped": true
+  },
+  "test_senses_v2.nous": {
+    "error": null,
+    "hash": "c512ce4c822ba6c25a271906b16408c5ff8709938bf4a744712e36095548fe37",
+    "replay_block": false,
+    "skipped": false
+  },
+  "test_senses_v2_valid.nous": {
+    "error": null,
+    "hash": "fcc592ccfd8a6784415af2cbb49eca074043f00fa454602a95b11a535e6ea5f9",
+    "replay_block": false,
+    "skipped": false
+  },
+  "tests/test_replay_e2e.nous": {
+    "error": null,
+    "hash": null,
+    "replay_block": true,
+    "skipped": true
+  },
+  "topology_test.nous": {
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '2' in the current parser context, at line 58 col 32\n\n        on rate_limit => sleep 2 cycle\n                               ^\nExpected one of: \n\t* DURATION_VAL\n\nPrevious tokens: Token('__ANON_4', 'sleep')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1191, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1184, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('INT', '2') at line 58, column 32.\nExpected one of: \n\t* DURATION_VAL\nPrevious tokens: [Token('__ANON_4', 'sleep')]\n\n",
+    "hash": null,
+    "replay_block": false,
+    "skipped": false
+  }
+}
