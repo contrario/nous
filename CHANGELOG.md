@@ -1,5 +1,32 @@
 # Changelog
 
+## [4.5.0] - 2026-04-17
+### Added — Phase G Governance, Layer 1: RiskEngine
+- **`risk_engine.py`** — runtime risk assessment over replay event logs
+  - `RiskRule` (dataclass) — YAML-configurable rule: `kind_filter`, `predicate`, `weight`, `window`, `extract`
+  - `RiskAssessment` — per-event score in [0,1] with `triggered_rules` + `reasoning`
+  - `RiskReport` — aggregate over a full log (max/mean score, rule hits, per-event detail)
+  - `RiskEngine.assess(event)` and `assess_log(path)` public API
+  - Sandboxed predicate eval (no `__` names, no builtins) — safe to load untrusted rule YAML
+  - Rolling per-(soul, rule) statistics for drift detection
+- **`risk_rules.yaml`** — 7 default rules: `high_llm_cost`, `llm_token_burst`, `sense_error`, `memory_write_burst`, `cycle_duration_spike`, `llm_error`, `response_length_anomaly`
+- **`nous replay <log> --risk-report`** — new CLI mode
+  - `--rules YAML` — load custom ruleset
+  - `--json` — machine-parseable output for CI/CD
+  - `--verbose` — per-event triggered rows
+  - Exit 0 = clean, 5 = triggered, 1 = I/O error
+- **`tests/test_risk_engine.py`** — 10/10 E2E: default rules, clean log, each rule fires, custom YAML, sandbox escape blocked, JSON roundtrip
+
+### Stability
+- Zero changes to existing code — pure additive layer
+- 40 regression templates remain byte-identical
+- Phase A 7/7, Phase C 10/10, Phase D 6/6, Risk 10/10 — all green
+- 33 total replay+governance tests
+
+### Why 4.5.0 (minor bump)
+Phase G (Governance) is a new capability layer, not a patch to Replay. Layer 1 ships the foundation (scoring); Layers 2-4 (grammar `law` blocks, `Intervention` primitive, dashboard) will follow in 4.6.0 / 4.7.0 / 4.8.0.
+
+
 ## [4.4.3] - 2026-04-17
 ### Added
 - **Phase D — LLM Replay in API** — chat endpoint now supports deterministic LLM replay

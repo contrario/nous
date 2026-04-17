@@ -1,0 +1,73 @@
+# risk_rules.yaml — default NOUS RiskEngine rules
+# __risk_rules_v1__
+#
+# Each rule has:
+#   name         : unique identifier
+#   description  : human-readable purpose
+#   kind_filter  : list of event kinds this rule applies to (empty = all)
+#   predicate    : Python expression; must eval to bool
+#   weight       : contribution to overall score (higher = more weight)
+#   window       : rolling history size per soul (0 = no rolling stats)
+#   extract      : optional expression that pulls a numeric value from
+#                  `data` and feeds it into the rolling window as `value`
+#
+# Predicate namespace:
+#   seq_id, soul, cycle, kind, data   — event fields
+#   value                             — extracted numeric (or None)
+#   count, mean, std, recent          — rolling stats for this (soul, rule)
+#
+# A predicate may reference `value` only when `extract` is defined.
+# Anything not in the namespace raises predicate_error (ignored, not fatal).
+
+rules:
+
+  - name: high_llm_cost
+    description: Single LLM call cost exceeds threshold (USD)
+    kind_filter: [llm.response]
+    extract: float(data.get("cost", 0.0))
+    predicate: value is not None and value > 0.05
+    weight: 3.0
+
+  - name: llm_token_burst
+    description: LLM call produces an unusually long response vs rolling mean
+    kind_filter: [llm.response]
+    extract: float(data.get("tokens_out", 0))
+    predicate: value is not None and count >= 5 and std > 0 and value > mean + 3 * std
+    weight: 2.0
+    window: 20
+
+  - name: sense_error
+    description: Sense invocation returned an error
+    kind_filter: [sense.error]
+    predicate: "True"
+    weight: 2.0
+
+  - name: memory_write_burst
+    description: More than 10 memory writes observed for this soul
+    kind_filter: [memory.write]
+    extract: "1.0"
+    predicate: count >= 10
+    weight: 1.5
+    window: 50
+
+  - name: cycle_duration_spike
+    description: Cycle-end timestamp differs wildly from rolling mean
+    kind_filter: [cycle.end]
+    extract: float(data.get("duration_ms", 0.0))
+    predicate: value is not None and count >= 5 and std > 0 and value > mean + 3 * std
+    weight: 2.0
+    window: 20
+
+  - name: llm_error
+    description: LLM call raised an error during the recorded run
+    kind_filter: [llm.error]
+    predicate: "True"
+    weight: 3.0
+
+  - name: response_length_anomaly
+    description: LLM response text length outside 3-sigma band of rolling history
+    kind_filter: [llm.response]
+    extract: float(len(str(data.get("text", ""))))
+    predicate: value is not None and count >= 5 and std > 0 and abs(value - mean) > 3 * std
+    weight: 1.0
+    window: 20

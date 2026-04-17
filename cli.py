@@ -34,7 +34,7 @@ from codegen import generate_python
 from typechecker import typecheck_program
 from replay_cli import cmd_replay
 
-VERSION = "4.4.3"
+VERSION = "4.5.0"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -1516,6 +1516,13 @@ def main() -> int:
                    help="For --diff: also compare event data payloads")
     p.add_argument("--json", action="store_true",
                    help="Emit machine-parseable JSON instead of text")
+    # __cli_replay_risk_flags_v1__
+    p.add_argument("--risk-report", action="store_true", dest="risk_report",
+                   help="Run RiskEngine on the log and print a risk report (exit 5 if any rule triggered)")
+    p.add_argument("--rules", metavar="YAML", default=None,
+                   help="Custom risk rules YAML file (default: risk_rules.yaml in install dir)")
+    p.add_argument("--verbose", action="store_true",
+                   help="For --risk-report: include per-event triggered rows")
 
     args = ap.parse_args()
     commands = {

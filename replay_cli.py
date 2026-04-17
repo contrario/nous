@@ -389,11 +389,75 @@ def cmd_replay_mutate(args: argparse.Namespace) -> int:
 
 
 # ============================================================================
+# risk-report
+# ============================================================================
+
+# __cmd_replay_risk_v1__
+def cmd_replay_risk(args: argparse.Namespace) -> int:
+    """Run the RiskEngine against an event log and print a report.
+
+    Exit codes:
+      0 = no rule triggered
+      1 = I/O or parse error
+      5 = one or more rules triggered
+    """
+    log_path = getattr(args, "log", None)
+    if not log_path:
+        print("ERROR: replay --risk-report requires a log path", file=sys.stderr)
+        return 1
+
+    log_p = Path(log_path)
+    if not log_p.exists():
+        print(f"ERROR: log not found: {log_p}", file=sys.stderr)
+        return 1
+
+    try:
+        from risk_engine import RiskEngine, render_report_text
+    except Exception as e:
+        print(f"ERROR: risk_engine import failed: {e}", file=sys.stderr)
+        return 1
+
+    rules_path = getattr(args, "rules", None)
+    try:
+        if rules_path:
+            eng = RiskEngine.from_yaml(Path(rules_path))
+        else:
+            eng = RiskEngine.from_yaml()
+    except Exception as e:
+        print(f"ERROR: failed to load risk rules: {e}", file=sys.stderr)
+        return 1
+
+    try:
+        report = eng.assess_log(log_p)
+    except Exception as e:
+        print(f"ERROR: risk assessment failed: {e}", file=sys.stderr)
+        return 1
+
+    want_json = bool(getattr(args, "json", False))
+    verbose = bool(getattr(args, "verbose", False))
+
+    if want_json:
+        import json as _json
+        print(_json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
+    else:
+        print(render_report_text(report, verbose=verbose))
+
+    if report.errors:
+        return 1
+    if report.triggered_events > 0:
+        return 5
+    return 0
+
+
+# ============================================================================
 # Router
 # ============================================================================
 
 def cmd_replay(args: argparse.Namespace) -> int:
     """Top-level replay command router. Dispatches based on flags."""
+    # __cmd_replay_risk_router_v1__
+    if getattr(args, "risk_report", False):
+        return cmd_replay_risk(args)
     if getattr(args, "diff", None):
         return cmd_replay_diff(args)
     if getattr(args, "mutate", None):

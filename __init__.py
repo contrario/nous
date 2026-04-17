@@ -3,7 +3,7 @@ NOUS (Νοῦς) — The Living Language for Agentic AI Systems
 =========================================================
 Version 4.0.0 | Author: Hlias Staurou (Hlia)
 """
-__version__ = "4.4.3"
+__version__ = "4.5.0"
 
 from pathlib import Path
 
