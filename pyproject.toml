@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nous-lang"
-version = "4.11.1"
+version = "4.11.2"
 description = "NOUS (Νοῦς) — The Living Language for Agentic AI Systems"
 readme = "README.md"
 license = {text = "MIT"}
@@ -45,6 +45,7 @@ Documentation = "https://nous-lang.org/docs"
 nous = "cli:main"
 
 [tool.setuptools]
+packages = ["templates"]
 py-modules = [
     "cli", "parser", "ast_nodes", "validator", "typechecker",
     "codegen", "codegen_js", "runtime", "bridge", "nsp",
@@ -66,5 +67,6 @@ py-modules = [
     "governance_lint", "stdlib_manager", "phrase_detector",
 ]
 
+# __templates_package_v1__
 [tool.setuptools.package-data]
-"*" = ["*.lark", "*.nous"]
+templates = ["*.nous"]

@@ -34,7 +34,7 @@ from codegen import generate_python
 from typechecker import typecheck_program
 from replay_cli import cmd_replay
 
-VERSION = "4.11.1"
+VERSION = "4.11.2"
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
@@ -1400,6 +1400,62 @@ def cmd_governance(args: Any) -> int:
         return 1
 
 
+# __templates_cli_v1__
+def cmd_templates(args) -> int:
+    """Manage shipped .nous templates (list, show, extract)."""
+    import templates as _tpl
+
+    action = getattr(args, "tpl_action", None)
+
+    if action == "list":
+        names = _tpl.list_templates()
+        if not names:
+            print("No templates are bundled with this installation.")
+            return 0
+        print(f"Available templates ({len(names)}):")
+        for n in names:
+            print(f"  - {n}")
+        return 0
+
+    if action == "show":
+        name = getattr(args, "name", None)
+        if not name:
+            print("Usage: nous templates show <name>", file=sys.stderr)
+            return 1
+        try:
+            src = _tpl.get_template_source(name)
+        except _tpl.TemplateNotFoundError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        sys.stdout.write(src)
+        if not src.endswith("\n"):
+            sys.stdout.write("\n")
+        return 0
+
+    if action == "extract":
+        name = getattr(args, "name", None)
+        dest = getattr(args, "dest", ".")
+        overwrite = getattr(args, "overwrite", False)
+        if not name:
+            print("Usage: nous templates extract <name> [--dest DIR] [--overwrite]",
+                  file=sys.stderr)
+            return 1
+        try:
+            out_path = _tpl.extract_template(name, dest_dir=dest, overwrite=overwrite)
+        except _tpl.TemplateNotFoundError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        except _tpl.TemplateExtractError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 2
+        print(f"Extracted: {out_path}")
+        return 0
+
+    print("Usage: nous templates {list|show|extract}", file=sys.stderr)
+    return 1
+
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language v2.0")
     sub = ap.add_subparsers(dest="command", required=True)
@@ -1622,6 +1678,21 @@ def main() -> int:
         help="Comma-separated rule codes to elevate to error (e.g. L010,L007)",
     )
 
+    # __templates_subparser_v1__
+    p_tpl = sub.add_parser(
+        "templates",
+        help="Manage shipped .nous templates",
+    )
+    tpl_sub = p_tpl.add_subparsers(dest="tpl_action")
+    tpl_sub.add_parser("list", help="List available bundled templates")
+    p_tpl_show = tpl_sub.add_parser("show", help="Print a template's source to stdout")
+    p_tpl_show.add_argument("name", help="Template name (with or without .nous suffix)")
+    p_tpl_extract = tpl_sub.add_parser("extract", help="Copy a template to a directory")
+    p_tpl_extract.add_argument("name", help="Template name (with or without .nous suffix)")
+    p_tpl_extract.add_argument("--dest", default=".", help="Destination directory (default: CWD)")
+    p_tpl_extract.add_argument("--overwrite", action="store_true", help="Replace existing file at destination")
+
+
     args = ap.parse_args()
     commands = {
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
@@ -1629,7 +1700,7 @@ def main() -> int:
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
-        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis, "metabolism": cmd_metabolism, "consciousness": cmd_consciousness, "replay": cmd_replay, "governance": cmd_governance,
+        "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis, "metabolism": cmd_metabolism, "consciousness": cmd_consciousness, "replay": cmd_replay, "governance": cmd_governance, "templates": cmd_templates,
     }
     return commands[args.command](args)
 
