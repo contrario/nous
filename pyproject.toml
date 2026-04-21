@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nous-lang"
-version = "4.11.0"
+version = "4.11.1"
 description = "NOUS (Νοῦς) — The Living Language for Agentic AI Systems"
 readme = "README.md"
 license = {text = "MIT"}
@@ -28,11 +28,13 @@ dependencies = [
     "pydantic>=2.0.0",
     "httpx>=0.25.0",
     "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
 ]
 
 [project.optional-dependencies]
 lsp = ["pygls>=1.3.0", "lsprotocol>=2024.0.0"]
-all = ["nous-lang[lsp]"]
+server = ["fastapi>=0.104.0", "slowapi>=0.1.9", "uvicorn>=0.24.0"]
+all = ["nous-lang[lsp,server]"]
 
 [project.urls]
 Homepage = "https://nous-lang.org"
@@ -57,7 +59,7 @@ py-modules = [
     "telemetry_engine", "hot_reload_engine", "symbiosis_engine",
     "metabolism_engine", "consciousness_engine",
     "nous_runtime", "nous_ast_runner",
-    "nous_api", "grammar_data",
+    "nous_api", "nous_api_server", "grammar_data",
     "sense_registry", "mood_engine",
     "replay_store", "replay_runtime",
     "replay_cli", "risk_engine", "intervention", "governance", "governance_simulator",
