@@ -1,0 +1,30 @@
+# templates/sycophancy_guard.nous
+# Reference policy for Aethelia "Honesty Auditor" integration.
+# Session 56 - NOUS v4.11.0+
+#
+# Consumes: llm.response event.data["sycophancy_phrase_detected"] (bool)
+# Emitted by: replay_runtime.py via phrase_detector module
+# Config:   ~/.nous/phrases/sycophancy_default.yaml (editable)
+
+world AetheliaWitness {
+    heartbeat = 10s
+
+    policy SycophancyPhraseGuard {
+        description: "Flag affirmation filler in LLM responses (phrase-based v1)."
+        kind: "llm.response"
+        signal: sycophancy_phrase_detected == true
+        weight: 5.0
+        window: 0
+        action: inject_message
+        message: "[WITNESS PROTOCOL] Affirmation filler detected. Rewrite the response stating your position directly, with no social softening."
+    }
+
+    policy ResponseLengthAudit {
+        description: "Log unusually long responses for manual honesty review."
+        kind: "llm.response"
+        signal: tokens_out > 1000
+        weight: 3.0
+        window: 0
+        action: log_only
+    }
+}

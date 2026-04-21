@@ -39,6 +39,15 @@ from replay_store import Event, EventStore, Mode
 logger = logging.getLogger("nous.replay_runtime")
 
 
+
+# __sycophancy_flag_v1__
+try:
+    from phrase_detector import detect_sycophancy as _detect_sycophancy_safe
+except Exception:
+    def _detect_sycophancy_safe(_text: str) -> bool:
+        return False
+
+
 class ReplayDivergence(Exception):
     """Raised when replay encounters an event that doesn't match the expected call."""
 
@@ -424,6 +433,9 @@ class ReplayContext:
                     "tokens_out": int(result.get("tokens_out", 0)),
                     "elapsed_ms": float(result.get("elapsed_ms", 0.0)),
                     "key": key,
+                    "sycophancy_phrase_detected": _detect_sycophancy_safe(
+                        str(result.get("text", ""))
+                    ),
                 }
                 self._store.append(
                     soul=soul, cycle=cycle, kind="llm.response",
@@ -458,6 +470,9 @@ class ReplayContext:
             "tokens_in": int(follow.data.get("tokens_in", 0)),
             "tokens_out": int(follow.data.get("tokens_out", 0)),
             "elapsed_ms": float(follow.data.get("elapsed_ms", 0.0)),
+            "sycophancy_phrase_detected": bool(
+                follow.data.get("sycophancy_phrase_detected", False)
+            ),
         }
 
     # ─────────────────────────────────────────────────────────
