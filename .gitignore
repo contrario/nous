@@ -44,3 +44,7 @@ website/backups/
 
 # deploy_website.sh is tracked (website deployment, not legacy session scripts)
 !deploy_website.sh
+
+# Phase v4.11.3 recovery artifacts
+grammar_data.py.bak.*
+/etc/nginx/sites-enabled/nous-lang.org.bak.*

@@ -17,6 +17,7 @@ error_recovery
 formatter
 governance
 governance_lint
+governance_simulator
 grammar_data
 hot_reload_engine
 immune_engine
@@ -30,10 +31,12 @@ mitosis_engine
 mood_engine
 natural_lang
 nous_api
+nous_api_server
 nous_ast_runner
 nous_runtime
 nsp
 parser
+phrase_detector
 plugin_manager
 profiler
 registry
@@ -48,6 +51,7 @@ sense_registry
 stdlib_manager
 symbiosis_engine
 telemetry_engine
+templates
 test_runner
 typechecker
 validator

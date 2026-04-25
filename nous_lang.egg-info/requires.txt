@@ -2,10 +2,16 @@ lark>=1.1.0
 pydantic>=2.0.0
 httpx>=0.25.0
 pyyaml>=6.0
+python-dotenv>=1.0.0
 
 [all]
-nous-lang[lsp]
+nous-lang[lsp,server]
 
 [lsp]
 pygls>=1.3.0
 lsprotocol>=2024.0.0
+
+[server]
+fastapi>=0.104.0
+slowapi>=0.1.9
+uvicorn>=0.24.0

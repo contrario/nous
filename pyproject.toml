@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nous-lang"
-version = "4.11.2"
+version = "4.11.3"
 description = "NOUS (Νοῦς) — The Living Language for Agentic AI Systems"
 readme = "README.md"
 license = {text = "MIT"}
@@ -70,3 +70,8 @@ py-modules = [
 # __templates_package_v1__
 [tool.setuptools.package-data]
 templates = ["*.nous"]
+
+# __grammar_lark_v1__ — ship nous.lark as installable data-file
+# Lives next to top-level py-modules (cli.py, parser.py, etc.) at install-time.
+[tool.setuptools.data-files]
+"." = ["nous.lark"]

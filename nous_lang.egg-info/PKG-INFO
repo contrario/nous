@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: nous-lang
-Version: 4.9.1
+Version: 4.11.3
 Summary: NOUS (Νοῦς) — The Living Language for Agentic AI Systems
 Author-email: Hlias Staurou <support@nous-lang.org>
 License: MIT
@@ -23,11 +23,16 @@ Requires-Dist: lark>=1.1.0
 Requires-Dist: pydantic>=2.0.0
 Requires-Dist: httpx>=0.25.0
 Requires-Dist: pyyaml>=6.0
+Requires-Dist: python-dotenv>=1.0.0
 Provides-Extra: lsp
 Requires-Dist: pygls>=1.3.0; extra == "lsp"
 Requires-Dist: lsprotocol>=2024.0.0; extra == "lsp"
+Provides-Extra: server
+Requires-Dist: fastapi>=0.104.0; extra == "server"
+Requires-Dist: slowapi>=0.1.9; extra == "server"
+Requires-Dist: uvicorn>=0.24.0; extra == "server"
 Provides-Extra: all
-Requires-Dist: nous-lang[lsp]; extra == "all"
+Requires-Dist: nous-lang[lsp,server]; extra == "all"
 Dynamic: license-file
 
 # NOUS (Νοῦς) — The Living Language
