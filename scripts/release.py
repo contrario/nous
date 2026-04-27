@@ -46,6 +46,15 @@ TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
 PYTEST_FLOOR: int = 178
 TEMPLATE_FOR_SMOKE: str = "sycophancy_guard"
+PYFLAKES_TARGETS: tuple[str, ...] = (
+    "nous_api_server.py",
+    "nous_api.py",
+    "cli.py",
+    "nous_runtime.py",
+    "parser.py",
+    "validator.py",
+    "codegen.py",
+)
 
 
 class ReleaseError(RuntimeError):
@@ -102,14 +111,14 @@ def phase_preflight() -> str:
 
 
 def phase_grammar_sync() -> None:
-    print("\n[1/9] GRAMMAR SYNC")
+    print("\n[1/10] GRAMMAR SYNC")
     run(["python3", "scripts/sync_grammar.py"], cwd=REPO_ROOT)
     run(["python3", "-m", "pytest", "tests/test_grammar_sync.py", "-q"], cwd=REPO_ROOT)
     print("  OK")
 
 
 def phase_pytest(skip: bool = False) -> None:
-    print("\n[2/9] PYTEST FLOOR")
+    print("\n[2/10] PYTEST FLOOR")
     if skip:
         print("  SKIP (--skip-tests)")
         return
@@ -134,7 +143,7 @@ def phase_pytest(skip: bool = False) -> None:
 
 
 def phase_regression() -> None:
-    print("\n[3/9] REGRESSION")
+    print("\n[3/10] REGRESSION")
     result = run(["python3", "regression_harness.py", "verify"], cwd=REPO_ROOT)
     if "RESULT: OK" not in result.stdout:
         raise ReleaseError(f"regression failed:\n{result.stdout[-500:]}")
@@ -142,7 +151,7 @@ def phase_regression() -> None:
 
 
 def phase_version_consistency() -> None:
-    print("\n[4/9] VERSION CONSISTENCY")
+    print("\n[4/10] VERSION CONSISTENCY")
     run(
         ["python3", "-m", "pytest", "tests/test_version_consistency.py", "-q"],
         cwd=REPO_ROOT,
@@ -150,8 +159,31 @@ def phase_version_consistency() -> None:
     print("  OK")
 
 
+def phase_pyflakes() -> None:
+    print("\n[5/10] PYFLAKES (undefined names)")
+    bad: list[str] = []
+    for target in PYFLAKES_TARGETS:
+        path: Path = REPO_ROOT / target
+        if not path.is_file():
+            raise ReleaseError(f"pyflakes target missing: {target}")
+        result = subprocess.run(
+            ["pyflakes", str(path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        for line in (result.stdout + result.stderr).splitlines():
+            if "undefined name" in line:
+                bad.append(line)
+    if bad:
+        for line in bad:
+            print(f"  {line}")
+        raise ReleaseError(f"{len(bad)} undefined name(s) in production sources")
+    print(f"  OK: {len(PYFLAKES_TARGETS)} files clean")
+
+
 def phase_build() -> tuple[Path, Path]:
-    print("\n[5/9] BUILD")
+    print("\n[6/10] BUILD")
     for d in (REPO_ROOT / "build", DIST_DIR):
         if d.exists():
             shutil.rmtree(d)
@@ -167,7 +199,7 @@ def phase_build() -> tuple[Path, Path]:
 
 
 def phase_wheel_gate(whl: Path, version: str) -> None:
-    print("\n[6/9] WHEEL CONTENT GATE")
+    print("\n[7/10] WHEEL CONTENT GATE")
     z = zipfile.ZipFile(whl)
     names = z.namelist()
     required: list[str] = ["_version.py", "nous.lark", "grammar_data.py"]
@@ -186,7 +218,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
 
 
 def phase_install_smoke(whl: Path, version: str) -> None:
-    print("\n[7/9] CLEAN-VENV INSTALL")
+    print("\n[8/10] CLEAN-VENV INSTALL")
     if TEST_VENV.exists():
         shutil.rmtree(TEST_VENV)
     run(["python3", "-m", "venv", str(TEST_VENV)])
@@ -205,7 +237,7 @@ def phase_install_smoke(whl: Path, version: str) -> None:
         run([str(pyexe), "-c", check_script], cwd=Path(td))
     print("  OK")
 
-    print("\n[8/9] UX SMOKE")
+    print("\n[9/10] UX SMOKE")
     nous_bin = TEST_VENV / "bin" / "nous"
     with tempfile.TemporaryDirectory() as td:
         td_path = Path(td)
@@ -223,7 +255,7 @@ def phase_install_smoke(whl: Path, version: str) -> None:
 
 
 def phase_upload(whl: Path, sdist: Path) -> None:
-    print("\n[9/9] PYPI UPLOAD")
+    print("\n[10/10] PYPI UPLOAD")
     if not TWINE_VENV.exists():
         raise ReleaseError(
             f"twine venv missing at {TWINE_VENV}; create with: "
@@ -254,6 +286,7 @@ def main() -> int:
         phase_pytest(skip=args.skip_tests)
         phase_regression()
         phase_version_consistency()
+        phase_pyflakes()
 
         if args.check:
             print(f"\n[CHECK] all gates green for v{version}; build/upload skipped")
