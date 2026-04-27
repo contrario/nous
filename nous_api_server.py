@@ -47,6 +47,35 @@ from nous_api import (
     ErrorResponse,
 )
 
+# __parse_nous_global_import_v1__
+from parser import parse_nous  # noqa: E402  top-level avoids NameError class
+
+# __pipeline_globals_v1__
+from validator import NousValidator  # noqa: E402
+from typechecker import typecheck_program  # noqa: E402
+from codegen import NousCodeGen  # noqa: E402
+# __verify_program_global_v1__
+from verifier import verify_program  # noqa: E402
+# __mood_engine_global_v1__
+from mood_engine import MoodEngine  # noqa: E402
+
+def _build_mood_from_ast(_emotions_node: object) -> Optional[MoodEngine]:
+    """Dead reference shim. Original symbol never defined; callers
+    treat None as 'no mood configured' and continue. Logged so the
+    absence is observable in production.
+    """
+    logger.warning(
+        "_build_mood_from_ast called but not implemented; mood disabled"
+    )
+    return None
+
+def _register_sense_world(*_args: object, **_kwargs: object) -> None:
+    """Dead reference shim. Original symbol never defined; callers
+    wrap this in try/except. Raising keeps the warning path active
+    so removal becomes visible in logs rather than silent.
+    """
+    raise NotImplementedError("_register_sense_world is not implemented")
+
 # Rate limiter (module-level; server-only)
 limiter = Limiter(key_func=get_remote_address)
 
@@ -613,7 +642,6 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
                 "code": "CHAT001",
             })
         try:
-            from parser import parse_nous
             source = tpl_path.read_text(encoding="utf-8")
             program = parse_nous(source)
             soul_configs = _get_soul_configs(program)
@@ -837,7 +865,6 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
             })
         source = template_path.read_text(encoding="utf-8")
         try:
-            from parser import parse_nous
             program = parse_nous(source)
         except Exception as e:
             raise HTTPException(status_code=422, detail={
@@ -1232,7 +1259,6 @@ async def diff_source(request: Request, body: DiffRequest, x_api_key: Optional[s
 
         def _run_diff() -> dict:
             import tempfile
-            from parser import parse_nous
             from behavioral_diff import behavioral_diff
 
             old_program = parse_nous(body.original)
@@ -1279,7 +1305,6 @@ async def _webhook_chat(
             return {"error": f"World '{world}' not found"}
         source = template_path.read_text(encoding="utf-8")
         try:
-            from parser import parse_nous
             program = parse_nous(source)
         except Exception as e:
             return {"error": f"Parse error: {e}"}
