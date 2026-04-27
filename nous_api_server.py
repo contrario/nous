@@ -19,7 +19,10 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from ast_nodes import NousProgram
 
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -675,7 +678,7 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
     _mood_engine = _get_or_create_mood(sess, chosen_soul)
     _mood_hint = _mood_engine.describe() if _mood_engine else ""
     if _mood_engine is not None:
-        _msg_lower = body.message.lower() if hasattr(body, "message") else (message.lower() if "message" in dir() else "")
+        _msg_lower = body.message.lower()
         _positive_kw = ("thank", "thanks", "great", "awesome", "good job", "well done", "love")
         _negative_kw = ("hate", "stupid", "useless", "bad", "wrong", "terrible", "frustrated", "annoy")
         if any(k in _msg_lower for k in _positive_kw):
@@ -894,7 +897,7 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
     _mood_engine = _get_or_create_mood(sess, chosen_soul)
     _mood_hint = _mood_engine.describe() if _mood_engine else ""
     if _mood_engine is not None:
-        _msg_lower = body.message.lower() if hasattr(body, "message") else (message.lower() if "message" in dir() else "")
+        _msg_lower = body.message.lower()
         _positive_kw = ("thank", "thanks", "great", "awesome", "good job", "well done", "love")
         _negative_kw = ("hate", "stupid", "useless", "bad", "wrong", "terrible", "frustrated", "annoy")
         if any(k in _msg_lower for k in _positive_kw):
@@ -1330,7 +1333,7 @@ async def _webhook_chat(
     _mood_engine = _get_or_create_mood(sess, chosen_soul)
     _mood_hint = _mood_engine.describe() if _mood_engine else ""
     if _mood_engine is not None:
-        _msg_lower = body.message.lower() if hasattr(body, "message") else (message.lower() if "message" in dir() else "")
+        _msg_lower = (message or "").lower()
         _positive_kw = ("thank", "thanks", "great", "awesome", "good job", "well done", "love")
         _negative_kw = ("hate", "stupid", "useless", "bad", "wrong", "terrible", "frustrated", "annoy")
         if any(k in _msg_lower for k in _positive_kw):
