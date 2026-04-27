@@ -26,7 +26,7 @@ import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from parser import parse_nous_file
 from validator import validate_program
