@@ -34,7 +34,8 @@ from codegen import generate_python
 from typechecker import typecheck_program
 from replay_cli import cmd_replay
 
-VERSION = "4.11.3"
+# __cc_version_cli_v1__
+from _version import __version__ as VERSION
 BANNER = r"""
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|

@@ -21,7 +21,9 @@ except ImportError:
 
 # === Version & Paths ===
 
-VERSION: str = "4.11.3"
+# __cc_version_api_v1__
+from _version import __version__ as _v
+VERSION: str = _v
 NOUS_DIR: Path = Path(__file__).parent
 TEMPLATES_DIR: Path = NOUS_DIR / "templates"
 LOG_FILE: Path = Path("/var/log/nous_api.log")
