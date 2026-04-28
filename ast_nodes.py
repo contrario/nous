@@ -9,6 +9,9 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any, Optional, Union, Literal
 from pydantic import BaseModel, Field
+# __cost_cap_imports_v1__
+from decimal import Decimal
+from typing import Literal
 
 
 class Tier(str, Enum):
@@ -47,6 +50,18 @@ class LawCost(NousNode):
     amount: float
     currency: str = "USD"
     per: str = "cycle"
+
+
+# __cost_cap_class_v1__
+class CostCap(NousNode):
+    """Total cost ceiling for a world's execution.
+
+    Distinct from LawCost (per-cycle recurring) and LawCurrency
+    (currency-typed law value). Enforced at compile-time via SMT
+    verification when --smt is enabled. Session 62 Phase 2.
+    """
+    amount: Decimal
+    currency: Literal["USD", "EUR"] = "USD"
 
 
 class LawCurrency(NousNode):
@@ -115,6 +130,7 @@ class WorldNode(NousNode):
     name: str
     laws: list[LawNode] = Field(default_factory=list)
     policies: list["PolicyNode"] = Field(default_factory=list)
+    cost_cap: Optional["CostCap"] = None  # __cost_cap_field_v1__
     heartbeat: Optional[str] = None
     timezone: Optional[str] = None
     telemetry: Optional[TelemetryNode] = None

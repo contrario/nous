@@ -1,0 +1,8 @@
+# Session 62 Phase 2: cost_cap parse-only regression entry.
+# Verifies grammar + AST round-trip for the new construct.
+# SMT verification of the cap is added in Phases 3-5.
+
+world BasicCapped {
+    cost_cap: 0.10 USD
+    heartbeat = 5m
+}

@@ -10,10 +10,11 @@ from pathlib import Path
 from typing import Any
 
 from lark import Lark, Transformer, Token, Tree
+from decimal import Decimal  # __cost_cap_decimal_v1__
 
 from ast_nodes import (
     ConsciousnessNode, MetabolismNode, SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
-    NousProgram, WorldNode, LawNode, LawCost, LawCurrency, LawDuration,
+    NousProgram, WorldNode, LawNode, LawCost, LawCurrency, CostCap, LawDuration,  # __cost_cap_import_v1__
     PolicyNode,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
@@ -529,10 +530,38 @@ class NousTransformer(Transformer):
                     node.timezone = item["timezone"]
                 elif "telemetry" in item:
                     node.telemetry = item["telemetry"]
+                elif "cost_cap" in item:  # __cost_cap_dispatch_v1__
+                    node.cost_cap = item["cost_cap"]
                 elif "config" in item:
                     k, v = item["config"]
                     node.config[k] = v
         return node
+
+    # ── Cost Cap (Session 62 Phase 2) ──
+    # __cost_cap_methods_v1__
+
+    def cost_amount_float(self, items: list) -> Decimal:
+        return Decimal(str(items[0]))
+
+    def cost_amount_int(self, items: list) -> Decimal:
+        return Decimal(str(items[0]))
+
+    def cost_amount(self, items: list) -> Decimal:
+        return items[0]
+
+    def cost_currency_usd(self, items: list) -> str:
+        return "USD"
+
+    def cost_currency_eur(self, items: list) -> str:
+        return "EUR"
+
+    def cost_currency(self, items: list) -> str:
+        return items[0]
+
+    def cost_cap_stmt(self, items: list) -> dict:
+        amount = items[-2]
+        currency = items[-1]
+        return {"cost_cap": CostCap(amount=amount, currency=currency)}
 
     # ── Mind ──
 

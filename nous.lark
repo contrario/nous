@@ -58,7 +58,7 @@ sense_body: "description" ":" STRING                   -> sense_description
 // ═══════════════════════════════════════════
 
 world_decl: WORLD NAME "{" world_body* "}"
-world_body: law_decl | heartbeat_decl | timezone_decl | telemetry_block | replay_block | policy_decl | config_assign
+world_body: law_decl | heartbeat_decl | timezone_decl | telemetry_block | replay_block | policy_decl | config_assign | cost_cap_stmt  // __cost_cap_world_body_v1__
 
 law_decl: LAW NAME "=" law_expr
 law_expr: currency_lit PER CYCLE          -> law_cost
@@ -71,6 +71,13 @@ law_expr: currency_lit PER CYCLE          -> law_cost
 heartbeat_decl: "heartbeat" "=" duration_lit
 timezone_decl: "timezone" "=" STRING
 config_assign: NAME "=" expr
+
+// __cost_cap_grammar_v1__
+cost_cap_stmt: COST_CAP ":" cost_amount cost_currency
+cost_amount: FLOAT  -> cost_amount_float
+           | INT    -> cost_amount_int
+cost_currency: "USD" -> cost_currency_usd
+             | "EUR" -> cost_currency_eur
 
 // ═══════════════════════════════════════════
 // SOUL
@@ -455,6 +462,7 @@ WAKE_ALL.2: "wake_all"
 CONSTITUTIONAL.2: "constitutional"
 PER.2: "per"
 CYCLE.2: "cycle"
+COST_CAP.2: "cost_cap"  // __cost_cap_terminal_v1__
 TIER: /Tier[0-3][A-B]?|Groq|Together|Fireworks|Cerebras/
 
 // ═══════════════════════════════════════════

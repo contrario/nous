@@ -44,7 +44,7 @@ REPO_ROOT: Path = Path("/opt/aetherlang_agents/nous")
 DIST_DIR: Path = REPO_ROOT / "dist"
 TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
-PYTEST_FLOOR: int = 184
+PYTEST_FLOOR: int = 189  # __cost_cap_floor_bump_v1__
 TEMPLATE_FOR_SMOKE: str = "sycophancy_guard"
 PYFLAKES_TARGETS: tuple[str, ...] = (
     "nous_api_server.py",
