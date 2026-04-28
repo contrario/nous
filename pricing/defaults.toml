@@ -1,0 +1,213 @@
+# ╔═══════════════════════════════════════════════════════════════════╗
+# ║ NOUS Pricing Table — defaults.toml                                ║
+# ║ Schema version 1.0 | Last verified 2026-04-28                     ║
+# ╠═══════════════════════════════════════════════════════════════════╣
+# ║                                                                   ║
+# ║ This file declares the per-token cost of each LLM model that      ║
+# ║ NOUS can compile against under --smt. Without this data,          ║
+# ║ cost_cap proofs are mathematically impossible.                    ║
+# ║                                                                   ║
+# ║ OVERRIDE PRIORITY (highest wins):                                 ║
+# ║   1. nous --prices /path/to/custom.toml ...    (CLI flag)         ║
+# ║   2. ./nous_prices.toml                         (project-local)   ║
+# ║   3. ~/.config/nous/prices.toml                 (user-global)     ║
+# ║   4. <package>/pricing/defaults.toml            (this file)       ║
+# ║                                                                   ║
+# ║ Run `nous prices show` to see which layer is active.              ║
+# ║ Run `nous prices init` to copy this file to your project root.    ║
+# ║ Run `nous prices verify <model>` for full cost breakdown.         ║
+# ║                                                                   ║
+# ║ All decimal values are stored as STRINGS so the TOML parser       ║
+# ║ preserves exact rationals. Float would introduce IEEE 754         ║
+# ║ rounding (0.1 != 0.1 in binary).                                  ║
+# ║                                                                   ║
+# ╚═══════════════════════════════════════════════════════════════════╝
+
+_schema_version = "1.0"
+_source_url     = "https://www.digitalapplied.com/blog/llm-api-pricing-index-q2-2026-cost-per-token"
+_last_verified  = "2026-04-28"
+_currency       = "USD"
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Anthropic — Claude family
+# ─────────────────────────────────────────────────────────────────────
+
+[models."claude-opus-4-7"]
+provider       = "anthropic"
+pricing_model  = "per_token"
+input_per_1m_usd  = "5.00"
+output_per_1m_usd = "25.00"
+
+# Prompt caching: Anthropic charges 10% of input rate for cache hits,
+# and 1.25x of input rate on the first call (cache write). Without
+# explicit user opt-in, --smt assumes full price (sound upper bound).
+prompt_caching_supported     = true
+input_cached_per_1m_usd      = "0.50"
+input_cache_write_per_1m_usd = "6.25"
+
+# Batch API: 50% off both input and output for async workloads (24h SLA).
+batch_discount_pct = 50
+
+# Reasoning multiplier: 1.0 means no hidden thinking tokens.
+# Increase for o3-class / R1-class models that emit invisible CoT.
+reasoning_token_multiplier = "1.0"
+
+verified_date = "2026-04-28"
+source_url    = "https://www.anthropic.com/pricing#api"
+verified_by   = "manual"
+notes         = "Q2 2026 list price"
+
+
+[models."claude-opus-4"]
+alias_of = "claude-opus-4-7"
+
+
+[models."claude-sonnet-4-6"]
+provider       = "anthropic"
+pricing_model  = "per_token"
+input_per_1m_usd  = "3.00"
+output_per_1m_usd = "15.00"
+prompt_caching_supported     = true
+input_cached_per_1m_usd      = "0.30"
+input_cache_write_per_1m_usd = "3.75"
+batch_discount_pct = 50
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://www.anthropic.com/pricing#api"
+verified_by   = "manual"
+
+
+[models."claude-haiku-4-5"]
+provider       = "anthropic"
+pricing_model  = "per_token"
+input_per_1m_usd  = "1.00"
+output_per_1m_usd = "5.00"
+prompt_caching_supported     = true
+input_cached_per_1m_usd      = "0.10"
+input_cache_write_per_1m_usd = "1.25"
+batch_discount_pct = 50
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://www.anthropic.com/pricing#api"
+verified_by   = "manual"
+
+
+# ─────────────────────────────────────────────────────────────────────
+# OpenAI — GPT-5 family
+# ─────────────────────────────────────────────────────────────────────
+
+[models."gpt-5-2"]
+provider       = "openai"
+pricing_model  = "per_token"
+input_per_1m_usd  = "1.75"
+output_per_1m_usd = "14.00"
+
+# OpenAI cache hit = 50% of input rate (less aggressive than Anthropic).
+# OpenAI does NOT charge a cache-write premium; first call is base price.
+prompt_caching_supported     = true
+input_cached_per_1m_usd      = "0.875"
+input_cache_write_per_1m_usd = "1.75"
+batch_discount_pct = 50
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://openai.com/api/pricing"
+verified_by   = "manual"
+
+
+[models."gpt-5-mini"]
+provider       = "openai"
+pricing_model  = "per_token"
+input_per_1m_usd  = "0.25"
+output_per_1m_usd = "2.00"
+prompt_caching_supported     = true
+input_cached_per_1m_usd      = "0.125"
+input_cache_write_per_1m_usd = "0.25"
+batch_discount_pct = 50
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://openai.com/api/pricing"
+verified_by   = "manual"
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Google — Gemini 3.x
+# ─────────────────────────────────────────────────────────────────────
+
+[models."gemini-3-1-pro"]
+provider       = "google"
+pricing_model  = "per_token"
+input_per_1m_usd  = "2.00"
+output_per_1m_usd = "12.00"
+prompt_caching_supported     = true
+input_cached_per_1m_usd      = "0.20"
+input_cache_write_per_1m_usd = "2.00"
+batch_discount_pct = 50
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://ai.google.dev/pricing"
+verified_by   = "manual"
+notes         = "Listed price for context <=200K tokens. Tiered pricing for >200K is a v1.1 schema feature (deferred)."
+
+
+# ─────────────────────────────────────────────────────────────────────
+# DeepSeek — value tier
+# ─────────────────────────────────────────────────────────────────────
+
+[models."deepseek-chat"]
+provider       = "deepseek"
+pricing_model  = "per_token"
+input_per_1m_usd  = "0.27"
+output_per_1m_usd = "1.10"
+prompt_caching_supported = false
+batch_discount_pct = 0
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
+verified_by   = "manual"
+
+
+# DeepSeek R1 is a REASONING model — emits 5K-20K hidden thinking
+# tokens before each visible response. The multiplier conservatively
+# bounds this for SMT verification.
+[models."deepseek-r1"]
+provider       = "deepseek"
+pricing_model  = "per_token"
+input_per_1m_usd  = "0.55"
+output_per_1m_usd = "2.20"
+prompt_caching_supported = false
+batch_discount_pct = 0
+reasoning_token_multiplier = "5.0"
+verified_date = "2026-04-28"
+source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
+verified_by   = "manual"
+notes         = "Reasoning model. Multiplier 5.0 covers worst-case thinking tokens."
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Self-hosted / open-weights examples
+# ─────────────────────────────────────────────────────────────────────
+
+# Self-hosted Llama on user GPU. Per-hour billing, NOT per-token.
+# Under --smt, the user must additionally declare expected runtime
+# hours per soul (Phase 5 feature). Until then, --smt rejects this
+# pricing model with a clear error.
+[models."llama-3-3-70b-local"]
+provider       = "self-hosted"
+pricing_model  = "per_hour"
+hourly_cost_usd = "2.50"
+verified_date = "2026-04-28"
+source_url    = "https://www.together.ai/pricing"
+verified_by   = "estimated"
+notes         = "Estimated A100 rental. Per-hour billing not yet SMT-verifiable; see Phase 5 roadmap."
+
+
+# Local model running on user's own hardware. Zero marginal cost.
+[models."local-ollama"]
+provider       = "local"
+pricing_model  = "free"
+input_per_1m_usd  = "0"
+output_per_1m_usd = "0"
+verified_date = "2026-04-28"
+verified_by   = "manual"
+notes         = "Self-hosted, no per-token cost. Compute cost (electricity, hardware) not tracked."

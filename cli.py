@@ -18,6 +18,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+# __cost_cap_phase3b_cli_import_v1__
+from cli_prices import build_prices_parser, cmd_prices
 import json
 import os
 import py_compile
@@ -1602,6 +1604,9 @@ def main() -> int:
 
     sub.add_parser("version", help="Show version")
 
+    # __cost_cap_phase3b_cli_hook_v1__
+    build_prices_parser(sub)
+
     p = sub.add_parser("dream", help="Dream system analysis")
     p.add_argument("file", help=".nous file to analyze")
 
@@ -1696,6 +1701,8 @@ def main() -> int:
 
     args = ap.parse_args()
     commands = {
+        # __cost_cap_phase3b_cli_dispatch_v1__
+        "prices": cmd_prices,
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
         "typecheck": cmd_typecheck, "docker": cmd_docker, "debug": cmd_debug,
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,

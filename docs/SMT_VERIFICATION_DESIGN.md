@@ -159,6 +159,21 @@ New constructs:
 Both are mandatory under `--smt` (Phase 3c will wire the check).
 Phase 5 extends `tokens` to interval ranges `[min,max]`.
 
+<!-- __cost_cap_phase3b_design_note_v1__ -->
+**Phase 3b status (Session 62):** Pricing infrastructure landed.
+- `pricing/defaults.toml` ships 10 starter models with verified
+  Q2 2026 prices.
+- `pricing.py` provides strict Pydantic loader, layered (CLI/cwd/
+  user/package), deterministic ordering, sha256 audit trail.
+- `nous prices show/init/verify/age` exposes the table to users.
+- Schema v1.0 supports per_token / per_hour / free pricing models;
+  optional cache + batch + reasoning fields enable tighter bounds.
+- EU AI Act Annex IV alignment: per-entry source_url, verified_by,
+  verified_date; lifecycle (deprecated_after, removed_after) with
+  staleness thresholds (warn>30d, error>90d under --smt).
+Phase 3c will wire smt_emit.py to consume the pricing table and
+produce SMT-LIB constraints.
+
 ---
 
 ### 4.2 `smt_verify.py` (Session 62)

@@ -69,6 +69,7 @@ py-modules = [
     "replay_store", "replay_runtime",
     "replay_cli", "risk_engine", "intervention", "governance", "governance_simulator",
     "governance_lint", "stdlib_manager", "phrase_detector",
+    "pricing", "cli_prices",  # __cost_cap_phase3b_modules_v1__
 ]
 
 # __cc_dynamic_block_v1__
@@ -83,3 +84,5 @@ templates = ["*.nous"]
 # Lives next to top-level py-modules (cli.py, parser.py, etc.) at install-time.
 [tool.setuptools.data-files]
 "." = ["nous.lark"]
+# __cost_cap_phase3b_datafiles_v1__
+"pricing" = ["pricing/defaults.toml"]
