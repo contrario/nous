@@ -188,7 +188,7 @@ chosen location; auditor verifies the cryptographic chain offline.
 **Currently shipped:**
 - Validator (`validator.py`) catches structural and semantic errors at
   compile time.
-- 54/54 regression templates byte-identical (deterministic codegen).
+- 57 templates baseline-stable, 0 drift (deterministic codegen).
 - Pyflakes Phase 4.5 gate against undefined-name violations (Session 60).
 
 **Gap (closing in Sessions 62-65):**

@@ -348,7 +348,7 @@ becomes the default in v5.0.0 release (Session 65).
 - Regression: 0 changes to existing 54 templates (additive only)
 
 **Exit criteria:** PYTEST_FLOOR raised by N (where N = number of new
-SMT tests); 54/54 regression byte-identical; v4.13.0 released with
+SMT tests); 57 templates baseline-stable; v4.13.0 released with
 optional `[smt]` extra.
 
 ### Session 63: Full Law-Type Coverage

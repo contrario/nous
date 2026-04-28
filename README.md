@@ -1,3 +1,4 @@
+<!-- __session64_docs_accuracy_v1__ -->
 # NOUS (Νοῦς) — The Living Language
 
 **The first agentic programming language with formal cost-bound verification.**
@@ -193,7 +194,7 @@ Anyone with the manifest and the publisher's public key can re-verify offline. T
 | Metric              | Value                                       |
 |---------------------|---------------------------------------------|
 | Tests               | 264 passing                                 |
-| Regression          | 54/54 templates byte-identical              |
+| Regression          | 57 templates, 0 baseline drift              |
 | Parser throughput   | LALR (Lark), 3.3 ms/parse                   |
 | Grammar rules       | ~200 (bilingual EN+GR)                      |
 | AST node types      | 50+ Pydantic V2 models                      |
