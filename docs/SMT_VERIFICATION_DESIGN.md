@@ -174,6 +174,13 @@ def verify(spec: SMTSpec, timeout_ms: int = 30_000) -> VerifyResult:
 `pyproject.toml` extras: `[smt]`. Optional install -- core NOUS must
 not require Z3.
 
+<!-- __smt_z3_pin_note_v1__ -->
+**Verified pin (2026-04-28, Session 62 Phase 1):**
+`z3-solver>=4.15.0,<4.17.0`. PyPI latest at the time was `4.16.0.0`
+(released 2026-02-19). The `"z3_version": "4.13.0"` value in the
+manifest schema example below (§4.4) is illustrative; the live
+manifest writes whatever Z3 version the compiling host has installed.
+
 **Failure modes:**
 
 - `unknown` (Z3 cannot decide within timeout) -> treated as failed
