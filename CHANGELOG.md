@@ -2,6 +2,37 @@
 
 <!-- __session63_changelog_v4_13_0__ -->
 
+<!-- __session63_changelog_v4_13_1__ -->
+
+## [4.13.1] - 2026-04-28
+
+### Fixed
+
+- **Shipped `pricing/defaults.toml` not found by wheel installs.**
+  `pricing.py` hardcoded `<package>/pricing/defaults.toml`, but
+  setuptools `data-files` installs the file at
+  `<sys.prefix>/pricing/defaults.toml`. Fresh installs of v4.13.0
+  could not run `nous verify --smt` (loader raised
+  `FileNotFoundError: no pricing TOML found in any layer`).
+
+  The package-defaults layer (layer 4) now resolves through a
+  small helper that tries, in order:
+  1. `<__file__>/pricing/defaults.toml` (dev tree, editable install).
+  2. `<sys.prefix>/pricing/defaults.toml` (data-files install).
+  3. `<sys.prefix>/share/pricing/defaults.toml` (some venv layouts).
+
+  Layer index unchanged: still `4` (so existing tests and
+  manifest provenance audits remain stable).
+
+### Notes
+
+- v4.13.0 was tagged and a GitHub release was published, but the
+  wheel was **never uploaded to PyPI** because clean-install
+  verification caught this issue first. v4.13.1 is the first
+  v4.13.x to reach PyPI.
+
+
+
 ## [4.13.0] - 2026-04-28
 
 ### Added — Formal SMT cost-bound verification

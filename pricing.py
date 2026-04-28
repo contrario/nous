@@ -232,10 +232,33 @@ class PricingLayer(BaseModel):
     found: bool
 
 
+# __pricing_data_files_resolver_v1__
+def _resolve_shipped_defaults() -> Path:
+    """Find shipped defaults.toml across install layouts.
+
+    Editable / dev installs put the file beside this module.
+    Wheel installs ship it via setuptools data-files at
+    <sys.prefix>/pricing/defaults.toml. Some platform/venv
+    combinations route data-files through <sys.prefix>/share/.
+    Returns the first existing candidate, or candidate 1 as a
+    deterministic fallback if none exist (so error messages still
+    point somewhere sensible).
+    """
+    candidates: list[Path] = [
+        Path(__file__).resolve().parent / "pricing" / "defaults.toml",
+        Path(sys.prefix) / "pricing" / "defaults.toml",
+        Path(sys.prefix) / "share" / "pricing" / "defaults.toml",
+    ]
+    for c in candidates:
+        if c.is_file():
+            return c
+    return candidates[0]
+
+
 def _candidate_layers(custom_path: Optional[Path]) -> list[PricingLayer]:
     home = Path(os.path.expanduser("~"))
     cwd = Path.cwd()
-    pkg_default = Path(__file__).resolve().parent / "pricing" / "defaults.toml"
+    pkg_default = _resolve_shipped_defaults()
     candidates: list[tuple[int, str, Optional[Path]]] = [
         (1, "--prices CLI flag", custom_path),
         (2, "./nous_prices.toml (project-local)", cwd / "nous_prices.toml"),
