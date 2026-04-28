@@ -227,6 +227,8 @@ transition:all 0.2s;white-space:nowrap;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+<!-- NOUS_VERSION_JS -->
+<script defer src="/js/nous-version.js?v=1"></script>
 </head>
 <body>
 
@@ -236,7 +238,7 @@ transition:all 0.2s;white-space:nowrap;
       <span class="ide-logo-n">NOUS IDE</span>
       <span class="ide-logo-sub">Νοῦς</span></div><a href="/" style="display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--td);text-decoration:none;padding:4px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:4px;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(201,165,84,0.3)';this.style.color='#c9a554'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#94a3b8'">2190 Home</a><div style="display:none">
     </div>
-    <span class="ide-version">v4.0.0</span>
+    <span class="ide-version" data-nous-version>v4.12.0</span>
   </div>
 
   <div class="tab-bar">
@@ -244,6 +246,7 @@ transition:all 0.2s;white-space:nowrap;
     <button class="tab-btn" data-tab="verify"><span class="tab-icon">✓</span>Verify</button>
     <button class="tab-btn" data-tab="graph"><span class="tab-icon">◇</span>Graph</button>
     <button class="tab-btn" data-tab="diff"><span class="tab-icon">⊿</span>Architecture Diff</button>
+    <button class="tab-btn" data-tab="governance" data-marker="__governance_tab_button_v1__"><span class="tab-icon">⚖</span>Governance</button>
     <button class="tab-btn" data-tab="chat"><span class="tab-icon">◉</span>Chat</button>
   </div>
 
@@ -299,6 +302,49 @@ transition:all 0.2s;white-space:nowrap;
     <div class="tab-panel" id="panel-diff">
       <div class="diff-wrap" id="diff-container"></div>
     </div>
+    <!-- __governance_tab_panel_v1__ -->
+    <div class="tab-panel" id="panel-governance" style="overflow:auto">
+      <div style="padding:16px;display:flex;flex-direction:column;gap:16px;height:100%">
+        <div style="display:flex;gap:12px;align-items:center;padding-bottom:10px;border-bottom:1px solid rgba(201,165,84,0.15)">
+          <div style="font-family:'Playfair Display',serif;font-size:18px;color:#c9a554">Policy Governance</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#64748b">Live static analysis &amp; policy inspector</span>
+          <button id="btn-gov-refresh" onclick="govRefresh()" style="margin-left:auto;background:#c9a554;color:#05070e;border:none;padding:6px 16px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:0.3px">REFRESH</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1;min-height:0">
+          <div style="display:flex;flex-direction:column;background:rgba(10,14,28,0.5);border:1px solid rgba(201,165,84,0.12);border-radius:8px;overflow:hidden">
+            <div style="padding:10px 14px;background:rgba(201,165,84,0.08);border-bottom:1px solid rgba(201,165,84,0.12);font-family:'JetBrains Mono',monospace;font-size:11px;color:#c9a554;letter-spacing:0.5px;display:flex;align-items:center">
+              <span>POLICIES</span>
+              <span id="gov-policies-count" style="margin-left:auto;color:#94a3b8;font-size:10px"></span>
+            </div>
+            <div id="gov-policies-list" style="flex:1;overflow:auto;padding:12px">
+              <div style="color:#5a6a7e;font-size:12px;text-align:center;padding:40px 20px">Write policies in Editor, then click REFRESH</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;background:rgba(10,14,28,0.5);border:1px solid rgba(201,165,84,0.12);border-radius:8px;overflow:hidden">
+            <div style="padding:10px 14px;background:rgba(201,165,84,0.08);border-bottom:1px solid rgba(201,165,84,0.12);font-family:'JetBrains Mono',monospace;font-size:11px;color:#c9a554;letter-spacing:0.5px;display:flex;align-items:center">
+              <span>LINT</span>
+              <span id="gov-lint-summary" style="margin-left:auto;color:#94a3b8;font-size:10px"></span>
+            </div>
+            <div id="gov-lint-list" style="flex:1;overflow:auto;padding:12px">
+              <div style="color:#5a6a7e;font-size:12px;text-align:center;padding:40px 20px">No lint results yet</div>
+            </div>
+          </div>
+        </div>
+        <!-- __governance_tab_sim_panel_v1__ -->
+        <div style="display:flex;flex-direction:column;background:rgba(10,14,28,0.5);border:1px solid rgba(201,165,84,0.12);border-radius:8px;overflow:hidden;flex-shrink:0;min-height:200px">
+          <div style="padding:10px 14px;background:rgba(201,165,84,0.08);border-bottom:1px solid rgba(201,165,84,0.12);font-family:'JetBrains Mono',monospace;font-size:11px;color:#c9a554;letter-spacing:0.5px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span>EVENT SIMULATION</span>
+            <input id="sim-kind" type="text" placeholder="event.kind (e.g. llm.request)" style="background:#05070e;color:#e2e8f0;border:1px solid rgba(201,165,84,0.2);border-radius:4px;padding:4px 8px;font-family:inherit;font-size:11px;min-width:180px">
+            <input id="sim-data" type="text" placeholder='event.data JSON (e.g. {&quot;cost&quot;:1.0})' style="background:#05070e;color:#e2e8f0;border:1px solid rgba(201,165,84,0.2);border-radius:4px;padding:4px 8px;font-family:inherit;font-size:11px;flex:1;min-width:240px">
+            <button onclick="govSimulate()" style="background:#c9a554;color:#05070e;border:none;padding:5px 14px;border-radius:4px;font-family:inherit;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:0.3px">SIMULATE</button>
+          </div>
+          <div id="sim-results" style="flex:1;overflow:auto;padding:12px">
+            <div style="color:#5a6a7e;font-size:12px;text-align:center;padding:30px 20px">Enter event.kind and data, then SIMULATE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="tab-panel" id="panel-chat">
       <div style="display:flex;flex-direction:column;height:100%;background:#05070e">
         <div style="padding:8px 16px;display:flex;gap:8px;align-items:center;border-bottom:1px solid #1a1f35">
@@ -1792,6 +1838,249 @@ window.sendChat = async function() {
   })
   .catch(function() {});
   window.clearChat();
+})();
+
+// __governance_tab_js_v1__
+(function() {
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function renderPolicies(policies) {
+    var box = document.getElementById('gov-policies-list');
+    var countEl = document.getElementById('gov-policies-count');
+    if (!box) return;
+    if (countEl) countEl.textContent = (policies && policies.length) ? (policies.length + ' declared') : '';
+    if (!policies || policies.length === 0) {
+      box.innerHTML = '<div style="color:#5a6a7e;font-size:12px;text-align:center;padding:40px 20px">No policies declared</div>';
+      return;
+    }
+    var actionColors = {
+      'block':'#e05252',
+      'abort_cycle':'#e05252',
+      'intervene':'#f59e0b',
+      'inject_message':'#a78bfa',
+      'log_only':'#60a5fa'
+    };
+    var html = '';
+    for (var i = 0; i < policies.length; i++) {
+      var p = policies[i];
+      var color = actionColors[p.action] || '#94a3b8';
+      html += '<div style="margin-bottom:10px;padding:10px 12px;background:rgba(5,7,14,0.6);border:1px solid rgba(201,165,84,0.1);border-radius:6px">';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">';
+      html += '<span style="font-family:\'JetBrains Mono\',monospace;color:#c9a554;font-size:13px;font-weight:600">' + escapeHtml(p.name || '-') + '</span>';
+      html += '<span style="font-family:\'JetBrains Mono\',monospace;color:' + color + ';font-size:9px;padding:2px 7px;background:rgba(5,7,14,0.8);border:1px solid ' + color + ';border-radius:3px;text-transform:uppercase;letter-spacing:0.4px">' + escapeHtml(p.action || 'log_only') + '</span>';
+      html += '<span style="margin-left:auto;font-family:\'JetBrains Mono\',monospace;color:#94a3b8;font-size:10px">weight ' + (Number(p.weight) || 0).toFixed(1) + '</span>';
+      html += '</div>';
+      html += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:#64748b">kind: ' + escapeHtml(String(p.kind || '-')) + '</div>';
+      html += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:#94a3b8;margin-top:3px;word-break:break-all">signal: ' + escapeHtml(String(p.signal || '-')) + '</div>';
+      html += '</div>';
+    }
+    box.innerHTML = html;
+  }
+
+  function renderLint(report) {
+    var box = document.getElementById('gov-lint-list');
+    var summary = document.getElementById('gov-lint-summary');
+    if (!box) return;
+    if (!report) {
+      box.innerHTML = '<div style="color:#e05252;font-size:12px;text-align:center;padding:40px 20px">Lint unavailable</div>';
+      if (summary) summary.textContent = '';
+      return;
+    }
+    if (summary) {
+      summary.textContent = (report.error_count || 0) + ' err / ' + (report.warning_count || 0) + ' warn / ' + (report.info_count || 0) + ' info';
+    }
+    if (!report.issues || report.issues.length === 0) {
+      box.innerHTML = '<div style="color:#4ade80;font-size:13px;text-align:center;padding:30px 20px">OK &mdash; no issues</div>';
+      return;
+    }
+    var sevColors = {'error':'#e05252','warning':'#f59e0b','info':'#60a5fa'};
+    var html = '';
+    for (var i = 0; i < report.issues.length; i++) {
+      var iss = report.issues[i];
+      var color = sevColors[iss.severity] || '#94a3b8';
+      html += '<div style="margin-bottom:8px;padding:8px 12px;background:rgba(5,7,14,0.6);border:1px solid ' + color + '40;border-left:3px solid ' + color + ';border-radius:4px">';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap">';
+      html += '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:700;color:' + color + ';text-transform:uppercase;letter-spacing:0.4px">' + escapeHtml(iss.severity) + '</span>';
+      html += '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:#94a3b8">' + escapeHtml(iss.rule) + '</span>';
+      if (iss.policy) {
+        html += '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:#c9a554">[' + escapeHtml(iss.policy) + ']</span>';
+      }
+      html += '</div>';
+      html += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#e2e8f0;line-height:1.5;word-break:break-word">' + escapeHtml(iss.message) + '</div>';
+      html += '</div>';
+    }
+    box.innerHTML = html;
+  }
+
+  // __governance_tab_js_monaco_fix_v1__
+  function _getEditorCode() {
+    try {
+      if (typeof window.getEditorCode === 'function') {
+        var v = window.getEditorCode();
+        if (typeof v === 'string') return v;
+      }
+    } catch (e) {}
+    try {
+      if (typeof monaco !== 'undefined' && monaco.editor && typeof monaco.editor.getEditors === 'function') {
+        var eds = monaco.editor.getEditors();
+        if (eds && eds.length > 0 && typeof eds[0].getValue === 'function') {
+          return eds[0].getValue() || '';
+        }
+      }
+    } catch (e) {}
+    try {
+      if (window._monacoEditor && typeof window._monacoEditor.getValue === 'function') {
+        return window._monacoEditor.getValue() || '';
+      }
+    } catch (e) {}
+    return '';
+  }
+
+  window.govRefresh = function() {
+    var code = _getEditorCode();
+
+    fetch('/api/v1/governance/lint', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ source: code || '', strict: false })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data && data.ok && data.report) renderLint(data.report);
+      else renderLint(null);
+    })
+    .catch(function() { renderLint(null); });
+
+    if (code && code.trim()) {
+      fetch('/api/v1/governance/policies/preview', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ source: code })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data && data.ok) renderPolicies(data.policies || []);
+        else renderPolicies([]);
+      })
+      .catch(function() { renderPolicies([]); });
+    } else {
+      renderPolicies([]);
+    }
+  };
+
+  var _govDebounce = null;
+  document.addEventListener('click', function(ev) {
+    var t = ev.target;
+    while (t && t !== document.body) {
+      if (t.classList && t.classList.contains('tab-btn') && t.getAttribute('data-tab') === 'governance') {
+        clearTimeout(_govDebounce);
+        _govDebounce = setTimeout(window.govRefresh, 150);
+        break;
+      }
+      t = t.parentNode;
+    }
+  });
+})();
+
+// __governance_tab_sim_js_v1__
+(function() {
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function _getEditorCodeSim() {
+    try {
+      if (typeof monaco !== 'undefined' && monaco.editor && typeof monaco.editor.getEditors === 'function') {
+        var eds = monaco.editor.getEditors();
+        if (eds && eds.length > 0 && typeof eds[0].getValue === 'function') {
+          return eds[0].getValue() || '';
+        }
+      }
+    } catch (e) {}
+    try {
+      if (typeof window.getEditorCode === 'function') {
+        var v = window.getEditorCode();
+        if (typeof v === 'string') return v;
+      }
+    } catch (e) {}
+    return '';
+  }
+  function renderSim(result) {
+    var box = document.getElementById('sim-results');
+    if (!box) return;
+    if (result && result.error) {
+      box.innerHTML = '<div style="color:#e05252;font-size:12px;padding:14px;background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.3);border-radius:6px">' + escapeHtml(result.error) + '</div>';
+      return;
+    }
+    if (!result || typeof result !== 'object') {
+      box.innerHTML = '<div style="color:#e05252;font-size:12px">Simulation failed</div>';
+      return;
+    }
+    var firedCount = result.fired_count || 0;
+    var skippedCount = result.skipped_count || 0;
+    var policyCount = result.policy_count || 0;
+    var sevColor = firedCount > 0 ? '#f59e0b' : '#4ade80';
+    var html = '';
+    html += '<div style="margin-bottom:10px;font-family:\'JetBrains Mono\',monospace;font-size:10px;color:#94a3b8">';
+    html += '<span style="color:' + sevColor + ';font-weight:700">' + firedCount + ' fired</span> / ' + skippedCount + ' skipped / ' + policyCount + ' total';
+    html += '</div>';
+    var matches = result.matches || [];
+    if (matches.length === 0) {
+      html += '<div style="color:#5a6a7e;font-size:12px;padding:20px;text-align:center">No policies to evaluate</div>';
+      box.innerHTML = html;
+      return;
+    }
+    var actionColors = {'block':'#e05252','abort_cycle':'#e05252','intervene':'#f59e0b','inject_message':'#a78bfa','log_only':'#60a5fa'};
+    for (var i = 0; i < matches.length; i++) {
+      var m = matches[i];
+      var fired = !!m.fired;
+      var border = fired ? '#f59e0b' : '#1a1f35';
+      var bg = fired ? 'rgba(245,158,11,0.08)' : 'rgba(5,7,14,0.6)';
+      var actColor = actionColors[m.action] || '#94a3b8';
+      html += '<div style="margin-bottom:6px;padding:8px 12px;background:' + bg + ';border:1px solid ' + border + ';border-left:3px solid ' + (fired ? '#f59e0b' : '#3a4a5e') + ';border-radius:4px">';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;flex-wrap:wrap">';
+      html += '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:700;color:' + (fired ? '#f59e0b' : '#64748b') + ';text-transform:uppercase;letter-spacing:0.4px">' + (fired ? 'FIRED' : 'skip') + '</span>';
+      html += '<span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#c9a554;font-weight:600">' + escapeHtml(m.policy || '-') + '</span>';
+      html += '<span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:' + actColor + ';padding:1px 6px;border:1px solid ' + actColor + ';border-radius:3px;text-transform:uppercase">' + escapeHtml(m.action || 'log_only') + '</span>';
+      html += '<span style="margin-left:auto;font-family:\'JetBrains Mono\',monospace;font-size:10px;color:#94a3b8">w' + (Number(m.weight) || 0).toFixed(1) + '</span>';
+      html += '</div>';
+      html += '<div style="font-family:\'JetBrains Mono\',monospace;font-size:10px;color:#94a3b8;word-break:break-word">' + escapeHtml(m.reason || '') + '</div>';
+      html += '</div>';
+    }
+    box.innerHTML = html;
+  }
+  window.govSimulate = function() {
+    var kindEl = document.getElementById('sim-kind');
+    var dataEl = document.getElementById('sim-data');
+    var kind = (kindEl && kindEl.value || '').trim();
+    if (!kind) {
+      renderSim({error: 'event.kind is required (e.g. llm.request)'});
+      return;
+    }
+    var dataStr = (dataEl && dataEl.value || '').trim();
+    var data = {};
+    if (dataStr) {
+      try { data = JSON.parse(dataStr); }
+      catch (e) { renderSim({error: 'Invalid JSON in event.data: ' + e.message}); return; }
+    }
+    var code = _getEditorCodeSim();
+    fetch('/api/v1/governance/simulate', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ source: code, event_kind: kind, event_data: data })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(resp) {
+      if (resp && resp.ok && resp.result) renderSim(resp.result);
+      else renderSim({error: (resp && resp.error) || 'simulation failed'});
+    })
+    .catch(function(e) { renderSim({error: String(e)}); });
+  };
 })();
 
 </script>

@@ -224,6 +224,8 @@ img{max-width:100%;display:block}
   .targets-grid{grid-template-columns:1fr!important}
 }
 </style>
+<!-- NOUS_VERSION_JS -->
+<script defer src="/js/nous-version.js?v=1"></script>
 </head>
 <body>
 
@@ -232,7 +234,7 @@ img{max-width:100%;display:block}
   <div class="nav-inner">
     <div style="display:flex;align-items:baseline">
       <button class="nav-logo" onclick="showHome()">ΝΟΥΣ</button>
-      <span class="nav-ver">v4.0.0</span>
+      <span class="nav-ver" data-nous-version>v4.12.0</span>
     </div>
     <div class="nav-links" id="navLinks">
       <a href="/docs" class="nav-link">Docs</a>
@@ -243,6 +245,10 @@ img{max-width:100%;display:block}
       <a href="#Ecosystem" class="nav-link">Ecosystem</a>
       <a href="#ArchDiff" class="nav-link">Diff</a>
       <a href="#Biology" class="nav-link">Biology</a>
+      <!-- __homepage_nav_pages_v1__ -->
+      <a href="/governance" class="nav-link">Governance</a>
+      <a href="/replay" class="nav-link">Replay</a>
+      <a href="/policies" class="nav-link">Policies</a>
       <a href="#Story" class="nav-link">Story</a>
       <div class="nav-sep"></div>
       <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="nav-gh">
@@ -300,7 +306,7 @@ img{max-width:100%;display:block}
   <div class="stats-bar">
     <div class="stat"><div class="stat-num" data-target="30">0</div><div class="stat-label">Priorities</div></div>
     <div class="stat"><div class="stat-num" data-target="259">0</div><div class="stat-label">Tests Passing</div></div>
-    <div class="stat"><div class="stat-num" data-target="32">0</div><div class="stat-label">CLI Commands</div></div>
+    <div class="stat"><div class="stat-num" data-target="43">0</div><div class="stat-label">CLI Commands</div></div>
     <div class="stat"><div class="stat-num" data-target="7">0</div><div class="stat-label">Proof Categories</div></div>
     <div class="stat"><div class="stat-num" data-target="3">0</div><div class="stat-label">Compile Targets</div></div>
   </div>
@@ -545,7 +551,7 @@ if(term)obs.observe(term);
 <section class="section" id="NewFeatures" style="background:linear-gradient(180deg,transparent,rgba(201,165,84,0.02),transparent)">
 <div class="container">
   <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
-    <div class="section-tag" style="border-color:rgba(77,158,255,0.19);color:var(--blue);background:rgba(77,158,255,0.05)">New in v4.0</div>
+    <div class="section-tag" style="border-color:rgba(77,158,255,0.19);color:var(--blue);background:rgba(77,158,255,0.05)">Continuous Updates</div>
     <h2 class="section-title">What's New</h2>
     <p class="section-sub">MCP integration, 9 LLM providers, and tools no other framework has.</p>
   </div>
@@ -750,7 +756,7 @@ if(term)obs.observe(term);
   <!-- Stats -->
   <div class="fade-in" style="display:flex;justify-content:center;gap:40px;margin-top:40px;flex-wrap:wrap">
     <div style="text-align:center">
-      <div style="font-size:28px;font-weight:700;color:var(--bright);font-family:'Playfair Display',serif">38</div>
+      <div style="font-size:28px;font-weight:700;color:var(--bright);font-family:'Playfair Display',serif">43</div>
       <div style="font-size:11px;color:var(--dim);margin-top:4px">CLI Commands</div>
     </div>
     <div style="text-align:center">
@@ -845,6 +851,48 @@ if(term)obs.observe(term);
 </div>
 </section>
 
+<!-- __governance_section_v1__ -->
+<section class="section" id="Governance" style="background:linear-gradient(180deg,transparent,rgba(77,158,255,0.02),transparent)">
+<div class="container">
+  <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
+    <div class="section-tag" style="border-color:rgba(201,165,84,0.19);color:var(--gold);background:rgba(201,165,84,0.05)">New in v4.9</div>
+    <h2 class="section-title">Governance &amp; Replay</h2>
+    <p class="section-sub">Declare policies in the source. Enforce them at runtime. Replay every decision deterministically.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:900px;margin:0 auto" class="fade-in">
+
+    <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0.4"></div>
+      <div style="color:var(--blue);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">Deterministic Replay</div>
+      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Record Once. Replay Forever.</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.65">Every sense call, LLM request, and memory write is recorded with a SHA256 hash chain. Replay a run bit-exact &mdash; same seeds, same timestamps, same responses. <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">Phase A&ndash;D</code></div>
+    </div>
+
+    <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.4"></div>
+      <div style="color:var(--gold);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">Policy DSL</div>
+      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Rules in the Source</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.65">Declare policies inside <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">world</code> blocks. Native grammar, compiled into the runtime, version-controlled alongside the agents they govern. <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">policy { kind, signal, action }</code></div>
+    </div>
+
+    <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:0.4"></div>
+      <div style="color:var(--purple);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">Intervention Engine</div>
+      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Block. Inject. Abort. Audit.</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.65">Five actions at three sites (<code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">sense.invoke</code>, <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">llm.request</code>, <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">memory.write</code>). Prompt-hash recompute on message injection closes the audit gap.</div>
+    </div>
+
+    <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0.4"></div>
+      <div style="color:var(--green);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">Dashboard &amp; CLI</div>
+      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Every Decision, Queryable</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.65">List active policies. Query historical interventions by soul, action, or time. Aggregate statistics. <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">nous governance stats log.jsonl</code></div>
+    </div>
+
+  </div>
+</div>
+</section>
+
 <section class="section" id="Story">
 <div class="container">
   <div class="section-head fade-in">
@@ -879,7 +927,7 @@ if(term)obs.observe(term);
     <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">python cli.py verify my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
     <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">python cli.py run my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
     <div class="divider"></div>
-    <div class="kw-header">32 CLI Commands</div>
+    <div class="kw-header">43 CLI Commands</div>
     <div class="cli-tags" id="cliTags"></div>
   </div>
 </div>
@@ -933,7 +981,7 @@ if(term)obs.observe(term);
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy"><span>© 2025–2026 Hlias Staurou</span><span>·</span><span>NOUS v4.0.0</span></div>
+    <div class="footer-copy"><span>© 2025–2026 Hlias Staurou</span><span>·</span><span>NOUS <span data-nous-version>v4.12.0</span></span></div>
     <div class="footer-right">
       <span class="footer-oss">OPEN SOURCE</span>
       <span style="color:var(--dim);font-size:12px">·</span>
@@ -1001,11 +1049,24 @@ const STORY = [
   {year:"2025",title:"The Shift",text:"Started exploring AI not as a user, but as an architect. No CS degree. No coding background. A terminal, Claude, and relentless curiosity."},
   {year:"Nov 2025",title:"NOUS is Born",text:"First grammar. First parser. First AST. Built entirely through conversation — every command pasted into a terminal. From 1 priority to 24 in twelve sessions."},
   {year:"Apr 2026",title:"The Breakthrough",text:"Session 16: six priorities in one context window. Distributed runtime. WASM. Self-hosting. Formal verification. NL interface. 259 tests, all green."},
-  {year:"Now",title:"v4.0.0 — Soul Biology",text:"Mitosis: verified self-replicating agents. Immune System: LLM-generated antibodies broadcast to clones. Agent Dreaming: speculative pre-computation with lucid cache hits. 43 CLI Commands. 31+ formal proofs. 12 Soul Subsystems."},
+  {year:"Apr 2026",title:"v4.0.0 — Soul Biology",text:"Mitosis: verified self-replicating agents. Immune System: LLM-generated antibodies broadcast to clones. Agent Dreaming: speculative pre-computation with lucid cache hits. 43 CLI Commands. 31+ formal proofs. 12 Soul Subsystems."},
   {year:"Apr 2026",title:"v4.0.0 — The Living Language",text:"30 priorities. 32 CLI commands. A compiler that compiles itself. A language that proves your agents correct before they run."},
+    // __timeline_v491_v1__
+  // __timeline_v4100_v1__
+  // __timeline_session60_v1__
+  {year:"Now",title:"Stability Hardening — Defense in Depth",text:"Session 60 closed with five commits and zero version bump. 13 latent Class-1 undefined-name bugs eliminated, including a real <code>NameError</code> in <code>_webhook_chat()</code>. New Phase 4.5 pyflakes gate added to the release pipeline. System-layer defenses installed on production: <code>tmpfiles.d</code> guard for <code>/</code> mode and <code>chattr +i</code> on <code>resolv.conf</code> defend against the failure mode traced to a systemd CHDIR loop. Server B parity in Session 61. Total validated cases now 202 (184 pytest + 6 standalone replay + 5 grammar-sync + 7 version-consistency)."},
+  // __timeline_v4120_v1__
+  {year:"Apr 2026",title:"v4.12.0 — Pyflakes Gate + Test Hardening",text:"Release pipeline gains Phase 4.5: pyflakes scan of seven critical files fails the build on any undefined-name violation. <code>tests/conftest.py</code> now excludes a hybrid standalone-pytest test from auto-collection — six replay tests pass cleanly via standalone harness while pytest stays clean. PYTEST_FLOOR raised 178 → 184. Same architectural principle: gate the class of bug, do not chase instances."},
+  // __timeline_v411x_v1__
+  {year:"Apr 2026",title:"v4.11.x — Sycophancy Guard + Templates",text:"<code>phrase_detector.py</code> + <code>templates/sycophancy_guard.nous</code> reference policy ship together. <code>nous_api.py</code> split into thin library + <code>nous_api_server.py</code> (2002 lines) — FastAPI / dotenv decoupled from core. New <code>nous templates list/extract</code> CLI surface. Templates now bundle inside the wheel (silently broken since v4.0). 171 tests, 52/52 regression templates byte-identical."},
+  // __timeline_v4100_demoted_v1__
+  {year:"Apr 2026",title:"v4.10.0 — Lint Integration Pack + Event Simulator",text:"Lint is now actionable across three surfaces: <code>--error-on L010,L007</code> CLI flag, automatic gate in <code>nous verify</code>, and red-squiggles in VS Code via LSP. Plus: a new <strong>event simulator</strong> in the /ide Governance tab — type an event kind, paste JSON data, see which policies fire with weight, action, and reason. New module <code>governance_simulator.py</code>, new endpoint POST /v1/governance/simulate. 212 tests (+49), 52/52 regression templates byte-identical, zero codegen touch."},
+  {year:"Apr 2026",title:"v4.9.1 — Governance Lint + IDE Tab",text:"Static analysis for policies shipped as both CLI (<code>nous governance lint</code>) and interactive IDE tab. 13 lint rules (L000–L100) catch invalid actions, weight out of range, inject_message without message, literal-constant signals, reserved name prefixes, and more. Text and JSON output; strict mode for CI. New backend endpoint POST /v1/governance/lint. 163 tests (+37), 52/52 regression templates byte-identical."},
+  // __timeline_v482_v1__
+  {year:"Apr 2026",title:"v4.8.2 — Governance Complete",text:"Phase G governance shipped across five layers: RiskEngine, native policy DSL, intervention runtime, inject_message, dashboard and CLI, plus prompt-hash recompute for audit. Deterministic replay Phase A–D locked. 3-site symmetry at sense.invoke, llm.request, memory.write. 126 tests, 52/52 regression templates byte-identical."},
 ];
 
-const CMDS = ["compile","run","validate","typecheck","verify","test","watch","debug","shell","profile","docker","plugins","pkg","ast","evolve","nsp","info","bridge","version","crossworld","bench","docs","fmt","noesis","build","init","migrate","viz","lsp","wasm","self-compile","create"];
+const CMDS = ["compile","run","validate","typecheck","verify","test","watch","debug","shell","profile","docker","plugins","pkg","ast","evolve","nsp","info","bridge","version","crossworld","bench","docs","fmt","noesis","build","init","migrate","viz","lsp","wasm","self-compile","create","diff","cost","dream","immune","mitosis","consciousness","metabolism","symbiosis","telemetry","retire","replay","governance"];
 
 const LEGAL = {
   privacy:{title:"Privacy Policy",updated:"14 April 2026",sections:[
@@ -1229,7 +1290,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCounters();
   setTimeout(initObserver, 100);
 });
-function devAccess(){var p=prompt("Password:");if(p&&btoa(p)==="SGxpYXMxOTc5IUAj"){location.href="http://188.245.245.132/ide.html"}else if(p){alert("Access denied.")}}
+function devAccess(){var p=prompt("Password:");if(p&&btoa(p)==="SGxpYXMxOTc5IUAj"){location.href="http://178.105.43.83/ide.html"}else if(p){alert("Access denied.")}}
 </script>
 </body>
 </html>

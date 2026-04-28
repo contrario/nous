@@ -108,6 +108,10 @@ pre code{background:none;padding:0;font-size:inherit;color:inherit}
       <a href="/" class="nav-link">Home</a>
       <a href="/examples" class="nav-link">Examples</a>
       <a href="/ide" class="nav-link">Playground</a>
+      <!-- __cross_nav_v1__ -->
+      <a href="/governance" class="nav-link">Governance</a>
+      <a href="/replay" class="nav-link">Replay</a>
+      <a href="/policies" class="nav-link">Policies</a>
       <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="nav-link">GitHub</a>
     </div>
   </div>
@@ -154,6 +158,17 @@ pre code{background:none;padding:0;font-size:inherit;color:inherit}
     <a href="#proof-codes" class="sb-link">Proof Codes</a>
   </div>
   <div class="sb-section">
+    <div class="sb-title">Governance &amp; Replay</div>
+    <a href="#replay" class="sb-link">Deterministic Replay</a>
+    <a href="#governance" class="sb-link">Governance Overview</a>
+    <a href="#policies" class="sb-link">Policy DSL</a>
+    <a href="#intervention" class="sb-link">Intervention Actions</a>
+    <a href="#governance-dashboard" class="sb-link">Dashboard &amp; CLI</a>
+    <a href="#governance-lint" class="sb-link">Lint</a>
+    <!-- __docs_sim_sidebar_v1__ -->
+    <a href="#governance-simulate" class="sb-link">Simulator</a>
+  </div>
+  <div class="sb-section">
     <div class="sb-title">Tools</div>
     <a href="#cli" class="sb-link">CLI Commands</a>
     <a href="#ide" class="sb-link">IDE</a>
@@ -187,7 +202,7 @@ pre code{background:none;padding:0;font-size:inherit;color:inherit}
 <!-- OVERVIEW -->
 <div class="doc-section" id="overview">
 <h1>NOUS Language Reference</h1>
-<p class="doc-updated">v4.0.0 · Last updated 14 April 2026</p>
+<p class="doc-updated">v4.10.0 · Last updated 17 April 2026</p>
 <p>NOUS (Νοῦς — Greek for "mind/intellect") is a self-evolving programming language purpose-built for agentic AI systems. It is not a framework, not a library, not a wrapper. It is a complete language with its own grammar, parser, type system, compiler, runtime, and IDE.</p>
 <div class="callout callout-info"><strong>The core insight:</strong> AI agents are not functions. They are living systems with memory, instincts, senses, healing ability, and evolution. NOUS models them as such.</div>
 <p>NOUS lets you describe multi-agent AI systems in a declarative, human-readable syntax. You define <strong>Souls</strong> (autonomous agents), <strong>Messages</strong> (typed data contracts), a <strong>Nervous System</strong> (routing between souls), and <strong>World Laws</strong> (constraints like cost ceilings). The compiler generates production-ready Python or JavaScript.</p>
@@ -1384,6 +1399,315 @@ Consciousness analysis:
 </table>
 </div>
 
+<!-- __docs_governance_v1__ -->
+<div class="doc-section" id="replay">
+<h2>Deterministic Replay</h2>
+<p>Every event produced by a NOUS runtime &mdash; sense invocations, LLM calls, memory writes, governance interventions &mdash; can be recorded into a hash-chained JSONL store and replayed later with bit-exact determinism. Same seeds, same timestamps, same responses, same decisions.</p>
+
+<h3>Modes</h3>
+<table class="doc-table">
+<thead><tr><th>Mode</th><th>Behavior</th></tr></thead>
+<tbody>
+<tr><td><code>off</code></td><td>No recording. Runtime is live. Zero overhead.</td></tr>
+<tr><td><code>record</code></td><td>All events appended to the event store with parent pointers and SHA256 chain links.</td></tr>
+<tr><td><code>replay</code></td><td>Runtime consults the store instead of calling external systems. Sense results, LLM responses, and timestamps all come from the log.</td></tr>
+</tbody>
+</table>
+
+<h3>Event store format</h3>
+<p>Events are append-only JSONL lines. Each event carries:</p>
+<pre><code>{
+  "seq_id": 42,
+  "soul": "Watcher",
+  "cycle": 7,
+  "kind": "llm.request",
+  "parent_id": 41,
+  "timestamp": 1713336000.123,
+  "data": { ... kind-specific probe data ... },
+  "prev_hash": "sha256:...",
+  "hash": "sha256:..."
+}</code></pre>
+<p>The <code>hash</code> is computed over the canonical serialization of the event plus <code>prev_hash</code>, forming a tamper-evident chain. Phase C adds verification: any modification to any byte of any event invalidates every hash after it.</p>
+
+<h3>Phases</h3>
+<table class="doc-table">
+<thead><tr><th>Phase</th><th>Adds</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>Event store, seq/parent tracking, record &amp; replay modes</td></tr>
+<tr><td>B</td><td>Deterministic clock (<code>ctx.now</code>) and seed derivation (<code>ctx.llm_seed</code>)</td></tr>
+<tr><td>C</td><td>Hash-chain verification, tamper detection, CLI verifier</td></tr>
+<tr><td>D</td><td>LLM wrapper (<code>ctx.record_or_replay_llm</code>) for full request/response replay</td></tr>
+</tbody>
+</table>
+
+<h3>Using replay from the runtime</h3>
+<pre><code>from replay_runtime import ReplayContext
+from replay_store import EventStore
+
+store = EventStore.open("/tmp/run.jsonl", mode="record")
+ctx = ReplayContext(store=store, mode="record", seed_base=42)
+
+# Later, replay the same log:
+store2 = EventStore.open("/tmp/run.jsonl", mode="replay")
+ctx2 = ReplayContext(store=store2, mode="replay", seed_base=42)</code></pre>
+
+<h3>Seed determinism</h3>
+<p>Every LLM call derives its seed from <code>(seed_base, soul, cycle, prompt_hash)</code>. Identical inputs produce identical seeds across runs. Replay never needs to call the real model &mdash; the recorded response is returned verbatim.</p>
+</div>
+
+<div class="doc-section" id="governance">
+<h2>Governance Overview</h2>
+<p>Governance in NOUS is not a middleware or a plug-in. It is a native part of the language that observes every event where a soul touches the outside world and decides whether that event is permitted, modified, or recorded for audit.</p>
+
+<h3>The five layers</h3>
+<table class="doc-table">
+<thead><tr><th>Layer</th><th>Purpose</th><th>Version</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>RiskEngine &mdash; YAML rules evaluated over probe data</td><td>v4.5.0</td></tr>
+<tr><td>2</td><td>Policy DSL &mdash; native <code>.nous</code> policy declarations</td><td>v4.6.0</td></tr>
+<tr><td>2.5</td><td><code>inject_message</code> &mdash; modify LLM messages in-place</td><td>v4.8.1</td></tr>
+<tr><td>3</td><td>Intervention runtime &mdash; block, abort_cycle, intervene</td><td>v4.7.0</td></tr>
+<tr><td>4</td><td>Dashboard &amp; CLI &mdash; policy inspector, event queries, stats</td><td>v4.8.0</td></tr>
+<tr><td>4.5</td><td>Prompt-hash recompute &mdash; audit injected messages</td><td>v4.8.2</td></tr>
+</tbody>
+</table>
+
+<h3>Three sites, one symmetry</h3>
+<p>The intervention hook fires at every runtime boundary where a soul reaches outside itself:</p>
+<table class="doc-table">
+<thead><tr><th>Site</th><th>Kind</th><th>Probe data</th></tr></thead>
+<tbody>
+<tr><td>Sense invocation</td><td><code>sense.invoke</code></td><td>sense, args, key</td></tr>
+<tr><td>LLM request</td><td><code>llm.request</code></td><td>provider, model, prompt_hash, messages_preview, temperature, seed, key</td></tr>
+<tr><td>Memory write</td><td><code>memory.write</code></td><td>field, old, new</td></tr>
+</tbody>
+</table>
+<p>One engine, three probe points, uniform semantics. A policy that blocks writes to a <code>secret</code> memory field uses the same declaration grammar as one that rate-limits LLM calls.</p>
+</div>
+
+<div class="doc-section" id="policies">
+<h2>Policy DSL</h2>
+<p>Policies live inside <code>world</code> blocks in <code>.nous</code> source. They are version-controlled alongside the agents they govern and compiled into the runtime wiring.</p>
+
+<h3>Syntax</h3>
+<pre><code>world Trader {
+    heartbeat = 5s
+
+    policy BlockHighValue {
+        kind: "llm.request"
+        signal: cost &gt; 0.05
+        weight: 10.0
+        action: block
+    }
+
+    policy AuditCostSpikes {
+        kind: "llm.response"
+        signal: cost &gt; 0.01
+        weight: 3.0
+        action: log_only
+    }
+}</code></pre>
+
+<h3>Fields</h3>
+<table class="doc-table">
+<thead><tr><th>Field</th><th>Type</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>kind</code></td><td>string</td><td>Event kind to match: <code>sense.invoke</code>, <code>llm.request</code>, <code>llm.response</code>, <code>memory.write</code></td></tr>
+<tr><td><code>signal</code></td><td>expression</td><td>Boolean expression over probe data fields</td></tr>
+<tr><td><code>weight</code></td><td>float</td><td>Score contribution when signal matches</td></tr>
+<tr><td><code>action</code></td><td>enum</td><td>One of: <code>log_only</code>, <code>intervene</code>, <code>inject_message</code>, <code>block</code>, <code>abort_cycle</code></td></tr>
+<tr><td><code>inject_as</code></td><td>enum</td><td>Required for <code>inject_message</code>: <code>system</code> or <code>user</code></td></tr>
+<tr><td><code>message</code></td><td>string</td><td>Required for <code>inject_message</code>: the content to inject</td></tr>
+</tbody>
+</table>
+
+<h3>inject_message example</h3>
+<pre><code>policy SafetyGuard {
+    kind: "llm.request"
+    signal: temperature &gt; 0.8
+    weight: 5.0
+    action: inject_message
+    inject_as: system
+    message: "Remember: do not generate harmful content."
+}</code></pre>
+<p>When triggered, a system message is prepended to the outgoing messages list before the LLM call executes. The soul code is unchanged. Compliance disclaimers, safety reminders, and A/B-testable guardrails become declarative.</p>
+
+<h3>Validation rules</h3>
+<table class="doc-table">
+<thead><tr><th>Code</th><th>Rule</th></tr></thead>
+<tbody>
+<tr><td>PL001</td><td>Policy name must be unique within a world</td></tr>
+<tr><td>PL002</td><td>kind must be a recognized event kind</td></tr>
+<tr><td>PL003</td><td>signal must be a valid boolean expression</td></tr>
+<tr><td>PL004</td><td>weight must be non-negative</td></tr>
+<tr><td>PL005</td><td>action must be one of the five valid actions</td></tr>
+<tr><td>PL006</td><td><code>inject_message</code> action requires a <code>message</code> clause</td></tr>
+<tr><td>PL007</td><td><code>inject_as</code> must be <code>system</code> or <code>user</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="doc-section" id="intervention">
+<h2>Intervention Actions</h2>
+<p>When one or more policies fire for an event, the InterventionEngine resolves the composite action by priority. The highest-severity triggered action wins.</p>
+
+<h3>Action priority (highest to lowest)</h3>
+<table class="doc-table">
+<thead><tr><th>Action</th><th>Priority</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td><code>abort_cycle</code></td><td>4</td><td>Raises <code>InterventionAborted</code>. The soul's current cycle terminates. Subsequent events in the cycle are not emitted.</td></tr>
+<tr><td><code>block</code></td><td>3</td><td>Raises <code>InterventionBlocked</code>. The triggering event itself is cancelled. The soul continues but the event never reaches the outside world.</td></tr>
+<tr><td><code>inject_message</code></td><td>2</td><td>Modifies the messages list in-place (LLM requests only). The call proceeds with the injected content.</td></tr>
+<tr><td><code>intervene</code></td><td>1</td><td>Emits a scored audit event. Execution continues.</td></tr>
+<tr><td><code>log_only</code></td><td>0</td><td>Emits an audit event. No runtime effect.</td></tr>
+</tbody>
+</table>
+
+<h3>Audit trail</h3>
+<p>Every triggered policy emits a <code>governance.intervention</code> event with:</p>
+<pre><code>{
+  "action": "block",
+  "policies": ["BlockHighValue"],
+  "score": 10.0,
+  "reasons": ["cost &gt; 0.05 matched: 0.073"],
+  "triggering_event_kind": "llm.request",
+  "triggering_event_seq_id": 42,
+  "inject_role": "",
+  "inject_content": ""
+}</code></pre>
+
+<h3>Prompt-hash recompute (Layer 4.5)</h3>
+<p>When <code>inject_message</code> modifies an LLM request, the resulting <code>llm.request</code> event carries three additional audit fields alongside the original <code>prompt_hash</code>:</p>
+<table class="doc-table">
+<thead><tr><th>Field</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td><code>prompt_hash</code></td><td>sha256 of the canonical payload BEFORE injection (preserved as the replay match key)</td></tr>
+<tr><td><code>prompt_hash_post_inject</code></td><td>sha256 of the canonical payload AFTER injection</td></tr>
+<tr><td><code>injected_role</code></td><td><code>system</code> or <code>user</code></td></tr>
+<tr><td><code>injected_policies</code></td><td>list of policy names that caused the injection</td></tr>
+</tbody>
+</table>
+<p>Auditors can verify both what the soul requested and what was ultimately transmitted to the LLM. Replay of pre-v4.8.2 logs remains fully supported: the original hash is the key.</p>
+</div>
+
+<div class="doc-section" id="governance-dashboard">
+<h2>Governance Dashboard &amp; CLI</h2>
+<p>The <code>governance.py</code> module exposes two read-only primitives, <code>PolicyInspector</code> and <code>GovernanceLog</code>, surfaced through CLI subcommands and HTTP endpoints.</p>
+
+<h3>CLI</h3>
+<pre><code>$ nous governance policies templates/trader.nous
+BlockHighValue     llm.request     block       10.0  cost &gt; 0.05
+AuditCostSpikes    llm.response    log_only     3.0  cost &gt; 0.01
+
+$ nous governance inspect /var/log/nous_events.jsonl --soul Watcher --limit 20
+Seq   Soul     Cycle  Action    Score  Policies
+42    Watcher  3      block     10.0   BlockHighValue
+55    Watcher  4      log_only   3.0   AuditCostSpikes
+
+$ nous governance stats /var/log/nous_events.jsonl
+Total events: 1204
+Total interventions: 147
+Blocked: 23
+Aborted: 2
+By policy: BlockHighValue=23, AuditCostSpikes=122
+By soul: Watcher=87, Trader=60</code></pre>
+
+<h3>HTTP endpoints</h3>
+<table class="doc-table">
+<thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>GET</td><td><code>/v1/governance/policies?world=X</code></td><td>List policies declared in a world template</td></tr>
+<tr><td>GET</td><td><code>/v1/governance/interventions?log=&amp;soul=&amp;action=&amp;since=&amp;limit=</code></td><td>Query intervention events from a replay log</td></tr>
+<tr><td>GET</td><td><code>/v1/governance/stats?log=</code></td><td>Aggregate intervention statistics</td></tr>
+</tbody>
+</table>
+<p>All three endpoints are rate-limited (60/min) and require an <code>X-API-Key</code> header. Error codes <code>GOV001</code>&ndash;<code>GOV005</code> distinguish missing log, parse failure, invalid filter, and I/O errors.</p>
+
+<h3>Data model</h3>
+<pre><code>PolicyInfo(name, kind, signal, weight, action, source_file)
+InterventionRecord(seq_id, soul, cycle, timestamp, action,
+                   policies, score, reasons, event_kind)
+GovernanceStats(total_events, total_interventions, by_action,
+                by_policy, by_soul, blocked_count, aborted_count)</code></pre>
+<p>All three are <code>@dataclass(frozen=True)</code> with <code>to_dict()</code> for JSON serialization.</p>
+</div>
+
+<div class="doc-section" id="governance-lint">
+<h2>Governance Lint</h2>
+<p>Static analysis for policy declarations. Catches errors before runtime: invalid actions, weight bounds, missing inject messages, dead signals, reserved name prefixes, and more. Ships as CLI, HTTP endpoint, and IDE tab; one engine, three surfaces.</p>
+
+<h3>CLI</h3>
+<pre><code>$ nous governance lint templates/trader.nous
+Lint: templates/trader.nous -- 2 policies
+===========================================
+OK -- no issues
+
+$ nous governance lint broken.nous --format json --strict
+{
+  "source_file": "broken.nous",
+  "policy_count": 1,
+  "issue_count": 1,
+  "error_count": 1,
+  "warning_count": 0,
+  "info_count": 0,
+  "issues": [
+    {
+      "rule": "L008",
+      "severity": "error",
+      "policy": "SafetyGuard",
+      "message": "Policy uses inject_message but has no message field",
+      "source_file": "broken.nous"
+    }
+  ]
+}</code></pre>
+<p>Exit codes: <code>0</code> clean, <code>1</code> on errors, <code>1</code> on warnings under <code>--strict</code>. Use <code>--format json</code> for CI pipelines.</p>
+
+<h3>HTTP endpoint</h3>
+<table class="doc-table">
+<thead><tr><th>Method</th><th>Path</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>POST</td><td><code>/v1/governance/lint</code></td><td>Lint .nous source; returns full <code>LintReport</code> as JSON plus <code>would_fail_strict</code> flag</td></tr>
+</tbody>
+</table>
+<p>Request body: <code>{"source": "...", "strict": false}</code>. API-key protected, rate-limited 60/min. Error codes <code>LNT001</code> (module unavailable), <code>LNT002</code> (internal error).</p>
+
+<h3>IDE integration</h3>
+<p>The <a href="/ide">/ide</a> page exposes a sixth tab, "Governance", that reads source from the Monaco editor and renders:</p>
+<ul>
+<li>Left column: all declared policies with color-coded action badges (red for <code>block</code>/<code>abort_cycle</code>, amber for <code>intervene</code>, purple for <code>inject_message</code>, blue for <code>log_only</code>), weight, kind, signal expression.</li>
+<li>Right column: lint issues grouped by severity (ERR / WARN / INFO) with rule code and policy name.</li>
+</ul>
+<p>Auto-refreshes when the tab is clicked (150ms debounce); manual REFRESH button revalidates on demand.</p>
+
+<h3>Rule catalog</h3>
+<table class="doc-table">
+<thead><tr><th>Rule</th><th>Severity</th><th>Condition</th></tr></thead>
+<tbody>
+<tr><td><code>L000</code></td><td>error</td><td>File not found</td></tr>
+<tr><td><code>L001</code></td><td>error</td><td>Duplicate policy name</td></tr>
+<tr><td><code>L002</code></td><td>error</td><td>Empty policy name</td></tr>
+<tr><td><code>L003</code></td><td>error</td><td>Invalid action (must be <code>log_only</code>/<code>intervene</code>/<code>block</code>/<code>abort_cycle</code>/<code>inject_message</code>)</td></tr>
+<tr><td><code>L004</code></td><td>error</td><td>Weight out of range (0.0, 10.0]</td></tr>
+<tr><td><code>L006</code></td><td>error</td><td>Empty signal expression</td></tr>
+<tr><td><code>L007</code></td><td>info</td><td>Unknown event kind</td></tr>
+<tr><td><code>L008</code></td><td>error</td><td><code>inject_message</code> policy with no <code>message</code> field</td></tr>
+<tr><td><code>L009</code></td><td>warning</td><td>File declares no policies</td></tr>
+<tr><td><code>L010</code></td><td>warning</td><td>Reserved name prefix <code>__</code></td></tr>
+<tr><td><code>L011</code></td><td>error</td><td>Negative window</td></tr>
+<tr><td><code>L012</code></td><td>info/warning</td><td>Signal is literal <code>true</code> (info, always fires) or <code>false</code> (warning, never fires)</td></tr>
+<tr><td><code>L100</code></td><td>error</td><td>Parse error</td></tr>
+</tbody>
+</table>
+
+<h3>Data model</h3>
+<pre><code>LintIssue(rule, severity, policy, message, source_file)
+LintReport(issues, source_file, policy_count)
+         .errors, .warnings, .infos       # filtered tuples
+         .has_errors, .has_warnings       # booleans
+         .to_dict()                       # JSON-ready</code></pre>
+<p>The linter uses <code>parse_nous()</code> directly (not <code>PolicyInspector</code>) so it can inspect <code>inject_as</code>, <code>message</code>, <code>window</code>, and <code>description</code> fields from the full <code>PolicyNode</code> AST. Empty or whitespace-only source short-circuits to <code>L009</code> instead of <code>L100</code> for cleaner UX.</p>
+</div>
+
 <div class="doc-section" id="files">
 <h2>File Inventory</h2>
 <h4>Core Compiler (7 files)</h4>
@@ -1399,6 +1723,52 @@ Consciousness analysis:
 <tr><td><code>error_recovery.py</code></td><td>9.7 KB</td><td>Enhanced error messages</td></tr>
 </tbody>
 </table>
+</div>
+
+<!-- __docs_sim_section_v1__ -->
+<div class="doc-section" id="governance-simulate">
+<h2>Event Simulator</h2>
+<p>The simulator answers <em>what-if</em> questions about declared policies. Given a synthetic event (<code>kind</code> + <code>data</code>), it evaluates every policy signal and reports which fire, with weight, action, and reason. Available as a Python module, an HTTP endpoint, and an IDE tab.</p>
+<h3>IDE tab</h3>
+<p>Open <a href="/ide">/ide</a>, switch to the <strong>Governance</strong> tab, click REFRESH to load policies, then use the <strong>EVENT SIMULATION</strong> strip at the bottom. Enter an event kind (e.g. <code>llm.request</code>) and a JSON data payload (e.g. <code>{&quot;cost&quot;: 1.5}</code>), then click SIMULATE.</p>
+<h3>HTTP endpoint</h3>
+<pre><code>POST /v1/governance/simulate
+Content-Type: application/json
+X-API-Key: &lt;key-if-configured&gt;
+
+{
+  "source": "world W { policy P { ... } }",
+  "event_kind": "llm.request",
+  "event_data": {"cost": 1.5}
+}
+
+-&gt; {
+  "ok": true,
+  "result": {
+    "event_kind": "llm.request",
+    "policy_count": 5,
+    "fired_count": 3,
+    "skipped_count": 2,
+    "matches": [
+      {"policy": "HighCost", "kind": "llm.request", "signal": "cost &gt; 1.0",
+       "weight": 9.0, "action": "block", "fired": true,
+       "reason": "signal evaluated to True"},
+      ...
+    ]
+  }
+}</code></pre>
+<p>Error codes: <code>SIM001</code> (missing event_kind), <code>SIM002</code> (module unavailable), <code>SIM003</code> (internal error).</p>
+<h3>Python API</h3>
+<pre><code>from governance_simulator import simulate_event
+
+result = simulate_event(source, event_kind="llm.request", event_data={"cost": 1.5})
+for m in result.fired:
+    print(f"FIRED {m.policy} ({m.action}, weight {m.weight})")
+</code></pre>
+<h3>Signal namespace</h3>
+<p>Data fields are exposed as bare names in the signal expression. For an event with <code>data = {&quot;cost&quot;: 0.5, &quot;tokens&quot;: 100}</code>, the signal <code>cost &gt; 0.1 and tokens &lt; 500</code> works directly. Field names must be valid Python identifiers and must not start with underscore. The sandbox blocks dunder access: no <code>__import__</code>, no <code>__builtins__</code>.</p>
+<h3>Kind filtering</h3>
+<p>If a policy declares <code>kind: &quot;memory.write&quot;</code>, it only evaluates when <code>event_kind == &quot;memory.write&quot;</code>. Mismatched policies are reported as skipped with <code>reason = &quot;kind mismatch (policy=..., event=...)&quot;</code>.</p>
 </div>
 
 <!-- TESTS -->
@@ -1429,6 +1799,9 @@ Consciousness analysis:
 // Search index
 const sections = [
   {id:'overview',title:'Overview',keywords:'nous language overview introduction what is'},
+  {id:'governance-lint',title:'Governance Lint',keywords:'lint static analysis policy rules L000 L008 L012 validate check issues errors warnings CI'},
+  // __docs_sim_search_v1__
+  {id:'governance-simulate',title:'Event Simulator',keywords:'simulate simulator event fire policy what-if kind data signal evaluate cost memory.write llm.request governance_simulator'},
   {id:'installation',title:'Installation',keywords:'install setup clone pip requirements'},
   {id:'first-program',title:'First Program',keywords:'hello world first program tutorial getting started'},
   {id:'concepts',title:'Core Concepts',keywords:'concepts world soul message nervous system mind senses memory instinct heal dna speak listen guard remember sense'},
@@ -1455,6 +1828,11 @@ const sections = [
   {id:'lsp',title:'LSP Server',keywords:'lsp language server protocol code actions auto fix vscode'},
   {id:'nl-interface',title:'Natural Language',keywords:'natural language create template llm english description'},
   {id:'debugger',title:'Debugger & REPL',keywords:'debugger repl interactive breakpoints step'},
+  {id:'replay',title:'Deterministic Replay',keywords:'replay deterministic record log jsonl event store hash chain seed phase a b c d'},
+  {id:'governance',title:'Governance Overview',keywords:'governance overview policy risk engine intervention layers phase g'},
+  {id:'policies',title:'Policy DSL',keywords:'policy dsl declare signal weight action kind inject_message inject_as PL001 PL006 PL007'},
+  {id:'intervention',title:'Intervention Actions',keywords:'intervention action block abort_cycle inject_message intervene log_only priority audit prompt hash recompute'},
+  {id:'governance-dashboard',title:'Governance Dashboard',keywords:'governance dashboard cli api endpoints policies inspect stats governance intervention events'},
   {id:'files',title:'File Inventory',keywords:'files inventory nous.lark parser.py ast_nodes.py validator.py codegen.py'},
   {id:'tests',title:'Test Suites',keywords:'tests suites 259 test_self_compiler test_lsp test_distributed'},
 ];

@@ -103,6 +103,40 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __blog_session60_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('session60-stability');return false">
+      <div class="post-meta">27 April 2026 &middot; Session 60</div>
+      <div class="post-title">Session 60 &mdash; Stability over Features. Five Commits. No Version Bump.</div>
+      <div class="post-excerpt">Most release notes boast about new features. This one is about choosing not to ship any. Five commits, zero version bump, 13 latent Class-1 bugs eliminated &mdash; including a real <code>NameError</code> waiting in <code>_webhook_chat()</code>. New <strong>Phase 4.5 pyflakes gate</strong> closes the class. System-layer defenses (<code>tmpfiles.d</code>, <code>chattr +i</code>) survive reboot. The handoff blamed AppArmor; the journal blamed a systemd CHDIR loop. PYTEST_FLOOR raised 178 &rarr; 184.</div>
+    </a>
+    <!-- __blog_v4100_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v4100-lint-sim');return false">
+      <div class="post-meta">17 April 2026 &middot; Session 54</div>
+      <div class="post-title">NOUS v4.10.0 &mdash; Lint, Everywhere. And Simulation.</div>
+      <div class="post-excerpt">Session 54 closed the governance loop. Lint went from opt-in command to three-surface enforcement: a CLI flag to elevate any rule (<code>--error-on L010,L007</code>), a build gate in <code>nous verify</code>, and red squiggles in VS Code via LSP. And for the &ldquo;what if&rdquo; question every policy author asks &mdash; a new event simulator in the /ide Governance tab. Type a kind, paste JSON, watch which policies fire. 212 tests, 52/52 regression byte-identical, zero codegen touch.</div>
+    </a>
+    <!-- __blog_v491_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v491-lint');return false">
+      <div class="post-meta">
+        <span class="post-date">17 APR 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v4.9.1 &mdash; Policy Lint: Static Analysis for Governance</div>
+      <div class="post-excerpt">Thirteen lint rules, a new CLI (<code>nous governance lint</code>), a new API endpoint, and a new IDE tab. If Phase G gave policies teeth, v4.9.1 gives them a dentist. Invalid actions, weight bounds, missing inject messages, dead signals &mdash; caught before runtime. 163 tests, 52/52 regression templates byte-identical.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __blog_v482_post_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v48-governance');return false">
+      <div class="post-meta">
+        <span class="post-date">17 APR 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v4.8.2 &mdash; Governance Complete: Declare. Enforce. Inject. Observe.</div>
+      <div class="post-excerpt">Phase G full stack shipped across five layers. Native policy DSL, runtime intervention, message injection, audit dashboard, and prompt-hash recompute. Deterministic replay Phase A&ndash;D locked. 126 tests, 52/52 regression templates byte-identical.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
     <a class="post-card" href="#" onclick="showPost('v40-consciousness');return false">
       <div class="post-meta">
         <span class="post-date">15 APR 2026</span>
@@ -153,6 +187,398 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
       <span class="post-read">Read post →</span>
     </a>
 
+  </div>
+
+    <!-- POST: v4.8.2 Governance Complete -->
+  <!-- __blog_post_v4100_v1__ -->
+  <!-- POST: Session 60 Stability Hardening -->
+  <div class="post-full" id="post-session60-stability">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">Session 60 &mdash; Stability over Features. Five Commits. No Version Bump.</h1>
+    <div class="post-full-meta">27 April 2026 &middot; 5 min read</div>
+
+    <p>Most release notes boast about new features. This one is about choosing not to ship any.</p>
+
+    <p>Session 60 closed with five commits and zero version bump. NOUS still ships at v4.12.0. What changed is the foundation underneath it.</p>
+
+    <h2>The choice</h2>
+    <p>When the session opened, two paths were possible: keep adding governance features, or chase down the latent class-1 bugs the v4.12.0 release surfaced. We took the second path. Stability is a feature &mdash; we just don&rsquo;t bill it as one.</p>
+
+    <h2>The pyflakes sweep &mdash; Phase 4.5</h2>
+    <p>A scan of seven critical files surfaced 13 undefined-name violations:</p>
+    <ul>
+      <li><code>cli.py</code>: 6&times; <code>Any</code> (annotations without import)</li>
+      <li><code>nous_api_server.py</code>: 3&times; <code>NousProgram</code> (forward reference broken), 2&times; <code>message</code>, 2&times; <code>body</code> (variables out of scope inside <code>_webhook_chat()</code>)</li>
+    </ul>
+    <p>The <code>body</code> and <code>message</code> references inside <code>_webhook_chat()</code> were a real bug. A malformed request would have raised <code>NameError</code> instead of returning the intended 400. Pyflakes caught what no integration test had.</p>
+
+    <p>Three architectural options were considered: an allowlist (hide the bugs), a scoped gate (only new code), or fix-first then gate. We chose fix-first. The release pipeline now runs <strong>Phase 4.5</strong>: any future undefined name in those seven files fails the build. The class is gone; the gate prevents its return.</p>
+
+    <h2>The conftest cleanup &mdash; pytest is the ground truth</h2>
+    <p><code>tests/test_replay_phase_d.py</code> is a hybrid: a standalone harness (its docstring says so) with a <code>__main__</code> block, but functions named <code>test_*</code>. Pytest auto-collected them. Async functions failed without pytest-asyncio; positional args were misread as fixtures.</p>
+
+    <p>First fix attempt: a heuristic grep classified six other files as &ldquo;standalone-looking&rdquo; and added them to <code>collect_ignore</code>. Pytest count dropped from 184 to 128. Fifty-seven tests lost.</p>
+
+    <p>Class of bug: heuristic file classification missed indented test methods inside class containers. <strong>Lesson:</strong> when classifying test files, run <code>pytest --collect-only</code> first. The collector sees what regex doesn&rsquo;t.</p>
+
+    <p>Rolled back. Final fix: minimal exclusion of the one hybrid file. Pytest stays at 184. The standalone harness runs separately, 6/6 green.</p>
+
+    <h2>The systemd CHDIR loop &mdash; root cause vs handoff hypothesis</h2>
+    <p>The previous handoff blamed AppArmor. The journal disagreed.</p>
+
+    <p>True root cause: when <code>/</code> is not <code>0755 root:root</code>, every systemd service with <code>User=</code> (resolved, networkd, timesyncd) fails to start. Documented at systemd issue #23201. Two events in the journal: a watchdog timeout on 26 Apr (3+ minutes, SIGABRT, CHDIR loop), and a restart attempt on 27 Apr where uid 1001 owned <code>/</code>.</p>
+
+    <p>The trigger of the chown is forgotten. The system-level defense matters more than the trigger: as long as <code>/</code> mode is owned and <code>0755</code>, the system survives.</p>
+
+    <h2>System-layer defenses</h2>
+    <p>Two declarative defenses, surviving reboot:</p>
+    <pre><code>/etc/tmpfiles.d/00-root-mode.conf:  z / 0755 root root -
+chattr +i /etc/resolv.conf</code></pre>
+    <p><code>tmpfiles.d</code> re-applies <code>/</code> mode at every boot. <code>chattr +i</code> blocks any rewrite of <code>resolv.conf</code> from cloud-init, netplan, or manual edits.</p>
+
+    <p>We considered switching to <code>systemd-resolved</code> stub mode. We chose <strong>not to</strong>: the watchdog hang on 26 Apr was 3+ minutes &mdash; stub mode would have meant complete DNS outage. Docker bridges cannot reach <code>127.0.0.53</code> on the host (systemd issue #9450); containers would have lost DNS. Static <code>resolv.conf</code> with 1.1.1.1 and 8.8.8.8, immutable. Boring. Reliable.</p>
+
+    <h2>The orphan that wasn&rsquo;t</h2>
+    <p>Phase 2 of the original mission was &ldquo;clean up uid 1001 orphan ownership&rdquo;. Investigation: uid 1001 is the <strong>active</strong> Langfuse Docker container user. Next.js + worker, running. No userns-remap, so the host sees only the numeric uid; <code>getent</code> returns empty because the host has no entry for the in-container user.</p>
+
+    <p>Had we run the chown, Langfuse files would have lost their owner. Containers would have failed to restart.</p>
+
+    <p><strong>Lesson:</strong> before chown on any uid that &ldquo;looks orphan&rdquo;, run:</p>
+    <pre><code>ps -eo uid,user,cmd | awk '$1==1001'</code></pre>
+    <p>Active container processes appear orphan to the host because the container&rsquo;s user table is private.</p>
+
+    <h2>By the numbers</h2>
+    <ul>
+      <li><strong>Commits</strong>: 5</li>
+      <li><strong>Version bump</strong>: 0</li>
+      <li><strong>Class-1 bugs eliminated</strong>: 13 (across 2 files)</li>
+      <li><strong>PYTEST_FLOOR raised</strong>: 178 &rarr; 184</li>
+      <li><strong>Standalone replay harness</strong>: 6/6</li>
+      <li><strong>Grammar sync</strong>: 5/5</li>
+      <li><strong>Version consistency</strong>: 7/7</li>
+      <li><strong>Regression templates byte-identical</strong>: 54/54</li>
+      <li><strong>Total validated cases</strong>: 197 &rarr; 202</li>
+      <li><strong>System defenses installed</strong>: 2</li>
+    </ul>
+
+    <h2>Lessons codified</h2>
+    <p>Three new rules added to the workbook:</p>
+    <ul>
+      <li><strong>Rule 23</strong>: when checking &ldquo;orphan&rdquo; UIDs, list active processes first.</li>
+      <li><strong>Rule 24</strong>: classify test files via <code>pytest --collect-only</code>, not regex.</li>
+      <li><strong>Rule 25</strong>: never trust handoff path/branch claims about a remote server without <code>ssh</code> + <code>find</code> verification.</li>
+    </ul>
+
+    <h2>What&rsquo;s next</h2>
+    <p>Session 61 brings the same defenses to Server B and refreshes the homepage and IDE versions to read directly from the backend. Sessions 62-65 begin the SMT verification arc: cost-bounded execution proven by Z3, then a full EU AI Act compliance dossier with cryptographic provenance via signed manifests.</p>
+
+    <p>The kitchen lesson holds. You cannot serve dinner on a wobbly counter.</p>
+
+    <p>Ship log: <a href="https://github.com/contrario/nous/commit/fb40d36">github.com/contrario/nous@fb40d36</a>.</p>
+  </div>
+
+  <!-- POST: v4.10.0 Lint Integration Pack + Event Simulator -->
+  <div class="post-full" id="post-v4100-lint-sim">
+    <h1 class="post-full-title">NOUS v4.10.0 &mdash; Lint, Everywhere. And Simulation.</h1>
+    <div class="post-full-meta">17 April 2026 &middot; 6 min read</div>
+
+    <p>v4.9.1 shipped <strong>policy lint</strong> as a command. v4.10.0 makes it <strong>actionable</strong> &mdash; and adds something new: a <strong>what-if simulator</strong> in the IDE.</p>
+
+    <h2>The problem with opt-in lint</h2>
+    <p>A lint tool nobody runs is a lint tool nobody has. Session 54 asked: <em>how do we make policy static analysis part of the build, the editor, and CI &mdash; not a standalone chore?</em></p>
+
+    <h2>Three surfaces, one engine</h2>
+
+    <h3>1. CLI: severity elevation</h3>
+    <p>The new <code>--error-on</code> flag promotes any non-error rule to a failure. Useful for team-specific conventions (e.g. &ldquo;we never use reserved name prefixes&rdquo;).</p>
+    <pre><code>$ nous governance lint mypolicies.nous --error-on L010,L007
+Lint: mypolicies.nous -- 1 policies
+===================================
+WARN L010 [__private] Policy name '__private' uses reserved prefix '__'
+
+Summary: 0 error(s), 1 warning(s), 0 info
+Elevated: 1 issue(s) promoted to error via --error-on
+  ELEV L010 [__private] Policy name '__private' uses reserved prefix '__'
+$ echo $?
+1</code></pre>
+
+    <h3>2. Build: automatic gate</h3>
+    <p><code>nous verify</code> now runs lint by default after formal verification. Errors fail the build. Three new flags: <code>--no-lint</code> (opt out), <code>--lint-strict</code> (warnings fail too), <code>--lint-error-on CODES</code> (elevate specific rules).</p>
+
+    <h3>3. Editor: red squiggles</h3>
+    <p>The LSP server now emits lint diagnostics with source <code>nous.lint</code>. VS Code shows them inline &mdash; L008 errors red, L010 warnings amber, L007 info blue. No action needed beyond installing the NOUS extension.</p>
+
+    <h2>The simulator: answer the &ldquo;what if&rdquo; question</h2>
+
+    <p>You&rsquo;ve declared your policies. Now what? Do they actually fire on the events you expect? Do they fire on events you <em>don&rsquo;t</em> expect?</p>
+
+    <p>Load the new <code>governance_demo</code> template in the <a href="/ide">/ide</a> Editor. Five policies across three event kinds:</p>
+
+    <img src="gov_sim_policies.png" alt="Governance tab with 5 declared policies and 1 lint info" style="max-width:100%;border:1px solid #1a2235;border-radius:8px;margin:20px 0">
+
+    <p>The new <strong>EVENT SIMULATION</strong> strip at the bottom takes a kind and a JSON data payload, runs every declared policy against it, and shows which fire (with weight, action, and the evaluation reason).</p>
+
+    <h3>Example: an expensive LLM call</h3>
+    <p>With <code>llm.request</code> and <code>{&quot;cost&quot;: 1.5}</code>, three policies fire &mdash; HighCost (block), MediumCost (intervene), AllRequests (log). Two are skipped because their <code>kind</code> doesn&rsquo;t match:</p>
+
+    <img src="gov_sim_high_cost.png" alt="3 policies fired, 2 skipped for high-cost LLM request" style="max-width:100%;border:1px solid #1a2235;border-radius:8px;margin:20px 0">
+
+    <h3>Example: a cheap call &mdash; only the logger fires</h3>
+    <p>Drop cost to <code>0.05</code>. HighCost and MediumCost evaluate to <code>False</code>. Only the catch-all logger remains:</p>
+
+    <img src="gov_sim_low_cost.png" alt="1 policy fired for low-cost LLM request" style="max-width:100%;border:1px solid #1a2235;border-radius:8px;margin:20px 0">
+
+    <h3>Example: a different event kind</h3>
+    <p>Change to <code>memory.write</code> with <code>{&quot;size&quot;: 2048}</code>. The LLM-request policies are skipped with explicit &ldquo;kind mismatch&rdquo; reasons, and only <strong>LargeMemory</strong> fires:</p>
+
+    <img src="gov_sim_memory_write.png" alt="1 policy fired for memory write, 4 skipped by kind" style="max-width:100%;border:1px solid #1a2235;border-radius:8px;margin:20px 0">
+
+    <h2>Under the hood</h2>
+    <p>The simulator is a standalone module (<code>governance_simulator.py</code>) that reuses the existing <code>PolicyInspector</code> from the lint engine and the sandbox-eval pattern from the risk engine. Data fields in the JSON payload become bare names in the signal namespace: <code>cost &gt; 0.5</code> works without <code>data.get(&quot;cost&quot;)</code>. The sandbox blocks dunder access, so no <code>__import__</code>, no <code>__builtins__</code>.</p>
+
+    <pre><code>POST /v1/governance/simulate
+Content-Type: application/json
+
+{
+  "source": "world ... { policy HighCost { ... } }",
+  "event_kind": "llm.request",
+  "event_data": {"cost": 1.5}
+}
+
+-> {"ok": true, "result": {
+      "policy_count": 5,
+      "fired_count": 3,
+      "skipped_count": 2,
+      "matches": [
+        {"policy": "HighCost", "fired": true, "weight": 9.0,
+         "action": "block", "reason": "signal evaluated to True"},
+        ...
+      ]
+}}</code></pre>
+
+    <h2>By the numbers</h2>
+    <ul>
+      <li><strong>Tests</strong>: 163 &rarr; 212 (+49)</li>
+      <li><strong>Regression templates</strong>: 52/52 byte-identical</li>
+      <li><strong>New CLI flags</strong>: <code>--error-on</code>, <code>--no-lint</code>, <code>--lint-strict</code>, <code>--lint-error-on</code></li>
+      <li><strong>New HTTP endpoint</strong>: POST /v1/governance/simulate</li>
+      <li><strong>New Python module</strong>: <code>governance_simulator.py</code></li>
+      <li><strong>New LSP diagnostic source</strong>: <code>nous.lint</code></li>
+      <li><strong>New IDE element</strong>: Event Simulation strip (Governance tab)</li>
+      <li><strong>New template</strong>: <code>governance_demo</code> (5 policies, 3 kinds)</li>
+      <li><strong>Codegen touch</strong>: zero</li>
+    </ul>
+
+    <p>Ship log: <a href="https://github.com/contrario/nous/releases/tag/v4.10.0">github.com/contrario/nous v4.10.0</a>. Try it at <a href="/ide">nous-lang.org/ide</a>.</p>
+  </div>
+
+  <!-- POST: v4.9.1 Policy Lint -->
+  <div class="post-full" id="post-v491-lint">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v4.9.1 &mdash; Policy Lint: Static Analysis for Governance</h1>
+    <div class="post-full-meta">17 April 2026 &middot; 5 min read</div>
+
+    <p>In v4.8.2 we closed the governance loop. Policies declare, the runtime enforces, interventions fire, the dashboard observes, and prompt hashes tell auditors exactly what was transmitted. Five layers, production-ready.</p>
+
+    <p>But something was missing. The loop lives at runtime. Mistakes in a policy &mdash; a typo in an action name, a weight outside the valid range, an <code>inject_message</code> missing its message field &mdash; would sit quietly in the source until the first event triggered them. For code that governs other code, that is too late.</p>
+
+    <p>v4.9.1 adds <strong>static analysis</strong>. Thirteen lint rules, three interfaces, zero runtime dependencies.</p>
+
+    <h2>The lint rules</h2>
+
+    <p>Each rule has a code (L000&ndash;L100), a severity (<code>error</code>, <code>warning</code>, <code>info</code>), and a target policy. The full catalog:</p>
+
+    <ul>
+      <li><strong>L000</strong> &mdash; file not found</li>
+      <li><strong>L001</strong> &mdash; duplicate policy name</li>
+      <li><strong>L002</strong> &mdash; empty policy name</li>
+      <li><strong>L003</strong> &mdash; invalid action (must be <code>log_only</code> / <code>intervene</code> / <code>block</code> / <code>abort_cycle</code> / <code>inject_message</code>)</li>
+      <li><strong>L004</strong> &mdash; weight out of range (0.0, 10.0]</li>
+      <li><strong>L006</strong> &mdash; empty signal expression</li>
+      <li><strong>L007</strong> &mdash; unknown event kind (info)</li>
+      <li><strong>L008</strong> &mdash; <code>inject_message</code> policy with no <code>message</code> field</li>
+      <li><strong>L009</strong> &mdash; file declares no policies (warning)</li>
+      <li><strong>L010</strong> &mdash; reserved name prefix <code>__</code> (warning)</li>
+      <li><strong>L011</strong> &mdash; negative window</li>
+      <li><strong>L012</strong> &mdash; signal is a literal constant &mdash; policy always or never fires</li>
+      <li><strong>L100</strong> &mdash; parse error</li>
+    </ul>
+
+    <p>These are not validator rules repackaged. The linter uses <code>parse_nous()</code> directly and inspects the full <code>PolicyNode</code> AST &mdash; including <code>inject_as</code>, <code>message</code>, <code>window</code>, and <code>description</code> fields that the compact <code>PolicyInfo</code> representation strips. That is how L008 works: the validator cannot see the missing message because it has already been dropped.</p>
+
+    <h2>Three interfaces, one engine</h2>
+
+    <p>The linter is a single Python module (<code>governance_lint.py</code>) with a clean separation between rule logic and presentation. That let us ship three interfaces without duplicating rules:</p>
+
+    <p><strong>CLI.</strong> <code>nous governance lint &lt;file.nous&gt; [--format text|json] [--strict]</code>. Exit code 0 when clean, 1 on errors, 1 on warnings under <code>--strict</code>. The JSON output is flat and CI-friendly &mdash; pipe it to <code>jq</code> and fail the build on any error.</p>
+
+    <p><strong>HTTP API.</strong> <code>POST /v1/governance/lint</code> takes <code>{source, strict}</code> and returns the full <code>LintReport</code> as JSON plus a <code>would_fail_strict</code> flag. API-key protected, rate-limited 60/min, the same pattern every other governance endpoint uses.</p>
+
+    <p><strong>IDE.</strong> A sixth tab at <a href="/ide">/ide</a>, called simply "Governance". Two columns: policies on the left with color-coded action badges, lint results on the right with severity-coded issue cards. Click the tab, it refreshes automatically (150ms debounce). Edit your policies, click REFRESH, watch problems appear and disappear.</p>
+
+    <h2>A concrete example</h2>
+
+    <p>Paste this into the IDE editor:</p>
+
+    <pre><code>world W {
+    heartbeat = 1s
+    policy SafetyGuard {
+        kind: "llm.request"
+        signal: cost &gt; 0.0
+        weight: 5.0
+        action: inject_message
+    }
+    policy __internal {
+        kind: "llm.request"
+        signal: true
+        weight: 3.0
+        action: log_only
+    }
+}</code></pre>
+
+    <p>Switch to the Governance tab. You will see two policies declared (with purple <code>INJECT_MESSAGE</code> and blue <code>LOG_ONLY</code> badges) and three lint issues: L008 error on SafetyGuard (missing <code>message</code> field), L010 warning on <code>__internal</code> (reserved prefix), L012 info on <code>__internal</code> (literal <code>true</code> signal means the policy always fires).</p>
+
+    <p>Fix the message field, rename <code>__internal</code>, add a real signal. Each refresh the issue count drops. The feedback loop is tight, visible, and pre-runtime.</p>
+
+    <h2>What did not change</h2>
+
+    <p>Zero codegen touches. Zero runtime patches. All 52 regression templates remain byte-identical to the ones compiled under v4.5.0 when Phase G started. The linter observes; it does not transform. That discipline is what makes it safe to ship meta-tooling on top of a working language.</p>
+
+    <p>Also: the existing validator still runs every compile. The linter is additive. Some rules overlap (L001 duplicate names matches validator PL001), but the linter catches more and structures its output for tooling. Run both, fail fast.</p>
+
+    <h2>By the numbers</h2>
+
+    <ul>
+      <li><strong>37</strong> new tests (126 &rarr; 163)</li>
+      <li><strong>52 / 52</strong> regression templates byte-identical</li>
+      <li><strong>13</strong> lint rules</li>
+      <li><strong>1</strong> new CLI subcommand, <strong>1</strong> new HTTP endpoint, <strong>1</strong> new IDE tab</li>
+      <li><strong>0</strong> codegen or runtime changes</li>
+    </ul>
+
+    <p>Ship log: <a href="https://github.com/contrario/nous/releases/tag/v4.9.1">github.com/contrario/nous v4.9.1</a>. Try it at <a href="/ide">nous-lang.org/ide</a>.</p>
+
+    <div style="display:flex;gap:10px;margin-top:40px;padding-top:30px;border-top:1px solid rgba(201,165,84,0.12)">
+      <button class="share-btn" onclick="navigator.clipboard.writeText('https://nous-lang.org/blog#v491-lint');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy link',2000)">Copy link</button>
+    </div>
+
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+  </div>
+
+  <div class="post-full" id="post-v48-governance">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v4.8.2 &mdash; Governance Complete: Declare. Enforce. Inject. Observe.</h1>
+    <div class="post-full-meta">
+      <span class="post-full-date">17 April 2026</span>
+      <span class="post-full-author">by Hlias Staurou</span>
+      <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+    </div>
+    <div class="post-body">
+      <p>Between v4.0.0 and today, NOUS grew a governance layer. Not a plug-in, not a middleware &mdash; a native part of the language that sees every LLM request, every sense invocation, and every memory write, and decides whether that event is allowed, modified, or recorded for later audit.</p>
+
+      <p>v4.8.2 closes the loop. Five layers are now live on production, with 126 tests passing and 52/52 regression templates byte-identical across the journey.</p>
+
+      <h2>Why governance</h2>
+      <p>Autonomous agents that run on your infrastructure, spend your money on LLM tokens, and write to your memory stores need more than best-effort prompt engineering. They need <strong>enforcement</strong>. Not as policy documents in a wiki, but as runtime invariants the language itself understands and the compiler itself emits.</p>
+
+      <p>The question was never <em>whether</em> to add governance, but where to put it. The answer, after four sessions of implementation, is: everywhere the runtime touches the outside world.</p>
+
+      <h2>Phase G in five layers</h2>
+
+      <h3>Layer 1 &mdash; RiskEngine (v4.5.0)</h3>
+      <p>A YAML rule engine that scores events against predicates. Each rule declares a <code>kind_filter</code>, a <code>predicate</code> over probe data, a <code>weight</code>, and an <code>action</code>. Scores aggregate, policies fire, decisions emerge. The engine is pure Python with zero dependencies beyond the standard library.</p>
+      <pre><code>- name: BlockHighValue
+  kind_filter: [llm.request]
+  predicate: cost &gt; 0.05
+  weight: 10.0
+  action: block</code></pre>
+
+      <h3>Layer 2 &mdash; Policy DSL (v4.6.0)</h3>
+      <p>YAML works, but NOUS is a language. Policies belong inside <code>.nous</code> source files, not adjacent to them. Layer 2 lifts rules into native grammar:</p>
+      <pre><code>world Trader {
+    heartbeat = 5s
+    policy BlockHighValue {
+        kind: "llm.request"
+        signal: cost &gt; 0.05
+        weight: 10.0
+        action: block
+    }
+}</code></pre>
+      <p>The compiler emits <code>_POLICIES</code> and <code>_POLICY_ACTIONS</code> tables into the generated Python, and the runtime wires them into the intervention engine. Policies live beside souls, version-controlled with the agent they govern.</p>
+
+      <h3>Layer 3 &mdash; Intervention runtime (v4.7.0)</h3>
+      <p>The RiskEngine decides. The InterventionEngine enforces. Three actions are available beyond <code>log_only</code>: <code>intervene</code> (scored audit, execution continues), <code>block</code> (raises <code>InterventionBlocked</code>, event is cancelled), and <code>abort_cycle</code> (raises <code>InterventionAborted</code>, the soul cycle terminates). Every triggered policy emits a <code>governance.intervention</code> event with the full decision trail.</p>
+
+      <h3>Layer 2.5 &mdash; inject_message (v4.8.1)</h3>
+      <p>The fifth action arrived last. Rather than block a risky LLM call or let it pass, <code>inject_message</code> modifies the outgoing messages in-place:</p>
+      <pre><code>policy SafetyGuard {
+    kind: "llm.request"
+    signal: temperature &gt; 0.8
+    weight: 5.0
+    action: inject_message
+    inject_as: system
+    message: "Remember: do not generate harmful content."
+}</code></pre>
+      <p>When the policy fires, a system (or user) message is prepended to the conversation before the call executes. The prompt is steered without touching the soul that sent it. Compliance disclaimers, safety reminders, and A/B-testable guardrails become declarative.</p>
+
+      <h3>Layer 4 &mdash; Dashboard + CLI (v4.8.0)</h3>
+      <p>Governance without visibility is theatre. Layer 4 adds a standalone <code>governance.py</code> module with <code>PolicyInspector</code> (parses policies from source files) and <code>GovernanceLog</code> (reads <code>governance.intervention</code> events from JSONL stores). Three HTTP endpoints and three CLI subcommands expose the data:</p>
+      <pre><code>$ nous governance policies templates/trader.nous
+BlockHighValue     llm.request     block       10.0  cost &gt; 0.05
+AuditCostSpikes    llm.response    log_only     3.0  cost &gt; 0.01
+
+$ nous governance stats /var/log/nous_events.jsonl
+Total interventions: 147
+Blocked: 23
+By policy: BlockHighValue=23, AuditCostSpikes=122</code></pre>
+
+      <h3>Layer 4.5 &mdash; prompt-hash recompute (v4.8.2, today)</h3>
+      <p>A subtle audit gap closed. Before v4.8.2, the <code>prompt_hash</code> recorded on an <code>llm.request</code> event reflected the original messages &mdash; even when <code>inject_message</code> had added a system prompt on top. Auditors could see <em>what was requested</em>, but not <em>what was transmitted</em>.</p>
+      <p>v4.8.2 adds three fields to the event data, emitted only when injection actually occurs:</p>
+      <pre><code>prompt_hash_post_inject  sha256 of canonical messages AFTER injection
+injected_role            "system" or "user"
+injected_policies        list of policy names that caused the inject</code></pre>
+      <p>The original <code>prompt_hash</code> is preserved as the replay match key, so every recorded log from v4.0 onward remains playable. Regression templates without <code>inject_message</code> policies produce byte-identical output.</p>
+
+      <h2>Three sites, one symmetry</h2>
+      <p>The intervention hook is wired at every runtime boundary where a soul reaches outside itself:</p>
+      <ul>
+        <li><code>sense.invoke</code> &mdash; before external inputs (HTTP, file, database)</li>
+        <li><code>llm.request</code> &mdash; before outgoing model calls</li>
+        <li><code>memory.write</code> &mdash; before state mutations</li>
+      </ul>
+      <p>One engine, three probe points, uniform semantics. A policy that blocks writes to a <code>secret</code> field uses the same declaration grammar as one that rate-limits LLM calls.</p>
+
+      <h2>Deterministic Replay, for the record</h2>
+      <p>Alongside governance, four phases of deterministic replay shipped quietly. The runtime can now record every event into a SHA256-chained JSONL store and replay it exactly &mdash; same seeds, same timestamps, same LLM responses, same governance decisions. Phase C adds tamper detection via hash chain verification. Phase D wraps the LLM call itself, so the same prompt yields the recorded response even if the upstream model has drifted.</p>
+      <p>Combined with governance, this means every production incident is reproducible. The audit log is not a summary &mdash; it is the system.</p>
+
+      <h2>What was built</h2>
+      <pre><code>Phase G Governance: 5 layers, ~2,400 lines production
+Deterministic Replay: 4 phases, hash-chain + seed-derived determinism
+Tests: 126 passing (up from 53 in v4.0)
+Regression templates: 52/52 byte-identical
+CLI: 43 commands (added governance policies/inspect/stats)
+API: 3 governance endpoints, rate-limited, key-protected
+PyPI: nous-lang 4.8.3</code></pre>
+
+      <h2>What comes next</h2>
+      <p>The governance loop is complete, but the surface to build on top of it is not. On the roadmap:</p>
+      <ul>
+        <li>Streaming chat replay (Phase D.1) &mdash; SSE chunk-level determinism</li>
+        <li>Server B Python 3.10 &rarr; 3.12 migration for full test parity</li>
+        <li>Policy indexing for O(1) dashboard queries at scale</li>
+        <li>Formal export of policy predicates to Coq/Lean &mdash; stretch goal</li>
+        <li>Multi-world policy federation for agent fleets</li>
+      </ul>
+
+      <p>v5.0.0 is the target once the next layer of capability solidifies. Until then: declare, enforce, inject, observe. The loop is closed.</p>
+
+      <div class="post-share">
+        <span class="post-share-label">Share:</span>
+        <button class="share-btn" onclick="navigator.clipboard.writeText('https://nous-lang.org/blog#v48-governance');this.textContent='Copied!';setTimeout(()=&gt;this.textContent='Copy link',2000)">Copy link</button>
+      </div>
+    </div>
   </div>
 
     <!-- POST: v4.0.0 Soul Consciousness -->
@@ -556,6 +982,10 @@ mitosis {}    &rarr; Self-replication under load</code></pre>
   <a href="/docs">Documentation</a>
   <a href="/examples">Examples</a>
   <a href="/ide">Playground</a>
+      <!-- __cross_nav_v1__ -->
+      <a href="/governance" class="nav-link">Governance</a>
+      <a href="/replay" class="nav-link">Replay</a>
+      <a href="/policies" class="nav-link">Policies</a>
   <a href="https://github.com/contrario/nous" target="_blank" rel="noopener">GitHub</a>
 </footer>
 

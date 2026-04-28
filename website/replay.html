@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOUS — Replay Viewer</title>
+<meta name="description" content="Inspect recorded NOUS event logs. Verify hash-chain integrity, browse events, filter by kind and soul.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#05070e;--bg2:#0a0f1a;--bg3:#0d1220;
+  --card:#0c1019;--border:#1a2235;--border-h:#2a3a55;
+  --text:#b8c4d4;--dim:#5a6a7e;--bright:#e2e8f0;
+  --gold:#c9a554;--gold-g:rgba(201,165,84,0.08);
+  --blue:#4d9eff;--green:#38d97a;--red:#f04848;
+  --purple:#a78bfa;--cyan:#45d1c8;--orange:#f59e0b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;line-height:1.6;overflow-x:hidden}
+::selection{background:rgba(201,165,84,0.2);color:var(--bright)}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+a{text-decoration:none;color:inherit;transition:opacity 0.2s}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:all 0.35s;padding:0 24px;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(5,7,14,0.92);backdrop-filter:blur(24px);border-bottom-color:var(--border)}
+.nav-inner{max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{font-size:22px;font-weight:600;color:var(--gold);font-family:'Playfair Display',serif;letter-spacing:3px;cursor:pointer;background:none;border:none}
+.nav-ver{font-size:10px;color:var(--dim);letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;margin-left:10px}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-link{color:var(--dim);font-size:13px;padding:7px 14px;border-radius:5px;transition:color 0.2s;letter-spacing:0.3px;background:none;border:none;cursor:pointer;font-family:inherit}
+.nav-link:hover{color:var(--bright)}
+.nav-link.active{color:var(--gold)}
+.nav-sep{width:1px;height:20px;background:var(--border);margin:0 8px}
+.nav-gh{color:var(--dim);font-size:13px;padding:7px 14px;display:flex;align-items:center;gap:6px;transition:color 0.2s}
+.nav-gh:hover{color:var(--bright)}
+@media(max-width:768px){.nav-links{display:none!important}}
+
+.page-wrap{max-width:1140px;margin:0 auto;padding:100px 24px 60px}
+.page-tag{display:inline-block;font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue);background:rgba(77,158,255,0.06);border:1px solid rgba(77,158,255,0.2);border-radius:4px;padding:5px 12px;margin-bottom:18px}
+.page-title{font-family:'Playfair Display',serif;font-size:42px;color:var(--bright);font-weight:300;margin-bottom:12px;line-height:1.15}
+.page-sub{color:var(--dim);font-size:15px;margin-bottom:40px;max-width:720px}
+
+.api-bar{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;flex-wrap:wrap}
+.api-bar label{font-size:11px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.api-bar input{background:var(--bg2);border:1px solid var(--border);color:var(--bright);padding:7px 12px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:12px;min-width:220px;flex:1}
+.api-bar input:focus{outline:none;border-color:var(--gold)}
+.api-bar button{background:var(--gold);color:var(--bg);border:none;padding:7px 16px;border-radius:5px;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:0.3px;cursor:pointer;transition:opacity 0.2s}
+.api-bar button:hover{opacity:0.85}
+.api-bar button.secondary{background:transparent;color:var(--bright);border:1px solid var(--border)}
+.api-bar button.secondary:hover{border-color:var(--gold);color:var(--gold);opacity:1}
+.api-status{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim)}
+.api-status.ok{color:var(--green)}
+.api-status.err{color:var(--red)}
+
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px;position:relative;overflow:hidden}
+.summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent,var(--gold)),transparent);opacity:0.5}
+.summary-label{font-size:10px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:6px}
+.summary-val{font-size:26px;color:var(--bright);font-family:'Playfair Display',serif;font-weight:300;line-height:1}
+.summary-val.mono{font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;line-height:1.4}
+.summary-val.small{font-size:16px}
+
+.verify-banner{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:8px;margin-bottom:24px;font-family:'JetBrains Mono',monospace;font-size:12px}
+.verify-banner.ok{background:rgba(56,217,122,0.06);border:1px solid rgba(56,217,122,0.25);color:var(--green)}
+.verify-banner.fail{background:rgba(240,72,72,0.06);border:1px solid rgba(240,72,72,0.25);color:var(--red)}
+.verify-banner.unknown{background:var(--bg2);border:1px solid var(--border);color:var(--dim)}
+.verify-icon{font-size:16px;flex-shrink:0}
+
+.filter-bar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+.filter-bar label{font-size:10px;color:var(--dim);letter-spacing:1.2px;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+.filter-bar input,.filter-bar select{background:var(--bg2);border:1px solid var(--border);color:var(--bright);padding:6px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px}
+.filter-bar input:focus,.filter-bar select:focus{outline:none;border-color:var(--gold)}
+
+.by-kind-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.kind-chip{font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 10px;border-radius:4px;background:var(--bg2);border:1px solid var(--border);color:var(--text);cursor:pointer;transition:all 0.2s}
+.kind-chip:hover{border-color:var(--gold);color:var(--bright)}
+.kind-chip.active{background:var(--gold-g);border-color:var(--gold);color:var(--gold)}
+.kind-chip .count{color:var(--dim);margin-left:6px}
+.kind-chip.active .count{color:var(--gold)}
+
+.events-list{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.event-row{display:grid;grid-template-columns:60px 100px 60px 150px 140px 1fr;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(26,34,53,0.6);align-items:center;cursor:pointer;transition:background 0.15s;font-family:'JetBrains Mono',monospace;font-size:11px}
+.event-row:last-child{border-bottom:none}
+.event-row:hover{background:rgba(201,165,84,0.03)}
+.event-row.expanded{background:rgba(77,158,255,0.03);border-bottom-color:var(--border-h)}
+.event-seq{color:var(--dim);text-align:right}
+.event-kind{font-size:10px}
+.event-soul{color:var(--bright)}
+.event-cycle{color:var(--dim);text-align:right}
+.event-ts{color:var(--dim);font-size:10px}
+.event-preview{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.event-detail{padding:16px 20px;background:var(--bg2);border-bottom:1px solid rgba(26,34,53,0.6);display:none;font-family:'JetBrains Mono',monospace;font-size:11px}
+.event-detail.shown{display:block}
+.event-detail pre{white-space:pre-wrap;word-break:break-word;color:var(--text);margin:0;line-height:1.6}
+.event-detail .detail-label{color:var(--dim);letter-spacing:1px;text-transform:uppercase;font-size:9px;margin-bottom:4px;margin-top:10px}
+.event-detail .detail-label:first-child{margin-top:0}
+.event-detail .hash-val{color:var(--cyan);font-size:10px;word-break:break-all}
+
+.badge{display:inline-block;font-size:9px;letter-spacing:0.8px;padding:2px 7px;border-radius:3px;font-family:inherit;text-transform:uppercase;font-weight:600}
+.badge-sense{background:rgba(69,209,200,0.08);color:var(--cyan);border:1px solid rgba(69,209,200,0.2)}
+.badge-llm{background:rgba(77,158,255,0.08);color:var(--blue);border:1px solid rgba(77,158,255,0.2)}
+.badge-memory{background:rgba(167,139,250,0.08);color:var(--purple);border:1px solid rgba(167,139,250,0.2)}
+.badge-gov{background:rgba(240,72,72,0.08);color:var(--red);border:1px solid rgba(240,72,72,0.2)}
+.badge-other{background:rgba(90,106,126,0.08);color:var(--dim);border:1px solid rgba(90,106,126,0.2)}
+
+.empty{color:var(--dim);text-align:center;padding:60px 20px;font-size:13px}
+.empty-hint{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);background:var(--bg2);border:1px dashed var(--border);border-radius:6px;padding:12px 16px;margin-top:16px;display:inline-block}
+
+.pagination{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim)}
+.pagination button{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:5px 14px;border-radius:4px;font-family:inherit;font-size:11px;cursor:pointer}
+.pagination button:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+.pagination button:disabled{opacity:0.4;cursor:not-allowed}
+
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+<!-- NOUS_VERSION_JS -->
+<script defer src="/js/nous-version.js?v=1"></script>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <div style="display:flex;align-items:baseline">
+      <button class="nav-logo" onclick="location.href='/'">ΝΟΥΣ</button>
+      <span class="nav-ver" data-nous-version>v4.12.0</span>
+    </div>
+    <div class="nav-links">
+      <a href="/docs" class="nav-link">Docs</a>
+      <a href="/blog" class="nav-link">Blog</a>
+      <a href="/ide" class="nav-link">Playground</a>
+      <a href="/governance" class="nav-link">Governance</a>
+      <a href="/replay" class="nav-link active">Replay</a>
+      <a href="/policies" class="nav-link">Policies</a>
+      <div class="nav-sep"></div>
+      <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="nav-gh">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="page-tag">Deterministic Replay · Phase A–D</div>
+  <h1 class="page-title">Replay Viewer</h1>
+  <p class="page-sub">Load a NOUS event log. Verify SHA256 hash chain integrity. Browse sense calls, LLM requests, memory writes, and governance interventions recorded in order.</p>
+
+  <div class="api-bar">
+    <label>API Key</label>
+    <input type="password" id="apiKey" placeholder="X-API-Key (optional)">
+    <button class="secondary" onclick="saveKey()">Save</button>
+    <span class="api-status" id="apiStatus">not tested</span>
+  </div>
+
+  <div class="api-bar">
+    <label>Log path</label>
+    <input id="logPath" placeholder="/tmp/nous_replay.jsonl or any .jsonl event log on the server" value="">
+    <button onclick="loadAll()">Load</button>
+    <button class="secondary" onclick="runVerify()">Verify chain</button>
+  </div>
+
+  <div id="verifyBanner" class="verify-banner unknown" style="display:none">
+    <span class="verify-icon">?</span>
+    <span id="verifyText">not verified</span>
+  </div>
+
+  <div id="summaryGrid"></div>
+
+  <div id="kindBar" style="display:none" class="by-kind-bar"></div>
+
+  <div id="filterBar" class="filter-bar" style="display:none">
+    <label>Soul</label>
+    <input id="soulFilter" placeholder="(any)" style="width:140px">
+    <label>Since (unix ts)</label>
+    <input id="sinceFilter" placeholder="(any)" style="width:160px">
+    <label>Page size</label>
+    <input id="pageSizeFilter" type="number" value="50" min="1" max="1000" style="width:80px">
+    <button onclick="resetAndLoadEvents()" style="background:var(--gold);color:var(--bg);border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;letter-spacing:0.5px">Apply</button>
+    <span id="filterStatus" style="color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:11px"></span>
+  </div>
+
+  <div id="eventsContent">
+    <div class="empty">Enter a log path and click Load.<br><span class="empty-hint">GET /api/v1/replay/summary + /api/v1/replay/events</span></div>
+  </div>
+</div>
+
+<script>
+var state = {
+  currentKind: null,
+  offset: 0,
+  pageSize: 50,
+  lastReturned: 0,
+  summary: null
+};
+
+window.addEventListener('scroll', function() {
+  var n = document.getElementById('mainNav');
+  if (window.scrollY > 20) n.classList.add('scrolled'); else n.classList.remove('scrolled');
+});
+
+(function() {
+  try {
+    var k = localStorage.getItem('nous_api_key');
+    if (k) document.getElementById('apiKey').value = k;
+    var l = localStorage.getItem('nous_last_log');
+    if (l) document.getElementById('logPath').value = l;
+  } catch (e) {}
+})();
+function saveKey() {
+  var k = document.getElementById('apiKey').value.trim();
+  try { localStorage.setItem('nous_api_key', k); } catch (e) {}
+  healthPing();
+}
+
+async function apiCall(path, params) {
+  var url = '/api/v1' + path;
+  if (params) {
+    var q = new URLSearchParams();
+    Object.keys(params).forEach(function(k) {
+      if (params[k] !== undefined && params[k] !== null && params[k] !== '') q.set(k, params[k]);
+    });
+    var qs = q.toString();
+    if (qs) url += '?' + qs;
+  }
+  var headers = { 'Content-Type': 'application/json' };
+  var k = document.getElementById('apiKey').value.trim();
+  if (k) headers['X-API-Key'] = k;
+  var resp = await fetch(url, { headers: headers });
+  var data;
+  try { data = await resp.json(); } catch (e) { data = {}; }
+  if (!resp.ok) {
+    var msg = 'HTTP ' + resp.status;
+    if (data && data.detail) msg = typeof data.detail === 'string' ? data.detail : (data.detail.error || JSON.stringify(data.detail));
+    throw new Error(msg);
+  }
+  return data;
+}
+
+async function healthPing() {
+  var el = document.getElementById('apiStatus');
+  el.textContent = 'checking...';
+  el.className = 'api-status';
+  try {
+    var h = await apiCall('/health');
+    el.textContent = 'OK v' + h.version;
+    el.className = 'api-status ok';
+  } catch (e) {
+    el.textContent = 'ERROR: ' + e.message;
+    el.className = 'api-status err';
+  }
+}
+healthPing();
+
+function kindBadgeClass(k) {
+  if (!k) return 'badge-other';
+  if (k.indexOf('sense') === 0) return 'badge-sense';
+  if (k.indexOf('llm') === 0) return 'badge-llm';
+  if (k.indexOf('memory') === 0) return 'badge-memory';
+  if (k.indexOf('governance') === 0) return 'badge-gov';
+  return 'badge-other';
+}
+
+function previewOf(ev) {
+  var d = ev.data || {};
+  if (ev.kind === 'sense.invoke') return (d.sense || '') + ' ' + JSON.stringify(d.args || {}).slice(0, 80);
+  if (ev.kind === 'sense.result') return JSON.stringify(d.value || '').slice(0, 100);
+  if (ev.kind === 'llm.request') return (d.provider || '') + '/' + (d.model || '') + ' t=' + (d.temperature !== undefined ? d.temperature : '?');
+  if (ev.kind === 'llm.response') return '$' + (d.cost || 0).toFixed(4) + ' · ' + (d.tokens_out || 0) + 'tok · ' + (d.elapsed_ms || 0).toFixed(0) + 'ms';
+  if (ev.kind === 'memory.write') return (d.field || '') + ': ' + JSON.stringify(d.old) + ' -> ' + JSON.stringify(d.new);
+  if (ev.kind === 'governance.intervention') return (d.action || '') + ' · ' + ((d.policies || []).join(', '));
+  return JSON.stringify(d).slice(0, 120);
+}
+
+function fmtTs(ts) {
+  if (ts === undefined || ts === null) return '';
+  try { return new Date(ts * 1000).toISOString().slice(11, 23); } catch (e) { return String(ts); }
+}
+
+async function loadSummary() {
+  var log = document.getElementById('logPath').value.trim();
+  if (!log) return null;
+  try { localStorage.setItem('nous_last_log', log); } catch (e) {}
+  var data = await apiCall('/replay/summary', { log: log });
+  state.summary = data;
+  var grid = '<div class="summary-grid">' +
+    '<div class="summary-card" style="--accent:var(--gold)"><div class="summary-label">Total events</div><div class="summary-val">' + data.total_events + '</div></div>' +
+    '<div class="summary-card" style="--accent:var(--blue)"><div class="summary-label">Souls</div><div class="summary-val small">' + (data.souls || []).join(', ') + '</div></div>' +
+    '<div class="summary-card" style="--accent:var(--cyan)"><div class="summary-label">First event</div><div class="summary-val small">' + (data.first_timestamp ? new Date(data.first_timestamp * 1000).toISOString().replace('T',' ').slice(0,19) : '—') + '</div></div>' +
+    '<div class="summary-card" style="--accent:var(--purple)"><div class="summary-label">Last event</div><div class="summary-val small">' + (data.last_timestamp ? new Date(data.last_timestamp * 1000).toISOString().replace('T',' ').slice(0,19) : '—') + '</div></div>' +
+    '<div class="summary-card" style="--accent:var(--green)"><div class="summary-label">Chain head</div><div class="summary-val mono">' + (data.last_hash ? data.last_hash.slice(0,16) + '…' : '—') + '</div></div>' +
+    '</div>';
+  document.getElementById('summaryGrid').innerHTML = grid;
+
+  var kinds = data.by_kind || {};
+  var chips = '<div class="kind-chip ' + (state.currentKind === null ? 'active' : '') + '" onclick="setKind(null)">all<span class="count">(' + data.total_events + ')</span></div>';
+  Object.keys(kinds).sort().forEach(function(k) {
+    chips += '<div class="kind-chip ' + (state.currentKind === k ? 'active' : '') + '" onclick="setKind(\'' + k + '\')">' + k + '<span class="count">(' + kinds[k] + ')</span></div>';
+  });
+  document.getElementById('kindBar').innerHTML = chips;
+  document.getElementById('kindBar').style.display = 'flex';
+  document.getElementById('filterBar').style.display = 'flex';
+  return data;
+}
+
+function setKind(k) {
+  state.currentKind = k;
+  state.offset = 0;
+  loadEvents();
+}
+
+async function loadEvents() {
+  var log = document.getElementById('logPath').value.trim();
+  if (!log) return;
+  var soul = document.getElementById('soulFilter').value.trim();
+  var since = document.getElementById('sinceFilter').value.trim();
+  var pageSize = parseInt(document.getElementById('pageSizeFilter').value, 10) || 50;
+  state.pageSize = pageSize;
+  var body = document.getElementById('eventsContent');
+  var fs = document.getElementById('filterStatus');
+  fs.innerHTML = '<span class="spinner"></span> loading events...';
+  try {
+    var data = await apiCall('/replay/events', {
+      log: log, kind: state.currentKind, soul: soul, since: since,
+      limit: state.pageSize, offset: state.offset
+    });
+    var evs = data.events || [];
+    state.lastReturned = evs.length;
+
+    if (!evs.length) {
+      body.innerHTML = '<div class="empty">No events match current filters.</div>';
+      fs.textContent = 'scanned ' + data.total_scanned + ', matched 0';
+      refreshKindChips();
+      return;
+    }
+
+    var html = '<div class="events-list">';
+    html += '<div class="event-row" style="background:var(--bg2);font-size:10px;color:var(--dim);cursor:default;border-bottom:1px solid var(--border-h)">' +
+      '<div>Seq</div><div>Kind</div><div>Cycle</div><div>Soul / Time</div><div>Time</div><div>Preview</div></div>';
+    evs.forEach(function(ev, i) {
+      var rowId = 'ev-' + i;
+      html += '<div class="event-row" id="row-' + rowId + '" onclick="toggleRow(\'' + rowId + '\')">' +
+        '<div class="event-seq">' + (ev.seq_id !== undefined ? '#' + ev.seq_id : '') + '</div>' +
+        '<div class="event-kind"><span class="badge ' + kindBadgeClass(ev.kind) + '">' + (ev.kind || '') + '</span></div>' +
+        '<div class="event-cycle">c' + (ev.cycle !== undefined ? ev.cycle : '?') + '</div>' +
+        '<div class="event-soul">' + (ev.soul || '—') + '</div>' +
+        '<div class="event-ts">' + fmtTs(ev.timestamp) + '</div>' +
+        '<div class="event-preview">' + escapeHtml(previewOf(ev)) + '</div>' +
+        '</div>' +
+        '<div class="event-detail" id="detail-' + rowId + '">' +
+        '<div class="detail-label">Hash</div><div class="hash-val">' + (ev.hash || '—') + '</div>' +
+        '<div class="detail-label">Prev hash</div><div class="hash-val">' + (ev.prev_hash || '—') + '</div>' +
+        '<div class="detail-label">Parent ID</div><pre>' + (ev.parent_id !== undefined && ev.parent_id !== null ? ev.parent_id : '—') + '</pre>' +
+        '<div class="detail-label">Data</div><pre>' + escapeHtml(JSON.stringify(ev.data, null, 2)) + '</pre>' +
+        '</div>';
+    });
+    html += '</div>';
+
+    html += '<div class="pagination">' +
+      '<span>scanned ' + data.total_scanned + ', showing ' + (data.offset + 1) + '–' + (data.offset + evs.length) + ' (kind=' + (state.currentKind || 'all') + ')</span>' +
+      '<div style="display:flex;gap:8px">' +
+      '<button onclick="prevPage()" ' + (state.offset === 0 ? 'disabled' : '') + '>← Prev</button>' +
+      '<button onclick="nextPage()" ' + (evs.length < state.pageSize ? 'disabled' : '') + '>Next →</button>' +
+      '</div></div>';
+
+    body.innerHTML = html;
+    fs.textContent = 'ok';
+  } catch (e) {
+    body.innerHTML = '<div class="empty" style="color:var(--red)">Failed: ' + e.message + '</div>';
+    fs.textContent = 'error';
+  }
+}
+
+function refreshKindChips() {
+  if (!state.summary) return;
+  var kinds = state.summary.by_kind || {};
+  var chips = '<div class="kind-chip ' + (state.currentKind === null ? 'active' : '') + '" onclick="setKind(null)">all<span class="count">(' + state.summary.total_events + ')</span></div>';
+  Object.keys(kinds).sort().forEach(function(k) {
+    chips += '<div class="kind-chip ' + (state.currentKind === k ? 'active' : '') + '" onclick="setKind(\'' + k + '\')">' + k + '<span class="count">(' + kinds[k] + ')</span></div>';
+  });
+  document.getElementById('kindBar').innerHTML = chips;
+}
+
+function toggleRow(id) {
+  var det = document.getElementById('detail-' + id);
+  var row = document.getElementById('row-' + id);
+  if (det.classList.contains('shown')) {
+    det.classList.remove('shown');
+    row.classList.remove('expanded');
+  } else {
+    det.classList.add('shown');
+    row.classList.add('expanded');
+  }
+}
+
+function prevPage() {
+  state.offset = Math.max(0, state.offset - state.pageSize);
+  loadEvents();
+}
+function nextPage() {
+  state.offset = state.offset + state.pageSize;
+  loadEvents();
+}
+function resetAndLoadEvents() {
+  state.offset = 0;
+  loadEvents();
+}
+
+async function runVerify() {
+  var log = document.getElementById('logPath').value.trim();
+  if (!log) return;
+  var banner = document.getElementById('verifyBanner');
+  var txt = document.getElementById('verifyText');
+  banner.style.display = 'flex';
+  banner.className = 'verify-banner unknown';
+  banner.querySelector('.verify-icon').textContent = '…';
+  txt.textContent = 'verifying hash chain...';
+  try {
+    var data = await apiCall('/replay/verify', { log: log });
+    if (data.status === 'ok') {
+      banner.className = 'verify-banner ok';
+      banner.querySelector('.verify-icon').textContent = '✓';
+      txt.textContent = 'Chain verified · ' + data.verified_events + ' events · head ' + (data.last_hash ? data.last_hash.slice(0,16) + '…' : '—');
+    } else {
+      banner.className = 'verify-banner fail';
+      banner.querySelector('.verify-icon').textContent = '✗';
+      txt.textContent = 'Tampered: ' + (data.error || 'unknown');
+    }
+  } catch (e) {
+    banner.className = 'verify-banner fail';
+    banner.querySelector('.verify-icon').textContent = '✗';
+    txt.textContent = 'Verify failed: ' + e.message;
+  }
+}
+
+async function loadAll() {
+  try {
+    state.offset = 0;
+    state.currentKind = null;
+    await loadSummary();
+    await loadEvents();
+  } catch (e) {
+    document.getElementById('eventsContent').innerHTML = '<div class="empty" style="color:var(--red)">Failed: ' + e.message + '</div>';
+  }
+}
+
+function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+</script>
+</body>
+</html>
