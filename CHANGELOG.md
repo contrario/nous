@@ -100,9 +100,9 @@
 
 ### Added
 
-- **Templates as proper package** — bundled `.nous` templates moved
-  under `nous_lang/templates/` and shipped via `package-data`. Reachable
-  via `importlib.resources`.
+- **Templates as proper package** — bundled `.nous` templates moved into
+  the top-level `templates/` package and shipped via `package-data`.
+  Reachable via `importlib.resources`.
 - **`nous templates list / copy <name>`** CLI commands.
 
 ---

@@ -108,7 +108,7 @@ nous governance simulate ...    # what-if policy evaluation
 nous templates list             # bundled templates
 nous templates copy <name>      # copy a template into cwd
 nous lsp                        # start LSP server (stdio)
-nous --version
+nous version
 ```
 
 ---
