@@ -9,9 +9,15 @@ world EmitDemo {
 soul Alpha {
     mind: claude-haiku-4-5 @ Tier3
     tokens: input=200 output=80
+    heal {
+        on error => alert(operator)
+    }
 }
 
 soul Beta {
     mind: claude-haiku-4-5 @ Tier3
     tokens: input=150 output=60
+    heal {
+        on error => alert(operator)
+    }
 }

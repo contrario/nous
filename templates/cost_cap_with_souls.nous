@@ -23,9 +23,15 @@ world TradingFloor {
 soul Trader {
     mind: claude-opus-4-7 @ Tier1
     tokens: input=500 output=200
+    heal {
+        on error => alert(operator)
+    }
 }
 
 soul Analyst {
     mind: claude-haiku-4-5 @ Tier3
     tokens: input=300 output=150
+    heal {
+        on error => alert(operator)
+    }
 }
