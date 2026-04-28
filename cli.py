@@ -22,6 +22,9 @@ import argparse
 from cli_prices import build_prices_parser, cmd_prices
 # __cost_cap_phase3c_cli_import_v1__
 from cli_emit_smt import build_emit_smt_parser, cmd_emit_smt
+# __cost_cap_phase4_cli_import_v1__
+# (verify subparser is integrated into existing cmd_verify;
+#  cli_verify module imports happen lazily inside the function)
 import json
 import os
 import py_compile
@@ -811,6 +814,10 @@ def cmd_create(args: argparse.Namespace) -> int:
 
 # __governance_lint_verify_integration_v1__
 def cmd_verify(args: argparse.Namespace) -> int:
+    # __cost_cap_phase4_cmd_verify_smt_delegate_v1__
+    if getattr(args, "smt", False):
+        from cli_verify import cmd_verify as cmd_verify_smt
+        return cmd_verify_smt(args)
     source = Path(args.file)
     if not source.exists():
         print(f"Error: file not found: {source}", file=sys.stderr)
@@ -1588,6 +1595,15 @@ def main() -> int:
     p.add_argument("--no-lint", action="store_true", help="Skip governance lint after verification")
     p.add_argument("--lint-strict", action="store_true", help="Lint: fail on warnings too")
     p.add_argument("--lint-error-on", default=None, metavar="CODES", help="Lint: elevate rules (e.g. L010,L007)")
+    # __cost_cap_phase4_smt_options_v1__
+    p.add_argument("--smt", action="store_true", help="Run SMT cost_cap proof (Phase 4)")
+    p.add_argument("--prices", metavar="PATH", help="Override pricing TOML path (--smt only)")
+    p.add_argument("--timeout-ms", type=int, default=30000, help="Z3 timeout in ms (--smt only)")
+    p.add_argument("--no-manifest", action="store_true", help="Skip signed manifest (--smt only)")
+    p.add_argument("--manifest-out", metavar="PATH", help="Manifest output path (--smt only)")
+    p.add_argument("--key-path", metavar="PATH", help="ed25519 signing key path (--smt only)")
+    p.add_argument("--publish", action="store_true", help="Publish to AetherProof ledger (--smt only)")
+    p.add_argument("--publish-endpoint", metavar="URL", help="Override publish endpoint (--smt only)")
 
     p = sub.add_parser("self-compile", help="Self-hosting: compile .nous via compiler.nous")
     p.add_argument("files", nargs="+", help=".nous files to compile")
@@ -1610,6 +1626,8 @@ def main() -> int:
     build_prices_parser(sub)
     # __cost_cap_phase3c_cli_hook_v1__
     build_emit_smt_parser(sub)
+    # __cost_cap_phase4_cli_hook_v1__
+    # (SMT options are added to the existing 'verify' subparser below)
 
     p = sub.add_parser("dream", help="Dream system analysis")
     p.add_argument("file", help=".nous file to analyze")
@@ -1709,6 +1727,8 @@ def main() -> int:
         "prices": cmd_prices,
         # __cost_cap_phase3c_cli_dispatch_v1__
         "emit-smt": cmd_emit_smt,
+        # __cost_cap_phase4_cli_dispatch_v1__
+        # (verify dispatch is the existing cmd_verify; SMT path inside it)
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
         "typecheck": cmd_typecheck, "docker": cmd_docker, "debug": cmd_debug,
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,

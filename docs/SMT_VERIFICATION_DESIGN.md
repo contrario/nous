@@ -174,6 +174,27 @@ Phase 5 extends `tokens` to interval ranges `[min,max]`.
 Phase 3c will wire smt_emit.py to consume the pricing table and
 produce SMT-LIB constraints.
 
+<!-- __cost_cap_phase4_design_note_v1__ -->
+**Phase 4 status (Session 62):** Closing arc — v4.13.0 release.
+- `smt_verify.py` runs z3 against the emitted SMT-LIB and
+  produces a `VerifyResult` with verdict (proven/refuted/
+  unknown/error), elapsed time, and on refutation a
+  `CounterExample` with per-soul cost breakdown, total,
+  overage, largest contributor.
+- `format_verdict()` renders constructive fix suggestions:
+  raise cost_cap to a copy-pasteable amount, reduce max_ticks
+  to a value that fits, identify the largest cost driver.
+- `manifest.py` produces ed25519-signed JSON manifests with
+  embedded base64 signature (Sigstore/SLSA convention).
+  Tamper detection verified end-to-end. Keys at
+  `~/.local/share/nous/keys/signing.key` (XDG, 0600).
+- `nous verify file.nous --smt` is the flagship CLI:
+  parses, loads pricing, emits SMT, runs z3, signs manifest,
+  optionally publishes to AetherProof (--publish opt-in).
+- Exit codes: 0=proven, 1=refuted, 2=unknown, 3=error.
+- 21 new pytests; full suite 243 -> 264.
+Released as NOUS v4.13.0 (Q2 2026).
+
 <!-- __cost_cap_phase3c_design_note_v1__ -->
 **Phase 3c status (Session 62):** SMT-LIB emitter landed.
 - `smt_emit.py` translates parsed `NousProgram` + `PricingTable`

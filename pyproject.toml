@@ -36,7 +36,7 @@ dependencies = [
 lsp = ["pygls>=1.3.0", "lsprotocol>=2024.0.0"]
 server = ["fastapi>=0.104.0", "slowapi>=0.1.9", "uvicorn>=0.24.0"]
 # __smt_extra_v1__
-smt = ["z3-solver>=4.15.0,<4.17.0"]
+smt = ["z3-solver>=4.15.0,<4.17.0", "cryptography>=42,<47"]  # __cost_cap_phase4_smt_extra_v1__
 all = ["nous-lang[lsp,server,smt]"]
 
 [project.urls]
@@ -71,6 +71,7 @@ py-modules = [
     "governance_lint", "stdlib_manager", "phrase_detector",
     "pricing", "cli_prices",  # __cost_cap_phase3b_modules_v1__
     "smt_emit", "cli_emit_smt",  # __cost_cap_phase3c_modules_v1__
+    "smt_verify", "manifest", "cli_verify",  # __cost_cap_phase4_modules_v1__
 ]
 
 # __cc_dynamic_block_v1__
