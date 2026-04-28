@@ -4,6 +4,42 @@
 
 <!-- __session63_changelog_v4_13_1__ -->
 <!-- __session64_changelog_v4_13_2__ -->
+<!-- __session64_changelog_v4_13_3__ -->
+## [4.13.3] - 2026-04-29
+
+### Added
+
+- **`--smt-margin PCT` flag** for `nous verify --smt`. Proves
+  `total_cost <= declared_cap * (100 - PCT) / 100` instead of
+  `total_cost <= declared_cap`. Conservative buffer for compliance
+  use cases (e.g. EU AI Act dossiers where regulators expect a
+  proven safety margin against billing surprises). Range `0..99`.
+  Default `0`. Example:
+  ```
+  nous verify file.nous --smt --smt-margin 20
+  PROVEN: total_cost <= $0.4 USD across all execution paths.
+    Declared cap: $0.5 USD, safety margin: 20%.
+  ```
+
+- New `SMTSpec.cost_cap_margin_pct: int` field (default `0`).
+- New `Manifest.safety_margin_pct: Optional[int]` field. Populated
+  only when `--smt-margin > 0`; absent from canonical JSON when
+  margin is zero (preserves manifest schema for non-margin runs).
+
+### Backward compatibility
+
+- `--smt-margin 0` (default) preserves the v4.13.2 obligation
+  literal and SMT-LIB serialize structure exactly. The spec sha256
+  cycles on the version-string bump (the `NV:` canonical key
+  includes `nous_version`), as it does on every release.
+- 57 / 57 regression templates baseline-stable.
+- All cost_cap demo templates compile, verify, and emit manifests
+  byte-identically when `--smt-margin` is omitted.
+
+### Tests
+
+- `tests/test_smt_margin.py` — 8 new tests (264 -> 272 total).
+
 ## [4.13.2] - 2026-04-29
 
 ### Removed

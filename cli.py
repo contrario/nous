@@ -1602,7 +1602,9 @@ def main() -> int:
     p.add_argument("--no-manifest", action="store_true", help="Skip signed manifest (--smt only)")
     p.add_argument("--manifest-out", metavar="PATH", help="Manifest output path (--smt only)")
     p.add_argument("--key-path", metavar="PATH", help="ed25519 signing key path (--smt only)")
+    p.add_argument("--smt-margin", type=int, default=0, metavar="PCT", help="Conservative safety margin 0..99 (--smt only); proves total_cost stays under (cap * (100-PCT)/100)")
     # __session64_publish_removal_v1__
+    # __session64_smt_margin_v1__
 
     p = sub.add_parser("self-compile", help="Self-hosting: compile .nous via compiler.nous")
     p.add_argument("files", nargs="+", help=".nous files to compile")

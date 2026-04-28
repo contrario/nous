@@ -10,6 +10,7 @@ Usage:
   nous verify file.nous --smt --no-manifest
   nous verify file.nous --smt --manifest-out audit.json
   nous verify file.nous --smt --timeout-ms 60000
+  nous verify file.nous --smt --smt-margin 20
 
 Exit codes:
   0  proven
@@ -21,6 +22,7 @@ Exit codes:
 """
 from __future__ import annotations
 # __session64_publish_removal_v1__
+# __session64_smt_margin_v1__
 
 import argparse
 import sys
@@ -85,7 +87,12 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
     # 3. Emit
     try:
-        spec = emit_smt(program, pricing, source_text=source_text)
+        margin_pct: int = getattr(args, "smt_margin", 0)
+        spec = emit_smt(
+            program, pricing,
+            source_text=source_text,
+            margin_pct=margin_pct,
+        )
     except EmitError as e:
         print(f"ERROR: cannot emit SMT for {src_path.name}:",
               file=sys.stderr)

@@ -30,6 +30,7 @@ Public API:
 """
 from __future__ import annotations
 # __session64_publish_removal_v1__
+# __session64_smt_margin_v1__
 
 import base64
 import json
@@ -87,6 +88,9 @@ class Manifest:
     # When refuted, total observed cost (Decimal as string).
     counterexample_total_usd: Optional[str] = None
 
+    # Optional safety margin applied during verify (--smt-margin PCT).
+    safety_margin_pct: Optional[int] = None
+
     def canonical_bytes(self) -> bytes:
         """Bytes that get signed — sorted, separator-stable JSON."""
         return json.dumps(
@@ -116,6 +120,8 @@ class Manifest:
             d["counterexample_total_usd"] = (
                 self.counterexample_total_usd
             )
+        if self.safety_margin_pct is not None:
+            d["safety_margin_pct"] = self.safety_margin_pct
         return d
 
 
@@ -128,6 +134,7 @@ def manifest_from_verify(
     ce_total: Optional[str] = None
     if result.counterexample is not None:
         ce_total = str(result.counterexample.total_cost_usd)
+    margin = spec.cost_cap_margin_pct
     return Manifest(
         schema_version=MANIFEST_SCHEMA_VERSION,
         nous_version=nous_version,
@@ -144,6 +151,7 @@ def manifest_from_verify(
         elapsed_ms=result.elapsed_ms,
         timestamp_utc=result.timestamp_utc,
         counterexample_total_usd=ce_total,
+        safety_margin_pct=(margin if margin > 0 else None),
     )
 
 

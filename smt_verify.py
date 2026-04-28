@@ -16,6 +16,7 @@ Public API:
 # __nous_smt_verify_module_v1__
 """
 from __future__ import annotations
+# __session64_smt_margin_v1__
 
 import time
 from dataclasses import dataclass, field
@@ -337,10 +338,24 @@ def format_verdict(result: VerifyResult) -> str:
     lines.append("─" * 60)
 
     if result.verdict == "proven":
-        lines.append(
-            f"PROVEN: total_cost ≤ ${spec.cost_cap_amount} "
-            f"{spec.cost_cap_currency} across all execution paths."
-        )
+        if spec.cost_cap_margin_pct > 0:
+            eff = (spec.cost_cap_amount
+                   * Decimal(100 - spec.cost_cap_margin_pct)
+                   / Decimal(100))
+            lines.append(
+                f"PROVEN: total_cost ≤ ${eff} "
+                f"{spec.cost_cap_currency} across all execution paths."
+            )
+            lines.append(
+                f"  Declared cap: ${spec.cost_cap_amount} "
+                f"{spec.cost_cap_currency}, "
+                f"safety margin: {spec.cost_cap_margin_pct}%."
+            )
+        else:
+            lines.append(
+                f"PROVEN: total_cost ≤ ${spec.cost_cap_amount} "
+                f"{spec.cost_cap_currency} across all execution paths."
+            )
         lines.append(
             f"  bounded by: {len(spec.soul_costs)} soul(s) × "
             f"{spec.max_ticks} ticks"

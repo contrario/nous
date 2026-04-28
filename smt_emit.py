@@ -31,6 +31,7 @@ Public API:
 # __nous_smt_emit_module_v1__
 """
 from __future__ import annotations
+# __session64_smt_margin_v1__
 
 import hashlib
 from dataclasses import dataclass, field
@@ -65,6 +66,7 @@ class SMTSpec:
     cost_cap_amount: Decimal
     cost_cap_currency: str
     max_ticks: int
+    cost_cap_margin_pct: int = 0
 
     declarations: tuple[tuple[str, str], ...] = ()
     range_assertions: tuple[str, ...] = ()
@@ -83,6 +85,16 @@ class SMTSpec:
         lines.append(f"; cost_cap: {self.cost_cap_amount} "
                      f"{self.cost_cap_currency}")
         lines.append(f"; max_ticks: {self.max_ticks}")
+        if self.cost_cap_margin_pct > 0:
+            eff = (self.cost_cap_amount
+                   * Decimal(100 - self.cost_cap_margin_pct)
+                   / Decimal(100))
+            lines.append(
+                f"; cost_cap_margin_pct: {self.cost_cap_margin_pct}"
+            )
+            lines.append(
+                f"; effective_cap: {eff} {self.cost_cap_currency}"
+            )
         for canonical, soul, per_call in self.soul_costs:
             lines.append(f"; soul {soul}: model={canonical}, "
                          f"per-call cost = {per_call}")
@@ -124,6 +136,10 @@ class SMTSpec:
             f"CC:{self.cost_cap_amount}|{self.cost_cap_currency}"
         )
         canonical.append(f"MT:{self.max_ticks}")
+        if self.cost_cap_margin_pct > 0:
+            canonical.append(
+                f"MARGIN:{self.cost_cap_margin_pct}"
+            )
         for var, sort in self.declarations:
             canonical.append(f"D:{var}:{sort}")
         for r in self.range_assertions:
@@ -256,9 +272,15 @@ def emit_smt(
     pricing: PricingTable,
     source_text: Optional[str] = None,
     today: Optional[date] = None,
+    margin_pct: int = 0,
 ) -> SMTSpec:
     if today is None:
         today = datetime.now(timezone.utc).date()
+
+    if not (0 <= margin_pct <= 99):
+        raise EmitError(
+            f"--smt-margin out of range: {margin_pct} (must be 0..99)"
+        )
 
     world = _validate_world(prog)
     souls = _validate_souls(prog)
@@ -307,7 +329,13 @@ def emit_smt(
                 f"(assert (= total_cost (+ {sum_terms})))"
             )
 
-    cap_smt = _decimal_to_rational(cap_amount)
+    if margin_pct > 0:
+        effective_cap = (cap_amount
+                         * Decimal(100 - margin_pct)
+                         / Decimal(100))
+    else:
+        effective_cap = cap_amount
+    cap_smt = _decimal_to_rational(effective_cap)
     obligation = f"(assert (not (<= total_cost {cap_smt})))"
 
     return SMTSpec(
@@ -319,6 +347,7 @@ def emit_smt(
         cost_cap_amount=cap_amount,
         cost_cap_currency=cap_currency,
         max_ticks=max_ticks,
+        cost_cap_margin_pct=margin_pct,
         declarations=tuple(decls),
         range_assertions=tuple(ranges),
         cost_assertions=tuple(asserts),
