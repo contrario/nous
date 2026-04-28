@@ -14,7 +14,7 @@ from decimal import Decimal  # __cost_cap_decimal_v1__
 
 from ast_nodes import (
     ConsciousnessNode, MetabolismNode, SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
-    NousProgram, WorldNode, LawNode, LawCost, LawCurrency, CostCap, LawDuration,  # __cost_cap_import_v1__
+    NousProgram, WorldNode, LawNode, LawCost, LawCurrency, CostCap, TokensDecl, LawDuration,  # __cost_cap_import_v1__ + __cost_cap_tokens_import_v1__
     PolicyNode,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
@@ -532,6 +532,8 @@ class NousTransformer(Transformer):
                     node.telemetry = item["telemetry"]
                 elif "cost_cap" in item:  # __cost_cap_dispatch_v1__
                     node.cost_cap = item["cost_cap"]
+                elif "max_ticks" in item:  # __cost_cap_max_ticks_dispatch_v1__
+                    node.max_ticks = item["max_ticks"]
                 elif "config" in item:
                     k, v = item["config"]
                     node.config[k] = v
@@ -562,6 +564,33 @@ class NousTransformer(Transformer):
         amount = items[-2]
         currency = items[-1]
         return {"cost_cap": CostCap(amount=amount, currency=currency)}
+
+    # __cost_cap_tokens_methods_v1__
+    def tokens_decl(self, items: list) -> TokensDecl:
+        ints: list[int] = []
+        for item in items:
+            if isinstance(item, Token) and item.type == "INT":
+                ints.append(int(item))
+            elif isinstance(item, int):
+                ints.append(item)
+        if len(ints) < 2:
+            raise ValueError(
+                "tokens declaration requires two integers "
+                "(input and output); got: " + repr(items)
+            )
+        return TokensDecl(input=ints[0], output=ints[1])
+
+    # __cost_cap_max_ticks_methods_v1__
+    def max_ticks_stmt(self, items: list) -> dict:
+        for item in items:
+            if isinstance(item, Token) and item.type == "INT":
+                return {"max_ticks": int(item)}
+            if isinstance(item, int):
+                return {"max_ticks": item}
+        raise ValueError(
+            "max_ticks declaration requires an integer; "
+            "got: " + repr(items)
+        )
 
     # ── Mind ──
 
@@ -860,6 +889,8 @@ class NousTransformer(Transformer):
         for item in s[1:]:
             if isinstance(item, MindNode):
                 node.mind = item
+            elif isinstance(item, TokensDecl):  # __cost_cap_tokens_dispatch_v1__
+                node.tokens = item
             elif isinstance(item, list) and item and isinstance(item[0], str):
                 node.senses = item
             elif isinstance(item, MemoryNode):

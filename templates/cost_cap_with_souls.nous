@@ -1,0 +1,31 @@
+# Session 62 Phase 3a: realistic cost_cap example with souls + bounds.
+#
+# Demonstrates the four cost-related declarations:
+#
+#   1. cost_cap: <amount> <currency>      (per world)
+#   2. max_ticks: <integer>               (per world)
+#   3. mind: <model> @ <tier>             (per soul)
+#   4. tokens: input=<N> output=<M>       (per soul)
+#
+# Souls are top-level entities, sibling to the world. The world's
+# cost_cap aggregates the cost of all souls operating under it,
+# bounded by max_ticks heartbeat cycles.
+#
+# `instinct` blocks (the per-tick agent logic) are intentionally
+# omitted here to keep the example focused on cost declarations.
+# See templates/customer_service.nous for `instinct` examples.
+
+world TradingFloor {
+    cost_cap: 0.50 USD
+    max_ticks: 5
+}
+
+soul Trader {
+    mind: claude-opus-4-7 @ Tier1
+    tokens: input=500 output=200
+}
+
+soul Analyst {
+    mind: claude-haiku-4-5 @ Tier3
+    tokens: input=300 output=150
+}

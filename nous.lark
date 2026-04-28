@@ -58,7 +58,7 @@ sense_body: "description" ":" STRING                   -> sense_description
 // ═══════════════════════════════════════════
 
 world_decl: WORLD NAME "{" world_body* "}"
-world_body: law_decl | heartbeat_decl | timezone_decl | telemetry_block | replay_block | policy_decl | config_assign | cost_cap_stmt  // __cost_cap_world_body_v1__
+world_body: law_decl | heartbeat_decl | timezone_decl | telemetry_block | replay_block | policy_decl | config_assign | cost_cap_stmt | max_ticks_stmt  // __cost_cap_world_body_v1__ + __cost_cap_max_ticks_world_body_v1__
 
 law_decl: LAW NAME "=" law_expr
 law_expr: currency_lit PER CYCLE          -> law_cost
@@ -79,12 +79,18 @@ cost_amount: FLOAT  -> cost_amount_float
 cost_currency: "USD" -> cost_currency_usd
              | "EUR" -> cost_currency_eur
 
+// __cost_cap_tokens_grammar_v1__
+tokens_decl: TOKENS ":" "input" "=" INT "output" "=" INT
+
+// __cost_cap_max_ticks_grammar_v1__
+max_ticks_stmt: MAX_TICKS ":" INT
+
 // ═══════════════════════════════════════════
 // SOUL
 // ═══════════════════════════════════════════
 
 soul_decl: SOUL NAME "{" soul_body* "}"
-soul_body: mind_decl
+soul_body: mind_decl | tokens_decl  // __cost_cap_tokens_soul_body_v1__
          | senses_decl
          | memory_block
          | instinct_block
@@ -463,6 +469,8 @@ CONSTITUTIONAL.2: "constitutional"
 PER.2: "per"
 CYCLE.2: "cycle"
 COST_CAP.2: "cost_cap"  // __cost_cap_terminal_v1__
+TOKENS.2: "tokens"  // __cost_cap_tokens_terminal_v1__
+MAX_TICKS.2: "max_ticks"  // __cost_cap_max_ticks_terminal_v1__
 TIER: /Tier[0-3][A-B]?|Groq|Together|Fireworks|Cerebras/
 
 // ═══════════════════════════════════════════

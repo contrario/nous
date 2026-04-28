@@ -150,6 +150,15 @@ def emit_smt(program: NousProgram) -> SMTSpec:
 **Format:** SMT-LIB 2.6. Solver-agnostic in principle; Z3 only in
 practice for Session 62.
 
+<!-- __cost_cap_phase3a_design_note_v1__ -->
+**Phase 3a status (Session 62):** AST/grammar foundations landed.
+New constructs:
+- `tokens: input=N output=M` (per soul) — declares upper-bound
+  token count for SMT cost emission.
+- `max_ticks: K` (per world) — bounds total execution length.
+Both are mandatory under `--smt` (Phase 3c will wire the check).
+Phase 5 extends `tokens` to interval ranges `[min,max]`.
+
 ---
 
 ### 4.2 `smt_verify.py` (Session 62)

@@ -64,6 +64,21 @@ class CostCap(NousNode):
     currency: Literal["USD", "EUR"] = "USD"
 
 
+# __cost_cap_tokens_class_v1__
+class TokensDecl(NousNode):
+    """Per-soul token estimate for SMT cost verification.
+
+    Required under --smt for every soul whose enclosing world
+    declares a cost_cap. Without --smt, this declaration is
+    ignored at compile time. Session 62 Phase 3a.
+
+    `input`/`output` are upper-bound integer token counts.
+    Phase 5 may extend these to interval ranges [min,max].
+    """
+    input: int
+    output: int
+
+
 class LawCurrency(NousNode):
     kind: str = "currency"
     amount: float
@@ -131,6 +146,7 @@ class WorldNode(NousNode):
     laws: list[LawNode] = Field(default_factory=list)
     policies: list["PolicyNode"] = Field(default_factory=list)
     cost_cap: Optional["CostCap"] = None  # __cost_cap_field_v1__
+    max_ticks: Optional[int] = None  # __cost_cap_max_ticks_field_v1__
     heartbeat: Optional[str] = None
     timezone: Optional[str] = None
     telemetry: Optional[TelemetryNode] = None
@@ -407,6 +423,7 @@ class EmotionsNode(NousNode):
 class SoulNode(NousNode):
     name: str
     mind: Optional[MindNode] = None
+    tokens: Optional["TokensDecl"] = None  # __cost_cap_tokens_field_v1__
     senses: list[str] = Field(default_factory=list)
     memory: Optional[MemoryNode] = None
     instinct: Optional[InstinctNode] = None
