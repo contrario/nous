@@ -14,7 +14,7 @@ installed metadata matches.
 """
 from __future__ import annotations
 
-__version__: str = "4.13.1"  # __cost_cap_phase4_1_version_v1__
-__version_tuple__: tuple[int, int, int] = (4, 13, 1)
+__version__: str = "4.13.2"  # __cost_cap_phase4_1_version_v1__
+__version_tuple__: tuple[int, int, int] = (4, 13, 2)
 
 __all__ = ["__version__", "__version_tuple__"]

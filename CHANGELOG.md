@@ -3,6 +3,39 @@
 <!-- __session63_changelog_v4_13_0__ -->
 
 <!-- __session63_changelog_v4_13_1__ -->
+<!-- __session64_changelog_v4_13_2__ -->
+## [4.13.2] - 2026-04-29
+
+### Removed
+
+- **Broken AetherProof publish path.** `manifest.publish_to_aetherproof()`,
+  the `AETHERPROOF_DEFAULT_URL` constant, and the `--publish` /
+  `--publish-endpoint` CLI flags on `nous verify --smt` are gone.
+  The shipped client posted to `https://api.aetherlang.online/v1/manifests`,
+  but that POST endpoint was never built (only `GET /v1/manifests/{id}`
+  exists publicly), and the payload schema NOUS sent did not match what
+  the AetherProof service expects (gate evidence, not pre-signed
+  manifests). Calling `--publish` on v4.13.1 always failed with
+  `HTTP 404`.
+
+### Architectural decision
+
+- **NOUS manifests are self-verifying offline artifacts.** A holder of
+  the manifest file plus the publisher's Ed25519 public key can verify
+  authenticity without contacting any service. Storage is the
+  publisher's choice (filesystem, S3, IPFS, git release, etc.) — no
+  central-ledger dependency. `manifest.verify_manifest_signature()`
+  remains the offline-verification primitive. `sign_manifest`,
+  `manifest_json`, `parse_manifest_json`, and the keypair management
+  helpers are unchanged.
+
+### Documentation
+
+- `docs/COST_VERIFICATION_GUIDE.md`, `docs/SMT_VERIFICATION_DESIGN.md`,
+  and `docs/EU_AI_ACT_COMPLIANCE.md` updated to describe
+  storage-agnostic, offline-verifiable manifests instead of
+  POST-to-central-service.
+
 
 ## [4.13.1] - 2026-04-28
 

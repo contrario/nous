@@ -1,3 +1,4 @@
+<!-- __session64_publish_removal_v1__ -->
 # EU AI Act Compliance Matrix
 
 **Status:** Working document, Session 61. Tracks the alignment between NOUS
@@ -125,9 +126,9 @@ via `nous ast | nous emit md` is possible today but not standardized.
 - `tests/test_replay_phase_d.py` 6/6 (standalone harness)
 - v4.8.2 timeline: "Deterministic replay Phase A-D locked"
 
-**Forthcoming enhancement (Session 64):** every replay log signed by
-AetherProof Ed25519 key; manifest published immutable on
-`api.aetherlang.online`; auditor verifies cryptographic chain.
+**Forthcoming enhancement:** every replay log signed by an Ed25519
+key (publisher-controlled); manifest stored at the publisher's
+chosen location; auditor verifies the cryptographic chain offline.
 
 ---
 
@@ -285,12 +286,12 @@ Session 65, NOUS will ship:
 
 1. **SMT-verified compilation:** every law/policy/cost-cap proven by Z3
    before deployment.
-2. **AetherProof signed manifests:** every compiled program emits a
-   content-addressed Ed25519-signed manifest published on
-   `api.aetherlang.online`.
-3. **Auditor CLI:** `nous audit <manifest_id>` downloads the manifest,
-   verifies the cryptographic chain, replays deterministically, and
-   produces a human-readable compliance report.
+2. **Signed manifests:** every compiled program emits a
+   content-addressed Ed25519-signed manifest. Storage is the
+   publisher's choice; verification is offline.
+3. **Auditor verification:** any holder of the manifest plus the
+   publisher's public key verifies the cryptographic chain offline,
+   replays deterministically, and produces a compliance report.
 4. **Public dossier:** v5.0.0 release will include an Annex IV-aligned
    technical documentation dossier auto-generated from the AST.
 

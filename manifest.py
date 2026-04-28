@@ -25,12 +25,11 @@ Public API:
   sign_manifest(m, key)          -> bytes (raw signature)
   manifest_json(m, sig, pub)     -> str (canonical JSON)
   verify_manifest_signature(...) -> bool
-  publish_to_aetherproof(...)    -> str (request_id)
-  AETHERPROOF_DEFAULT_URL        constant
 
 # __nous_manifest_module_v1__
 """
 from __future__ import annotations
+# __session64_publish_removal_v1__
 
 import base64
 import json
@@ -51,9 +50,6 @@ from smt_verify import VerifyResult
 
 
 MANIFEST_SCHEMA_VERSION: str = "1.0"
-AETHERPROOF_DEFAULT_URL: str = (
-    "https://api.aetherlang.online/v1/manifests"
-)
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -286,59 +282,3 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         ),
     )
     return m, sig, pub
-
-
-# ─────────────────────────────────────────────────────────────────────
-# AetherProof publish (opt-in)
-# ─────────────────────────────────────────────────────────────────────
-
-def publish_to_aetherproof(
-    manifest_doc: str,
-    endpoint: str = AETHERPROOF_DEFAULT_URL,
-    timeout_seconds: int = 10,
-) -> str:
-    """POST the signed manifest JSON. Returns request_id from response.
-
-    Raises RuntimeError on network/HTTP failure. Caller is expected
-    to handle this and present a graceful error — proof remains
-    valid even if publication fails.
-    """
-    try:
-        import httpx
-    except ImportError as e:
-        raise RuntimeError(
-            "httpx is required for --publish; install with "
-            "`pip install httpx`"
-        ) from e
-
-    try:
-        resp = httpx.post(
-            endpoint,
-            content=manifest_doc.encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            timeout=timeout_seconds,
-        )
-    except Exception as e:
-        raise RuntimeError(
-            f"failed to reach AetherProof endpoint {endpoint}: {e}"
-        ) from e
-
-    if resp.status_code >= 400:
-        raise RuntimeError(
-            f"AetherProof rejected manifest: "
-            f"HTTP {resp.status_code}: {resp.text[:200]}"
-        )
-
-    try:
-        body = resp.json()
-    except Exception:
-        raise RuntimeError(
-            f"AetherProof returned non-JSON body: {resp.text[:200]}"
-        )
-
-    request_id = body.get("request_id") or body.get("id")
-    if not request_id:
-        raise RuntimeError(
-            f"AetherProof response missing request_id: {body!r}"
-        )
-    return str(request_id)

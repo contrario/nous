@@ -1,3 +1,4 @@
+<!-- __session64_publish_removal_v1__ -->
 # SMT Verification Design
 
 **Status:** Design document, Session 61. Implementation begins Session 62.
@@ -43,10 +44,10 @@ deterministic replay, SMT-proven constraints -- in one stack.
 - Counterexample extraction: when Z3 finds a path that violates a
   constraint, emit a deterministic replay trace showing exactly when
   and how.
-- Cryptographic publication: every successfully-verified compilation
-  produces an AetherProof signed manifest published on
-  `api.aetherlang.online`.
-- CLI surface: `nous verify --smt`, `nous audit <manifest_id>`.
+- Cryptographic signing: every successfully-verified compilation
+  produces a self-contained Ed25519-signed manifest. Storage is
+  the publisher's choice; verification is offline.
+- CLI surface: `nous verify --smt`.
 
 ### Out of scope (explicit non-goals)
 
@@ -97,10 +98,10 @@ It is what makes the problem tractable.
   codegen.py                  -> Python (existing)
      |
      v
-  manifest_emit.py [NEW]      -> AetherProof signed manifest
+  manifest_emit.py            -> Ed25519-signed manifest (self-contained)
      |
      v
-  POST api.aetherlang.online  -> public, immutable, content-addressed
+  storage of publisher's choice (filesystem, S3, git release, ...)
 ```
 
 The dotted line: replay_emit.py reuses the existing Phase D event-log
@@ -302,22 +303,15 @@ format we already use for production replay logs.
 }
 ```
 
-**Publication:** `POST https://api.aetherlang.online/v1/manifests`.
-Returns `request_id`; manifest is fetched via
-`GET https://api.aetherlang.online/v1/manifests/{request_id}`.
+**Storage:** publisher's choice. The manifest is a self-contained
+JSON file; any HTTPS host, object store, or git release works.
 
-**Verification flow (auditor side):**
-
-```
-$ nous audit  <request_id>
-[1/4] Fetching manifest from api.aetherlang.online ... OK
-[2/4] Verifying Ed25519 signature against root-of-trust ... OK
-[3/4] Re-running SMT verification with stored obligations ... PROVEN
-[4/4] Replaying source compilation byte-by-byte ... IDENTICAL
-
-VERDICT: PASS. Manifest c8a1...e4f7 is authentic, complete, and
-proves the constraints declared in the source.
-```
+**Verification flow (auditor side):** any holder of the manifest
+file plus the publisher's Ed25519 public key can verify offline.
+The chain is: (1) Ed25519 signature over canonical JSON, (2) SMT
+obligations re-checked with stored solver inputs, (3) source /
+pricing / SMT-spec hashes recomputed and matched. The function
+`manifest.verify_manifest_signature()` provides the primitive.
 
 ---
 
@@ -372,21 +366,13 @@ optional `[smt]` extra.
 **Exit criteria:** Every grammar law type has an SMT translation and
 at least one positive + one negative test; v4.14.0 released.
 
-### Session 64: AetherProof Manifest Integration
+### Session 64 (superseded): Central Ledger Approach Retired
 
-**Deliverable:** Signed manifests, public API, auditor CLI.
-
-- `manifest_emit.py` builds + signs the manifest
-- `nous compile --emit-manifest` publishes to `api.aetherlang.online`
-- `nous audit <id>` downloads, verifies, replays
-- Server-side: extend AetherProof API to accept NOUS manifest schema
-  (existing v1 schema for general LLM coding proofs, new v2 schema for
-  NOUS programs)
-- Test: round-trip compile -> publish -> audit -> verify, end-to-end
-
-**Exit criteria:** A third party with only an `<manifest_id>` can
-verify a NOUS program ran correctly and respected its declared
-constraints; v4.15.0 released.
+This was the original Session 64 plan. Architectural decision in
+v4.13.2 retired the central-ledger approach: NOUS manifests are
+self-verifying offline artifacts and storage is the publisher's
+choice. No single-vendor service dependency. The `--publish` flag
+and `publish_to_aetherproof()` were removed.
 
 ### Session 65: v5.0.0 Public Launch
 
@@ -465,7 +451,6 @@ By end of Session 65, all five must hold:
 - Z3 SMT solver: https://github.com/Z3Prover/z3
 - SMT-LIB Standard 2.6: https://smtlib.cs.uiowa.edu/papers/smt-lib-reference-v2.6-r2021-05-12.pdf
 - Dafny (verified programming): https://dafny.org/
-- AetherProof: https://releases.aetherlang.online/
 - NOUS Phase D Replay: see `replay_runtime.py`, v4.8.2 release notes
 - NOUS EU AI Act compliance: [`EU_AI_ACT_COMPLIANCE.md`](./EU_AI_ACT_COMPLIANCE.md)
 

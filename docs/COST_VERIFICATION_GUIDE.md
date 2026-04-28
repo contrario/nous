@@ -1,3 +1,4 @@
+<!-- __session64_publish_removal_v1__ -->
 # Cost Verification Guide
 
 **Status:** Phase 3a (foundations). End-to-end SMT verification
@@ -285,13 +286,13 @@ NOUS uses publicly-listed provider prices because:
 
 ---
 
-## The public ledger (Phase 4)
+## Manifest storage (Phase 4)
 
-When `nous verify --smt` succeeds, Phase 4 will publish a signed
-manifest to AetherProof:
-
-    POST https://api.aetherlang.online/v1/manifests
-    GET  https://api.aetherlang.online/v1/manifests/{request_id}
+When `nous verify --smt` succeeds, Phase 4 emits a self-contained
+Ed25519-signed manifest. The manifest is offline-verifiable:
+anyone with the file plus the publisher's public key can verify
+authenticity without contacting any service. Storage is the
+publisher's choice (filesystem, S3, IPFS, git release, etc.).
 
 The manifest contains:
 

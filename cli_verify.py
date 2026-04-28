@@ -9,7 +9,6 @@ Usage:
   nous verify file.nous --smt --prices /path/to/x.toml
   nous verify file.nous --smt --no-manifest
   nous verify file.nous --smt --manifest-out audit.json
-  nous verify file.nous --smt --publish
   nous verify file.nous --smt --timeout-ms 60000
 
 Exit codes:
@@ -21,6 +20,7 @@ Exit codes:
 # __nous_cli_verify_v1__
 """
 from __future__ import annotations
+# __session64_publish_removal_v1__
 
 import argparse
 import sys
@@ -28,11 +28,9 @@ from pathlib import Path
 from typing import Optional
 
 from manifest import (
-    AETHERPROOF_DEFAULT_URL,
     load_or_create_keypair,
     manifest_from_verify,
     manifest_json,
-    publish_to_aetherproof,
     sign_manifest,
 )
 from parser import parse_nous
@@ -142,16 +140,6 @@ def cmd_verify(args: argparse.Namespace) -> int:
               file=sys.stderr)
         return _exit_for_verdict(result.verdict)
 
-    if args.publish:
-        endpoint: str = args.publish_endpoint or AETHERPROOF_DEFAULT_URL
-        try:
-            request_id = publish_to_aetherproof(doc, endpoint=endpoint)
-            print(f"  published to:  {endpoint}")
-            print(f"  request_id:    {request_id}")
-        except RuntimeError as e:
-            print(f"\nWARN: publish failed (manifest still valid): {e}",
-                  file=sys.stderr)
-
     return _exit_for_verdict(result.verdict)
 
 
@@ -199,15 +187,5 @@ def build_verify_parser(subparsers: argparse._SubParsersAction) -> None:
         "--key-path", metavar="PATH",
         help="ed25519 signing key path "
              "(default: ~/.local/share/nous/keys/signing.key).",
-    )
-    p.add_argument(
-        "--publish", action="store_true",
-        help="Publish signed manifest to AetherProof public ledger "
-             "(opt-in).",
-    )
-    p.add_argument(
-        "--publish-endpoint", metavar="URL",
-        help=f"Override publish endpoint "
-             f"(default: {AETHERPROOF_DEFAULT_URL}).",
     )
     p.set_defaults(func=cmd_verify)
