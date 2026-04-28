@@ -1,5 +1,136 @@
 # Changelog
 
+<!-- __session63_changelog_v4_13_0__ -->
+
+## [4.13.0] - 2026-04-28
+
+### Added — Formal SMT cost-bound verification
+
+- **`cost_cap` world-body declaration** — `cost_cap: 0.50 USD` declares a
+  hard upper bound on total program spend. Currency parser supports USD
+  (extensible to EUR etc. in Phase 5).
+- **`max_ticks` world-body declaration** — `max_ticks: 5` bounds the number
+  of execution cycles. Required input for SMT proof.
+- **Per-soul `tokens` declaration** — `tokens: input=500 output=200`
+  declares per-tick token estimates. Multiplied by per-token rates from
+  the active pricing table to compute worst-case spend.
+- **Layered pricing infrastructure** (`pricing/defaults.toml`):
+  - Strict Pydantic loader with schema v1.0.
+  - Priority order: `--prices` flag > `./nous.prices.toml` >
+    `~/.config/nous/prices.toml` > package defaults.
+  - Deterministic ordering, SHA-256 audit hash.
+  - New CLI: `nous prices show / init / verify / age`.
+- **`smt_emit.py`** — deterministic SMT-LIB 2.6 emitter. Decimal → exact
+  rationals; no float artefacts. Output is byte-deterministic across
+  runs and machines. New CLI: `nous emit-smt FILE.nous`.
+- **`smt_verify.py`** — Z3 wrapper with counterexample extraction and
+  **constructive fix suggestions** (raise cap to X / reduce ticks to Y /
+  identify largest contributor).
+- **`manifest.py`** — ed25519-signed JSON manifests (Sigstore/SLSA
+  convention). Single self-contained file with embedded base64 signature.
+  Tamper detection. AetherProof publish opt-in via `--publish`.
+- **`nous verify FILE.nous --smt`** — flagship CLI: parse → emit → solve
+  → manifest. Backward compat preserved: `nous verify FILE.nous` (no
+  `--smt`) still runs governance lint as a build gate.
+- **ed25519 key management** — auto-generated at
+  `~/.local/share/nous/keys/signing.key` (XDG, mode 0600).
+  `--key-path` override supported.
+- **`[smt]` optional extra** in `pyproject.toml`:
+  `z3-solver>=4.15.0,<4.17.0` and `cryptography>=42,<47`.
+- **Documentation**: `docs/COST_VERIFICATION_GUIDE.md`,
+  `docs/SMT_VERIFICATION_DESIGN.md`, `docs/EU_AI_ACT_COMPLIANCE.md`.
+
+### Changed
+
+- Existing `nous verify` subparser extended with `--smt` flag. No new
+  subparser registered. Default behaviour (no `--smt`) unchanged.
+
+### Stats
+
+- Tests: 184 → 264 (+80).
+- Regression templates: 54/54 byte-identical (additive arc only).
+- Codegen touch: zero.
+- New modules: `smt_emit`, `cli_emit_smt`, `smt_verify`, `manifest`,
+  `cli_verify`, `pricing/*`.
+
+---
+
+## [4.12.0] - 2026-04-27
+
+### Added
+
+- **Single-source `VERSION` constant** — `_version.py` is now the sole
+  source of truth (`__version__: str` + `__version_tuple__: tuple`).
+  `nous_api.py` reads it dynamically; no hardcoded version strings
+  anywhere else.
+- **R18 version-consistency test** — verifies pip metadata matches
+  `_version.__version__` after install. Run with
+  `pip install -e .` to refresh metadata before invoking.
+- **Atomic release pipeline** — Phase 4.5 pyflakes gate added; release
+  pipeline now has 10 phases, each commit-atomic.
+
+### Fixed
+
+- `cli.py`: missing `Any` in typing import.
+- `nous_api_server.py`: `NousProgram` forward ref + `body`/`message`
+  `NameError` in compile/verify/chat pipelines.
+- `tests/conftest.py`: exclude `test_replay_phase_d.py` from collection
+  (path-collection edge case).
+
+### Changed
+
+- Build artifacts (`build/`, `dist/`, `*.egg-info/`) added to
+  `.gitignore`.
+
+---
+
+## [4.11.3] - 2026-04-25
+
+### Fixed
+
+- **Broken-template hotfix** — `nous templates copy` was emitting a
+  template that failed parser load on fresh installs.
+- **Grammar single-source** — `nous.lark` is now resolved through one
+  canonical loader path. Previous duplicate-resolution paths (package
+  vs sys.path) caused divergent parser state on certain installs.
+
+---
+
+## [4.11.2] - 2026-04-21
+
+### Added
+
+- **Templates as proper package** — bundled `.nous` templates moved
+  under `nous_lang/templates/` and shipped via `package-data`. Reachable
+  via `importlib.resources`.
+- **`nous templates list / copy <name>`** CLI commands.
+
+---
+
+## [4.11.1] - 2026-04-21
+
+### Changed
+
+- **`nous_api.py` split** into thin importable library + dedicated
+  `nous_api_server.py` runner. Programs that only need to call the
+  library no longer pull in FastAPI/uvicorn at import time.
+
+---
+
+## [4.11.0] - 2026-04-21
+
+### Added
+
+- **Sycophancy phrase detector** (`phrase_detector.py`) — heuristic
+  pass over LLM outputs to flag flattery / capitulation / over-eager
+  agreement language.
+- **`llm.response` event kind** — first-class event in the governance
+  layer. Policies can match on `llm.response` and inspect the response
+  string via signal helpers (e.g. `contains_phrase("absolutely")`).
+- Governance lint extended to validate `llm.response` policies.
+
+---
+
 ## [4.10.0] - 2026-04-17
 
 ### Added
