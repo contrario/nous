@@ -174,6 +174,24 @@ Phase 5 extends `tokens` to interval ranges `[min,max]`.
 Phase 3c will wire smt_emit.py to consume the pricing table and
 produce SMT-LIB constraints.
 
+<!-- __cost_cap_phase3c_design_note_v1__ -->
+**Phase 3c status (Session 62):** SMT-LIB emitter landed.
+- `smt_emit.py` translates parsed `NousProgram` + `PricingTable`
+  into deterministic SMT-LIB 2.6 text. Pure Python, no z3 import.
+- Decimal -> exact rationals (e.g. 0.05 -> `(/ 1 20)`); IEEE 754
+  rounding cannot enter the proof.
+- Sound default cost formula: full input price (no caching),
+  full output price scaled by reasoning multiplier. Opt-in
+  caching/batch tightening lives in Phase 5.
+- `SMTSpec` dataclass exposes `serialize()` (deterministic text)
+  and `sha256()` (canonical content hash for Phase 4 manifests).
+- `nous emit-smt <file.nous>` CLI subcommand prints the SMT-LIB
+  to stdout or writes it to a `.smt2` file.
+- 26 pytests (decimal conversion, error paths, determinism, z3
+  round-trip with skip if z3 unavailable).
+Phase 4 will integrate z3 directly via `nous verify --smt` and
+AetherProof manifest emission for public audit.
+
 ---
 
 ### 4.2 `smt_verify.py` (Session 62)

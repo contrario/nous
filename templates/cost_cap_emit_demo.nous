@@ -1,0 +1,17 @@
+# Phase 3c demo — exercise `nous emit-smt cost_cap_emit_demo.nous`
+# to see the generated SMT-LIB 2.6 constraints.
+
+world EmitDemo {
+    cost_cap: 0.20 USD
+    max_ticks: 3
+}
+
+soul Alpha {
+    mind: claude-haiku-4-5 @ Tier3
+    tokens: input=200 output=80
+}
+
+soul Beta {
+    mind: claude-haiku-4-5 @ Tier3
+    tokens: input=150 output=60
+}

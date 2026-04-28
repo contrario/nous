@@ -20,6 +20,8 @@ from __future__ import annotations
 import argparse
 # __cost_cap_phase3b_cli_import_v1__
 from cli_prices import build_prices_parser, cmd_prices
+# __cost_cap_phase3c_cli_import_v1__
+from cli_emit_smt import build_emit_smt_parser, cmd_emit_smt
 import json
 import os
 import py_compile
@@ -1606,6 +1608,8 @@ def main() -> int:
 
     # __cost_cap_phase3b_cli_hook_v1__
     build_prices_parser(sub)
+    # __cost_cap_phase3c_cli_hook_v1__
+    build_emit_smt_parser(sub)
 
     p = sub.add_parser("dream", help="Dream system analysis")
     p.add_argument("file", help=".nous file to analyze")
@@ -1703,6 +1707,8 @@ def main() -> int:
     commands = {
         # __cost_cap_phase3b_cli_dispatch_v1__
         "prices": cmd_prices,
+        # __cost_cap_phase3c_cli_dispatch_v1__
+        "emit-smt": cmd_emit_smt,
         "compile": cmd_compile, "run": cmd_run, "validate": cmd_validate,
         "typecheck": cmd_typecheck, "docker": cmd_docker, "debug": cmd_debug,
         "shell": cmd_shell, "test": cmd_test, "watch": cmd_watch,
