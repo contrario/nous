@@ -5,6 +5,68 @@
 <!-- __session63_changelog_v4_13_1__ -->
 <!-- __session64_changelog_v4_13_2__ -->
 <!-- __session64_changelog_v4_13_3__ -->
+<!-- __session64_changelog_v4_14_0__ -->
+## [4.14.0] - 2026-04-29
+
+### Added
+
+- **`nous dossier <source.nous>`** --- new top-level subcommand
+  for EU AI Act Annex IV compliance bundles. Takes a NOUS source
+  plus its signed manifest, validates the full crypto chain, and
+  emits a self-contained directory:
+
+  ```
+  source_dossier_<timestamp>/
+      source.nous           audited program
+      manifest.json         signed manifest (copy)
+      pricing.toml          active pricing layer snapshot
+      public_key.b64        raw 32-byte Ed25519 pubkey
+      README.md             Annex IV item-by-item mapping
+      verify_offline.py     portable verifier (cryptography only)
+  ```
+
+  Pre-conditions verified before any file is written
+  (raises `DossierError` otherwise):
+  1. Manifest Ed25519 signature is valid.
+  2. Source bytes hash matches `manifest.source_sha256`.
+  3. Active pricing TOML hash matches `manifest.pricing_sha256`.
+  4. Re-emitted SMT spec hash matches `manifest.smt_spec_sha256`.
+
+- **`verify_offline.py`** ships in every dossier. Pure stdlib +
+  `cryptography` library. No NOUS install required. Re-checks
+  Ed25519 signature and source SHA-256, prints PASS/FAIL with
+  exit `0` / `1`. Designed for regulators and auditors who hold
+  the dossier directory and the publisher's public key.
+
+- New module `dossier.py` (`build_dossier()`, `DossierError`,
+  `DossierResult`).
+- New CLI module `cli_dossier.py` (`cmd_dossier`,
+  `build_dossier_parser`).
+
+### Architectural decision
+
+- The original Session 63 candidate name was
+  `nous prices export --format=annex_iv`. Renamed to top-level
+  `nous dossier` because a dossier composes manifest + source +
+  pricing + crypto, not pricing alone. The `nous prices` tree
+  stays focused on pricing operations (`show`, `init`, `verify`,
+  `age`).
+
+### Tests
+
+- `tests/test_dossier.py` --- 6 tests (272 -> 278 total).
+  - happy path emits 6 expected files
+  - README contains Annex IV mapping items 1-9
+  - verify_offline.py is executable
+  - tampered source -> source.sha256 mismatch
+  - tampered manifest -> Ed25519 signature does NOT verify
+  - non-empty output dir -> refuse to overwrite
+
+### Packaging
+
+- Added `dossier` and `cli_dossier` to `pyproject.toml` py-modules
+  so wheel installs include both.
+
 ## [4.13.3] - 2026-04-29
 
 ### Added
