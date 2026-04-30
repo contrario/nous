@@ -1086,7 +1086,9 @@ def _transform_diff_for_ide(
     old_program: "NousProgram",
     new_program: "NousProgram",
 ) -> dict:
-    from ast_nodes import SoulNode
+    from ast_nodes import (
+        SoulNode, RouteNode, MatchRouteNode, FanInNode, FanOutNode, FeedbackNode,
+    )
     items = result_dict.get("items", [])
     cost_data = result_dict.get("cost", {})
     per_soul_raw = cost_data.get("per_soul", [])
@@ -1125,12 +1127,25 @@ def _transform_diff_for_ide(
         return None
 
     def _get_routes(program: "NousProgram") -> list[tuple[str, str]]:
-        routes = []
-        if program.nervous_system:
-            for r in program.nervous_system.routes:
-                src = r.source if isinstance(r.source, str) else str(r.source)
-                dst = r.target if isinstance(r.target, str) else str(r.target)
-                routes.append((src, dst))
+        # __session66_feedbacknode_fix_v3__
+        routes: list[tuple[str, str]] = []
+        if program.nervous_system is None:
+            return routes
+        for r in program.nervous_system.routes:
+            if isinstance(r, RouteNode):
+                routes.append((r.source, r.target))
+            elif isinstance(r, MatchRouteNode):
+                for arm in r.arms:
+                    if arm.target and not arm.is_silence:
+                        routes.append((r.source, arm.target))
+            elif isinstance(r, FanInNode):
+                for s in r.sources:
+                    routes.append((s, r.target))
+            elif isinstance(r, FanOutNode):
+                for tgt in r.targets:
+                    routes.append((r.source, tgt))
+            elif isinstance(r, FeedbackNode):
+                routes.append((r.source_soul, r.target_soul))
         return routes
 
     cost_lookup = {e["soul"]: e for e in per_soul_raw}

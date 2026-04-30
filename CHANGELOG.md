@@ -6,6 +6,24 @@
 <!-- __session64_changelog_v4_13_2__ -->
 <!-- __session64_changelog_v4_13_3__ -->
 <!-- __session65_changelog_v4_16_0__ -->
+<!-- __session66_changelog_v4_16_1__ -->
+## [4.16.1] - 2026-04-30
+### Fixed
+- **`/v1/diff`** crashed with `'FeedbackNode' object has no attribute
+  'source'` (and `.target`) when either input contained a
+  `FeedbackNode`, `FanInNode`, `FanOutNode`, or `MatchRouteNode` in
+  its `nervous_system`. Three call sites had blind
+  `route.source` / `route.target` access:
+    1. `behavioral_diff._get_routes`
+    2. `behavioral_diff._get_entrypoints`
+    3. nested `_get_routes` inside
+       `nous_api_server._transform_diff_for_ide`.
+  All three now isinstance-dispatch over every `NerveStatement`
+  variant and emit the correct edges (or "is a target" set).
+### Tests
+- New `tests/test_behavioral_diff_routes.py` (+8 tests) locks in the
+  dispatch behavior for each NerveStatement variant plus mixed and
+  empty cases. Pytest floor: 302 -> 310.
 ## [4.16.0] - 2026-04-30
 ### Added
 - **`PUT /v1/templates/{name}`** --- save a `.nous` world template
