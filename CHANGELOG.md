@@ -5,6 +5,48 @@
 <!-- __session63_changelog_v4_13_1__ -->
 <!-- __session64_changelog_v4_13_2__ -->
 <!-- __session64_changelog_v4_13_3__ -->
+<!-- __session65_changelog_v4_16_0__ -->
+## [4.16.0] - 2026-04-30
+### Added
+- **`PUT /v1/templates/{name}`** --- save a `.nous` world template
+  to `TEMPLATES_DIR`. Pairs with the existing
+  `GET /v1/templates/{name}` (read) for full RESTful CRUD on
+  templates. Pipeline:
+  1. Hard auth (`require_write_api_key`): empty `API_KEYS` -> 403,
+     missing or invalid key -> 401. Reads remain soft-auth.
+  2. Name sanitisation: `^[A-Za-z0-9_][A-Za-z0-9_-]{0,63}$`,
+     resolved path must stay inside `TEMPLATES_DIR`.
+  3. Lint gate: `governance_lint` errors block the save unless
+     `force=true`. Linter crash treated as has_errors.
+  4. Backup: existing file copied to
+     `<name>.nous.bak.<YYYYmmddTHHMMSS_uuuuuu>`, oldest pruned
+     beyond 5 backups.
+  5. Atomic write: `tempfile -> fsync -> os.replace`. No reader
+     ever sees a partial file.
+  6. Response includes `sha256` of bytes written.
+
+### Architectural notes
+- **No alias endpoints added.** The Session 64 sec.6.3 plan listed
+  `/v1/policies/list` and `/v1/policies/validate`, but the
+  existing `GET /v1/governance/policies` and
+  `POST /v1/governance/lint` already cover those. Aliasing
+  doubles the API surface for zero new capability and was
+  rejected.
+- **Endpoint named for what it actually does.** A `.nous` template
+  contains the entire world (souls, mind, governance), not just
+  policies. `templates/save` is honest naming.
+
+### Tests
+- `tests/test_templates_save.py` --- 13 new tests covering hard
+  auth (3 paths), happy path, backup creation + pruning to 5,
+  lint-errors-blocks-save, force-override, lint-unavailable,
+  lint-crash, and three name-safety rejections.
+- PYTEST_FLOOR: 289 -> 302.
+
+### Compatibility
+- No changes to existing endpoints. No grammar / AST / codegen
+  changes. 57/57 regression templates baseline-stable.
+
 <!-- __session65_changelog_v4_15_0__ -->
 ## [4.15.0] - 2026-04-30
 ### Added

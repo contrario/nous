@@ -2241,6 +2241,171 @@ async def replay_diff(request: Request, body: ReplayDiffRequest, x_api_key: Opti
     return result
 
 
+# __session65_templates_save_v1__
+
+def require_write_api_key(x_api_key: Optional[str]) -> str:
+    """Strict variant of require_api_key for write endpoints.
+
+    Differences from require_api_key:
+      - If API_KEYS is empty (server not configured for writes) -> 403.
+        Reads are public-safe, writes are not.
+      - Missing key -> 401 (not "anonymous").
+      - Invalid key -> 401 (same as existing).
+    """
+    if not API_KEYS:
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "write endpoints disabled (API_KEYS not configured)", "code": "AUTH002"},
+        )
+    if not x_api_key:
+        raise HTTPException(
+            status_code=401,
+            detail={"error": "API key required for write endpoints", "code": "AUTH003"},
+        )
+    if x_api_key not in API_KEYS:
+        raise HTTPException(
+            status_code=401,
+            detail={"error": "Invalid API key", "code": "AUTH001"},
+        )
+    return x_api_key
+
+
+def _resolve_template_path(name: str) -> Path:
+    """Resolve a template name to an absolute *.nous path inside TEMPLATES_DIR.
+
+    Rejects: empty, leading dot, non-alphanumeric chars, separators,
+    paths resolving outside TEMPLATES_DIR. Returns target path
+    (which may or may not exist).
+    """
+    import re as _re
+    if not name:
+        raise HTTPException(status_code=422, detail={"error": "name required", "code": "TPL003"})
+    if not _re.match(r"^[A-Za-z0-9_][A-Za-z0-9_-]{0,63}$", name):
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "invalid template name (allowed: [A-Za-z0-9_-], 1-64 chars, no leading dot)", "code": "TPL004"},
+        )
+    base = TEMPLATES_DIR.resolve()
+    base.mkdir(parents=True, exist_ok=True)
+    candidate = (base / f"{name}.nous").resolve()
+    if not candidate.is_relative_to(base):
+        raise HTTPException(status_code=403, detail={"error": "path outside templates dir", "code": "TPL005"})
+    return candidate
+
+
+def _backup_template_if_exists(target: Path, max_keep: int = 5) -> Optional[str]:
+    """If target exists, copy to <stem>.nous.bak.<ts>, prune to max_keep newest."""
+    import shutil as _shutil
+    if not target.exists():
+        return None
+    ts = time.strftime("%Y%m%dT%H%M%S") + f"_{int((time.time() * 1_000_000) % 1_000_000):06d}"
+    backup = target.with_name(f"{target.stem}.nous.bak.{ts}")
+    _shutil.copy2(target, backup)
+    bak_pattern = f"{target.stem}.nous.bak.*"
+    bak_files = sorted(target.parent.glob(bak_pattern))
+    while len(bak_files) > max_keep:
+        old = bak_files.pop(0)
+        try:
+            old.unlink()
+        except OSError:
+            pass
+    return str(backup)
+
+
+def _atomic_write_bytes(target: Path, content: bytes) -> None:
+    """tempfile + fsync + os.replace. No partial writes visible to readers."""
+    fd, tmppath = tempfile.mkstemp(prefix=f".{target.name}.", suffix=".tmp", dir=str(target.parent))
+    try:
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(content)
+            fh.flush()
+            os.fsync(fh.fileno())
+        os.replace(tmppath, target)
+    except Exception:
+        try:
+            os.unlink(tmppath)
+        except OSError:
+            pass
+        raise
+
+
+class TemplateSaveRequest(BaseModel):
+    """PUT /v1/templates/{name} body. The name lives in the path, not here."""
+    source: str = Field(..., min_length=1, max_length=1_000_000, description="Full .nous source text")
+    force: bool = Field(default=False, description="If true, save even when lint produces errors")
+
+
+@app.put("/v1/templates/{name}")
+@limiter.limit("10/minute")
+async def templates_save(
+    request: Request,
+    name: str,
+    body: TemplateSaveRequest,
+    x_api_key: Optional[str] = Header(None),
+) -> dict[str, Any]:
+    """Save a .nous template to TEMPLATES_DIR.
+
+    Pipeline:
+      1. require_write_api_key (hard auth)
+      2. _resolve_template_path (name + traversal safety)
+      3. governance_lint (errors block save unless force=true)
+      4. _backup_template_if_exists (rotates last 5)
+      5. _atomic_write_bytes
+      6. sha256 of content
+
+    Response on success:
+        {ok, name, path, bytes_written, sha256, backup?, lint?}
+    Response on lint-blocked:
+        {ok: false, error, code: "TPL001", lint: {...}}  (HTTP 200)
+    """
+    require_write_api_key(x_api_key)
+    target = _resolve_template_path(name)
+
+    lint_dict: Optional[dict[str, Any]] = None
+    lint_failed = False
+    try:
+        from governance_lint import GovernanceLinter
+        try:
+            linter = GovernanceLinter()
+            report = linter.lint_source(body.source, source_file=f"{name}.nous")
+            lint_failed = bool(getattr(report, "has_errors", False))
+            lint_dict = report.to_dict() if hasattr(report, "to_dict") else None
+        except Exception as exc:
+            lint_failed = True
+            lint_dict = {"error": str(exc), "crashed": True}
+    except ImportError:
+        pass
+
+    if lint_failed and not body.force:
+        return {
+            "ok": False,
+            "error": "lint produced errors; pass force=true to save anyway",
+            "code": "TPL001",
+            "lint": lint_dict,
+        }
+
+    content = body.source.encode("utf-8")
+    backup = _backup_template_if_exists(target)
+    try:
+        _atomic_write_bytes(target, content)
+    except OSError as exc:
+        raise HTTPException(
+            status_code=500,
+            detail={"error": f"write failed: {exc}", "code": "TPL002"},
+        )
+    sha = hashlib.sha256(content).hexdigest()
+
+    return {
+        "ok": True,
+        "name": name,
+        "path": str(target),
+        "bytes_written": len(content),
+        "sha256": sha,
+        "backup": backup,
+        "lint": lint_dict,
+    }
+
+
 @app.exception_handler(500)
 async def internal_error_handler(request: Request, exc):
     logger.error(f"Internal error: {traceback.format_exc()}")
