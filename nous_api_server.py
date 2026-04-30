@@ -2021,6 +2021,226 @@ async def replay_verify(request: Request, log: str = "", x_api_key: Optional[str
         }
 
 
+# __session65_replay_list_diff_v1__
+
+NOUS_REPLAY_DIR: Path = Path(os.environ.get("NOUS_REPLAY_DIR", "/var/lib/nous/replays"))
+
+
+def _resolve_replay_log(name: str) -> Path:
+    """Resolve a replay log filename to an absolute path inside NOUS_REPLAY_DIR.
+
+    Rejects empty name, path separators, leading dot, parent-dir traversal,
+    and symlinks pointing outside the dir. Returns a regular-file Path.
+    """
+    if not name:
+        raise HTTPException(status_code=422, detail={"error": "name required", "code": "REP003"})
+    if "/" in name or "\\" in name or name.startswith("."):
+        raise HTTPException(status_code=403, detail={"error": "invalid filename", "code": "REP006"})
+    base = NOUS_REPLAY_DIR.resolve()
+    if not base.exists():
+        raise HTTPException(status_code=404, detail={"error": "replay dir not configured", "code": "REP007"})
+    candidate = (base / name).resolve()
+    if not candidate.is_relative_to(base):
+        raise HTTPException(status_code=403, detail={"error": "path outside replay dir", "code": "REP006"})
+    if not candidate.is_file():
+        raise HTTPException(status_code=404, detail={"error": f"log not found: {name}", "code": "REP002"})
+    return candidate
+
+
+def _tail_last_line(path: Path, tail_bytes: int = 8192) -> str:
+    """Read the last non-empty line of a JSONL file in O(tail_bytes)."""
+    size = path.stat().st_size
+    if size == 0:
+        return ""
+    with path.open("rb") as fh:
+        if size <= tail_bytes:
+            data = fh.read()
+        else:
+            fh.seek(-tail_bytes, os.SEEK_END)
+            data = fh.read()
+    text = data.decode("utf-8", errors="replace")
+    non_empty = [ln for ln in text.splitlines() if ln.strip()]
+    return non_empty[-1] if non_empty else ""
+
+
+class ReplayDiffRequest(BaseModel):
+    """POST body for /v1/replay/diff. Filenames are resolved inside NOUS_REPLAY_DIR."""
+    a: str = Field(..., description="Filename of first replay log inside NOUS_REPLAY_DIR")
+    b: str = Field(..., description="Filename of second replay log inside NOUS_REPLAY_DIR")
+    max_events: int = Field(default=100000, ge=1, le=10_000_000, description="Hard cap on common-prefix scan length")
+
+
+@app.get("/v1/replay/list")
+@limiter.limit("60/minute")
+async def replay_list(request: Request, x_api_key: Optional[str] = Header(None)) -> dict[str, Any]:
+    """List *.jsonl replay logs in NOUS_REPLAY_DIR with cheap last-line metadata.
+
+    Does NOT validate hash chains (use /v1/replay/verify for that).
+    Empty / missing dir returns empty list, status 200.
+    """
+    require_api_key(x_api_key)
+    base = NOUS_REPLAY_DIR.resolve()
+    if not base.exists() or not base.is_dir():
+        return {"replay_dir": str(base), "logs": []}
+    logs: list[dict[str, Any]] = []
+    for entry in sorted(base.iterdir()):
+        if entry.is_symlink():
+            try:
+                if not entry.resolve().is_relative_to(base):
+                    continue
+            except (OSError, ValueError):
+                continue
+        if not entry.is_file():
+            continue
+        if entry.suffix != ".jsonl":
+            continue
+        try:
+            st = entry.stat()
+        except OSError:
+            continue
+        last_line = _tail_last_line(entry)
+        last_seq: Optional[int] = None
+        last_hash: str = ""
+        last_kind: str = ""
+        if last_line:
+            try:
+                ev = json.loads(last_line)
+                last_seq = int(ev.get("seq_id", -1))
+                last_hash = str(ev.get("hash", ""))
+                last_kind = str(ev.get("kind", ""))
+            except (json.JSONDecodeError, TypeError, ValueError):
+                pass
+        logs.append({
+            "name": entry.name,
+            "size_bytes": st.st_size,
+            "mtime": st.st_mtime,
+            "last_seq_id": last_seq,
+            "last_hash": last_hash,
+            "last_kind": last_kind,
+        })
+    return {"replay_dir": str(base), "logs": logs}
+
+
+@app.post("/v1/replay/diff")
+@limiter.limit("30/minute")
+async def replay_diff(request: Request, body: ReplayDiffRequest, x_api_key: Optional[str] = Header(None)) -> dict[str, Any]:
+    """Compare two replay logs in NOUS_REPLAY_DIR by (seq_id, hash) lockstep walk.
+
+    Returned body status field:
+      identical    : both exhausted, every event matched
+      divergent    : first non-matching event before either exhausted
+      truncated_a  : a exhausted before b
+      truncated_b  : b exhausted before a
+      error        : iteration raised (typically tampered hash chain)
+    """
+    require_api_key(x_api_key)
+    path_a = _resolve_replay_log(body.a)
+    path_b = _resolve_replay_log(body.b)
+
+    try:
+        from replay_store import EventStore
+    except ImportError:
+        raise HTTPException(status_code=501, detail={"error": "replay module not available", "code": "REP001"})
+
+    store_a = EventStore.open(path_a, mode="replay")
+    store_b = EventStore.open(path_b, mode="replay")
+    iter_a = iter(store_a)
+    iter_b = iter(store_b)
+
+    common_prefix = 0
+    a_total = 0
+    b_total = 0
+    divergence: Optional[dict[str, Any]] = None
+    status = "identical"
+    error: Optional[str] = None
+
+    try:
+        while True:
+            try:
+                ea = next(iter_a)
+            except StopIteration:
+                ea = None
+            try:
+                eb = next(iter_b)
+            except StopIteration:
+                eb = None
+
+            if ea is None and eb is None:
+                break
+            if ea is not None:
+                a_total += 1
+            if eb is not None:
+                b_total += 1
+
+            if ea is None and eb is not None:
+                status = "truncated_a"
+                divergence = {
+                    "at_seq_id": eb.seq_id,
+                    "kind": "truncated",
+                    "a_event": None,
+                    "b_event": eb.to_dict(),
+                }
+                for _rest in iter_b:
+                    b_total += 1
+                break
+            if eb is None and ea is not None:
+                status = "truncated_b"
+                divergence = {
+                    "at_seq_id": ea.seq_id,
+                    "kind": "truncated",
+                    "a_event": ea.to_dict(),
+                    "b_event": None,
+                }
+                for _rest in iter_a:
+                    a_total += 1
+                break
+
+            if ea.hash == eb.hash and ea.seq_id == eb.seq_id:
+                common_prefix += 1
+                if common_prefix >= body.max_events:
+                    break
+                continue
+
+            status = "divergent"
+            divergence = {
+                "at_seq_id": ea.seq_id if ea.seq_id == eb.seq_id else None,
+                "kind": "hash_mismatch" if ea.seq_id == eb.seq_id else "seq_mismatch",
+                "a_event": ea.to_dict(),
+                "b_event": eb.to_dict(),
+            }
+            for _rest in iter_a:
+                a_total += 1
+            for _rest in iter_b:
+                b_total += 1
+            break
+    except Exception as exc:
+        status = "error"
+        error = str(exc)
+    finally:
+        try:
+            store_a.close()
+        except Exception:
+            pass
+        try:
+            store_b.close()
+        except Exception:
+            pass
+
+    result: dict[str, Any] = {
+        "a": body.a,
+        "b": body.b,
+        "status": status,
+        "a_total_events": a_total,
+        "b_total_events": b_total,
+        "common_prefix_length": common_prefix,
+        "divergence": divergence,
+    }
+    if error is not None:
+        result["error"] = error
+        result["code"] = "REP005"
+    return result
+
+
 @app.exception_handler(500)
 async def internal_error_handler(request: Request, exc):
     logger.error(f"Internal error: {traceback.format_exc()}")

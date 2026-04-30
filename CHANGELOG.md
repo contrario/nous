@@ -5,6 +5,38 @@
 <!-- __session63_changelog_v4_13_1__ -->
 <!-- __session64_changelog_v4_13_2__ -->
 <!-- __session64_changelog_v4_13_3__ -->
+<!-- __session65_changelog_v4_15_0__ -->
+## [4.15.0] - 2026-04-30
+### Added
+- **`GET /v1/replay/list`** --- enumerate replay logs in
+  `NOUS_REPLAY_DIR` (default `/var/lib/nous/replays`,
+  env-overridable). Returns per-log metadata (name, size,
+  mtime, last_seq_id, last_hash, last_kind) via O(8KB) tail
+  read. Does not validate hash chains; pair with
+  `/v1/replay/verify` for integrity.
+- **`POST /v1/replay/diff`** --- lockstep compare two replay
+  logs by `(seq_id, hash)`. Body: `{a, b, max_events?}`
+  (filenames inside `NOUS_REPLAY_DIR`). Returns status =
+  `identical | divergent | truncated_a | truncated_b | error`,
+  with first divergence event side-by-side.
+
+### Security
+- New endpoints sandbox filenames to `NOUS_REPLAY_DIR`. Reject
+  path separators, leading dot, parent-dir traversal, and
+  symlinks pointing outside the directory. Existing replay
+  endpoints (`summary`, `events`, `verify`) preserve their
+  current absolute-path behaviour for backward compatibility.
+
+### Tests
+- `tests/test_replay_list_diff.py` --- 11 new tests covering
+  list metadata, list filtering, diff identical / truncated_a /
+  truncated_b / divergent, and four path-safety rejections.
+- PYTEST_FLOOR: 278 -> 289.
+
+### Compatibility
+- No changes to existing endpoints. No grammar / AST / codegen
+  changes. 57/57 regression templates baseline-stable.
+
 <!-- __session64_changelog_v4_14_0__ -->
 ## [4.14.0] - 2026-04-29
 
