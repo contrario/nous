@@ -46,6 +46,7 @@ TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
 PYTEST_FLOOR: int = 320  # __nerve_dispatch_sweep_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__
 TEMPLATE_FOR_SMOKE: str = "sycophancy_guard"
+_ALLOW_EXISTING_TAG: bool = False  # __NERVE_DISPATCH_RELEASE_ALLOW_EXISTING_TAG_v1__
 PYFLAKES_TARGETS: tuple[str, ...] = (
     "nous_api_server.py",
     "nous_api.py",
@@ -104,9 +105,25 @@ def phase_preflight() -> str:
     tag_name: str = f"v{version}"
     tag_check = run(["git", "tag", "-l", tag_name], cwd=REPO_ROOT, check=False)
     if tag_check.stdout.strip() == tag_name:
-        raise ReleaseError(f"tag {tag_name} already exists — bump _version.py first")
-
-    print(f"  OK: clean tree, tag {tag_name} not yet present")
+        # __NERVE_DISPATCH_RELEASE_ALLOW_EXISTING_TAG_v1__
+        if not _ALLOW_EXISTING_TAG:
+            raise ReleaseError(
+                f"tag {tag_name} already exists — bump _version.py first "
+                "(or pass --allow-existing-tag for re-publish)"
+            )
+        head = run(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT).stdout.strip()
+        tag_sha = run(
+            ["git", "rev-list", "-n", "1", tag_name], cwd=REPO_ROOT,
+        ).stdout.strip()
+        if head != tag_sha:
+            raise ReleaseError(
+                f"--allow-existing-tag set but HEAD ({head[:8]}) does not "
+                f"match tag {tag_name} ({tag_sha[:8]}) — refusing to publish "
+                "a different commit under the same tag"
+            )
+        print(f"  OK: tag {tag_name} matches HEAD; re-publish allowed")
+    else:
+        print(f"  OK: clean tree, tag {tag_name} not yet present")
     return version
 
 
@@ -274,7 +291,13 @@ def main() -> int:
     parser.add_argument("--build", action="store_true", help="run through phase 8 (no upload)")
     parser.add_argument("--upload", action="store_true", help="full pipeline incl. PyPI upload")
     parser.add_argument("--skip-tests", action="store_true", help="emergency: skip pytest floor")
+    parser.add_argument(
+        "--allow-existing-tag", action="store_true",
+        help="permit re-publish when tag already exists at HEAD",
+    )
     args = parser.parse_args()
+    global _ALLOW_EXISTING_TAG
+    _ALLOW_EXISTING_TAG = bool(args.allow_existing_tag)
 
     if not (args.check or args.build or args.upload):
         parser.print_help()
