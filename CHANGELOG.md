@@ -1,5 +1,35 @@
 # Changelog
 
+## [4.17.0] - 2026-05-01
+
+### Added
+- `ast_nodes.iter_route_edges(nervous_system)`: canonical iterator yielding
+  `(source, target, kind)` tuples over every NerveStatement edge
+  (RouteNode, MatchRouteNode, FanInNode, FanOutNode, FeedbackNode).
+  Single source of truth for route enumeration; reimplementing this
+  dispatch elsewhere is now a regression.
+- 10 regression tests in `tests/test_iter_route_edges.py` covering
+  every variant, silence-arm filtering, empty/None inputs, and
+  unknown-subtype panic. PYTEST_FLOOR raised 310 -> 320.
+
+### Fixed
+- `nous show` no longer silently drops FanIn/FanOut/Feedback edges.
+  Previously the `hasattr(r, "source") and hasattr(r, "target")` guard
+  matched only RouteNode; programs with multi-source/multi-target
+  topology displayed wrong edge counts.
+- `nous cost-cap` no longer crashes on programs containing FanOutNode
+  or FeedbackNode. Previously `route.target` access raised AttributeError
+  on these variants.
+- `behavioral_diff._get_routes` now delegates to `iter_route_edges`,
+  collapsing 27 lines of duplicated dispatch into 4. Behavior preserved
+  by existing test suite.
+
+### Internal
+- NerveStatement dispatch sweep, phase 1-4. Remaining inline dispatch
+  in `verifier.py`, `validator.py`, `codegen.py` deliberately retained:
+  those sites do per-kind work beyond edge enumeration and need separate
+  refactors.
+
 <!-- __session63_changelog_v4_13_0__ -->
 
 <!-- __session63_changelog_v4_13_1__ -->

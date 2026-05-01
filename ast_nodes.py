@@ -7,7 +7,7 @@ Every node is typed, validated, serializable.
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any, Optional, Union, Literal
+from typing import Any, Iterator, Optional, Union, Literal
 from pydantic import BaseModel, Field
 # __cost_cap_imports_v1__
 from decimal import Decimal
@@ -476,6 +476,42 @@ class FeedbackNode(NousNode):
 
 
 NerveStatement = Union[RouteNode, MatchRouteNode, FanInNode, FanOutNode, FeedbackNode]
+
+
+# __NERVE_DISPATCH_HELPER_v1__
+def iter_route_edges(
+    nervous_system: Optional["NervousSystemNode"],
+) -> Iterator[tuple[str, str, str]]:
+    """Yield (source, target, kind) for every NerveStatement edge.
+
+    Canonical dispatcher over RouteNode, MatchRouteNode, FanInNode,
+    FanOutNode, FeedbackNode. Consumers MUST NOT reimplement this with
+    isinstance ladders elsewhere; extend this function instead.
+
+    kind is one of: "route", "match", "fanin", "fanout", "feedback".
+    Silence arms (arm.is_silence == True or arm.target is None) are skipped.
+    """
+    if nervous_system is None or not nervous_system.routes:
+        return
+    for stmt in nervous_system.routes:
+        if isinstance(stmt, RouteNode):
+            yield (stmt.source, stmt.target, "route")
+        elif isinstance(stmt, MatchRouteNode):
+            for arm in stmt.arms:
+                if arm.target and not arm.is_silence:
+                    yield (stmt.source, arm.target, "match")
+        elif isinstance(stmt, FanInNode):
+            for src in stmt.sources:
+                yield (src, stmt.target, "fanin")
+        elif isinstance(stmt, FanOutNode):
+            for tgt in stmt.targets:
+                yield (stmt.source, tgt, "fanout")
+        elif isinstance(stmt, FeedbackNode):
+            yield (stmt.source_soul, stmt.target_soul, "feedback")
+        else:
+            raise TypeError(
+                f"unknown NerveStatement subtype: {type(stmt).__name__}"
+            )
 
 
 class NervousSystemNode(NousNode):

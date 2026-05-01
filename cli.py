@@ -569,11 +569,13 @@ def cmd_info(args: argparse.Namespace) -> int:
         genes = len(soul.dna.genes) if soul.dna else 0
         heals = len(soul.heal.rules) if soul.heal else 0
         print(f"  {soul.name}: mind={mind} | {senses} senses | {mem} memory | {genes} genes | {heals} heal rules")
+    # __NERVE_DISPATCH_CLI_v1__
     if program.nervous_system:
-        print(f"\nNervous System ({len(program.nervous_system.routes)} routes):")
-        for r in program.nervous_system.routes:
-            if hasattr(r, "source") and hasattr(r, "target"):
-                print(f"  {r.source} → {r.target}")
+        from ast_nodes import iter_route_edges
+        edges = list(iter_route_edges(program.nervous_system))
+        print(f"\nNervous System ({len(program.nervous_system.routes)} routes, {len(edges)} edges):")
+        for src, tgt, kind in edges:
+            print(f"  {src} → {tgt}  [{kind}]")
     if program.evolution:
         print(f"\nEvolution: {len(program.evolution.mutations)} mutation targets")
     if program.perception:

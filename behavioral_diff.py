@@ -138,32 +138,9 @@ def _estimate_soul_cost(soul: SoulNode) -> float:
 
 
 def _get_routes(program: NousProgram) -> list[tuple[str, str]]:
-    # __session66_feedbacknode_fix_v1__
-    # Flatten every NerveStatement variant into (src, dst) edges.
-    # RouteNode      : 1 edge (source -> target)
-    # MatchRouteNode : N edges (source -> arm.target for each non-silence arm)
-    # FanInNode      : N edges (each src in sources -> target)
-    # FanOutNode     : N edges (source -> each tgt in targets)
-    # FeedbackNode   : 1 edge (source_soul -> target_soul)
-    routes: list[tuple[str, str]] = []
-    if program.nervous_system is None:
-        return routes
-    for route in program.nervous_system.routes:
-        if isinstance(route, RouteNode):
-            routes.append((route.source, route.target))
-        elif isinstance(route, MatchRouteNode):
-            for arm in route.arms:
-                if arm.target and not arm.is_silence:
-                    routes.append((route.source, arm.target))
-        elif isinstance(route, FanInNode):
-            for src in route.sources:
-                routes.append((src, route.target))
-        elif isinstance(route, FanOutNode):
-            for tgt in route.targets:
-                routes.append((route.source, tgt))
-        elif isinstance(route, FeedbackNode):
-            routes.append((route.source_soul, route.target_soul))
-    return routes
+    # __NERVE_DISPATCH_BEHAVIORAL_DIFF_v1__
+    from ast_nodes import iter_route_edges
+    return [(src, tgt) for src, tgt, _ in iter_route_edges(program.nervous_system)]
 
 
 def _detect_cycles(routes: list[tuple[str, str]]) -> list[list[str]]:
@@ -217,28 +194,11 @@ def _find_unreachable(routes: list[tuple[str, str]], all_souls: list[str], entry
 
 
 def _get_entrypoints(program: NousProgram) -> list[str]:
-    # __session66_feedbacknode_fix_v2__
-    # Mirrors _get_routes dispatch: every NerveStatement variant must
-    # contribute its target soul name(s) to the set of "is a target".
+    # __NERVE_DISPATCH_BEHAVIORAL_DIFF_ENTRYPOINTS_v1__
+    from ast_nodes import iter_route_edges
     if not program.nervous_system:
         return [s.name for s in program.souls]
-
-    targets: set[str] = set()
-    for route in program.nervous_system.routes:
-        if isinstance(route, RouteNode):
-            targets.add(route.target)
-        elif isinstance(route, MatchRouteNode):
-            for arm in route.arms:
-                if arm.target and not arm.is_silence:
-                    targets.add(arm.target)
-        elif isinstance(route, FanInNode):
-            targets.add(route.target)
-        elif isinstance(route, FanOutNode):
-            for tgt in route.targets:
-                targets.add(tgt)
-        elif isinstance(route, FeedbackNode):
-            targets.add(route.target_soul)
-
+    targets = {tgt for _src, tgt, _kind in iter_route_edges(program.nervous_system)}
     return [s.name for s in program.souls if s.name not in targets]
 
 

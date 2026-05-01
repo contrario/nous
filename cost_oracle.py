@@ -171,11 +171,12 @@ def cost_oracle(program: NousProgram, period_days: int = 30) -> CostOracleResult
                 cost_ceiling = float(law.expr.amount)
                 break
 
+    # __NERVE_DISPATCH_COST_ORACLE_v1__
     targets: set[str] = set()
     if program.nervous_system:
-        for route in program.nervous_system.routes:
-            dst = route.target if isinstance(route.target, str) else str(route.target)
-            targets.add(dst)
+        from ast_nodes import iter_route_edges
+        for _src, tgt, _kind in iter_route_edges(program.nervous_system):
+            targets.add(tgt)
 
     soul_costs: list[SoulCost] = []
     total_per_cycle = 0.0

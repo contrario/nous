@@ -1127,26 +1127,9 @@ def _transform_diff_for_ide(
         return None
 
     def _get_routes(program: "NousProgram") -> list[tuple[str, str]]:
-        # __session66_feedbacknode_fix_v3__
-        routes: list[tuple[str, str]] = []
-        if program.nervous_system is None:
-            return routes
-        for r in program.nervous_system.routes:
-            if isinstance(r, RouteNode):
-                routes.append((r.source, r.target))
-            elif isinstance(r, MatchRouteNode):
-                for arm in r.arms:
-                    if arm.target and not arm.is_silence:
-                        routes.append((r.source, arm.target))
-            elif isinstance(r, FanInNode):
-                for s in r.sources:
-                    routes.append((s, r.target))
-            elif isinstance(r, FanOutNode):
-                for tgt in r.targets:
-                    routes.append((r.source, tgt))
-            elif isinstance(r, FeedbackNode):
-                routes.append((r.source_soul, r.target_soul))
-        return routes
+        # __NERVE_DISPATCH_NOUS_API_SERVER_NESTED_v1__
+        from ast_nodes import iter_route_edges
+        return [(s, t) for s, t, _ in iter_route_edges(program.nervous_system)]
 
     cost_lookup = {e["soul"]: e for e in per_soul_raw}
     souls_list = []
