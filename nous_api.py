@@ -9,7 +9,7 @@ import logging
 import os
 import time
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Literal
 
 from pydantic import BaseModel, Field
 
@@ -82,9 +82,72 @@ class ChatRequest(BaseModel):
 class WebhookPayload(BaseModel):
     data: Any = None
 
+# __DIFF_SIDE_PROVENANCE_v1__
+class DiffSide(BaseModel):
+    """Provenance metadata for one side of a diff comparison.
+
+    kind classifies WHERE the source came from. identifier disambiguates
+    between multiple instances of the same kind. label is an optional
+    display override; if absent, the renderer computes a deterministic
+    string from kind + identifier.
+    """
+    kind: Literal[
+        "template", "editor", "paste", "replay", "file", "unknown"
+    ] = "unknown"
+    identifier: Optional[str] = None
+    label: Optional[str] = None
+
+
 class DiffRequest(BaseModel):
     original: str = Field(..., description="Original .nous source code")
     modified: str = Field(..., description="Modified .nous source code")
+    original_side: Optional[DiffSide] = Field(
+        default=None,
+        description="Provenance for original; if absent, treated as kind=unknown"
+    )
+    modified_side: Optional[DiffSide] = Field(
+        default=None,
+        description="Provenance for modified; if absent, treated as kind=unknown"
+    )
+
+
+# __DIFF_SIDE_RENDERER_v1__
+def render_diff_side(side: Optional[DiffSide]) -> str:
+    """Deterministic display string for one side of a diff.
+
+    Server-computed so audit logs and dossier evidence stay stable across
+    clients. If side is None or kind is unknown, returns "(unknown source)".
+    If side.label is set, it overrides the computed string (escape hatch).
+    """
+    if side is None:
+        return "(unknown source)"
+    if side.label:
+        return side.label
+    kind = side.kind
+    ident = side.identifier
+    if kind == "template":
+        if not ident:
+            return "Template (unnamed)"
+        return f"Template: {ident}"
+    if kind == "editor":
+        if not ident:
+            return "Editor (current)"
+        return f"Editor: {ident}"
+    if kind == "paste":
+        if not ident:
+            return "Paste"
+        return f"Paste {ident}"
+    if kind == "replay":
+        if not ident:
+            return "Replay (unknown)"
+        prefix = ident[:8] if len(ident) > 8 else ident
+        return f"Replay {prefix}…"
+    if kind == "file":
+        if not ident:
+            return "File (unnamed)"
+        from pathlib import Path as _P
+        return f"File: {_P(ident).name}"
+    return "(unknown source)"
 
 class ErrorResponse(BaseModel):
     error: str

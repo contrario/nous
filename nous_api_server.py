@@ -1272,6 +1272,10 @@ async def diff_source(request: Request, body: DiffRequest, x_api_key: Optional[s
             loop.run_in_executor(None, _run_diff),
             timeout=30.0,
         )
+        # __DIFF_SIDE_RESPONSE_LABELS_v1__
+        from nous_api import render_diff_side
+        result["original_label"] = render_diff_side(body.original_side)
+        result["modified_label"] = render_diff_side(body.modified_side)
         return JSONResponse(content={"ok": True, "diff": result})
     except asyncio.TimeoutError:
         raise HTTPException(status_code=504, detail="Diff timed out (30s)")

@@ -1,5 +1,46 @@
 # Changelog
 
+## [4.18.0] - 2026-05-01
+
+### Added
+- `DiffSide` provenance model in `nous_api.py`: classifies one side of a diff
+  comparison by `kind` (template / editor / paste / replay / file / unknown),
+  optional `identifier`, and optional `label` override.
+- `DiffRequest.original_side` and `DiffRequest.modified_side` (both optional;
+  default `None` = backward compatible with 4.16.x clients).
+- `render_diff_side()` canonical renderer producing deterministic display
+  strings: `Template: sycophancy_guard`, `Editor (current)`, `Paste A`,
+  `Replay 550e8400…`, `File: sample.jsonl`, `(unknown source)`.
+- `/v1/diff` response now includes `original_label` and `modified_label`
+  fields, server-rendered via the canonical function. Clients that send
+  no provenance get `(unknown source)` for both — explicit, not fabricated.
+- 17 regression tests in `tests/test_diff_side.py` covering every kind,
+  edge cases (anonymous paste, missing identifier, label override),
+  request roundtrip, and Literal enum rejection of unknown kinds.
+
+### Fixed
+- The IDE diff card no longer needs to hardcode the literal
+  `original.nous -> modified.nous` string. All four flows (Save bar,
+  template-vs-editor, paste-vs-paste, replay-vs-replay) now have a
+  contract-defined provenance shape they can fill in. Frontend wiring
+  follows in a separate commit (lives outside this repo at /var/www/).
+
+### Architectural notes
+- Mirrors W3C PROV: every comparison artifact has TWO sides, each with
+  identity + origin metadata. Removes the audit-trail liability where
+  `nous dossier` evidence pointed at fictional file names.
+- `kind` is a closed Literal enum. New kinds are explicit additions, not
+  silent string drift. `unknown` is the safe default; clients are not
+  forced to lie.
+- Server computes labels once. Audit logs and dossiers see stable strings
+  regardless of client UI version.
+
+### Breaking
+- None. Existing 4.16.x clients sending only `original` and `modified`
+  continue to work; the response gains two new fields they can ignore.
+
+PYTEST_FLOOR: 320 -> 337
+
 ## [4.17.0] - 2026-05-01
 
 ### Added
