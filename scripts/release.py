@@ -224,14 +224,15 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
     if missing:
         raise ReleaseError(f"wheel missing files: {missing}")
     n_templates: int = sum(1 for n in names if n.endswith(".nous"))
-    if n_templates != 6:
-        raise ReleaseError(f"expected 6 templates in wheel, got {n_templates}")
+    EXPECTED_TEMPLATES: int = 9  # __session67_template_count_v1__
+    if n_templates != EXPECTED_TEMPLATES:
+        raise ReleaseError(f"expected {EXPECTED_TEMPLATES} templates in wheel, got {n_templates}")
     meta_path: str = next(n for n in names if n.endswith("METADATA"))
     meta: str = z.read(meta_path).decode()
     expected: str = f"Version: {version}"
     if expected not in meta:
         raise ReleaseError(f"wheel METADATA missing {expected!r}")
-    print(f"  OK: _version.py + nous.lark + grammar_data + 6 templates + Version={version}")
+    print(f"  OK: _version.py + nous.lark + grammar_data + {EXPECTED_TEMPLATES} templates + Version={version}")
 
 
 def phase_install_smoke(whl: Path, version: str) -> None:
