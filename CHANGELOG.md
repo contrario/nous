@@ -24,6 +24,12 @@
   collapsing 27 lines of duplicated dispatch into 4. Behavior preserved
   by existing test suite.
 
+### Dependencies
+- `cryptography>=42,<47` promoted from `[smt]` extra to a base dependency.
+  `cli.py` loads `cli_dossier` -> `dossier` at module import (Session 64),
+  so cryptography was already a hard requirement for any working install.
+  The `[smt]` extra now contains only `z3-solver`.
+
 ### Internal
 - NerveStatement dispatch sweep, phase 1-4. Remaining inline dispatch
   in `verifier.py`, `validator.py`, `codegen.py` deliberately retained:
