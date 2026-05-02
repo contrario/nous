@@ -14,6 +14,7 @@ from ast_nodes import (
     InstinctNode, DnaNode, HealNode, HealRuleNode, HealActionNode,
     HealStrategy, MessageNode, NervousSystemNode, RouteNode,
     MatchRouteNode, FanInNode, FanOutNode, FeedbackNode,
+    iter_route_edges,
     LetNode, RememberNode, SpeakNode, GuardNode, SenseCallNode,
     SleepNode, IfNode, ForNode, GeneNode,
     LawCost, LawDuration, LawBool, LawInt, LawConstitutional,
@@ -37,17 +38,9 @@ class NousCodeGenJS:
         self._analyze_topology()
 
     def _analyze_topology(self) -> None:
-        ns = self.program.nervous_system
-        if ns:
-            for route in ns.routes:
-                if isinstance(route, RouteNode):
-                    self._routes.append((route.source, route.target))
-                elif isinstance(route, FanInNode):
-                    for src in route.sources:
-                        self._routes.append((src, route.target))
-                elif isinstance(route, FanOutNode):
-                    for tgt in route.targets:
-                        self._routes.append((route.source, tgt))
+        # __session69_codegen_topology_stage2_v1__
+        for src, tgt, _kind in iter_route_edges(self.program.nervous_system):
+            self._routes.append((src, tgt))
         for src, tgt in self._routes:
             self._outgoing.setdefault(src, []).append(tgt)
             self._incoming.setdefault(tgt, []).append(src)
