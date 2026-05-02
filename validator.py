@@ -411,23 +411,13 @@ class NousValidator:
         graph: dict[str, list[str]] = {name: [] for name in self.soul_names}
         feedback_edges: set[tuple[str, str]] = set()
 
-        for route in ns.routes:
-            if isinstance(route, RouteNode):
-                if route.source in graph:
-                    graph[route.source].append(route.target)
-            elif isinstance(route, FeedbackNode):
-                feedback_edges.add((route.source_soul, route.target_soul))
-            elif isinstance(route, FanInNode):
-                for src in route.sources:
-                    if src in graph:
-                        graph[src].append(route.target)
-            elif isinstance(route, FanOutNode):
-                if route.source in graph:
-                    graph[route.source].extend(route.targets)
-            elif isinstance(route, MatchRouteNode):
-                for arm in route.arms:
-                    if arm.target and not arm.is_silence and route.source in graph:
-                        graph[route.source].append(arm.target)
+        # __session68_nerve_dispatch_helper_v1__
+        from ast_nodes import iter_route_edges
+        for src, tgt, kind in iter_route_edges(ns):
+            if kind == "feedback":
+                feedback_edges.add((src, tgt))
+            elif src in graph:
+                graph[src].append(tgt)
 
         visited: set[str] = set()
         rec_stack: set[str] = set()

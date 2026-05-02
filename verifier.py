@@ -162,23 +162,15 @@ class NousVerifier:
         for msg in self.program.messages:
             self._message_map[msg.name] = msg
 
+        # __session68_nerve_dispatch_helper_v1__
+        from ast_nodes import iter_route_edges
         ns = self.program.nervous_system
         if ns:
-            for route in ns.routes:
-                if isinstance(route, RouteNode):
-                    self._routes.append((route.source, route.target))
-                elif isinstance(route, FanInNode):
-                    for src in route.sources:
-                        self._routes.append((src, route.target))
-                elif isinstance(route, FanOutNode):
-                    for tgt in route.targets:
-                        self._routes.append((route.source, tgt))
-                elif isinstance(route, FeedbackNode):
-                    self._feedback_edges.add((route.source_soul, route.target_soul))
-                elif isinstance(route, MatchRouteNode):
-                    for arm in route.arms:
-                        if arm.target and not arm.is_silence:
-                            self._routes.append((route.source, arm.target))
+            for src, tgt, kind in iter_route_edges(ns):
+                if kind == "feedback":
+                    self._feedback_edges.add((src, tgt))
+                else:
+                    self._routes.append((src, tgt))
 
         for src, tgt in self._routes:
             self._outgoing.setdefault(src, []).append(tgt)
