@@ -24,8 +24,6 @@ import argparse
 import sys
 from pathlib import Path
 
-from dossier import DossierError, build_dossier
-
 
 def cmd_dossier(args: argparse.Namespace) -> int:
     fmt: str = getattr(args, "format", "annex_iv")
@@ -41,6 +39,9 @@ def cmd_dossier(args: argparse.Namespace) -> int:
     if not src.is_file():
         print(f"ERROR: source not found: {src}", file=sys.stderr)
         return 3
+
+    # __session68_lazy_import_dossier_v1__
+    from dossier import DossierError, build_dossier
 
     try:
         result = build_dossier(
