@@ -1,36 +1,45 @@
-<!-- __session64_publish_removal_v1__ -->
+<!-- __session71_phase5b_step11_docs_v1__ -->
 # EU AI Act Compliance Matrix
 
-**Status:** Working document, Session 61. Tracks the alignment between NOUS
-language features and the high-risk AI system requirements of Regulation
-(EU) 2024/1689 (the "AI Act").
+**Status:** Working document, Session 71 (3 May 2026, HEAD
+`1a6dd1c`, v5.0.0). Tracks the alignment between NOUS language
+features and the high-risk AI system requirements of
+Regulation (EU) 2024/1689 (the "AI Act").
 
-**Enforcement deadline for high-risk Annex III systems:** 2 August 2026.
+**Enforcement deadline for high-risk Annex III systems:**
+2 August 2026.
 
-**Penalties:** up to EUR 35 000 000 or 7 % of global annual turnover for
-prohibited practices; up to EUR 15 000 000 or 3 % for high-risk violations.
+**Penalties:** up to EUR 35 000 000 or 7 percent of global
+annual turnover for prohibited practices; up to EUR 15 000 000
+or 3 percent for high-risk violations.
 
-**This document is descriptive, not legal advice.** Compliance is a
-provider/deployer obligation. NOUS provides primitives that make
-compliance easier; the operator is responsible for the resulting system.
+**This document is descriptive, not legal advice.** Compliance
+is a provider/deployer obligation. NOUS provides primitives
+that make compliance easier; the operator is responsible for
+the resulting system.
 
 ---
 
 ## Strategic Position
 
-NOUS is built around three pillars that map naturally to AI Act
-requirements:
+NOUS is built around three pillars that map naturally to AI
+Act requirements:
 
-1. **Declarative Constitution.** Laws, policies, and risk constraints
-   are first-class language constructs, not external documentation.
-2. **Deterministic Replay.** Every agent run produces a reproducible,
-   chained event log (Phase D, shipped Session 54).
-3. **SMT-Verified Compilation.** Constraints are mathematically proven
-   before deployment (Sessions 62-65, in progress).
+1. **Declarative Constitution.** Laws, policies, and risk
+   constraints are first-class language constructs, not
+   external documentation.
+2. **Deterministic Replay.** Every agent run produces a
+   reproducible, chained event log (Phase D, shipped Session
+   54).
+3. **SMT-Verified Compilation.** Constraints are
+   mathematically proven before deployment (shipped end-to-end
+   for both USD and EUR pricing in v5.0.0, 3 May 2026).
 
-Combined with cryptographic provenance via AetherProof signed manifests
-(planned Session 64), NOUS targets the position of *the first
-agentic programming language compliant with the AI Act by construction*.
+Combined with cryptographic provenance via Ed25519-signed
+manifests (shipped Session 64) and the `nous dossier` Annex IV
+emitter (shipped v4.14.0), NOUS holds the position of *the
+first agentic programming language compliant with the AI Act
+by construction* in its declared scope.
 
 ---
 
@@ -40,19 +49,22 @@ Status legend:
 - **COVERED**: feature exists and is tested in production.
 - **PARTIAL**: foundation exists, additional work required.
 - **PLANNED**: not yet built; on the killer-feature arc.
-- **OUT OF SCOPE**: provider/deployer obligation, not a language concern.
+- **OUT OF SCOPE**: provider/deployer obligation, not a
+  language concern.
 
 ### Article 9 -- Risk Management System
 
-> *"A risk management system shall be established, implemented,
-> documented and maintained ... a continuous iterative process planned
-> and run throughout the entire lifecycle ..."*
+> *"A risk management system shall be established,
+> implemented, documented and maintained ... a continuous
+> iterative process planned and run throughout the entire
+> lifecycle ..."*
 
 **Status:** COVERED
 
 **NOUS implementation:**
 - Native `policy` DSL with risk weights (`risk_engine.py`)
-- Governance simulator for what-if risk evaluation (`governance_simulator.py`)
+- Governance simulator for what-if risk evaluation
+  (`governance_simulator.py`)
 - Lint rules (L000-L100) catch policy errors before deployment
 - Risk re-evaluation on every event (continuous, not one-shot)
 
@@ -61,47 +73,52 @@ Status legend:
 - `intervention.py` -- 14/14 tests
 - `governance_lint.py` -- 49/49 tests
 - `governance_simulator.py` -- 25/25 tests
-- v4.8.2 release (Session 52) shipped Phase G governance complete
+- v4.8.2 release (Session 52) shipped Phase G governance
+  complete
 
 ---
 
 ### Article 10 -- Data and Data Governance
 
-> *"Training, validation and testing data sets shall be subject to data
-> governance and management practices ..."*
+> *"Training, validation and testing data sets shall be
+> subject to data governance and management practices ..."*
 
 **Status:** OUT OF SCOPE
 
-**Rationale:** NOUS is the *runtime language* for agents, not a model
-training framework. Data governance for the underlying LLM is the
-responsibility of the model provider (e.g., Anthropic, OpenAI). NOUS
-provides hooks (`memory.write` policies, `data_scope` declarations) so
-deployers can enforce data-handling constraints at the agent layer.
+**Rationale:** NOUS is the *runtime language* for agents, not
+a model training framework. Data governance for the underlying
+LLM is the responsibility of the model provider (e.g.
+Anthropic, OpenAI). NOUS provides hooks (`memory.write`
+policies, `data_scope` declarations) so deployers can enforce
+data-handling constraints at the agent layer.
 
 **Evidence:**
 - Policy DSL supports `kind == "memory.write"` constraints
-- 3-site symmetry (sense.invoke, llm.request, memory.write) enables
-  per-site data governance
+- 3-site symmetry (sense.invoke, llm.request, memory.write)
+  enables per-site data governance
 
 ---
 
 ### Article 11 -- Technical Documentation
 
-> *"Technical documentation ... shall be drawn up before that system is
-> placed on the market or put into service ..."*
+> *"Technical documentation ... shall be drawn up before that
+> system is placed on the market or put into service ..."*
 
 **Status:** COVERED (machine-generated)
 
 **NOUS implementation:**
-- AST is itself technical documentation: every law, policy, and risk
-  declaration is structured, inspectable, and machine-readable.
-- `nous compile --emit-docs` (planned, Session 65) will produce an
-  Annex IV-aligned dossier directly from the AST.
-
-**Gap:** the dossier-generation CLI is not yet shipped. Manual export
-via `nous ast | nous emit md` is possible today but not standardized.
+- AST is itself technical documentation: every law, policy,
+  and risk declaration is structured, inspectable, and
+  machine-readable.
+- `nous dossier <source>` produces an Annex IV-aligned bundle
+  directly from the AST plus the signed manifest plus the
+  pricing table.
+- Output format `annex_iv` ships in v4.14.0 and is the
+  default.
 
 **Evidence:**
+- `cli_dossier.py` (registered as the `dossier` subcommand in
+  `cli.py`)
 - `ast_nodes.py` (Pydantic V2 strict validation)
 - `parser.py` Lark grammar
 - v4.0.0 timeline entry: "A compiler that compiles itself"
@@ -110,14 +127,16 @@ via `nous ast | nous emit md` is possible today but not standardized.
 
 ### Article 12 -- Record-Keeping
 
-> *"High-risk AI systems shall technically allow for the automatic
-> recording of events (logs) over the lifetime of the system."*
+> *"High-risk AI systems shall technically allow for the
+> automatic recording of events (logs) over the lifetime of
+> the system."*
 
 **Status:** COVERED
 
 **NOUS implementation:**
 - Phase D Deterministic Replay (shipped Session 54)
-- Every event chained via SHA-256 hash (prev_hash + content_hash)
+- Every event chained via SHA-256 hash (prev_hash +
+  content_hash)
 - `EventStore` integrity check via `nous replay verify`
 - HTTP API: `GET /v1/replay/summary`, `/events`, `/verify`
 
@@ -125,29 +144,34 @@ via `nous ast | nous emit md` is possible today but not standardized.
 - `replay_runtime.py`
 - `tests/test_replay_phase_d.py` 6/6 (standalone harness)
 - v4.8.2 timeline: "Deterministic replay Phase A-D locked"
+- Production replay directory `/var/lib/nous/replays/` with
+  immutable evidence files
 
-**Forthcoming enhancement:** every replay log signed by an Ed25519
-key (publisher-controlled); manifest stored at the publisher's
-chosen location; auditor verifies the cryptographic chain offline.
+**Cryptographic chain:** every replay log can be signed by an
+Ed25519 key (publisher-controlled); the manifest is stored at
+the publisher's chosen location; the auditor verifies the
+cryptographic chain offline.
 
 ---
 
 ### Article 13 -- Transparency and Provision of Information to Deployers
 
-> *"High-risk AI systems shall be designed and developed in such a way as
-> to ensure that their operation is sufficiently transparent ..."*
+> *"High-risk AI systems shall be designed and developed in
+> such a way as to ensure that their operation is sufficiently
+> transparent ..."*
 
 **Status:** COVERED
 
 **NOUS implementation:**
-- Laws and policies are written in declarative source code, not buried
-  in prompts or runtime configuration.
-- `policies.html` dashboard renders all active policies with their
-  signals, weights, and actions.
+- Laws and policies are written in declarative source code,
+  not buried in prompts or runtime configuration.
+- `policies.html` dashboard renders all active policies with
+  their signals, weights, and actions.
 - `governance.html` dashboard shows live intervention history.
 
 **Evidence:**
-- `website/policies.html` (split-pane editor with live preview)
+- `website/policies.html` (split-pane editor with live
+  preview)
 - `website/governance.html` (3-tab dashboard)
 - v4.8.3 release shipped 3 production dashboards
 
@@ -155,19 +179,20 @@ chosen location; auditor verifies the cryptographic chain offline.
 
 ### Article 14 -- Human Oversight
 
-> *"High-risk AI systems shall be designed and developed in such a way ...
-> that they can be effectively overseen by natural persons ..."*
+> *"High-risk AI systems shall be designed and developed in
+> such a way ... that they can be effectively overseen by
+> natural persons ..."*
 
 **Status:** COVERED
 
 **NOUS implementation:**
-- `intervene` action in policy DSL halts execution and surfaces decision
-  to a human operator.
-- `inject_message` action injects clarifying text into agent context
-  (Layer 2.5, v4.8.1).
+- `intervene` action in policy DSL halts execution and
+  surfaces the decision to a human operator.
+- `inject_message` action injects clarifying text into agent
+  context (Layer 2.5, v4.8.1).
 - `block` action aborts the cycle entirely.
-- `governance_simulator` lets operators preview policy effect before
-  deployment.
+- `governance_simulator` lets operators preview policy effect
+  before deployment.
 
 **Evidence:**
 - `intervention.py` 14/14 tests
@@ -178,66 +203,95 @@ chosen location; auditor verifies the cryptographic chain offline.
 
 ### Article 15 -- Accuracy, Robustness and Cybersecurity
 
-> *"High-risk AI systems shall be designed and developed in such a way
-> that they achieve an appropriate level of accuracy, robustness, and
-> cybersecurity, and that they perform consistently in those respects
-> throughout their lifecycle."*
+> *"High-risk AI systems shall be designed and developed in
+> such a way that they achieve an appropriate level of
+> accuracy, robustness, and cybersecurity, and that they
+> perform consistently in those respects throughout their
+> lifecycle."*
 
-**Status:** PARTIAL -> moving to COVERED in Sessions 62-65
+**Status:** COVERED (closed in Phase 5b, v5.0.0)
 
-**Currently shipped:**
-- Validator (`validator.py`) catches structural and semantic errors at
-  compile time.
-- 57 templates baseline-stable, 0 drift (deterministic codegen).
-- Pyflakes Phase 4.5 gate against undefined-name violations (Session 60).
+**Shipped:**
+- Validator (`validator.py`) catches structural and semantic
+  errors at compile time.
+- 57 templates baseline-stable, 0 drift (deterministic
+  codegen).
+- Pyflakes Phase 4.5 gate against undefined-name violations
+  (Session 60).
+- Z3 SMT solver integration: every `cost_cap` declaration is
+  proven (or refuted) before deployment under `--smt`.
+- AST -> SMT-LIB 2.6 emission (`smt_emit.py`) for cost caps
+  with currency-aware semantics; both USD and EUR pricing
+  tables are supported end-to-end.
+- Phase 5a hard-blocks currency mismatch between pricing table
+  and cap (`_validate_currency_consistency`, S69 commit
+  `1eb3e6b`).
+- Phase 5b shipped end-to-end EUR verification, removed the
+  v4.13.0 USD-only escape hatch in `_validate_world`, and
+  added `nous prices upgrade` for v1.0 -> v2.0 schema
+  migration (S70 commits `5e4ae11`, `237738f`, `b2869c6`,
+  release `1a6dd1c`).
+- Counterexample reporting includes the offending soul,
+  per-call cost, total cost, declared cap, and overage.
+- `--smt-margin PCT` adds a conservative safety margin (proves
+  total_cost <= cap * (100 - PCT) / 100).
+- Ed25519-signed manifest emitted by default on every
+  successful proof; `--no-manifest` to skip.
 
-**Gap (closing in Sessions 62-65):**
-- No mathematical proof that constraints hold across all execution
-  paths. Today's validator is structural, not semantic.
+**Evidence:**
+- `smt_emit.py`, `smt_runner.py`, `manifest.py`
+- `tests/test_smt_emit.py`, `tests/test_smt_emit_eur.py`,
+  `tests/test_smt_verify.py`,
+  `tests/test_pricing_v1_compat.py`
+- 394 pytest passing on Server A, 0 xfailed (PYTEST_FLOOR =
+  394)
+- 57-template regression harness, 0 drift
+- v5.0.0 CHANGELOG entry covering the full Phase 5b arc
 
-**Planned implementation:**
-- Z3 SMT solver integration (Session 62)
-- AST -> SMT-LIB emission for cost caps, rate limits, forbidden actions
-  (Sessions 62-63)
-- Counterexample -> deterministic replay trace (Session 63)
-- Build fails if Z3 cannot prove safety (Session 63)
-
-This is the **killer feature** of NOUS as positioned for the AI Act:
-no other agentic language ships verified-by-construction safety today.
+This is the **killer feature** of NOUS as positioned for the
+AI Act: no other agentic language ships verified-by-
+construction safety today.
 
 ---
 
 ### Article 17 -- Quality Management System
 
-> *"Providers of high-risk AI systems shall put a quality management
-> system in place that ensures compliance ..."*
+> *"Providers of high-risk AI systems shall put a quality
+> management system in place that ensures compliance ..."*
 
 **Status:** COVERED
 
 **NOUS implementation:**
-- `scripts/release.py` 10-phase pipeline (test, regression, version
-  consistency, grammar sync, pyflakes gate, ...)
-- `regression_harness.py` for 54-template byte-identical verification
-- PYTEST_FLOOR enforced (currently 184)
-- Version-consistency tests across `cli.py`, `nous_api.py`, `_version.py`
+- `scripts/release.py` 10-phase pipeline (test, regression,
+  version consistency, grammar sync, pyflakes gate, wheel
+  content gate, clean-venv install, UX smoke, PyPI upload).
+- `regression_harness.py` for 57-template byte-identical
+  verification.
+- PYTEST_FLOOR enforced (currently 394).
+- Version-consistency tests across `cli.py`, `nous_api.py`,
+  `_version.py`, and `pyproject.toml`.
 
 **Evidence:**
 - `scripts/release.py`
 - `regression_harness.py verify` (must return RESULT: OK)
 - `tests/test_version_consistency.py` 7/7
+- v5.0.0 release ran the full 10-phase pipeline end-to-end
+  with no manual intervention after `--upload`.
 
 ---
 
 ### Article 19 -- Automatically Generated Logs
 
-> *"Providers of high-risk AI systems shall keep the logs ... for a
-> period appropriate to the intended purpose ..."*
+> *"Providers of high-risk AI systems shall keep the logs ...
+> for a period appropriate to the intended purpose ..."*
 
 **Status:** COVERED
 
 **NOUS implementation:**
-- All replay event logs are JSONL append-only with SHA-256 chain.
-- Retention is operator-controlled (NOUS does not delete logs).
+- All replay event logs are JSONL append-only with SHA-256
+  chain.
+- Retention is operator-controlled (NOUS does not delete
+  logs).
 - `nous replay verify <log>` validates chain integrity.
 
 **Evidence:** see Article 12.
@@ -246,64 +300,89 @@ no other agentic language ships verified-by-construction safety today.
 
 ### Article 50 -- Transparency Obligations (Synthetic Content)
 
-> *"Providers of AI systems ... that generate synthetic audio, image,
-> video or text content, shall ensure that the outputs of the AI system
-> are marked in a machine-readable format and detectable as artificially
-> generated or manipulated."*
+> *"Providers of AI systems ... that generate synthetic audio,
+> image, video or text content, shall ensure that the outputs
+> of the AI system are marked in a machine-readable format and
+> detectable as artificially generated or manipulated."*
 
 **Status:** OUT OF SCOPE for the language; PLANNED hook
 
-**Rationale:** Synthetic-content marking is a property of the model
-output, not the orchestration language. NOUS provides a
-`mark_synthetic` action in the policy DSL (planned, Session 66+) so
-deployers can declare watermarking obligations as policies.
+**Rationale:** Synthetic-content marking is a property of the
+model output, not the orchestration language. NOUS provides a
+`mark_synthetic` action in the policy DSL (planned, future
+session) so deployers can declare watermarking obligations as
+policies.
 
 ---
 
 ## Summary
 
-| Article                | Title                                | Status                  |
-|------------------------|--------------------------------------|-------------------------|
-| 9                      | Risk Management System               | COVERED                 |
-| 10                     | Data and Data Governance             | OUT OF SCOPE            |
-| 11                     | Technical Documentation              | COVERED (machine-gen)   |
-| 12                     | Record-Keeping                       | COVERED                 |
-| 13                     | Transparency to Deployers            | COVERED                 |
-| 14                     | Human Oversight                      | COVERED                 |
-| 15                     | Accuracy / Robustness / Cybersec     | PARTIAL -> 62-65        |
-| 17                     | Quality Management System            | COVERED                 |
-| 19                     | Automatically Generated Logs         | COVERED                 |
-| 50                     | Synthetic Content Marking            | PLANNED (Session 66+)   |
+| Article | Title                                | Status                |
+|---------|--------------------------------------|-----------------------|
+| 9       | Risk Management System               | COVERED               |
+| 10      | Data and Data Governance             | OUT OF SCOPE          |
+| 11      | Technical Documentation              | COVERED (machine-gen) |
+| 12      | Record-Keeping                       | COVERED               |
+| 13      | Transparency to Deployers            | COVERED               |
+| 14      | Human Oversight                      | COVERED               |
+| 15      | Accuracy / Robustness / Cybersec     | COVERED (v5.0.0)      |
+| 17      | Quality Management System            | COVERED               |
+| 19      | Automatically Generated Logs         | COVERED               |
+| 50      | Synthetic Content Marking            | PLANNED               |
 
-**7 articles covered, 1 partial (closing), 1 planned, 1 out of scope.**
+**8 articles covered, 0 partial, 1 planned, 1 out of scope.**
 
 ---
 
-## Path to Full Compliance Dossier
+## Compliance Dossier (shipped)
 
-Sessions 62-65 close the only material gap (Article 15). At end of
-Session 65, NOUS will ship:
+The four pieces called out in earlier revisions of this
+document are all live as of v5.0.0:
 
-1. **SMT-verified compilation:** every law/policy/cost-cap proven by Z3
-   before deployment.
+1. **SMT-verified compilation:** every declared `cost_cap` is
+   proven by Z3 before deployment under `--smt`.
+   Currency-aware for both USD and EUR.
 2. **Signed manifests:** every compiled program emits a
    content-addressed Ed25519-signed manifest. Storage is the
    publisher's choice; verification is offline.
-3. **Auditor verification:** any holder of the manifest plus the
-   publisher's public key verifies the cryptographic chain offline,
-   replays deterministically, and produces a compliance report.
-4. **Public dossier:** v5.0.0 release will include an Annex IV-aligned
-   technical documentation dossier auto-generated from the AST.
+3. **Auditor verification:** any holder of the manifest plus
+   the publisher's public key verifies the cryptographic
+   chain offline, replays deterministically, and produces a
+   compliance report.
+4. **Public dossier:** `nous dossier <source>` emits an Annex
+   IV-aligned technical documentation bundle auto-generated
+   from the AST plus the signed manifest plus the pricing
+   table.
+
+---
+
+## What is NOT in this matrix
+
+- Article 16 (provider obligations on placing on the market):
+  provider/deployer obligation, not a language concern.
+- Article 18 (record-keeping retention period): operator
+  policy.
+- Article 20 (corrective actions): operator policy.
+- Articles 26 to 49 (provider/deployer obligations, conformity
+  assessment, registration): operator and notified-body
+  responsibilities. NOUS supplies the technical documentation
+  (Article 11) and proof artifacts (Article 15) on which those
+  obligations are built.
 
 ---
 
 ## References
 
-- Regulation (EU) 2024/1689 (the AI Act): https://artificialintelligenceact.eu/
-- Implementation timeline: https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
-- AI Act Service Desk: https://ai-act-service-desk.ec.europa.eu/
-- Code of Practice on Marking and Labelling AI-Generated Content (draft, Dec 2025)
+- Regulation (EU) 2024/1689 (the AI Act):
+  https://artificialintelligenceact.eu/
+- Implementation timeline:
+  https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
+- AI Act Service Desk:
+  https://ai-act-service-desk.ec.europa.eu/
+- Code of Practice on Marking and Labelling AI-Generated
+  Content (draft, Dec 2025)
 
 ---
 
-*Last updated: Session 61, 28 April 2026 (HEAD: ad278dd)*
+*Last updated: Session 71, 3 May 2026 (HEAD: post-`1a6dd1c`,
+v5.0.0).*
