@@ -371,3 +371,62 @@ class TestZ3RoundTrip:
         s = z3.Solver()
         s.from_string(body)
         assert s.check() == z3.sat, "$0.001 cap must produce counterex."
+
+
+# ─────────────────────────────────────────────────────────────────────
+# __session69_smt_currency_consistency_v1__
+# Phase 5a security: pricing _currency must match cost_cap.currency.
+# Without this hard-block, a custom EUR-denominated pricing TOML would
+# silently produce a proof comparing EUR cost expressions against a
+# USD cap, yielding false-positive or false-negative verdicts.
+# ─────────────────────────────────────────────────────────────────────
+
+def test_currency_consistency_usd_usd_passes(tmp_path: Path) -> None:
+    """Regression sanity: USD cap with USD pricing must still build."""
+    pricing_path = tmp_path / "nous_prices.toml"
+    pricing_path.write_text(PRICING_TOML_BASIC)
+    pricing = PricingTable.model_validate(
+        tomllib.loads(PRICING_TOML_BASIC)
+    )
+    pricing.source_path = pricing_path
+    prog = make_program(cost_cap_currency="USD")
+    spec = emit_smt(prog, pricing, source_text="dummy", today=date(2026, 5, 3))
+    assert spec.cost_cap_currency == "USD"
+
+
+def test_currency_consistency_eur_pricing_rejects() -> None:
+    """USD cap + EUR pricing must raise EmitError before SMT emission."""
+    pricing_eur_text = PRICING_TOML_BASIC.replace(
+        '_currency = "USD"',
+        '_currency = "EUR"',
+        1,
+    )
+    pricing = PricingTable.model_validate(
+        tomllib.loads(pricing_eur_text)
+    )
+    prog = make_program(cost_cap_currency="USD")
+    with pytest.raises(EmitError, match="currency mismatch"):
+        emit_smt(prog, pricing, source_text="dummy", today=date(2026, 5, 3))
+
+
+def test_currency_consistency_error_is_actionable(tmp_path: Path) -> None:
+    """Error must name both currencies and the pricing source path."""
+    pricing_eur_text = PRICING_TOML_BASIC.replace(
+        '_currency = "USD"',
+        '_currency = "EUR"',
+        1,
+    )
+    pricing_path = tmp_path / "custom_eur.toml"
+    pricing_path.write_text(pricing_eur_text)
+    pricing = PricingTable.model_validate(
+        tomllib.loads(pricing_eur_text)
+    )
+    pricing.source_path = pricing_path
+    prog = make_program(cost_cap_currency="USD")
+    with pytest.raises(EmitError) as exc_info:
+        emit_smt(prog, pricing, source_text="dummy", today=date(2026, 5, 3))
+    msg = str(exc_info.value)
+    assert "'USD'" in msg
+    assert "'EUR'" in msg
+    assert str(pricing_path) in msg
+    assert "FX" in msg

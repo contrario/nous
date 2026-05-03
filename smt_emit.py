@@ -239,6 +239,40 @@ def _validate_souls(prog: NousProgram) -> list[SoulNode]:
     return sorted(prog.souls, key=lambda s: s.name)
 
 
+# __session69_smt_currency_consistency_v1__
+def _validate_currency_consistency(
+    world: WorldNode,
+    pricing: PricingTable,
+) -> None:
+    """Refuse to emit an SMT spec whose pricing currency disagrees
+    with the world's declared cost_cap currency.
+
+    Mixing currencies inside a formal proof would require embedding
+    an FX rate as an SMT assertion. FX rates are not bounded and
+    fluctuate continuously, so they cannot be part of an auditable
+    EU AI Act Annex IV evidence chain. The only safe action is to
+    refuse the combination at emit time.
+    """
+    pricing_ccy = pricing.currency
+    cap_ccy = world.cost_cap.currency
+    if pricing_ccy == cap_ccy:
+        return
+
+    source_hint = ""
+    if getattr(pricing, "source_path", None) is not None:
+        source_hint = f" (pricing source: {pricing.source_path})"
+
+    raise EmitError(
+        f"currency mismatch: world {world.name!r} declares cost_cap in "
+        f"{cap_ccy!r} but pricing table declares "
+        f"_currency = {pricing_ccy!r}{source_hint}. "
+        f"--smt refuses to mix currencies inside a formal proof "
+        f"(FX rates are not auditable). "
+        f"Use a pricing TOML whose _currency matches your cost_cap, "
+        f"or change cost_cap to {pricing_ccy!r}."
+    )
+
+
 def _per_call_cost_smt(
     canonical_model: str,
     entry: PricingEntry,
@@ -284,6 +318,7 @@ def emit_smt(
 
     world = _validate_world(prog)
     souls = _validate_souls(prog)
+    _validate_currency_consistency(world, pricing)  # __session69_smt_currency_consistency_v1__
 
     cap_amount = world.cost_cap.amount
     cap_currency = world.cost_cap.currency
