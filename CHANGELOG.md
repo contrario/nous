@@ -1,5 +1,100 @@
 # Changelog
 
+## [5.0.0] - 2026-05-03
+
+### Breaking
+
+- **Pricing schema v1.0 -> v2.0 field rename.** The `*_usd` suffix
+  has been dropped from `PricingEntry` to make per-token rates
+  currency-agnostic; per-table `_currency` is now authoritative.
+    - `input_per_1m_usd`            -> `input_per_1m`
+    - `output_per_1m_usd`           -> `output_per_1m`
+    - `input_cached_per_1m_usd`     -> `input_cached_per_1m`
+    - `input_cache_write_per_1m_usd`-> `input_cache_write_per_1m`
+    - `hourly_cost_usd`             -> `hourly_cost`
+  Existing v1.0 pricing TOMLs continue to load via a loader-side
+  backward-compat translator that emits exactly one
+  `DeprecationWarning` per file. Run `nous prices upgrade <file>`
+  to migrate.
+
+- **`PricingTable.sha256()` canonical form changed for v1.0 inputs
+  after migration.** The pre-translation v1.0 hash and the
+  post-Phase-5b hash for the same logical data will differ
+  because canonical field names changed. No production dossiers
+  existed prior to this release, so the break has zero deployed
+  impact. Going forward, sha256 is stable across v1->v2 loads
+  because the translator runs before canonicalisation.
+
+### Added
+
+- **`nous prices upgrade <input.toml> -o <output.toml>`** -- new
+  CLI subcommand. Line-based migration that preserves comments,
+  blank lines, and formatting verbatim. Validates the migrated
+  TOML through the v2 loader and full Pydantic validation BEFORE
+  writing the output file. Idempotent on v2.0 input. Refuses to
+  overwrite output without `--force`. Supports `--in-place`.
+
+- **EUR end-to-end SMT cost verification.** Programs declaring
+  `cost_cap: <amount> EUR` and using a pricing table with
+  `_currency = "EUR"` now compile cleanly under `--smt`. Z3
+  round-trip confirmed: provable obligations return UNSAT,
+  refuted obligations return SAT with counterexamples. The
+  Phase 5a `_validate_currency_consistency` guard remains:
+  mixing pricing-currency and cap-currency inside a single
+  proof is still refused (FX rates are not auditable).
+
+- **`pricing/eur_example.toml`** -- shipped EUR-native pricing
+  demonstration with three Mistral models and a local-ollama-eur
+  entry. Values are illustrative; production use requires
+  provider verification.
+
+- **`tests/test_pricing_v1_compat.py`** (12 tests) locking in
+  the v1->v2 loader translator: DeprecationWarning emission,
+  sha-stable v1==v2 invariant, dual-name rejection, decimal
+  precision preservation.
+
+- **`tests/test_cli_prices_upgrade.py`** (18 tests) covering
+  every upgrade CLI behaviour including comment / blank-line
+  preservation and post-migration Pydantic validation.
+
+- **`tests/test_smt_emit_eur.py`** (11 tests) end-to-end EUR
+  cost verification including Z3 round-trip with provable and
+  refuted obligations at multiple `max_ticks` scales.
+
+### Removed
+
+- The v4.13.0 USD-only escape hatch in
+  `smt_emit.py::_validate_world` (the `if w.cost_cap.currency
+  != "USD"` block raising "USD only"). Phase 5a's
+  `_validate_currency_consistency` remains in place as the
+  asfaleia floor for mismatched-currency cases.
+
+- `tests/test_smt_emit.py::test_eur_currency_rejected_v4_13`.
+  The test asserted error message "USD only" which no longer
+  exists. The mismatch case it exercised (USD pricing + EUR
+  cap) is covered by `test_currency_consistency_eur_pricing_rejects`
+  and the new `test_smt_emit_eur.py::TestCurrencyMismatchStillRejected`
+  class.
+
+### Migration guide
+
+```bash
+# Migrate a v1.0 pricing TOML in place:
+nous prices upgrade ./nous_prices.toml --in-place
+
+# Migrate to a separate output file (safe for review):
+nous prices upgrade ./nous_prices.toml -o ./nous_prices_v2.toml
+diff ./nous_prices.toml ./nous_prices_v2.toml
+
+# After migration, cost_cap.currency MUST equal pricing _currency.
+# If your project uses a non-USD provider (e.g. Mistral via Le
+# Plateforme), update BOTH sides:
+#   1. _currency = "EUR"        in your pricing TOML
+#   2. cost_cap: 0.50 EUR       in your world block
+```
+
+PYTEST_FLOOR: 354 -> 394
+
 ## [4.18.0] - 2026-05-01
 
 ### Added
