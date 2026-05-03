@@ -9,7 +9,6 @@ Covers:
   - Cap as negated obligation
   - EmitError on missing world / cost_cap / max_ticks / mind / tokens
   - EmitError on per_hour pricing
-  - EmitError on non-USD currency in v4.13.0
   - Byte-deterministic across runs
   - sha256 stable across reloads
   - z3 round-trip (skip if z3 not importable)
@@ -296,12 +295,6 @@ class TestEmitErrors:
         with pytest.raises(ValueError, match="cannot be used"):
             emit_smt(prog, pricing, today=date(2026, 4, 28))
 
-    def test_eur_currency_rejected_v4_13(
-            self, pricing: PricingTable) -> None:
-        prog = make_program(cost_cap_currency="EUR")
-        with pytest.raises(EmitError, match="USD only"):
-            emit_smt(prog, pricing, today=date(2026, 4, 28))
-
 
 # ─────────────────────────────────────────────────────────────────────
 # Determinism
@@ -431,3 +424,5 @@ def test_currency_consistency_error_is_actionable(tmp_path: Path) -> None:
     assert "'EUR'" in msg
     assert str(pricing_path) in msg
     assert "FX" in msg
+
+# __session70_phase5b_step8_eur_e2e_v1__

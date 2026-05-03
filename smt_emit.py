@@ -30,6 +30,7 @@ Public API:
 
 # __nous_smt_emit_module_v1__
 # __session70_phase5b_v2_schema_rename_v1__
+# __session70_phase5b_step8_eur_e2e_v1__
 """
 from __future__ import annotations
 # __session64_smt_margin_v1__
@@ -190,13 +191,6 @@ def _validate_world(prog: NousProgram) -> WorldNode:
             f"world {w.name!r} has no `cost_cap:` declaration; "
             f"--smt cannot prove anything without a declared ceiling. "
             f"Add inside the world block: cost_cap: <amount> <USD|EUR>"
-        )
-    if w.cost_cap.currency != "USD":
-        raise EmitError(
-            f"world {w.name!r} declares cost_cap in "
-            f"{w.cost_cap.currency!r}; --smt v4.13.0 supports USD only "
-            f"(multi-currency conversion is a Phase 5 feature). "
-            f"Convert your cap to USD or remove --smt."
         )
     if w.max_ticks is None:
         raise EmitError(
