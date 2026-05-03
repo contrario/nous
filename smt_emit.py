@@ -29,6 +29,7 @@ Public API:
   SMTSpec.sha256() -> str              canonical hash for manifests
 
 # __nous_smt_emit_module_v1__
+# __session70_phase5b_v2_schema_rename_v1__
 """
 from __future__ import annotations
 # __session64_smt_margin_v1__
@@ -279,14 +280,14 @@ def _per_call_cost_smt(
     tokens_input: int,
     tokens_output: int,
 ) -> str:
-    if entry.input_per_1m_usd is None or entry.output_per_1m_usd is None:
+    if entry.input_per_1m is None or entry.output_per_1m is None:
         raise EmitError(
             f"model {canonical_model!r} has no input/output prices; "
             f"only per_token models are supported under --smt"
         )
 
-    input_rate = _decimal_to_rational(entry.input_per_1m_usd)
-    output_rate = _decimal_to_rational(entry.output_per_1m_usd)
+    input_rate = _decimal_to_rational(entry.input_per_1m)
+    output_rate = _decimal_to_rational(entry.output_per_1m)
     reasoning_mult = _decimal_to_rational(entry.reasoning_token_multiplier)
     million = "1000000"
 

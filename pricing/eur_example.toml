@@ -1,0 +1,93 @@
+# =====================================================================
+# NOUS Pricing Table -- eur_example.toml
+# Schema version 2.0 | EUR-native demonstration
+# =====================================================================
+#
+# This file demonstrates EUR-native pricing for NOUS schema v2.0.
+# It is provided as a reference: the values below are ILLUSTRATIVE
+# and MUST be replaced with verified live prices before any
+# production SMT verification run.
+#
+# To use this file:
+#   nous --prices /path/to/eur_example.toml run program.nous
+# Or copy it to ./nous_prices.toml in your project root.
+#
+# Currency consistency rule (Phase 5a):
+#   `_currency` here is "EUR". Any program using this table must
+#   declare cost_cap in EUR. NOUS refuses to compile mixed-currency
+#   verification because FX rates are not auditable.
+#
+# Schema v1.0 -> v2.0 migration:
+#   - Field names dropped the `_usd` suffix.
+#   - Per-table `_currency` is now authoritative.
+#   - Pre-v2.0 dossiers are NOT sha-comparable to v2.0 dossiers.
+#
+# =====================================================================
+
+_schema_version = "2.0"
+_source_url     = "https://mistral.ai/pricing"
+_last_verified  = "2026-04-28"
+_currency       = "EUR"
+
+
+# ---------------------------------------------------------------------
+# Mistral -- EU-native provider
+# ---------------------------------------------------------------------
+
+# Illustrative EUR-denominated pricing. NOT a verified live quote.
+# Replace before production use.
+
+[models."mistral-large-2"]
+provider       = "mistral"
+pricing_model  = "per_token"
+input_per_1m   = "2.00"
+output_per_1m  = "6.00"
+prompt_caching_supported = false
+batch_discount_pct = 0
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://mistral.ai/pricing"
+verified_by   = "estimated"
+notes         = "ILLUSTRATIVE EUR pricing. Verify before SMT use."
+
+
+[models."mistral-medium-3"]
+provider       = "mistral"
+pricing_model  = "per_token"
+input_per_1m   = "0.40"
+output_per_1m  = "2.00"
+prompt_caching_supported = false
+batch_discount_pct = 0
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://mistral.ai/pricing"
+verified_by   = "estimated"
+notes         = "ILLUSTRATIVE EUR pricing. Verify before SMT use."
+
+
+[models."mistral-small-3"]
+provider       = "mistral"
+pricing_model  = "per_token"
+input_per_1m   = "0.20"
+output_per_1m  = "0.60"
+prompt_caching_supported = false
+batch_discount_pct = 0
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+source_url    = "https://mistral.ai/pricing"
+verified_by   = "estimated"
+notes         = "ILLUSTRATIVE EUR pricing. Verify before SMT use."
+
+
+# ---------------------------------------------------------------------
+# Local / open-weights -- works in any currency table
+# ---------------------------------------------------------------------
+
+[models."local-ollama-eur"]
+provider       = "local"
+pricing_model  = "free"
+input_per_1m   = "0"
+output_per_1m  = "0"
+verified_date = "2026-04-28"
+verified_by   = "manual"
+notes         = "Self-hosted, no per-token cost."

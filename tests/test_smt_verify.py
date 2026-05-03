@@ -36,22 +36,22 @@ z3_available = importlib.util.find_spec("z3") is not None
 
 
 PRICING_TOML = dedent("""\
-    _schema_version = "1.0"
+    _schema_version = "2.0"
     _currency = "USD"
 
     [models."claude-opus-4-7"]
     provider = "anthropic"
     pricing_model = "per_token"
-    input_per_1m_usd = "5.00"
-    output_per_1m_usd = "25.00"
+    input_per_1m = "5.00"
+    output_per_1m = "25.00"
     reasoning_token_multiplier = "1.0"
     verified_date = "2026-04-28"
 
     [models."claude-haiku-4-5"]
     provider = "anthropic"
     pricing_model = "per_token"
-    input_per_1m_usd = "1.00"
-    output_per_1m_usd = "5.00"
+    input_per_1m = "1.00"
+    output_per_1m = "5.00"
     reasoning_token_multiplier = "1.0"
     verified_date = "2026-04-28"
 """)
@@ -266,3 +266,5 @@ class TestSanity:
         text = format_verdict(result)
         assert "ERROR" in text
         assert "synthetic error" in text
+
+# __session70_phase5b_v2_schema_rename_v1__

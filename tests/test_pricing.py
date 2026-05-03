@@ -13,6 +13,7 @@ Covers:
   - Free / per_hour edge cases
 
 # __nous_pricing_pytest_v1__
+# __session70_phase5b_v2_schema_rename_v1__
 """
 from __future__ import annotations
 
@@ -40,14 +41,14 @@ from pricing import (
 # ─────────────────────────────────────────────────────────────────────
 
 VALID_MIN_TOML = dedent("""\
-    _schema_version = "1.0"
+    _schema_version = "2.0"
     _currency = "USD"
 
     [models."test-model"]
     provider = "test"
     pricing_model = "per_token"
-    input_per_1m_usd = "1.00"
-    output_per_1m_usd = "5.00"
+    input_per_1m = "1.00"
+    output_per_1m = "5.00"
     verified_date = "2026-04-28"
 """)
 
@@ -89,8 +90,8 @@ class TestSchemaStrictness:
     def test_float_values_rejected(self, tmp_path: Path) -> None:
         """Floats produce IEEE 754 rounding; only strings/ints allowed."""
         body = VALID_MIN_TOML.replace(
-            'input_per_1m_usd = "1.00"',
-            "input_per_1m_usd = 1.00",  # bare float
+            'input_per_1m = "1.00"',
+            "input_per_1m = 1.00",  # bare float
         )
         with pytest.raises(Exception):
             _load(tmp_path, body)
@@ -98,20 +99,20 @@ class TestSchemaStrictness:
     def test_unsupported_schema_version_rejected(self,
                                                  tmp_path: Path) -> None:
         body = VALID_MIN_TOML.replace(
-            '_schema_version = "1.0"', '_schema_version = "2.0"'
+            '_schema_version = "2.0"', '_schema_version = "3.0"'
         )
         with pytest.raises(Exception):
             _load(tmp_path, body)
 
     def test_decimal_preserved_exactly(self, tmp_path: Path) -> None:
         body = VALID_MIN_TOML.replace(
-            'input_per_1m_usd = "1.00"',
-            'input_per_1m_usd = "0.001"',
+            'input_per_1m = "1.00"',
+            'input_per_1m = "0.001"',
         )
         table = _load(tmp_path, body)
         e = table.models["test-model"]
-        assert e.input_per_1m_usd == Decimal("0.001")
-        assert e.input_per_1m_usd.as_integer_ratio() == (1, 1000)
+        assert e.input_per_1m == Decimal("0.001")
+        assert e.input_per_1m.as_integer_ratio() == (1, 1000)
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -129,7 +130,7 @@ class TestAliases:
         table = _load(tmp_path, body)
         canonical, entry = table.resolve("test-alias")
         assert canonical == "test-model"
-        assert entry.input_per_1m_usd == Decimal("1.00")
+        assert entry.input_per_1m == Decimal("1.00")
 
     def test_alias_to_unknown_model_rejected(self,
                                              tmp_path: Path) -> None:
@@ -143,7 +144,7 @@ class TestAliases:
 
     def test_alias_cycle_rejected(self, tmp_path: Path) -> None:
         body = dedent("""\
-            _schema_version = "1.0"
+            _schema_version = "2.0"
 
             [models."a"]
             alias_of = "b"
@@ -239,13 +240,13 @@ class TestPricingModels:
 
     def test_free_model_zero_prices(self, tmp_path: Path) -> None:
         body = dedent("""\
-            _schema_version = "1.0"
+            _schema_version = "2.0"
 
             [models."local"]
             provider = "local"
             pricing_model = "free"
-            input_per_1m_usd = "0"
-            output_per_1m_usd = "0"
+            input_per_1m = "0"
+            output_per_1m = "0"
             verified_date = "2026-04-28"
         """)
         table = _load(tmp_path, body)
@@ -253,16 +254,16 @@ class TestPricingModels:
             table, "local", today=date(2026, 4, 28),
         )
         assert canonical == "local"
-        assert e.input_per_1m_usd == Decimal("0")
+        assert e.input_per_1m == Decimal("0")
 
     def test_per_hour_rejected_under_smt(self, tmp_path: Path) -> None:
         body = dedent("""\
-            _schema_version = "1.0"
+            _schema_version = "2.0"
 
             [models."llama-local"]
             provider = "self-hosted"
             pricing_model = "per_hour"
-            hourly_cost_usd = "2.50"
+            hourly_cost = "2.50"
             verified_date = "2026-04-28"
         """)
         table = _load(tmp_path, body)
@@ -288,8 +289,8 @@ class TestSha256:
             self, tmp_path: Path) -> None:
         t1 = _load(tmp_path, VALID_MIN_TOML)
         t2 = _load(tmp_path, VALID_MIN_TOML.replace(
-            'input_per_1m_usd = "1.00"',
-            'input_per_1m_usd = "1.50"',
+            'input_per_1m = "1.00"',
+            'input_per_1m = "1.50"',
         ))
         assert t1.sha256() != t2.sha256()
 
@@ -310,6 +311,6 @@ class TestLayeredLoader:
         monkeypatch.setenv("HOME", str(tmp_path))
         table = load_pricing()
         # Whatever ships, it must be schema 1.0 and have at least one model.
-        assert table.schema_version == "1.0"
+        assert table.schema_version == "2.0"
         assert len(table.models) > 0
         assert table.layer_index == 4

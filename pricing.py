@@ -1,20 +1,23 @@
 """
-NOUS Pricing — schema, loader, and audit trail.
+NOUS Pricing -- schema, loader, and audit trail.
 
 Provides per-model LLM cost data for SMT cost_cap verification.
 Loader is layered (CLI flag > project > user > package defaults),
 deterministic, and produces a stable sha256 used by Phase 4
 manifests.
 
-Schema version 1.0. Designed to accept additive v1.x extensions
-without breaking changes.
+Schema version 2.0 (current). Schema version 1.0 supported via
+loader-side backward-compat translation; emits DeprecationWarning.
 
 Public API:
   load_pricing(custom_path: Path | None) -> PricingTable
   PricingTable.get(model_name: str) -> PricingEntry  (resolves aliases)
   PricingTable.sha256() -> str                       (deterministic)
+  SCHEMA_VERSION_SUPPORTED                           (1.0 + 2.0)
+  SCHEMA_VERSION_CURRENT                             ("2.0")
 
 # __nous_pricing_module_v1__
+# __session70_phase5b_v2_schema_rename_v1__
 """
 from __future__ import annotations
 
@@ -23,6 +26,7 @@ import json
 import os
 import sys
 import tomllib
+import warnings
 from datetime import date, datetime, timezone
 from decimal import Decimal
 from pathlib import Path
@@ -33,11 +37,21 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 
 STALENESS_WARN_DAYS: int = 30
 STALENESS_ERROR_DAYS_UNDER_SMT: int = 90
-SCHEMA_VERSION_SUPPORTED: tuple[str, ...] = ("1.0",)
+SCHEMA_VERSION_SUPPORTED: tuple[str, ...] = ("1.0", "2.0")
+SCHEMA_VERSION_CURRENT: str = "2.0"
 
 
 PricingModel = Literal["per_token", "per_hour", "free"]
 VerifiedBy = Literal["manual", "auto-fetched", "estimated"]
+
+
+_V1_TO_V2_FIELD_MAP: dict[str, str] = {
+    "input_per_1m_usd": "input_per_1m",
+    "output_per_1m_usd": "output_per_1m",
+    "input_cached_per_1m_usd": "input_cached_per_1m",
+    "input_cache_write_per_1m_usd": "input_cache_write_per_1m",
+    "hourly_cost_usd": "hourly_cost",
+}
 
 
 class PricingEntry(BaseModel):
@@ -46,16 +60,16 @@ class PricingEntry(BaseModel):
     provider: Optional[str] = None
     pricing_model: PricingModel = "per_token"
 
-    input_per_1m_usd: Optional[Decimal] = None
-    output_per_1m_usd: Optional[Decimal] = None
+    input_per_1m: Optional[Decimal] = None
+    output_per_1m: Optional[Decimal] = None
 
     prompt_caching_supported: bool = False
-    input_cached_per_1m_usd: Optional[Decimal] = None
-    input_cache_write_per_1m_usd: Optional[Decimal] = None
+    input_cached_per_1m: Optional[Decimal] = None
+    input_cache_write_per_1m: Optional[Decimal] = None
     batch_discount_pct: Optional[int] = None
     reasoning_token_multiplier: Decimal = Decimal("1.0")
 
-    hourly_cost_usd: Optional[Decimal] = None
+    hourly_cost: Optional[Decimal] = None
 
     currency: str = "USD"
     verified_date: Optional[date] = None
@@ -70,11 +84,11 @@ class PricingEntry(BaseModel):
     alias_of: Optional[str] = None
 
     @field_validator(
-        "input_per_1m_usd",
-        "output_per_1m_usd",
-        "input_cached_per_1m_usd",
-        "input_cache_write_per_1m_usd",
-        "hourly_cost_usd",
+        "input_per_1m",
+        "output_per_1m",
+        "input_cached_per_1m",
+        "input_cache_write_per_1m",
+        "hourly_cost",
         "reasoning_token_multiplier",
         mode="before",
     )
@@ -100,31 +114,31 @@ class PricingEntry(BaseModel):
                 "non-alias entries require 'provider' field"
             )
         if self.pricing_model == "per_token":
-            if self.input_per_1m_usd is None or self.output_per_1m_usd is None:
+            if self.input_per_1m is None or self.output_per_1m is None:
                 raise ValueError(
                     "pricing_model='per_token' requires both "
-                    "input_per_1m_usd and output_per_1m_usd"
+                    "input_per_1m and output_per_1m"
                 )
         elif self.pricing_model == "per_hour":
-            if self.hourly_cost_usd is None:
+            if self.hourly_cost is None:
                 raise ValueError(
-                    "pricing_model='per_hour' requires hourly_cost_usd"
+                    "pricing_model='per_hour' requires hourly_cost"
                 )
         elif self.pricing_model == "free":
             if (
-                (self.input_per_1m_usd is not None
-                 and self.input_per_1m_usd != Decimal("0"))
-                or (self.output_per_1m_usd is not None
-                    and self.output_per_1m_usd != Decimal("0"))
+                (self.input_per_1m is not None
+                 and self.input_per_1m != Decimal("0"))
+                or (self.output_per_1m is not None
+                    and self.output_per_1m != Decimal("0"))
             ):
                 raise ValueError(
                     "pricing_model='free' requires zero input/output prices "
                     "(or omit them)"
                 )
-        if self.input_cache_write_per_1m_usd is not None:
-            if self.input_per_1m_usd is None:
+        if self.input_cache_write_per_1m is not None:
+            if self.input_per_1m is None:
                 raise ValueError(
-                    "input_cache_write_per_1m_usd requires input_per_1m_usd"
+                    "input_cache_write_per_1m requires input_per_1m"
                 )
         return self
 
@@ -275,6 +289,62 @@ def _candidate_layers(custom_path: Optional[Path]) -> list[PricingLayer]:
     ]
 
 
+def _translate_v1_to_v2(data: dict[str, Any], source: str) -> dict[str, Any]:
+    """Translate a v1.0 pricing TOML dict to v2.0 in-memory.
+
+    Returns a NEW dict (does not mutate input). Renames legacy
+    `*_usd` field names on each entry to drop the `_usd` suffix.
+    Bumps `_schema_version` to "2.0" so downstream PricingTable
+    validates cleanly.
+
+    Fail-closed: if both a v1 field name and its v2 counterpart
+    appear on the same entry, raises ValueError.
+
+    No-op if `_schema_version` is not "1.0".
+
+    Emits one DeprecationWarning per file when translation runs.
+    """
+    if data.get("_schema_version") != "1.0":
+        return data
+
+    out: dict[str, Any] = dict(data)
+    out["_schema_version"] = "2.0"
+
+    models = out.get("models")
+    if not isinstance(models, dict):
+        return out
+
+    new_models: dict[str, Any] = {}
+    for name, entry in models.items():
+        if not isinstance(entry, dict):
+            new_models[name] = entry
+            continue
+        new_entry: dict[str, Any] = {}
+        for k, v in entry.items():
+            if k in _V1_TO_V2_FIELD_MAP:
+                new_key = _V1_TO_V2_FIELD_MAP[k]
+                if new_key in entry:
+                    raise ValueError(
+                        f"pricing entry {name!r} has both legacy v1 "
+                        f"field {k!r} and v2 field {new_key!r}; this "
+                        f"is ambiguous. Pick one."
+                    )
+                new_entry[new_key] = v
+            else:
+                new_entry[k] = v
+        new_models[name] = new_entry
+    out["models"] = new_models
+
+    warnings.warn(
+        f"pricing TOML at {source} uses schema v1.0; v2.0 renames "
+        f"`*_usd` fields to drop the suffix and unlocks non-USD "
+        f"currencies. Run `nous prices upgrade <file>` to migrate.",
+        DeprecationWarning,
+        stacklevel=3,
+    )
+    return out
+
+
 def load_pricing(custom_path: Optional[Path] = None) -> PricingTable:
     for layer in _candidate_layers(custom_path):
         if layer.found and layer.path is not None:
@@ -292,6 +362,7 @@ def _load_from_path(path: Path, layer_index: int) -> PricingTable:
         data: dict[str, Any] = tomllib.loads(raw_text)
     except tomllib.TOMLDecodeError as e:
         raise ValueError(f"invalid TOML in {path}: {e}") from e
+    data = _translate_v1_to_v2(data, str(path))
     table = PricingTable.model_validate(data)
     table.source_path = path
     table.layer_index = layer_index
@@ -365,6 +436,6 @@ def get_price_for_smt(
         raise ValueError(
             f"model {canonical!r} uses per_hour billing; SMT verification "
             f"of per-hour models requires expected runtime declaration "
-            f"(deferred to Phase 5). Use --no-smt or pick a per_token model."
+            f"(deferred to Phase 5c). Use --no-smt or pick a per_token model."
         )
     return canonical, entry

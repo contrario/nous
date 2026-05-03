@@ -15,6 +15,7 @@ Covers:
   - z3 round-trip (skip if z3 not importable)
 
 # __nous_smt_emit_pytest_v1__
+# __session70_phase5b_v2_schema_rename_v1__
 """
 from __future__ import annotations
 
@@ -41,51 +42,51 @@ from smt_emit import EmitError, SMTSpec, emit_smt, _decimal_to_rational
 # ─────────────────────────────────────────────────────────────────────
 
 PRICING_TOML_BASIC = dedent("""\
-    _schema_version = "1.0"
+    _schema_version = "2.0"
     _currency = "USD"
 
     [models."claude-opus-4-7"]
     provider = "anthropic"
     pricing_model = "per_token"
-    input_per_1m_usd = "5.00"
-    output_per_1m_usd = "25.00"
+    input_per_1m = "5.00"
+    output_per_1m = "25.00"
     reasoning_token_multiplier = "1.0"
     verified_date = "2026-04-28"
 
     [models."claude-haiku-4-5"]
     provider = "anthropic"
     pricing_model = "per_token"
-    input_per_1m_usd = "1.00"
-    output_per_1m_usd = "5.00"
+    input_per_1m = "1.00"
+    output_per_1m = "5.00"
     reasoning_token_multiplier = "1.0"
     verified_date = "2026-04-28"
 
     [models."deepseek-r1"]
     provider = "deepseek"
     pricing_model = "per_token"
-    input_per_1m_usd = "0.55"
-    output_per_1m_usd = "2.20"
+    input_per_1m = "0.55"
+    output_per_1m = "2.20"
     reasoning_token_multiplier = "5.0"
     verified_date = "2026-04-28"
 
     [models."local-ollama"]
     provider = "local"
     pricing_model = "free"
-    input_per_1m_usd = "0"
-    output_per_1m_usd = "0"
+    input_per_1m = "0"
+    output_per_1m = "0"
     verified_date = "2026-04-28"
 
     [models."llama-local"]
     provider = "self-hosted"
     pricing_model = "per_hour"
-    hourly_cost_usd = "2.50"
+    hourly_cost = "2.50"
     verified_date = "2026-04-28"
 
     [models."deprecated-old"]
     provider = "test"
     pricing_model = "per_token"
-    input_per_1m_usd = "1.00"
-    output_per_1m_usd = "5.00"
+    input_per_1m = "1.00"
+    output_per_1m = "5.00"
     verified_date = "2025-01-01"
     removed_after = "2025-12-31"
 """)

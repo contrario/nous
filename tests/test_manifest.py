@@ -44,14 +44,14 @@ from smt_verify import VerifyResult
 
 
 PRICING_TOML = dedent("""\
-    _schema_version = "1.0"
+    _schema_version = "2.0"
     _currency = "USD"
 
     [models."m1"]
     provider = "test"
     pricing_model = "per_token"
-    input_per_1m_usd = "1.00"
-    output_per_1m_usd = "5.00"
+    input_per_1m = "1.00"
+    output_per_1m = "5.00"
     reasoning_token_multiplier = "1.0"
     verified_date = "2026-04-28"
 """)
@@ -231,3 +231,5 @@ class TestTamperDetection:
 
         # Try to use m2's signature for m1.
         assert not verify_manifest_signature(m1, sig_for_m2, pub)
+
+# __session70_phase5b_v2_schema_rename_v1__

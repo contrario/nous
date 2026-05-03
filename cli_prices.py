@@ -146,10 +146,10 @@ def cmd_prices_verify(args: argparse.Namespace) -> int:
 
     print("Base pricing under --smt (no caching, no batch):")
     if entry.pricing_model == "per_token":
-        print(f"  per 1M input tokens:   ${entry.input_per_1m_usd}")
-        print(f"  per 1M output tokens:  ${entry.output_per_1m_usd}")
+        print(f"  per 1M input tokens:   ${entry.input_per_1m}")
+        print(f"  per 1M output tokens:  ${entry.output_per_1m}")
     elif entry.pricing_model == "per_hour":
-        print(f"  per GPU-hour:          ${entry.hourly_cost_usd}")
+        print(f"  per GPU-hour:          ${entry.hourly_cost}")
         print(f"  (per_hour models not yet supported under --smt)")
     elif entry.pricing_model == "free":
         print(f"  per 1M tokens:         $0  (local/open-weights)")
@@ -158,28 +158,28 @@ def cmd_prices_verify(args: argparse.Namespace) -> int:
 
     if entry.prompt_caching_supported:
         print("Optional discounts (declared in .nous source):")
-        if entry.input_cached_per_1m_usd is not None:
-            base = entry.input_per_1m_usd or 1
+        if entry.input_cached_per_1m is not None:
+            base = entry.input_per_1m or 1
             try:
                 pct = round(
-                    100 * float(entry.input_cached_per_1m_usd) / float(base)
+                    100 * float(entry.input_cached_per_1m) / float(base)
                 ) if base else 0
             except Exception:
                 pct = 0
             print(f"  cache hit input:       "
-                  f"${entry.input_cached_per_1m_usd}  /1M  "
+                  f"${entry.input_cached_per_1m}  /1M  "
                   f"(= {pct}% of base)")
-        if entry.input_cache_write_per_1m_usd is not None:
-            base = entry.input_per_1m_usd or 1
+        if entry.input_cache_write_per_1m is not None:
+            base = entry.input_per_1m or 1
             try:
                 pct = round(
-                    100 * float(entry.input_cache_write_per_1m_usd)
+                    100 * float(entry.input_cache_write_per_1m)
                     / float(base)
                 ) if base else 0
             except Exception:
                 pct = 0
             print(f"  cache write input:     "
-                  f"${entry.input_cache_write_per_1m_usd}  /1M  "
+                  f"${entry.input_cache_write_per_1m}  /1M  "
                   f"(= {pct}% of base, paid on first call)")
         if entry.batch_discount_pct:
             print(f"  batch API:             "
@@ -314,3 +314,5 @@ def cmd_prices(args: argparse.Namespace) -> int:
               file=sys.stderr)
         return 1
     return func(args)
+
+# __session70_phase5b_v2_schema_rename_v1__
