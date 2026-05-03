@@ -14,8 +14,10 @@ Hooked into cli.py via build_prices_parser(subparsers).
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import sys
+import tomllib
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -23,6 +25,7 @@ from typing import Optional
 from pricing import (
     PricingTable,
     _candidate_layers,
+    _translate_v1_to_v2,
     days_since,
     get_price_for_smt,
     lifecycle_status,
@@ -260,6 +263,159 @@ def cmd_prices_age(args: argparse.Namespace) -> int:
     return 0
 
 
+_V1_TO_V2_FIELD_RENAMES: dict[str, str] = {
+    "input_per_1m_usd": "input_per_1m",
+    "output_per_1m_usd": "output_per_1m",
+    "input_cached_per_1m_usd": "input_cached_per_1m",
+    "input_cache_write_per_1m_usd": "input_cache_write_per_1m",
+    "hourly_cost_usd": "hourly_cost",
+}
+
+
+def _migrate_v1_text(src: str) -> tuple[str, dict[str, int], bool]:
+    """Apply line-based v1 -> v2 rename, preserving comments verbatim.
+
+    Returns:
+      (new_text, per-field rename counts, schema_bumped flag)
+
+    Renames each top-of-line `<field>_usd = ...` key to drop `_usd`,
+    and bumps `_schema_version = "1.0"` to `"2.0"`.
+    Comments (lines starting with `#`) and string values containing
+    these names are NOT modified because the regex anchors at
+    line-start whitespace and requires `=` immediately after.
+    """
+    rename_map = _V1_TO_V2_FIELD_RENAMES
+    counts: dict[str, int] = {k: 0 for k in rename_map}
+    schema_bumped: bool = False
+
+    field_pattern = re.compile(
+        r"^(\s*)("
+        + "|".join(re.escape(k) for k in rename_map)
+        + r")(\s*=)"
+    )
+    schema_pattern = re.compile(
+        r'^(\s*_schema_version\s*=\s*)"1\.0"'
+    )
+
+    out_lines: list[str] = []
+    for line in src.splitlines(keepends=True):
+        m = field_pattern.match(line)
+        if m is not None:
+            old_name = m.group(2)
+            new_name = rename_map[old_name]
+            counts[old_name] += 1
+            line = line[:m.start(2)] + new_name + line[m.end(2):]
+        elif schema_pattern.match(line) is not None:
+            line = schema_pattern.sub(r'\g<1>"2.0"', line, count=1)
+            schema_bumped = True
+        out_lines.append(line)
+    return "".join(out_lines), counts, schema_bumped
+
+
+def cmd_prices_upgrade(args: argparse.Namespace) -> int:
+    """nous prices upgrade <input.toml> -- migrate v1.0 -> v2.0.
+
+    Preserves comments, blank lines, and ordering verbatim. Validates
+    the migrated text through the v2 loader before writing.
+
+    Refuses to overwrite an existing output file unless --force.
+    Refuses to migrate non-v1 inputs (idempotent on v2; rejects v3+).
+    """
+    input_path: Path = Path(args.input).resolve()
+    if not input_path.is_file():
+        print(f"ERROR: input file not found: {input_path}",
+              file=sys.stderr)
+        return 1
+
+    if args.in_place and args.output:
+        print(
+            "ERROR: --in-place and -o/--output are mutually exclusive",
+            file=sys.stderr,
+        )
+        return 1
+    if args.in_place:
+        output_path: Path = input_path
+    elif args.output:
+        output_path = Path(args.output).resolve()
+    else:
+        print(
+            "ERROR: must specify -o/--output PATH or --in-place",
+            file=sys.stderr,
+        )
+        return 1
+
+    src_text: str = input_path.read_text(encoding="utf-8")
+    try:
+        src_data = tomllib.loads(src_text)
+    except tomllib.TOMLDecodeError as e:
+        print(f"ERROR: invalid TOML in {input_path}: {e}",
+              file=sys.stderr)
+        return 1
+
+    schema = src_data.get("_schema_version")
+    if schema is None:
+        print(
+            f"ERROR: {input_path} has no `_schema_version`; "
+            f"cannot migrate.",
+            file=sys.stderr,
+        )
+        return 1
+    if schema == "2.0":
+        print(f"OK: {input_path} is already v2.0; nothing to do.")
+        return 0
+    if schema != "1.0":
+        print(
+            f"ERROR: only v1.0 -> v2.0 migration is supported; "
+            f"input declares v{schema}.",
+            file=sys.stderr,
+        )
+        return 1
+
+    if (output_path.exists()
+            and output_path != input_path
+            and not args.force):
+        print(
+            f"ERROR: output {output_path} already exists. "
+            f"Use --force to overwrite.",
+            file=sys.stderr,
+        )
+        return 1
+
+    new_text, counts, schema_bumped = _migrate_v1_text(src_text)
+
+    try:
+        new_data = tomllib.loads(new_text)
+    except tomllib.TOMLDecodeError as e:
+        print(
+            f"ERROR: post-migration TOML failed to parse: {e}",
+            file=sys.stderr,
+        )
+        return 2
+
+    try:
+        validated = _translate_v1_to_v2(new_data, str(input_path))
+        PricingTable.model_validate(validated)
+    except Exception as e:
+        print(
+            f"ERROR: post-migration table failed validation: {e}",
+            file=sys.stderr,
+        )
+        return 2
+
+    output_path.write_text(new_text, encoding="utf-8")
+
+    total_renames: int = sum(counts.values())
+    print(f"OK: migrated v1.0 -> v2.0")
+    print(f"  input:  {input_path}")
+    print(f"  output: {output_path}")
+    print(f"  schema_version bumped: {schema_bumped}")
+    print(f"  field renames ({total_renames} total):")
+    for old, new in _V1_TO_V2_FIELD_RENAMES.items():
+        if counts[old] > 0:
+            print(f"    {old:<32s} -> {new}: {counts[old]}")
+    return 0
+
+
 # ─────────────────────────────────────────────────────────────────────
 # argparse integration
 # ─────────────────────────────────────────────────────────────────────
@@ -305,6 +461,32 @@ def build_prices_parser(subparsers: argparse._SubParsersAction) -> None:
     )
     p_age.set_defaults(func=cmd_prices_age)
 
+    p_upgrade = sub_p.add_parser(
+        "upgrade",
+        help="Migrate a pricing TOML from schema v1.0 to v2.0.",
+        description=(
+            "Renames `*_usd` fields to drop the `_usd` suffix and "
+            "bumps `_schema_version` to `\"2.0\"`. Preserves "
+            "comments and formatting verbatim."
+        ),
+    )
+    p_upgrade.add_argument(
+        "input", help="Input TOML path (must be schema v1.0).",
+    )
+    p_upgrade.add_argument(
+        "-o", "--output",
+        help="Output TOML path. Mutually exclusive with --in-place.",
+    )
+    p_upgrade.add_argument(
+        "--in-place", action="store_true",
+        help="Rewrite the input file in place.",
+    )
+    p_upgrade.add_argument(
+        "--force", action="store_true",
+        help="Overwrite output if it already exists.",
+    )
+    p_upgrade.set_defaults(func=cmd_prices_upgrade)
+
 
 def cmd_prices(args: argparse.Namespace) -> int:
     """Dispatcher used by cli.py if it wants a single entry point."""
@@ -316,3 +498,5 @@ def cmd_prices(args: argparse.Namespace) -> int:
     return func(args)
 
 # __session70_phase5b_v2_schema_rename_v1__
+
+# __session70_phase5b_step7_upgrade_cli_v1__
