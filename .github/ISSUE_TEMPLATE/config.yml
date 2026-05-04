@@ -1,0 +1,29 @@
+# __session71_community_files_v1__
+# .github/ISSUE_TEMPLATE/config.yml
+#
+# Disables blank issues to force template selection, and adds
+# off-template links for security disclosures and general
+# discussion.
+
+blank_issues_enabled: false
+
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/contrario/nous/security/advisories/new
+    about: >-
+      Report a security vulnerability privately through GitHub
+      Security Advisories. Do NOT open a public issue for
+      security problems.
+
+  - name: Documentation or website
+    url: https://nous-lang.org/
+    about: >-
+      Browse the user-facing docs and the EU AI Act mapping at
+      nous-lang.org.
+
+  - name: Code of Conduct
+    url: https://github.com/contrario/nous/blob/main/CODE_OF_CONDUCT.md
+    about: >-
+      Read the project's Code of Conduct. To report a Code of
+      Conduct violation, open an issue or DM the maintainer
+      (see CODE_OF_CONDUCT.md for the reporting flow).
