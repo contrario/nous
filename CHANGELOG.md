@@ -1,5 +1,29 @@
 # Changelog
 
+<!-- __session71_changelog_unreleased_v1__ -->
+
+## [Unreleased]
+
+<!--
+  Add bullets here under the headings below as work lands on
+  `main` between releases. The release pipeline promotes this
+  section into the next versioned heading.
+
+  Headings (Keep a Changelog 1.1.0):
+    Added       -- new features
+    Changed     -- changes to existing functionality
+    Deprecated  -- soon-to-be removed features
+    Removed     -- now removed features
+    Fixed       -- bug fixes
+    Security    -- vulnerability fixes
+-->
+
+### Added
+
+### Changed
+
+### Fixed
+
 ## [5.0.0] - 2026-05-03
 
 ### Breaking
