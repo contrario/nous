@@ -9,7 +9,6 @@ import hashlib
 import json
 import logging
 import os
-import py_compile
 import sys
 import tempfile
 import time
@@ -174,21 +173,23 @@ def _compile_pipeline(source: str) -> dict[str, Any]:
     gen = NousCodeGen(program)
     python_code = gen.generate()
 
-    with tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False) as f:
-        f.write(python_code)
-        tmp_path = f.name
-
+    # __hx_pyc_leak_fix_v1__ in-memory compile; removes /tmp .py write + /tmp/__pycache__/.pyc leak
     try:
-        py_compile.compile(tmp_path, doraise=True)
-    except py_compile.PyCompileError as e:
+        compile(python_code, "<nous_api_compile>", "exec")
+    except SyntaxError as _se:
         return {
             "ok": False,
             "stage": "py_compile",
-            "errors": [{"code": "PY001", "message": str(e)}],
+            "errors": [{"code": "PY001", "message": f"SyntaxError: {_se.msg} at line {_se.lineno}"}],
             "warnings": val_warnings + tc_warnings,
         }
-    finally:
-        os.unlink(tmp_path)
+    except (ValueError, TypeError) as _ce:
+        return {
+            "ok": False,
+            "stage": "py_compile",
+            "errors": [{"code": "PY001", "message": f"{type(_ce).__name__}: {_ce}"}],
+            "warnings": val_warnings + tc_warnings,
+        }
 
     lines = python_code.strip().split("\n")
     soul_count = len(program.souls)

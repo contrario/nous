@@ -36,6 +36,16 @@ _raw_keys: str = os.getenv("NOUS_API_KEYS", "")
 if _raw_keys:
     API_KEYS = {k.strip() for k in _raw_keys.split(",") if k.strip()}
 
+# __hx_env_scrub_nous_api_keys_v1__ __hx_pyc_leak_fix_v1_p3__ defense-in-depth: scrub from Python's os.environ.
+# Effect: customer code calling os.getenv("NOUS_API_KEYS") receives None.
+# Limitation: does NOT close /proc/self/environ surface. The kernel snapshots
+# argv+envp at exec() time; Python's os.environ mutations do not propagate
+# to the kernel-frozen /proc/<pid>/environ page (proc(5) behavior). Closure
+# of that surface is tracked under HX-NOUS-API-PROC-ENVIRON-EXPOSURE
+# (file-based secrets, re-exec with scrubbed environ, or sandbox isolation
+# via HX-NOUS-API-CUSTOMER-CODE-SANDBOX).
+os.environ.pop("NOUS_API_KEYS", None)
+
 # === Logging (shared by server module) ===
 
 try:
