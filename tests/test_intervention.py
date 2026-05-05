@@ -386,25 +386,25 @@ soul S {
 }
 """
         py = generate_python(parse_nous(src))
-        tmp = tempfile.mkdtemp(prefix="nous_genmod_")
-        gen_path = os.path.join(tmp, "generated_ivt.py")
-        with open(gen_path, "w", encoding="utf-8") as f:
-            f.write(py)
-        spec = importlib.util.spec_from_file_location("generated_ivt", gen_path)
-        if spec is None or spec.loader is None:
-            _record(name, False, "could not build spec")
-            return
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        ok = (
-            hasattr(mod, "_POLICIES")
-            and hasattr(mod, "_POLICY_ACTIONS")
-            and hasattr(mod, "_INTERVENTION_ENGINE")
-            and len(mod._POLICIES) == 1
-            and mod._POLICY_ACTIONS.get("HighRisk") == "block"
-            and mod._INTERVENTION_ENGINE.enabled
-        )
-        _record(name, ok)
+        with tempfile.TemporaryDirectory(prefix="nous_genmod_") as tmp:
+            gen_path = os.path.join(tmp, "generated_ivt.py")
+            with open(gen_path, "w", encoding="utf-8") as f:
+                f.write(py)
+            spec = importlib.util.spec_from_file_location("generated_ivt", gen_path)
+            if spec is None or spec.loader is None:
+                _record(name, False, "could not build spec")
+                return
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            ok = (
+                hasattr(mod, "_POLICIES")
+                and hasattr(mod, "_POLICY_ACTIONS")
+                and hasattr(mod, "_INTERVENTION_ENGINE")
+                and len(mod._POLICIES) == 1
+                and mod._POLICY_ACTIONS.get("HighRisk") == "block"
+                and mod._INTERVENTION_ENGINE.enabled
+            )
+            _record(name, ok)
     except Exception as e:
         _record(name, False, repr(e))
 
