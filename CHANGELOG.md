@@ -24,6 +24,29 @@
 
 ### Fixed
 
+<!-- __session77_release_v5_2_0_changelog__ -->
+## [5.2.0] - 2026-05-16
+
+### Added
+
+- **`nous skill-export` subcommand.** Inverse of `nous dossier-spec`: emit an agentskills.io-compliant skill (SKILL.md + nous.yaml) from a NOUS `.nous` program. New helper module `skill_export.py`, new CLI wrapper `cli_skill_export.py`.
+- **`POST /v1/skill/export` HTTP endpoint.** Streams an `application/zip` containing the emitted skill plus, by default, a fully-signed Annex IV dossier under an ephemeral Ed25519 key. Rate-limited 10/minute per API key. Timeout 60s. Header `X-Skill-Name` carries the resolved skill name.
+- **IDE Export Skill button.** New toolbar button in the NOUS IDE (`/ide.html`) next to Download .py. Prompts for description and (optional) skill name, POSTs to `/v1/skill/export`, downloads the resulting ZIP. API key stored in `localStorage` after first use, matching the existing saveTemplate convention.
+- **62 new tests** covering schema (40), CLI surface (11), and HTTP endpoint (11) including end-to-end ZIP -> `verify_offline.py` -> VERDICT: PASS. PYTEST_FLOOR raised 441 -> 503.
+- **`docs/SKILL_EXPORT.md`**: full reference covering translation surface, all three call sites (CLI, API, IDE), output bundle layout, determinism boundary, refusal conditions, and the chain of custody.
+
+### Changed
+
+- `pyproject.toml` py-modules list extended with `skill_export`, `cli_skill_export`.
+- Wheel content gate (`scripts/release.py`) now requires the 2 new modules in addition to the v5.1.0 set.
+- `/v1/health` reports `cli_commands: 44` (was 43).
+
+### Notes
+
+- Skill export translation is **lossy and one-way**: NOUS constructs the agentskills.io schema cannot hold (instincts, mitosis, immune, nervous-system topology, message contracts) are dropped. The original `.nous` program retains them at runtime.
+- The API and IDE surfaces use **ephemeral Ed25519 keys per request**. For stable signing keys across many exports, use the CLI surface plus `nous dossier-spec --key PATH` on the emitted skill directory.
+- The `.nous` world-level `cost_cap: X CCY` shorthand (distinct from `law cost_<name> = $... per cycle`) is not recognized by the exporter; planned for a future minor.
+
 <!-- __session77_release_v5_1_0_changelog__ -->
 ## [5.1.0] - 2026-05-16
 

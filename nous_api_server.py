@@ -25,8 +25,10 @@ if TYPE_CHECKING:
 
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
-from pydantic import BaseModel, Field
+from fastapi.responses import JSONResponse, Response, StreamingResponse  # __session77_skill_export_endpoint_v1__
+from pydantic import BaseModel, ConfigDict, Field  # __session77_skill_export_endpoint_v1__
+import zipfile  # __session77_skill_export_endpoint_v1__
+from io import BytesIO  # __session77_skill_export_endpoint_v1__
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
@@ -220,7 +222,7 @@ async def health(request: Request):
         "uptime_seconds": uptime,
         "engines": 8,
         "subsystems": 12,
-        "cli_commands": 43,
+        "cli_commands": 44,  # __session77_skill_export_endpoint_v1__
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -302,6 +304,135 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
     except Exception as e:
         logger.error(f"verify error: {traceback.format_exc()}")
         raise HTTPException(status_code=422, detail={"error": str(e), "code": "VERIFY001"})
+
+
+class SkillExportEndpointRequest(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    source: str = Field(..., min_length=1, max_length=100_000)
+    description: str = Field(..., min_length=1, max_length=1024)
+    skill_name: Optional[str] = Field(default=None, min_length=1, max_length=64)
+    license: Optional[str] = Field(default=None, min_length=1, max_length=64)
+    compatibility: Optional[str] = Field(default=None, min_length=1, max_length=500)
+    tool_overrides: list[dict[str, Any]] = Field(default_factory=list)
+    with_dossier: bool = Field(default=True)
+
+
+@app.post("/v1/skill/export")  # __session77_skill_export_endpoint_v1__
+@limiter.limit("10/minute")
+async def skill_export_endpoint(
+    request: Request,
+    body: SkillExportEndpointRequest,
+    x_api_key: Optional[str] = Header(None),
+):
+    require_api_key(x_api_key)
+    logger.info(
+        f"skill-export request: {len(body.source)} chars, "
+        f"with_dossier={body.with_dossier}"
+    )
+    try:
+        def _do_export() -> tuple[bytes, str]:
+            from parser import parse_nous
+            from skill_export import (
+                ExportRequest,
+                ToolBudgetOverride,
+                export_skill,
+            )
+            program = parse_nous(body.source)
+            overrides = [
+                ToolBudgetOverride(**o) for o in body.tool_overrides
+            ]
+            export_req = ExportRequest(
+                description=body.description,
+                skill_name=body.skill_name,
+                license=body.license,
+                compatibility=body.compatibility,
+                tool_overrides=overrides,
+            )
+            exported = export_skill(program, export_req)
+            buf = BytesIO()
+            with tempfile.TemporaryDirectory(
+                prefix="nous_skill_export_"
+            ) as td:
+                td_path = Path(td)
+                skill_dir = td_path / exported.skill_name
+                skill_dir.mkdir()
+                (skill_dir / "SKILL.md").write_text(
+                    exported.skill_md, encoding="utf-8"
+                )
+                (skill_dir / "nous.yaml").write_text(
+                    exported.nous_yaml, encoding="utf-8"
+                )
+                if body.with_dossier:
+                    from dossier_spec import build_dossier_spec
+                    output_dir = td_path / "_dossier_out"
+                    key_path = td_path / "_ephemeral_signing.key"
+                    dossier_result = build_dossier_spec(
+                        skill_dir,
+                        output=output_dir,
+                        key_path=key_path,
+                    )
+                    try:
+                        key_path.unlink()
+                    except FileNotFoundError:
+                        pass
+                    with zipfile.ZipFile(
+                        buf, "w", zipfile.ZIP_DEFLATED
+                    ) as zf:
+                        zf.writestr(
+                            f"{exported.skill_name}/SKILL.md",
+                            exported.skill_md,
+                        )
+                        zf.writestr(
+                            f"{exported.skill_name}/nous.yaml",
+                            exported.nous_yaml,
+                        )
+                        for fname in dossier_result.files:
+                            src = output_dir / fname
+                            zf.writestr(
+                                f"{exported.skill_name}/dossier/{fname}",
+                                src.read_bytes(),
+                            )
+                else:
+                    with zipfile.ZipFile(
+                        buf, "w", zipfile.ZIP_DEFLATED
+                    ) as zf:
+                        zf.writestr(
+                            f"{exported.skill_name}/SKILL.md",
+                            exported.skill_md,
+                        )
+                        zf.writestr(
+                            f"{exported.skill_name}/nous.yaml",
+                            exported.nous_yaml,
+                        )
+            return buf.getvalue(), exported.skill_name
+        zip_bytes, skill_name = await asyncio.wait_for(
+            asyncio.get_event_loop().run_in_executor(None, _do_export),
+            timeout=60.0,
+        )
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": (
+                    f"attachment; filename=\"{skill_name}.zip\""
+                ),
+                "X-Skill-Name": skill_name,
+            },
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(
+            status_code=408,
+            detail={
+                "error": "skill-export timed out (60s)",
+                "code": "TIMEOUT003",
+            },
+        )
+    except Exception as e:
+        logger.error(f"skill-export error: {traceback.format_exc()}")
+        raise HTTPException(
+            status_code=422,
+            detail={"error": str(e), "code": "SKILLEXPORT001"},
+        )
 
 
 @app.post("/v1/run")

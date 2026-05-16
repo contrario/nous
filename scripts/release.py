@@ -45,7 +45,7 @@ REPO_ROOT: Path = Path("/opt/aetherlang_agents/nous")
 DIST_DIR: Path = REPO_ROOT / "dist"
 TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
-PYTEST_FLOOR: int = 441  # __session77_release_v5_1_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__
+PYTEST_FLOOR: int = 503  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__
 TEMPLATE_FOR_SMOKE: str = "sycophancy_guard"
 _ALLOW_EXISTING_TAG: bool = False  # __NERVE_DISPATCH_RELEASE_ALLOW_EXISTING_TAG_v1__
 PYFLAKES_TARGETS: tuple[str, ...] = (
@@ -222,7 +222,8 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
     names = z.namelist()
     required: list[str] = ["_version.py", "nous.lark", "grammar_data.py",
                             "skill_md.py", "dossier_spec.py",
-                            "cli_dossier_spec.py"]
+                            "cli_dossier_spec.py",
+                            "skill_export.py", "cli_skill_export.py"]
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
         raise ReleaseError(f"wheel missing files: {missing}")

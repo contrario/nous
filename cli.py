@@ -22,6 +22,8 @@ import argparse
 from cli_dossier import build_dossier_parser, cmd_dossier
 # __session77_cli_dossier_spec_wiring_v1__
 from cli_dossier_spec import build_dossier_spec_parser, cmd_dossier_spec
+# __session77_cli_skill_export_wiring_v1__
+from cli_skill_export import build_skill_export_parser, cmd_skill_export
 from cli_prices import build_prices_parser, cmd_prices
 # __cost_cap_phase3c_cli_import_v1__
 from cli_emit_smt import build_emit_smt_parser, cmd_emit_smt
@@ -1633,6 +1635,7 @@ def main() -> int:
     build_dossier_parser(sub)
     # __session64_dossier_v1__
     build_dossier_spec_parser(sub)  # __session77_cli_dossier_spec_wiring_v1__
+    build_skill_export_parser(sub)  # __session77_cli_skill_export_wiring_v1__
     # __cost_cap_phase3c_cli_hook_v1__
     build_emit_smt_parser(sub)
     # __cost_cap_phase4_cli_hook_v1__
@@ -1735,6 +1738,7 @@ def main() -> int:
         # __cost_cap_phase3b_cli_dispatch_v1__
         "prices": cmd_prices, "dossier": cmd_dossier,
         "dossier-spec": cmd_dossier_spec,  # __session77_cli_dossier_spec_wiring_v1__
+        "skill-export": cmd_skill_export,  # __session77_cli_skill_export_wiring_v1__
         # __cost_cap_phase3c_cli_dispatch_v1__
         "emit-smt": cmd_emit_smt,
         # __cost_cap_phase4_cli_dispatch_v1__

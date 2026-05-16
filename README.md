@@ -204,7 +204,7 @@ Key article alignments:
 - **Article 12 (Record-Keeping)** -- SHA-256-chained JSONL replay logs, integrity-verifiable via `nous replay verify`.
 - **Article 14 (Human Oversight)** -- `intervene`, `inject_message`, `block` policy actions plus governance simulator.
 - **Article 15 (Accuracy / Robustness / Cybersecurity)** -- Z3 SMT proofs on every `cost_cap` declaration, currency-aware (USD + EUR), with Ed25519-signed manifests.
-- **Article 17 (Quality Management)** -- 10-phase release pipeline, 441-test pytest floor, 57-template byte-identical regression harness.  <!-- __session77_release_v5_1_0_readme__ -->
+- **Article 17 (Quality Management)** -- 10-phase release pipeline, 503-test pytest floor, 57-template byte-identical regression harness.  <!-- __session77_release_v5_2_0_readme__ -->
 
 <!-- __session77_readme_skill_md_v1__ -->
 ### Annex IV dossiers from existing SKILL.md skills (v5.1.0+)
@@ -215,7 +215,7 @@ NOUS can produce signed Annex IV dossiers directly from skill folders that follo
 nous dossier-spec ./my-skill/
 ```
 
-The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a deterministic source envelope (`source.nous`), the signed `manifest.json`, the resolved pricing TOML, the public key, a human-readable README, and an offline `verify_offline.py`. `SKILL.md` is left byte-identical, so strict spec validators continue to pass. See [`docs/SKILL_MD_SIDECAR.md`](docs/SKILL_MD_SIDECAR.md) for the schema reference and CLI flag documentation.
+The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a deterministic source envelope (`source.nous`), the signed `manifest.json`, the resolved pricing TOML, the public key, a human-readable README, and an offline `verify_offline.py`. `SKILL.md` is left byte-identical, so strict spec validators continue to pass. See [`docs/SKILL_MD_SIDECAR.md`](docs/SKILL_MD_SIDECAR.md) for the schema reference and CLI flag documentation. <!-- __session77_readme_skill_export_v1__ --> For the inverse direction -- emitting an agentskills.io skill from a `.nous` program via CLI, HTTP API, or IDE button -- see [`docs/SKILL_EXPORT.md`](docs/SKILL_EXPORT.md).
 
 ---
 
@@ -239,7 +239,7 @@ Security issues should be reported via [GitHub Security Advisories](https://gith
 
 | Metric              | Value                                                            |
 |---------------------|------------------------------------------------------------------|
-| Tests               | 441 passing (PYTEST_FLOOR enforced)                              |
+| Tests               | 503 passing (PYTEST_FLOOR enforced)                              |
 | Regression          | 57 templates, 0 baseline drift                                   |
 | Shipped templates   | 9 (`templates/*.nous`)                                           |
 | Grammar rules       | 115 (Lark LALR, bilingual EN+GR)                                 |
