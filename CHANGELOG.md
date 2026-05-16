@@ -24,6 +24,31 @@
 
 ### Fixed
 
+<!-- __session77_release_v5_1_0_changelog__ -->
+## [5.1.0] - 2026-05-16
+
+### Added
+
+- **`nous dossier-spec` subcommand.** Emit EU AI Act Annex IV-aligned, Ed25519-signed compliance dossiers directly from agentskills.io-compliant skill folders. New helper module `dossier_spec.py`, new CLI wrapper `cli_dossier_spec.py`.
+- **`skill_md.py` sidecar format.** Pydantic V2 schema (`NousSidecar`, `NousToolSpec`, `MoneyAmount`, `SkillMDFrontmatter`), parser (`parse_skill_dir`, `parse_skill_md_file`, `parse_sidecar_file`), and translator (`translate_to_program`) for `SKILL.md` + adjacent `nous.yaml`.
+- **Deterministic source envelope** (`source.nous` in skill_md dossiers): canonical byte sequence wrapping `SKILL.md` and `nous.yaml` whose SHA-256 anchors the manifest.
+- **`--key PATH` CLI flag** on `nous dossier-spec` for CI/CD-friendly Ed25519 signing key override (fallback to `manifest.default_key_path()` with auto-create).
+- **44 new tests** covering schema, parser, translator, CLI end-to-end, and `nous dossier` regression. PYTEST_FLOOR raised 397 -> 441.
+- **6 new test fixtures** under `tests/skill_md_fixtures/`: minimal, basic, extended, invalid-currency, over-budget, missing-nous-block.
+- **`docs/SKILL_MD_SIDECAR.md`**: schema reference, CLI flag documentation, envelope format spec.
+
+### Changed
+
+- `skill_md.translate_to_program` now sets `world.max_ticks = sum(tool.max_calls)` so emitted programs are immediately SMT-verifiable without further user input.
+- `pyproject.toml` py-modules list extended with `skill_md`, `dossier_spec`, `cli_dossier_spec`.
+- Wheel content gate (`scripts/release.py`) now requires the 3 new modules in addition to the existing `_version.py`, `nous.lark`, `grammar_data.py`.
+
+### Notes
+
+- `dossier-spec` translator currently narrows currency to USD and EUR; sidecar parses any ISO 4217 shape, broader currency support tracked for a future minor.
+- Manifest schema unchanged; `source_kind: Literal["nous","skill_md"]` discriminator deferred to v5.2.0.
+- Envelope format is v1; future widenings will increment while keeping `verify_offline.py` format-agnostic.
+
 ## [5.0.0] - 2026-05-03
 
 ### Breaking

@@ -1,0 +1,8 @@
+spec_version: "1.0"
+cost_cap: 5.00USD
+default_model: claude-haiku-4-5
+tools:
+  - name: tiny_tool
+    max_calls: 1
+    input_tokens: 100
+    output_tokens: 50

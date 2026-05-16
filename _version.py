@@ -14,8 +14,8 @@ installed metadata matches.
 """
 from __future__ import annotations
 
-__version__: str = "5.0.1"  # __hx_pyc_leak_fix_v1__
-__version_tuple__: tuple[int, int, int] = (5, 0, 1)
+__version__: str = "5.1.0"  # __session77_release_v5_1_0_version__
+__version_tuple__: tuple[int, int, int] = (5, 1, 0)
 
 __all__ = ["__version__", "__version_tuple__"]
 

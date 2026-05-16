@@ -1,0 +1,12 @@
+spec_version: "1.0"
+cost_cap: 0.01USD
+default_model: claude-sonnet-4-6
+tools:
+  - name: expensive_search
+    max_calls: 20
+    input_tokens: 5000
+    output_tokens: 2000
+  - name: expensive_summarizer
+    max_calls: 10
+    input_tokens: 8000
+    output_tokens: 4000

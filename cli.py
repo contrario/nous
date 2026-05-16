@@ -20,6 +20,8 @@ from __future__ import annotations
 import argparse
 # __cost_cap_phase3b_cli_import_v1__
 from cli_dossier import build_dossier_parser, cmd_dossier
+# __session77_cli_dossier_spec_wiring_v1__
+from cli_dossier_spec import build_dossier_spec_parser, cmd_dossier_spec
 from cli_prices import build_prices_parser, cmd_prices
 # __cost_cap_phase3c_cli_import_v1__
 from cli_emit_smt import build_emit_smt_parser, cmd_emit_smt
@@ -1630,6 +1632,7 @@ def main() -> int:
     build_prices_parser(sub)
     build_dossier_parser(sub)
     # __session64_dossier_v1__
+    build_dossier_spec_parser(sub)  # __session77_cli_dossier_spec_wiring_v1__
     # __cost_cap_phase3c_cli_hook_v1__
     build_emit_smt_parser(sub)
     # __cost_cap_phase4_cli_hook_v1__
@@ -1731,6 +1734,7 @@ def main() -> int:
     commands = {
         # __cost_cap_phase3b_cli_dispatch_v1__
         "prices": cmd_prices, "dossier": cmd_dossier,
+        "dossier-spec": cmd_dossier_spec,  # __session77_cli_dossier_spec_wiring_v1__
         # __cost_cap_phase3c_cli_dispatch_v1__
         "emit-smt": cmd_emit_smt,
         # __cost_cap_phase4_cli_dispatch_v1__
