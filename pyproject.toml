@@ -76,6 +76,7 @@ py-modules = [
     "dossier", "cli_dossier",  # __session64_dossier_modules_v1__
     "skill_md", "dossier_spec", "cli_dossier_spec",  # __session77_release_v5_1_0_pyproject__
     "skill_export", "cli_skill_export",  # __session77_release_v5_2_0_pyproject__
+    "rekor_anchor",  # __session80_release_v5_3_0_pyproject__  # __nous_aetherproof_release_530_packaging_v1__
 ]
 
 # __cc_dynamic_block_v1__

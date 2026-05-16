@@ -65,6 +65,11 @@ class DossierResult:
 VERIFY_OFFLINE_PY: str = '#!/usr/bin/env python3\n"""Offline verification of NOUS dossier (Annex IV).\nUsage: python3 verify_offline.py\nExit:  0 = PASS, 1 = FAIL, 2 = environment error.\nRequires: cryptography library (no NOUS install needed).\n"""\nfrom __future__ import annotations\n\nimport base64\nimport hashlib\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path(__file__).parent\n\n\ndef _fail(msg: str) -> int:\n    print(f"FAIL: {msg}", file=sys.stderr)\n    return 1\n\n\ndef main() -> int:\n    try:\n        from cryptography.hazmat.primitives.asymmetric.ed25519 import (\n            Ed25519PublicKey,\n        )\n        from cryptography.exceptions import InvalidSignature\n    except ImportError:\n        print(\n            "ERROR: cryptography library required.\\n"\n            "Install: pip install \'cryptography>=42\'",\n            file=sys.stderr,\n        )\n        return 2\n\n    manifest_path = ROOT / "manifest.json"\n    if not manifest_path.is_file():\n        return _fail(f"manifest.json not found in {ROOT}")\n    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))\n\n    sig_block = manifest.get("signature")\n    if not sig_block:\n        return _fail("manifest has no signature block")\n    pub_b64 = sig_block.get("public_key_b64", "")\n    sig_b64 = sig_block.get("signature_b64", "")\n    if not pub_b64 or not sig_b64:\n        return _fail("manifest signature block incomplete")\n\n    body = {k: v for k, v in manifest.items() if k != "signature"}\n    body_bytes = json.dumps(\n        body, sort_keys=True, separators=(",", ":")\n    ).encode("utf-8")\n\n    try:\n        pub_key = Ed25519PublicKey.from_public_bytes(\n            base64.b64decode(pub_b64)\n        )\n        pub_key.verify(base64.b64decode(sig_b64), body_bytes)\n    except InvalidSignature:\n        return _fail("Ed25519 signature does NOT verify")\n    except Exception as e:\n        return _fail(f"signature verification error: {e}")\n    print("OK   Ed25519 signature verified")\n\n    source_path = ROOT / "source.nous"\n    if not source_path.is_file():\n        return _fail(f"source.nous not found in {ROOT}")\n    src_sha = hashlib.sha256(source_path.read_bytes()).hexdigest()\n    expected = manifest.get("source_sha256", "")\n    if src_sha != expected:\n        return _fail(\n            f"source.sha256 mismatch: file={src_sha[:16]}... "\n            f"manifest={expected[:16]}..."\n        )\n    print(f"OK   source.sha256 matches manifest ({src_sha[:16]}...)")\n\n    print()\n    print("VERDICT: PASS")\n    print(f"  world:      {manifest.get(\'world_name\', \'?\')}")\n    cap = manifest.get("cost_cap_usd", "?")\n    print(f"  cost_cap:   ${cap} USD")\n    margin = manifest.get("safety_margin_pct")\n    if margin:\n        try:\n            from decimal import Decimal\n            eff = Decimal(cap) * Decimal(100 - margin) / Decimal(100)\n            print(\n                f"  effective:  ${eff} USD ({margin}% safety margin)"\n            )\n        except Exception:\n            print(f"  margin:     {margin}%")\n    print(f"  verdict:    {manifest.get(\'verdict\', \'?\')}")\n    print(f"  solver:     {manifest.get(\'solver_version\', \'?\')}")\n    print(f"  timestamp:  {manifest.get(\'timestamp_utc\', \'?\')}")\n    return 0\n\n\nif __name__ == "__main__":\n    sys.exit(main())\n'
 
 
+# __nous_aetherproof_verify_offline_rekor_v1__
+# __nous_aetherproof_rekor_offline_verifier_pivot_v1__
+VERIFY_OFFLINE_PY_WITH_REKOR: str = '#!/usr/bin/env python3\n"""Offline verification of NOUS dossier (Annex IV) with Sigstore Rekor anchor.\n\nUsage: python3 verify_offline.py\nExit:  0 = PASS, 1 = FAIL, 2 = environment error.\nRequires: cryptography library (no NOUS install needed).\n\nChecks performed:\n  1. Ed25519 signature over canonical manifest body bytes (signature and\n     transparency_log blocks stripped before recomputing canonical form).\n     Proves manifest authorship.\n  2. source.nous sha256 matches manifest.source_sha256.\n  3. transparency_log.provider == "sigstore-rekor".\n  4. transparency_log.rekor_public_key_pem is in KNOWN_REKOR_PUBLIC_KEYS\n     (pinned Sigstore allowlist shipped with this verifier).\n  5. ECDSA P-256 verify of signed_entry_timestamp over canonical SET\n     payload {body, integratedTime, logID, logIndex}. Proves Rekor\'s\n     attestation that the leaf was integrated at integratedTime.\n  6. Rekor leaf body is kind=="hashedrekord" and:\n     - spec.data.hash.algorithm == "sha256"\n     - spec.data.hash.value == sha256(canonical manifest body bytes)\n     - spec.signature.publicKey.content (b64) decodes to a PEM\n       SubjectPublicKeyInfo parseable as an ECDSA-P-256 public key\n       (the per-submission ephemeral submitter key)\n     - spec.signature.content (b64) decodes to a DER ECDSA signature\n       that verifies ECDSA-SHA256 over canonical manifest body bytes\n       under the leaf publicKey\n\nArchitecture (Path-beta dual signing). The Rekor leaf carries an\nECDSA-P-256 signature, not the manifest\'s Ed25519 signature. EdDSA is\nincompatible with hashedrekord (Sigstore issue #851) because hashedrekord\npasses only a pre-computed hash to the verifier while EdDSA must re-hash\nthe message internally. To anchor an Ed25519-signed NOUS manifest into\nRekor, the dossier signing pipeline generates a per-submission ephemeral\nECDSA-P-256 keypair, signs the same canonical bytes with it, and submits\nthe ECDSA artefact. Both signatures cover the same bytes: verification\nof the Ed25519 signature (step 1) proves authorship; verification of\nthe ECDSA signature (step 6) proves the integrity of the Rekor leaf\nwired to those same bytes. The Rekor anchor itself (step 5) proves the\nleaf was integrated at the claimed time.\n"""\nfrom __future__ import annotations\n\nimport base64\nimport hashlib\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path(__file__).parent\n\nKNOWN_REKOR_PUBLIC_KEYS = [\n    "-----BEGIN PUBLIC KEY-----\\n"\n    "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2G2Y+2tabdTV5BcGiBIx0a9fAFwr\\n"\n    "kBbmLSGtks4L3qX6yYY0zufBnhC8Ur/iy55GhWP/9A/bY2LhC30M9+RYtw==\\n"\n    "-----END PUBLIC KEY-----\\n",\n]\n\n\ndef _fail(msg: str) -> int:\n    print(f"FAIL: {msg}", file=sys.stderr)\n    return 1\n\n\ndef main() -> int:\n    try:\n        from cryptography.hazmat.primitives.asymmetric.ed25519 import (\n            Ed25519PublicKey,\n        )\n        from cryptography.hazmat.primitives.asymmetric import ec\n        from cryptography.hazmat.primitives import hashes, serialization\n        from cryptography.hazmat.primitives.asymmetric.ec import ECDSA\n        from cryptography.exceptions import InvalidSignature\n    except ImportError:\n        print(\n            "ERROR: cryptography library required.\\n"\n            "Install: pip install \'cryptography>=42\'",\n            file=sys.stderr,\n        )\n        return 2\n\n    manifest_path = ROOT / "manifest.json"\n    if not manifest_path.is_file():\n        return _fail(f"manifest.json not found in {ROOT}")\n    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))\n\n    sig_block = manifest.get("signature")\n    if not sig_block:\n        return _fail("manifest has no signature block")\n    pub_b64 = sig_block.get("public_key_b64", "")\n    sig_b64 = sig_block.get("signature_b64", "")\n    if not pub_b64 or not sig_b64:\n        return _fail("manifest signature block incomplete")\n\n    body = {\n        k: v for k, v in manifest.items()\n        if k not in ("signature", "transparency_log")\n    }\n    body_bytes = json.dumps(\n        body, sort_keys=True, separators=(",", ":")\n    ).encode("utf-8")\n\n    try:\n        pub_key = Ed25519PublicKey.from_public_bytes(\n            base64.b64decode(pub_b64)\n        )\n        pub_key.verify(base64.b64decode(sig_b64), body_bytes)\n    except InvalidSignature:\n        return _fail("Ed25519 signature does NOT verify")\n    except Exception as e:\n        return _fail(f"signature verification error: {e}")\n    print("OK   Ed25519 manifest signature verified")\n\n    source_path = ROOT / "source.nous"\n    if not source_path.is_file():\n        return _fail(f"source.nous not found in {ROOT}")\n    src_sha = hashlib.sha256(source_path.read_bytes()).hexdigest()\n    expected = manifest.get("source_sha256", "")\n    if src_sha != expected:\n        return _fail(\n            f"source.sha256 mismatch: file={src_sha[:16]}... "\n            f"manifest={expected[:16]}..."\n        )\n    print(f"OK   source.sha256 matches manifest ({src_sha[:16]}...)")\n\n    tlog = manifest.get("transparency_log")\n    if tlog is None:\n        return _fail(\n            "transparency_log block missing; this verifier ships with "\n            "a Rekor-anchored dossier and expects the block to be present"\n        )\n    if not isinstance(tlog, dict):\n        return _fail("transparency_log is not an object")\n    if tlog.get("provider") != "sigstore-rekor":\n        return _fail(\n            f"transparency_log.provider != \'sigstore-rekor\' "\n            f"(got {tlog.get(\'provider\')!r})"\n        )\n\n    rekor_pem = tlog.get("rekor_public_key_pem", "")\n    if rekor_pem not in KNOWN_REKOR_PUBLIC_KEYS:\n        return _fail(\n            "transparency_log.rekor_public_key_pem is not in the pinned "\n            "KNOWN_REKOR_PUBLIC_KEYS allowlist; the dossier was either "\n            "anchored under a rotated Sigstore key not yet trusted by "\n            "this verifier, or the dossier is tampered"\n        )\n\n    try:\n        rekor_pub = serialization.load_pem_public_key(\n            rekor_pem.encode("utf-8")\n        )\n    except Exception as e:\n        return _fail(f"rekor pubkey parse error: {e}")\n    if not isinstance(rekor_pub, ec.EllipticCurvePublicKey):\n        return _fail("rekor pubkey is not an EC key")\n    if not isinstance(rekor_pub.curve, ec.SECP256R1):\n        return _fail(\n            f"rekor pubkey curve is not P-256: {rekor_pub.curve.name}"\n        )\n\n    try:\n        set_payload = json.dumps(\n            {\n                "body": tlog["body_b64"],\n                "integratedTime": int(tlog["integrated_time"]),\n                "logID": tlog["log_id"],\n                "logIndex": int(tlog["log_index"]),\n            },\n            sort_keys=True,\n            separators=(",", ":"),\n        ).encode("utf-8")\n    except (KeyError, TypeError, ValueError) as e:\n        return _fail(f"transparency_log fields invalid: {e}")\n\n    try:\n        set_sig_der = base64.b64decode(\n            tlog["signed_entry_timestamp_b64"], validate=True\n        )\n    except (KeyError, ValueError) as e:\n        return _fail(f"SET decode error: {e}")\n\n    try:\n        rekor_pub.verify(set_sig_der, set_payload, ECDSA(hashes.SHA256()))\n    except InvalidSignature:\n        return _fail("Rekor SET signature does NOT verify")\n    except Exception as e:\n        return _fail(f"Rekor SET verification error: {e}")\n    print("OK   Rekor SignedEntryTimestamp verified")\n\n    try:\n        leaf_raw = base64.b64decode(tlog["body_b64"], validate=True)\n        leaf = json.loads(leaf_raw)\n    except Exception as e:\n        return _fail(f"rekor leaf decode error: {e}")\n\n    if not isinstance(leaf, dict) or leaf.get("kind") != "hashedrekord":\n        return _fail(\n            f"rekor leaf kind != \'hashedrekord\' "\n            f"(got {leaf.get(\'kind\') if isinstance(leaf, dict) else type(leaf).__name__})"\n        )\n    spec = leaf.get("spec", {})\n    if not isinstance(spec, dict):\n        return _fail("rekor leaf spec is not an object")\n\n    data_block = spec.get("data", {})\n    if not isinstance(data_block, dict):\n        return _fail("rekor leaf spec.data is not an object")\n    hash_block = data_block.get("hash", {})\n    if not isinstance(hash_block, dict):\n        return _fail("rekor leaf spec.data.hash is not an object")\n\n    if hash_block.get("algorithm") != "sha256":\n        return _fail(\n            f"rekor leaf hash.algorithm != \'sha256\' "\n            f"(got {hash_block.get(\'algorithm\')!r})"\n        )\n\n    expected_payload_sha = hashlib.sha256(body_bytes).hexdigest()\n    leaf_hash = hash_block.get("value", "")\n    if leaf_hash != expected_payload_sha:\n        return _fail(\n            f"rekor leaf payload hash mismatch: "\n            f"manifest={expected_payload_sha[:16]}... "\n            f"leaf={leaf_hash[:16]}..."\n        )\n\n    sig_inner = spec.get("signature", {})\n    if not isinstance(sig_inner, dict):\n        return _fail("rekor leaf spec.signature is not an object")\n\n    pk_inner = sig_inner.get("publicKey", {})\n    if not isinstance(pk_inner, dict):\n        return _fail("rekor leaf spec.signature.publicKey is not an object")\n\n    try:\n        leaf_pubkey_pem = base64.b64decode(\n            pk_inner.get("content", ""), validate=True\n        )\n    except Exception as e:\n        return _fail(f"rekor leaf pubkey b64 decode error: {e}")\n\n    try:\n        leaf_pub = serialization.load_pem_public_key(leaf_pubkey_pem)\n    except Exception as e:\n        return _fail(f"rekor leaf pubkey PEM parse error: {e}")\n\n    if not isinstance(leaf_pub, ec.EllipticCurvePublicKey):\n        return _fail(\n            f"rekor leaf publicKey is not an EC key "\n            f"(got {type(leaf_pub).__name__}); Path-beta dual signing "\n            f"requires ECDSA-P-256 leaf publicKey"\n        )\n    if not isinstance(leaf_pub.curve, ec.SECP256R1):\n        return _fail(\n            f"rekor leaf publicKey curve is not P-256: "\n            f"{leaf_pub.curve.name}"\n        )\n\n    try:\n        leaf_sig_der = base64.b64decode(\n            sig_inner.get("content", ""), validate=True\n        )\n    except Exception as e:\n        return _fail(f"rekor leaf signature b64 decode error: {e}")\n\n    try:\n        leaf_pub.verify(leaf_sig_der, body_bytes, ECDSA(hashes.SHA256()))\n    except InvalidSignature:\n        return _fail(\n            "rekor leaf ECDSA signature does NOT verify over manifest "\n            "canonical body bytes (anchored signature is for different "\n            "bytes or has been tampered)"\n        )\n    except Exception as e:\n        return _fail(f"rekor leaf signature verification error: {e}")\n\n    print(\n        f"OK   Rekor leaf ECDSA-P-256 signature verified "\n        f"(log_index={tlog.get(\'log_index\')})"\n    )\n\n    print()\n    print(\n        "VERDICT: PASS (Ed25519 manifest + Sigstore Rekor anchor "\n        "via Path-beta dual signing)"\n    )\n    print(f"  world:        {manifest.get(\'world_name\', \'?\')}")\n    cap = manifest.get("cost_cap_usd", "?")\n    print(f"  cost_cap:     ${cap} USD")\n    margin = manifest.get("safety_margin_pct")\n    if margin:\n        try:\n            from decimal import Decimal\n            eff = Decimal(cap) * Decimal(100 - margin) / Decimal(100)\n            print(\n                f"  effective:    ${eff} USD ({margin}% safety margin)"\n            )\n        except Exception:\n            print(f"  margin:       {margin}%")\n    print(f"  verdict:      {manifest.get(\'verdict\', \'?\')}")\n    print(f"  solver:       {manifest.get(\'solver_version\', \'?\')}")\n    print(f"  timestamp:    {manifest.get(\'timestamp_utc\', \'?\')}")\n    print(f"  rekor_log_id: {tlog.get(\'log_id\')}")\n    print(f"  rekor_index:  {tlog.get(\'log_index\')}")\n    print(f"  rekor_time:   {tlog.get(\'integrated_time\')}")\n    return 0\n\n\nif __name__ == "__main__":\n    sys.exit(main())\n'
+
+
 def _candidate_pricing_paths(
     custom_path: Optional[Path],
 ) -> list[Path]:
@@ -206,8 +211,29 @@ def build_dossier(
     prices: Optional[Path] = None,
     output: Optional[Path] = None,
     today: Optional[date] = None,
+    anchor: str = "none",
+    _test_rekor_anchor: "object | None" = None,
 ) -> DossierResult:
-    """Build an Annex IV-aligned dossier directory."""
+    """Build an Annex IV-aligned dossier directory.
+
+    # __nous_aetherproof_dossier_rekor_emit_v1__
+
+    When ``anchor == "none"`` (default), output is BYTE-IDENTICAL to
+    v5.2.0: the input manifest.json is copied verbatim, and the
+    Ed25519-only ``VERIFY_OFFLINE_PY`` template is emitted.
+
+    When ``anchor == "rekor"``, the Ed25519 signature event is
+    submitted to the public Sigstore Rekor transparency log. The
+    emitted ``manifest.json`` gains a ``transparency_log`` block
+    alongside the existing ``signature`` block. The emitted
+    ``verify_offline.py`` is ``VERIFY_OFFLINE_PY_WITH_REKOR``, which
+    performs the Ed25519 + source-hash checks plus ECDSA-P-256
+    Rekor SignedEntryTimestamp verification and leaf-body cross-check.
+
+    ``_test_rekor_anchor`` is a private hook accepting a pre-built
+    ``rekor_anchor.RekorAnchor`` so unit tests can exercise the
+    anchored path without making a live Rekor submission.
+    """
     source = Path(source).resolve()
     if not source.is_file():
         raise DossierError(f"source not found: {source}")
@@ -270,9 +296,37 @@ def build_dossier(
     (output / "source.nous").write_bytes(source_bytes)
     files.append("source.nous")
 
-    (output / "manifest.json").write_text(
-        manifest_text, encoding="utf-8"
-    )
+    rekor_anchor_obj = None
+    if anchor == "rekor":
+        if _test_rekor_anchor is not None:
+            rekor_anchor_obj = _test_rekor_anchor
+        else:
+            from rekor_anchor import anchor_manifest_to_rekor
+            rekor_anchor_obj = anchor_manifest_to_rekor(
+                manifest_canonical_bytes=parsed_manifest.canonical_bytes(),
+                manifest_signature_b64=base64.b64encode(
+                    sig
+                ).decode("ascii"),
+                manifest_public_key_b64=base64.b64encode(
+                    _public_key_raw_bytes(pub)
+                ).decode("ascii"),
+            )
+        from manifest import manifest_json as _render_manifest_json
+        rendered_manifest_text = _render_manifest_json(
+            parsed_manifest, sig, pub, rekor_anchor=rekor_anchor_obj
+        )
+        (output / "manifest.json").write_text(
+            rendered_manifest_text, encoding="utf-8"
+        )
+    elif anchor == "none":
+        (output / "manifest.json").write_text(
+            manifest_text, encoding="utf-8"
+        )
+    else:
+        raise DossierError(
+            f"unsupported anchor mode: {anchor!r} "
+            f"(expected 'none' or 'rekor')"
+        )
     files.append("manifest.json")
 
     shutil.copy2(pricing_path, output / "pricing.toml")
@@ -303,7 +357,12 @@ def build_dossier(
     files.append("README.md")
 
     verify_path = output / "verify_offline.py"
-    verify_path.write_text(VERIFY_OFFLINE_PY, encoding="utf-8")
+    if anchor == "rekor":
+        verify_path.write_text(
+            VERIFY_OFFLINE_PY_WITH_REKOR, encoding="utf-8"
+        )
+    else:
+        verify_path.write_text(VERIFY_OFFLINE_PY, encoding="utf-8")
     verify_path.chmod(0o755)
     files.append("verify_offline.py")
 

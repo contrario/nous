@@ -249,14 +249,24 @@ def manifest_json(
     manifest: Manifest,
     signature: bytes,
     public_key: Ed25519PublicKey,
+    rekor_anchor: "RekorAnchor | None" = None,
 ) -> str:
-    """Render the full audit-ready JSON document."""
+    """Render the full audit-ready JSON document.
+
+    If ``rekor_anchor`` is provided, the manifest envelope gains a
+    sibling ``transparency_log`` block alongside the ``signature``
+    block. When ``rekor_anchor=None`` (the default), the output is
+    BYTE-IDENTICAL to the v5.2.0 behavior.
+    """
+    # __nous_aetherproof_manifest_json_extension_v1__
     doc: dict = manifest.canonical_dict()
     doc["signature"] = {
         "algorithm": "ed25519",
         "public_key_b64": public_key_b64(public_key),
         "signature_b64": base64.b64encode(signature).decode("ascii"),
     }
+    if rekor_anchor is not None:
+        doc["transparency_log"] = rekor_anchor.to_manifest_block()
     return json.dumps(doc, indent=2, sort_keys=True) + "\n"
 
 
@@ -290,3 +300,49 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         ),
     )
     return m, sig, pub
+
+
+def parse_manifest_json_with_anchor(
+    text: str,
+) -> tuple[Manifest, bytes, Ed25519PublicKey, "RekorAnchor | None"]:
+    """Inverse of manifest_json that also recovers a Rekor anchor.
+
+    Returns a 4-tuple ``(manifest, signature_bytes, public_key,
+    anchor_or_None)``. When the ``transparency_log`` block is absent
+    (any v5.2.0 dossier, or any v5.3.0 dossier produced without
+    ``--anchor rekor``), the fourth element is ``None`` and the first
+    three elements match :func:`parse_manifest_json` exactly.
+    """
+    # __nous_aetherproof_parse_with_anchor_v1__
+    from rekor_anchor import RekorAnchor as _RekorAnchor
+    doc = json.loads(text)
+    anchor_block = doc.pop("transparency_log", None)
+    sig_block = doc.pop("signature")
+    if sig_block.get("algorithm") != "ed25519":
+        raise ValueError("only ed25519 signatures are supported")
+    sig = base64.b64decode(sig_block["signature_b64"])
+    pub_raw = base64.b64decode(sig_block["public_key_b64"])
+    pub = Ed25519PublicKey.from_public_bytes(pub_raw)
+    m = Manifest(
+        schema_version=doc["schema_version"],
+        nous_version=doc["nous_version"],
+        smt_emit_version=doc["smt_emit_version"],
+        source_sha256=doc["source_sha256"],
+        pricing_sha256=doc["pricing_sha256"],
+        smt_spec_sha256=doc["smt_spec_sha256"],
+        world_name=doc["world_name"],
+        cost_cap_usd=doc["cost_cap_usd"],
+        max_ticks=doc["max_ticks"],
+        verdict=doc["verdict"],
+        solver_name=doc["solver_name"],
+        solver_version=doc["solver_version"],
+        elapsed_ms=doc["elapsed_ms"],
+        timestamp_utc=doc["timestamp_utc"],
+        counterexample_total_usd=doc.get(
+            "counterexample_total_usd"
+        ),
+    )
+    anchor: "_RekorAnchor | None" = None
+    if anchor_block is not None:
+        anchor = _RekorAnchor.from_manifest_block(anchor_block)
+    return m, sig, pub, anchor

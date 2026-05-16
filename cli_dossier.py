@@ -41,7 +41,9 @@ def cmd_dossier(args: argparse.Namespace) -> int:
         return 3
 
     # __session68_lazy_import_dossier_v1__
+    # __nous_aetherproof_cli_dossier_anchor_v1__
     from dossier import DossierError, build_dossier
+    from rekor_anchor import RekorRejected, RekorUnavailable
 
     try:
         result = build_dossier(
@@ -49,9 +51,25 @@ def cmd_dossier(args: argparse.Namespace) -> int:
             manifest=Path(args.manifest) if args.manifest else None,
             prices=Path(args.prices) if args.prices else None,
             output=Path(args.output) if args.output else None,
+            anchor=getattr(args, "anchor", "none"),
         )
     except DossierError as e:
         print(f"ERROR: dossier build failed: {e}", file=sys.stderr)
+        return 1
+    except RekorUnavailable as e:
+        print(
+            f"ERROR: Sigstore Rekor unreachable: {e}\n"
+            f"  --anchor rekor requires network access to the public "
+            f"Sigstore Rekor transparency log; retry or use "
+            f"--anchor none.",
+            file=sys.stderr,
+        )
+        return 1
+    except RekorRejected as e:
+        print(
+            f"ERROR: Rekor rejected the anchor submission: {e}",
+            file=sys.stderr,
+        )
         return 1
     except Exception as e:
         print(
@@ -99,6 +117,19 @@ def build_dossier_parser(sub: argparse._SubParsersAction) -> None:
         "--output", metavar="DIR",
         help="Output directory "
              "(default: <source>_dossier_<timestamp>/).",
+    )
+    p.add_argument(
+        "--anchor", default="none", choices=["none", "rekor"],
+        help=(
+            "Transparency log anchor mode. 'none' (default) emits "
+            "a v5.2.0-shape dossier with no transparency log. "
+            "'rekor' submits the manifest's Ed25519 signature "
+            "event to the public Sigstore Rekor transparency log "
+            "and embeds the resulting log inclusion proof in "
+            "manifest.json; the emitted verify_offline.py performs "
+            "ECDSA-P-256 SignedEntryTimestamp verification against "
+            "a pinned Sigstore key allowlist."
+        ),
     )
     p.add_argument(
         "--format", default="annex_iv", choices=["annex_iv"],

@@ -22,6 +22,7 @@ NOUS is a programming language for agentic AI systems where every program is:
 - **Verifiable** -- declare a `cost_cap` in USD or EUR and Z3 proves at compile time that no execution path can ever exceed it.
 - **Auditable** -- every verified program emits an Ed25519-signed manifest with full provenance (source SHA-256, AST SHA-256, pricing SHA-256, SMT obligations SHA-256, solver name+version, verdict, timestamp).
 - **Annex IV-ready** -- `nous dossier` emits an EU AI Act Annex IV-aligned compliance bundle directly from the AST plus the signed manifest plus the pricing table.
+- **Rekor-anchored** -- <!-- __nous_aetherproof_release_530_docs_v1__ --> since v5.3.0, optional `--anchor rekor` anchors emitted manifests into the public Sigstore Rekor transparency log via Path-beta dual signing (per-submission ECDSA-P-256 leaf, long-lived Ed25519 manifest signature preserved). External, third-party-auditable durability with zero NOUS-side trust assumption. See `docs/REKOR_ANCHOR.md`.
 - **Governable** -- first-class `policy { on ... signal ... action ... }` declarations, statically lintable (13 rule codes) and live-simulatable.
 - **Deterministically replayable** -- every agent run produces a SHA-256-chained JSONL event log. `nous replay verify` validates chain integrity offline.
 - **Self-evolving** -- programs can observe their own execution, evaluate fitness, mutate DNA parameters, and self-heal within constitutional safety bounds.

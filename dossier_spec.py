@@ -94,8 +94,23 @@ def build_dossier_spec(
     smt_margin: int = 0,
     key_path: Optional[Path] = None,
     today: Optional[date] = None,
+    anchor: str = "none",
+    _test_rekor_anchor: "object | None" = None,
 ) -> DossierSpecResult:
-    """Build an Annex IV-aligned dossier from a SKILL.md skill directory."""
+    """Build an Annex IV-aligned dossier from a SKILL.md skill directory.
+
+    # __nous_aetherproof_dossier_spec_rekor_emit_v1__
+
+    When ``anchor == "none"`` (default), output is BYTE-IDENTICAL to
+    v5.2.0. When ``anchor == "rekor"``, the freshly-computed Ed25519
+    signature is submitted to the public Sigstore Rekor transparency
+    log; the emitted manifest.json gains a ``transparency_log`` block,
+    and verify_offline.py is the Rekor-aware variant.
+
+    ``_test_rekor_anchor`` is a private hook accepting a pre-built
+    ``rekor_anchor.RekorAnchor`` so unit tests can exercise the
+    anchored path without making a live Rekor submission.
+    """
     from skill_md import (
         SkillMDError,
         MoneyAmount,
@@ -112,7 +127,10 @@ def build_dossier_spec(
         manifest_json,
         default_key_path,
     )
-    from dossier import VERIFY_OFFLINE_PY
+    from dossier import (
+    VERIFY_OFFLINE_PY,
+    VERIFY_OFFLINE_PY_WITH_REKOR,
+)
     from ast_nodes import CostCap
     from _version import __version__ as nous_version
 
@@ -209,7 +227,31 @@ def build_dossier_spec(
         ) from e
 
     signature = sign_manifest(manifest, priv)
-    signed_json = manifest_json(manifest, signature, pub)
+    rekor_anchor_obj = None
+    if anchor == "rekor":
+        if _test_rekor_anchor is not None:
+            rekor_anchor_obj = _test_rekor_anchor
+        else:
+            from rekor_anchor import anchor_manifest_to_rekor
+            rekor_anchor_obj = anchor_manifest_to_rekor(
+                manifest_canonical_bytes=manifest.canonical_bytes(),
+                manifest_signature_b64=base64.b64encode(
+                    signature
+                ).decode("ascii"),
+                manifest_public_key_b64=base64.b64encode(
+                    _public_key_raw_bytes(pub)
+                ).decode("ascii"),
+            )
+        signed_json = manifest_json(
+            manifest, signature, pub, rekor_anchor=rekor_anchor_obj
+        )
+    elif anchor == "none":
+        signed_json = manifest_json(manifest, signature, pub)
+    else:
+        raise DossierSpecError(
+            f"unsupported anchor mode: {anchor!r} "
+            f"(expected 'none' or 'rekor')"
+        )
 
     if output is None:
         ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -270,7 +312,12 @@ def build_dossier_spec(
     files.append("README.md")
 
     verify_path = output / "verify_offline.py"
-    verify_path.write_text(VERIFY_OFFLINE_PY, encoding="utf-8")
+    if anchor == "rekor":
+        verify_path.write_text(
+            VERIFY_OFFLINE_PY_WITH_REKOR, encoding="utf-8"
+        )
+    else:
+        verify_path.write_text(VERIFY_OFFLINE_PY, encoding="utf-8")
     verify_path.chmod(0o755)
     files.append("verify_offline.py")
 

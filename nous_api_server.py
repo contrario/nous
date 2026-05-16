@@ -315,6 +315,7 @@ class SkillExportEndpointRequest(BaseModel):
     compatibility: Optional[str] = Field(default=None, min_length=1, max_length=500)
     tool_overrides: list[dict[str, Any]] = Field(default_factory=list)
     with_dossier: bool = Field(default=True)
+    anchor: str = Field(default="none", pattern="^(none|rekor)$")  # __nous_aetherproof_api_dossier_anchor_v1__
 
 
 @app.post("/v1/skill/export")  # __session77_skill_export_endpoint_v1__
@@ -325,6 +326,7 @@ async def skill_export_endpoint(
     x_api_key: Optional[str] = Header(None),
 ):
     require_api_key(x_api_key)
+    from rekor_anchor import RekorRejected, RekorUnavailable
     logger.info(
         f"skill-export request: {len(body.source)} chars, "
         f"with_dossier={body.with_dossier}"
@@ -370,6 +372,7 @@ async def skill_export_endpoint(
                         skill_dir,
                         output=output_dir,
                         key_path=key_path,
+                        anchor=getattr(body, "anchor", "none"),
                     )
                     try:
                         key_path.unlink()
@@ -426,6 +429,18 @@ async def skill_export_endpoint(
                 "error": "skill-export timed out (60s)",
                 "code": "TIMEOUT003",
             },
+        )
+    except RekorRejected as e:
+        logger.warning(f"skill-export rekor rejected: {e}")
+        raise HTTPException(
+            status_code=400,
+            detail={"error": str(e), "code": "REKOR_REJECTED"},
+        )
+    except RekorUnavailable as e:
+        logger.warning(f"skill-export rekor unavailable: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail={"error": str(e), "code": "REKOR_UNAVAILABLE"},
         )
     except Exception as e:
         logger.error(f"skill-export error: {traceback.format_exc()}")

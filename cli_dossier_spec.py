@@ -48,7 +48,9 @@ def cmd_dossier_spec(args: argparse.Namespace) -> int:
         )
         return 3
 
+    # __nous_aetherproof_cli_dossier_spec_anchor_v1__
     from dossier_spec import DossierSpecError, build_dossier_spec
+    from rekor_anchor import RekorRejected, RekorUnavailable
 
     try:
         result = build_dossier_spec(
@@ -58,10 +60,26 @@ def cmd_dossier_spec(args: argparse.Namespace) -> int:
             output=Path(args.output) if args.output else None,
             smt_margin=args.smt_margin,
             key_path=Path(args.key) if args.key else None,
+            anchor=getattr(args, "anchor", "none"),
         )
     except DossierSpecError as e:
         print(
             f"ERROR: dossier-spec build failed: {e}",
+            file=sys.stderr,
+        )
+        return 1
+    except RekorUnavailable as e:
+        print(
+            f"ERROR: Sigstore Rekor unreachable: {e}\n"
+            f"  --anchor rekor requires network access to the public "
+            f"Sigstore Rekor transparency log; retry or use "
+            f"--anchor none.",
+            file=sys.stderr,
+        )
+        return 1
+    except RekorRejected as e:
+        print(
+            f"ERROR: Rekor rejected the anchor submission: {e}",
             file=sys.stderr,
         )
         return 1
@@ -142,6 +160,19 @@ def build_dossier_spec_parser(
             "Path to Ed25519 signing keypair file (will be "
             "created with mode 0600 if it does not exist; "
             "default: manifest.default_key_path())"
+        ),
+    )
+    p.add_argument(
+        "--anchor", default="none", choices=["none", "rekor"],
+        help=(
+            "Transparency log anchor mode. 'none' (default) emits "
+            "a v5.2.0-shape dossier with no transparency log. "
+            "'rekor' submits the freshly-computed Ed25519 "
+            "signature to the public Sigstore Rekor transparency "
+            "log and embeds the inclusion proof in manifest.json; "
+            "the emitted verify_offline.py performs ECDSA-P-256 "
+            "SignedEntryTimestamp verification against a pinned "
+            "Sigstore key allowlist."
         ),
     )
     p.add_argument(

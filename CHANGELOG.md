@@ -24,6 +24,29 @@
 
 ### Fixed
 
+<!-- __session80_release_v5_3_0_changelog__ -->  <!-- __nous_aetherproof_release_530_docs_v1__ -->
+## [5.3.0] - 2026-05-16
+
+### Added
+
+- **Rekor anchoring (Path-beta dual signing).** Optional `--anchor rekor` flag on `nous dossier-spec` and `nous skill-export` (and the corresponding HTTP endpoints) anchors emitted manifests into the public Sigstore Rekor transparency log. New module `rekor_anchor.py`. The Rekor leaf carries a per-submission ephemeral ECDSA-P-256 signature over the manifest's canonical body bytes; the existing Ed25519 manifest signature is preserved unchanged. Both signatures cover the same bytes; the dual-signing design works around the incompatibility between Ed25519 and Rekor's `hashedrekord/0.0.1` leaf format (Sigstore issue #851).
+- **Self-contained offline verifier.** Dossiers emitted with `--anchor rekor` ship a `verify_offline.py` that validates the Ed25519 manifest signature, the source SHA-256, the Rekor SignedEntryTimestamp, AND the ECDSA-P-256 leaf signature against canonical body bytes -- all offline, no network calls, no NOUS install needed (only `cryptography>=42`). Pinned Sigstore Rekor public key allowlist shipped in the verifier.
+- **27 new tests** in `tests/test_rekor_anchor.py` covering the Pydantic V2 model, failure modes (RekorUnavailable, RekorRejected), offline verify (positive + 6 rejection axes), raw-b64 Ed25519 PEM helper, post-Path-beta wire shape, and the `/v1/skill/export` `anchor` field. PYTEST_FLOOR raised 503 -> 530.
+- **Live Rekor anchor fixture.** `tests/rekor_fixtures/valid_anchor.json` is the wire response from the first NOUS payload submitted to public Rekor (log_index 1554376230, integrated 2026-05-16T20:08:25Z UTC). Used as the offline-verify positive-case fixture. Anyone can retrieve the live entry: `curl https://rekor.sigstore.dev/api/v1/log/entries?logIndex=1554376230`.
+- **`docs/REKOR_ANCHOR.md`**: full reference covering the Path-beta architecture, Sigstore issue #851 explanation, wire format, offline-verify procedure, byte-identity guarantee for `anchor=none`, Sigstore key rotation policy.
+
+### Changed
+
+- `pyproject.toml` py-modules list extended with `rekor_anchor`.
+- Wheel content gate (`scripts/release.py`) now requires `rekor_anchor.py` in addition to the v5.2.0 set; PYTEST_FLOOR raised 503 -> 530.
+- `dossier.py::VERIFY_OFFLINE_PY_WITH_REKOR` embedded verifier rewritten to match Path-beta semantics: ECDSA-P-256 verify of leaf signature over canonical body bytes, replacing the prior byte-identity check that assumed Ed25519 direct submission.
+
+### Notes
+
+- **Byte-identity guarantee preserved**: without the explicit `--anchor rekor` opt-in, manifests are byte-identical to v5.2.0 output. Existing customers see no change.
+- **Air-gapped operation**: `--anchor rekor` fails hard on Rekor unreachability rather than falling back silently. Customers in air-gapped environments should omit the flag; the v5.2.0-equivalent dossier remains Article 14-compliant for inner-circle audit.
+- The per-submission ECDSA-P-256 keypair is ephemeral: generated at submission time, used once, discarded. Customers do not manage Rekor-side key material.
+
 <!-- __session77_release_v5_2_0_changelog__ -->
 ## [5.2.0] - 2026-05-16
 
