@@ -18,7 +18,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional, TYPE_CHECKING
+from typing import Any, Literal, Optional, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from ast_nodes import NousProgram
@@ -466,9 +466,454 @@ async def skill_export_endpoint(
 # ====================================================================
 
 
+# ====================================================================
+# S82 #1b: V2 surface for /v1/verify-dossier (state-of-the-art audit shape).
+#
+# Backward-compatible extension. When request.policy is present, the
+# endpoint returns a structured V2 response with verdict + checks +
+# evidence + human_readable. When policy is absent, the legacy V1
+# response shape is returned unchanged. No existing V1 client breaks.
+#
+# # __session82_verify_dossier_v2_v1__
+# ====================================================================
+
+V2_SPEC_VERSION: str = "verify-dossier/v2"
+
+
+class VerifyDossierPolicy(BaseModel):
+    """Auditor-supplied trust policy for the V2 verification path."""
+    model_config = ConfigDict(strict=True, extra="forbid")
+    require_anchor: bool = True
+    max_anchor_age_seconds: Optional[int] = Field(default=None, ge=0)
+    require_pubkey_in_allowlist: bool = True
+
+
+class CheckResult(BaseModel):
+    """Single check outcome.
+
+    ok is a discriminated union:
+      - True/False: the check ran and produced a boolean result
+      - "skipped_unanchored": no transparency_log block present
+      - "skipped_no_policy": policy did not request this check
+    """
+    model_config = ConfigDict(strict=True, extra="forbid")
+    ok: Union[bool, Literal["skipped_unanchored", "skipped_no_policy"]]
+    errors: list[str] = Field(default_factory=list)
+
+
+class V2Checks(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    manifest_well_formed: CheckResult
+    manifest_signature_ed25519: CheckResult
+    source_sha256_field_well_formed: CheckResult
+    transparency_log_present: CheckResult
+    rekor_public_key_in_allowlist: CheckResult
+    rekor_signed_entry_timestamp: CheckResult
+    rekor_leaf_inclusion: CheckResult
+    rekor_anchor_age: CheckResult
+
+
+class V2Evidence(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    manifest_sha256: str
+    manifest_canonical_bytes_sha256: Optional[str] = None
+    public_key_b64: Optional[str] = None
+    rekor_log_index: Optional[int] = None
+    rekor_integrated_at: Optional[str] = None
+    rekor_log_id: Optional[str] = None
+    rekor_anchor_age_seconds: Optional[int] = None
+
+
+class V2HumanReadable(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    verdict_summary: str
+    trust_explanation: str
+    next_steps: list[str]
+
+
+class VerifyDossierEndpointResponseV2(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    spec_version: str
+    verdict: Literal["ACCEPT", "REJECT"]
+    trust_level: Literal["rekor_anchored", "ed25519_only", "none"]
+    policy_applied: VerifyDossierPolicy
+    checks: V2Checks
+    evidence: V2Evidence
+    human_readable: V2HumanReadable
+
+
+def _run_verification_checks(
+    manifest_json_text: str,
+    policy: Optional[VerifyDossierPolicy],
+) -> "tuple[V2Checks, V2Evidence, str]":
+    """Pure function: runs every check on a manifest_json and returns
+    (checks, evidence, trust_level). Does NOT compute verdict
+    (verdict requires policy + checks; computed by the caller).
+    """
+    import base64 as _b64
+    from datetime import datetime as _dt, timezone as _tz
+    from pydantic import ValidationError as _ValidationError
+
+    manifest_well_formed = CheckResult(ok=False, errors=[])
+    signature_check = CheckResult(ok=False, errors=[])
+    source_sha_format = CheckResult(ok=False, errors=[])
+    tlog_present = CheckResult(ok=False, errors=[])
+    rekor_allowlist: CheckResult = CheckResult(ok="skipped_unanchored")
+    rekor_set: CheckResult = CheckResult(ok="skipped_unanchored")
+    rekor_inclusion: CheckResult = CheckResult(ok="skipped_unanchored")
+    rekor_age: CheckResult = CheckResult(ok="skipped_unanchored")
+
+    input_bytes = manifest_json_text.encode("utf-8")
+    manifest_input_sha256 = hashlib.sha256(input_bytes).hexdigest()
+    manifest_canonical_sha256: Optional[str] = None
+    public_key_b64_str: Optional[str] = None
+    rekor_log_index: Optional[int] = None
+    rekor_integrated_at: Optional[str] = None
+    rekor_log_id: Optional[str] = None
+    rekor_anchor_age_seconds: Optional[int] = None
+
+    try:
+        from manifest import (
+            parse_manifest_json_with_anchor,
+            verify_manifest_signature,
+            public_key_b64 as _pubkey_b64_fn,
+        )
+        m, sig, pub, anchor = parse_manifest_json_with_anchor(
+            manifest_json_text
+        )
+        manifest_well_formed = CheckResult(ok=True)
+    except (
+        json.JSONDecodeError, KeyError, ValueError,
+        TypeError, _ValidationError,
+    ) as exc:
+        manifest_well_formed = CheckResult(
+            ok=False,
+            errors=[f"parse_error: {type(exc).__name__}: {exc}"],
+        )
+    except Exception as exc:
+        manifest_well_formed = CheckResult(
+            ok=False,
+            errors=[
+                f"parse_error_unexpected: {type(exc).__name__}: {exc}"
+            ],
+        )
+
+    if not manifest_well_formed.ok:
+        checks = V2Checks(
+            manifest_well_formed=manifest_well_formed,
+            manifest_signature_ed25519=signature_check,
+            source_sha256_field_well_formed=source_sha_format,
+            transparency_log_present=tlog_present,
+            rekor_public_key_in_allowlist=rekor_allowlist,
+            rekor_signed_entry_timestamp=rekor_set,
+            rekor_leaf_inclusion=rekor_inclusion,
+            rekor_anchor_age=rekor_age,
+        )
+        evidence = V2Evidence(manifest_sha256=manifest_input_sha256)
+        return (checks, evidence, "none")
+
+    canonical_bytes = m.canonical_bytes()
+    manifest_canonical_sha256 = hashlib.sha256(
+        canonical_bytes
+    ).hexdigest()
+    public_key_b64_str = _pubkey_b64_fn(pub)
+
+    try:
+        sig_ok = verify_manifest_signature(m, sig, pub)
+        if sig_ok:
+            signature_check = CheckResult(ok=True)
+        else:
+            signature_check = CheckResult(
+                ok=False, errors=["ed25519_signature_invalid"]
+            )
+    except Exception as exc:
+        signature_check = CheckResult(
+            ok=False,
+            errors=[
+                f"signature_check_error: {type(exc).__name__}: {exc}"
+            ],
+        )
+
+    src_sha = m.source_sha256 or ""
+    if (
+        len(src_sha) == 64
+        and all(c in "0123456789abcdef" for c in src_sha)
+    ):
+        source_sha_format = CheckResult(ok=True)
+    else:
+        source_sha_format = CheckResult(
+            ok=False,
+            errors=[
+                f"source_sha256_field_malformed: got len={len(src_sha)}"
+            ],
+        )
+
+    if anchor is None:
+        tlog_present = CheckResult(
+            ok=False,
+            errors=["transparency_log_block_absent"],
+        )
+    else:
+        tlog_present = CheckResult(ok=True)
+        rekor_log_index = anchor.log_index
+        rekor_log_id = anchor.log_id
+        rekor_integrated_at = (
+            _dt.fromtimestamp(anchor.integrated_time, tz=_tz.utc)
+            .isoformat()
+            .replace("+00:00", "Z")
+        )
+        now_ts = int(_dt.now(tz=_tz.utc).timestamp())
+        rekor_anchor_age_seconds = max(
+            0, now_ts - anchor.integrated_time
+        )
+
+        try:
+            from rekor_anchor import (
+                verify_rekor_anchor_offline_detail,
+            )
+            detail = verify_rekor_anchor_offline_detail(
+                anchor=anchor,
+                expected_manifest_canonical_bytes=canonical_bytes,
+                expected_manifest_signature_b64=_b64.b64encode(
+                    sig
+                ).decode("ascii"),
+                expected_manifest_public_key_b64=public_key_b64_str,
+            )
+            rekor_allowlist = CheckResult(
+                ok=bool(detail.pubkey_in_allowlist),
+                errors=[
+                    e for e in detail.errors if "allowlist" in e
+                ],
+            )
+            rekor_set = CheckResult(
+                ok=bool(detail.set_signature_ok),
+                errors=[
+                    e for e in detail.errors
+                    if "set_signature" in e or e.startswith("set_")
+                ],
+            )
+            rekor_inclusion = CheckResult(
+                ok=bool(detail.inclusion_body_ok),
+                errors=[
+                    e for e in detail.errors
+                    if "inclusion" in e or "submitter" in e
+                    or "leaf" in e
+                ],
+            )
+        except Exception as exc:
+            err_str = f"rekor_verify_error: {type(exc).__name__}: {exc}"
+            rekor_allowlist = CheckResult(ok=False, errors=[err_str])
+            rekor_set = CheckResult(ok=False, errors=[err_str])
+            rekor_inclusion = CheckResult(ok=False, errors=[err_str])
+
+        if policy is None or policy.max_anchor_age_seconds is None:
+            rekor_age = CheckResult(ok="skipped_no_policy")
+        else:
+            if rekor_anchor_age_seconds <= policy.max_anchor_age_seconds:
+                rekor_age = CheckResult(ok=True)
+            else:
+                rekor_age = CheckResult(
+                    ok=False,
+                    errors=[
+                        f"anchor_too_old: age="
+                        f"{rekor_anchor_age_seconds}s "
+                        f"limit={policy.max_anchor_age_seconds}s"
+                    ],
+                )
+
+    if not signature_check.ok:
+        trust_level = "none"
+    elif (
+        tlog_present.ok
+        and rekor_allowlist.ok is True
+        and rekor_set.ok is True
+        and rekor_inclusion.ok is True
+    ):
+        trust_level = "rekor_anchored"
+    elif signature_check.ok and not tlog_present.ok:
+        trust_level = "ed25519_only"
+    else:
+        trust_level = "none"
+
+    checks = V2Checks(
+        manifest_well_formed=manifest_well_formed,
+        manifest_signature_ed25519=signature_check,
+        source_sha256_field_well_formed=source_sha_format,
+        transparency_log_present=tlog_present,
+        rekor_public_key_in_allowlist=rekor_allowlist,
+        rekor_signed_entry_timestamp=rekor_set,
+        rekor_leaf_inclusion=rekor_inclusion,
+        rekor_anchor_age=rekor_age,
+    )
+    evidence = V2Evidence(
+        manifest_sha256=manifest_input_sha256,
+        manifest_canonical_bytes_sha256=manifest_canonical_sha256,
+        public_key_b64=public_key_b64_str,
+        rekor_log_index=rekor_log_index,
+        rekor_integrated_at=rekor_integrated_at,
+        rekor_log_id=rekor_log_id,
+        rekor_anchor_age_seconds=rekor_anchor_age_seconds,
+    )
+    return (checks, evidence, trust_level)
+
+
+def _compute_v2_verdict(
+    checks: V2Checks,
+    trust_level: str,
+    policy: VerifyDossierPolicy,
+) -> str:
+    if not checks.manifest_well_formed.ok:
+        return "REJECT"
+    if not checks.manifest_signature_ed25519.ok:
+        return "REJECT"
+    if trust_level == "rekor_anchored":
+        if (
+            policy.max_anchor_age_seconds is not None
+            and checks.rekor_anchor_age.ok is False
+        ):
+            return "REJECT"
+        return "ACCEPT"
+    if trust_level == "ed25519_only":
+        if policy.require_anchor:
+            return "REJECT"
+        return "ACCEPT"
+    return "REJECT"
+
+
+def _v2_human_readable(
+    verdict: str,
+    trust_level: str,
+    checks: V2Checks,
+    policy: VerifyDossierPolicy,
+) -> V2HumanReadable:
+    if verdict == "ACCEPT":
+        if trust_level == "rekor_anchored":
+            summary = (
+                "Dossier accepted: full Sigstore Rekor anchor verified."
+            )
+            expl = (
+                "The manifest's Ed25519 author signature verifies, "
+                "the Rekor signed entry timestamp verifies under the "
+                "pinned Sigstore public key, and the Rekor leaf body "
+                "binds to the manifest's canonical bytes via "
+                "ECDSA-P-256 (Path-beta dual signing)."
+            )
+            next_steps: list[str] = []
+        else:
+            summary = (
+                "Dossier accepted: Ed25519 author signature verified "
+                "(no public anchor)."
+            )
+            expl = (
+                "The dossier carries no transparency_log block. "
+                "Author identity is proven by the Ed25519 signature, "
+                "but there is no public log entry confirming when "
+                "this dossier was issued."
+            )
+            next_steps = [
+                "To obtain anchored evidence, re-issue the dossier "
+                "with NOUS v5.3.0 or later using --anchor rekor.",
+            ]
+    else:
+        if not checks.manifest_well_formed.ok:
+            summary = "Dossier rejected: manifest could not be parsed."
+            expl = (
+                "The manifest is malformed (invalid JSON, missing "
+                "required fields, or wrong schema). The dossier "
+                "cannot be verified."
+            )
+            next_steps = [
+                "Verify the manifest.json file matches the NOUS "
+                "manifest schema. See docs/VERIFY_DOSSIER.md.",
+            ]
+        elif not checks.manifest_signature_ed25519.ok:
+            summary = (
+                "Dossier rejected: Ed25519 signature invalid."
+            )
+            expl = (
+                "The Ed25519 signature does not verify over the "
+                "manifest's canonical bytes. The dossier was tampered "
+                "with after signing, or the embedded public key does "
+                "not match the signer."
+            )
+            next_steps = [
+                "Do not trust this dossier. Request a freshly signed "
+                "copy from the issuer.",
+            ]
+        elif trust_level == "ed25519_only":
+            summary = (
+                "Dossier rejected: policy requires a Sigstore Rekor "
+                "anchor, none present."
+            )
+            expl = (
+                "The Ed25519 author signature is valid, but the "
+                "dossier has no transparency_log block. Audit policy "
+                "(require_anchor=true) requires public-log inclusion."
+            )
+            next_steps = [
+                "Either accept with require_anchor=false (Ed25519 "
+                "evidence only), or obtain an anchored dossier.",
+            ]
+        elif (
+            policy.max_anchor_age_seconds is not None
+            and checks.rekor_anchor_age.ok is False
+        ):
+            summary = (
+                "Dossier rejected: anchor is older than policy limit."
+            )
+            expl = (
+                "The Rekor anchor verifies cryptographically, but "
+                "its integrated_time is older than "
+                "max_anchor_age_seconds. Audit policy requires "
+                "fresher attestations."
+            )
+            next_steps = [
+                "Re-anchor the dossier or relax the age policy.",
+            ]
+        else:
+            summary = (
+                "Dossier rejected: one or more checks failed."
+            )
+            expl = (
+                "See the checks block for per-check error details. "
+                "Each failed check carries an errors[] list naming "
+                "the specific failure."
+            )
+            next_steps = [
+                "Inspect the checks block for the specific failure "
+                "(see also docs/VERIFY_DOSSIER.md).",
+            ]
+    return V2HumanReadable(
+        verdict_summary=summary,
+        trust_explanation=expl,
+        next_steps=next_steps,
+    )
+
+
+def _render_v2_response(
+    manifest_json_text: str,
+    policy: VerifyDossierPolicy,
+) -> VerifyDossierEndpointResponseV2:
+    checks, evidence, trust_level = _run_verification_checks(
+        manifest_json_text, policy
+    )
+    verdict = _compute_v2_verdict(checks, trust_level, policy)
+    hr = _v2_human_readable(verdict, trust_level, checks, policy)
+    return VerifyDossierEndpointResponseV2(
+        spec_version=V2_SPEC_VERSION,
+        verdict=verdict,
+        trust_level=trust_level,
+        policy_applied=policy,
+        checks=checks,
+        evidence=evidence,
+        human_readable=hr,
+    )
+
+
 class VerifyDossierEndpointRequest(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     manifest_json: str = Field(min_length=1, max_length=262144)
+    policy: Optional[VerifyDossierPolicy] = None
 
 
 class VerifyDossierEndpointResponse(BaseModel):
@@ -483,7 +928,7 @@ class VerifyDossierEndpointResponse(BaseModel):
     errors: list[str] = Field(default_factory=list)
 
 
-@app.post("/v1/verify-dossier")
+@app.post("/v1/verify-dossier", response_model=None)
 @limiter.limit("30/minute")
 async def verify_dossier_endpoint(
     request: Request,
@@ -491,6 +936,11 @@ async def verify_dossier_endpoint(
 ) -> VerifyDossierEndpointResponse:
     # No require_api_key call: this endpoint is public by design.
     # __session81_verify_dossier_endpoint_v1__
+    # __session82_verify_dossier_v2_v1__ dispatch:
+    if body.policy is not None:
+        return _render_v2_response(
+            body.manifest_json, body.policy
+        )
     import base64 as _b64
     from datetime import datetime as _dt, timezone as _tz
     from pydantic import ValidationError as _ValidationError
