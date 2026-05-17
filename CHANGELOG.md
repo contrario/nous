@@ -24,6 +24,23 @@
 
 ### Fixed
 
+<!-- __session81_release_v5_4_0_changelog__ -->
+## [5.4.0] - 2026-05-17
+
+### Added
+
+- Public `POST /v1/verify-dossier` endpoint (S81 #1): unauthenticated, rate-limited 30/minute, accepts a `manifest_json` string, returns structured `signature_ok`, `rekor_set_ok`, `rekor_inclusion_ok`, `manifest_sha256`, `rekor_log_index`, `rekor_integrated_at`, and `errors[]`. Convenience surface for browser verification; offline `verify_offline.py` remains the canonical trust path.
+- `rekor_anchor.RekorVerifyDetail` Pydantic V2 strict frozen model with granular `pubkey_in_allowlist`, `set_signature_ok`, `inclusion_body_ok` booleans plus `errors[]` (S81 #1).
+- `rekor_anchor.verify_rekor_anchor_offline_detail()` (S81 #1): no-early-exit variant that evaluates each check independently for diagnostic visibility.
+- IDE: new `Dossier` tab (S81 #2) calling `/api/v1/verify-dossier` with drag-drop `manifest.json` / `skill_export.zip` support via JSZip 3.10.1 (SRI-pinned). Tab sits between `Verify` (source) and `Graph` for semantic grouping of verification flows.
+- `nous-lang.org/verify.html` (S81 #3): standalone verification surface with the same drag-drop component, three trust paths documented (browser, offline, CLI), and links to Sigstore Rekor for anchored entries.
+- `nous-lang.org/verify_offline.py` (S81 #3): byte-identical static extraction of `dossier.VERIFY_OFFLINE_PY_WITH_REKOR`. Auto-synced by the S81 #3 patcher; sha256 verified against the live source of truth on every apply.
+
+### Changed
+
+- `rekor_anchor.verify_rekor_anchor_offline()` refactored to delegate to `verify_rekor_anchor_offline_detail()`; outcome byte-equivalent to S80, asserted across all three captured fixtures by `tests/test_rekor_anchor.py::TestVerifyRekorAnchorOfflineDetail::test_legacy_bool_matches_and_of_detail_fields`.
+- `PYTEST_FLOOR` raised 530 -> 542 (9 new endpoint tests + 3 new rekor detail tests, all shipped in S81 #1).
+
 <!-- __session80_release_v5_3_0_changelog__ -->  <!-- __nous_aetherproof_release_530_docs_v1__ -->
 ## [5.3.0] - 2026-05-16
 
