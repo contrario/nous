@@ -378,3 +378,88 @@ class TestSkillExportEndpointRequestAnchorField:
             pytest.skip("cannot import SkillExportEndpointRequest from nous_api_server")
         with pytest.raises(ValidationError):
             Model(source="x", description="y", anchor="rekor", extra_field="x")
+
+
+class TestVerifyRekorAnchorOfflineDetail:
+    """S81 #1: granular detail variant of verify_rekor_anchor_offline.
+
+    # __session81_test_rekor_detail_v1__
+    """
+
+    def test_valid_fixture_returns_all_true(self) -> None:
+        from rekor_anchor import verify_rekor_anchor_offline_detail
+        anchor = _valid_anchor()
+        inp = _valid_inputs()
+        detail = verify_rekor_anchor_offline_detail(
+            anchor=anchor,
+            expected_manifest_canonical_bytes=inp["canonical_bytes"],
+            expected_manifest_signature_b64=inp["signature_b64"],
+            expected_manifest_public_key_b64=inp["public_key_b64"],
+        )
+        assert detail.pubkey_in_allowlist is True
+        assert detail.set_signature_ok is True
+        assert detail.inclusion_body_ok is True
+        assert detail.errors == []
+
+    def test_failure_fixture_yields_errors(self) -> None:
+        from rekor_anchor import verify_rekor_anchor_offline_detail
+        anchor = RekorAnchor(**_load_fixture("tampered_anchor.json"))
+        inp = _valid_inputs()
+        detail = verify_rekor_anchor_offline_detail(
+            anchor=anchor,
+            expected_manifest_canonical_bytes=inp["canonical_bytes"],
+            expected_manifest_signature_b64=inp["signature_b64"],
+            expected_manifest_public_key_b64=inp["public_key_b64"],
+        )
+        assert detail.errors, "tampered fixture must produce errors"
+        assert not (
+            detail.pubkey_in_allowlist
+            and detail.set_signature_ok
+            and detail.inclusion_body_ok
+        )
+
+    def test_legacy_bool_matches_and_of_detail_fields(self) -> None:
+        """Regression backstop: verify_rekor_anchor_offline outcome
+        equals AND of detail.{pubkey_in_allowlist, set_signature_ok,
+        inclusion_body_ok} across ALL three S80 fixtures.
+        """
+        from rekor_anchor import (
+            verify_rekor_anchor_offline,
+            verify_rekor_anchor_offline_detail,
+        )
+        inp = _valid_inputs()
+        for fname in (
+            "valid_anchor.json",
+            "tampered_anchor.json",
+            "wrong_pubkey_anchor.json",
+        ):
+            anchor = RekorAnchor(**_load_fixture(fname))
+            legacy = verify_rekor_anchor_offline(
+                anchor=anchor,
+                expected_manifest_canonical_bytes=inp[
+                    "canonical_bytes"
+                ],
+                expected_manifest_signature_b64=inp["signature_b64"],
+                expected_manifest_public_key_b64=inp[
+                    "public_key_b64"
+                ],
+            )
+            detail = verify_rekor_anchor_offline_detail(
+                anchor=anchor,
+                expected_manifest_canonical_bytes=inp[
+                    "canonical_bytes"
+                ],
+                expected_manifest_signature_b64=inp["signature_b64"],
+                expected_manifest_public_key_b64=inp[
+                    "public_key_b64"
+                ],
+            )
+            expected = (
+                detail.pubkey_in_allowlist
+                and detail.set_signature_ok
+                and detail.inclusion_body_ok
+            )
+            assert legacy == expected, (
+                f"mismatch on {fname}: legacy={legacy} "
+                f"detail.AND={expected}"
+            )

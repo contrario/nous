@@ -450,6 +450,154 @@ async def skill_export_endpoint(
         )
 
 
+# ====================================================================
+# S81 #1: POST /v1/verify-dossier (public, unauthenticated, rate-limited).
+#
+# Convenience wrapper around manifest.parse_manifest_json_with_anchor +
+# rekor_anchor.verify_rekor_anchor_offline_detail. The API is NOT in
+# the trust path; offline verification with verify_offline.py remains
+# the canonical surface. This endpoint exists so the verify.html page
+# (S81 #3) and future browser-native verifiers can display structured
+# PASS/FAIL results without requiring the user to install Python first.
+#
+# CORS: inherits global allow_origins=["*"] middleware at module top.
+#
+# # __session81_verify_dossier_endpoint_v1__
+# ====================================================================
+
+
+class VerifyDossierEndpointRequest(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    manifest_json: str = Field(min_length=1, max_length=262144)
+
+
+class VerifyDossierEndpointResponse(BaseModel):
+    model_config = ConfigDict(strict=True, extra="forbid")
+    signature_ok: bool
+    public_key_b64: Optional[str] = None
+    rekor_inclusion_ok: Optional[bool] = None
+    rekor_set_ok: Optional[bool] = None
+    rekor_log_index: Optional[int] = None
+    rekor_integrated_at: Optional[str] = None
+    manifest_sha256: str
+    errors: list[str] = Field(default_factory=list)
+
+
+@app.post("/v1/verify-dossier")
+@limiter.limit("30/minute")
+async def verify_dossier_endpoint(
+    request: Request,
+    body: VerifyDossierEndpointRequest,
+) -> VerifyDossierEndpointResponse:
+    # No require_api_key call: this endpoint is public by design.
+    # __session81_verify_dossier_endpoint_v1__
+    import base64 as _b64
+    from datetime import datetime as _dt, timezone as _tz
+    from pydantic import ValidationError as _ValidationError
+
+    input_bytes: bytes = body.manifest_json.encode("utf-8")
+    manifest_sha256_hex: str = hashlib.sha256(input_bytes).hexdigest()
+    errors: list[str] = []
+    public_key_b64_str: Optional[str] = None
+    rekor_inclusion_ok: Optional[bool] = None
+    rekor_set_ok: Optional[bool] = None
+    rekor_log_index: Optional[int] = None
+    rekor_integrated_at: Optional[str] = None
+    signature_ok: bool = False
+
+    try:
+        from manifest import (
+            parse_manifest_json_with_anchor,
+            verify_manifest_signature,
+            public_key_b64 as _pubkey_b64_fn,
+        )
+        m, sig, pub, anchor = parse_manifest_json_with_anchor(
+            body.manifest_json
+        )
+    except (
+        json.JSONDecodeError,
+        KeyError,
+        ValueError,
+        TypeError,
+        _ValidationError,
+    ) as exc:
+        errors.append(f"parse_error: {type(exc).__name__}: {exc}")
+        return VerifyDossierEndpointResponse(
+            signature_ok=False,
+            manifest_sha256=manifest_sha256_hex,
+            errors=errors,
+        )
+    except Exception as exc:
+        errors.append(
+            f"parse_error_unexpected: {type(exc).__name__}: {exc}"
+        )
+        return VerifyDossierEndpointResponse(
+            signature_ok=False,
+            manifest_sha256=manifest_sha256_hex,
+            errors=errors,
+        )
+
+    canonical_bytes: bytes = m.canonical_bytes()
+    manifest_sha256_hex = hashlib.sha256(canonical_bytes).hexdigest()
+    public_key_b64_str = _pubkey_b64_fn(pub)
+
+    try:
+        signature_ok = verify_manifest_signature(m, sig, pub)
+        if not signature_ok:
+            errors.append("ed25519_signature_invalid")
+    except Exception as exc:
+        signature_ok = False
+        errors.append(
+            f"signature_check_error: {type(exc).__name__}: {exc}"
+        )
+
+    if anchor is not None:
+        try:
+            from rekor_anchor import (
+                verify_rekor_anchor_offline_detail,
+            )
+            detail = verify_rekor_anchor_offline_detail(
+                anchor=anchor,
+                expected_manifest_canonical_bytes=canonical_bytes,
+                expected_manifest_signature_b64=_b64.b64encode(
+                    sig
+                ).decode("ascii"),
+                expected_manifest_public_key_b64=public_key_b64_str,
+            )
+            rekor_set_ok = bool(
+                detail.pubkey_in_allowlist
+                and detail.set_signature_ok
+            )
+            rekor_inclusion_ok = bool(detail.inclusion_body_ok)
+            rekor_log_index = anchor.log_index
+            rekor_integrated_at = (
+                _dt.fromtimestamp(
+                    anchor.integrated_time, tz=_tz.utc
+                )
+                .isoformat()
+                .replace("+00:00", "Z")
+            )
+            for err in detail.errors:
+                errors.append(f"rekor: {err}")
+        except Exception as exc:
+            rekor_set_ok = False
+            rekor_inclusion_ok = False
+            errors.append(
+                f"rekor_verify_error: {type(exc).__name__}: {exc}"
+            )
+
+    return VerifyDossierEndpointResponse(
+        signature_ok=signature_ok,
+        public_key_b64=public_key_b64_str,
+        rekor_inclusion_ok=rekor_inclusion_ok,
+        rekor_set_ok=rekor_set_ok,
+        rekor_log_index=rekor_log_index,
+        rekor_integrated_at=rekor_integrated_at,
+        manifest_sha256=manifest_sha256_hex,
+        errors=errors,
+    )
+
+
 @app.post("/v1/run")
 @limiter.limit("30/minute")
 async def run_source(request: Request, body: RunRequest, x_api_key: Optional[str] = Header(None)):

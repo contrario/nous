@@ -307,6 +307,171 @@ def _load_ecdsa_p256_public_key(
     return pub
 
 
+class RekorVerifyDetail(BaseModel):
+    """Granular result of verify_rekor_anchor_offline_detail().
+
+    Each boolean reflects a single independent check:
+
+      pubkey_in_allowlist  - anchor.rekor_public_key_pem matches the
+                             known-keys allowlist (or the override
+                             passed via known_rekor_public_keys=).
+      set_signature_ok     - the Rekor signedEntryTimestamp
+                             ECDSA-P-256 signature verifies over the
+                             canonical SET payload
+                             {body, integratedTime, logID, logIndex}.
+      inclusion_body_ok    - the leaf body parses as
+                             hashedrekord/0.0.1, its sha256 matches
+                             the expected manifest canonical bytes,
+                             and the submitter (ephemeral ECDSA-P-256
+                             per submission) signature over the
+                             manifest canonical bytes verifies.
+
+    errors[] holds short diagnostic strings for any failed check.
+
+    # __session81_rekor_verify_detail_v1__
+    """
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+    pubkey_in_allowlist: bool
+    set_signature_ok: bool
+    inclusion_body_ok: bool
+    errors: list[str] = Field(default_factory=list)
+
+
+def verify_rekor_anchor_offline_detail(
+    anchor: RekorAnchor,
+    expected_manifest_canonical_bytes: bytes,
+    expected_manifest_signature_b64: str,
+    expected_manifest_public_key_b64: str,
+    known_rekor_public_keys: Optional[list[str]] = None,
+) -> RekorVerifyDetail:
+    """Like verify_rekor_anchor_offline() but returns RekorVerifyDetail.
+
+    Each of the three booleans is evaluated independently (no early
+    exit). The AND of the three is byte-equivalent to the legacy bool
+    return of verify_rekor_anchor_offline() (regression-asserted by
+    tests/test_rekor_anchor.py).
+
+    Parameters expected_manifest_signature_b64 and
+    expected_manifest_public_key_b64 are kept for API parity with the
+    legacy function; they are not consumed by the Path-beta dual
+    signing verifier (the leaf carries its own per-submission
+    ECDSA-P-256 pubkey + signature, verified directly against
+    expected_manifest_canonical_bytes).
+
+    # __session81_rekor_verify_detail_v1__
+    """
+    errors: list[str] = []
+
+    if anchor.provider != "sigstore-rekor":
+        return RekorVerifyDetail(
+            pubkey_in_allowlist=False,
+            set_signature_ok=False,
+            inclusion_body_ok=False,
+            errors=[f"unknown_provider: {anchor.provider}"],
+        )
+
+    allowlist = (
+        KNOWN_REKOR_PUBLIC_KEYS
+        if known_rekor_public_keys is None
+        else known_rekor_public_keys
+    )
+    pubkey_in_allowlist = anchor.rekor_public_key_pem in allowlist
+    if not pubkey_in_allowlist:
+        errors.append("rekor_public_key_not_in_allowlist")
+
+    set_signature_ok = False
+    try:
+        rekor_pub = _load_ecdsa_p256_public_key(
+            anchor.rekor_public_key_pem
+        )
+        payload_bytes = _canonical_set_payload(anchor)
+        signature_der = base64.b64decode(
+            anchor.signed_entry_timestamp_b64, validate=True
+        )
+        rekor_pub.verify(
+            signature_der, payload_bytes, ECDSA(hashes.SHA256())
+        )
+        set_signature_ok = True
+    except InvalidSignature:
+        errors.append("set_signature_invalid")
+    except Exception as exc:
+        errors.append(
+            f"set_signature_check_error: {type(exc).__name__}"
+        )
+
+    inclusion_body_ok = False
+    try:
+        leaf_body_raw = base64.b64decode(anchor.body_b64, validate=True)
+        leaf_body = json.loads(leaf_body_raw)
+        if not isinstance(leaf_body, dict):
+            raise ValueError("leaf body is not a dict")
+        if leaf_body.get("kind") != "hashedrekord":
+            raise ValueError(
+                f"leaf kind != hashedrekord: {leaf_body.get('kind')!r}"
+            )
+        spec = leaf_body.get("spec")
+        if not isinstance(spec, dict):
+            raise ValueError("leaf spec missing or not a dict")
+
+        expected_payload_sha256 = hashlib.sha256(
+            expected_manifest_canonical_bytes
+        ).hexdigest()
+        hash_block = spec.get("data", {}).get("hash", {})
+        if hash_block.get("algorithm") != "sha256":
+            raise ValueError(
+                "leaf hash algorithm != sha256: "
+                f"{hash_block.get('algorithm')!r}"
+            )
+        if hash_block.get("value") != expected_payload_sha256:
+            raise ValueError(
+                "leaf hash does not match expected manifest sha256"
+            )
+
+        sig_block = spec.get("signature", {})
+        submitter_sig_b64 = sig_block.get("content", "")
+        submitter_pem_b64 = sig_block.get("publicKey", {}).get(
+            "content", ""
+        )
+        if not submitter_sig_b64 or not submitter_pem_b64:
+            raise ValueError(
+                "leaf submitter signature or pubkey missing"
+            )
+
+        submitter_pem = base64.b64decode(
+            submitter_pem_b64, validate=True
+        ).decode("utf-8")
+        submitter_pub = serialization.load_pem_public_key(
+            submitter_pem.encode("utf-8")
+        )
+        if not isinstance(submitter_pub, ec.EllipticCurvePublicKey):
+            raise ValueError("submitter pubkey is not EC")
+        if not isinstance(submitter_pub.curve, ec.SECP256R1):
+            raise ValueError("submitter pubkey curve is not P-256")
+
+        submitter_sig_der = base64.b64decode(
+            submitter_sig_b64, validate=True
+        )
+        submitter_pub.verify(
+            submitter_sig_der,
+            expected_manifest_canonical_bytes,
+            ECDSA(hashes.SHA256()),
+        )
+        inclusion_body_ok = True
+    except InvalidSignature:
+        errors.append("submitter_signature_invalid")
+    except Exception as exc:
+        errors.append(
+            f"inclusion_body_check_error: {type(exc).__name__}: {exc}"
+        )
+
+    return RekorVerifyDetail(
+        pubkey_in_allowlist=pubkey_in_allowlist,
+        set_signature_ok=set_signature_ok,
+        inclusion_body_ok=inclusion_body_ok,
+        errors=errors,
+    )
+
+
 def verify_rekor_anchor_offline(
     anchor: RekorAnchor,
     expected_manifest_canonical_bytes: bytes,
@@ -314,104 +479,33 @@ def verify_rekor_anchor_offline(
     expected_manifest_public_key_b64: str,
     known_rekor_public_keys: Optional[list[str]] = None,
 ) -> bool:
-    if anchor.provider != "sigstore-rekor":
-        return False
+    """Verify a RekorAnchor offline against expected manifest bytes.
 
-    allowlist = (
-        KNOWN_REKOR_PUBLIC_KEYS
-        if known_rekor_public_keys is None
-        else known_rekor_public_keys
+    Returns True iff all three independent checks succeed:
+        pubkey_in_allowlist AND set_signature_ok AND inclusion_body_ok.
+
+    Refactored in S81 to delegate to
+    verify_rekor_anchor_offline_detail(). Outcome is byte-equivalent
+    to the S80 implementation; asserted in
+    tests/test_rekor_anchor.py.
+
+    # __session81_verify_dossier_endpoint_v1__
+    """
+    detail = verify_rekor_anchor_offline_detail(
+        anchor=anchor,
+        expected_manifest_canonical_bytes=(
+            expected_manifest_canonical_bytes
+        ),
+        expected_manifest_signature_b64=(
+            expected_manifest_signature_b64
+        ),
+        expected_manifest_public_key_b64=(
+            expected_manifest_public_key_b64
+        ),
+        known_rekor_public_keys=known_rekor_public_keys,
     )
-    if anchor.rekor_public_key_pem not in allowlist:
-        return False
-
-    try:
-        rekor_pub = _load_ecdsa_p256_public_key(
-            anchor.rekor_public_key_pem
-        )
-    except (ValueError, Exception):
-        return False
-
-    payload_bytes = _canonical_set_payload(anchor)
-    try:
-        signature_der = base64.b64decode(
-            anchor.signed_entry_timestamp_b64, validate=True
-        )
-    except (ValueError, Exception):
-        return False
-
-    try:
-        rekor_pub.verify(
-            signature_der, payload_bytes, ECDSA(hashes.SHA256())
-        )
-    except InvalidSignature:
-        return False
-    except Exception:
-        return False
-
-    try:
-        leaf_body_raw = base64.b64decode(anchor.body_b64, validate=True)
-        leaf_body = json.loads(leaf_body_raw)
-    except (ValueError, json.JSONDecodeError, Exception):
-        return False
-
-    if not isinstance(leaf_body, dict):
-        return False
-    if leaf_body.get("kind") != "hashedrekord":
-        return False
-    spec = leaf_body.get("spec")
-    if not isinstance(spec, dict):
-        return False
-
-    expected_payload_sha256 = hashlib.sha256(
-        expected_manifest_canonical_bytes
-    ).hexdigest()
-    hash_block = spec.get("data", {}).get("hash", {})
-    if hash_block.get("algorithm") != "sha256":
-        return False
-    if hash_block.get("value") != expected_payload_sha256:
-        return False
-
-    sig_block = spec.get("signature", {})
-    submitter_sig_b64 = sig_block.get("content", "")
-    submitter_pem_b64 = sig_block.get("publicKey", {}).get("content", "")
-    if not submitter_sig_b64 or not submitter_pem_b64:
-        return False
-
-    try:
-        submitter_pem = base64.b64decode(
-            submitter_pem_b64, validate=True
-        ).decode("utf-8")
-    except (ValueError, UnicodeDecodeError, Exception):
-        return False
-
-    try:
-        submitter_pub = serialization.load_pem_public_key(
-            submitter_pem.encode("utf-8")
-        )
-        if not isinstance(submitter_pub, ec.EllipticCurvePublicKey):
-            return False
-        if not isinstance(submitter_pub.curve, ec.SECP256R1):
-            return False
-    except Exception:
-        return False
-
-    try:
-        submitter_sig_der = base64.b64decode(
-            submitter_sig_b64, validate=True
-        )
-    except (ValueError, Exception):
-        return False
-
-    try:
-        submitter_pub.verify(
-            submitter_sig_der,
-            expected_manifest_canonical_bytes,
-            ECDSA(hashes.SHA256()),
-        )
-    except InvalidSignature:
-        return False
-    except Exception:
-        return False
-
-    return True
+    return (
+        detail.pubkey_in_allowlist
+        and detail.set_signature_ok
+        and detail.inclusion_body_ok
+    )
