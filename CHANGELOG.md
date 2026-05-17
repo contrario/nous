@@ -24,6 +24,23 @@
 
 ### Fixed
 
+<!-- __session82_release_v5_5_0_changelog__ -->
+## [5.5.0] - 2026-05-17
+
+### Added
+
+- V2 response shape for `POST /v1/verify-dossier` (S82 #1b): backward-compatible opt-in via new `policy` request field. When `policy` is present, returns `spec_version: "verify-dossier/v2"`, `verdict` (ACCEPT/REJECT), `trust_level` (rekor_anchored / ed25519_only / none), `policy_applied`, `checks{8}` (each with discriminated `ok: true | false | "skipped_unanchored" | "skipped_no_policy"` plus `errors[]`), `evidence`, and `human_readable{verdict_summary, trust_explanation, next_steps[]}`. When `policy` is omitted the legacy V1 response shape is preserved byte-identically for existing clients.
+- `dossier.VERIFY_OFFLINE_PY_HYBRID` (S82 #1a): hybrid offline verifier that accepts both Rekor-anchored and unanchored dossiers. Strict by default; new `--allow-unanchored` flag explicitly opts into unanchored verification. Replaces `VERIFY_OFFLINE_PY_WITH_REKOR` as the verifier source shipped from `nous-lang.org/verify_offline.py`.
+- Six new `tests/test_dossier_hybrid_template.py` cases covering the unanchored verification path of the HYBRID template.
+- Twelve new `tests/test_verify_dossier_endpoint_v2.py` cases covering V2 endpoint dispatch, verdict computation, policy defaults, check skipping, evidence assembly, and error propagation.
+
+### Changed
+
+- `nous-lang.org/verify.html` JS refactored for V2 response shape (S82 #1c): verdict banner, four status pills (SIGNATURE, SOURCE ID, ANCHORED, REKOR ANCHOR with composite state), evidence block with clickable Rekor log link, collapsible trust explanation, next-steps list, and per-check diagnostics. POST body opts into V2 with a permissive policy (`require_anchor: false`) so unanchored dossiers render with honest evidence rather than a hard REJECT. Wording in path-card #2 and the Run-offline note updated to reflect HYBRID-mode verifier.
+- `nous-lang.org/ide.html` Dossier tab (S82 #1c2): same V2 surface as verify.html, adapted to IDE element IDs (`dossier-*`) and the compact tab layout.
+- `nous-lang.org/verify_offline.py` (S82 #1c): re-extracted from `dossier.VERIFY_OFFLINE_PY_HYBRID`. SHA-pinned at deploy time.
+- `PYTEST_FLOOR` raised 542 -> 560 to reflect the new tests (S82 #1d).
+
 <!-- __session81_release_v5_4_0_changelog__ -->
 ## [5.4.0] - 2026-05-17
 
