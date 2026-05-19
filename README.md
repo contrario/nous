@@ -249,6 +249,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 - [EU AI Act Compliance](docs/EU_AI_ACT_COMPLIANCE.md) -- Annex IV / Article 11 mapping
 - [Annex IV Mapping](docs/ANNEX_IV_MAPPING.md) -- per-section Annex IV crosswalk to NOUS evidence artifacts
 - [Rekor Anchoring](docs/REKOR_ANCHOR.md) -- Path-beta dual signing, Sigstore wire format, offline verification
+- [Rekor v2 Migration](docs/REKOR_V2_MIGRATION.md) -- migration plan from Rekor v1 to v2 (Sigstore tile-based log)
 - [Public Verification API](docs/VERIFY_DOSSIER.md) -- `POST /v1/verify-dossier`, trust model, three verification paths
 - [SKILL.md Sidecar](docs/SKILL_MD_SIDECAR.md) -- emit dossiers from existing agentskills.io skill folders
 - [Skill Export](docs/SKILL_EXPORT.md) -- emit agentskills.io skills from `.nous` programs
