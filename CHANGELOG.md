@@ -25,6 +25,31 @@
 ### Fixed
 
 <!-- __session82_release_v5_5_0_changelog__ -->
+<!-- __session85_release_v5_7_0_changelog__ -->
+## [5.7.0] - 2026-05-21
+
+### Added
+- `null` / `none` as a first-class literal mapping to Python `None`;
+  `== null` / `!= null` emit `is None` / `is not None`.
+- `guard <expr> else <action>` now honored: the else action (any
+  statement) is emitted before the guard return instead of being
+  silently dropped.
+- Codegen-time undefined-name gate: `nous compile` runs pyflakes as a
+  library over generated Python and REFUSES with `CodegenSemanticError`
+  if any name is undefined, before writing output. Ignores unused
+  imports and all non-undefined-name categories.
+
+### Changed
+- `customer_service` template binds `message` in soul Triage from a
+  `superbrain_search` sense call (was unbound).
+- Regression baseline re-anchored to gate-verified codegen output for
+  the 7 templates whose output changed under the null / guard-else fixes.
+
+### Fixed
+- Release pipeline phase 10 is idempotent on duplicate upload
+  (`twine upload --skip-existing`; duplicate-400 no longer aborts
+  before tag).
+
 <!-- __session84_release_v5_6_0_changelog__ -->
 ## [5.6.0] - 2026-05-20
 
