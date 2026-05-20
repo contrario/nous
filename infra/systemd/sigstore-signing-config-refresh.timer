@@ -1,0 +1,11 @@
+[Unit]
+Description=Monthly Sigstore SigningConfig mirror refresh (NOUS Rekor v2 P1)
+Documentation=file:///opt/aetherlang_agents/nous/docs/REKOR_V2_MIGRATION.md
+
+[Timer]
+OnCalendar=*-*-01 03:30:00
+Persistent=yes
+RandomizedDelaySec=1800
+
+[Install]
+WantedBy=timers.target

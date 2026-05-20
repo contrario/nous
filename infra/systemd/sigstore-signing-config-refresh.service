@@ -1,0 +1,34 @@
+[Unit]
+Description=Refresh Sigstore SigningConfig mirror (NOUS Rekor v2 P1)
+Documentation=file:///opt/aetherlang_agents/nous/docs/REKOR_V2_MIGRATION.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=nous-refresh
+Group=nous-refresh
+Environment=HOME=/var/lib/nous-refresh
+Environment=XDG_CACHE_HOME=/var/lib/nous-refresh/.cache
+Environment=XDG_DATA_HOME=/var/lib/nous-refresh/.local/share
+ExecStart=/usr/bin/python3 /opt/aetherlang_agents/nous/scripts/refresh_signing_config.py --tool-python /opt/sigstore-tool/bin/python --out /var/lib/nous-sigstore/signing_config.json --compare /opt/aetherlang_agents/nous/infra/sigstore/signing_config.json
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+DevicePolicy=closed
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/nous-sigstore /var/lib/nous-refresh
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target
