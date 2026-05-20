@@ -238,6 +238,7 @@ class ListenNode(NousNode):
 
 class GuardNode(NousNode):
     condition: Any
+    else_action: Optional[Any] = None  # __session85_guard_else_ast_v1__
 
 
 class SenseCallNode(NousNode):

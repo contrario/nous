@@ -35,6 +35,7 @@ soul Triage {
     }
 
     instinct {
+        let message = sense superbrain_search(query: "incoming")
         guard message != null else sleep 5s
         speak Ticket(customer_id: "c1", query: message, priority: "normal")
         remember tickets_processed = tickets_processed + 1

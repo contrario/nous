@@ -607,6 +607,8 @@ class NousCodeGen:
             cond = self._expr_to_python(stmt.condition)
             self._emit(f"if not ({cond}):")
             self._indent()
+            if stmt.else_action is not None:  # __session85_guard_else_codegen_v1__
+                self._emit_statement(stmt.else_action, soul_name)
             self._emit("return")
             self._dedent()
 
@@ -1105,10 +1107,25 @@ class NousCodeGen:
             return f"[{items}]"
         if isinstance(expr, dict):
             kind = expr.get("kind", "")
+            if kind == "null_literal":  # __session85_null_kind_codegen_v1__
+                return "None"
             if kind == "binop":
+                op = expr["op"]
+                left_is_null = (
+                    isinstance(expr["left"], dict)
+                    and expr["left"].get("kind") == "null_literal"
+                )
+                right_is_null = (
+                    isinstance(expr["right"], dict)
+                    and expr["right"].get("kind") == "null_literal"
+                )
+                if op in ("==", "!=") and (left_is_null or right_is_null):  # __session85_null_binop_codegen_v1__
+                    operand = expr["right"] if left_is_null else expr["left"]
+                    other = self._expr_to_python(operand)
+                    is_op = "is" if op == "==" else "is not"
+                    return f"({other} {is_op} None)"
                 left = self._expr_to_python(expr["left"])
                 right = self._expr_to_python(expr["right"])
-                op = expr["op"]
                 if op == "&&":
                     op = "and"
                 elif op == "||":
@@ -1344,3 +1361,41 @@ class NousCodeGen:
 def generate_python(program: NousProgram, node_filter: str | None = None) -> str:
     gen = NousCodeGen(program)
     return gen.generate(node_filter=node_filter)
+
+
+class CodegenSemanticError(Exception):  # __session85_undefined_gate_codegen_v1__
+    pass
+
+
+def check_undefined_names(code: str, filename: str = "<generated>") -> list[tuple[int, str, str]]:
+    import pyflakes.api as _pf_api
+    import pyflakes.messages as _pf_msg
+
+    findings: list[tuple[int, str, str]] = []
+
+    class _UndefReporter:
+        def unexpectedError(self, fn: str, msg: str) -> None:
+            return None
+
+        def syntaxError(self, fn: str, msg: str, lineno: int, offset: int, text: str) -> None:
+            return None
+
+        def flake(self, message: Any) -> None:
+            if isinstance(message, (_pf_msg.UndefinedName, _pf_msg.UndefinedLocal)):
+                name = message.message_args[0] if message.message_args else "?"
+                findings.append((message.lineno, str(name), type(message).__name__))
+
+    _pf_api.check(code, filename, _UndefReporter())
+    findings.sort()
+    return findings
+
+
+def assert_no_undefined_names(code: str, filename: str = "<generated>") -> None:
+    findings = check_undefined_names(code, filename)
+    if findings:
+        first_line, first_name, _cls = findings[0]
+        detail = ", ".join(f"{n} (line {ln})" for (ln, n, _c) in findings)
+        raise CodegenSemanticError(
+            f"undefined name {first_name!r} at line {first_line}: "
+            f"generated module references {len(findings)} undefined name(s): {detail}"
+        )

@@ -141,6 +141,9 @@ class NousTransformer(Transformer):
     def name_ref(self, items: list) -> str:
         return items[0]
 
+    def null_lit(self, items: list) -> dict:  # __session85_null_lit_parser_v1__
+        return {"kind": "null_literal"}
+
     def list_lit(self, items: list) -> list:
         return items[0] if items else []
 
@@ -665,9 +668,14 @@ class NousTransformer(Transformer):
         s = self._strip(items)
         return LetNode(name=s[0], value={"kind": "listen", "world": s[1], "soul": s[2], "type": s[3]})
 
-    def guard_stmt(self, items: list) -> GuardNode:
+    def guard_stmt(self, items: list) -> GuardNode:  # __session85_guard_else_parser_v1__
         s = self._strip(items)
-        return GuardNode(condition=s[0])
+        else_action = s[1] if len(s) > 1 else None
+        return GuardNode(condition=s[0], else_action=else_action)
+
+    def guard_else_action(self, items: list) -> Any:
+        s = self._strip(items)
+        return s[0] if s else None
 
     def sense_bare(self, items: list) -> SenseCallNode:
         s = self._strip(items)

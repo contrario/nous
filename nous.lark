@@ -145,7 +145,8 @@ speak_stmt: SPEAK NAME "(" arg_list? ")"                          -> speak_local
 listen_expr: "let" NAME "=" LISTEN NAME "::" NAME                 -> listen_local
            | "let" NAME "=" LISTEN "@" NAME "::" NAME "::" NAME   -> listen_cross
 
-guard_stmt: GUARD expr
+guard_stmt: GUARD expr ("else" guard_else_action)?  // __session85_guard_else_grammar_v1__
+guard_else_action: statement  // __session85_guard_else_widen_v1__
 
 if_stmt: "if" expr "{" statement* "}" ("else" "{" statement* "}")?
 for_stmt: "for" NAME "in" expr "{" statement* "}"
@@ -385,6 +386,7 @@ MUL_OP: "*" | "/" | "%"
      | "self"                                      -> self_ref
      | "world" "." dotted_name                     -> world_ref
      | NAME "::" NAME                              -> soul_field_ref
+     | NULL                                        -> null_lit  // __session85_null_atom_v1__
      | NAME                                        -> name_ref
      | "[" expr_list? "]"                          -> list_lit
      | "%{" kv_list? "}"                           -> map_lit
@@ -478,6 +480,7 @@ TIER: /Tier[0-3][A-B]?|Groq|Together|Fireworks|Cerebras/
 // ═══════════════════════════════════════════
 
 BOOL.2: "true" | "false"
+NULL.2: "null" | "none"  // __session85_null_terminal_v1__
 COMP_OP: "==" | "!=" | ">=" | "<=" | ">" | "<"
 
 DURATION_VAL.3: /\d+(ms|s|m|h|d)(?![a-zA-Z_])/

@@ -45,7 +45,7 @@ REPO_ROOT: Path = Path("/opt/aetherlang_agents/nous")
 DIST_DIR: Path = REPO_ROOT / "dist"
 TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
-PYTEST_FLOOR: int = 566  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__  # __session80_release_v5_3_0_release_script__  # __nous_aetherproof_release_530_packaging_v1__  # __session81_release_v5_4_0_release_script__  # __session82_release_v5_5_0_release_script__
+PYTEST_FLOOR: int = 576  # __session85_release_v5_7_0_floor_v1__  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__  # __session80_release_v5_3_0_release_script__  # __nous_aetherproof_release_530_packaging_v1__  # __session81_release_v5_4_0_release_script__  # __session82_release_v5_5_0_release_script__
 TEMPLATE_FOR_SMOKE: str = "sycophancy_guard"
 _ALLOW_EXISTING_TAG: bool = False  # __NERVE_DISPATCH_RELEASE_ALLOW_EXISTING_TAG_v1__
 PYFLAKES_TARGETS: tuple[str, ...] = (
@@ -287,8 +287,27 @@ def phase_upload(whl: Path, sdist: Path) -> None:
     twine = TWINE_VENV / "bin" / "twine"
     run([str(twine), "check", str(whl), str(sdist)])
     print("  twine check OK")
-    run([str(twine), "upload", str(whl), str(sdist)])
-    print(f"  OK: uploaded {whl.name} + {sdist.name}")
+    # __session85_phase10_idempotent_v1__
+    result = run(
+        [str(twine), "upload", "--skip-existing", str(whl), str(sdist)],
+        check=False,
+    )
+    combined = (result.stdout + result.stderr).lower()
+    duplicate = (
+        "already exists" in combined
+        or "skipping" in combined
+        or "this filename has already been used" in combined
+    )
+    if result.returncode != 0 and not duplicate:
+        print(f"    stdout: {result.stdout[-500:]}")
+        print(f"    stderr: {result.stderr[-500:]}")
+        raise ReleaseError(
+            f"twine upload failed (exit {result.returncode}); not a duplicate"
+        )
+    if duplicate:
+        print(f"  OK: {whl.name} + {sdist.name} already on PyPI (idempotent)")
+    else:
+        print(f"  OK: uploaded {whl.name} + {sdist.name}")
 
 
 def main() -> int:

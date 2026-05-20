@@ -131,6 +131,13 @@ def cmd_compile(args: argparse.Namespace) -> int:
         return 0
     print("[4/4] Generating Python...")
     code = generate_python(program)
+    from codegen import assert_no_undefined_names, CodegenSemanticError  # __session85_undefined_gate_cli_v1__
+    try:
+        assert_no_undefined_names(code, str(source))
+    except CodegenSemanticError as _gate_err:
+        print(f"      semantic gate FAIL: CodegenSemanticError: {_gate_err}", file=sys.stderr)
+        return 1
+    print("      undefined-name gate PASS")
     out_path = Path(args.output) if args.output else source.with_suffix(".py")
     out_path.write_text(code, encoding="utf-8")
 
