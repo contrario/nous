@@ -1368,8 +1368,15 @@ class CodegenSemanticError(Exception):  # __session85_undefined_gate_codegen_v1_
 
 
 def check_undefined_names(code: str, filename: str = "<generated>") -> list[tuple[int, str, str]]:
-    import pyflakes.api as _pf_api
-    import pyflakes.messages as _pf_msg
+    try:  # __session85_gate_optional_pyflakes_v1__
+        import pyflakes.api as _pf_api
+        import pyflakes.messages as _pf_msg
+    except ModuleNotFoundError:
+        import logging as _logging
+        _logging.getLogger("nous.codegen").info(
+            "undefined-name gate skipped: pyflakes not installed (dev/release-only dependency)"
+        )
+        return []
 
     findings: list[tuple[int, str, str]] = []
 
