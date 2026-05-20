@@ -234,10 +234,10 @@ PYTEST_FLOOR: 354 -> 394
   default `None` = backward compatible with 4.16.x clients).
 - `render_diff_side()` canonical renderer producing deterministic display
   strings: `Template: sycophancy_guard`, `Editor (current)`, `Paste A`,
-  `Replay 550e8400…`, `File: sample.jsonl`, `(unknown source)`.
+  `Replay 550e8400...`, `File: sample.jsonl`, `(unknown source)`.
 - `/v1/diff` response now includes `original_label` and `modified_label`
   fields, server-rendered via the canonical function. Clients that send
-  no provenance get `(unknown source)` for both — explicit, not fabricated.
+  no provenance get `(unknown source)` for both -- explicit, not fabricated.
 - 17 regression tests in `tests/test_diff_side.py` covering every kind,
   edge cases (anonymous paste, missing identifier, label override),
   request roundtrip, and Literal enum rejection of unknown kinds.
@@ -493,7 +493,7 @@ PYTEST_FLOOR: 320 -> 337
 
 ### Tests
 
-- `tests/test_smt_margin.py` — 8 new tests (264 -> 272 total).
+- `tests/test_smt_margin.py` -- 8 new tests (264 -> 272 total).
 
 ## [4.13.2] - 2026-04-29
 
@@ -514,7 +514,7 @@ PYTEST_FLOOR: 320 -> 337
 - **NOUS manifests are self-verifying offline artifacts.** A holder of
   the manifest file plus the publisher's Ed25519 public key can verify
   authenticity without contacting any service. Storage is the
-  publisher's choice (filesystem, S3, IPFS, git release, etc.) — no
+  publisher's choice (filesystem, S3, IPFS, git release, etc.) -- no
   central-ledger dependency. `manifest.verify_manifest_signature()`
   remains the offline-verification primitive. `sign_manifest`,
   `manifest_json`, `parse_manifest_json`, and the keypair management
@@ -559,14 +559,14 @@ PYTEST_FLOOR: 320 -> 337
 
 ## [4.13.0] - 2026-04-28
 
-### Added — Formal SMT cost-bound verification
+### Added -- Formal SMT cost-bound verification
 
-- **`cost_cap` world-body declaration** — `cost_cap: 0.50 USD` declares a
+- **`cost_cap` world-body declaration** -- `cost_cap: 0.50 USD` declares a
   hard upper bound on total program spend. Currency parser supports USD
   (extensible to EUR etc. in Phase 5).
-- **`max_ticks` world-body declaration** — `max_ticks: 5` bounds the number
+- **`max_ticks` world-body declaration** -- `max_ticks: 5` bounds the number
   of execution cycles. Required input for SMT proof.
-- **Per-soul `tokens` declaration** — `tokens: input=500 output=200`
+- **Per-soul `tokens` declaration** -- `tokens: input=500 output=200`
   declares per-tick token estimates. Multiplied by per-token rates from
   the active pricing table to compute worst-case spend.
 - **Layered pricing infrastructure** (`pricing/defaults.toml`):
@@ -575,19 +575,19 @@ PYTEST_FLOOR: 320 -> 337
     `~/.config/nous/prices.toml` > package defaults.
   - Deterministic ordering, SHA-256 audit hash.
   - New CLI: `nous prices show / init / verify / age`.
-- **`smt_emit.py`** — deterministic SMT-LIB 2.6 emitter. Decimal → exact
+- **`smt_emit.py`** -- deterministic SMT-LIB 2.6 emitter. Decimal -> exact
   rationals; no float artefacts. Output is byte-deterministic across
   runs and machines. New CLI: `nous emit-smt FILE.nous`.
-- **`smt_verify.py`** — Z3 wrapper with counterexample extraction and
+- **`smt_verify.py`** -- Z3 wrapper with counterexample extraction and
   **constructive fix suggestions** (raise cap to X / reduce ticks to Y /
   identify largest contributor).
-- **`manifest.py`** — ed25519-signed JSON manifests (Sigstore/SLSA
+- **`manifest.py`** -- ed25519-signed JSON manifests (Sigstore/SLSA
   convention). Single self-contained file with embedded base64 signature.
   Tamper detection. AetherProof publish opt-in via `--publish`.
-- **`nous verify FILE.nous --smt`** — flagship CLI: parse → emit → solve
-  → manifest. Backward compat preserved: `nous verify FILE.nous` (no
+- **`nous verify FILE.nous --smt`** -- flagship CLI: parse -> emit -> solve
+  -> manifest. Backward compat preserved: `nous verify FILE.nous` (no
   `--smt`) still runs governance lint as a build gate.
-- **ed25519 key management** — auto-generated at
+- **ed25519 key management** -- auto-generated at
   `~/.local/share/nous/keys/signing.key` (XDG, mode 0600).
   `--key-path` override supported.
 - **`[smt]` optional extra** in `pyproject.toml`:
@@ -602,7 +602,7 @@ PYTEST_FLOOR: 320 -> 337
 
 ### Stats
 
-- Tests: 184 → 264 (+80).
+- Tests: 184 -> 264 (+80).
 - Regression templates: 54/54 byte-identical (additive arc only).
 - Codegen touch: zero.
 - New modules: `smt_emit`, `cli_emit_smt`, `smt_verify`, `manifest`,
@@ -614,14 +614,14 @@ PYTEST_FLOOR: 320 -> 337
 
 ### Added
 
-- **Single-source `VERSION` constant** — `_version.py` is now the sole
+- **Single-source `VERSION` constant** -- `_version.py` is now the sole
   source of truth (`__version__: str` + `__version_tuple__: tuple`).
   `nous_api.py` reads it dynamically; no hardcoded version strings
   anywhere else.
-- **R18 version-consistency test** — verifies pip metadata matches
+- **R18 version-consistency test** -- verifies pip metadata matches
   `_version.__version__` after install. Run with
   `pip install -e .` to refresh metadata before invoking.
-- **Atomic release pipeline** — Phase 4.5 pyflakes gate added; release
+- **Atomic release pipeline** -- Phase 4.5 pyflakes gate added; release
   pipeline now has 10 phases, each commit-atomic.
 
 ### Fixed
@@ -643,9 +643,9 @@ PYTEST_FLOOR: 320 -> 337
 
 ### Fixed
 
-- **Broken-template hotfix** — `nous templates copy` was emitting a
+- **Broken-template hotfix** -- `nous templates copy` was emitting a
   template that failed parser load on fresh installs.
-- **Grammar single-source** — `nous.lark` is now resolved through one
+- **Grammar single-source** -- `nous.lark` is now resolved through one
   canonical loader path. Previous duplicate-resolution paths (package
   vs sys.path) caused divergent parser state on certain installs.
 
@@ -655,7 +655,7 @@ PYTEST_FLOOR: 320 -> 337
 
 ### Added
 
-- **Templates as proper package** — bundled `.nous` templates moved into
+- **Templates as proper package** -- bundled `.nous` templates moved into
   the top-level `templates/` package and shipped via `package-data`.
   Reachable via `importlib.resources`.
 - **`nous templates list / copy <name>`** CLI commands.
@@ -676,10 +676,10 @@ PYTEST_FLOOR: 320 -> 337
 
 ### Added
 
-- **Sycophancy phrase detector** (`phrase_detector.py`) — heuristic
+- **Sycophancy phrase detector** (`phrase_detector.py`) -- heuristic
   pass over LLM outputs to flag flattery / capitulation / over-eager
   agreement language.
-- **`llm.response` event kind** — first-class event in the governance
+- **`llm.response` event kind** -- first-class event in the governance
   layer. Policies can match on `llm.response` and inspect the response
   string via signal helpers (e.g. `contains_phrase("absolutely")`).
 - Governance lint extended to validate `llm.response` policies.
@@ -689,11 +689,11 @@ PYTEST_FLOOR: 320 -> 337
 ## [4.10.0] - 2026-04-17
 
 ### Added
-- `--error-on CODES` CLI flag for `nous governance lint` — elevate non-error rules to failure (e.g. `--error-on L010,L007`). Exit 2 on invalid rule codes.
+- `--error-on CODES` CLI flag for `nous governance lint` -- elevate non-error rules to failure (e.g. `--error-on L010,L007`). Exit 2 on invalid rule codes.
 - `nous verify` now runs governance lint after formal verification. Errors fail the build by default. New flags: `--no-lint`, `--lint-strict`, `--lint-error-on`.
 - LSP server emits lint diagnostics with source `nous.lint`. Visible as red/amber/blue squiggles in VS Code (L008 error, L010 warning, L007 info).
-- New module `governance_simulator.py` — safe-eval engine for what-if policy evaluation. Data fields become bare names in signal namespace.
-- New HTTP endpoint `POST /v1/governance/simulate` — simulate an event against declared policies. Error codes SIM001/SIM002/SIM003.
+- New module `governance_simulator.py` -- safe-eval engine for what-if policy evaluation. Data fields become bare names in signal namespace.
+- New HTTP endpoint `POST /v1/governance/simulate` -- simulate an event against declared policies. Error codes SIM001/SIM002/SIM003.
 - New IDE element: EVENT SIMULATION strip in Governance tab with kind/data inputs and color-coded fired/skipped matches.
 - New constant `VALID_RULE_CODES` and helper `_parse_rule_codes()` in `governance_lint`.
 - New template `governance_demo.nous` with 5 policies across 3 event kinds.
@@ -794,7 +794,7 @@ users should install v4.8.3 or higher.
 
 ## [4.8.2] - 2026-04-17
 
-### Added — Phase G Layer 4.5: prompt-hash recompute on inject_message
+### Added -- Phase G Layer 4.5: prompt-hash recompute on inject_message
 
 When an `inject_message` policy triggers and modifies the outgoing LLM
 messages, the `llm.request` event now carries three additional fields:
@@ -875,30 +875,30 @@ transmitted.
 - Layer 1 (RiskEngine, v4.5.0) + Layer 2 (Policy DSL, v4.6.0) + Layer 3 (Runtime enforcement, v4.7.0)
 
 ## [4.6.0] - 2026-04-17
-### Added — Phase G Governance, Layer 2: Policy DSL
-- **Grammar extension** — `policy NAME { ... }` blocks inside `world`
+### Added -- Phase G Governance, Layer 2: Policy DSL
+- **Grammar extension** -- `policy NAME { ... }` blocks inside `world`
   - Keywords: `policy` | `πολιτική` (POLICY.2 terminal)
   - Clauses: `kind`, `signal`, `window`, `weight`, `action`, `description`
   - Actions: `log_only`, `intervene`, `block`, `inject_message`, `abort_cycle`
-  - **Native NOUS expressions** as signals — type-checked at parse time, not runtime strings
-- **AST nodes** — `PolicyNode` (Pydantic V2) with `PolicyAction` Literal enum
+  - **Native NOUS expressions** as signals -- type-checked at parse time, not runtime strings
+- **AST nodes** -- `PolicyNode` (Pydantic V2) with `PolicyAction` Literal enum
   - Rejects invalid actions at construction time (compile-time type safety)
   - `WorldNode.policies: list[PolicyNode]` default empty
-- **Validator** — `_check_policies()` with 5 error codes
+- **Validator** -- `_check_policies()` with 5 error codes
   - PL001 duplicate name, PL002 missing signal, PL003 weight range, PL004 negative window, PL005 empty kind
-- **Codegen emission** — `_emit_policy_constants()`
+- **Codegen emission** -- `_emit_policy_constants()`
   - Emits `_POLICIES: list[RiskRule] = [...]` + `_POLICY_ACTIONS: dict[str, str]`
   - Imports `risk_engine.RiskRule` only when policies present
-  - Reuses `_expr_to_python` for signal → predicate translation (binop, not, compare)
-  - **Zero bytes emitted when no policies declared** → 40 regression templates byte-identical
-- **RiskRule** — extended with `action: str = "log_only"` field (backward compatible)
+  - Reuses `_expr_to_python` for signal -> predicate translation (binop, not, compare)
+  - **Zero bytes emitted when no policies declared** -> 40 regression templates byte-identical
+- **RiskRule** -- extended with `action: str = "log_only"` field (backward compatible)
   - `from_dict` reads optional `action` from YAML
   - Existing YAML rules continue to work unchanged
-- **`tests/test_policy_grammar.py`** — 10/10 E2E
+- **`tests/test_policy_grammar.py`** -- 10/10 E2E
   - Parse, AST typing, defaults, validator positive+negative, codegen emission, zero-output-without-policies, runtime RiskRule instantiation, py_compile
 
 ### Stability
-- **40 regression templates remain byte-identical** — the critical gate
+- **40 regression templates remain byte-identical** -- the critical gate
 - All previous tests green: Foundation 7/7, Phase C 10/10, Phase D 6/6, Risk 10/10
 - **43 total replay+governance tests** (7 + 10 + 6 + 10 + 10)
 
@@ -910,26 +910,26 @@ Layer 3 (Intervention primitive + runtime hook) follows in 4.7.0.
 
 
 ## [4.5.0] - 2026-04-17
-### Added — Phase G Governance, Layer 1: RiskEngine
-- **`risk_engine.py`** — runtime risk assessment over replay event logs
-  - `RiskRule` (dataclass) — YAML-configurable rule: `kind_filter`, `predicate`, `weight`, `window`, `extract`
-  - `RiskAssessment` — per-event score in [0,1] with `triggered_rules` + `reasoning`
-  - `RiskReport` — aggregate over a full log (max/mean score, rule hits, per-event detail)
+### Added -- Phase G Governance, Layer 1: RiskEngine
+- **`risk_engine.py`** -- runtime risk assessment over replay event logs
+  - `RiskRule` (dataclass) -- YAML-configurable rule: `kind_filter`, `predicate`, `weight`, `window`, `extract`
+  - `RiskAssessment` -- per-event score in [0,1] with `triggered_rules` + `reasoning`
+  - `RiskReport` -- aggregate over a full log (max/mean score, rule hits, per-event detail)
   - `RiskEngine.assess(event)` and `assess_log(path)` public API
-  - Sandboxed predicate eval (no `__` names, no builtins) — safe to load untrusted rule YAML
+  - Sandboxed predicate eval (no `__` names, no builtins) -- safe to load untrusted rule YAML
   - Rolling per-(soul, rule) statistics for drift detection
-- **`risk_rules.yaml`** — 7 default rules: `high_llm_cost`, `llm_token_burst`, `sense_error`, `memory_write_burst`, `cycle_duration_spike`, `llm_error`, `response_length_anomaly`
-- **`nous replay <log> --risk-report`** — new CLI mode
-  - `--rules YAML` — load custom ruleset
-  - `--json` — machine-parseable output for CI/CD
-  - `--verbose` — per-event triggered rows
+- **`risk_rules.yaml`** -- 7 default rules: `high_llm_cost`, `llm_token_burst`, `sense_error`, `memory_write_burst`, `cycle_duration_spike`, `llm_error`, `response_length_anomaly`
+- **`nous replay <log> --risk-report`** -- new CLI mode
+  - `--rules YAML` -- load custom ruleset
+  - `--json` -- machine-parseable output for CI/CD
+  - `--verbose` -- per-event triggered rows
   - Exit 0 = clean, 5 = triggered, 1 = I/O error
-- **`tests/test_risk_engine.py`** — 10/10 E2E: default rules, clean log, each rule fires, custom YAML, sandbox escape blocked, JSON roundtrip
+- **`tests/test_risk_engine.py`** -- 10/10 E2E: default rules, clean log, each rule fires, custom YAML, sandbox escape blocked, JSON roundtrip
 
 ### Stability
-- Zero changes to existing code — pure additive layer
+- Zero changes to existing code -- pure additive layer
 - 40 regression templates remain byte-identical
-- Phase A 7/7, Phase C 10/10, Phase D 6/6, Risk 10/10 — all green
+- Phase A 7/7, Phase C 10/10, Phase D 6/6, Risk 10/10 -- all green
 - 33 total replay+governance tests
 
 ### Why 4.5.0 (minor bump)
@@ -938,50 +938,50 @@ Phase G (Governance) is a new capability layer, not a patch to Replay. Layer 1 s
 
 ## [4.4.3] - 2026-04-17
 ### Added
-- **Phase D — LLM Replay in API** — chat endpoint now supports deterministic LLM replay
-- **`ReplayContext.record_or_replay_llm`** — coroutine wrap for any async LLM call
+- **Phase D -- LLM Replay in API** -- chat endpoint now supports deterministic LLM replay
+- **`ReplayContext.record_or_replay_llm`** -- coroutine wrap for any async LLM call
   - Events: `llm.request`, `llm.response`, `llm.error`
   - Match key: `sha256(provider | model | canonical(messages) | temperature)[:16]`
   - Prompt hash mismatch raises `ReplayDivergence`
   - Preserves cost, tokens_in, tokens_out, tier, elapsed_ms in recorded response
 - **`ChatRequest`** extended with three optional fields: `replay_mode` (off|record|replay), `replay_log`, `replay_seed_base`
-- **`tests/test_replay_phase_d.py`** — 6-step E2E harness (OFF passthrough, record roundtrip, replay hit, prompt-hash divergence, error record+replay, seed determinism)
+- **`tests/test_replay_phase_d.py`** -- 6-step E2E harness (OFF passthrough, record roundtrip, replay hit, prompt-hash divergence, error record+replay, seed determinism)
 
 ### Changed
 - `/v1/chat` handler wraps the tier-call loop under `ReplayContext` when `replay_mode != "off"`; default behavior unchanged
 
 ### Stability
 - 40 regression templates remain byte-identical
-- Phase A foundation: 7/7, Phase C E2E: 10/10, Phase D E2E: 6/6 — all green
+- Phase A foundation: 7/7, Phase C E2E: 10/10, Phase D E2E: 6/6 -- all green
 
 
 ## [1.4.0] - 2026-04-12
 
 ### Added
-- **LALR parser** — 90.6x faster than Earley (3.3ms vs 324ms per parse)
-- **Multi-world execution** — `nous run a.nous b.nous` runs worlds concurrently via asyncio.TaskGroup
-- **multiworld.py** — WorldInstance, SharedChannelBus, MultiWorldRunner
-- **Constitutional guards** — C001 (NoLiveTrading enforcement), C003 (MaxPositionSize warning), C004 (MaxDailyLoss warning)
-- **ConstitutionalGuard class** in codegen — position check, daily loss circuit breaker, audit log
-- **ccxt RSI-14** — Real OHLCV from Binance/Bybit/Gate/KuCoin/OKX with Wilder smoothing
-- **Exchange fallback chain** — 5 exchanges, contract address detection, exotic quote skip
-- **`_sense_*` methods** — Per-soul tool delegation to `self._runtime.sense()`
-- **`WORLD_CONFIG` dict** — World config + env vars accessible in generated code
-- **`model_rebuild()`** — After every Pydantic message class in codegen
-- **infra_monitor.nous** — Example infrastructure monitoring world
+- **LALR parser** -- 90.6x faster than Earley (3.3ms vs 324ms per parse)
+- **Multi-world execution** -- `nous run a.nous b.nous` runs worlds concurrently via asyncio.TaskGroup
+- **multiworld.py** -- WorldInstance, SharedChannelBus, MultiWorldRunner
+- **Constitutional guards** -- C001 (NoLiveTrading enforcement), C003 (MaxPositionSize warning), C004 (MaxDailyLoss warning)
+- **ConstitutionalGuard class** in codegen -- position check, daily loss circuit breaker, audit log
+- **ccxt RSI-14** -- Real OHLCV from Binance/Bybit/Gate/KuCoin/OKX with Wilder smoothing
+- **Exchange fallback chain** -- 5 exchanges, contract address detection, exotic quote skip
+- **`_sense_*` methods** -- Per-soul tool delegation to `self._runtime.sense()`
+- **`WORLD_CONFIG` dict** -- World config + env vars accessible in generated code
+- **`model_rebuild()`** -- After every Pydantic message class in codegen
+- **infra_monitor.nous** -- Example infrastructure monitoring world
 
 ### Changed
-- **nous.lark** — Keyword priority `.2`, `remember_set`/`remember_add` split, `then_block`/`else_block` sub-rules
-- **parser.py** — Zero workarounds, `_strip()` helper, `string_lit` returns `{"kind": "string_lit", "value": "..."}`
-- **codegen.py** — `self` → `self.name`, `.where()` → `.filter()`, runtime integration in `run_world()`
-- **validator.py** — Recursive tool scanning in if/for bodies, `_get_bool_law()`/`_get_currency_law()` helpers
-- **cli.py** — v1.4.0, `nargs="+"` for multi-file support
-- **gate_alpha_scan.py** — Pair format: `symbol/quote` instead of contract address
-- **fetch_rsi.py** — Full rewrite with ccxt async
+- **nous.lark** -- Keyword priority `.2`, `remember_set`/`remember_add` split, `then_block`/`else_block` sub-rules
+- **parser.py** -- Zero workarounds, `_strip()` helper, `string_lit` returns `{"kind": "string_lit", "value": "..."}`
+- **codegen.py** -- `self` -> `self.name`, `.where()` -> `.filter()`, runtime integration in `run_world()`
+- **validator.py** -- Recursive tool scanning in if/for bodies, `_get_bool_law()`/`_get_currency_law()` helpers
+- **cli.py** -- v1.4.0, `nargs="+"` for multi-file support
+- **gate_alpha_scan.py** -- Pair format: `symbol/quote` instead of contract address
+- **fetch_rsi.py** -- Full rewrite with ccxt async
 
 ### Fixed
 - `self` in .nous generating Python object instead of soul name string
-- `.where(field > val)` crash — ToolResult has `.filter()` not `.where()`
+- `.where(field > val)` crash -- ToolResult has `.filter()` not `.where()`
 - `world.config.X` generating undefined `world_config` variable
 - Channels not connected to runtime
 - Pydantic forward refs crash in dynamic import (model_rebuild fix)
@@ -1003,3 +1003,4 @@ Phase G (Governance) is a new capability layer, not a patch to Replay. Layer 1 s
 - Project inception
 - Grammar design (Lark EBNF)
 - Core AST node definitions
+<!-- __changelog_ascii_fold_s84_v1__ -->
