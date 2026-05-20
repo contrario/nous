@@ -25,6 +25,40 @@
 ### Fixed
 
 <!-- __session82_release_v5_5_0_changelog__ -->
+<!-- __session84_release_v5_6_0_changelog__ -->
+## [5.6.0] - 2026-05-20
+
+### Added
+
+- **Rekor v2 migration P1: trust root mirror (S84 #3a/#3b).** New
+  `infra/sigstore/signing_config.json`, a pinned snapshot of the
+  Sigstore SigningConfig resolved via TUF on 2026-05-20 (v1-only:
+  the production config lists only `rekor.sigstore.dev` at
+  `majorApiVersion: 1`, by Sigstore's stated decision to withhold the
+  Rekor v2 URL from TUF until clients upgrade). New
+  `scripts/refresh_signing_config.py`: a stdlib-only refresh that drives
+  a version-pinned `sigstore` CLI (`sigstore plumbing update-trust-root`)
+  via subprocess and never imports `sigstore` into the NOUS runtime,
+  writing the resolved config to a staging path. A monthly systemd timer
+  (`infra/systemd/sigstore-signing-config-refresh.{service,timer}`) runs
+  the refresh as an unprivileged `nous-refresh` user under a hardened
+  sandbox; promotion of a changed config into the repo is a deliberate
+  commit.
+- **6 new tests** in `tests/test_signing_config_mirror.py` validating the
+  pinned mirror offline (mediaType, rekorTlogUrls shape, v1 presence).
+  PYTEST_FLOOR raised 560 -> 566.
+
+### Notes
+
+- No runtime code path consumes the mirror yet; `rekor_anchor.py` is
+  unchanged. P1 is the trust-root plumbing for the v2 read path (P2,
+  planned v5.7.0). The dependency surface of `nous-lang` is unchanged:
+  the `sigstore` tool lives in an isolated venv, not in the wheel.
+- The homepage story timeline was rebuilt into ascending order with
+  v4.14.0 through v5.5.0 cards (web-only, not in this package).
+- `CHANGELOG.md` was folded to ASCII for typographic characters; the
+  `POLICY.2` Greek grammar-keyword reference is retained intentionally.
+
 ## [5.5.0] - 2026-05-17
 
 ### Added
