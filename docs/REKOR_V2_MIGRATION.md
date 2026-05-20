@@ -316,6 +316,25 @@ the `SigningConfig`. Decision deferred to S84+ (sigstore-tuf adds a
 non-trivial transitive surface; an internal mirror is a small JSON
 file refreshed monthly via a cron / systemd timer).
 
+**P1 decision (S84):** internal mirror chosen over a `python-tuf` /
+`sigstore-python` runtime dependency. The mirror is
+`infra/sigstore/signing_config.json`, refreshed by
+`scripts/refresh_signing_config.py`, which drives a version-pinned
+`sigstore` CLI (`sigstore plumbing update-trust-root`) in an isolated
+tool venv and never imports `sigstore` into the NOUS runtime. The
+refresh writes to a staging path under an unprivileged user; promotion
+into the repo is a deliberate commit. Rationale: the `sigstore-python`
+public API churned in 2026 (SigningConfig helpers moved to TrustConfig,
+v0.1 support dropped), so NOUS depends on the spec-stable
+`signingconfig.v0.2+json` output format, not the unstable Python API.
+
+**Live state (2026-05-20):** the production SigningConfig distributed
+via TUF lists only `rekor.sigstore.dev` at `majorApiVersion: 1`.
+Sigstore has stated it will not distribute the Rekor v2 URL via TUF
+until verification clients have upgraded. The annotated v2 example
+above is therefore illustrative; the monthly refresh is what will
+surface the v2 entry when Sigstore rolls it out.
+
 ---
 
 ## 9. Backward compatibility for historical v1 dossiers
@@ -489,3 +508,4 @@ above assumes the stated 1-year deprecation window holds.
 *Last updated: Session 83, 19 May 2026 (HEAD: post-`f584c4b`, v5.5.0).*
 
 <!-- __session83_rekor_v2_migration_v1__ -->
+<!-- __session84_rekor_p1_mirror_v1__ -->
