@@ -25,6 +25,17 @@
 ### Fixed
 
 <!-- __session82_release_v5_5_0_changelog__ -->
+<!-- __session86_release_v5_8_1_changelog__ -->
+## [5.8.1] - 2026-05-21
+
+### Fixed
+- The undefined-name gate is now enforced by `nous run` and hot-reload,
+  not only `nous compile`. nous_ast_runner executes the AST live (no
+  codegen), so `nous run` performs a throwaway codegen pass and refuses
+  (CodegenSemanticError, exit 1) before any execution if a generated
+  module would reference an undefined name. `run` and `compile` now
+  reject the same sources by the same check.
+
 <!-- __session86_release_v5_8_0_changelog__ -->
 ## [5.8.0] - 2026-05-21
 
