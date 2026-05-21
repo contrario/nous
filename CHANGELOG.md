@@ -25,6 +25,23 @@
 ### Fixed
 
 <!-- __session82_release_v5_5_0_changelog__ -->
+<!-- __session86_release_v5_8_0_changelog__ -->
+## [5.8.0] - 2026-05-21
+
+### Added
+- `rekor_signing_config` module: a Sigstore SigningConfig v0.2 loader
+  and Rekor transparency-log endpoint selector. Makes the
+  SigningConfig the single source of truth for which Rekor tlog
+  endpoint to submit to, removing hardcoded URL/path assumptions
+  (per the rekor-tiles client spec: the v2 URL MUST NOT be
+  hardcoded). Selects the highest API version the client supports
+  (currently v1), grouped by operator, honoring validFor windows.
+  Fails closed with RekorApiVersionUnsupported if only a
+  higher-than-supported API version is available, rather than
+  silently downgrading. Submission and offline verification are
+  unchanged; Rekor v2 submission/verification (tiles, inclusion
+  proof, checkpoint) remain future work.
+
 <!-- __session86_release_v5_7_1_changelog__ -->
 ## [5.7.1] - 2026-05-21
 
