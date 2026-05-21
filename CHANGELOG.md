@@ -26,6 +26,29 @@
 
 <!-- __session82_release_v5_5_0_changelog__ -->
 <!-- __session86_release_v5_8_1_changelog__ -->
+<!-- __session88_release_v5_9_0_changelog__ -->
+## [5.9.0] - 2026-05-21
+
+### Added
+- Rekor v2 read-path verifier (modules only; not yet wired into the
+  live verify flow -- dispatch lands in a later release). `rekor_entry`
+  normalizes hashedrekord v0.0.1 and v0.0.2 leaf bodies into one value
+  object (DER SubjectPublicKeyInfo public key, hex digest), recognizing
+  and refusing dsse. `rekor_checkpoint` verifies a C2SP signed-note
+  checkpoint (Ed25519 log signature, key ID per the signed-note spec)
+  and an RFC 6962 inclusion proof, taking root hash and tree size from
+  the verified checkpoint. `rekor_verify_v2` composes both with the
+  Path-beta leaf-to-manifest ECDSA tie and reports four independent
+  per-step results (leaf digest, leaf signature, checkpoint signature,
+  inclusion proof) so an auditor sees exactly which link broke.
+- `RekorAnchorV2` v2 anchor manifest schema with a `rekor_api_version`
+  discriminator present only in v2 blocks. v1 anchor blocks omit it and
+  the reader treats absence as v1, so every historical v1 dossier and
+  its signature remain byte-identical.
+
+### Changed
+- PYTEST_FLOOR raised 596 -> 641.
+
 ## [5.8.1] - 2026-05-21
 
 ### Fixed
