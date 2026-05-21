@@ -226,7 +226,8 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                             "skill_export.py", "cli_skill_export.py",
                                 "rekor_anchor.py",
                                 "rekor_signing_config.py",  # __session86_rekor_signing_config_wheelgate_v1__
-                                "rekor_entry.py"]  # __session87_rekor_entry_wheelgate_v1__
+                                "rekor_entry.py",  # __session87_rekor_entry_wheelgate_v1__
+                                "rekor_checkpoint.py"]  # __session87_rekor_checkpoint_wheelgate_v1__
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
         raise ReleaseError(f"wheel missing files: {missing}")
