@@ -25,6 +25,16 @@
 ### Fixed
 
 <!-- __session82_release_v5_5_0_changelog__ -->
+<!-- __session86_release_v5_7_1_changelog__ -->
+## [5.7.1] - 2026-05-21
+
+### Fixed
+- Codegen now emits `HEARTBEAT_SECONDS` and `COST_CEILING`
+  unconditionally (using defaults when no `world` block is present),
+  so generated modules for world-less sources no longer reference
+  these as undefined names. World-bearing output is byte-identical.
+  Caught by the S85 undefined-name gate.
+
 <!-- __session85_release_v5_7_0_changelog__ -->
 ## [5.7.0] - 2026-05-21
 
