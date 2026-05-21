@@ -50,10 +50,10 @@ def _extract_heartbeat(world: WorldNode) -> int:
     return 300
 
 
-def _extract_cost_ceiling(world: WorldNode) -> float:
+def _extract_cost_ceiling(world: WorldNode) -> float:  # __session87_runner_cost_ceiling_fix_v1__
     for law in world.laws:
-        if isinstance(law, LawCost) and "cost" in law.name.lower():
-            return law.amount
+        if isinstance(law.expr, LawCost) and law.expr.per == "cycle":
+            return law.expr.amount
     return 0.10
 
 
@@ -318,3 +318,94 @@ if __name__ == "__main__":
     cycles = int(sys.argv[3]) if len(sys.argv) > 3 else 3
 
     run_program(file, mode=mode, max_cycles=cycles)
+
+
+# === GAP 1 differential surface ===  __session87_runner_codegen_equiv_v1__
+from dataclasses import dataclass, field as _ss_field  # noqa: E402
+from typing import Mapping as _SSMapping  # noqa: E402
+
+
+@dataclass(frozen=True)
+class SemanticSurface:
+    """Deterministic facts both execution paths derive from one validated AST.
+
+    Field-wise equality. Routes are intentionally excluded from this v1
+    surface: codegen emits no structured route table, so recovering route
+    edges from the emitted module requires inverting channel-name strings,
+    a lossy operation that would make equality unsound. Route lowering is
+    covered by a separate forward test.
+    """
+
+    souls: frozenset
+    messages: frozenset
+    soul_models: _SSMapping
+    soul_senses: _SSMapping
+    soul_memory: _SSMapping
+    heartbeat_seconds: int
+    cost_ceiling: float
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SemanticSurface):
+            return NotImplemented
+        return (
+            self.souls == other.souls
+            and self.messages == other.messages
+            and dict(self.soul_models) == dict(other.soul_models)
+            and {k: set(v) for k, v in self.soul_senses.items()}
+            == {k: set(v) for k, v in other.soul_senses.items()}
+            and {k: set(v) for k, v in self.soul_memory.items()}
+            == {k: set(v) for k, v in other.soul_memory.items()}
+            and self.heartbeat_seconds == other.heartbeat_seconds
+            and self.cost_ceiling == other.cost_ceiling
+        )
+
+    def __hash__(self) -> int:
+        return hash((self.souls, self.messages, self.heartbeat_seconds))
+
+
+def derive_runtime_surface(program: "NousProgram") -> SemanticSurface:
+    """Derive the semantic surface the live runner consumes, from the AST.
+
+    Mirrors the setup logic of execute_program (soul registration, law
+    constants) without running any cycle. Standalone by design: the
+    derivation needs no runtime state, so re-deriving here keeps
+    execute_program byte-identical and side-effect free.
+    """
+    world = program.world
+    if world is not None:
+        heartbeat = _extract_heartbeat(world)
+        cost_ceiling = _extract_cost_ceiling(world)
+    else:
+        heartbeat = 300
+        cost_ceiling = 0.10
+
+    souls = frozenset(s.name for s in program.souls)
+    messages = frozenset(m.name for m in program.messages)
+
+    soul_models: dict = {}
+    soul_senses: dict = {}
+    soul_memory: dict = {}
+    for soul in program.souls:
+        if soul.mind is not None:
+            model = soul.mind.model
+            tier = soul.mind.tier.value
+        else:
+            model = "unknown"
+            tier = "Tier1"
+        soul_models[soul.name] = model + " @ " + tier
+        soul_senses[soul.name] = frozenset(soul.senses or [])
+        fields = set()
+        if soul.memory is not None:
+            for f in soul.memory.fields:
+                fields.add(f.name if hasattr(f, "name") else str(f))
+        soul_memory[soul.name] = frozenset(fields)
+
+    return SemanticSurface(
+        souls=souls,
+        messages=messages,
+        soul_models=soul_models,
+        soul_senses=soul_senses,
+        soul_memory=soul_memory,
+        heartbeat_seconds=int(heartbeat),
+        cost_ceiling=float(cost_ceiling),
+    )
