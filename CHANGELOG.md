@@ -20,9 +20,23 @@
 
 ### Added
 
+- Differential test (`tests/test_runner_codegen_equiv.py`): asserts the
+  AST runner and codegen derive an identical semantic surface (souls,
+  messages, per-soul model/tier/senses/memory-field names, law
+  constants) from each gate-clean source. The codegen side recovers the
+  surface from the emitted module via stdlib `ast`, so a pass proves
+  codegen emits what the runner consumes. Routes are deferred to a
+  separate forward test. <!-- __session89_g1_changelog_v1__ -->
+
 ### Changed
 
 ### Fixed
+
+- AST runner ignored declared per-cycle cost ceilings. `_extract_cost_ceiling`
+  tested `isinstance(law, LawCost)` where `law` is a `LawNode` wrapper (payload
+  in `.expr`), so the check was always false and the runner silently used the
+  0.10 default. Now reads `law.expr` (matching codegen). Surfaced by the new
+  differential test.
 
 <!-- __session82_release_v5_5_0_changelog__ -->
 <!-- __session86_release_v5_8_1_changelog__ -->
