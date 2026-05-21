@@ -172,6 +172,15 @@ def cmd_run(args: argparse.Namespace) -> int:
         return _run_hot_reload(source)
     try:
         from nous_ast_runner import run_program
+        from parser import parse_nous_file as _gate_parse  # __session86_gate_run_hotreload_v1__
+        from codegen import generate_python as _gate_gen
+        from codegen import assert_no_undefined_names as _gate_assert
+        from codegen import CodegenSemanticError as _GateErr
+        try:
+            _gate_assert(_gate_gen(_gate_parse(source)), str(source))
+        except _GateErr as _gate_exc:
+            print(f"semantic gate FAIL: CodegenSemanticError: {_gate_exc}", file=sys.stderr)
+            return 1
         run_program(str(source), mode=mode, max_cycles=cycles, daily_budget=budget)
         return 0
     except KeyboardInterrupt:
@@ -208,6 +217,14 @@ def _run_hot_reload(source: Path) -> int:
 
     cg = NousCodeGen(program)
     code = cg.generate()
+
+    from codegen import assert_no_undefined_names as _gate_assert  # __session86_gate_hotreload_v1__
+    from codegen import CodegenSemanticError as _GateErr
+    try:
+        _gate_assert(code, str(source))
+    except _GateErr as _gate_exc:
+        print(f"  semantic gate FAIL: CodegenSemanticError: {_gate_exc}")
+        return 1
 
     tmp = tempfile.NamedTemporaryFile(suffix=".py", mode="w", delete=False,
                                       dir=str(source.parent), prefix="_hot_init_")
