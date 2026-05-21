@@ -80,6 +80,7 @@ py-modules = [
     "rekor_signing_config",  # __session86_rekor_signing_config_pyproject_v1__
     "rekor_entry",  # __session87_rekor_entry_pyproject_v1__
     "rekor_checkpoint",  # __session87_rekor_checkpoint_pyproject_v1__
+    "rekor_verify_v2",  # __session87_rekor_verify_v2_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
