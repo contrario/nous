@@ -24,7 +24,7 @@
     "skipped": false
   },
   "customer_service.nous": {
-    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '-' in the current parser context, at line 40 col 30\n\n        if sentiment.score < -0.5 {\n                             ^\nExpected one of: \n\t* \"%{\"\n\t* \"€\"\n\t* FLOAT\n\t* LSQB\n\t* NAME\n\t* LPAR\n\t* DOLLAR\n\t* STRING\n\t* BANG\n\t* BOOL\n\t* INT\n\t* NULL\n\t* DURATION_VAL\n\nPrevious tokens: Token('COMP_OP', '<')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1356, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1349, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('MINUS', '-') at line 40, column 30.\nExpected one of: \n\t* \"%{\"\n\t* \"€\"\n\t* FLOAT\n\t* IF\n\t* NAME\n\t* LSQB\n\t* LPAR\n\t* DOLLAR\n\t* STRING\n\t* NOW\n\t* BOOL\n\t* BANG\n\t* INT\n\t* SELF\n\t* NULL\n\t* \"world\"\n\t* DURATION_VAL\nPrevious tokens: [Token('COMP_OP', '<')]\n\n",
+    "error": "Traceback (most recent call last):\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 689, in lex\n    yield lexer.next_token(lexer_state, parser_state)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lexer.py\", line 622, in next_token\n    raise UnexpectedCharacters(lex_state.text.text, line_ctr.char_pos, line_ctr.line, line_ctr.column,\nlark.exceptions.UnexpectedCharacters: No terminal matches '-' in the current parser context, at line 40 col 30\n\n        if sentiment.score < -0.5 {\n                             ^\nExpected one of: \n\t* BOOL\n\t* LPAR\n\t* STRING\n\t* LSQB\n\t* NULL\n\t* INT\n\t* DURATION_VAL\n\t* FLOAT\n\t* \"%{\"\n\t* BANG\n\t* DOLLAR\n\t* \"€\"\n\t* NAME\n\nPrevious tokens: Token('COMP_OP', '<')\n\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/opt/aetherlang_agents/nous/regression_harness.py\", line 62, in compile_one\n    program = parse_nous_file(path)\n              ^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1356, in parse_nous_file\n    return parse_nous(source)\n           ^^^^^^^^^^^^^^^^^^\n  File \"/opt/aetherlang_agents/nous/parser.py\", line 1349, in parse_nous\n    tree = parser.parse(source)\n           ^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/lark.py\", line 677, in parse\n    return self.parser.parse(text, start=start, on_error=on_error)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/lark/parser_frontends.py\", line 131, in parse\n    return self.parser.parse(stream, chosen_start, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nlark.exceptions.UnexpectedToken: Unexpected token Token('MINUS', '-') at line 40, column 30.\nExpected one of: \n\t* BOOL\n\t* \"world\"\n\t* LPAR\n\t* LSQB\n\t* STRING\n\t* NULL\n\t* INT\n\t* DURATION_VAL\n\t* NOW\n\t* FLOAT\n\t* \"%{\"\n\t* BANG\n\t* DOLLAR\n\t* IF\n\t* \"€\"\n\t* NAME\n\t* SELF\nPrevious tokens: [Token('COMP_OP', '<')]\n\n",
     "hash": null,
     "replay_block": false,
     "skipped": false
@@ -121,7 +121,7 @@
   },
   "noesis_phase9_test.nous": {
     "error": null,
-    "hash": "153ba61d288e3f31622359fb723de93e18030c8ec6d9dd066873dee81a899d40",
+    "hash": "ea081a774055f2d98b0ac9dc10433b8293774a2ec1fb6f30c047e207ac29c211",
     "replay_block": false,
     "skipped": false
   },
@@ -133,7 +133,7 @@
   },
   "nous-v2.0/stdlib/aggregator/main.nous": {
     "error": null,
-    "hash": "2e418bd299a52d22fede52bb974c7e08891199b5839f63969cf776c0e9cc11b6",
+    "hash": "f4ed90e4822bc2f31e5888836ca9e0d9e62ce6a5ee5d11e85bc027f779c3d0f0",
     "replay_block": false,
     "skipped": false
   },
@@ -145,13 +145,13 @@
   },
   "nous-v2.0/stdlib/router/main.nous": {
     "error": null,
-    "hash": "6284d07042470f338ccb0528088f055550a1f5181503ff06e4a699e1212be317",
+    "hash": "e723cf8062b978ff84fb437b3d39fce014b73c1ad349aee715d11aea2b70a9b1",
     "replay_block": false,
     "skipped": false
   },
   "nous-v2.0/stdlib/scheduler/main.nous": {
     "error": null,
-    "hash": "74295d3abc42e54f51d89a620b403067f0080f09d04a820d4f784fbfee21a986",
+    "hash": "2a86d7c5561857dd004f1ffe4b158d9e382d0a0120f54d56fbd90fe856c365a5",
     "replay_block": false,
     "skipped": false
   },
@@ -181,13 +181,13 @@
   },
   "signals.nous": {
     "error": null,
-    "hash": "423cfd978482bd1d2b8b26cf031fe363aa7fdd9a44efbce1bdcb969f08ce7a75",
+    "hash": "7bf75be10dae3ac2bc2190a86c64ced800a52ba5f72061ec7fc0818c0ca78469",
     "replay_block": false,
     "skipped": false
   },
   "stdlib/aggregator/main.nous": {
     "error": null,
-    "hash": "2e418bd299a52d22fede52bb974c7e08891199b5839f63969cf776c0e9cc11b6",
+    "hash": "f4ed90e4822bc2f31e5888836ca9e0d9e62ce6a5ee5d11e85bc027f779c3d0f0",
     "replay_block": false,
     "skipped": false
   },
@@ -199,13 +199,13 @@
   },
   "stdlib/router/main.nous": {
     "error": null,
-    "hash": "6284d07042470f338ccb0528088f055550a1f5181503ff06e4a699e1212be317",
+    "hash": "e723cf8062b978ff84fb437b3d39fce014b73c1ad349aee715d11aea2b70a9b1",
     "replay_block": false,
     "skipped": false
   },
   "stdlib/scheduler/main.nous": {
     "error": null,
-    "hash": "74295d3abc42e54f51d89a620b403067f0080f09d04a820d4f784fbfee21a986",
+    "hash": "2a86d7c5561857dd004f1ffe4b158d9e382d0a0120f54d56fbd90fe856c365a5",
     "replay_block": false,
     "skipped": false
   },
@@ -307,7 +307,7 @@
   },
   "test_lsp_errors.nous": {
     "error": null,
-    "hash": "02b99ff5071e0a10c6c411d35a56ad5686b4176174701b008956eb7f833169c8",
+    "hash": "ccee7b6fb487942b7e76f38597a0d6790a788e72f393652b543694c868032aee",
     "replay_block": false,
     "skipped": false
   },

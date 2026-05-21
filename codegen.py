@@ -262,16 +262,17 @@ class NousCodeGen:
         self._emit(f"_noesis_auto_learn = {auto_learn}")
         self._emit_blank()
 
-    def _emit_law_constants(self) -> None:
-        if not self.program.world:
-            return
-        self._emit("# ═══ World Laws ═══")
-        self._emit_blank()
+    def _emit_law_constants(self) -> None:  # __session86_b2_law_constants_v1__
         world = self.program.world
-        self._emit(f'WORLD_NAME = "{world.name}"')
+        if world is not None:
+            self._emit("# ═══ World Laws ═══")
+            self._emit_blank()
+            self._emit(f'WORLD_NAME = "{world.name}"')
         self._emit(f"HEARTBEAT_SECONDS = {self._heartbeat_seconds}")
         self._emit(f"COST_CEILING = {self._cost_ceiling}")
 
+        if world is None:
+            return
         for law in world.laws:
             name = f"LAW_{law.name.upper()}"
             if isinstance(law.expr, LawCost):
