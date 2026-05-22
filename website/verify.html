@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify a NOUS dossier — nous-lang.org</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+/* __session81_verify_html_v1__ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#05070e;--bg2:#0a0e1c;--card:rgba(10,14,28,0.85);
+--gold:#c9a554;--gold-d:rgba(201,165,84,0.15);--gold-b:rgba(201,165,84,0.25);--gold-t:rgba(201,165,84,0.08);
+--red:#e05252;--red-d:rgba(224,82,82,0.12);
+--green:#4ade80;--green-d:rgba(74,222,128,0.12);
+--t:#e2e8f0;--td:#94a3b8;--t3:#64748b;
+--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'Playfair Display',serif;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sans);min-height:100vh;line-height:1.5}
+.header{padding:20px 40px;border-bottom:1px solid rgba(201,165,84,0.12);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.brand{font-family:var(--serif);font-size:22px;color:var(--gold);letter-spacing:0.04em}
+.brand-sub{font-family:var(--mono);font-size:11px;color:var(--td);margin-left:12px}
+.nav a{color:var(--td);text-decoration:none;font-family:var(--mono);font-size:12px;margin-left:24px;letter-spacing:0.04em;transition:color 0.2s}
+.nav a:hover{color:var(--gold)}
+.container{max-width:920px;margin:0 auto;padding:48px 24px 80px}
+h1{font-family:var(--serif);font-size:38px;color:var(--gold);font-weight:600;letter-spacing:-0.02em;margin-bottom:14px;line-height:1.15}
+.lede{font-size:15px;color:var(--td);max-width:720px;margin-bottom:36px;line-height:1.65}
+.paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:36px}
+.path-card{background:var(--card);border:1px solid var(--gold-b);border-radius:10px;padding:18px}
+.path-card-n{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:0.1em;margin-bottom:8px}
+.path-card-t{font-family:var(--serif);font-size:16px;color:var(--t);margin-bottom:8px}
+.path-card-d{font-size:12px;color:var(--td);line-height:1.55}
+.path-card-d code{font-family:var(--mono);background:var(--gold-t);color:var(--gold);padding:1px 5px;border-radius:3px;font-size:11px}
+.card{background:var(--card);border:1px solid var(--gold-b);border-radius:12px;padding:24px;margin-bottom:18px}
+.card-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.card-t{font-family:var(--serif);font-size:17px;color:var(--gold);letter-spacing:0.03em}
+.pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.pill{border-radius:8px;padding:10px 14px;min-width:140px;text-align:center}
+.pill-l{font-size:10px;opacity:0.85;text-transform:uppercase;letter-spacing:0.08em}
+.pill-pass{background:var(--green-d);border:1px solid rgba(74,222,128,0.2);color:var(--green)}
+.pill-fail{background:var(--red-d);border:1px solid rgba(224,82,82,0.2);color:var(--red)}
+.pill-na{background:var(--gold-d);border:1px solid var(--gold-b);color:var(--gold)}
+.drop{border:2px dashed var(--gold-b);border-radius:12px;padding:48px 24px;text-align:center;background:var(--gold-t);cursor:pointer;transition:all 0.2s}
+.drop:hover{background:var(--gold-d);border-color:var(--gold)}
+.drop.drag-over{background:var(--gold-d);border-color:var(--gold);border-style:solid}
+.drop-icon{font-size:40px;color:var(--gold);opacity:0.6;margin-bottom:10px}
+.drop-text{font-family:var(--sans);font-size:15px;color:var(--t)}
+.paste-area{width:100%;min-height:200px;margin-top:12px;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--t);border:1px solid var(--gold-b);border-radius:6px;padding:12px;resize:vertical}
+.btn{font-family:var(--mono);font-size:12px;padding:9px 18px;border:1px solid var(--gold-b);border-radius:5px;background:var(--gold-d);color:var(--gold);cursor:pointer;letter-spacing:0.06em;transition:all 0.2s}
+.btn:hover{border-color:var(--gold)}
+.mono{font-family:var(--mono);font-size:12px;color:var(--td);word-break:break-all}
+.link{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-b)}
+.link:hover{border-bottom-style:solid}
+.errs{margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--red);background:var(--red-d);padding:12px 14px;border-radius:6px}
+.errs ul{margin:6px 0 0 0;padding-left:20px}
+.errs li{margin-top:4px}
+pre.code{background:var(--bg2);border:1px solid var(--gold-b);border-radius:6px;padding:14px;font-family:var(--mono);font-size:12px;color:var(--t);overflow-x:auto;line-height:1.6}
+.footer{padding:24px 40px;border-top:1px solid rgba(201,165,84,0.12);font-family:var(--mono);font-size:11px;color:var(--t3);text-align:center;letter-spacing:0.04em}
+@media (max-width: 640px){
+  .header{padding:16px 20px}
+  .nav a{margin-left:14px}
+  .container{padding:32px 18px 64px}
+  h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div><span class="brand">Νοῦς</span><span class="brand-sub">nous-lang.org</span></div>
+  <nav class="nav">
+    <a href="/">Home</a>
+    <a href="/ide.html">IDE</a>
+    <a href="https://github.com/contrario/nous" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </nav>
+</header>
+
+<main class="container">
+  <h1>Verify a NOUS dossier</h1>
+  <p class="lede">
+    Cryptographic verification of a signed NOUS dossier (manifest.json or skill_export.zip).
+    Validates the Ed25519 author signature and, when present, the Sigstore Rekor transparency-log
+    anchor (Path-beta dual signing: ECDSA-P-256 leaf signature plus signedEntryTimestamp).
+    The canonical trust path is offline; this page is a convenience surface.
+  </p>
+
+  <div class="paths">
+    <div class="path-card">
+      <div class="path-card-n">1 · BROWSER</div>
+      <div class="path-card-t">Quick check</div>
+      <div class="path-card-d">
+        Drop a file below. Calls the public verify endpoint at
+        <code>/api/v1/verify-dossier</code>. No API key required.
+      </div>
+    </div>
+    <div class="path-card">
+      <div class="path-card-n">2 · OFFLINE</div>
+      <div class="path-card-t">Reproducible</div>
+      <div class="path-card-d">
+        Download <a class="link" href="/verify_offline.py">verify_offline.py</a> and run it
+        in the dossier directory. Single dependency: <code>cryptography</code>.
+        Hybrid mode: works with both Rekor-anchored and unanchored dossiers.
+      </div>
+    </div>
+    <div class="path-card">
+      <div class="path-card-n">3 · CLI</div>
+      <div class="path-card-t">Full toolchain</div>
+      <div class="path-card-d">
+        <code>pip install nous-lang &amp;&amp; nous dossier verify &lt;path&gt;</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span style="font-size:18px;color:var(--gold)">⊛</span><span class="card-t">Drop a dossier to verify</span></div>
+    <div id="drop" class="drop" data-marker="__session81_verify_html_v1__">
+      <div class="drop-icon">⬆</div>
+      <div class="drop-text">
+        Drop manifest.json or skill_export.zip here<br>
+        <span style="font-size:12px;color:var(--td)">or click to select a file</span>
+      </div>
+      <input type="file" id="file-input" accept=".json,.zip,application/json,application/zip" style="display:none">
+    </div>
+    <details style="margin-top:16px">
+      <summary style="font-size:11px;color:var(--td);cursor:pointer;font-family:var(--mono);letter-spacing:0.06em">PASTE JSON INSTEAD</summary>
+      <textarea id="paste" class="paste-area" placeholder='{"schema_version":"1.0", ... "signature":{...}}'></textarea>
+      <button id="verify-paste" class="btn" style="margin-top:10px">VERIFY PASTED</button>
+    </details>
+  </div>
+
+  <div class="card" id="result" style="display:none"></div>
+
+  <div class="card" style="background:var(--bg2)">
+    <div class="card-h"><span style="font-size:18px;color:var(--gold)">⚙</span><span class="card-t">Run offline</span></div>
+    <p style="color:var(--td);font-size:13px;margin-bottom:14px;line-height:1.6">
+      For deterministic, third-party-auditable verification, the canonical procedure is to
+      download the verifier and run it in a directory containing the dossier's
+      <code style="font-family:var(--mono);color:var(--gold)">manifest.json</code> and
+      <code style="font-family:var(--mono);color:var(--gold)">source.nous</code>:
+    </p>
+<pre class="code">curl -sLO https://nous-lang.org/verify_offline.py
+cd path/to/dossier/
+python3 /path/to/verify_offline.py</pre>
+    <p style="color:var(--t3);font-size:11px;margin-top:12px;font-family:var(--mono);letter-spacing:0.04em">
+      DEPENDENCIES: cryptography &gt;= 42 · Python &gt;= 3.11 · NO NOUS INSTALL REQUIRED
+    </p>
+    <p style="color:var(--td);font-size:12px;margin-top:14px;line-height:1.6">
+      The verifier runs in two modes. For Rekor-anchored dossiers (NOUS v5.3.0 and later),
+      run with no flags. For unanchored dossiers (legacy releases or <code style="font-family:var(--mono);color:var(--gold)">anchor=none</code>), add
+      <code style="font-family:var(--mono);color:var(--gold)">--allow-unanchored</code>:
+      <code style="font-family:var(--mono);color:var(--gold)">python3 verify_offline.py --allow-unanchored</code>.
+    </p>
+  </div>
+</main>
+
+<footer class="footer">
+  Νοῦς · Self-evolving programming language for agentic AI · EU AI Act Annex IV compliance
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ3iIPkbieZSmmo2E0weR2v801dk3ycGwOPKmnw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+// __session82_verify_html_v2_v1__
+(function(){
+  var dropZone = document.getElementById('drop');
+  var fileInput = document.getElementById('file-input');
+  var pasteArea = document.getElementById('paste');
+  var pasteBtn = document.getElementById('verify-paste');
+  var resultEl = document.getElementById('result');
+  if (!dropZone || !fileInput || !resultEl) return;
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function show(html) {
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = html;
+    try {
+      resultEl.scrollIntoView({behavior:'smooth', block:'start'});
+    } catch (e) {}
+  }
+
+  function pill(label, state) {
+    var cls = state === 'pass' ? 'pill-pass'
+            : state === 'fail' ? 'pill-fail' : 'pill-na';
+    return '<div class="pill ' + cls + '">'
+      + '<div class="pill-l">' + escapeHtml(label) + '</div></div>';
+  }
+
+  function verdictBanner(verdict, summary) {
+    var color = verdict === 'ACCEPT' ? 'var(--green)' : 'var(--red)';
+    var bg = verdict === 'ACCEPT' ? 'var(--green-d)' : 'var(--red-d)';
+    return '<div style="padding:18px 20px;margin-bottom:14px;'
+      + 'background:' + bg + ';border-left:4px solid ' + color + ';'
+      + 'border-radius:6px">'
+      + '<div style="font-family:var(--mono);font-size:11px;'
+      + 'letter-spacing:0.1em;color:' + color + ';margin-bottom:6px">'
+      + 'VERDICT &middot; ' + escapeHtml(verdict)
+      + '</div>'
+      + '<div style="font-family:var(--sans);font-size:15px;'
+      + 'color:var(--t);line-height:1.5">' + escapeHtml(summary)
+      + '</div></div>';
+  }
+
+  function checkPillState(ok) {
+    if (ok === true) return 'pass';
+    if (ok === false) return 'fail';
+    return 'na';
+  }
+
+  function checkPillLabel(name, ok) {
+    if (ok === 'skipped_unanchored') return name + ' SKIPPED';
+    if (ok === 'skipped_no_policy')  return name + ' NOT CHECKED';
+    return name + ' ' + (ok ? 'OK' : 'FAIL');
+  }
+
+  function renderResult(data) {
+    if (!data || data.spec_version !== 'verify-dossier/v2') {
+      show('<div style="padding:20px;color:var(--red);'
+        + 'font-family:var(--mono);font-size:13px">'
+        + 'Unexpected response shape (no spec_version). Reload the '
+        + 'page and try again.</div>');
+      return;
+    }
+    var html = '';
+    html += verdictBanner(
+      data.verdict, data.human_readable.verdict_summary
+    );
+
+    html += '<div class="card-h">'
+      + '<span style="font-size:18px;color:var(--gold)">&#9883;</span>'
+      + '<span class="card-t">Per-check evidence</span></div>';
+
+    var c = data.checks;
+    html += '<div class="pills">';
+    html += pill(
+      checkPillLabel('SIGNATURE', c.manifest_signature_ed25519.ok),
+      checkPillState(c.manifest_signature_ed25519.ok)
+    );
+    html += pill(
+      checkPillLabel(
+        'SOURCE ID', c.source_sha256_field_well_formed.ok
+      ),
+      checkPillState(c.source_sha256_field_well_formed.ok)
+    );
+    html += pill(
+      checkPillLabel('ANCHORED', c.transparency_log_present.ok),
+      checkPillState(c.transparency_log_present.ok)
+    );
+
+    var allRekor = [
+      c.rekor_public_key_in_allowlist.ok,
+      c.rekor_signed_entry_timestamp.ok,
+      c.rekor_leaf_inclusion.ok
+    ];
+    var rekorOk;
+    if (allRekor.every(function(x){ return x === true; })) {
+      rekorOk = true;
+    } else if (allRekor.every(function(x){
+      return x === 'skipped_unanchored';
+    })) {
+      rekorOk = 'skipped_unanchored';
+    } else {
+      rekorOk = false;
+    }
+    html += pill(
+      checkPillLabel('REKOR ANCHOR', rekorOk),
+      checkPillState(rekorOk)
+    );
+    html += '</div>';
+
+    var ev = data.evidence;
+    html += '<div style="margin-top:18px;padding:14px 16px;'
+      + 'background:var(--gold-t);border-radius:8px;'
+      + 'border:1px solid var(--gold-b)">'
+      + '<div class="pill-l" style="margin-bottom:8px">EVIDENCE'
+      + '</div>'
+      + '<div class="mono" style="color:var(--t)">manifest_sha256: '
+      + escapeHtml(ev.manifest_sha256) + '</div>';
+
+    if (ev.public_key_b64) {
+      html += '<div class="mono" style="color:var(--t);'
+        + 'margin-top:4px">public_key (Ed25519): '
+        + escapeHtml(ev.public_key_b64) + '</div>';
+    }
+
+    if (ev.rekor_log_index !== null
+        && ev.rekor_log_index !== undefined) {
+      var url = 'https://rekor.sigstore.dev/api/v1/log/entries'
+        + '?logIndex=' + encodeURIComponent(ev.rekor_log_index);
+      html += '<div class="mono" style="color:var(--t);'
+        + 'margin-top:4px">rekor_log_index: '
+        + '<a class="link" href="' + url + '" target="_blank" '
+        + 'rel="noopener noreferrer">'
+        + escapeHtml(String(ev.rekor_log_index)) + '</a></div>';
+      html += '<div class="mono" style="color:var(--t);'
+        + 'margin-top:4px">integrated_at: '
+        + escapeHtml(ev.rekor_integrated_at || '(unknown)')
+        + '</div>';
+      if (ev.rekor_anchor_age_seconds !== null
+          && ev.rekor_anchor_age_seconds !== undefined) {
+        var hrs = Math.round(ev.rekor_anchor_age_seconds / 3600);
+        html += '<div class="mono" style="color:var(--t);'
+          + 'margin-top:4px">anchor_age: '
+          + escapeHtml(String(ev.rekor_anchor_age_seconds))
+          + 's (~' + hrs + 'h)</div>';
+      }
+    }
+    html += '</div>';
+
+    html += '<details style="margin-top:14px">'
+      + '<summary style="font-size:11px;color:var(--td);'
+      + 'cursor:pointer;font-family:var(--mono);'
+      + 'letter-spacing:0.06em">TRUST EXPLANATION &middot; '
+      + escapeHtml(String(data.trust_level).toUpperCase())
+      + '</summary>'
+      + '<p style="font-size:13px;color:var(--td);margin-top:10px;'
+      + 'line-height:1.65">'
+      + escapeHtml(data.human_readable.trust_explanation)
+      + '</p></details>';
+
+    if (data.human_readable.next_steps
+        && data.human_readable.next_steps.length > 0) {
+      html += '<div style="margin-top:14px;padding:14px 16px;'
+        + 'background:var(--bg2);border:1px solid var(--gold-b);'
+        + 'border-radius:8px">'
+        + '<div class="pill-l" style="margin-bottom:8px">NEXT STEPS'
+        + '</div><ul style="margin:6px 0 0 20px;font-size:13px;'
+        + 'color:var(--td);line-height:1.65">';
+      for (var i = 0; i < data.human_readable.next_steps.length; i++) {
+        html += '<li style="margin-top:4px">'
+          + escapeHtml(data.human_readable.next_steps[i])
+          + '</li>';
+      }
+      html += '</ul></div>';
+    }
+
+    var hasCheckErrors = false;
+    var keys = Object.keys(c);
+    for (var k = 0; k < keys.length; k++) {
+      var ce = c[keys[k]].errors;
+      if (ce && ce.length > 0) { hasCheckErrors = true; break; }
+    }
+    if (hasCheckErrors) {
+      html += '<details style="margin-top:14px">'
+        + '<summary style="font-size:11px;color:var(--td);'
+        + 'cursor:pointer;font-family:var(--mono);'
+        + 'letter-spacing:0.06em">PER-CHECK DIAGNOSTICS</summary>'
+        + '<div style="margin-top:10px">';
+      for (var key in c) {
+        if (!c.hasOwnProperty(key)) continue;
+        var errs = c[key].errors;
+        if (errs && errs.length > 0) {
+          html += '<div style="margin-top:8px;padding:10px 12px;'
+            + 'background:var(--bg2);border-radius:6px;'
+            + 'font-family:var(--mono);font-size:12px">'
+            + '<div style="color:var(--gold);margin-bottom:4px">'
+            + escapeHtml(key) + '</div>';
+          for (var ei = 0; ei < errs.length; ei++) {
+            html += '<div style="color:var(--red);margin-top:2px">'
+              + escapeHtml(errs[ei]) + '</div>';
+          }
+          html += '</div>';
+        }
+      }
+      html += '</div></details>';
+    }
+
+    show(html);
+  }
+
+  function verifyJson(manifestJson) {
+    show('<div style="padding:24px;text-align:center;'
+      + 'color:var(--gold);font-family:var(--mono);'
+      + 'font-size:13px;letter-spacing:0.08em">VERIFYING...</div>');
+    return fetch('/api/v1/verify-dossier', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        manifest_json: manifestJson,
+        policy: {require_anchor: false}
+      })
+    }).then(function(resp) {
+      if (!resp.ok) {
+        return resp.text().then(function(t) {
+          show('<div style="padding:20px;color:var(--red);'
+            + 'font-family:var(--mono);font-size:13px">HTTP '
+            + resp.status + ': '
+            + escapeHtml(t.slice(0, 400)) + '</div>');
+        });
+      }
+      return resp.json().then(renderResult);
+    }).catch(function(err) {
+      show('<div style="padding:20px;color:var(--red);'
+        + 'font-family:var(--mono);font-size:13px">'
+        + 'NETWORK ERROR: '
+        + escapeHtml(err && err.message ? err.message : String(err))
+        + '</div>');
+    });
+  }
+
+  function extractManifestFromZip(blob) {
+    if (typeof JSZip === 'undefined') {
+      return Promise.reject(new Error('JSZip library not loaded yet'));
+    }
+    return JSZip.loadAsync(blob).then(function(zip) {
+      var preferred = ['manifest.json', 'dossier/manifest.json'];
+      for (var i = 0; i < preferred.length; i++) {
+        if (zip.files[preferred[i]] && !zip.files[preferred[i]].dir) {
+          return zip.files[preferred[i]].async('string');
+        }
+      }
+      var names = Object.keys(zip.files);
+      for (var j = 0; j < names.length; j++) {
+        var f = zip.files[names[j]];
+        if (!f.dir
+            && names[j].toLowerCase().endsWith('manifest.json')) {
+          return f.async('string');
+        }
+      }
+      throw new Error('manifest.json not found in archive');
+    });
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+    var name = (file.name || '').toLowerCase();
+    var isZip = name.endsWith('.zip')
+      || file.type === 'application/zip'
+      || file.type === 'application/x-zip-compressed';
+    if (isZip) {
+      extractManifestFromZip(file).then(verifyJson).catch(function(err) {
+        show('<div style="padding:20px;color:var(--red);'
+          + 'font-family:var(--mono);font-size:13px">ZIP ERROR: '
+          + escapeHtml(err && err.message ? err.message : String(err))
+          + '</div>');
+      });
+    } else {
+      file.text().then(verifyJson).catch(function(err) {
+        show('<div style="padding:20px;color:var(--red);'
+          + 'font-family:var(--mono);font-size:13px">'
+          + 'FILE READ ERROR: '
+          + escapeHtml(err && err.message ? err.message : String(err))
+          + '</div>');
+      });
+    }
+  }
+
+  dropZone.addEventListener('click', function() {
+    fileInput.click();
+  });
+  fileInput.addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+      handleFile(e.target.files[0]);
+    }
+    e.target.value = '';
+  });
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  dropZone.addEventListener('dragleave', function() {
+    dropZone.classList.remove('drag-over');
+  });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer && e.dataTransfer.files
+        && e.dataTransfer.files[0]) {
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+  if (pasteBtn && pasteArea) {
+    pasteBtn.addEventListener('click', function() {
+      var t = (pasteArea.value || '').trim();
+      if (!t) return;
+      verifyJson(t);
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -76,6 +76,24 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 .footer{border-top:1px solid var(--border);padding:32px 0;text-align:center;margin-top:60px}
 .footer a{color:var(--dim);font-size:13px;margin:0 12px;text-decoration:none}.footer a:hover{color:var(--gold)}
 @media(max-width:600px){.page-title{font-size:32px}.post-full-title{font-size:28px}.stat-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* __session82_update_note_css_v1__ */
+    .update-note {
+      border-left: 3px solid var(--gold, #c9a554);
+      padding: 1rem 1.5rem;
+      margin: 2rem 0;
+      background: rgba(201, 165, 84, 0.05);
+      font-size: 0.95em;
+    }
+    .update-note h3 {
+      color: var(--gold, #c9a554);
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.1em;
+    }
+    .update-note p {
+      margin: 0.75rem 0;
+    }
 </style>
 </head>
 <body>
@@ -104,6 +122,167 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST LIST -->
   <div class="post-list" id="postList">
     <!-- __blog_session60_v1__ -->
+    <!-- __blog_card_v4133_v1__ -->
+    <!-- __session86_blog_v56_v58_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v580-rekor-v2-signing-config');return false">
+      <div class="post-meta">
+        <span class="post-date">21 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.8.0 &amp; v5.8.1 &mdash; SigningConfig-Driven Anchoring, and Gating the Runtime</div>
+      <div class="post-excerpt">Two releases. v5.8.0 makes the Sigstore SigningConfig the single source of truth for which Rekor transparency log NOUS submits to, replacing hardcoded endpoint constants: the new <code>rekor_signing_config</code> module selects the highest Rekor API version the client supports, grouped by operator, honoring validity windows, and fails closed if only an unsupported version is available. v5.8.1 extends the undefined-name gate to <code>nous run</code> and hot-reload, so a source that would <code>NameError</code> at runtime is refused before execution. 15 new tests (PYTEST_FLOOR 581 &rarr; 596), zero regressions, both servers live. PyPI: <code>nous-lang 5.8.1</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session86_blog_v570_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v570-compiler-correctness');return false">
+      <div class="post-meta">
+        <span class="post-date">21 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.7.0 &amp; v5.7.1 &mdash; Compiler Correctness: null, guard...else, and the Undefined-Name Gate</div>
+      <div class="post-excerpt">A correctness pass on codegen. v5.7.0 fixes a class of source that passed every gate yet failed at runtime: it adds a real <code>null</code>/<code>none</code> literal, makes <code>guard ... else</code> emit its else action (previously silently dropped), and introduces an undefined-name gate that refuses to write Python referencing a name that does not exist. v5.7.1 is a follow-on fix: the law constants <code>HEARTBEAT_SECONDS</code> and <code>COST_CEILING</code> are now emitted unconditionally, so world-less sources no longer reference undefined names. 18 new tests (PYTEST_FLOOR 566 &rarr; 581), zero regressions. PyPI: <code>nous-lang 5.7.1</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session86_blog_v560_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v560-rekor-v2-trust-root');return false">
+      <div class="post-meta">
+        <span class="post-date">20 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.6.0 &mdash; Rekor v2, Part One: Mirroring the Trust Root</div>
+      <div class="post-excerpt">The first step of migrating to Sigstore Rekor v2. v5.6.0 pins a snapshot of the production Sigstore SigningConfig resolved via TUF, and adds a stdlib-only monthly refresh that drives a version-pinned <code>sigstore</code> CLI in an isolated venv &mdash; never importing <code>sigstore</code> into the NOUS runtime, so the wheel's dependency surface is unchanged. The mirrored config is v1-only by Sigstore's own decision to withhold the v2 URL from TUF until clients upgrade. No runtime path consumes the mirror yet; this is the trust-root plumbing for the v2 read path. 6 new tests (PYTEST_FLOOR 560 &rarr; 566). PyPI: <code>nous-lang 5.6.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session82_blog_v550_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v550-v2-verify-dossier-surface');return false">
+      <div class="post-meta">
+        <span class="post-date">17 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.5.0 &mdash; A Verdict, with Evidence</div>
+      <div class="post-excerpt">v5.4.0 gave a public boolean: did this dossier verify, yes or no. v5.5.0 gives a verdict with structured reasoning: an ACCEPT or REJECT, a trust level, eight per-check results with a discriminated <code>ok</code> field that distinguishes "failed" from "skipped," an evidence block of raw facts, and a human-readable summary with next steps. Opt-in via a new <code>policy</code> request field; legacy clients see the v5.4.0 shape unchanged. Plus a HYBRID offline verifier with explicit <code>--allow-unanchored</code> for legacy dossiers. 18 new tests (PYTEST_FLOOR 542 &rarr; 560), zero regressions, both servers live, PyPI: <code>nous-lang 5.5.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session81_blog_v540_card_v1__ __session81_blog_v540_card_v2__ -->
+    <a class="post-card" href="#" onclick="showPost('v540-public-verification-surface');return false">
+      <div class="post-meta">
+        <span class="post-date">17 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.4.0 &mdash; The Public Verification Surface</div>
+      <div class="post-excerpt">v5.3.0 anchored every signed manifest into the Sigstore Rekor transparency log. v5.4.0 closes the gap on the consumer side: a public <code>POST /v1/verify-dossier</code> endpoint, a standalone verification page, a drag-drop verifier tab in the IDE, and a byte-identical static download of the offline verifier. Anyone with a browser can verify; anyone with Python and <code>cryptography</code> can verify deterministically offline; the API is convenience, the offline path is canonical. 12 new tests (PYTEST_FLOOR 530 &rarr; 542), zero regressions, both servers live, PyPI: <code>nous-lang 5.4.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session78_blog_stop-button-not-article-14_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('stop-button-not-article-14');return false">
+      <div class="post-meta">
+        <span class="post-date">16 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Commentary</span>
+      </div>
+      <div class="post-title">Your Stop Button Is Not Article 14 Compliance</div>
+      <div class="post-excerpt">The EU AI Act becomes enforceable for high-risk systems on 2 August 2026. Article 14 is widely read as a requirement for a halt button or a reviewer dashboard. The actual text asks for something stricter: a design property of the system itself, with five distinct overseer capabilities of which "stop" covers roughly one fifth. This piece argues that verification and governance are two layers, not one, and walks through the convergent vocabulary &mdash; obligation shell, requester and authority, admission and admissibility, attestation primitive, governed artifact, governance trace, execution lineage, derived admission state &mdash; developed by Brian James in the context of MCK and used here as agreed shared terminology between his architecture and mine.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session77_blog_v520_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v520-skill-export-release');return false">
+      <div class="post-meta">
+        <span class="post-date">16 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.2.0 &mdash; Closing the Skill Loop</div>
+      <div class="post-excerpt">v5.1.0 attached NOUS compliance to existing agentskills.io skills. v5.2.0 ships the inverse: <code>nous skill-export</code>, a new subcommand and <code>POST /v1/skill/export</code> endpoint that emit fresh agentskills.io-compliant skills directly from <code>.nous</code> source, optionally bundled with a signed Annex IV dossier under an ephemeral Ed25519 key. Three surfaces (CLI, HTTP API, in-browser IDE button), one underlying translator. 62 new tests (PYTEST_FLOOR 441 &rarr; 503). 13 files changed, 2,028 insertions, 0 regressions. The 57-template regression harness produced 0 diffs. Both servers on 5.2.0; PyPI: <code>nous-lang 5.2.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session77_blog_skill_export_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('nous-to-skill-export');return false">
+      <div class="post-meta">
+        <span class="post-date">16 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Feature</span>
+      </div>
+      <div class="post-title">Skill Export from the NOUS IDE &mdash; .nous Source to Signed Annex IV Bundle in Three Clicks</div>
+      <div class="post-excerpt">v5.1.0 shipped <code>nous dossier-spec</code> for skill consumers who want to attest existing agentskills.io skills. This release closes the loop for skill authors: write a <code>.nous</code> program in the NOUS IDE, click <strong>&#8599; Export Skill</strong>, and download a complete agentskills.io skill packaged with an Ed25519-signed Annex IV dossier. Three surfaces share one implementation: <code>nous skill-export</code> CLI, <code>POST /v1/skill/export</code> HTTP endpoint, and an in-browser button in the IDE editor toolbar. Ephemeral signing key per request, offline verifier included, byte-deterministic source envelope, zero NOUS install required to verify.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session77_blog_v510_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v510-skill-md-sidecar');return false">
+      <div class="post-meta">
+        <span class="post-date">16 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.1.0 &mdash; Annex IV Dossiers for the SKILL.md Ecosystem</div>
+      <div class="post-excerpt">v5.1.0 ships <code>nous dossier-spec</code>: a single CLI that produces EU AI Act Annex IV-aligned, Ed25519-signed compliance dossiers directly from agentskills.io-compliant skill folders without modifying <code>SKILL.md</code>. A small <code>nous.yaml</code> sidecar declares <code>cost_cap</code>, <code>default_model</code>, and per-tool token budgets; the rest of the dossier &mdash; deterministic source envelope, SMT-verified cost proof, signed manifest, offline verifier &mdash; assembles itself. Pytest floor 397 &rarr; 441 (+44 tests). 6 new fixtures, 3 new modules, 0 regressions. PyPI: <code>nous-lang 5.1.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session71_blog_v500_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v500-eur-smt');return false">
+      <div class="post-meta">
+        <span class="post-date">03 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.0.0 &mdash; End-to-End EUR Cost Verification with Currency-Agnostic SMT</div>
+      <div class="post-excerpt">v4.13.x proved cost caps in USD. v5.0.0 proves them in any currency the pricing table declares &mdash; with EUR as the first tested non-USD case. The pricing TOML schema drops its <code>_usd</code> field-name suffix in favour of a per-table <code>_currency</code> declaration; <code>nous prices upgrade</code> migrates v1.0 files to v2.0 in place while preserving every comment and blank line; the SMT path layers a currency-mismatch hard-block (Phase 5a) under the structural validator (Phase 5b); and a Z3 round-trip on a four-model EUR pricing table verifies <code>0.50 EUR</code> caps as cleanly as their USD counterparts. Pytest floor 354 &rarr; 394 (+40 tests). 57/57 regression templates baseline-stable, 0 drift. PyPI: <code>nous-lang 5.0.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session68_blog_v418_bundle__ -->
+    <a class="post-card" href="#" onclick="showPost('v418-bundle');return false">
+      <div class="post-meta">
+        <span class="post-date">02 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release Bundle</span>
+      </div>
+      <div class="post-title">NOUS v4.15.0 &rarr; v4.18.0 &mdash; A Fleet-Operable Compiler with Audit-Stable Diffs</div>
+      <div class="post-excerpt">Five releases turn NOUS from a single-machine compiler into a fleet-operable system with audit-stable comparisons. v4.15.0 adds <code>GET /v1/replay/list</code> and <code>POST /v1/replay/diff</code> for cross-machine log inspection and lockstep comparison. v4.16.0 adds <code>PUT /v1/templates/{name}</code> with hard auth, lint gating, atomic writes, and pruned backups. v4.16.1 fixes a <code>/v1/diff</code> crash on <code>FeedbackNode</code> / <code>FanIn</code> / <code>FanOut</code> routes. v4.17.0 promotes <code>cryptography</code> to a base dependency so clean-venv installs no longer need the <code>[smt]</code> extra. v4.18.0 adds <code>DiffSide</code> provenance: every comparison carries server-rendered, contract-defined source labels for Annex IV evidence. Pytest floor 278 &rarr; 337, 0 regression drift across 57 templates.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <a class="post-card" href="#" onclick="showPost('v4133-smt-margin');return false">
+      <div class="post-meta">
+        <span class="post-date">29 APR 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v4.13.3 &mdash; Conservative Cost Caps with <code>--smt-margin</code></div>
+      <div class="post-excerpt">v4.13.2 proved <code>total_cost &le; declared_cap</code>. v4.13.3 lets you prove a tighter bound: <code>total_cost &le; declared_cap &times; (100 &minus; PCT) / 100</code>. A 20% safety margin against a $0.50 cap proves a $0.40 ceiling under exact rational arithmetic &mdash; no floats, no rounding error. Default is zero, byte-identical to v4.13.2 manifests. Useful when a regulator wants visible buffer between the proven bound and the budget line, or when a procurement team writes "demonstrate at least 20% safety margin" into the contract. 8 new tests, 272 total. Backward-compatible.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+    <!-- __blog_card_v4132_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v4132-self-verifying');return false">
+      <div class="post-meta">
+        <span class="post-date">29 APR 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v4.13.2 &mdash; Self-Verifying Manifests, No Central Ledger</div>
+      <div class="post-excerpt">v4.13.1 shipped a <code>--publish</code> flag that posted signed manifests to a central service. The endpoint was never built and the schema mismatched. v4.13.2 retires the path entirely. NOUS manifests are self-verifying offline artefacts: manifest file plus publisher&rsquo;s Ed25519 public key is sufficient to verify authenticity, anywhere, without contacting any service. Storage is the publisher&rsquo;s choice &mdash; filesystem, S3, IPFS, git release, whatever fits. No vendor dependency in the trust chain.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+    <!-- __blog_card_eu_ai_act_2026_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('eu-ai-act-2026');return false">
+      <div class="post-meta">
+        <span class="post-date">28 APR 2026</span>
+        <span class="post-tag" style="background:rgba(56,217,122,0.1);border:1px solid rgba(56,217,122,0.2);color:var(--green)">Compliance</span>
+      </div>
+      <div class="post-title">EU AI Act, 2 August 2026 &mdash; How NOUS Maps to Annex IV, Article 9 and Article 12</div>
+      <div class="post-excerpt">In 96 days the bulk of the EU AI Act becomes enforceable. High-risk AI systems must ship with technical documentation (Article 11 / Annex IV), a continuous risk management system (Article 9), and automatic event logging that allows full reconstruction of algorithmic decisions (Article 12). Three layers of paperwork that most agentic AI stacks today produce by hand &mdash; if at all. NOUS produces them automatically, signed, and machine-verifiable. Declarative source, signed manifests, deterministic replay. Here’s the article-by-article map.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+    <!-- __blog_card_v4131_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v4131-cost-verification');return false">
+      <div class="post-meta">
+        <span class="post-date">28 APR 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v4.13.1 &mdash; Formal SMT Cost-Bound Verification</div>
+      <div class="post-excerpt">Declare a <code>cost_cap</code> in any <code>world</code> block, declare per-soul <code>tokens</code> and <code>max_ticks</code>, run <code>nous verify --smt</code>. Z3 proves every reachable execution path stays under the cap &mdash; or returns a counterexample with constructive fix suggestions. Every verified program emits an ed25519-signed JSON manifest with full provenance: source SHA-256, pricing SHA-256, SMT spec SHA-256, solver name+version, verdict, timestamp. EU AI Act Annex IV audit-ready. 264 tests, 54/54 regression byte-identical. Shipped on PyPI as <code>nous-lang[smt]==4.13.1</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
     <a class="post-card" href="#" onclick="showPost('session60-stability');return false">
       <div class="post-meta">27 April 2026 &middot; Session 60</div>
       <div class="post-title">Session 60 &mdash; Stability over Features. Five Commits. No Version Bump.</div>
@@ -191,6 +370,1075 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
     <!-- POST: v4.8.2 Governance Complete -->
   <!-- __blog_post_v4100_v1__ -->
+  <!-- __blog_post_v4133_v1__ -->
+  <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
+  <!-- __session82_blog_v550_post_v1__ -->
+  <div class="post-full" id="post-v580-rekor-v2-signing-config">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.8.0 &amp; v5.8.1 &mdash; SigningConfig-Driven Anchoring, and Gating the Runtime</h1>
+    <div class="post-full-meta">21 May 2026 &middot; 7 min read</div>
+
+    <p>Two releases on the same day, each closing a gap the previous work left explicit. v5.8.0 is the second part of the Rekor v2 migration; v5.8.1 finishes a gate that v5.7.0 started.</p>
+
+    <h2>v5.8.0: the SigningConfig is the source of truth</h2>
+    <p>Until now, the Rekor endpoint and request paths were hardcoded constants in <code>rekor_anchor.py</code>. The Sigstore client specification is explicit that this is wrong: the Rekor v2 instance URL must not be hardcoded, because the operator rotates the log and freezes the previous instance. Clients are told to read the endpoint from a SigningConfig and select the highest API version they support.</p>
+    <p>v5.8.0 adds <code>rekor_signing_config</code>, a loader and selector for the Sigstore SigningConfig v0.2 format. It parses the <code>rekorTlogUrls</code> list, filters to entries within their validity window, groups by operator, and selects the highest major API version the client supports. NOUS supports v1 today, expressed as a single constant; raising support to v2 is a deliberate one-line change paired with the v2 verifier, not an accidental upgrade.</p>
+    <h2>Failing closed</h2>
+    <p>The security-relevant behavior is what happens when only an unsupported version is available. If a future production SigningConfig lists only a v2 endpoint and the client supports only v1, the selector raises a typed error and refuses to submit, rather than silently downgrading or mis-parsing a v2 entry as v1. This honors the specification's requirement that clients gracefully fail on an unknown API version. The module was validated against the real mirrored production SigningConfig (which selects v1) and against synthetic v2-present and v2-only configurations.</p>
+    <p>Submission and offline verification are unchanged. The actual v2 read path &mdash; tile-backed inclusion proofs and checkpoints, the hashedrekord v0.0.2 and DSSE v0.0.2 entry formats &mdash; remains future work, to be built against the live v2 instance once it is distributed.</p>
+    <h2>v5.8.1: the gate reaches the runtime</h2>
+    <p>v5.7.0 introduced an undefined-name gate that refuses to emit Python referencing a name that does not exist, catching a class of bug that previously passed every compile-time check and only <code>NameError</code>-ed at runtime. But the gate was wired only into <code>nous compile</code>. The runtime executes the AST directly with no codegen, so <code>nous run</code> never produced Python for the gate to scan &mdash; an unbound name would still reach runtime.</p>
+    <p>v5.8.1 closes that. Before delegating to the runtime, <code>nous run</code> performs a throwaway codegen pass and runs the same gate; hot-reload gates its generated code before compiling it. Both fail closed: on a semantic error nothing executes and the process exits non-zero. <code>compile</code>, <code>run</code>, and hot-reload now reject the same sources by the same check, with no second name-resolution implementation to drift out of sync.</p>
+    <h2>Numbers</h2>
+    <p>v5.8.0 added 14 tests in <code>tests/test_rekor_signing_config.py</code>, including selection against the real mirrored config (PYTEST_FLOOR 581 to 595). v5.8.1 added one test pinning the run-gate refusal path (595 to 596). Zero regressions across the 51-template harness. Both servers report <code>5.8.1</code>; PyPI: <code>nous-lang 5.8.1</code>; tags <code>v5.8.0</code> and <code>v5.8.1</code>.</p>
+  </div>
+
+  <div class="post-full" id="post-v570-compiler-correctness">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.7.0 &amp; v5.7.1 &mdash; Compiler Correctness: null, guard...else, and the Undefined-Name Gate</h1>
+    <div class="post-full-meta">21 May 2026 &middot; 8 min read</div>
+
+    <p>A compiler can pass every structural check and still emit code that fails the moment it runs. v5.7.0 targets exactly that gap: sources that parse, validate, and generate Python cleanly, then raise <code>NameError</code> at runtime. Three fixes, one theme &mdash; the generated code should mean what the source says.</p>
+
+    <h2>A real null literal</h2>
+    <p>NOUS previously had no way to write an absent value. v5.7.0 adds <code>null</code> (and the interchangeable <code>none</code>) as a first-class literal that compiles to Python <code>None</code>. Equality against it compiles to identity: <code>x == null</code> emits <code>x is None</code>, and <code>x != none</code> emits <code>x is not None</code>. Absence checks are now correct regardless of the value's type, instead of relying on a name that did not exist.</p>
+    <h2>guard ... else</h2>
+    <p>A <code>guard</code> returns early when its condition is false. The optional <code>else</code> action was being silently dropped by codegen, which also turned any statement after the guard into dead code. v5.7.0 fixes the grammar and the emitter so the else action runs before the early return, and the trailing action runs only when the guard holds. The failure path is explicit again.</p>
+    <h2>The undefined-name gate</h2>
+    <p>The structural fix underneath both is a new gate: before any generated module is written, the compiler scans it for references to undefined names and refuses with a typed <code>CodegenSemanticError</code> that names the symbol and line. The gate is dev-only in its dependency &mdash; it uses a static analyzer that is not part of the shipped wheel &mdash; so it degrades to a no-op where that analyzer is absent, which is why the clean-venv release phase still passes. It is the backstop that turns a runtime <code>NameError</code> into a compile-time refusal.</p>
+    <h2>v5.7.1: world-less sources</h2>
+    <p>The gate immediately earned its keep. The codegen for law constants <code>HEARTBEAT_SECONDS</code> and <code>COST_CEILING</code> returned early when a source had no <code>world</code> block, yet the rest of the generated module referenced those constants unconditionally &mdash; so world-less sources generated Python with undefined names, now caught by the v5.7.0 gate. v5.7.1 emits both constants always, with safe defaults, while keeping the world-bearing output byte-identical. Eight world-less development sources became gate-clean.</p>
+    <h2>Numbers</h2>
+    <p>v5.7.0 added 10 tests (<code>tests/test_s85_codegen_correctness.py</code>), v5.7.1 added 5 (<code>tests/test_s86_law_constants.py</code>); PYTEST_FLOOR 566 to 581. The regression harness was re-baselined to gate-verified output with zero unexplained diffs. Both servers on <code>5.7.1</code>; PyPI: <code>nous-lang 5.7.1</code>; tags <code>v5.7.0</code> and <code>v5.7.1</code>.</p>
+  </div>
+
+  <div class="post-full" id="post-v560-rekor-v2-trust-root">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.6.0 &mdash; Rekor v2, Part One: Mirroring the Trust Root</h1>
+    <div class="post-full-meta">20 May 2026 &middot; 5 min read</div>
+
+    <p>Sigstore is replacing the Rekor transparency log with a tile-backed v2 that is cheaper to run and has a redesigned API. NOUS anchors manifests into Rekor, so the migration matters &mdash; but it has to be done carefully, because the v2 instance URL is rotated and the previous instance frozen. v5.6.0 is the first, deliberately small step: get the trust root in place, change no runtime behavior.</p>
+
+    <h2>The mirror</h2>
+    <p>v5.6.0 pins a snapshot of the production Sigstore SigningConfig, resolved via TUF, into the repository at <code>infra/sigstore/signing_config.json</code>. As of the snapshot, the production config is v1-only: it lists <code>rekor.sigstore.dev</code> at <code>majorApiVersion: 1</code> and no v2 URL, by Sigstore's stated decision to withhold the v2 endpoint from TUF until clients have upgraded to verify v2 entries. Pinning the config means NOUS reads a known, reviewed trust root rather than whatever TUF returns at submission time.</p>
+    <h2>Refresh without contaminating the runtime</h2>
+    <p>The mirror is kept current by a stdlib-only refresh script that drives a version-pinned <code>sigstore</code> CLI through a subprocess. The <code>sigstore</code> tool lives in an isolated venv and is never imported into the NOUS runtime, so the dependency surface of <code>nous-lang</code> is unchanged &mdash; the wheel does not grow a heavy transitive dependency. A monthly systemd timer runs the refresh as an unprivileged user under a hardened sandbox, writing to a staging path; promoting a changed config into the repository is a deliberate commit, not an automatic one.</p>
+    <h2>Nothing consumes it yet</h2>
+    <p>Deliberately, no runtime code path reads the mirror in v5.6.0. <code>rekor_anchor.py</code> is unchanged. This release is the trust-root plumbing; the endpoint selection that consumes it arrived in v5.8.0, and the v2 read path itself remains future work. 6 tests in <code>tests/test_signing_config_mirror.py</code> validate the pinned mirror offline &mdash; mediaType, the <code>rekorTlogUrls</code> shape, and v1 presence. PYTEST_FLOOR 560 to 566. PyPI: <code>nous-lang 5.6.0</code>; tag <code>v5.6.0</code>.</p>
+  </div>
+
+  <div class="post-full" id="post-v550-v2-verify-dossier-surface">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.5.0 &mdash; A Verdict, with Evidence</h1>
+    <div class="post-full-meta">17 May 2026 &middot; 9 min read</div>
+
+    <p>v5.4.0 shipped the public verification surface as three boolean fields: <code>signature_ok</code>, <code>rekor_set_ok</code>, <code>rekor_inclusion_ok</code>. It worked. It also forced every downstream consumer to invent their own logic for what those booleans meant in combination, and gave them no way to distinguish "this check failed" from "this check was not run." For an auditor running a compliance pipeline, that distinction is the difference between a defensible audit and a guess.</p>
+
+    <p>v5.5.0 ships a state-of-the-art response shape that closes both gaps. It is fully backward compatible: clients that send the v5.4.0 request body get the v5.4.0 response shape, byte-identical. Clients that opt in by sending a new <code>policy</code> field get a structured verdict.</p>
+
+    <h2>What the new shape looks like</h2>
+
+    <p>The opt-in is one extra field in the request body:</p>
+
+<pre class="code">{
+  "manifest_json": "...",
+  "policy": {"require_anchor": false}
+}</pre>
+
+    <p>The response now contains a top-level <code>verdict</code> (ACCEPT or REJECT), a <code>trust_level</code> (<code>rekor_anchored</code>, <code>ed25519_only</code>, or <code>none</code>), the <code>policy_applied</code> with all defaults filled in for the audit record, eight per-check results with a discriminated <code>ok</code> field, an <code>evidence</code> block of raw facts (hashes, log indices, public keys, anchor age), and a <code>human_readable</code> block with a one-sentence verdict summary, a trust explanation, and a next-steps array.</p>
+
+    <p>Every layer answers a different question. The verdict answers "should I accept this." The trust level answers "if I accept it, how much should I trust it." The policy applied answers "what rules produced this verdict, recorded permanently for the audit." The checks answer "where did each independent verification step land." The evidence answers "what raw facts did the verifier see." The human-readable block answers "how do I explain this to a human in one line."</p>
+
+    <h2>Why a discriminated check field matters</h2>
+
+    <p>The single biggest semantic improvement in v5.5.0 is the <code>ok</code> field on each check. In v5.4.0, a Rekor check was either <code>true</code>, <code>false</code>, or <code>null</code> (null meaning "no anchor present"). The null collapsed two distinct states: "the dossier was not anchored" and "the check did not apply for some other reason." That collapse left auditors unable to distinguish, say, an unanchored development dossier from one whose anchor metadata was malformed.</p>
+
+    <p>In v5.5.0, each check has exactly one of four values:</p>
+
+    <ul>
+      <li><code>true</code> &mdash; the check ran and passed.</li>
+      <li><code>false</code> &mdash; the check ran and failed. The <code>errors</code> array contains the cause.</li>
+      <li><code>"skipped_unanchored"</code> &mdash; the check was skipped because the dossier has no <code>transparency_log</code> block. Applies to the four Rekor-specific checks.</li>
+      <li><code>"skipped_no_policy"</code> &mdash; the check was skipped because the policy does not require it. Currently applies to <code>rekor_anchor_age</code> when no age cap is configured.</li>
+    </ul>
+
+    <p>An auditor writing a compliance script can now say "require <code>ok=true</code> on these specific checks; tolerate <code>skipped_unanchored</code> on these others" and have the policy be unambiguous. That is a vocabulary the V1 shape did not have.</p>
+
+    <h2>Trust level: separating ACCEPT from rekor_anchored</h2>
+
+    <p>v5.5.0 distinguishes the verdict (ACCEPT or REJECT) from the trust level (<code>rekor_anchored</code>, <code>ed25519_only</code>, <code>none</code>). The verdict is whether the policy you applied passed. The trust level is how the system thinks you should weight that verdict downstream.</p>
+
+    <p>Concrete: a dossier with a valid Ed25519 author signature but no public anchor, verified under <code>policy.require_anchor=false</code>, gets <code>verdict=ACCEPT</code> and <code>trust_level=ed25519_only</code>. The dossier passed the policy you set, but the system is telling you the public log does not corroborate it. That is honest. The same dossier under <code>policy.require_anchor=true</code> gets <code>verdict=REJECT</code> and <code>trust_level=none</code>.</p>
+
+    <p>This split lets the browser page at <a href="/verify.html">nous-lang.org/verify.html</a> default to a permissive policy (the UX would be hostile if a legacy dossier just said REJECT with no explanation), while audit pipelines default to strict and get a hard REJECT on the same input. Both are correct for their context.</p>
+
+    <h2>HYBRID offline verifier</h2>
+
+    <p>The offline verifier shipped from <a href="/verify_offline.py">nous-lang.org/verify_offline.py</a> is now byte-extracted from <code>dossier.VERIFY_OFFLINE_PY_HYBRID</code>. It runs in two modes:</p>
+
+    <ul>
+      <li>Default: strict. Refuses unanchored dossiers. This is what an EU AI Act-grade compliance pipeline wants.</li>
+      <li><code>--allow-unanchored</code>: hybrid. Accepts both anchored and unanchored dossiers, downgrading trust to <code>ed25519_only</code> on the latter.</li>
+    </ul>
+
+    <p>The previous verifier, <code>VERIFY_OFFLINE_PY_WITH_REKOR</code>, refused unanchored dossiers unconditionally. That made it useless for verifying legacy dossiers, which had to fall back to the toolchain path. The HYBRID verifier closes that gap without compromising the strict default.</p>
+
+    <h2>UI implications</h2>
+
+    <p>The verify.html page and the IDE Dossier tab were refactored end-to-end for V2. The new UI shows the verdict banner first, then the four status pills (SIGNATURE, SOURCE ID, ANCHORED, REKOR ANCHOR), then the evidence block, then collapsible trust explanation and per-check diagnostics. The Rekor log index is clickable and links straight to the Sigstore entry page. The footer shows the next-steps array when REJECT, hiding the section entirely on ACCEPT to avoid clutter.</p>
+
+    <p>The verify.html page sends <code>{require_anchor: false}</code> as the default policy so drag-dropping any dossier produces a useful response rather than a hostile rejection. The IDE Dossier tab uses the same default. Auditors who want strict verification call the endpoint directly from a script with their chosen policy, or use the CLI which defaults to strict.</p>
+
+    <h2>Numbers</h2>
+
+    <p>6 new tests in <code>tests/test_dossier_hybrid_template.py</code> covering the unanchored verification path. 12 new tests in <code>tests/test_verify_dossier_endpoint_v2.py</code> covering V2 endpoint dispatch, verdict computation, policy defaults, check skipping, evidence assembly, and error propagation. PYTEST_FLOOR raised 542 to 560. The 57-template regression harness produced 0 diffs. All 10 release-pipeline phases passed: grammar sync, pytest floor, regression, version consistency, pyflakes, build, wheel content gate, clean-venv install, UX smoke, PyPI upload.</p>
+
+    <p>Both production servers report <code>version: 5.5.0</code>. The V1 endpoint behavior is byte-identical to v5.4.0 when <code>policy</code> is omitted; this was verified by a 9-test V1 suite still passing unmodified. PyPI: <code>nous-lang 5.5.0</code>. GitHub: tag <code>v5.5.0</code>.</p>
+
+    <h2>See also</h2>
+
+    <p><code>docs/VERIFY_DOSSIER.md</code> contains the full V2 API reference, the verdict-computation logic, the four-state <code>ok</code> field semantics, and the failure-mode table. <code>docs/REKOR_ANCHOR.md</code> covers the anchoring side: how a dossier acquires its <code>transparency_log</code> block and the Path-beta dual signing rationale. Live surfaces: <code>https://nous-lang.org/api/v1/verify-dossier</code>, <code>https://nous-lang.org/verify.html</code>, <code>https://nous-lang.org/ide.html</code>, <code>https://nous-lang.org/verify_offline.py</code>.</p>
+
+  </div>
+
+  <!-- __session81_blog_v540_post_v1__ __session81_blog_v540_post_v2__ -->
+  <div class="post-full" id="post-v540-public-verification-surface">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.4.0 &mdash; The Public Verification Surface</h1>
+    <div class="post-full-meta">17 May 2026 &middot; 8 min read</div>
+
+    <p>v5.3.0 anchored every signed NOUS dossier into the Sigstore Rekor transparency log via Path-beta dual signing. v5.4.0 closes the gap on the consumer side: a public endpoint, a standalone page, an IDE tab, and a byte-identical offline verifier &mdash; three independent trust paths that let anyone, anywhere, audit a NOUS dossier without installing NOUS itself.</p>
+
+    <h2>The gap v5.4.0 closes</h2>
+
+    <p>v5.3.0 made every signed NOUS dossier independently auditable via a public transparency log. But to actually run that audit, a verifier needed three things: the NOUS CLI installed, the right Python version on the path, and familiarity with the manifest schema. That is a high bar for the EU AI Act conformity case it is meant to serve. A regulator, an internal auditor, a downstream consumer &mdash; none of them should need to install a programming language to check a cryptographic signature.</p>
+
+    <p>v5.4.0 ships three independent surfaces, each addressing a different audience.</p>
+
+    <h2>Browser convenience</h2>
+
+    <p>Drop a <code>manifest.json</code> or <code>skill_export.zip</code> onto <a href="/verify.html">nous-lang.org/verify</a> (or the new Dossier tab in the <a href="/ide.html">IDE</a>). The page client-side extracts the manifest from the ZIP via JSZip, POSTs to <code>/api/v1/verify-dossier</code>, and renders three PASS/FAIL pills with a clickable <code>log_index</code> linking to the live Sigstore Rekor entry. No login. No NOUS install. No API key. Useful for quick checks and for sharing a verifiable artifact link with anyone.</p>
+
+    <h2>Offline reproducible</h2>
+
+    <p>Download <a href="/verify_offline.py"><code>verify_offline.py</code></a> from the same page. Single dependency: the <code>cryptography</code> library, which ships with most modern Python distributions. Run it in a directory containing <code>manifest.json</code> and <code>source.nous</code>; exit code 0 is PASS, 1 is FAIL, 2 is environment error. The verifier is byte-identical to the string embedded in <code>dossier.py</code> as <code>VERIFY_OFFLINE_PY_WITH_REKOR</code> &mdash; the same code that <code>nous dossier-spec</code> emits inside every anchored bundle. This is the canonical trust path.</p>
+
+    <h2>Toolchain (full)</h2>
+
+    <p>For organizations that already have the toolchain: <code>pip install nous-lang</code> then <code>nous dossier verify path/to/dossier/</code>. Runs the offline verifier plus the SMT re-check against <code>pricing/defaults.toml</code>. No behavior change in this release for users on this path.</p>
+
+    <h2>Why granularity matters</h2>
+
+    <p>The new endpoint returns a structured response with separate booleans for each independent cryptographic check: <code>signature_ok</code> (Ed25519 author signature verifies against the manifest's claimed author public key), <code>rekor_set_ok</code> (Rekor SignedEntryTimestamp ECDSA-P-256 signature verifies AND Rekor's signing key is in the pinned allowlist), and <code>rekor_inclusion_ok</code> (the leaf body parses as hashedrekord/0.0.1, its sha256 matches the manifest's canonical body bytes, AND the embedded submitter signature verifies).</p>
+
+    <p>Each field reflects exactly one claim. <code>signature_ok</code> proves authorship. <code>rekor_set_ok</code> proves the log entry exists and was signed by a trusted Sigstore instance. <code>rekor_inclusion_ok</code> proves the manifest in hand is exactly the manifest that was anchored.</p>
+
+    <p>The internal API &mdash; <code>rekor_anchor.verify_rekor_anchor_offline_detail()</code> &mdash; exposes the same granularity for any code that wants to make trust decisions based on which specific check failed. A failed <code>rekor_inclusion_ok</code> with <code>rekor_set_ok=true</code> is meaningfully different from the inverse: the first means the dossier has been tampered with after Rekor logged a different version; the second means the Rekor entry itself is suspect.</p>
+
+    <p>The legacy <code>verify_rekor_anchor_offline()</code> bool API is retained, refactored to delegate. A regression test asserts that the AND of the three detail booleans equals the legacy boolean across all three captured S80 fixtures &mdash; outcome byte-equivalent.</p>
+
+    <h2>Boundaries</h2>
+
+    <p><code>POST /v1/verify-dossier</code> is not in the trust path. It runs the same checks as <code>verify_offline.py</code> but inside the NOUS API &mdash; if you do not trust the API operator, the response means nothing. The offline verifier is the only path where the verification computation happens entirely on the verifier's machine, with no network round-trip and no dependency on the issuer's infrastructure. The browser page is, accordingly, framed as a quick check, not as audit evidence.</p>
+
+    <p>The endpoint is rate-limited (30 requests per minute per IP) and the request body is capped at 256 KiB. Real-world dossiers are 2-10 KiB; the cap exists to prevent abuse, not to constrain legitimate use.</p>
+
+    <h2>Numbers</h2>
+
+    <p>9 new endpoint tests in <code>tests/test_verify_dossier_endpoint.py</code> covering Pydantic strict mode, parse failures, real Ed25519 sign/verify roundtrip, tampered-signature detection, tampered-field detection, and the real-manifest-with-fixture-anchor integration case. 3 new tests appended to <code>tests/test_rekor_anchor.py</code> exercising the new <code>RekorVerifyDetail</code> model and asserting legacy-bool equivalence.</p>
+
+    <p>PYTEST_FLOOR raised 530 to 542. The 57-template regression harness produced 0 diffs. All 10 release-pipeline phases passed: grammar sync, pytest floor, regression, version consistency, pyflakes, build, wheel content gate, clean-venv install, UX smoke, PyPI upload. Both production servers report <code>version: 5.4.0</code> and respond to <code>/v1/verify-dossier</code> with the structured shape. PyPI: <code>nous-lang 5.4.0</code>. GitHub: tag <code>v5.4.0</code>.</p>
+
+    <h2>See also</h2>
+
+    <p><code>docs/VERIFY_DOSSIER.md</code> contains the full API reference for the endpoint, the three trust paths, and failure modes. <code>docs/REKOR_ANCHOR.md</code> covers the anchoring side: how a dossier acquires its <code>transparency_log</code> block and the Path-beta dual signing rationale (why ECDSA-P-256 leaf instead of Ed25519; Sigstore issue #851). Live surfaces: <code>https://nous-lang.org/api/v1/verify-dossier</code>, <code>https://nous-lang.org/verify.html</code>, <code>https://nous-lang.org/verify_offline.py</code>.</p>
+
+  </div>
+
+  <!-- __session78_blog_stop-button-not-article-14_post_v1__ -->
+  <div class="post-full" id="post-stop-button-not-article-14">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">Your Stop Button Is Not Article 14 Compliance</h1>
+    <div class="post-full-meta">16 May 2026 &middot; 12 min read</div>
+
+    <p>The EU AI Act becomes enforceable for high-risk systems on 2 August 2026. I have spent the last few weeks reading Article 14 carefully &mdash; not the summaries, not the consultancy decks, the actual text &mdash; and I keep coming back to the same uncomfortable conclusion. Most of the oversight architectures I see being built will not satisfy it.</p>
+    <p>Not because they are badly built. Because they were built around a misreading.</p>
+    <p>The misreading is this: human oversight gets treated as a UI feature. A dashboard. A halt button. A reviewer screen somewhere in the workflow. That reading is intuitive &mdash; humans oversee things, so we give them a screen and a control &mdash; but the regulation is asking for something stricter than that. It is asking for a design property of the system itself.</p>
+    <p>The good news is that this is fixable. The fix is architectural, not cosmetic. And once you see what Article 14 is actually asking for, the rest of the design follows.</p>
+
+    <h2>What Article 14 actually requires</h2>
+    <p>Before we get to the architecture, the regulation. Article 14 is one short page of legal text and it is worth reading the whole thing once, but the operational substance lives in paragraphs 1 and 4.</p>
+    <p>Paragraph 1 sets the design obligation. High-risk AI systems shall be designed and developed in such a way that they can be effectively overseen by natural persons during the period in which they are in use. The word that does the work there is <em>designed</em>. Not "monitored", not "wrapped", not "supervised". Designed. The capability for oversight has to be a property of the system from the start, not something layered on top after the fact.</p>
+    <p>Paragraph 4 is the operational expansion. It lists what the overseer must be enabled to do &mdash; and it is more than most readers remember. The overseer must be able to:</p>
+    <ul>
+      <li>understand the system's capacities and limitations, and detect anomalies and unexpected performance</li>
+      <li>stay aware of automation bias when interpreting the output</li>
+      <li>correctly interpret what the system produced</li>
+      <li>decide, in any given situation, not to use the output or to disregard it</li>
+      <li>intervene or halt the system through a stop mechanism</li>
+    </ul>
+    <p>That is five distinct capabilities, not one. And only the last one is what most teams reach for first.</p>
+    <p>The industry has started calling this the three-tier oversight framework &mdash; Understand, Intervene, Halt &mdash; and the framing is useful because it forces you to admit that a stop button alone covers roughly one-fifth of what the regulation asks for. Understanding, interpreting correctly, detecting anomalies, resisting automation bias, deciding to disregard &mdash; none of those are UI controls. They are capacities the system has to make available to the overseer, and the overseer has to be able to exercise them under real operational conditions.</p>
+    <p>Paragraph 5 adds a separate rule for biometric identification &mdash; two natural persons must independently verify any decision before action &mdash; but that rule applies narrowly, and is not what this piece is about. The harder question, the one most architectures will fail on, is in paragraph 4.</p>
+    <p>The honest reading is this. Article 14 is asking for a system that treats human oversight as a first-class structural property. Not a review screen. Not a kill switch. A property of the architecture that survives audit, survives staff turnover, and survives the moment when the regulator asks the only question that matters: how do you know.</p>
+
+    <h2>Verification is not governance</h2>
+    <p>The mistake almost every AI architecture makes is collapsing two layers into one. Verification and governance look similar from the outside &mdash; both involve checks, both produce records, both block bad outputs &mdash; but they are answering different questions, and Article 14 quietly depends on you keeping them apart.</p>
+    <p>Verification asks: does this output conform to what we said it would do? Did the model stay inside its declared budget. Did the generated code pass the tests. Did the response match the schema. These are questions with deterministic answers. A signature, a hash, a parser, a test runner. The answer is yes, no, or we could not check.</p>
+    <p>Governance asks something different: is this output allowed to proceed? That question has nothing to do with whether the output is technically correct. An output can be perfectly valid and still not admissible. The pricing was correct, but the human approver has not signed off yet. The code passed every test, but the workflow it came from requires sign-off from a named compliance officer. The generation was clean, but admission is conditional on something the generator cannot see.</p>
+    <p>A verifier cannot answer the second question. It does not know about authority. It does not know about validity windows. It does not know that this particular workflow needs a named human to attest before the output can be released. A verifier knows what you told it to check. Governance knows what the system is allowed to do.</p>
+    <p>This distinction is not academic. It is the reason most stop-button implementations fail under audit. The button stops execution, but nothing in the architecture explains why a particular output was admitted in the first place. The verifier said yes, the system released. The governance question &mdash; by what authority &mdash; was never asked, because nothing in the architecture was structured to ask it.</p>
+    <p>Article 14 is often read like a verification requirement, but its practical burden is architectural governance. It says "human oversight" and most teams hear "checks". But every one of the five capabilities in paragraph 4 is a governance capability, not a verification one. Understanding the system's limits, resisting automation bias, deciding to disregard, halting &mdash; these are admission decisions. They are exercised by an authority, not by a checker.</p>
+    <p>Once you see it this way, the architecture rearranges itself. You stop asking "did the model produce a valid output" and start asking "is this execution admissible under the current governance state". The verifier still runs. The governance layer sits above it. And the model &mdash; generating, summarising, proposing &mdash; sits below both. Named in the receipt. Never the author of it.</p>
+
+    <h2>Two questions, same pressure</h2>
+    <p>I did not arrive at this distinction alone. Most of what I have written so far crystallised through a conversation with Brian James, who has been building an independent governance infrastructure under a project he calls MCK. We approached the same problem from opposite directions and ended up needing the same vocabulary.</p>
+    <p>My work started from a question about probabilistic systems. How do you make generation operationally stable? Cost cannot be unbounded. Output cannot be unverifiable. The sandbox cannot be unattested. The receipt cannot be unsigned. Each of those constraints forced a deterministic primitive. NOUS bounds cost with formal SMT proofs before execution. AetherProof produces signed receipts that anyone can verify offline using a public key. AetherCode runs every output through a five-gate verifier inside an isolated sandbox and refuses to bill if the verification subsystem itself cannot run. The architecture is built around the assumption that the model is the unstable part of the system, and the deterministic layer below it has to absorb that instability before anything is released.</p>
+    <p>Brian's work started from the opposite question. How do you preserve operational governance when probabilistic systems enter regulated execution environments? His architecture, in his own framing, was never model-first. The governance layer he built does not depend on a model existing at all. It treats every artifact entering the execution boundary the same way &mdash; source records, workflow outputs, model generations &mdash; as governed objects subject to admissibility rules. When a model output arrives at the boundary, it is governed exactly like any other artifact. No special trust. No special treatment. Just another input being checked against the obligation state of the workflow.</p>
+    <p>Different entry points. Same pressure underneath. Once a system moves beyond simple generation into operational execution, the questions of authority, admissibility, accountability and replay stop being optional. They become the architecture, or the architecture fails them.</p>
+    <p>The conceptual framework Brian developed for this layer is the <em>obligation shell</em>. The way I have come to understand it from our exchange &mdash; paraphrased here in my own words rather than quoted from his &mdash; is that an obligation shell is a governance envelope wrapped around any artifact, output, workflow, or execution request before that artifact enters runtime. The shell carries the conditions under which the artifact is allowed to proceed: what evaluations have to succeed, which authority has to attest, what evidence the attestation has to reference, and within what time window the attestation remains valid. The shell exists from the moment the artifact is provisioned, not at the moment a gate runs. It is a first-class object in the architecture &mdash; addressable, queryable, attributable, and replayable as state.</p>
+    <p>Brian and I have agreed to converge on a small set of shared terms for talking about this layer publicly. Each of these terms describes a primitive that any architecture honest about Article 14 will eventually need:</p>
+    <ul>
+      <li><strong>Obligation shell</strong> &mdash; the governance envelope I just described</li>
+      <li><strong>Requester and Authority</strong> &mdash; the actor who initiates an execution request, kept structurally distinct from the actor (or policy, or governance layer) empowered to admit or block it</li>
+      <li><strong>Admission and Admissibility</strong> &mdash; the act of allowing an artifact to proceed, and the property of being allowed to proceed</li>
+      <li><strong>Attestation primitive</strong> &mdash; a recorded act by an accountable authority, treated as a first-class object rather than a log line</li>
+      <li><strong>Governed artifact</strong> &mdash; anything that has to pass through the governance boundary before it can be used</li>
+      <li><strong>Governance trace</strong> &mdash; the lineage of how a governance decision was reached</li>
+      <li><strong>Execution lineage</strong> &mdash; the parallel lineage of what runtime execution actually did once admission was granted</li>
+      <li><strong>Derived admission state</strong> &mdash; the admission outcome computed from the obligation posture, rather than asserted by the requester</li>
+    </ul>
+    <p>The shared vocabulary used in this piece describes the governance boundary layer: the point where artifacts, outputs, workflows, or execution requests become subject to authority, admissibility, attestation, and traceable lineage.</p>
+    <p>These terms emerged from implementation pressure on both sides. I arrived at fragments of them building NOUS and AetherCode. Brian arrived at a fuller version building MCK. Where the terms collide, we have agreed to use the same words rather than make readers translate between dialects.</p>
+    <p>The reason this matters for Article 14 is that the regulation presupposes exactly this kind of structure. Paragraph 4 is asking for capabilities that only an obligation shell &mdash; or something isomorphic to one &mdash; can deliver. The overseer must understand the system's limits, and the system must record what limits applied at the moment of execution. The overseer must be able to disregard the output, and the system must record by what authority the disregard was exercised. The overseer must be able to halt operation, and the system must record the transition from operational to halted as a governance event, not just a process termination.</p>
+    <p>A stop button cannot do any of this on its own. A verifier cannot do any of this on its own. The architecture has to be one where these acts are first-class.</p>
+
+    <h2>What this approach does not solve</h2>
+    <p>I want to be careful here. Nothing I have described &mdash; not the verifier, not the obligation shell, not the signed receipts, not any combination of the three &mdash; is a complete answer to Article 14. The architecture covers the structural part of the regulation. The parts it does not cover are real, and they have to be acknowledged or the rest of the piece is just sales talk dressed up as engineering.</p>
+    <p><strong>Automation bias is not an architecture problem.</strong> Paragraph 4(b) asks the system to be provided in a way that lets the overseer remain aware of the tendency to over-rely on AI output. No primitive in the world can train someone's attention. That capability lives in training, in interface design that surfaces uncertainty without hiding it, in workflow choices that resist habituation. A signed receipt does not stop a tired overseer from approving every output because the previous fifty looked fine. The architecture can give the overseer the tools. It cannot make them use them.</p>
+    <p><strong>Live monitoring is the deployer's job, not mine.</strong> Paragraph 4(a) asks the overseer to "duly monitor" the system. NOUS produces a post-hoc dossier. AetherProof produces a per-output receipt. Aether Shield enforces request-time policy and emits a record of every block at the gateway layer. None of those are a unified operational dashboard sitting in front of a human reviewer. That dashboard has to be built by whoever deploys the system, against their own incident response procedures and their own escalation paths. A programming language, a signing service, and a request gateway do not turn themselves into a SOC.</p>
+    <p><strong>The kill switch is fundamentally a sociotechnical problem.</strong> The regulation talks about a stop mechanism in 4(e), and every architecture I have described can stop. NOUS programs can be halted. AetherCode can shut its execution path. Aether Shield can ban an agent. But "stop" in the regulatory sense is not just process termination. It is a recorded, attributable, auditable act performed by a named authority &mdash; and most deployments do not yet have the organisational scaffolding to specify who that authority is, when they are reachable, what their escalation tree looks like, and how the act is recorded outside the system being halted. The architecture supports the mechanism. It cannot supply the authority.</p>
+    <p><strong>The biometric two-person rule is out of scope.</strong> Paragraph 5 requires that for certain biometric identification systems, two qualified persons independently verify any decision before action is taken. That rule does not generalise to the rest of high-risk AI, and none of the systems I work on are biometric. Mentioning it here only to say I am not claiming to address it.</p>
+    <p>The honest summary is this. The architecture covers a specific slice of Article 14 &mdash; the structural slice, the part that has to be designed in rather than added later. It gives the overseer verifiable evidence to interpret correctly. It records who admitted what and under what conditions. It enables disregard and halting as first-class governance acts rather than process events. That is necessary. It is not sufficient.</p>
+    <p>The parts that are missing &mdash; automation bias training, live operational monitoring, organisational kill-switch governance &mdash; are not architectural problems pretending to be solved. They are deployment problems that have to be solved by the deployer, often by people who are not engineers at all. A vendor who pretends otherwise is selling a checkbox.</p>
+
+    <h2>Where this is going</h2>
+    <p>The conversation that produced this piece ended on a point Brian made that has stayed with me. The vocabulary we converged on did not come from theory. It came from implementation pressure on both sides. He was not designing a governance framework in the abstract. I was not designing a verification stack in the abstract. We were both shipping systems that had to behave correctly under operational load, and the architecture forced the language. Two solo builders, working independently, ending up with parallel terminology because the boundary being described is real.</p>
+    <p>His read on where this is heading, and I agree with it, is that the broader industry is about to learn the difference between verification and governance the hard way. Most current architectures collapse them into a single layer. That collapse is going to start producing audit failures, accountability gaps, and incident reports that nobody can answer cleanly. The next twelve to eighteen months are going to make this distinction harder to ignore than it has been until now.</p>
+    <p>If you are responsible for an AI system that will fall under Article 14, the practical question to take into your next architecture review is not "do we have a stop button". The practical question is closer to this:</p>
+    <ul>
+      <li>Can we name, for any output the system produced, the authority under which it was admitted into use?</li>
+      <li>Can we replay, deterministically, the governance state of the workflow at the moment the output was admitted?</li>
+      <li>Can the overseer disregard an output, and is that act recorded as a separate, attributable event?</li>
+      <li>Does our halt mechanism halt the system as a governance event, or just as a process termination?</li>
+      <li>If a regulator asked us how we know any of the above, can we answer without referencing the model?</li>
+    </ul>
+    <p>If most of those answers are not yet "yes", you are not in a bad position. You are in the position most teams will be in on August first. The question is whether you start now or in July.</p>
+    <p>Article 14 is one of the more demanding parts of the AI Act, but it is not the hardest part. The hardest part is realising it was never asking for a UI in the first place.</p>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:32px 0">
+
+    <p style="font-size:0.9em;color:var(--dim)">The EU AI Act becomes enforceable for high-risk systems on 2 August 2026. Penalties for non-compliance with Article 14 obligations reach EUR 15 million or 3% of worldwide annual turnover, whichever is higher (Article 99(4)). The EUR 35 million / 7% tier applies only to the prohibited practices listed in Article 5, and is not what Article 14 violations fall under.</p>
+    <p style="font-size:0.9em;color:var(--dim)">Cryptographically signed receipts, immutable audit trails and formal SMT verification are above the explicit baseline the regulation sets, not formally required by it. They are how I have chosen to build for a regulation that is asking for "design that enables effective oversight" without specifying the implementation. A deployer reasoning about compliance should treat them as one defensible interpretation of the design obligation, not as the mandated form of it.</p>
+    <p style="font-size:0.9em;color:var(--dim)">This piece is technical commentary on a regulation. It is not legal advice. Deployers and providers should consult qualified counsel for compliance determinations specific to their use case.</p>
+    <!-- __session82_article_14_omnibus_update_v1__ -->
+    <aside class="update-note">
+      <h3>Update -- 17 May 2026</h3>
+      <p>On 7 May 2026 the European Council and Parliament reached provisional political agreement on the Digital Omnibus on AI, which shifts the binding compliance dates: stand-alone Annex III high-risk systems move from 2 August 2026 to 2 December 2027, AI embedded in Annex I regulated products moves to 2 August 2028, and the transparency and watermarking provisions activate on 2 December 2026. The text is provisional, not formally adopted; final adoption is expected but not certain.</p>
+      <p>The deadline shift does not change the architectural argument in this piece. Article 14 is not enforceable later because it became easier; it is enforceable later because the practical burden was widely underestimated. The shared vocabulary developed here describes a governance boundary that has to be built into the system regardless of the date by which it must be demonstrable. Eighteen additional months is build time, not relief.</p>
+    </aside>
+
+    <p style="font-size:0.9em;color:var(--dim)">The shared vocabulary used in this piece for governance primitives &mdash; obligation shell, requester and authority, admission and admissibility, attestation primitive, governed artifact, governance trace, execution lineage, and derived admission state &mdash; was developed by Brian James in the context of MCK. The terms are used here as agreed shared terminology for the convergent layer between his architecture and mine. The definitions in this piece are paraphrased in my own wording rather than reproduced from his framing; any imprecision in the paraphrase is mine. Where I have applied the terms to AetherCode, NOUS or AetherProof, the application is mine; the underlying conceptual framework is his.</p>
+  </div>
+
+  <!-- __session77_blog_v520_post_v1__ -->
+  <div class="post-full" id="post-v520-skill-export-release">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.2.0 &mdash; Closing the Skill Loop</h1>
+    <div class="post-full-meta">16 May 2026 &middot; Session 77 &middot; 5 min read</div>
+
+    <h2>The arc, two releases in</h2>
+    <p>v5.1.0 shipped <code>nous dossier-spec</code> earlier today, giving skill consumers a way to produce EU AI Act Annex IV-aligned, Ed25519-signed compliance dossiers from existing <code>SKILL.md</code> + <code>nous.yaml</code> pairs. That release served the consumer side of the agentskills.io ecosystem: people who have a skill and want to attest its cost behavior.</p>
+    <p>v5.2.0 closes the loop for authors. Specifically, skill authors who write their agents in NOUS. The <code>.nous</code> program is the runtime authority: world, cost ceiling, souls, senses, mind models, nervous-system topology, instincts, mitosis, immune, telemetry. <code>SKILL.md</code> is the discovery and admission surface: it tells 26+ AI platforms (Claude Code, Codex, Gemini CLI, Copilot, Cursor, VS Code, and others) what the skill does, when to load it, and what its cost envelope is. Without an export path, the author had to keep the two by hand. <code>nous skill-export</code> closes that gap.</p>
+
+    <h2>What v5.2.0 ships</h2>
+    <p>The release is structured around three surfaces over one translator. All three call the same underlying <code>skill_export.export_skill()</code> function:</p>
+    <ul>
+      <li><strong>CLI:</strong> <code>nous skill-export &lt;input.nous&gt; --description "&lt;text&gt;" [--output DIR] [--name &lt;kebab&gt;]</code></li>
+      <li><strong>HTTP API:</strong> <code>POST /v1/skill/export</code>, rate-limited 10/minute per API key, returns <code>application/zip</code> with optional signed dossier subdirectory.</li>
+      <li><strong>IDE button:</strong> <strong>&#8599; Export Skill</strong> in the editor toolbar at <a href="/ide.html">nous-lang.org/ide.html</a>, next to <strong>Download .py</strong>.</li>
+    </ul>
+    <p>The translation is deliberately lossy and one-way. NOUS constructs the agentskills.io schema cannot hold (instinct bodies, nervous-system topology, mitosis, immune, telemetry, heal rules, message contracts) are dropped from the emitted skill. The original <code>.nous</code> program retains them at runtime; the emitted skill carries only the cost-relevant projection.</p>
+
+    <h2>Annex IV dossier, ephemeral key per request</h2>
+    <p>When <code>with_dossier: true</code> (the default for API and IDE), the emitted ZIP contains a <code>dossier/</code> subdirectory byte-identical to what <code>nous dossier-spec</code> would produce against the same emitted skill: deterministic <code>source.nous</code> envelope, signed <code>manifest.json</code>, <code>pricing.toml</code>, <code>public_key.b64</code>, human-readable <code>README.md</code>, and stand-alone <code>verify_offline.py</code>.</p>
+    <p>The signing key differs between surfaces. The API and IDE generate a <strong>fresh Ed25519 keypair per request</strong>, sign the manifest with it, and discard the private key before the response returns. The <code>public_key.b64</code> in the dossier is sufficient for offline verification, but the bundle cannot be re-signed with byte-identity by re-running the request. For a stable signing key across many exports, use the CLI plus <code>nous dossier-spec --key PATH</code>.</p>
+
+    <h2>Release metrics</h2>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0">
+      <tbody>
+        <tr><th style="text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);color:var(--dim);font-weight:normal">Source change</th><td style="padding:6px 12px;border-bottom:1px solid var(--border)">13 files, +2,028 insertions, -10 deletions</td></tr>
+        <tr><th style="text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);color:var(--dim);font-weight:normal">New modules</th><td style="padding:6px 12px;border-bottom:1px solid var(--border)"><code>skill_export.py</code>, <code>cli_skill_export.py</code></td></tr>
+        <tr><th style="text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);color:var(--dim);font-weight:normal">New tests</th><td style="padding:6px 12px;border-bottom:1px solid var(--border)">62 (40 unit, 11 CLI, 11 endpoint incl. end-to-end verifier)</td></tr>
+        <tr><th style="text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);color:var(--dim);font-weight:normal">PYTEST_FLOOR</th><td style="padding:6px 12px;border-bottom:1px solid var(--border)">441 &rarr; 503</td></tr>
+        <tr><th style="text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);color:var(--dim);font-weight:normal">Regression diffs</th><td style="padding:6px 12px;border-bottom:1px solid var(--border)">0 (across 57 templates)</td></tr>
+        <tr><th style="text-align:left;padding:6px 12px;color:var(--dim);font-weight:normal">CLI commands</th><td style="padding:6px 12px">43 &rarr; 44</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Release pipeline ritual</h2>
+    <p>The same 10-phase atomic release pipeline ran for v5.2.0 as for v5.1.0 earlier today:</p>
+    <ol>
+      <li>Pre-flight: clean tree, tag <code>v5.2.0</code> not present.</li>
+      <li>Grammar sync: <code>scripts/sync_grammar.py</code> + <code>test_grammar_sync.py</code>.</li>
+      <li>Pytest floor: 503 of 503 passed.</li>
+      <li>Regression harness: 0 diffs across 57 templates.</li>
+      <li>Version consistency: all six locations agree on <code>5.2.0</code>.</li>
+      <li>Pyflakes: 7 release-path files clean.</li>
+      <li>Build: wheel + sdist produced.</li>
+      <li>Wheel content gate: <code>_version.py</code>, <code>nous.lark</code>, <code>grammar_data.py</code>, plus the v5.1.0 skill_md / dossier_spec / cli_dossier_spec, plus the new <code>skill_export.py</code> and <code>cli_skill_export.py</code>; 9 templates; <code>Version: 5.2.0</code> in METADATA.</li>
+      <li>Clean-venv install smoke: fresh venv, install wheel, exercise <code>nous templates extract</code> + <code>nous compile</code>; both exit 0.</li>
+      <li>PyPI upload: twine check OK, twine upload OK.</li>
+    </ol>
+    <p>Each gate is structurally hard. A failure at any point aborts before upload. There is no partial PyPI publish; each release is atomic with the artifact set it produces.</p>
+
+    <h2>The deeper change</h2>
+    <p>v5.0.0 made NOUS cost-verification currency-agnostic. v5.1.0 wrapped that verification into a portable, spec-compliant compliance artifact. v5.2.0 closes the loop so NOUS authors can flow source through to that compliance artifact without leaving their editor. The unifying through line, ever since Session 16, has been the same: take probabilistic execution and produce deterministic evidence that travels with it.</p>
+    <p>Three releases in nine days. Same architecture each time. Same release pipeline. Same regression discipline. The point of v5.2.0 is that the loop now closes <em>without manual sync</em>: one source file, three surfaces, one signed dossier whose chain of custody anyone can verify offline with the standard <code>cryptography</code> library.</p>
+
+    <h2>Reference</h2>
+    <ul>
+      <li><a href="/blog/#post-nous-to-skill-export">Skill Export from the NOUS IDE</a> &mdash; deeper-dive companion to this release announcement.</li>
+      <li><a href="https://github.com/contrario/nous/blob/main/docs/SKILL_EXPORT.md"><code>docs/SKILL_EXPORT.md</code></a> &mdash; full schema/CLI/API/IDE reference.</li>
+      <li><a href="https://github.com/contrario/nous/releases/tag/v5.2.0">v5.2.0 GitHub release</a> &middot; <a href="https://pypi.org/project/nous-lang/5.2.0/">PyPI 5.2.0</a></li>
+    </ul>
+    <p>Install: <code>pip install --upgrade nous-lang==5.2.0</code>.</p>
+  </div>
+
+  <!-- __session77_blog_skill_export_post_v1__ -->
+  <div class="post-full" id="post-nous-to-skill-export">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">Skill Export from the NOUS IDE &mdash; .nous Source to Signed Annex IV Bundle in Three Clicks</h1>
+    <div class="post-full-meta">16 May 2026 &middot; Session 77 &middot; 6 min read</div>
+
+    <h2>The gap this closes</h2>
+    <p>v5.1.0 shipped earlier today with <code>nous dossier-spec</code>: a CLI that produces EU AI Act Annex IV-aligned, Ed25519-signed compliance dossiers from any existing agentskills.io-compliant skill directory. That release served skill <em>consumers</em>: someone with a third-party <code>SKILL.md</code> in hand, who wants to produce a mechanical proof that the skill behaves within a declared cost envelope.</p>
+    <p>This release serves skill <em>authors</em>. Specifically, skill authors who write their agents in NOUS. The <code>.nous</code> program is the runtime authority: it encodes the world, the cost ceiling, the souls, their senses, the mind models, the nervous-system topology, and so on. The agentskills.io <code>SKILL.md</code> is the discovery and admission surface: it tells 26+ AI platforms (Claude Code, OpenAI Codex, Gemini CLI, GitHub Copilot, Cursor, VS Code, and others) what the skill does, when to load it, and what its cost envelope is. Without an export path, the author had to keep the two by hand. <code>nous skill-export</code> closes that loop.</p>
+
+    <h2>What gets translated</h2>
+    <p>The translation is <em>lossy and one-way</em>. The agentskills.io schema is strictly smaller than the NOUS language. The exporter projects a <code>NousProgram</code> onto the subset that the schema can hold:</p>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0">
+      <thead><tr><th style="text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);color:var(--dim)">.nous construct</th><th style="text-align:left;padding:6px 12px;border-bottom:1px solid var(--border);color:var(--dim)">SKILL.md / nous.yaml projection</th></tr></thead>
+      <tbody>
+        <tr><td style="padding:4px 12px"><code>world</code> name</td><td style="padding:4px 12px">kebab-case skill <code>name</code></td></tr>
+        <tr><td style="padding:4px 12px"><code>law cost_x = $A per cycle</code></td><td style="padding:4px 12px"><code>cost_cap: "&lt;A&gt;&lt;CCY&gt;"</code></td></tr>
+        <tr><td style="padding:4px 12px"><code>soul</code> &rarr; <code>senses</code> list</td><td style="padding:4px 12px">flattened union &rarr; tool list</td></tr>
+        <tr><td style="padding:4px 12px"><code>soul</code> &rarr; <code>mind: model</code></td><td style="padding:4px 12px">most-frequent &rarr; <code>default_model</code></td></tr>
+        <tr><td style="padding:4px 12px">message contracts, nervous_system, instinct bodies, mitosis, immune, telemetry, heal rules</td><td style="padding:4px 12px">dropped (the original <code>.nous</code> program retains them at runtime)</td></tr>
+      </tbody>
+    </table>
+    <p>The dropped constructs are not lost in the runtime: the original <code>.nous</code> program continues to govern them. They are simply not expressible in the agentskills.io schema, so the emitted skill carries only the projection the schema can hold. The cost envelope is the projection that matters most: <code>SKILL.md</code> + <code>nous.yaml</code> carry enough information for the SMT solver to prove the cost cap holds across every reachable execution.</p>
+
+    <h2>Three surfaces, one implementation</h2>
+    <p>All three surfaces call the same underlying <code>skill_export.export_skill()</code> function and produce byte-identical output for the same inputs.</p>
+
+    <h3>1. CLI</h3>
+    <pre><code>nous skill-export market_monitor.nous \
+    --description "Monitor crypto prices and alert on threshold crossings" \
+    --output ./my-skill/</code></pre>
+    <p>Writes <code>./my-skill/SKILL.md</code> and <code>./my-skill/nous.yaml</code>. Run <code>nous dossier-spec ./my-skill/ --key path/to/persistent-signing.key</code> afterwards to produce a fully signed Annex IV dossier with a stable signing key.</p>
+
+    <h3>2. HTTP API</h3>
+    <pre><code>POST /v1/skill/export
+X-API-Key: &lt;key&gt;
+Content-Type: application/json
+
+{
+  "source": "&lt;.nous source text&gt;",
+  "description": "Monitor crypto prices ...",
+  "with_dossier": true
+}</code></pre>
+    <p>Returns a streaming <code>application/zip</code> with the skill directory and (by default) the signed dossier sub-directory inside it. Rate-limited to 10 requests per minute per API key. Each request generates a fresh Ed25519 keypair, signs the manifest with it, and discards the private key before returning. The public key is bundled in the dossier; offline verification works without any NOUS install.</p>
+
+    <h3>3. IDE button</h3>
+    <p>The NOUS IDE editor toolbar gained a new button next to <strong>Download .py</strong>: <strong>&#8599; Export Skill</strong>. Three prompts (description, optional skill name, API key on first use), one POST, one streaming ZIP download. The whole flow takes about five seconds end to end, of which roughly half is the SMT solver running.</p>
+
+    <h2>What is in the bundle</h2>
+    <p>With <code>with_dossier: true</code> (the default for all three surfaces), the ZIP contains ten files:</p>
+    <pre><code>&lt;skill-name&gt;/
+  SKILL.md
+  nous.yaml
+  dossier/
+    source.nous          # deterministic envelope (SHA in manifest)
+    manifest.json        # signed manifest (canonical JSON)
+    SKILL.md             # verbatim copy
+    nous.yaml            # verbatim copy
+    pricing.toml         # resolved pricing layer (SHA in manifest)
+    public_key.b64       # Ed25519 public key, raw base64
+    README.md            # human-readable Annex IV summary
+    verify_offline.py    # stand-alone offline verifier</code></pre>
+    <p>The dossier directory is byte-identical to what <code>nous dossier-spec</code> would produce when run against the same emitted skill, with one exception: the signing key is ephemeral on the API and IDE surfaces. Each HTTP request generates a fresh keypair, signs once, and discards the private key before the response returns. The <code>public_key.b64</code> file is sufficient for offline verification, but the bundle cannot be re-signed by re-running the export with the same expectation of byte-identity. If you want a stable signing key across many exports, use the CLI surface with <code>nous dossier-spec --key PATH</code>.</p>
+
+    <h2>Determinism boundary</h2>
+    <p>The skill files themselves are byte-deterministic: same <code>NousProgram</code> plus same metadata in, same <code>(SKILL.md, nous.yaml)</code> out. No timestamps, no random IDs, no host-dependent information. This determinism is required by the <code>source.nous</code> envelope, whose SHA-256 anchors the signed manifest.</p>
+    <p>The signed dossier as a whole is <em>not</em> byte-deterministic across calls, because the Ed25519 signature varies per ephemeral keypair. But the manifest's <code>source_sha256</code> and <code>pricing_sha256</code> fields are deterministic given the same inputs, which is what lets two independent parties verify they produced the same underlying artifact even when the signatures differ.</p>
+
+    <h2>The verification chain</h2>
+    <p>Every bundle includes <code>verify_offline.py</code>, which depends only on the standard <code>cryptography</code> Python library:</p>
+    <pre><code>cd &lt;skill-name&gt;/dossier/
+python3 verify_offline.py</code></pre>
+    <p>A passing verification:</p>
+    <pre><code>OK   Ed25519 signature verified
+OK   source.sha256 matches manifest (7c899f5392a24ccd...)
+
+VERDICT: PASS
+  world:      sdf
+  cost_cap:   $3.0 USD
+  verdict:    proven
+  solver:     z3 4.16.0
+  timestamp:  2026-05-16T11:32:02+00:00</code></pre>
+    <p>The verifier checks two things: (a) the Ed25519 signature on <code>manifest.json</code> verifies under <code>public_key.b64</code>, and (b) the SHA-256 of <code>source.nous</code> matches the value in the manifest. That is the entire chain of custody. The solver verdict (<code>proven</code> or <code>refuted</code>) is itself part of the signed manifest, so a refuted skill cannot be silently re-signed as proven.</p>
+
+    <h2>What this is and is not</h2>
+    <p>The export covers a specific slice of skill compliance: a spec-compliant agentskills.io <code>SKILL.md</code>, a NOUS sidecar declaring cost and tool budgets, and an Ed25519-signed Annex IV dossier with a formal SMT proof of cost-cap satisfaction.</p>
+    <p>The export does <em>not</em> cover: prompt-injection vulnerability assessment, output toxicity, IP leakage, or PII-handling checks. It does not cover runtime behavior beyond cost (latency, accuracy, robustness). It does not cover the NOUS constructs the agentskills.io schema cannot hold (instincts, mitosis, immune, nervous-system topology). For those, ship the original <code>.nous</code> program alongside the skill. The skill is the discovery and admission surface; the <code>.nous</code> program is the runtime authority.</p>
+
+    <h2>Try it</h2>
+    <p>Three ways in:</p>
+    <ul>
+      <li><strong>IDE</strong>: open <a href="/ide.html">nous-lang.org/ide.html</a>, write a <code>.nous</code> program, click <strong>&#8599; Export Skill</strong>.</li>
+      <li><strong>CLI</strong>: <code>pip install nous-lang==5.1.0</code>, then <code>nous skill-export your.nous --description "..."</code>.</li>
+      <li><strong>API</strong>: <code>POST /v1/skill/export</code> with X-API-Key header.</li>
+    </ul>
+    <p>Full reference documentation: <a href="https://github.com/contrario/nous/blob/main/docs/SKILL_EXPORT.md"><code>docs/SKILL_EXPORT.md</code></a>.</p>
+  </div>
+
+  <!-- __session77_blog_v510_post_v1__ -->
+  <div class="post-full" id="post-v510-skill-md-sidecar">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.1.0 &mdash; Annex IV Dossiers for the SKILL.md Ecosystem</h1>
+    <div class="post-full-meta">16 May 2026 &middot; Session 77 &middot; 4 min read</div>
+
+    <h2>The gap</h2>
+    <p>The <a href="https://github.com/agentskills/agentskills">agentskills.io</a> ecosystem is growing fast and overwhelmingly unattested. Snyk&rsquo;s February 2026 ToxicSkills audit looked at a broad sample of public skills and found 36.8% with detectable security flaws, 13.4% with flaws rated critical, and 76 confirmed malicious. Skill consumers cannot independently verify a skill&rsquo;s runtime cost behaviour. There is no signed, auditable artifact tying a skill&rsquo;s declared capability to a mechanical proof of its bounded resource consumption.</p>
+    <p>This is sharper in the EU. The AI Act, in force since August 2024, requires high-risk AI providers to document the &ldquo;general logic of the AI system and the algorithms&rdquo; (Annex IV(2)(b)) and to ensure systems &ldquo;operate consistently for their intended purpose&rdquo; with appropriate accuracy, robustness, and cybersecurity (Article 15). Cost-bound behaviour is one such design choice that providers must document and defend.</p>
+    <p><code>nous dossier-spec</code> bridges that gap. It reads a skill directory containing the standard <code>SKILL.md</code> and a small adjacent <code>nous.yaml</code> sidecar, runs the existing NOUS Z3 SMT verifier against the declared cost budget, and emits a complete dossier under Ed25519 signature.</p>
+
+    <h2>The sidecar</h2>
+    <p><code>nous.yaml</code> is small. The canonical example:</p>
+    <pre><code>spec_version: "1.0"
+cost_cap: 0.50USD
+default_model: claude-sonnet-4-6
+tools:
+  - name: web_search
+    max_calls: 10
+    input_tokens: 500
+    output_tokens: 200
+  - name: summarizer
+    max_calls: 3
+    input_tokens: 2000
+    output_tokens: 500</code></pre>
+    <p>Each tool declares an upper bound on call count and per-call token counts. NOUS multiplies these out, looks up token prices in a versioned pricing TOML (also SHA-pinned in the manifest), and asks Z3 whether the cost cap holds across every reachable execution. The verdict is either <code>proven</code> (no execution path exceeds the cap) or <code>refuted</code> (with a concrete counterexample, recorded in the manifest).</p>
+
+    <h2>Why a sidecar and not a frontmatter extension</h2>
+    <p>The agentskills.io spec defines a strict frontmatter schema. The reference SDK&rsquo;s Go validator (<code>skills-ref validate</code>) maintains an <code>AllowedFields</code> whitelist and rejects unknown top-level keys. Embedding the cost declaration under a <code>nous:</code> key would fail strict validation. The spec&rsquo;s official <code>metadata:</code> extension field is constrained to flat <code>str -&gt; str</code> mappings &mdash; too narrow for the nested <code>tools</code> list. A sidecar leaves <code>SKILL.md</code> byte-identical and 100% spec-compliant. Existing tooling that does not know about NOUS simply ignores <code>nous.yaml</code>. NOUS-aware tooling consumes it. Both sides win.</p>
+
+    <h2>The output bundle</h2>
+    <p>Running <code>nous dossier-spec ./my-skill/</code> produces a directory containing eight files:</p>
+    <ul>
+      <li><code>source.nous</code> &mdash; deterministic envelope wrapping <code>SKILL.md</code> and <code>nous.yaml</code>; its SHA-256 anchors the manifest</li>
+      <li><code>manifest.json</code> &mdash; signed manifest (canonical JSON, sorted keys)</li>
+      <li><code>SKILL.md</code> &mdash; verbatim from input</li>
+      <li><code>nous.yaml</code> &mdash; verbatim from input</li>
+      <li><code>pricing.toml</code> &mdash; resolved pricing layer (SHA in manifest)</li>
+      <li><code>public_key.b64</code> &mdash; Ed25519 public key, raw base64</li>
+      <li><code>README.md</code> &mdash; human-readable Annex IV summary</li>
+      <li><code>verify_offline.py</code> &mdash; stand-alone offline verifier (only requires the <code>cryptography</code> Python library; no NOUS install needed)</li>
+    </ul>
+    <p>The verifier checks two things: (a) the Ed25519 signature on <code>manifest.json</code> verifies under <code>public_key.b64</code>, and (b) the SHA-256 of <code>source.nous</code> matches the manifest. That is the entire chain of custody.</p>
+
+    <h2>What this is and is not</h2>
+    <p><code>nous dossier-spec</code> does not execute the skill. It does not patch or inject anything at runtime. It proves a property about the skill <em>as declared</em>, given a pricing model with a documented SHA-256, and seals that proof under signature. It does not assess prompt-injection vulnerability, output toxicity, IP leakage, or any of the other axes ToxicSkills measures. Those are valuable; they are not what this artifact attests.</p>
+
+    <h2>What v5.1.0 ships</h2>
+    <p>Three new modules: <code>skill_md.py</code> (schema + parser + translator), <code>dossier_spec.py</code> (pipeline helper), <code>cli_dossier_spec.py</code> (CLI wrapper). 44 new tests across schema validation, parser edge cases, translator semantics, end-to-end CLI flows, and a regression guard for the existing <code>nous dossier</code> subcommand. 6 new test fixtures covering minimal, basic, extended, invalid-currency, over-budget, and missing-nous-block cases. Pytest floor lifted 397 &rarr; 441. Documentation page <a href="https://github.com/contrario/nous/blob/main/docs/SKILL_MD_SIDECAR.md"><code>docs/SKILL_MD_SIDECAR.md</code></a> covers the full schema reference, CLI flag documentation, and source envelope format.</p>
+    <p>The Manifest schema is unchanged in v5.1.0; skill_md dossiers share the same canonical form as <code>nous dossier</code> outputs. A <code>source_kind</code> discriminator field is planned for v5.2.0 to let downstream tooling programmatically distinguish the two flavours. Currency support beyond USD and EUR is also planned; the sidecar already accepts any ISO 4217 shape at parse time.</p>
+
+    <h2>Try it</h2>
+    <pre><code>pip install nous-lang==5.1.0
+nous dossier-spec ./my-skill/</code></pre>
+    <p>Source: <a href="https://github.com/contrario/nous">github.com/contrario/nous</a>. Release tag: <a href="https://github.com/contrario/nous/releases/tag/v5.1.0">v5.1.0</a>.</p>
+  </div>
+
+  <!-- __session71_blog_v500_post_v1__ -->
+  <div class="post-full" id="post-v500-eur-smt">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.0.0 &mdash; End-to-End EUR Cost Verification with Currency-Agnostic SMT</h1>
+    <div class="post-full-meta">3 May 2026 &middot; Session 70 &middot; 5 min read</div>
+
+    <h2>The arc</h2>
+    <p>Until v5.0.0, NOUS built the same evidence chain in one currency. Cost caps were declared in USD. Pricing tables priced models in USD. Manifests signed USD-denominated proofs. The architecture was currency-agnostic at the SMT level &mdash; rationals do not have a currency &mdash; but the surface area carried <code>_usd</code> suffixes on every per-token rate and a defensive escape hatch in the validator that refused to emit a proof unless the cap currency was <code>USD</code>. EU AI Act conformity requires EUR-denominated evidence. Either the language went currency-aware or the evidence was incomplete.</p>
+    <p>v5.0.0 is that change, in four commits and a tag. The pricing schema sheds its <code>_usd</code> suffix in favour of a per-table <code>_currency</code> field. A loader-side translator accepts pre-v5 files with one <code>DeprecationWarning</code> per load and a sha-stable invariant: a v1.0 file and its v2.0-equivalent migrated form produce <em>identical</em> <code>PricingTable.sha256()</code>. A new <code>nous prices upgrade</code> CLI migrates files on disk while preserving every comment, blank line, and formatting decision. The SMT validator drops the v4.13.0 USD-only block, and the Phase 5a currency-mismatch hard-block (shipped Session 69) becomes the asfaleia floor. Z3 round-trip on EUR proves the architecture is currency-blind in fact, not just in claim.</p>
+    <p>The semver bump is MAJOR for three concrete reasons: the pricing TOML field names are publicly documented, the <code>PricingTable.sha256()</code> canonical form changed for any pre-v5 dossier, and the loader now accepts both schema versions. No production dossiers existed at release; the sha-break has zero deployed impact. That window is now closed &mdash; future schema changes must be sha-stable.</p>
+
+    <h2>Phase 5b Step 1 &mdash; The schema rename</h2>
+    <p>Five fields on <code>PricingEntry</code> dropped their <code>_usd</code> suffix:</p>
+    <ul>
+      <li><code>input_per_1m_usd</code> &rarr; <code>input_per_1m</code></li>
+      <li><code>output_per_1m_usd</code> &rarr; <code>output_per_1m</code></li>
+      <li><code>input_cached_per_1m_usd</code> &rarr; <code>input_cached_per_1m</code></li>
+      <li><code>input_cache_write_per_1m_usd</code> &rarr; <code>input_cache_write_per_1m</code></li>
+      <li><code>hourly_cost_usd</code> &rarr; <code>hourly_cost</code></li>
+    </ul>
+    <p>Per-table <code>_currency</code> (defaulting to <code>"USD"</code> for backward compatibility) is now authoritative. Set it to <code>"EUR"</code> for an EUR-native table; the SMT path enforces consistency between the table currency and the cap currency.</p>
+    <p>Backward compatibility runs through a loader-side translator, not Pydantic <code>AliasChoices</code>. Three reasons in order of weight: (1) the translator emits exactly one <code>DeprecationWarning</code> per v1 file load &mdash; auditable in pytest output and in production logs, where <code>AliasChoices</code> would accept either name silently; (2) if a TOML accidentally declares both <code>input_per_1m_usd = "X"</code> and <code>input_per_1m = "Y"</code> on the same entry, the translator raises with a clear message naming both fields, where <code>AliasChoices</code> would silently pick one; (3) the loader is the only place that knows about v1.0, so the new canonical names live in exactly one place.</p>
+    <p>Sha-stability is the empirical contract. <code>PricingTable.sha256()</code> builds the canonical form from <code>model_dump()</code> <em>after</em> the translator runs. Both a v1.0 file and its v2.0-equivalent migrated form compute to <code>a64df6712e4090eb...</code>. The invariant is locked in by <code>tests/test_pricing_v1_compat.py::test_sha256_v1_equals_v2_equivalent</code>. Production dossiers signed against post-v5 canonical forms will not silently break when the TOML on disk is later upgraded with <code>nous prices upgrade</code>.</p>
+
+    <h2>Phase 5b Step 7 &mdash; The migration tool</h2>
+    <p><code>nous prices upgrade &lt;input.toml&gt; -o &lt;output.toml&gt; [--force]</code> migrates a v1.0 pricing TOML to v2.0. <code>--in-place</code> is the alternative, mutually exclusive with <code>-o</code>. <code>--force</code> opts in to overwriting an existing output file.</p>
+    <p>The line-based regex preserves every comment, every blank line, and every formatting decision the user made. A <code>tomllib</code> round-trip would have lost all of it. The pattern only matches when the field name is the first non-whitespace token on the line and immediately followed by <code>=</code>, so comment lines starting with <code>#</code> are untouched, string values containing the field name are untouched, and substring confusion (<code>MY_input_per_1m_usd_FIELD</code>) is impossible.</p>
+    <p>Validation runs <em>before</em> the write. The flow: read source, parse to detect schema version, apply rename in memory, re-parse via <code>tomllib</code>, run the loader translator (no-op since schema is now <code>"2.0"</code>), validate via <code>PricingTable.model_validate</code>, only then write to disk. A migration that would produce invalid v2.0 TOML aborts with the source untouched.</p>
+    <p>Idempotent on v2.0 input. Eighteen tests across two classes cover the pure function and the full handler.</p>
+
+    <h2>Phase 5b Step 8+9 &mdash; EUR end-to-end</h2>
+    <p>The v4.13.0 USD-only block in <code>smt_emit.py::_validate_world</code> is gone. Programs declaring <code>cost_cap: 0.50 EUR</code> against a pricing table with <code>_currency = "EUR"</code> compile cleanly under <code>--smt</code>.</p>
+    <p>What stayed is more important than what left. The Phase 5a guard <code>_validate_currency_consistency</code> (S69 commit <code>1eb3e6b</code>) is the asfaleia floor: it refuses to emit a proof when pricing currency differs from cap currency. Two checks layer in <code>emit_smt</code>:</p>
+    <ol>
+      <li><code>_validate_world(prog)</code> &mdash; structural validity (cost_cap declared, max_ticks declared, max_ticks &gt; 0).</li>
+      <li><code>_validate_currency_consistency(world, pricing)</code> &mdash; refuses mismatched currency pairs. Hard-block, no override.</li>
+    </ol>
+    <p>The currency-mismatch matrix:</p>
+    <table style="border-collapse:collapse;margin:16px 0;font-family:'JetBrains Mono',monospace;font-size:13px">
+      <tr>
+        <th style="text-align:left;padding:6px 16px;border-bottom:1px solid var(--border);color:var(--dim)">Pricing currency</th>
+        <th style="text-align:left;padding:6px 16px;border-bottom:1px solid var(--border);color:var(--dim)">Cap currency</th>
+        <th style="text-align:left;padding:6px 16px;border-bottom:1px solid var(--border);color:var(--dim)">Pre-v5</th>
+        <th style="text-align:left;padding:6px 16px;border-bottom:1px solid var(--border);color:var(--dim)">v5.0.0</th>
+      </tr>
+      <tr>
+        <td style="padding:4px 16px">USD</td>
+        <td style="padding:4px 16px">USD</td>
+        <td style="padding:4px 16px;color:var(--green)">OK</td>
+        <td style="padding:4px 16px;color:var(--green)">OK</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 16px">EUR</td>
+        <td style="padding:4px 16px">EUR</td>
+        <td style="padding:4px 16px;color:var(--red)">REJECTED</td>
+        <td style="padding:4px 16px;color:var(--green)">OK (NEW)</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 16px">USD</td>
+        <td style="padding:4px 16px">EUR</td>
+        <td style="padding:4px 16px;color:var(--red)">REJECTED</td>
+        <td style="padding:4px 16px;color:var(--red)">REJECTED</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 16px">EUR</td>
+        <td style="padding:4px 16px">USD</td>
+        <td style="padding:4px 16px;color:var(--red)">REJECTED</td>
+        <td style="padding:4px 16px;color:var(--red)">REJECTED</td>
+      </tr>
+    </table>
+    <p>The two REJECTED-after rows are caught by Phase 5a; the OK-NEW row is what v5.0.0 unlocks. The SMT solver itself never asks about currency &mdash; SMT-LIB sees rationals. Phase 5a's job is to enforce same-unit-ness at the source level before any obligation reaches Z3.</p>
+
+    <h2>Worked example &mdash; mistral-small-3 at 0.50 EUR</h2>
+    <p>The shipped <code>pricing/eur_example.toml</code> declares four illustrative Mistral models. Run a one-soul world against <code>mistral-small-3</code>:</p>
+    <pre><code>input_per_1m  = 0.20 EUR
+output_per_1m = 0.60 EUR
+tokens.input  = 100
+tokens.output = 50
+
+per_call_cost = (0.20 * 100 + 0.60 * 50) / 1 000 000
+              = 50 / 1 000 000
+              = 5e-5 EUR
+
+max_ticks  = 1
+total_cost = 5e-5 EUR
+
+cap = 0.50 EUR  &rarr; 5e-5 &lt;&lt; 0.50  &rarr; Z3 UNSAT (proven)
+cap = 1e-7 EUR  &rarr; 5e-5 &gt;  1e-7  &rarr; Z3 SAT   (counterexample)</code></pre>
+    <p>Eleven tests in <code>tests/test_smt_emit_eur.py</code> verify the four Z3 round-trip cases (provable UNSAT, refuted SAT, scaled provable, scaled refuted) plus a <code>TestCurrencyMismatchStillRejected</code> class that confirms USD-pricing-with-EUR-cap and EUR-pricing-with-USD-cap remain hard-blocked.</p>
+    <p>The <code>eur_example.toml</code> ships with <code>notes = "ILLUSTRATIVE EUR pricing. Verify before SMT use."</code> and <code>verified_by = "estimated"</code> on every entry. <code>nous prices age</code> flags these models conspicuously. Production users replace illustrative tables with provider-verified rates before signing manifests.</p>
+
+    <h2>Phase 5b Step 10 &mdash; The release ritual</h2>
+    <p>The 10-phase release pipeline ran clean end-to-end:</p>
+    <ul>
+      <li>Pre-flight: clean tree, tag <code>v5.0.0</code> not present.</li>
+      <li>Grammar sync, pytest floor (394 &ge; 394), regression harness (0 diffs across 57 templates), version consistency (7 sources aligned), pyflakes (7 production files clean).</li>
+      <li>Build: wheel + sdist.</li>
+      <li>Wheel content gate: <code>_version.py</code> + grammar + 9 templates + <code>Version: 5.0.0</code> in METADATA.</li>
+      <li>Clean-venv install, UX smoke (<code>nous templates extract</code> + <code>nous compile</code> = exit 0).</li>
+      <li>PyPI upload: twine check passed, wheel + sdist uploaded.</li>
+    </ul>
+    <p>One pip-metadata gotcha during dev, documented for future major bumps: editable installs read <code>_version.__version__</code> from source on every import but read <code>importlib.metadata.version("nous-lang")</code> from the metadata captured at install time. After bumping <code>_version.py</code>, the consistency test fails until the editable install is rebound: <code>pip install -e . --break-system-packages --no-deps --force-reinstall</code>. Wheel-installed environments (clean venvs in release pipeline phases 7 to 9) get the right version automatically.</p>
+
+    <h2>The release in numbers</h2>
+    <ul>
+      <li><strong>4 commits</strong> on <code>main</code>: <code>5e4ae11</code> &rarr; <code>237738f</code> &rarr; <code>b2869c6</code> &rarr; <code>1a6dd1c</code>.</li>
+      <li><strong>Pytest floor 354 &rarr; 394</strong> (+40 net: +12 v1 compat, +18 upgrade CLI, +11 EUR e2e, &minus;1 obsolete v4.13.0 currency rejection).</li>
+      <li><strong>57/57 regression templates</strong> baseline-stable. Zero drift.</li>
+      <li><strong>15 files modified</strong>, <strong>5 created</strong>: <code>pricing/eur_example.toml</code>, <code>tests/test_pricing_v1_compat.py</code>, <code>tests/test_cli_prices_upgrade.py</code>, <code>tests/test_smt_emit_eur.py</code>, plus the wheel and sdist in <code>dist/</code>.</li>
+      <li><strong>1 new CLI subcommand</strong>: <code>nous prices upgrade</code>.</li>
+      <li><strong>1 escape hatch retired</strong>: the v4.13.0 USD-only block in <code>_validate_world</code>.</li>
+      <li><strong>1 sha-stability invariant locked</strong>: pre/post-migration tables produce identical <code>sha256</code>.</li>
+    </ul>
+
+    <h2>Try it</h2>
+    <p><code>pip install --upgrade nous-lang</code> &mdash; the CLI surface is unchanged outside of the new <code>nous prices upgrade</code> subcommand.</p>
+    <p>Migrate an existing pricing TOML:</p>
+    <pre><code>nous prices upgrade ./nous_prices.toml -o ./nous_prices.v2.toml
+diff ./nous_prices.toml ./nous_prices.v2.toml
+mv ./nous_prices.v2.toml ./nous_prices.toml</code></pre>
+    <p>Or in place:</p>
+    <pre><code>nous prices upgrade ./nous_prices.toml --in-place</code></pre>
+    <p>Try EUR end-to-end:</p>
+    <pre><code>nous verify --smt my_eur_agent.nous \
+    --prices /opt/aetherlang_agents/nous/pricing/eur_example.toml</code></pre>
+    <p>Ship logs:
+      <a href="https://github.com/contrario/nous/releases/tag/v5.0.0">v5.0.0</a> &middot;
+      <a href="https://pypi.org/project/nous-lang/5.0.0/">pypi.org/project/nous-lang/5.0.0</a> &middot;
+      <a href="https://github.com/contrario/nous/blob/main/CHANGELOG.md">CHANGELOG</a>.
+    </p>
+  </div>
+
+  <!-- __session68_blog_v418_bundle__ -->
+  <div class="post-full" id="post-v418-bundle">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v4.15.0 &rarr; v4.18.0 &mdash; A Fleet-Operable Compiler with Audit-Stable Diffs</h1>
+    <div class="post-full-meta">2 May 2026 &middot; Session 68 &middot; 6 min read</div>
+
+    <h2>The arc</h2>
+    <p>Between v4.14.0 and v4.18.0, NOUS stopped being a compiler that runs on one machine and started being a compiler whose state is legible across a fleet. Five releases, one direction: cross-machine replay logs become inspectable, world templates become writable over HTTP, the diff path stops crashing on non-route nerves, the install no longer needs an extra to work, and every comparison labels its own sources in a way an auditor can trust.</p>
+    <p>The throughline is provenance. A regulator under EU AI Act Annex IV does not ask &ldquo;did your tests pass&rdquo; &mdash; they ask &ldquo;show me what changed, where, and how you know.&rdquo; This bundle is the surface area for that question.</p>
+
+    <h2>v4.15.0 &mdash; Reading the replay fleet</h2>
+    <p>Two read-only HTTP endpoints, both sandboxed to <code>NOUS_REPLAY_DIR</code> (default <code>/var/lib/nous/replays</code>):</p>
+    <p><code>GET /v1/replay/list</code> enumerates <code>*.jsonl</code> logs with cheap last-line metadata: size, mtime, last <code>seq_id</code>, last hash, last event kind. Tail-reads the final 8&nbsp;KB of each file. No chain validation &mdash; that remains <code>/v1/replay/verify</code>&rsquo;s job. The list endpoint is for fleet dashboards: which machines logged, when, how far.</p>
+    <p><code>POST /v1/replay/diff</code> compares two logs lockstep by <code>(seq_id, hash)</code>. Verdicts are a closed set: <code>identical</code>, <code>divergent</code>, <code>truncated_a</code>, <code>truncated_b</code>, <code>error</code>. The first divergence event is reported side-by-side &mdash; not a textual diff, an event-level one, because hashes diverge at events, not at lines.</p>
+    <p>Path safety is non-negotiable: filenames are rejected on path separators, leading dot, parent-dir traversal, and outward-pointing symlinks. The endpoint cannot be used to read anything outside the replay directory regardless of how clever the client is. 11 tests, pytest floor 278 &rarr; 289.</p>
+
+    <h2>v4.16.0 &mdash; Writing templates over HTTP</h2>
+    <p><code>PUT /v1/templates/{name}</code> is the RESTful counterpart to the existing GET. Saving a <code>.nous</code> world template runs the full safety pipeline before a single byte hits disk:</p>
+    <ol>
+      <li><strong>Hard auth.</strong> An empty <code>NOUS_API_KEYS</code> environment returns 403 (server unconfigured for writes). Missing or invalid keys return 401. The GET path keeps soft auth for backward compatibility; writes do not.</li>
+      <li><strong>Name sanitisation.</strong> Pattern <code>^[A-Za-z0-9_][A-Za-z0-9_-]{0,63}$</code>, plus a resolved-path check that the file lands inside <code>TEMPLATES_DIR</code>.</li>
+      <li><strong>Lint gate.</strong> The <code>governance_lint</code> linter runs against the submitted source. Errors block the save unless the client passes <code>force=true</code>. A linter crash is treated as having errors, not as a green light.</li>
+      <li><strong>Backup.</strong> An existing file is copied to <code>&lt;name&gt;.nous.bak.&lt;ts_us&gt;</code> and the directory is pruned to the 5 most recent backups.</li>
+      <li><strong>Atomic write.</strong> Tempfile + fsync + <code>os.replace</code>. No reader ever sees a partial file.</li>
+      <li><strong>SHA-256 receipt.</strong> The response includes the hash of the bytes written, so the client can verify what landed without re-fetching.</li>
+    </ol>
+    <p>The original Session 64 plan listed <code>/v1/policies/{list,validate,save}</code>. Aliasing was rejected because list and validate already exist as <code>/v1/governance/{policies,lint}</code>, and a <code>.nous</code> file is a full world (souls, mind, governance) &mdash; there are no separate policy files in NOUS. The save endpoint is named after the artifact it produces. 13 tests, pytest floor 289 &rarr; 302.</p>
+
+    <h2>v4.16.1 &mdash; Diffs that do not crash</h2>
+    <p>Three call sites in the diff path were doing blind <code>route.source</code> / <code>route.target</code> attribute access. Correct for <code>RouteNode</code>; dead wrong for every other nerve statement: <code>MatchRouteNode</code>, <code>FanInNode</code>, <code>FanOutNode</code>, <code>FeedbackNode</code>. The trading_floor template (which uses <code>FeedbackNode</code>) hit <code>AttributeError</code> &rarr; HTTP 422 on every diff request.</p>
+    <p>The fix: <code>isinstance</code>-dispatch over the five nerve variants in <code>behavioral_diff._get_routes</code>, <code>behavioral_diff._get_entrypoints</code>, and the nested <code>_get_routes</code> inside <code>nous_api_server._transform_diff_for_ide</code>. Each variant emits the correct <code>(src, dst)</code> edges (or, for entrypoints, the correct &ldquo;is-a-target&rdquo; set).</p>
+    <p>The lesson is older than this bug: when a base type has variants, attribute access without dispatch is a latent crash. 8 regression tests pinned to the four non-route variants. Pytest floor 302 &rarr; 310.</p>
+
+    <h2>v4.17.0 &mdash; Install you can trust</h2>
+    <p>Since Session 64, <code>cli.py</code> imports <code>cli_dossier</code> at module load, which transitively imports <code>cryptography</code> for Ed25519 signing. The dependency was already a hard runtime requirement &mdash; it was just hidden behind the <code>[smt]</code> extra. A clean <code>pip install nous-lang</code> in a fresh venv would import-fail before printing the help text.</p>
+    <p>The fix is small and the message is honest: <code>cryptography</code> moves to base. The <code>[smt]</code> extra now contains only what it claims to: Z3. <code>pip install nous-lang</code> is sufficient for the entire CLI surface, including <code>nous dossier</code> and signed manifests. Optional remains optional; required becomes visibly required.</p>
+
+    <h2>v4.18.0 &mdash; Diffs that name themselves</h2>
+    <p>Before v4.18.0, the IDE&rsquo;s &ldquo;Safe to Deploy&rdquo; card hardcoded the strings <code>original.nous</code> and <code>modified.nous</code>. Fine when both sides were in-editor pastes. A liability the moment a diff could be saved-template-vs-editor, paste-vs-paste, or replay-vs-replay &mdash; the labels lied about where the bytes came from, and a <code>nous dossier</code> bundle would inherit the lie.</p>
+    <p>v4.18.0 adds a <code>DiffSide</code> Pydantic model with a closed <code>Literal</code> enum of source kinds: <code>editor</code>, <code>paste</code>, <code>template</code>, <code>replay</code>, <code>file</code>, <code>unknown</code>. The server runs <code>render_diff_side()</code> &mdash; one canonical renderer &mdash; and returns <code>original_label</code> and <code>modified_label</code> in the <code>/v1/diff</code> response. The IDE renders what the server says. Audit logs record what the server said. <code>nous dossier</code> evidence captures what the server said. Three different consumers, one label string, no drift.</p>
+    <p>Backward compatibility is intentional: clients on 4.16.x that do not send provenance still get a valid response &mdash; both labels render as <code>(unknown source)</code>. New kinds are explicit additions to the <code>Literal</code> enum; silent string drift is a parse error, not a deployment surprise. 17 tests, pytest floor 320 &rarr; 337.</p>
+
+    <h2>The bundle in numbers</h2>
+    <ul>
+      <li><strong>5 releases</strong> shipped: v4.15.0, v4.16.0, v4.16.1, v4.17.0, v4.18.0.</li>
+      <li><strong>Pytest floor 278 &rarr; 337</strong> (+59 tests, +21%).</li>
+      <li><strong>57/57 regression templates</strong> baseline-stable across the bundle. Zero drift.</li>
+      <li><strong>3 new HTTP endpoints</strong>: <code>GET /v1/replay/list</code>, <code>POST /v1/replay/diff</code>, <code>PUT /v1/templates/{name}</code>.</li>
+      <li><strong>1 install-time bug</strong> retired (cryptography extra).</li>
+      <li><strong>1 audit-trail liability</strong> closed (hardcoded diff labels).</li>
+    </ul>
+
+    <h2>Try it</h2>
+    <p><code>pip install --upgrade nous-lang</code> &mdash; no extras required for the full CLI surface, including <code>nous dossier</code>.</p>
+    <p>Ship logs:
+      <a href="https://github.com/contrario/nous/releases/tag/v4.15.0">v4.15.0</a> &middot;
+      <a href="https://github.com/contrario/nous/releases/tag/v4.16.0">v4.16.0</a> &middot;
+      <a href="https://github.com/contrario/nous/releases/tag/v4.16.1">v4.16.1</a> &middot;
+      <a href="https://github.com/contrario/nous/releases/tag/v4.17.0">v4.17.0</a> &middot;
+      <a href="https://github.com/contrario/nous/releases/tag/v4.18.0">v4.18.0</a> &middot;
+      <a href="https://pypi.org/project/nous-lang/4.18.0/">pypi.org/project/nous-lang/4.18.0</a>.
+    </p>
+  </div>
+
+  <div class="post-full" id="post-v4133-smt-margin">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v4.13.3 &mdash; Conservative Cost Caps with <code>--smt-margin</code></h1>
+    <div class="post-full-meta">29 April 2026 &middot; Session 64 &middot; 4 min read</div>
+
+    <p>v4.13.1 introduced formal SMT proof that <code>total_cost &le; declared_cap</code>. v4.13.2 made manifests self-verifying offline. v4.13.3 closes a small but real gap: regulators and procurement teams sometimes want a <strong>visible buffer</strong> between the proven bound and the budget line. Not "we proved we will not exceed $0.50" but "we proved we will not exceed $0.40, against a $0.50 declared cap, with 20% safety margin."</p>
+
+    <h2>The flag</h2>
+    <pre><code>nous verify file.nous --smt --smt-margin 20</code></pre>
+
+    <p>Range: integer percent <code>0..99</code>. Default <code>0</code>. The proof obligation becomes:</p>
+    <pre><code>total_cost &le; declared_cap &times; (100 &minus; PCT) / 100</code></pre>
+
+    <p>Computed under exact rational arithmetic, same as the rest of the cost_cap pipeline &mdash; no floating-point, no rounding error. Z3 returns <code>unsat</code> on the negation, exactly as before, against a tighter cap.</p>
+
+    <h2>What a margin&mdash;proven verdict looks like</h2>
+    <pre><code>$ nous verify cost_cap_with_souls.nous --smt --smt-margin 20
+Parsed cost_cap_with_souls.nous: world=TradingFloor, souls=2
+Loaded pricing: layer 4, 10 models, sha256 d23f54c3956dbfe4&hellip;
+Emitted SMT-LIB: spec sha256 d7c8a99d4d17acdc&hellip;
+Running solver (timeout 30000ms)...
+&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;
+PROVEN: total_cost &le; $0.4 USD across all execution paths.
+  Declared cap: $0.5 USD, safety margin: 20%.
+  bounded by: 2 soul(s) &times; 5 ticks
+Manifest signed: cost_cap_with_souls.manifest.json</code></pre>
+
+    <p>Two new lines compared to v4.13.2 output: the proven bound is <strong>the effective cap</strong>, and a second line surfaces the declared cap and the margin so any human reader (or auditor) can reconstruct the arithmetic at a glance.</p>
+
+    <h2>What ends up in the signed manifest</h2>
+    <p>The manifest gains a single optional field:</p>
+    <pre><code>"safety_margin_pct": 20</code></pre>
+
+    <p>Present <em>only</em> when <code>--smt-margin &gt; 0</code>. When margin is zero (the default), the field is absent from the canonical JSON entirely. Old verifiers, old test fixtures, old regression baselines, all stay byte-identical for the no-margin path. The schema is additive, the change is backward-compatible.</p>
+
+    <p>The SMT spec sha256 also includes a <code>MARGIN:N</code> tag in its canonical key list, but only when <code>N &gt; 0</code>. Two runs of the same source with different margins produce different sha256 hashes, as they should &mdash; they prove different obligations.</p>
+
+    <h2>What a refuted verdict at high margin looks like</h2>
+    <p>Push the margin to 99 percent against a 0.5 USD cap:</p>
+    <pre><code>$ nous verify cost_cap_with_souls.nous --smt --smt-margin 99
+&hellip;
+REFUTED: SMT solver found a counterexample.
+Per-soul cost breakdown:
+  Analyst              (claude-haiku-4-5)        per-call $0.001050  &times; 5 ticks  =  $0.005250
+  Trader               (claude-opus-4-7)         per-call $0.007500  &times; 5 ticks  =  $0.037500
+
+  total_cost  =  $0.042750
+  cap         =  $0.005
+  overage     =  $0.037750  (755.0% over)
+  largest contributor: 'Trader'
+Suggested fixes (any one):
+  1. Raise cost_cap to &ge; $0.0428 USD
+  2. Reduce max_ticks to &le; 58 (currently 5)
+  3. Reduce tokens on soul 'Trader' (largest cost driver)</code></pre>
+
+    <p>The counterexample is exact: against an effective cap of $0.005 (1% of the declared $0.5), the program would consume 755% of budget. The solver still tells you which soul drives the overage and gives three independent suggested fixes. The same flow, a tighter envelope.</p>
+
+    <h2>Why this matters</h2>
+    <p>Three concrete reasons to ship a margin&mdash;proven verdict.</p>
+
+    <p><strong>1. Pricing volatility headroom.</strong> Provider prices move. A model that costs $3 per million input tokens today might cost $4 per million next quarter. A 20% safety margin proven today gives you headroom for a 25% provider price increase before the actual run breaches the declared cap. The proof is still mechanical; the buffer is now visible in writing.</p>
+
+    <p><strong>2. Regulatory and procurement language.</strong> EU AI Act compliance dossiers, FedRAMP boundaries, and large-account procurement contracts all prefer "we proved a buffer" to "we proved exactly the limit." A margin makes the buffer first-class. The auditor sees the declared cap, the effective bound, and the margin in one line.</p>
+
+    <p><strong>3. Layered defense for live deployments.</strong> Today the typical agentic-AI deployment has a runtime budget alarm at, say, 80% of the per-request limit. With <code>--smt-margin 20</code>, the proven bound matches the alarm. The static proof and the runtime monitor are guarding the same line. No silent gap between what the verifier proved and what the on-call engineer sees.</p>
+
+    <h2>Backward compatibility &mdash; no surprises</h2>
+    <ul>
+      <li><code>nous verify file.nous --smt</code> (no margin flag) produces the exact same obligation literal, the same SMT-LIB serialize structure, and the same verdict text as v4.13.2.</li>
+      <li>57 / 57 regression templates baseline-stable.</li>
+      <li>The manifest canonical JSON for non-margin runs is byte-identical schema-wise to v4.13.2 manifests; the new field is absent unless margin &gt; 0.</li>
+    </ul>
+
+    <h2>The release in numbers</h2>
+    <ul>
+      <li>264 &rarr; 272 tests (8 new in <code>tests/test_smt_margin.py</code>).</li>
+      <li>1 commit, 1 tag, 1 PyPI release.</li>
+      <li>~230 insertions, 8 deletions across 8 files.</li>
+      <li>0 codegen changes. 0 grammar changes. 0 runtime changes.</li>
+    </ul>
+
+    <h2>Try it</h2>
+    <pre><code>pip install --upgrade 'nous-lang[smt]==4.13.3'
+nous verify file.nous --smt --smt-margin 20</code></pre>
+    <p>Ship log: <a href="https://github.com/contrario/nous/releases/tag/v4.13.3">github.com/contrario/nous v4.13.3</a> &middot; <a href="https://pypi.org/project/nous-lang/4.13.3/">pypi.org/project/nous-lang/4.13.3</a>.</p>
+
+  </div>
+
+  <!-- __blog_post_v4132_v1__ -->
+  <!-- POST: NOUS v4.13.2 Self-Verifying Manifests, No Central Ledger -->
+  <div class="post-full" id="post-v4132-self-verifying">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v4.13.2 &mdash; Self-Verifying Manifests, No Central Ledger</h1>
+    <div class="post-full-meta">29 April 2026 &middot; Session 64 &middot; 4 min read</div>
+
+    <p>One day after v4.13.1 shipped formal SMT cost-bound verification with signed manifests, we cut v4.13.2 to remove a feature that should never have been there: a <code>--publish</code> flag on <code>nous verify --smt</code> that POSTed manifests to a central service. The endpoint was never built. The schema didn&rsquo;t match. Calling it always returned <code>HTTP 404</code>. v4.13.2 retires the path entirely.</p>
+
+    <h2>Why the path had to go</h2>
+    <p>Three reasons, in order of importance.</p>
+    <p><strong>1. The proof doesn&rsquo;t need a central ledger.</strong> A NOUS manifest already carries an Ed25519 signature over canonical JSON. The provenance hashes (source, pricing, SMT spec) are baked in. A third party with the manifest file plus the publisher&rsquo;s public key can verify authenticity offline, anywhere, on any laptop, without contacting any service. Pushing that file through a central API adds zero cryptographic value.</p>
+    <p><strong>2. Service dependency creates failure modes.</strong> NOUS is open infrastructure. If publishing is part of the recommended verification workflow, then every NOUS user behind a firewall, in an air-gapped environment, or in a jurisdiction where outbound HTTPS to that domain is restricted, has a broken workflow. By making the manifest fully self-contained, every environment works the same.</p>
+    <p><strong>3. Trust-root confusion.</strong> A central-ledger architecture would re-sign manifests with the service&rsquo;s key, producing dual signatures with overlapping but distinct semantics. Who attested what? Whose key do auditors pin? The single-signature, publisher-controlled key model has none of those questions.</p>
+
+    <h2>What v4.13.2 removes</h2>
+    <ul>
+      <li><code>manifest.publish_to_aetherproof()</code> &mdash; the function that posted to the central endpoint.</li>
+      <li><code>manifest.AETHERPROOF_DEFAULT_URL</code> &mdash; the hardcoded constant.</li>
+      <li><code>nous verify --publish</code> CLI flag.</li>
+      <li><code>nous verify --publish-endpoint</code> CLI flag.</li>
+      <li>All POST-to-central-service language in the documentation.</li>
+    </ul>
+
+    <h2>What v4.13.2 keeps</h2>
+    <ul>
+      <li><code>sign_manifest</code>, <code>manifest_json</code>, <code>parse_manifest_json</code>.</li>
+      <li><code>load_or_create_keypair</code>, <code>public_key_b64</code>.</li>
+      <li><code>verify_manifest_signature</code> &mdash; the offline verification primitive.</li>
+      <li>Auto-generated keypair at <code>~/.local/share/nous/keys/signing.key</code> (XDG, mode 0600).</li>
+    </ul>
+
+    <h2>The new storage model</h2>
+    <p>Storage is the publisher&rsquo;s choice. Drop the manifest in your build artefacts directory. Push it to S3. Pin it on IPFS. Attach it to a GitHub release. Email it to the auditor. The trust model is the same in every case: the file is self-contained and offline-verifiable.</p>
+    <p>For the EU AI Act compliance dossier specifically, that means the regulator does not need network access to verify an attestation. They need the file and your public key. That is it.</p>
+
+    <h2>The release in numbers</h2>
+    <ul>
+      <li>264 tests passed (unchanged).</li>
+      <li>56 / 56 regression templates byte-identical.</li>
+      <li>1 commit, 1 tag, 1 PyPI release.</li>
+      <li>v4.13.2 wheel: zero references to <code>publish_to_aetherproof</code> or the central URL anywhere in the package.</li>
+    </ul>
+
+    <h2>Try it</h2>
+    <pre><code>pip install --upgrade 'nous-lang[smt]==4.13.2'
+nous verify file.nous --smt    # signs manifest, no network needed</code></pre>
+    <p>Ship log: <a href="https://github.com/contrario/nous/releases/tag/v4.13.2">github.com/contrario/nous v4.13.2</a> &middot; <a href="https://pypi.org/project/nous-lang/4.13.2/">pypi.org/project/nous-lang/4.13.2</a>.</p>
+
+  </div>
+
+  <!-- __blog_post_eu_ai_act_2026_v1__ -->
+  <!-- POST: EU AI Act 2 August 2026 -->
+  <div class="post-full" id="post-eu-ai-act-2026">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">EU AI Act, 2 August 2026 &mdash; How NOUS Maps to Annex IV, Article 9 and Article 12</h1>
+    <div class="post-full-meta">28 April 2026 &middot; Compliance &middot; 7 min read</div>
+
+    <p>In 96 days, the bulk of the EU’s Artificial Intelligence Act (Regulation 2024/1689) becomes enforceable. From <strong>2 August 2026</strong> onward, providers and deployers of high-risk AI systems placed on the EU market are bound by the full text of Section 2 of Chapter III &mdash; risk management, data governance, technical documentation, record-keeping, transparency, human oversight, accuracy, robustness and cybersecurity. Penalties for serious infringements run up to <strong>€35 million or 7% of global turnover</strong>, whichever is higher. This is not GDPR; this is GDPR’s harder, more technical sibling.</p>
+
+    <p>Most agentic AI stacks shipping today produce zero of the required compliance artefacts. The audit-trail story is "we have logs in CloudWatch." The risk-management story is "we set a rate limit." The technical-documentation story is a Notion page that hasn’t been updated since the last fundraise.</p>
+
+    <p>This is the gap NOUS was built for. Below is the article-by-article map of where NOUS already produces the artefact the regulation demands.</p>
+
+    <h2>Three articles that hit hardest</h2>
+    <p>The 113-article Regulation has many obligations, but for builders of agentic AI systems three articles dominate the operational burden:</p>
+    <ul>
+      <li><strong>Article 11 + Annex IV</strong> &mdash; technical documentation that must demonstrate compliance and be kept up to date across the lifecycle of the system.</li>
+      <li><strong>Article 9</strong> &mdash; a risk management system that runs as a continuous, iterative process throughout the system’s lifecycle.</li>
+      <li><strong>Article 12</strong> &mdash; automatic event logging that allows full traceability of operation, sufficient to reconstruct algorithmic decisions for post-market monitoring and incident investigation.</li>
+    </ul>
+    <p>Each of these is, in 2026 software-engineering terms, a request for an artefact a regulator can verify without trusting the publisher. That is exactly the shape of what NOUS produces.</p>
+
+    <h2>Article 11 + Annex IV → the NOUS signed manifest</h2>
+    <p>Annex IV requires the technical documentation to contain, at a minimum, a general description of the system, a detailed description of the elements and their development process, information about monitoring and control, performance metrics, the risk management system, lifecycle changes, applied harmonised standards, the EU declaration of conformity, and the post-market monitoring plan. It must be drawn up <em>before</em> the system is placed on the market and kept up to date.</p>
+
+    <p>NOUS v4.13.1 ships <strong>signed manifests</strong> that capture the technical chain-of-custody automatically. Every <code>nous verify --smt</code> run writes a JSON document like this:</p>
+
+    <pre><code>{
+  "schema_version": "1.0",
+  "nous_version": "4.13.1",
+  "world_name": "TradingFloor",
+  "verdict": "proven",
+  "cost_cap_usd": "0.5",
+  "max_ticks": 5,
+  "source_sha256":   "e88a7d3f1bc3e01d…",
+  "pricing_sha256":  "d23f54c3956dbfe4…",
+  "smt_spec_sha256": "d032d4b829bb1211…",
+  "solver_name": "z3",
+  "solver_version": "z3 4.16.0",
+  "timestamp_utc": "2026-04-28T18:33:56+00:00",
+  "signature": {
+    "algorithm": "ed25519",
+    "public_key_b64": "G8EfmzKqmsgMoCtE…",
+    "signature_b64":  "uY+Ajqaa3H4ZDh2hQludg0Y…"
+  }
+}</code></pre>
+
+    <p>This is the technical documentation Annex IV asks for, in machine-verifiable form:</p>
+    <ul>
+      <li><code>source_sha256</code> pins the exact .nous source → maps to Annex IV section 2(b) "general logic of the AI system and of the algorithms".</li>
+      <li><code>pricing_sha256</code> pins the exact cost model used → maps to Annex IV section 2(d) "computational resources used".</li>
+      <li><code>smt_spec_sha256</code> pins the exact constraint system fed to Z3 → maps to Annex IV section 4 "performance metrics".</li>
+      <li><code>solver_name + solver_version</code> pin the verifier → maps to Annex IV section 7 "harmonised standards applied".</li>
+      <li><code>verdict + timestamp_utc</code> pin <em>when</em> the proof was produced and what it concluded.</li>
+      <li><code>signature.signature_b64</code> with ed25519 makes the whole document <strong>tamper-evident</strong> — a regulator can re-verify the proof offline using the publisher’s public key.</li>
+    </ul>
+
+    <p>Tamper-detection is built in. Change a single byte in the manifest and the signature fails. Anyone holding the public root key can challenge a publisher’s claim without trusting the publisher.</p>
+
+    <h2>Article 9 → first-class <code>policy</code> declarations</h2>
+    <p>Article 9 requires a risk management system that is a "continuous iterative process planned and run throughout the entire lifecycle" of a high-risk AI system, regularly reviewed and updated. It must identify, analyse, estimate and evaluate risks; adopt management measures; and ensure residual risks are acceptable.</p>
+
+    <p>In NOUS, this isn’t a Confluence page. It’s syntax. A policy declaration sits inside the program source itself:</p>
+
+    <pre><code>policy ProtectClient {
+    kind: "memory.write"
+    signal: contains_phrase(value, "absolutely")
+    weight: 0.8
+    action: inject_message
+    inject_as: system
+    message: "Avoid sycophantic absolutes."
+    description: "Block sycophancy before it reaches client memory."
+}</code></pre>
+
+    <p>This declaration is:</p>
+    <ul>
+      <li><strong>Statically lintable.</strong> 28 rules in NOUS’s governance lint catch invalid actions, weight bounds, missing inject-message bodies, dead signals, and reserved-name violations <em>before</em> deployment. Run <code>nous governance lint</code> in CI; failures break the build.</li>
+      <li><strong>Live-simulatable.</strong> The IDE’s <code>POST /v1/governance/simulate</code> endpoint lets you submit a candidate event and watch which policies fire, which intervene, and which are silently bypassed &mdash; the "what-if" question every risk auditor asks.</li>
+      <li><strong>Version-controlled.</strong> The risk management system lives in git, side by side with the agent source. Every change is tracked, reviewed, and can be rolled back. Article 9’s "continuous iterative process" maps to the same workflow as a code review.</li>
+    </ul>
+
+    <p>And v4.13.1 adds a fourth dimension: <strong>operational bounds</strong>. A <code>cost_cap</code> declaration on a world is a risk management measure expressible in code, mechanically provable, and pinned in the signed manifest. The risk "this agent will spend more than €0.50 per cycle" goes from "we set a rate limit somewhere" to "Z3 proved it cannot, and here is the certificate".</p>
+
+    <h2>Article 12 → deterministic replay</h2>
+    <p>Article 12 requires high-risk AI systems to "technically allow for the automatic recording of events (logs) over the lifetime of the system" with sufficient detail to identify risks, support post-market monitoring, and let deployers monitor operation. The regulatory principle, distilled by the practitioner literature, is <em>full reconstructability of algorithmic decisions</em>.</p>
+
+    <p>NOUS’s deterministic replay (Phases A–D) was built around exactly this principle. When a world declares:</p>
+
+    <pre><code>world ExampleWorld {
+    replay {
+        enabled: true
+        mode: "record"
+        store: jsonl
+        path: "./replay.jsonl"
+        seed_base: 42
+        capture: [sense.invoke, llm.request, memory.write]
+    }
+}</code></pre>
+
+    <p>...the runtime captures every external interaction at three symmetric sites — sense invocation, LLM request, memory write — with deterministic seeds. The recorded log can later be replayed to reproduce <em>byte-identical</em> output. That is what reconstructability looks like at a technical level: not "we have CloudWatch retention," but "given the recording, anyone can re-run the system and get the same answer."</p>
+
+    <p>Combine this with the signed manifest, and you get the audit pattern regulators will ask for after 2 August 2026:</p>
+    <ol>
+      <li>The signed manifest pins source, pricing, solver, verdict.</li>
+      <li>The replay log captures every runtime event between invocations.</li>
+      <li>A regulator with the public key plus the replay file can, without trusting the operator, both verify the proof and reproduce the run.</li>
+    </ol>
+
+    <h2>What this means for builders</h2>
+    <p>The 2 August 2026 deadline is a forcing function. The teams that will be ready are the teams whose compliance artefacts are produced as a side effect of the build, not assembled by hand under audit pressure. The teams that will be late are the teams who are still treating risk management as a documentation problem rather than an architectural one.</p>
+
+    <p>NOUS is one answer to the architectural question. It is not the only answer, and it is not a complete answer &mdash; data governance under Article 10, human oversight under Article 14, cybersecurity under Article 15 are all still on the operator. But for the three hardest articles &mdash; technical documentation, risk management, record-keeping &mdash; the gap between "we have a Notion page" and "here is a cryptographically signed audit trail with full replay" is a <strong>three-order-of-magnitude</strong> difference in defensibility.</p>
+
+    <p>Three months out from the deadline, that gap is worth closing.</p>
+
+    <h2>Try it</h2>
+    <pre><code>pip install 'nous-lang[smt]==4.13.1'
+nous prices init
+nous templates copy cost_cap_with_souls
+nous verify cost_cap_with_souls.nous --smt
+cat cost_cap_with_souls.manifest.json</code></pre>
+
+    <p>The full text of the EU AI Act is at <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">eur-lex.europa.eu/eli/reg/2024/1689/oj</a>. The official implementation timeline is published by the European Commission at <a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai">digital-strategy.ec.europa.eu</a>. NOUS’s mapping document lives at <a href="https://github.com/contrario/nous/blob/main/docs/EU_AI_ACT_COMPLIANCE.md">docs/EU_AI_ACT_COMPLIANCE.md</a> in the project repository.</p>
+
+    <p style="color:var(--dim);font-size:13px;margin-top:32px">This post is informational, not legal advice. Conformity assessment under the AI Act involves obligations beyond what any single tool can satisfy. Consult qualified counsel for your specific situation.</p>
+
+  </div>
+
+  <!-- __blog_post_v4131_v1__ -->
+  <!-- POST: NOUS v4.13.1 Formal SMT Cost-Bound Verification -->
+  <div class="post-full" id="post-v4131-cost-verification">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v4.13.1 &mdash; Formal SMT Cost-Bound Verification</h1>
+    <div class="post-full-meta">28 April 2026 &middot; Session 62 + 63 &middot; 7 min read</div>
+
+    <p>Every other agentic framework lets you set a <em>max budget</em> at <em>runtime</em> and abort when it’s exceeded &mdash; by which point the spend has already happened. NOUS v4.13.1 lets you <strong>prove before you ship</strong> that every reachable execution path stays under the cap. The proof is mechanical (Z3), the cost model is auditable (signed pricing TOML with SHA-256), and the artefact is verifiable by anyone holding your public key.</p>
+
+    <h2>The shape of the feature</h2>
+    <pre><code>world TradingFloor {
+    cost_cap: 0.50 USD
+    max_ticks: 5
+}
+
+soul Trader {
+    mind: claude-opus-4-7 @ Tier1
+    tokens: input=500 output=200
+}
+
+soul Analyst {
+    mind: claude-haiku-4-5 @ Tier3
+    tokens: input=300 output=150
+}</code></pre>
+
+    <p>Three new declarations: <code>cost_cap</code> on the world, <code>max_ticks</code> on the world, <code>tokens</code> on each soul. No runtime code &mdash; these feed the verifier.</p>
+
+    <h2>The proof chain</h2>
+    <p>When you run <code>nous verify TradingFloor.nous --smt</code>, the compiler:</p>
+    <ol>
+      <li>Parses the program to AST.</li>
+      <li>Loads the layered pricing table (CLI &gt; project &gt; user &gt; shipped defaults) and computes a SHA-256 audit hash over the canonical form.</li>
+      <li>Emits a deterministic SMT-LIB 2.6 constraint system using exact rational arithmetic &mdash; no floats, no rounding error.</li>
+      <li>Calls Z3 with a 30-second timeout. The solver either proves <code>total_cost &le; cap</code> across every reachable path (<code>unsat</code> on the negation) or returns a concrete counterexample (<code>sat</code>).</li>
+      <li>Writes an ed25519-signed JSON manifest containing the full provenance chain.</li>
+    </ol>
+
+    <h2>What a proven verdict looks like</h2>
+    <pre><code>$ nous verify TradingFloor.nous --smt
+Parsed TradingFloor.nous: world=TradingFloor, souls=2
+Loaded pricing: layer 4, 10 models, sha256 d23f54c3956dbfe4…
+Emitted SMT-LIB: spec sha256 d032d4b829bb1211…
+Running solver (timeout 30000ms)...
+──────────────────────────────────────────────────────────
+World:        TradingFloor
+Solver:       z3 4.16.0
+Elapsed:      24ms
+Spec sha256:  d032d4b829bb1211…
+──────────────────────────────────────────────────────────
+PROVEN: total_cost ≤ $0.5 USD across all execution paths.
+  bounded by: 2 soul(s) × 5 ticks
+Manifest signed: TradingFloor.manifest.json</code></pre>
+
+    <h2>What a refuted verdict looks like</h2>
+    <p>Tighten the cap to <code>0.01 USD</code> and re-run. The solver doesn’t just say "no" &mdash; it tells you exactly how much you’re over, who the largest contributor is, and how to fix it:</p>
+    <pre><code>REFUTED: SMT solver found a counterexample.
+Per-soul cost breakdown:
+  Analyst              (claude-haiku-4-5)  per-call $0.001050  × 5 ticks  =  $0.005250
+  Trader               (claude-opus-4-7 )  per-call $0.007500  × 5 ticks  =  $0.037500
+  total_cost  =  $0.042750
+  cap         =  $0.01
+  overage     =  $0.032750  (327.5% over)
+  largest contributor: 'Trader'
+Suggested fixes (any one):
+  1. Raise cost_cap to &gt;= $0.0428 USD
+  2. Reduce max_ticks to &lt;= 1 (currently 5)
+  3. Reduce tokens on soul 'Trader' (largest cost driver)</code></pre>
+
+    <h2>The signed manifest</h2>
+    <p>Every verified program writes a self-contained JSON manifest:</p>
+    <pre><code>{
+  "schema_version": "1.0",
+  "nous_version": "4.13.1",
+  "world_name": "TradingFloor",
+  "verdict": "proven",
+  "cost_cap_usd": "0.5",
+  "max_ticks": 5,
+  "source_sha256": "e88a7d3f1bc3e01d…",
+  "pricing_sha256": "d23f54c3956dbfe4…",
+  "smt_spec_sha256": "d032d4b829bb1211…",
+  "solver_name": "z3",
+  "solver_version": "z3 4.16.0",
+  "timestamp_utc": "2026-04-28T18:33:56+00:00",
+  "signature": {
+    "algorithm": "ed25519",
+    "public_key_b64": "G8EfmzKqmsgMoCtE…",
+    "signature_b64":  "uY+Ajqaa3H4ZDh2hQludg0Y3KrqoDdmetpa2d5tW4ikG…"
+  }
+}</code></pre>
+    <p>The signing key is auto-generated at <code>~/.local/share/nous/keys/signing.key</code> on first use (XDG, mode 0600). Anyone with the manifest and the publisher’s public key can re-verify offline. Tamper-detection is built in: change a single field and the signature fails.</p>
+
+    <h2>Why this matters for the EU AI Act</h2>
+    <p>Annex IV / Article 11(1) requires technical documentation of risk-management measures and operational constraints for high-risk AI systems. A cryptographically-signed manifest pinning the exact source, exact pricing data, exact solver version, and exact verdict is exactly the kind of artefact regulators want to see &mdash; and it’s reproducible by any third party with the public key.</p>
+
+    <h2>The hotfix story behind v4.13.1</h2>
+    <p>v4.13.0 was tagged on GitHub on 28 April with the full SMT pipeline. It was <em>never uploaded to PyPI</em>. PyPI clean-install verification caught the blocker first: the pricing loader hardcoded <code>&lt;package&gt;/pricing/defaults.toml</code>, but setuptools <code>data-files</code> installs the file at <code>&lt;sys.prefix&gt;/pricing/defaults.toml</code>. Fresh wheel installs couldn’t load the shipped defaults. v4.13.1 fixes the loader to resolve all three layouts (editable / wheel-data / share/) and is the first v4.13.x to actually reach PyPI. v4.13.0 stays as a tag for historical accuracy; the wheel never escaped the build server.</p>
+
+    <h2>Try it</h2>
+    <pre><code>pip install 'nous-lang[smt]==4.13.1'
+nous prices init
+nous templates copy cost_cap_with_souls
+nous verify cost_cap_with_souls.nous --smt</code></pre>
+    <p>Ship log: <a href="https://github.com/contrario/nous/releases/tag/v4.13.1">github.com/contrario/nous v4.13.1</a> &middot; <a href="https://pypi.org/project/nous-lang/4.13.1/">pypi.org/project/nous-lang/4.13.1</a>.</p>
+
+  </div>
+
   <!-- POST: Session 60 Stability Hardening -->
   <div class="post-full" id="post-session60-stability">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
@@ -1025,3 +2273,5 @@ window.addEventListener('popstate', () => {
 </script>
 </body>
 </html>
+
+<!-- __session70_blog_v500_two_years_fix_v1__ -->

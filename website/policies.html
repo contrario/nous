@@ -181,6 +181,17 @@ a{text-decoration:none;color:inherit;transition:opacity 0.2s}
           </select>
         </div>
       </div>
+            <!-- __session65_policies_save_v1__ -->
+      <div class="save-bar" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:6px;background:var(--bg2)">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);font-weight:500">Save as template</span>
+        <input id="saveTplName" placeholder="my_world" maxlength="64" style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 8px;width:200px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:4px">
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--dim);cursor:pointer">
+          <input type="checkbox" id="saveForce" style="margin:0">
+          force (override lint)
+        </label>
+        <button class="btn primary" onclick="runSave()">Save</button>
+        <span id="saveStatus" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);flex:1;min-width:200px;overflow-wrap:anywhere"></span>
+      </div>
       <div id="validationPanel" class="validation hidden"></div>
     </div>
 
@@ -544,6 +555,88 @@ function escapeHtml(s) {
   if (s === null || s === undefined) return '';
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+// __session65_policies_save_v1__
+function _lintReportToMessages(lint) {
+  var msgs = [];
+  if (!lint) return msgs;
+  if (lint.crashed) {
+    msgs.push({ severity: 'err', code: 'LNT', message: lint.error || 'linter crashed' });
+    return msgs;
+  }
+  var errors = lint.errors || lint.issues || [];
+  errors.forEach(function(e) {
+    var code = e.code || e.rule || '?';
+    var message = e.message || (typeof e === 'string' ? e : JSON.stringify(e));
+    msgs.push({ severity: 'err', code: code, message: message });
+  });
+  (lint.warnings || []).forEach(function(w) {
+    var code = w.code || w.rule || '?';
+    var message = w.message || (typeof w === 'string' ? w : JSON.stringify(w));
+    msgs.push({ severity: 'warn', code: code, message: message });
+  });
+  if (!msgs.length && lint.error) {
+    msgs.push({ severity: 'err', code: 'LNT', message: lint.error });
+  }
+  return msgs;
+}
+
+async function runSave() {
+  var name = document.getElementById('saveTplName').value.trim();
+  var force = document.getElementById('saveForce').checked;
+  var source = document.getElementById('editor').value;
+  var st = document.getElementById('saveStatus');
+
+  function setStatus(text, color) {
+    st.textContent = text;
+    st.style.color = color;
+  }
+
+  if (!name) {
+    setStatus('name required', 'var(--red)');
+    return;
+  }
+  if (!/^[A-Za-z0-9_][A-Za-z0-9_-]{0,63}$/.test(name)) {
+    setStatus('invalid name (allowed: [A-Za-z0-9_-], 1-64 chars, must start with alphanum or underscore)', 'var(--red)');
+    return;
+  }
+  if (!source.trim()) {
+    setStatus('editor is empty', 'var(--red)');
+    return;
+  }
+
+  setStatus('saving ' + name + '.nous...', 'var(--dim)');
+  hideValidation();
+
+  try {
+    var data = await apiCall('/templates/' + encodeURIComponent(name), {
+      method: 'PUT',
+      body: JSON.stringify({ source: source, force: force })
+    });
+    if (data && data.ok === true) {
+      var prefix = (data.sha256 || '').slice(0, 12);
+      var bakNote = '';
+      if (data.backup) {
+        var parts = String(data.backup).split('/');
+        bakNote = ' (backup: ' + parts[parts.length - 1] + ')';
+      }
+      setStatus('saved ' + data.bytes_written + 'B sha256:' + prefix + bakNote, 'var(--green)');
+      var lintMsgs = _lintReportToMessages(data.lint);
+      if (lintMsgs.length) {
+        showValidation(lintMsgs);
+      }
+    } else {
+      var errMsg = (data && data.error) ? data.error : 'save failed (no error detail)';
+      var code = (data && data.code) ? data.code : '?';
+      setStatus(errMsg + ' [' + code + ']', 'var(--gold)');
+      if (data && data.lint) {
+        showValidation(_lintReportToMessages(data.lint));
+      }
+    }
+  } catch (e) {
+    setStatus(e.message, 'var(--red)');
+  }
+}
+
 </script>
 </body>
 </html>

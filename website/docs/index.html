@@ -202,7 +202,7 @@ pre code{background:none;padding:0;font-size:inherit;color:inherit}
 <!-- OVERVIEW -->
 <div class="doc-section" id="overview">
 <h1>NOUS Language Reference</h1>
-<p class="doc-updated">v4.10.0 · Last updated 17 April 2026</p>
+<p class="doc-updated">v5.8.1 · Last updated 21 May 2026</p><!-- __session86_docs_refresh_v1__ -->
 <p>NOUS (Νοῦς — Greek for "mind/intellect") is a self-evolving programming language purpose-built for agentic AI systems. It is not a framework, not a library, not a wrapper. It is a complete language with its own grammar, parser, type system, compiler, runtime, and IDE.</p>
 <div class="callout callout-info"><strong>The core insight:</strong> AI agents are not functions. They are living systems with memory, instincts, senses, healing ability, and evolution. NOUS models them as such.</div>
 <p>NOUS lets you describe multi-agent AI systems in a declarative, human-readable syntax. You define <strong>Souls</strong> (autonomous agents), <strong>Messages</strong> (typed data contracts), a <strong>Nervous System</strong> (routing between souls), and <strong>World Laws</strong> (constraints like cost ceilings). The compiler generates production-ready Python or JavaScript.</p>
@@ -220,7 +220,7 @@ $ pip install -r requirements.txt
 
 <span class="cm"># Verify installation</span>
 $ python cli.py version
-NOUS v4.0.0 — The Living Language</code></pre>
+NOUS v5.8.1 — The Living Language</code></pre>
 </div>
 
 <!-- FIRST PROGRAM -->
@@ -398,6 +398,15 @@ $ python cli.py run hello.nous</code></pre>
 </table>
 <h4>Type Inference</h4>
 <p>The type checker (18 rules, TC001–TC009) performs full inference across soul instinct blocks, tracking message field types through listen/speak chains. Errors are reported with file, line, and rule code.</p>
+<h4>The null / none literal</h4>
+<p>NOUS has a dedicated absent-value literal, spelled <code>null</code> or <code>none</code> (the two are interchangeable). It compiles to Python <code>None</code>. Equality against the literal compiles to identity comparison: <code>x == null</code> emits <code>x is None</code> and <code>x != none</code> emits <code>x is not None</code>, so absence checks are correct regardless of the value's type.</p>
+<pre><code><span class="kw">let</span> result = <span class="sp">sense</span> lookup(key: <span class="st">"k"</span>)
+<span class="kw">guard</span> result != <span class="kw">null</span>
+<span class="kw">speak</span> Found(value: result)</code></pre>
+<h4>guard ... else</h4>
+<p>A <code>guard</code> performs an early return when its condition is false. An optional <code>else</code> action runs a single statement before the return, so the failure path is explicit rather than silent. The trailing action after the guard executes only when the condition holds.</p>
+<pre><code><span class="kw">guard</span> budget_ok <span class="kw">else</span> <span class="kw">speak</span> Rejected(reason: <span class="st">"over budget"</span>)
+<span class="kw">speak</span> Approved(id: request_id)</code></pre>
 </div>
 
 <!-- WAKE STRATEGIES -->
@@ -514,6 +523,8 @@ $ python cli.py run hello.nous</code></pre>
 <div class="doc-section" id="codegen">
 <h2>Code Generation</h2>
 <p>NOUS generates production-ready asyncio Python from the Living AST. Each soul becomes an async function, channels use <code>asyncio.Queue</code>, and the runtime manages lifecycle, cost tracking, and error recovery.</p>
+<h4>Undefined-name gate</h4>
+<p>Before any generated module is written or run, the compiler scans it for references to undefined names. A source that would produce Python raising <code>NameError</code> at runtime is refused at compile time with a <code>CodegenSemanticError</code> naming the offending symbol and line. The same gate is enforced by <code>nous compile</code>, <code>nous run</code>, and hot-reload, so all three reject the same sources by the same check. The gate fails closed: on a semantic error nothing is written and nothing executes.</p>
 </div>
 
 <!-- TARGETS -->
@@ -612,6 +623,11 @@ $ python cli.py run hello.nous</code></pre>
 
 ══════════════════════════════
 VERIFIED: 10 proven, 0 warnings, 0 errors</code></pre>
+<h3>Cryptographic Provenance</h3>
+<p>Beyond the SMT formal proofs, NOUS can anchor a manifest's SHA-256 in the Sigstore Rekor transparency log, producing evidence that a specific artifact existed at a specific time. Verification is offline and key-pinned: a third party checks the anchor against a pinned Rekor public key with only the <code>cryptography</code> library, with no network access required.</p>
+<p>Three independent checks must all pass: the Rekor public key is in the allowlist, the signed entry timestamp verifies over the canonical log payload, and the leaf body parses as a hashedrekord whose hash matches the manifest and whose submitter signature verifies.</p>
+<p>Endpoint selection is driven by a Sigstore SigningConfig rather than a hardcoded URL: the client selects the highest Rekor API version it supports, grouped by operator and honoring validity windows. If only an unsupported (higher) API version is available, selection fails closed rather than silently downgrading.</p>
+<p>The public verification surface accepts a dossier at <code>POST /v1/verify-dossier</code> and returns a discriminated result that distinguishes a failed check from a check that did not run (for example, an unanchored manifest), so an auditor can tell <em>verified false</em> apart from <em>not checked</em>.</p>
 </div>
 
 <!-- PROOF CODES -->
@@ -1384,7 +1400,7 @@ Consciousness analysis:
 
 <div class="doc-section" id="runtime-engines">
 <h2>Runtime Engines</h2>
-<p>NOUS v4.0 includes 8 specialized runtime engines that run alongside the main event loop. Each engine manages one aspect of soul lifecycle.</p>
+<p>NOUS includes 8 specialized runtime engines that run alongside the main event loop. Each engine manages one aspect of soul lifecycle.</p>
 
 <table class="doc-table">
 <tr><th>Engine</th><th>Purpose</th><th>CLI</th></tr>
@@ -1773,7 +1789,8 @@ for m in result.fired:
 
 <!-- TESTS -->
 <div class="doc-section" id="tests">
-<h2>Test Suites — 259 Tests</h2>
+<h2>Test Suites — 596 Tests</h2>
+<p>Full suite: 596 tests passing (PYTEST_FLOOR 596). The table below lists representative suites; the floor is enforced per release and is monotone non-decreasing.</p>
 <table class="doc-table">
 <thead><tr><th>Suite</th><th>Tests</th><th>Coverage</th></tr></thead>
 <tbody>

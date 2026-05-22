@@ -114,6 +114,23 @@ color:var(--green);overflow-y:auto;line-height:1.6;
 .pill-c{background:var(--red-d);border:1px solid rgba(224,82,82,0.2);color:var(--red)}
 .pill-w{background:var(--amber-d);border:1px solid rgba(245,158,11,0.2);color:var(--amber)}
 .pill-i{background:var(--blue-d);border:1px solid rgba(96,165,250,0.2);color:var(--blue)}
+/* __session81_ide_dossier_tab_v1__ */
+.pill-pass{background:var(--green-d);border:1px solid rgba(74,222,128,0.2);color:var(--green)}
+.pill-fail{background:var(--red-d);border:1px solid rgba(224,82,82,0.2);color:var(--red)}
+.pill-na{background:var(--gold-d);border:1px solid var(--gold-b);color:var(--gold)}
+.dossier-wrap{padding:24px 0;overflow:auto;width:100%}
+.dossier-drop{border:2px dashed var(--gold-b);border-radius:12px;padding:36px 24px;text-align:center;background:var(--gold-t);cursor:pointer;transition:all 0.2s}
+.dossier-drop:hover{background:var(--gold-d);border-color:var(--gold)}
+.dossier-drop.drag-over{background:var(--gold-d);border-color:var(--gold);border-style:solid}
+.dossier-drop-icon{font-size:32px;color:var(--gold);opacity:0.6;margin-bottom:8px}
+.dossier-drop-text{font-family:var(--sans);font-size:14px;color:var(--t)}
+.dossier-paste{width:100%;min-height:160px;margin-top:10px;font-family:var(--mono);font-size:12px;background:var(--bg2);color:var(--t);border:1px solid var(--gold-b);border-radius:6px;padding:10px;resize:vertical}
+.dossier-mono{font-family:var(--mono);font-size:11px;color:var(--td);word-break:break-all}
+.dossier-link{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-b)}
+.dossier-link:hover{border-bottom-style:solid}
+.dossier-errs{margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--red);background:var(--red-d);padding:10px 12px;border-radius:6px}
+.dossier-errs ul{margin:6px 0 0 0;padding-left:18px}
+.dossier-errs li{margin-top:4px}
 
 .cards-row{display:flex;gap:18px;flex-wrap:wrap}
 .card{background:var(--card);border:1px solid var(--gold-b);border-radius:12px;padding:22px}
@@ -226,6 +243,7 @@ transition:all 0.2s;white-space:nowrap;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.30.4/cytoscape.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ3iIPkbieZSmmo2E0weR2v801dk3ycGwOPKmnw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
 <!-- NOUS_VERSION_JS -->
 <script defer src="/js/nous-version.js?v=1"></script>
@@ -244,6 +262,7 @@ transition:all 0.2s;white-space:nowrap;
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="editor"><span class="tab-icon">⌘</span>Editor</button>
     <button class="tab-btn" data-tab="verify"><span class="tab-icon">✓</span>Verify</button>
+    <button class="tab-btn" data-tab="dossier" data-marker="__session81_ide_dossier_tab_v1__"><span class="tab-icon">⊛</span>Dossier</button>
     <button class="tab-btn" data-tab="graph"><span class="tab-icon">◇</span>Graph</button>
     <button class="tab-btn" data-tab="diff"><span class="tab-icon">⊿</span>Architecture Diff</button>
     <button class="tab-btn" data-tab="governance" data-marker="__governance_tab_button_v1__"><span class="tab-icon">⚖</span>Governance</button>
@@ -264,8 +283,20 @@ transition:all 0.2s;white-space:nowrap;
 <option value="">Load template…</option>
 </select>
 <button class="editor-toolbar-btn" id="btn-download-py" onclick="downloadPython()" style="opacity:0.4;cursor:default" disabled title="Compile first to enable download">⬇ Download .py</button>
+<!-- __session77_ide_skill_export_v1__ -->
+<button class="editor-toolbar-btn" id="btn-skill-export" onclick="exportAsSkill()" title="Export this .nous program as an agentskills.io skill with a signed Annex IV dossier">↗ Export Skill</button>
 </div>
 <span class="editor-file" id="editor-filename">untitled.nous</span>
+          </div>
+          <div class="save-bar" data-marker="__session66_ide_save_v1__" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);flex-wrap:wrap">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;letter-spacing:0.4px">SAVE AS</span>
+            <input id="save-name" type="text" placeholder="template_name (no .nous)" maxlength="64" pattern="[A-Za-z0-9_][A-Za-z0-9_-]{0,63}" style="background:#05070e;color:#e2e8f0;border:1px solid rgba(201,165,84,0.2);border-radius:4px;padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;min-width:240px;outline:none">
+            <label style="display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#94a3b8;cursor:pointer">
+              <input id="save-force" type="checkbox" style="cursor:pointer">
+              force (override lint)
+            </label>
+            <button id="btn-save" onclick="saveTemplate()" class="editor-toolbar-btn" style="font-weight:600">SAVE</button>
+            <span id="save-status" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;letter-spacing:0.2px;flex:1;min-width:120px"></span>
           </div>
           <div id="monaco-container"></div>
         </div>
@@ -283,6 +314,30 @@ transition:all 0.2s;white-space:nowrap;
       </div>
     </div>
 
+    <div class="tab-panel" id="panel-dossier" data-marker="__session81_ide_dossier_tab_v1__">
+      <div class="dossier-wrap">
+        <div class="card" style="max-width:900px;margin:0 auto">
+          <div class="card-h"><span style="font-size:17px">⊛</span><span class="card-t">Dossier verification</span></div>
+          <div style="font-size:12px;color:var(--td);margin:8px 0 16px;line-height:1.5">
+            Verify a signed NOUS dossier (manifest.json or skill_export.zip) against the public verification surface. Public endpoint; no API key required. The canonical trust path remains offline verification with verify_offline.py.
+          </div>
+          <div id="dossier-drop" class="dossier-drop">
+            <div class="dossier-drop-icon">⬆</div>
+            <div class="dossier-drop-text">
+              Drop manifest.json or skill_export.zip here<br>
+              <span style="font-size:11px;color:var(--td)">or click to select a file</span>
+            </div>
+            <input type="file" id="dossier-file-input" accept=".json,.zip,application/json,application/zip" style="display:none">
+          </div>
+          <details style="margin-top:14px">
+            <summary style="font-size:11px;color:var(--td);cursor:pointer;font-family:var(--mono);letter-spacing:0.06em">PASTE JSON INSTEAD</summary>
+            <textarea id="dossier-paste" class="dossier-paste" placeholder='{"schema_version":"1.0", ... "signature":{...}}'></textarea>
+            <button class="editor-toolbar-btn" id="dossier-verify-paste" style="margin-top:10px">VERIFY PASTED</button>
+          </details>
+        </div>
+        <div class="card" id="dossier-result" style="max-width:900px;margin:16px auto 0;display:none"></div>
+      </div>
+    </div>
     <div class="tab-panel" id="panel-graph" style="position:relative;overflow:hidden">
       <div id="graph-bar" style="position:absolute;top:0;left:0;right:0;z-index:10;padding:10px 16px;background:rgba(5,7,14,0.92);border-bottom:1px solid rgba(201,165,84,0.12);display:flex;align-items:center;gap:12px">
         <button onclick="renderGraph()" style="background:#c9a554;color:#05070e;border:none;padding:5px 14px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;cursor:pointer">RENDER</button>
@@ -300,6 +355,32 @@ transition:all 0.2s;white-space:nowrap;
     </div>
 
     <div class="tab-panel" id="panel-diff">
+      <!-- __session66_diff_dropdowns_v1__ -->
+      <div id="diff-static-bar" style="max-width:1100px;width:100%;margin:0 auto 16px auto;background:var(--card);border:1px solid var(--gold-b);border-radius:10px;padding:14px 16px">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="diff-input-label">Original:</span>
+          <select id="diff-original-source" style="background:#05070e;color:#e2e8f0;border:1px solid rgba(201,165,84,0.2);border-radius:4px;padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;outline:none;min-width:220px">
+            <option value="__editor__">Editor (current code)</option>
+            <option value="__paste__">Paste...</option>
+          </select>
+          <span class="diff-input-vs">vs</span>
+          <span class="diff-input-label">Modified:</span>
+          <select id="diff-modified-source" style="background:#05070e;color:#e2e8f0;border:1px solid rgba(201,165,84,0.2);border-radius:4px;padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;outline:none;min-width:220px">
+            <option value="__paste__">Paste...</option>
+            <option value="__editor__">Editor (current code)</option>
+          </select>
+          <button class="diff-run-btn" onclick="runLiveDiff()" id="btn-run-diff">&#9654; Run Diff</button>
+          <button class="diff-run-btn" onclick="loadDemoData()" style="background:transparent;color:#5a6a7e;border:1px solid #1a2235;margin-left:8px;font-size:11px">DEMO</button>
+        </div>
+        <div id="diff-paste-original" style="display:none;margin-top:12px">
+          <div style="font-size:10px;color:var(--td);margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px">ORIGINAL .nous source</div>
+          <textarea id="diff-original-code" style="width:100%;height:140px;background:#0a0e17;color:#e2e8f0;border:1px solid #1a2235;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12px;resize:vertical;outline:none;tab-size:2" placeholder="Paste ORIGINAL .nous source. Must start with `world`, `soul`, `message`, etc."></textarea>
+        </div>
+        <div id="diff-paste-modified" style="display:block;margin-top:12px">
+          <div style="font-size:10px;color:var(--td);margin-bottom:6px;font-family:'JetBrains Mono',monospace;letter-spacing:0.5px">MODIFIED .nous source</div>
+          <textarea id="diff-modified-code" style="width:100%;height:140px;background:#0a0e17;color:#e2e8f0;border:1px solid #1a2235;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12px;resize:vertical;outline:none;tab-size:2" placeholder="Paste MODIFIED .nous source. Must start with `world`, `soul`, `message`, etc."></textarea>
+        </div>
+      </div>
       <div class="diff-wrap" id="diff-container"></div>
     </div>
     <!-- __governance_tab_panel_v1__ -->
@@ -1071,8 +1152,11 @@ function renderDiff(data) {
 renderEmpty(); return; }
   const d = data;
   const c = d.cost;
-  const pct = ((c.total_after - c.total_before) / c.total_before * 100);
+  const pct = (c.total_before > 0)
+    ? ((c.total_after - c.total_before) / c.total_before * 100)
+    : (c.total_after > 0 ? Infinity : 0);
   const isDown = pct < 0;
+  const isFlat = pct === 0;
   const monthSaved = c.monthly_before - c.monthly_after;
   const breaking = d.verdict.critical > 0;
   const maxCost = Math.max(...c.souls.filter(s => s.before !== null).map(s => s.before));
@@ -1080,21 +1164,17 @@ renderEmpty(); return; }
   const tierRemoved = c.souls.filter(s => s.tier_after === null);
 
   let html = '';
-
-  html += '<div class="diff-input-bar">';
-  html += '<span class="diff-input-label">Original:</span>';
-  html += '<input class="diff-input-file" value="' + d.source + '" readonly>';
-  html += '<span class="diff-input-vs">vs</span>';
-  html += '<input class="diff-input-file" value="' + d.target + '" readonly>';
-  html += '<button class="diff-run-btn" onclick="loadDemoData()">&#9654; Run Diff</button>';
-  html += '</div>';
+  // __session66_diff_render_polish_v1__
 
   html += '<div class="verdict ' + (breaking ? 'brk' : 'safe') + '">';
   html += '<div>';
   html += '<div class="v-title" style="color:' + (breaking ? 'var(--red)' : 'var(--green)') + '">';
   html += breaking ? 'BREAKING CHANGES DETECTED' : 'SAFE TO DEPLOY';
   html += '</div>';
-  html += '<div class="v-sub">' + d.source + ' \u2192 ' + d.target + ' \u00B7 ' + d.findings.length + ' findings</div>';
+  // __DIFF_SIDE_RENDER_LABELS_v1__
+  var srcLabel = d.original_label || d.source || 'original';
+  var tgtLabel = d.modified_label || d.target || 'modified';
+  html += '<div class="v-sub">' + srcLabel + ' \u2192 ' + tgtLabel + ' \u00B7 ' + d.findings.length + ' findings</div>';
   html += '</div><div class="pills">';
   if (d.verdict.critical > 0) html += '<div class="pill pill-c"><div class="pill-n">' + d.verdict.critical + '</div><div class="pill-l">Critical</div></div>';
   if (d.verdict.warning > 0) html += '<div class="pill pill-w"><div class="pill-n">' + d.verdict.warning + '</div><div class="pill-l">Warning</div></div>';
@@ -1109,9 +1189,13 @@ renderEmpty(); return; }
   html += '<span style="font-size:18px;color:var(--td)">\u2192</span>';
   html += '<span class="cost-new" id="cost-anim">$' + c.monthly_after.toFixed(2) + '</span>';
   html += '<span style="font-size:13px;color:var(--td)">/month</span></div>';
-  html += '<div class="pct-badge ' + (isDown ? 'pct-down' : 'pct-up') + '">';
-  html += '<span style="font-size:15px;color:' + (isDown ? 'var(--green)' : 'var(--red)') + '">' + (isDown ? '\u2193' : '\u2191') + '</span>';
-  html += '<span style="font-size:13px;font-weight:600;color:' + (isDown ? 'var(--green)' : 'var(--red)') + '">' + Math.abs(pct).toFixed(1) + '%</span>';
+  const pctCls = isFlat ? 'pct-down' : (isDown ? 'pct-down' : 'pct-up');
+  const pctColor = isFlat ? 'var(--td)' : (isDown ? 'var(--green)' : 'var(--red)');
+  const pctArrow = isFlat ? '\u2261' : (isDown ? '\u2193' : '\u2191');
+  const pctText = isFinite(pct) ? (Math.abs(pct).toFixed(1) + '%') : 'new cost';
+  html += '<div class="pct-badge ' + pctCls + '">';
+  html += '<span style="font-size:15px;color:' + pctColor + '">' + pctArrow + '</span>';
+  html += '<span style="font-size:13px;font-weight:600;color:' + pctColor + '">' + pctText + '</span>';
   if (monthSaved > 0) html += '<span style="font-size:11px;color:var(--green);opacity:0.8">\u00B7 saving $' + monthSaved.toFixed(2) + '/mo</span>';
   html += '</div>';
 
@@ -1247,67 +1331,221 @@ function diffLine(icon, color, label, detail, bg) {
 }
 
 function renderEmpty() {
+  // __session66_diff_dropdowns_v1__
   document.getElementById('diff-container').innerHTML =
-    '<div class="diff-input-bar">' +
-    '<span class="diff-input-label">Original:</span>' +
-    '<span class="diff-input-hint" style="color:var(--text-dim);font-size:12px;font-family:\'JetBrains Mono\',monospace">\u2190 uses Editor tab code</span>' +
-    '<span class="diff-input-vs">vs</span>' +
-    '<span class="diff-input-label">Modified:</span>' +
-    '<span class="diff-input-hint" style="color:var(--text-dim);font-size:12px;font-family:\'JetBrains Mono\',monospace">\u2193 paste below</span>' +
-    '<button class="diff-run-btn" onclick="runLiveDiff()" id="btn-run-diff">&#9654; Run Diff</button>' +
-    '<button class="diff-run-btn" onclick="loadDemoData()" style="background:transparent;color:#5a6a7e;border:1px solid #1a2235;margin-left:8px;font-size:11px">DEMO</button>' +
-    '</div>' +
-    '<textarea id="diff-modified-code" style="width:100%;height:180px;background:var(--bg-code,#0a0e17);color:var(--text,#e0e6ed);border:1px solid var(--border,#1a2235);border-radius:8px;padding:14px;font-family:\'JetBrains Mono\',monospace;font-size:13px;resize:vertical;margin-bottom:16px;outline:none;tab-size:2" placeholder="Paste your MODIFIED .nous code here...\n\nThe original code is taken from the Editor tab.\nBoth programs are sent to the NOUS compiler for semantic diff analysis."></textarea>' +
-    '<div class="diff-empty">' +
+    '<div class="diff-empty" style="margin-top:8px">' +
     '<div class="diff-empty-icon">\u2206</div>' +
     '<div class="diff-empty-title">Architecture Diff</div>' +
-    '<div class="diff-empty-sub">Write your original .nous program in the Editor tab, paste the modified version above, then click Run Diff for live semantic impact analysis.</div>' +
+    '<div class="diff-empty-sub">Pick original and modified sources above (Editor / Paste / saved template), then click Run Diff for semantic impact analysis.</div>' +
     '</div>';
+  if (typeof _initDiffSources === 'function') _initDiffSources();
 }
 
 window.loadDemoData = function() {
   renderDiff(MOCK_DIFF);
 };
-window.runLiveDiff = function() {
-  var original = getEditorCode();
-  var modifiedEl = document.getElementById('diff-modified-code');
-  var modified = modifiedEl ? modifiedEl.value : '';
-  if (!original.trim()) {
-    alert('Write your original .nous code in the Editor tab first.');
-    return;
+var _diffSourcesInitialized = false;
+
+function _initDiffSources() {
+  if (_diffSourcesInitialized) return;
+  _diffSourcesInitialized = true;
+  ['original', 'modified'].forEach(function(side) {
+    var sel = document.getElementById('diff-' + side + '-source');
+    if (!sel) return;
+    sel.addEventListener('change', function() {
+      var paste = document.getElementById('diff-paste-' + side);
+      if (paste) paste.style.display = (sel.value === '__paste__') ? 'block' : 'none';
+    });
+  });
+  fetch('/api/v1/templates')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var tpls = data.templates || [];
+      ['diff-original-source', 'diff-modified-source'].forEach(function(id) {
+        var sel = document.getElementById(id);
+        if (!sel) return;
+        var sep = document.createElement('option');
+        sep.disabled = true;
+        sep.textContent = '\u2500\u2500\u2500 saved templates \u2500\u2500\u2500';
+        sel.appendChild(sep);
+        tpls.forEach(function(t) {
+          var opt = document.createElement('option');
+          opt.value = t.name;
+          opt.textContent = t.name + ' (' + t.souls + ' souls, ' + t.lines + ' lines)';
+          sel.appendChild(opt);
+        });
+      });
+    })
+    .catch(function() {});
+}
+
+async function _resolveDiffSource(side) {
+  var sel = document.getElementById('diff-' + side + '-source');
+  var val = sel ? sel.value : '__editor__';
+  if (val === '__editor__') {
+    return { source: getEditorCode() || '', kind: 'editor' };
   }
-  if (!modified.trim()) {
-    alert('Paste the modified .nous code in the textarea above.');
-    return;
+  if (val === '__paste__') {
+    var ta = document.getElementById('diff-' + side + '-code');
+    return { source: ta ? ta.value : '', kind: 'paste' };
   }
+  var resp = await fetch('/api/v1/templates/' + encodeURIComponent(val));
+  if (!resp.ok) {
+    throw new Error('Failed to load template "' + val + '" (HTTP ' + resp.status + ')');
+  }
+  var data = await resp.json();
+  return { source: data.source || '', kind: 'template:' + val };
+}
+
+// __DIFF_SIDE_KIND_TO_SIDE_v1__
+function _kindToSide(kind) {
+  // Translate internal kind strings into v4.18.0 DiffSide objects.
+  // 'editor' -> {kind:'editor'}
+  // 'paste' -> {kind:'paste'}
+  // 'template:<name>' -> {kind:'template', identifier:<name>}
+  if (!kind) return { kind: 'unknown' };
+  if (kind === 'editor') return { kind: 'editor' };
+  if (kind === 'paste') return { kind: 'paste' };
+  if (kind.indexOf('template:') === 0) {
+    return { kind: 'template', identifier: kind.slice('template:'.length) };
+  }
+  return { kind: 'unknown' };
+}
+
+function _looksLikeCompilerOutput(s) {
+  if (!s) return null;
+  var trimmed = s.replace(/^\s+/, '');
+  var head = trimmed.slice(0, 200);
+  var fullScan = [
+    'Compiled successfully',
+    'Generated Python',
+    'Target:   Python',
+    '\u2550\u2550\u2550 VERIFIED',
+    '\u2550\u2550\u2550 VERIFICATION FAILED',
+    '\u2500\u2500\u2500 Generated'
+  ];
+  for (var i = 0; i < fullScan.length; i++) {
+    if (s.indexOf(fullScan[i]) >= 0) return fullScan[i];
+  }
+  var prefixScan = [
+    '\u2713', '\u2717',
+    'OK ', 'OK\n', 'OK\t',
+    'Error:', 'ERROR:', 'FAIL:', 'FAILED',
+    'Verify ', 'Verifying ', '== ',
+    'World:', 'Souls:', 'Messages:', 'Output:', 'Target:',
+    'RESULT:'
+  ];
+  for (var j = 0; j < prefixScan.length; j++) {
+    if (head.indexOf(prefixScan[j]) === 0) return prefixScan[j].trim();
+  }
+  return null;
+}
+
+window.runLiveDiff = async function() {
+  // __session66_diff_dropdowns_v1__
   var btn = document.getElementById('btn-run-diff');
-  if (btn) { btn.textContent = '\u23F3 Analyzing...'; btn.disabled = true; }
-  fetch('/api/v1/diff', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ original: original, modified: modified })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (btn) { btn.innerHTML = '&#9654; Run Diff'; btn.disabled = false; }
-    if (data.ok && data.diff) {
+  var container = document.getElementById('diff-container');
+
+  function setBusy(busy) {
+    if (!btn) return;
+    if (busy) { btn.textContent = '\u23F3 Analyzing...'; btn.disabled = true; }
+    else { btn.innerHTML = '&#9654; Run Diff'; btn.disabled = false; }
+  }
+  function showWarn(msg) {
+    container.innerHTML =
+      '<div class="diff-empty"><div class="diff-empty-icon" style="color:var(--gold)">!</div>' +
+      '<div class="diff-empty-title" style="color:var(--gold)">' + escapeForDiff(msg) + '</div></div>';
+  }
+  function showCompilerHit(hit, sideLabel) {
+    container.innerHTML =
+      '<div class="diff-empty"><div class="diff-empty-icon" style="color:var(--gold)">!</div>' +
+      '<div class="diff-empty-title" style="color:var(--gold)">' + sideLabel + ' side looks like compiler output, not .nous source</div>' +
+      '<div class="diff-empty-sub" style="color:var(--text-dim);font-family:\'JetBrains Mono\',monospace">' +
+      'Detected marker: <code style="color:var(--gold)">' + escapeForDiff(hit) + '</code>' +
+      '<br><br>Use a saved template, or paste actual NOUS source -- starts with <code>world</code>, <code>soul</code>, <code>message</code>, etc.' +
+      '</div></div>';
+  }
+  function showErr(title, msg) {
+    container.innerHTML =
+      '<div class="diff-empty"><div class="diff-empty-icon" style="color:var(--red)">\u2717</div>' +
+      '<div class="diff-empty-title" style="color:var(--red)">' + escapeForDiff(title) + '</div>' +
+      '<pre class="diff-error-pre" style="color:var(--text-dim);font-family:\'JetBrains Mono\',monospace;font-size:12px;text-align:left;white-space:pre-wrap;word-break:break-word;background:rgba(224,82,82,0.04);border:1px solid rgba(224,82,82,0.2);border-radius:6px;padding:12px;max-width:760px;margin:8px auto 0;line-height:1.5">' +
+      escapeForDiff(msg) +
+      '</pre></div>';
+  }
+
+  setBusy(true);
+  try {
+    var origRes, modRes;
+    try {
+      var both = await Promise.all([
+        _resolveDiffSource('original'),
+        _resolveDiffSource('modified')
+      ]);
+      origRes = both[0];
+      modRes = both[1];
+    } catch (loadErr) {
+      showErr('Source Load Failed', loadErr.message || String(loadErr));
+      return;
+    }
+
+    if (!origRes.source.trim()) {
+      showWarn('Original side is empty. Pick Editor (with code), Paste, or a saved template.');
+      return;
+    }
+    if (!modRes.source.trim()) {
+      showWarn('Modified side is empty. Pick Editor (with code), Paste, or a saved template.');
+      return;
+    }
+
+    if (origRes.kind === 'paste' || origRes.kind === 'editor') {
+      var hitO = _looksLikeCompilerOutput(origRes.source);
+      if (hitO) { showCompilerHit(hitO, 'Original'); return; }
+    }
+    if (modRes.kind === 'paste' || modRes.kind === 'editor') {
+      var hitM = _looksLikeCompilerOutput(modRes.source);
+      if (hitM) { showCompilerHit(hitM, 'Modified'); return; }
+    }
+
+    // __DIFF_SIDE_FETCH_BODY_v1__
+    var resp = await fetch('/api/v1/diff', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        original: origRes.source,
+        modified: modRes.source,
+        original_side: _kindToSide(origRes.kind),
+        modified_side: _kindToSide(modRes.kind)
+      })
+    });
+    var data;
+    try { data = await resp.json(); } catch (e) { data = {}; }
+
+    if (data && data.ok && data.diff) {
       renderDiff(data.diff);
     } else {
-      var errMsg = data.detail || 'Diff failed';
-      document.getElementById('diff-container').innerHTML =
-        '<div class="diff-empty"><div class="diff-empty-icon" style="color:var(--red)">\u2717</div>' +
-        '<div class="diff-empty-title" style="color:var(--red)">Diff Error</div>' +
-        '<div class="diff-empty-sub" style="color:var(--text-dim)">' + errMsg + '</div></div>';
+      var errMsg = data && data.detail;
+      if (errMsg && typeof errMsg !== 'string') {
+        errMsg = errMsg.error || errMsg.message || JSON.stringify(errMsg);
+      }
+      if (!errMsg) errMsg = (data && data.error) || ('Diff failed (HTTP ' + resp.status + ')');
+      showErr('Diff Error', errMsg);
     }
-  })
-  .catch(function(err) {
-    if (btn) { btn.innerHTML = '&#9654; Run Diff'; btn.disabled = false; }
-    document.getElementById('diff-container').innerHTML =
-      '<div class="diff-empty"><div class="diff-empty-icon" style="color:var(--red)">\u2717</div>' +
-      '<div class="diff-empty-title" style="color:var(--red)">Connection Error</div>' +
-      '<div class="diff-empty-sub" style="color:var(--text-dim)">' + err.message + '</div></div>';
-  });
+  } catch (e) {
+    showErr('Connection Error', e.message || String(e));
+  } finally {
+    setBusy(false);
+  }
 };
+
+function escapeForDiff(s) {
+  if (s === null || s === undefined) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
 var _lastCompiledPython = null;
 var _lastWorldName = 'untitled';
@@ -1350,6 +1588,97 @@ function _updateDownloadBtn(enabled) {
 }
 
 window.downloadPython = downloadPython;
+// __session77_ide_skill_export_v1__
+window.exportAsSkill = exportAsSkill;
+async function exportAsSkill() {
+  var source = '';
+  try {
+    if (typeof window.getEditorCode === 'function') {
+      source = window.getEditorCode() || '';
+    }
+  } catch (e) { source = ''; }
+  if (!source.trim()) {
+    alert('Editor is empty. Write a .nous program first.');
+    return;
+  }
+  var description = prompt(
+    'Skill description (1-1024 chars, required):\n\nThis appears in SKILL.md frontmatter and is how agents decide when to load your skill.'
+  );
+  if (description === null) return;
+  description = description.trim();
+  if (!description) {
+    alert('Description is required.');
+    return;
+  }
+  var skillName = prompt(
+    'Skill name (optional kebab-case override).\n\nLeave blank to auto-derive from the world name.\nMust match ^[a-z0-9]+(-[a-z0-9]+)*$ if provided.'
+  );
+  if (skillName === null) return;
+  skillName = skillName.trim();
+  var apiKey = '';
+  try { apiKey = localStorage.getItem('nous_api_key') || ''; } catch (e) {}
+  if (!apiKey) {
+    var entered = prompt('Enter X-API-Key (required for skill export):') || '';
+    apiKey = entered.trim();
+    if (!apiKey) {
+      alert('Cancelled (no API key).');
+      return;
+    }
+    try { localStorage.setItem('nous_api_key', apiKey); } catch (e) {}
+  }
+  var btn = document.getElementById('btn-skill-export');
+  var origText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.textContent = 'EXPORTING...';
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+  }
+  var body = { source: source, description: description, with_dossier: true };
+  if (skillName) body.skill_name = skillName;
+  try {
+    var resp = await fetch('/api/v1/skill/export', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey
+      },
+      body: JSON.stringify(body)
+    });
+    if (!resp.ok) {
+      var detail = 'HTTP ' + resp.status;
+      try {
+        var errData = await resp.json();
+        if (errData && errData.detail) {
+          if (typeof errData.detail === 'string') {
+            detail += ': ' + errData.detail;
+          } else if (errData.detail.error) {
+            detail += ': ' + errData.detail.error;
+          }
+        }
+      } catch (e) {}
+      alert('Export failed: ' + detail);
+      return;
+    }
+    var resolvedName = resp.headers.get('X-Skill-Name') || 'skill';
+    var blob = await resp.blob();
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = resolvedName + '.zip';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Export error: ' + (err && err.message ? err.message : err));
+  } finally {
+    if (btn) {
+      btn.textContent = origText;
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+  }
+}
 function downloadPython() {
   if (!_lastCompiledPython) { alert('Compile your .nous program first.'); return; }
   var blob = new Blob([_lastCompiledPython], { type: 'text/x-python' });
@@ -1534,6 +1863,8 @@ document.getElementById('btn-run').addEventListener('click', function() {
     if (p.nodes.length === 0) {
       if (empty) empty.style.display = 'flex';
       box.style.display = 'none';
+      // __session63_graph_badge_reset_v1__
+      if (info) info.textContent = '0 souls \u00b7 0 routes';
       return;
     }
     if (empty) empty.style.display = 'none';
@@ -2083,6 +2414,422 @@ window.sendChat = async function() {
   };
 })();
 
+// __session66_ide_save_v1__
+window.saveTemplate = async function() {
+  var nameEl = document.getElementById('save-name');
+  var forceEl = document.getElementById('save-force');
+  var statusEl = document.getElementById('save-status');
+  var btn = document.getElementById('btn-save');
+  var name = (nameEl && nameEl.value || '').trim();
+  var force = !!(forceEl && forceEl.checked);
+
+  function setStatus(msg, color) {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    statusEl.style.color = color || '#94a3b8';
+  }
+
+  if (!name) { setStatus('enter a name', '#f59e0b'); return; }
+  if (!/^[A-Za-z0-9_][A-Za-z0-9_-]{0,63}$/.test(name)) {
+    setStatus('invalid name (alphanumeric, _, -; max 64 chars)', '#e05252');
+    return;
+  }
+
+  var source = '';
+  try {
+    if (typeof window.getEditorCode === 'function') {
+      source = window.getEditorCode() || '';
+    }
+  } catch (e) { source = ''; }
+  if (!source.trim()) { setStatus('editor is empty', '#f59e0b'); return; }
+
+  var apiKey = '';
+  try { apiKey = localStorage.getItem('nous_api_key') || ''; } catch (e) {}
+  if (!apiKey) {
+    var entered = prompt('Enter X-API-Key (required for writes):') || '';
+    apiKey = entered.trim();
+    if (!apiKey) {
+      setStatus('save cancelled (no API key)', '#f59e0b');
+      return;
+    }
+    try { localStorage.setItem('nous_api_key', apiKey); } catch (e) {}
+  }
+
+  var origText = btn ? btn.textContent : '';
+  if (btn) { btn.textContent = 'SAVING...'; btn.disabled = true; }
+  setStatus('saving...', '#94a3b8');
+
+  try {
+    var resp = await fetch('/api/v1/templates/' + encodeURIComponent(name), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey
+      },
+      body: JSON.stringify({ source: source, force: force })
+    });
+    var data;
+    try { data = await resp.json(); } catch (e) { data = {}; }
+
+    if (!resp.ok) {
+      var msg = 'HTTP ' + resp.status;
+      if (data && data.detail) {
+        msg = (typeof data.detail === 'string')
+          ? data.detail
+          : (data.detail.error || JSON.stringify(data.detail));
+      }
+      setStatus('FAILED: ' + msg, '#e05252');
+      return;
+    }
+
+    if (data && data.ok === true) {
+      var sha = (data.sha256 || '').slice(0, 12);
+      var bytes = data.bytes_written || 0;
+      var backupTxt = data.backup ? (' \u00B7 backup: ' + data.backup) : '';
+      setStatus('OK \u00B7 ' + bytes + 'B \u00B7 sha256:' + sha + backupTxt, '#4ade80');
+      var fname = document.getElementById('editor-filename');
+      if (fname) fname.textContent = name + '.nous';
+    } else if (data && data.ok === false) {
+      var lintErrs = (data.lint && data.lint.error_count) || 0;
+      var code = data.code || 'TPL???';
+      setStatus('LINT (' + code + '): ' + lintErrs + ' errors \u00B7 use force to override', '#f59e0b');
+    } else {
+      setStatus('unexpected response shape', '#e05252');
+    }
+  } catch (e) {
+    setStatus('NETWORK: ' + e.message, '#e05252');
+  } finally {
+    if (btn) { btn.textContent = origText; btn.disabled = false; }
+  }
+};
+
+if (typeof window.loadTemplate === 'function') {
+  var _session66_origLoadTemplate = window.loadTemplate;
+  window.loadTemplate = function(name) {
+    _session66_origLoadTemplate(name);
+    var nameInput = document.getElementById('save-name');
+    if (nameInput && name) nameInput.value = name;
+  };
+}
+
+// __session82_ide_dossier_v2_v1__
+(function(){
+  var dropZone = document.getElementById('dossier-drop');
+  var fileInput = document.getElementById('dossier-file-input');
+  var pasteArea = document.getElementById('dossier-paste');
+  var pasteBtn = document.getElementById('dossier-verify-paste');
+  var resultEl = document.getElementById('dossier-result');
+  if (!dropZone || !fileInput || !resultEl) return;
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function show(html) {
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = html;
+  }
+
+  function pill(label, state) {
+    var cls = state === 'pass' ? 'pill-pass'
+            : state === 'fail' ? 'pill-fail' : 'pill-na';
+    return '<div class="pill ' + cls + '" '
+      + 'style="min-width:140px;padding:10px 14px">'
+      + '<div class="pill-l">' + escapeHtml(label) + '</div>'
+      + '</div>';
+  }
+
+  function verdictBanner(verdict, summary) {
+    var color = verdict === 'ACCEPT' ? 'var(--green)' : 'var(--red)';
+    var bg = verdict === 'ACCEPT' ? 'var(--green-d)' : 'var(--red-d)';
+    return '<div style="padding:14px 16px;margin-bottom:12px;'
+      + 'background:' + bg + ';border-left:4px solid ' + color + ';'
+      + 'border-radius:6px">'
+      + '<div style="font-family:var(--mono);font-size:10px;'
+      + 'letter-spacing:0.1em;color:' + color + ';margin-bottom:5px">'
+      + 'VERDICT &middot; ' + escapeHtml(verdict)
+      + '</div>'
+      + '<div style="font-family:var(--sans);font-size:13px;'
+      + 'color:var(--t);line-height:1.5">' + escapeHtml(summary)
+      + '</div></div>';
+  }
+
+  function checkPillState(ok) {
+    if (ok === true) return 'pass';
+    if (ok === false) return 'fail';
+    return 'na';
+  }
+
+  function checkPillLabel(name, ok) {
+    if (ok === 'skipped_unanchored') return name + ' SKIPPED';
+    if (ok === 'skipped_no_policy')  return name + ' NOT CHECKED';
+    return name + ' ' + (ok ? 'OK' : 'FAIL');
+  }
+
+  function renderResult(data) {
+    if (!data || data.spec_version !== 'verify-dossier/v2') {
+      show('<div style="padding:18px;color:var(--red);'
+        + 'font-family:var(--mono);font-size:12px">'
+        + 'Unexpected response shape (no spec_version). Reload the '
+        + 'tab and try again.</div>');
+      return;
+    }
+    var html = '';
+    html += '<div class="card-h">'
+      + '<span style="font-size:17px">&#9883;</span>'
+      + '<span class="card-t">Verification result</span></div>';
+    html += verdictBanner(
+      data.verdict, data.human_readable.verdict_summary
+    );
+
+    var c = data.checks;
+    html += '<div class="pills" style="margin-top:14px;'
+      + 'justify-content:flex-start;flex-wrap:wrap">';
+    html += pill(
+      checkPillLabel('SIGNATURE', c.manifest_signature_ed25519.ok),
+      checkPillState(c.manifest_signature_ed25519.ok)
+    );
+    html += pill(
+      checkPillLabel(
+        'SOURCE ID', c.source_sha256_field_well_formed.ok
+      ),
+      checkPillState(c.source_sha256_field_well_formed.ok)
+    );
+    html += pill(
+      checkPillLabel('ANCHORED', c.transparency_log_present.ok),
+      checkPillState(c.transparency_log_present.ok)
+    );
+    var allRekor = [
+      c.rekor_public_key_in_allowlist.ok,
+      c.rekor_signed_entry_timestamp.ok,
+      c.rekor_leaf_inclusion.ok
+    ];
+    var rekorOk;
+    if (allRekor.every(function(x){ return x === true; })) {
+      rekorOk = true;
+    } else if (allRekor.every(function(x){
+      return x === 'skipped_unanchored';
+    })) {
+      rekorOk = 'skipped_unanchored';
+    } else {
+      rekorOk = false;
+    }
+    html += pill(
+      checkPillLabel('REKOR ANCHOR', rekorOk),
+      checkPillState(rekorOk)
+    );
+    html += '</div>';
+
+    var ev = data.evidence;
+    html += '<div style="margin-top:16px;padding:12px 14px;'
+      + 'background:var(--gold-t);border-radius:8px;'
+      + 'border:1px solid var(--gold-b)">'
+      + '<div class="pill-l" style="margin-bottom:6px">EVIDENCE'
+      + '</div>'
+      + '<div class="dossier-mono">manifest_sha256: '
+      + escapeHtml(ev.manifest_sha256) + '</div>';
+
+    if (ev.public_key_b64) {
+      html += '<div class="dossier-mono" style="margin-top:3px">'
+        + 'public_key (Ed25519): '
+        + escapeHtml(ev.public_key_b64) + '</div>';
+    }
+
+    if (ev.rekor_log_index !== null
+        && ev.rekor_log_index !== undefined) {
+      var url = 'https://rekor.sigstore.dev/api/v1/log/entries'
+        + '?logIndex=' + encodeURIComponent(ev.rekor_log_index);
+      html += '<div class="dossier-mono" style="margin-top:3px">'
+        + 'rekor_log_index: '
+        + '<a class="dossier-link" href="' + url + '" '
+        + 'target="_blank" rel="noopener noreferrer">'
+        + escapeHtml(String(ev.rekor_log_index)) + '</a></div>';
+      html += '<div class="dossier-mono" style="margin-top:3px">'
+        + 'integrated_at: '
+        + escapeHtml(ev.rekor_integrated_at || '(unknown)')
+        + '</div>';
+      if (ev.rekor_anchor_age_seconds !== null
+          && ev.rekor_anchor_age_seconds !== undefined) {
+        var hrs = Math.round(ev.rekor_anchor_age_seconds / 3600);
+        html += '<div class="dossier-mono" style="margin-top:3px">'
+          + 'anchor_age: '
+          + escapeHtml(String(ev.rekor_anchor_age_seconds))
+          + 's (~' + hrs + 'h)</div>';
+      }
+    }
+    html += '</div>';
+
+    html += '<details style="margin-top:12px">'
+      + '<summary style="font-size:11px;color:var(--td);'
+      + 'cursor:pointer;font-family:var(--mono);'
+      + 'letter-spacing:0.06em">TRUST EXPLANATION &middot; '
+      + escapeHtml(String(data.trust_level).toUpperCase())
+      + '</summary>'
+      + '<p style="font-size:12px;color:var(--td);margin-top:8px;'
+      + 'line-height:1.6">'
+      + escapeHtml(data.human_readable.trust_explanation)
+      + '</p></details>';
+
+    if (data.human_readable.next_steps
+        && data.human_readable.next_steps.length > 0) {
+      html += '<div style="margin-top:12px;padding:12px 14px;'
+        + 'background:var(--bg2);border:1px solid var(--gold-b);'
+        + 'border-radius:8px">'
+        + '<div class="pill-l" style="margin-bottom:6px">NEXT STEPS'
+        + '</div><ul style="margin:4px 0 0 18px;font-size:12px;'
+        + 'color:var(--td);line-height:1.6">';
+      for (var i = 0; i < data.human_readable.next_steps.length; i++) {
+        html += '<li style="margin-top:3px">'
+          + escapeHtml(data.human_readable.next_steps[i])
+          + '</li>';
+      }
+      html += '</ul></div>';
+    }
+
+    var hasCheckErrors = false;
+    var keys = Object.keys(c);
+    for (var k = 0; k < keys.length; k++) {
+      var ce = c[keys[k]].errors;
+      if (ce && ce.length > 0) { hasCheckErrors = true; break; }
+    }
+    if (hasCheckErrors) {
+      html += '<details style="margin-top:12px">'
+        + '<summary style="font-size:11px;color:var(--td);'
+        + 'cursor:pointer;font-family:var(--mono);'
+        + 'letter-spacing:0.06em">PER-CHECK DIAGNOSTICS</summary>'
+        + '<div style="margin-top:8px">';
+      for (var key in c) {
+        if (!c.hasOwnProperty(key)) continue;
+        var errs = c[key].errors;
+        if (errs && errs.length > 0) {
+          html += '<div style="margin-top:6px;padding:8px 10px;'
+            + 'background:var(--bg2);border-radius:6px;'
+            + 'font-family:var(--mono);font-size:11px">'
+            + '<div style="color:var(--gold);margin-bottom:3px">'
+            + escapeHtml(key) + '</div>';
+          for (var ei = 0; ei < errs.length; ei++) {
+            html += '<div style="color:var(--red);margin-top:2px">'
+              + escapeHtml(errs[ei]) + '</div>';
+          }
+          html += '</div>';
+        }
+      }
+      html += '</div></details>';
+    }
+
+    show(html);
+  }
+
+  function verifyJson(manifestJson) {
+    show('<div style="padding:18px;text-align:center;'
+      + 'color:var(--gold);font-family:var(--mono);font-size:11px;'
+      + 'letter-spacing:0.06em">VERIFYING...</div>');
+    return fetch('/api/v1/verify-dossier', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        manifest_json: manifestJson,
+        policy: {require_anchor: false}
+      })
+    }).then(function(resp) {
+      if (!resp.ok) {
+        return resp.text().then(function(t) {
+          show('<div style="padding:18px;color:var(--red);'
+            + 'font-family:var(--mono);font-size:12px">HTTP '
+            + resp.status + ': ' + escapeHtml(t.slice(0, 400))
+            + '</div>');
+        });
+      }
+      return resp.json().then(renderResult);
+    }).catch(function(err) {
+      show('<div style="padding:18px;color:var(--red);'
+        + 'font-family:var(--mono);font-size:12px">NETWORK ERROR: '
+        + escapeHtml(err && err.message ? err.message : String(err))
+        + '</div>');
+    });
+  }
+
+  function extractManifestFromZip(blob) {
+    if (typeof JSZip === 'undefined') {
+      return Promise.reject(new Error('JSZip library not loaded yet'));
+    }
+    return JSZip.loadAsync(blob).then(function(zip) {
+      var preferred = ['manifest.json', 'dossier/manifest.json'];
+      for (var i = 0; i < preferred.length; i++) {
+        if (zip.files[preferred[i]] && !zip.files[preferred[i]].dir) {
+          return zip.files[preferred[i]].async('string');
+        }
+      }
+      var names = Object.keys(zip.files);
+      for (var j = 0; j < names.length; j++) {
+        var f = zip.files[names[j]];
+        if (!f.dir && names[j].toLowerCase()
+            .endsWith('manifest.json')) {
+          return f.async('string');
+        }
+      }
+      throw new Error('manifest.json not found in archive');
+    });
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+    var name = (file.name || '').toLowerCase();
+    var isZip = name.endsWith('.zip')
+      || file.type === 'application/zip'
+      || file.type === 'application/x-zip-compressed';
+    if (isZip) {
+      extractManifestFromZip(file).then(verifyJson).catch(function(err) {
+        show('<div style="padding:18px;color:var(--red);'
+          + 'font-family:var(--mono);font-size:12px">ZIP ERROR: '
+          + escapeHtml(err && err.message ? err.message : String(err))
+          + '</div>');
+      });
+    } else {
+      file.text().then(verifyJson).catch(function(err) {
+        show('<div style="padding:18px;color:var(--red);'
+          + 'font-family:var(--mono);font-size:12px">FILE READ ERROR: '
+          + escapeHtml(err && err.message ? err.message : String(err))
+          + '</div>');
+      });
+    }
+  }
+
+  dropZone.addEventListener('click', function() {
+    fileInput.click();
+  });
+  fileInput.addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+      handleFile(e.target.files[0]);
+    }
+    e.target.value = '';
+  });
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  dropZone.addEventListener('dragleave', function() {
+    dropZone.classList.remove('drag-over');
+  });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer && e.dataTransfer.files
+        && e.dataTransfer.files[0]) {
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+  if (pasteBtn && pasteArea) {
+    pasteBtn.addEventListener('click', function() {
+      var t = (pasteArea.value || '').trim();
+      if (!t) return;
+      verifyJson(t);
+    });
+  }
+})();
 </script>
 
 </body>

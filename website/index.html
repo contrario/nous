@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOUS (Νοῦς) — The Living Language for Agentic AI Systems</title>
-<meta name="description" content="NOUS is a self-evolving programming language purpose-built for agentic AI systems. Define autonomous agents as living organisms with memory, instincts, senses, and healing.">
+<meta name="description" content="NOUS is a self-evolving programming language for agentic AI systems with EU AI Act Annex IV compliance built in. Every run produces cryptographically verifiable evidence: cost-bound SMT proofs, Ed25519-signed manifests, and Sigstore Rekor anchoring.">
 <meta name="keywords" content="NOUS, programming language, agentic AI, multi-agent systems, formal verification, self-evolving">
 <meta name="author" content="Hlias Staurou">
 <meta property="og:title" content="NOUS (Νοῦς) — The Living Language for Agentic AI Systems">
-<meta property="og:description" content="A self-evolving programming language purpose-built for agentic AI systems. Compile to Python, JavaScript, or browser HTML. Formally verified.">
+<meta property="og:description" content="A self-evolving programming language for agentic AI systems, with EU AI Act Annex IV compliance built into the language. Cost-bound SMT proofs, signed manifests, Sigstore Rekor anchoring. Compliance by architecture.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nous-lang.org">
 <meta property="og:image" content="/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="NOUS (Νοῦς) — The Living Language">
-<meta name="twitter:description" content="A self-evolving programming language for agentic AI systems.">
+<meta name="twitter:description" content="A self-evolving programming language for agentic AI systems, with EU AI Act Annex IV compliance built into the language itself.">
 <link rel="canonical" href="https://nous-lang.org">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,6 +71,16 @@ img{max-width:100%;display:block}
 .nav-gh{color:var(--dim);font-size:13px;padding:7px 14px;display:flex;align-items:center;gap:6px;transition:color 0.2s}
 .nav-gh:hover{color:var(--bright)}
 .nav-cta{margin-left:8px;padding:7px 20px;background:var(--gold);color:var(--bg);border-radius:5px;font-size:13px;font-weight:600;letter-spacing:0.3px}
+/* __session86_nav_more_v1__ */
+.nav-more{position:relative;display:inline-block}
+.nav-more-trigger{color:var(--dim);font-size:13px;padding:7px 14px;border-radius:5px;transition:color 0.2s;letter-spacing:0.3px;background:none;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+.nav-more:hover .nav-more-trigger,.nav-more:focus-within .nav-more-trigger{color:var(--bright)}
+.nav-more-caret{font-size:9px;transition:transform 0.2s;opacity:0.7}
+.nav-more:hover .nav-more-caret,.nav-more:focus-within .nav-more-caret{transform:rotate(180deg)}
+.nav-more-panel{position:absolute;top:100%;right:0;margin-top:6px;min-width:190px;background:var(--bg2,#0b0e16);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 0.18s,transform 0.18s,visibility 0.18s;box-shadow:0 12px 40px rgba(0,0,0,0.5);z-index:300}
+.nav-more:hover .nav-more-panel,.nav-more:focus-within .nav-more-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.nav-more-panel .nav-link{display:block;text-align:left;width:100%}
+.nav-more-panel .nav-link:hover{background:rgba(255,255,255,0.04)}
 /* Hero */
 .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:80px 0 40px}
 .hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.4}
@@ -89,6 +99,11 @@ img{max-width:100%;display:block}
 .btn-gh{padding:13px 30px;background:transparent;border:1px solid var(--border);color:var(--dim);border-radius:6px;font-size:14px;display:inline-flex;align-items:center;gap:8px}
 /* Code Block */
 .code-block{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.75}
+/* __session86_governance_panel_v1__ */
+.code-block pre{max-height:420px;overflow-y:auto;margin:0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.code-block pre::-webkit-scrollbar{width:8px}
+.code-block pre::-webkit-scrollbar-track{background:transparent}
+.code-block pre::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 .code-header{display:flex;align-items:center;padding:10px 16px;background:rgba(255,255,255,0.015);border-bottom:1px solid var(--border)}
 .code-dots{display:flex;gap:7px}
 .code-dots span{width:11px;height:11px;border-radius:50%}
@@ -166,6 +181,11 @@ img{max-width:100%;display:block}
 .timeline-year{color:var(--gold);font-size:12px;letter-spacing:2px;font-family:'JetBrains Mono',monospace;margin-bottom:6px}
 .timeline-title{color:var(--bright);font-size:20px;font-weight:400;font-family:'Playfair Display',serif;margin-bottom:8px}
 .timeline-text{color:var(--dim);font-size:14.5px;line-height:1.7}
+/* __session86_story_collapse_v1__ */
+.timeline-earlier{display:none;flex-direction:column}
+.timeline-earlier.open{display:flex}
+.story-toggle{margin:8px 0 0 -53px;padding:8px 18px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--gold);font-size:12.5px;letter-spacing:1px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:border-color 0.2s,color 0.2s}
+.story-toggle:hover{border-color:rgba(201,165,84,0.4);color:var(--bright)}
 .quote-box{text-align:center;margin-top:48px;padding:44px 36px;background:var(--card);border:1px solid rgba(201,165,84,0.09);border-radius:8px;max-width:720px;margin-left:auto;margin-right:auto}
 .quote-text{font-size:22px;font-style:italic;color:var(--bright);font-family:'Playfair Display',serif;line-height:1.6;margin-bottom:16px}
 .quote-author{color:var(--gold);font-size:13px;letter-spacing:2.5px;text-transform:uppercase}
@@ -234,22 +254,29 @@ img{max-width:100%;display:block}
   <div class="nav-inner">
     <div style="display:flex;align-items:baseline">
       <button class="nav-logo" onclick="showHome()">ΝΟΥΣ</button>
-      <span class="nav-ver" data-nous-version>v4.12.0</span>
+      <span class="nav-ver" data-nous-version>v4.13.1</span>
     </div>
     <div class="nav-links" id="navLinks">
+      <!-- __session86_nav_more_v1__ -->
       <a href="/docs" class="nav-link">Docs</a>
       <a href="/blog" class="nav-link">Blog</a>
-      <a href="#Language" class="nav-link">Language</a>
-      <a href="#Compiler" class="nav-link">Compiler</a>
-      <a href="#Verification" class="nav-link">Verification</a>
-      <a href="#Ecosystem" class="nav-link">Ecosystem</a>
-      <a href="#ArchDiff" class="nav-link">Diff</a>
-      <a href="#Biology" class="nav-link">Biology</a>
-      <!-- __homepage_nav_pages_v1__ -->
-      <a href="/governance" class="nav-link">Governance</a>
-      <a href="/replay" class="nav-link">Replay</a>
-      <a href="/policies" class="nav-link">Policies</a>
+      <!-- __session82_homepage_nav_verify_v1__ -->
+      <a href="/verify.html" class="nav-link">Verify</a>
       <a href="#Story" class="nav-link">Story</a>
+      <div class="nav-more">
+        <button class="nav-more-trigger" aria-haspopup="true" aria-expanded="false">More <span class="nav-more-caret">&#9662;</span></button>
+        <div class="nav-more-panel">
+          <a href="#Language" class="nav-link">Language</a>
+          <a href="#Compiler" class="nav-link">Compiler</a>
+          <a href="#Verification" class="nav-link">Verification</a>
+          <a href="#Ecosystem" class="nav-link">Ecosystem</a>
+          <a href="#ArchDiff" class="nav-link">Diff</a>
+          <a href="#Biology" class="nav-link">Biology</a>
+          <a href="/governance" class="nav-link">Governance</a>
+          <a href="/replay" class="nav-link">Replay</a>
+          <a href="/policies" class="nav-link">Policies</a>
+        </div>
+      </div>
       <div class="nav-sep"></div>
       <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="nav-gh">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -270,10 +297,10 @@ img{max-width:100%;display:block}
   <div class="container">
     <div class="hero-grid">
       <div>
-        <div class="hero-badge"><span class="hero-dot"></span> The Living Language</div>
+        <!-- __session86_badge_removed_v1__ hero badge removed -->
         <h1>NOUS <span>Νοῦς</span></h1>
-        <p class="hero-sub">A self-evolving programming language purpose-built for agentic AI systems.</p>
-        <p class="hero-desc">Define autonomous agents as living organisms with memory, instincts, senses, and healing. Compile to Python, JavaScript, or browser HTML. Formally verify before execution.</p>
+        <p class="hero-sub"><!-- __session86_hero_annex_iv_v1__ --><!-- __session86_hero_v2_v1__ -->A programming language for agentic AI systems, with EU AI Act Annex IV compliance built into the language itself.</p>
+        <p class="hero-desc">Define autonomous agents with memory, instincts, senses, and healing. Every run produces cryptographically verifiable evidence for Annex IV: cost-bound SMT proofs, Ed25519-signed manifests, and Sigstore Rekor transparency-log anchoring. Compliance by architecture, not by assertion. Compile to Python, JavaScript, or browser HTML — formally verified before execution.</p>
         <div class="hero-buttons">
           <a href="#Install" class="btn-gold">Get Started</a>
           <a href="/docs" class="btn-outline">Documentation →</a>
@@ -287,7 +314,7 @@ img{max-width:100%;display:block}
         <div class="code-block">
           <div class="code-header">
             <div class="code-dots"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
-            <span class="code-title" id="codeTitle">trading_pipeline.nous</span>
+            <span class="code-title" id="codeTitle">governance_demo.nous</span>
             <div class="code-actions">
               <button class="code-lang-btn active-en" id="btnEN" onclick="setLang(false)">EN</button>
               <button class="code-lang-btn inactive" id="btnEL" onclick="setLang(true)">ΕΛ</button>
@@ -305,8 +332,10 @@ img{max-width:100%;display:block}
 <div class="container" style="padding-bottom:40px">
   <div class="stats-bar">
     <div class="stat"><div class="stat-num" data-target="30">0</div><div class="stat-label">Priorities</div></div>
-    <div class="stat"><div class="stat-num" data-target="259">0</div><div class="stat-label">Tests Passing</div></div>
-    <div class="stat"><div class="stat-num" data-target="43">0</div><div class="stat-label">CLI Commands</div></div>
+    <!-- __session77_homepage_tests_441_v1__ -->
+    <!-- __session77_homepage_tests_503_v1__  __session81_homepage_stats_v540_v1__  __session82_homepage_stats_v550_v1__  __session86_homepage_stats_596_v1__ -->
+    <div class="stat"><div class="stat-num" data-target="596">0</div><div class="stat-label">Tests Passing</div></div>
+    <div class="stat"><div class="stat-num" data-target="44">0</div><div class="stat-label">CLI Commands</div></div>
     <div class="stat"><div class="stat-num" data-target="7">0</div><div class="stat-label">Proof Categories</div></div>
     <div class="stat"><div class="stat-num" data-target="3">0</div><div class="stat-label">Compile Targets</div></div>
   </div>
@@ -756,7 +785,7 @@ if(term)obs.observe(term);
   <!-- Stats -->
   <div class="fade-in" style="display:flex;justify-content:center;gap:40px;margin-top:40px;flex-wrap:wrap">
     <div style="text-align:center">
-      <div style="font-size:28px;font-weight:700;color:var(--bright);font-family:'Playfair Display',serif">43</div>
+      <div style="font-size:28px;font-weight:700;color:var(--bright);font-family:'Playfair Display',serif">44</div>
       <div style="font-size:11px;color:var(--dim);margin-top:4px">CLI Commands</div>
     </div>
     <div style="text-align:center">
@@ -855,7 +884,7 @@ if(term)obs.observe(term);
 <section class="section" id="Governance" style="background:linear-gradient(180deg,transparent,rgba(77,158,255,0.02),transparent)">
 <div class="container">
   <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
-    <div class="section-tag" style="border-color:rgba(201,165,84,0.19);color:var(--gold);background:rgba(201,165,84,0.05)">New in v4.9</div>
+    <div class="section-tag" style="border-color:rgba(201,165,84,0.19);color:var(--gold);background:rgba(201,165,84,0.05)">Governance Layer</div>
     <h2 class="section-title">Governance &amp; Replay</h2>
     <p class="section-sub">Declare policies in the source. Enforce them at runtime. Replay every decision deterministically.</p>
   </div>
@@ -917,17 +946,16 @@ if(term)obs.observe(term);
   </div>
   <div class="install-box fade-in">
     <div class="kw-header">Installation</div>
-    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">git clone https://github.com/contrario/nous.git</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
-    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">cd nous && pip install -r requirements.txt</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
-    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">python cli.py version</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
+    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">pip install nous-lang</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
+    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">nous version</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
     <div class="divider"></div>
     <div class="kw-header">Your First Program</div>
-    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">python cli.py create "A scanner that monitors an API every 30 seconds"</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
-    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">python cli.py compile my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
-    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">python cli.py verify my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
-    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">python cli.py run my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
+    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">nous create "A scanner that monitors an API every 30 seconds"</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
+    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">nous compile my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
+    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">nous verify my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
+    <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">nous run my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
     <div class="divider"></div>
-    <div class="kw-header">43 CLI Commands</div>
+    <div class="kw-header">44 CLI Commands</div>
     <div class="cli-tags" id="cliTags"></div>
   </div>
 </div>
@@ -981,7 +1009,7 @@ if(term)obs.observe(term);
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy"><span>© 2025–2026 Hlias Staurou</span><span>·</span><span>NOUS <span data-nous-version>v4.12.0</span></span></div>
+    <div class="footer-copy"><span>© 2025–2026 Hlias Staurou</span><span>·</span><span>NOUS <span data-nous-version>v4.13.1</span></span></div>
     <div class="footer-right">
       <span class="footer-oss">OPEN SOURCE</span>
       <span style="color:var(--dim);font-size:12px">·</span>
@@ -993,9 +1021,9 @@ if(term)obs.observe(term);
 
 <script>
 // ── DATA ──
-const CODE_EN = `world TradingPipeline {\n    law cost_ceiling = $0.50 per cycle\n    heartbeat = 30s\n}\n\nmessage Signal {\n    source: string\n    data: string\n    confidence: float = 0.0\n}\n\nsoul Scanner {\n    mind: claude-sonnet @ Tier0A\n    senses: [http_get]\n    memory {\n        scan_count: int = 0\n    }\n    instinct {\n        let raw = sense http_get(url: "https://api.market.com/prices")\n        remember scan_count += 1\n        speak Signal(source: "scanner", data: raw, confidence: 0.85)\n    }\n    heal {\n        on timeout => retry(3, exponential)\n    }\n}`;
+const CODE_EN = `world GovernanceDemo {\n    heartbeat = 10s\n    policy HighCost {\n        kind: "llm.request"\n        signal: cost > 1.0\n        weight: 9.0\n        action: block\n    }\n    policy MediumCost {\n        kind: "llm.request"\n        signal: cost > 0.10\n        action: intervene\n    }\n    policy LargeMemory {\n        kind: "memory.write"\n        signal: size > 1024\n        action: intervene\n    }\n}\n\nsoul Analyst {\n    mind: deepseek-chat @ Tier1\n    instinct {\n        let q = listen Auditor::Query\n        guard q != null else sleep 5s\n        speak Answer(text: "analysis complete", confidence: 0.9)\n    }\n}\n\nsoul Auditor {\n    mind: claude-3-haiku @ Tier0A\n    instinct {\n        speak Query(text: "check latest output")\n        let a = listen Analyst::Answer\n        guard a != null else sleep 5s\n        remember audits = audits + 1\n    }\n}`;
 
-const CODE_EL = `κόσμος TradingPipeline {\n    νόμος cost_ceiling = $0.50 per cycle\n    παλμός = 30s\n}\n\nμήνυμα Signal {\n    source: string\n    data: string\n    confidence: float = 0.0\n}\n\nψυχή Scanner {\n    νους: claude-sonnet @ Tier0A\n    αισθήσεις: [http_get]\n    μνήμη {\n        scan_count: int = 0\n    }\n    ένστικτο {\n        θυμάμαι scan_count += 1\n        λέω Signal(source: "scanner", data: raw, confidence: 0.85)\n    }\n    θεραπεία {\n        on timeout => retry(3, exponential)\n    }\n}`;
+const CODE_EL = `κόσμος GovernanceDemo {\n    παλμός = 10s\n    policy HighCost {\n        kind: "llm.request"\n        signal: cost > 1.0\n        weight: 9.0\n        action: block\n    }\n    policy MediumCost {\n        kind: "llm.request"\n        signal: cost > 0.10\n        action: intervene\n    }\n    policy LargeMemory {\n        kind: "memory.write"\n        signal: size > 1024\n        action: intervene\n    }\n}\n\nψυχή Analyst {\n    νους: deepseek-chat @ Tier1\n    ένστικτο {\n        let q = ακούω Auditor::Query\n        guard q != null else sleep 5s\n        λέω Answer(text: "analysis complete", confidence: 0.9)\n    }\n}\n\nψυχή Auditor {\n    νους: claude-3-haiku @ Tier0A\n    ένστικτο {\n        λέω Query(text: "check latest output")\n        let a = ακούω Analyst::Answer\n        guard a != null else sleep 5s\n        θυμάμαι audits = audits + 1\n    }\n}`;
 
 const FEATURES = [
   {icon:"◈",title:"World",desc:"The environment. Defines cost ceilings, heartbeat intervals, and laws constraining all souls.",color:"var(--gold)"},
@@ -1051,19 +1079,25 @@ const STORY = [
   {year:"Apr 2026",title:"The Breakthrough",text:"Session 16: six priorities in one context window. Distributed runtime. WASM. Self-hosting. Formal verification. NL interface. 259 tests, all green."},
   {year:"Apr 2026",title:"v4.0.0 — Soul Biology",text:"Mitosis: verified self-replicating agents. Immune System: LLM-generated antibodies broadcast to clones. Agent Dreaming: speculative pre-computation with lucid cache hits. 43 CLI Commands. 31+ formal proofs. 12 Soul Subsystems."},
   {year:"Apr 2026",title:"v4.0.0 — The Living Language",text:"30 priorities. 32 CLI commands. A compiler that compiles itself. A language that proves your agents correct before they run."},
-    // __timeline_v491_v1__
-  // __timeline_v4100_v1__
-  // __timeline_session60_v1__
-  {year:"Now",title:"Stability Hardening — Defense in Depth",text:"Session 60 closed with five commits and zero version bump. 13 latent Class-1 undefined-name bugs eliminated, including a real <code>NameError</code> in <code>_webhook_chat()</code>. New Phase 4.5 pyflakes gate added to the release pipeline. System-layer defenses installed on production: <code>tmpfiles.d</code> guard for <code>/</code> mode and <code>chattr +i</code> on <code>resolv.conf</code> defend against the failure mode traced to a systemd CHDIR loop. Server B parity in Session 61. Total validated cases now 202 (184 pytest + 6 standalone replay + 5 grammar-sync + 7 version-consistency)."},
-  // __timeline_v4120_v1__
-  {year:"Apr 2026",title:"v4.12.0 — Pyflakes Gate + Test Hardening",text:"Release pipeline gains Phase 4.5: pyflakes scan of seven critical files fails the build on any undefined-name violation. <code>tests/conftest.py</code> now excludes a hybrid standalone-pytest test from auto-collection — six replay tests pass cleanly via standalone harness while pytest stays clean. PYTEST_FLOOR raised 178 → 184. Same architectural principle: gate the class of bug, do not chase instances."},
-  // __timeline_v411x_v1__
-  {year:"Apr 2026",title:"v4.11.x — Sycophancy Guard + Templates",text:"<code>phrase_detector.py</code> + <code>templates/sycophancy_guard.nous</code> reference policy ship together. <code>nous_api.py</code> split into thin library + <code>nous_api_server.py</code> (2002 lines) — FastAPI / dotenv decoupled from core. New <code>nous templates list/extract</code> CLI surface. Templates now bundle inside the wheel (silently broken since v4.0). 171 tests, 52/52 regression templates byte-identical."},
-  // __timeline_v4100_demoted_v1__
-  {year:"Apr 2026",title:"v4.10.0 — Lint Integration Pack + Event Simulator",text:"Lint is now actionable across three surfaces: <code>--error-on L010,L007</code> CLI flag, automatic gate in <code>nous verify</code>, and red-squiggles in VS Code via LSP. Plus: a new <strong>event simulator</strong> in the /ide Governance tab — type an event kind, paste JSON data, see which policies fire with weight, action, and reason. New module <code>governance_simulator.py</code>, new endpoint POST /v1/governance/simulate. 212 tests (+49), 52/52 regression templates byte-identical, zero codegen touch."},
-  {year:"Apr 2026",title:"v4.9.1 — Governance Lint + IDE Tab",text:"Static analysis for policies shipped as both CLI (<code>nous governance lint</code>) and interactive IDE tab. 13 lint rules (L000–L100) catch invalid actions, weight out of range, inject_message without message, literal-constant signals, reserved name prefixes, and more. Text and JSON output; strict mode for CI. New backend endpoint POST /v1/governance/lint. 163 tests (+37), 52/52 regression templates byte-identical."},
-  // __timeline_v482_v1__
+  // __timeline_s84_backfill_v1__
   {year:"Apr 2026",title:"v4.8.2 — Governance Complete",text:"Phase G governance shipped across five layers: RiskEngine, native policy DSL, intervention runtime, inject_message, dashboard and CLI, plus prompt-hash recompute for audit. Deterministic replay Phase A–D locked. 3-site symmetry at sense.invoke, llm.request, memory.write. 126 tests, 52/52 regression templates byte-identical."},
+  {year:"Apr 2026",title:"v4.9.1 — Governance Lint + IDE Tab",text:"Static analysis for policies shipped as both CLI (<code>nous governance lint</code>) and interactive IDE tab. 13 lint rules (L000–L100) catch invalid actions, weight out of range, inject_message without message, literal-constant signals, reserved name prefixes, and more. Text and JSON output; strict mode for CI. New backend endpoint POST /v1/governance/lint. 163 tests (+37), 52/52 regression templates byte-identical."},
+  {year:"Apr 2026",title:"v4.10.0 — Lint Integration Pack + Event Simulator",text:"Lint is now actionable across three surfaces: <code>--error-on L010,L007</code> CLI flag, automatic gate in <code>nous verify</code>, and red-squiggles in VS Code via LSP. Plus: a new <strong>event simulator</strong> in the /ide Governance tab — type an event kind, paste JSON data, see which policies fire with weight, action, and reason. New module <code>governance_simulator.py</code>, new endpoint POST /v1/governance/simulate. 212 tests (+49), 52/52 regression templates byte-identical, zero codegen touch."},
+  {year:"Apr 2026",title:"v4.11.x — Sycophancy Guard + Templates",text:"<code>phrase_detector.py</code> + <code>templates/sycophancy_guard.nous</code> reference policy ship together. <code>nous_api.py</code> split into thin library + <code>nous_api_server.py</code> (2002 lines) — FastAPI / dotenv decoupled from core. New <code>nous templates list/extract</code> CLI surface. Templates now bundle inside the wheel (silently broken since v4.0). 171 tests, 52/52 regression templates byte-identical."},
+  {year:"Now",title:"Stability Hardening — Defense in Depth",text:"Session 60 closed with five commits and zero version bump. 13 latent Class-1 undefined-name bugs eliminated, including a real <code>NameError</code> in <code>_webhook_chat()</code>. New Phase 4.5 pyflakes gate added to the release pipeline. System-layer defenses installed on production: <code>tmpfiles.d</code> guard for <code>/</code> mode and <code>chattr +i</code> on <code>resolv.conf</code> defend against the failure mode traced to a systemd CHDIR loop. Server B parity in Session 61. Total validated cases now 202 (184 pytest + 6 standalone replay + 5 grammar-sync + 7 version-consistency)."},
+  {year:"Apr 2026",title:"v4.12.0 — Pyflakes Gate + Test Hardening",text:"Release pipeline gains Phase 4.5: pyflakes scan of seven critical files fails the build on any undefined-name violation. <code>tests/conftest.py</code> now excludes a hybrid standalone-pytest test from auto-collection — six replay tests pass cleanly via standalone harness while pytest stays clean. PYTEST_FLOOR raised 178 → 184. Same architectural principle: gate the class of bug, do not chase instances."},
+  {year:"Apr 2026",title:"v4.13.1 — Formal SMT Cost-Bound Verification",text:"Declare <code>cost_cap: 0.50 USD</code> and <code>max_ticks: 5</code> in any <code>world</code> block; declare <code>tokens: input=N output=M</code> on each <code>soul</code>. Run <code>nous verify file.nous --smt</code>. Z3 either proves <em>total_cost ≤ cap</em> across every reachable execution path, or returns a counterexample with constructive fix suggestions. Every verified program emits an ed25519-signed JSON manifest with full provenance (source SHA-256, pricing SHA-256, SMT spec SHA-256, solver name+version, verdict, timestamp). Anyone with the manifest and the publisher\u2019s public key can re-verify offline. EU AI Act Annex IV / Article 11(1) audit-ready. 264 tests, 54/54 regression byte-identical. Shipped on PyPI as <code>nous-lang[smt]==4.13.1</code>."},
+  {year:"Apr 2026",title:"v4.14.0 — The Dossier",text:"New <code>nous dossier</code> subcommand emits a self-contained EU AI Act Annex IV bundle: source, signed manifest, pricing snapshot, raw Ed25519 public key, an item-by-item README, and a portable <code>verify_offline.py</code> that needs only the <code>cryptography</code> library. Four crypto pre-conditions are checked before a single file is written. The auditor holds the directory and the public key, and verifies offline with no NOUS install. 6 new tests."},
+  {year:"May 2026",title:"v5.0.0 — Currency-Agnostic Verification",text:"Pricing goes currency-agnostic: the <code>*_usd</code> suffix is dropped and per-table <code>_currency</code> becomes authoritative. Programs declaring <code>cost_cap</code> in EUR against an EUR pricing table now compile and prove clean under <code>--smt</code>, with the Z3 round-trip confirmed both directions. Mixing currencies inside one proof stays refused: FX rates are not auditable. 41 new tests lock the v1 to v2 migration, EUR cost verification, and the price-upgrade CLI."},
+  {year:"May 2026",title:"v5.1.0 — SKILL.md Sidecar",text:"<code>nous dossier-spec</code> emits Annex IV-aligned, Ed25519-signed dossiers straight from agentskills.io skill folders. New <code>skill_md.py</code> parses <code>SKILL.md</code> plus an adjacent <code>nous.yaml</code> into a Pydantic V2 schema; a deterministic source envelope wraps both, and its SHA-256 anchors the manifest. The new <code>--key PATH</code> flag makes signing CI-friendly. 44 new tests, 6 fixtures."},
+  {year:"May 2026",title:"v5.2.0 — Skill Export",text:"<code>nous skill-export</code> runs the inverse: emit an agentskills.io-compliant skill from any <code>.nous</code> program, with a fully-signed Annex IV dossier in the same ZIP. CLI, HTTP endpoint, and an IDE button share one surface. The translation is honest: lossy and one-way, with every dropped construct documented. 62 new tests, end-to-end ZIP to verify to PASS. 44 CLI commands."},
+  {year:"May 2026",title:"v5.3.0 — Anchored to the Public Log",text:"Optional <code>--anchor rekor</code> writes emitted manifests into the public Sigstore Rekor transparency log. The leaf carries a per-submission ephemeral ECDSA-P-256 signature over canonical body bytes while the Ed25519 manifest signature is preserved; both cover the same bytes, working around Sigstore issue #851. The shipped <code>verify_offline.py</code> validates signature, source hash, SignedEntryTimestamp, and leaf, all offline with only <code>cryptography</code>. First live anchor: log_index 1554376230. 27 new tests."},
+  {year:"May 2026",title:"v5.4.0 — Public Verification Surface",text:"A public, unauthenticated <code>POST /v1/verify-dossier</code> endpoint plus a standalone <code>verify.html</code> with drag-drop manifest verification. Three documented trust paths, browser, offline, and CLI, and a new IDE Dossier tab. Offline <code>verify_offline.py</code> stays the canonical trust root; the browser surface is convenience over the same evidence. 12 new tests."},
+  {year:"May 2026",title:"v5.6.0 — Rekor v2, Part One",text:"// __session86_story_v56_v58_v1__ The first step of migrating to Sigstore Rekor v2. A snapshot of the production Sigstore SigningConfig, resolved via TUF, is pinned into the repo at <code>infra/sigstore/signing_config.json</code> (v1-only, by Sigstore's decision to withhold the v2 URL from TUF until clients upgrade). A stdlib-only monthly refresh drives a version-pinned <code>sigstore</code> CLI in an isolated venv, never importing it into the runtime, so the wheel's dependency surface is unchanged. No runtime path consumes the mirror yet: this is trust-root plumbing. 6 new tests, floor 560 to 566."},
+  {year:"May 2026",title:"v5.7.0 — Compiler Correctness",text:"A correctness pass on codegen, targeting sources that pass every gate yet <code>NameError</code> at runtime. Adds a real <code>null</code>/<code>none</code> literal compiling to <code>None</code> with identity-comparison semantics; makes <code>guard ... else</code> emit its else action (previously silently dropped); and introduces an undefined-name gate that refuses to write Python referencing a name that does not exist, with a typed CodegenSemanticError. 10 new tests, floor 566 to 576."},
+  {year:"May 2026",title:"v5.7.1 — Law Constants Always Emitted",text:"A follow-on caught by the new gate. The law constants <code>HEARTBEAT_SECONDS</code> and <code>COST_CEILING</code> were emitted only when a source had a <code>world</code> block, yet the rest of the generated module referenced them unconditionally, so world-less sources produced undefined names. Both constants are now emitted always with safe defaults; world-bearing output stays byte-identical. 5 new tests, floor 576 to 581."},
+  {year:"May 2026",title:"v5.8.0 — Rekor v2, Part Two",text:"The Sigstore SigningConfig becomes the single source of truth for which Rekor log NOUS submits to, replacing hardcoded endpoint constants. The new <code>rekor_signing_config</code> module selects the highest Rekor API version the client supports, grouped by operator, honoring validity windows, and fails closed if only an unsupported version is available rather than silently downgrading. Validated against the real mirrored production config. 14 new tests, floor 581 to 595."},
+  {year:"May 2026",title:"v5.8.1 — Gating the Runtime",text:"The undefined-name gate from v5.7.0 was wired only into <code>nous compile</code>. The runtime executes the AST directly, so <code>nous run</code> never produced Python for the gate to scan. v5.8.1 runs a throwaway codegen pass before execution and gates hot-reload before compile, both failing closed. Compile, run, and hot-reload now reject the same sources by the same check. 1 new test, floor 595 to 596."}
 ];
 
 const CMDS = ["compile","run","validate","typecheck","verify","test","watch","debug","shell","profile","docker","plugins","pkg","ast","evolve","nsp","info","bridge","version","crossworld","bench","docs","fmt","noesis","build","init","migrate","viz","lsp","wasm","self-compile","create","diff","cost","dream","immune","mitosis","consciousness","metabolism","symbiosis","telemetry","retire","replay","governance"];
@@ -1107,7 +1141,7 @@ function hl(code) {
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
     .replace(/(#.*$)/gm,'<span class="cm">$1</span>')
     .replace(/(["'`])(.*?)\1/g,'<span class="st">$1$2$1</span>')
-    .replace(/\b(world|soul|message|nervous_system|mind|senses|memory|instinct|heal|dna|speak|listen|guard|remember|sense|law|heartbeat|topology|let|on|if|else|import|from|test|assert|evolve|κόσμος|ψυχή|μήνυμα|νους|αισθήσεις|μνήμη|ένστικτο|θεραπεία|νόμος|παλμός|θυμάμαι|λέω|ακούω)\b/g,'<span class="kw">$1</span>')
+    .replace(/\b(world|soul|message|nervous_system|mind|senses|memory|instinct|heal|dna|speak|listen|guard|remember|sense|law|heartbeat|topology|let|on|if|else|import|from|test|assert|evolve|policy|sleep|null|none|κόσμος|ψυχή|μήνυμα|νους|αισθήσεις|μνήμη|ένστικτο|θεραπεία|νόμος|παλμός|θυμάμαι|λέω|ακούω)\b/g,'<span class="kw">$1</span>')
     .replace(/\b(string|int|float|bool|timestamp|duration|currency)\b/g,'<span class="ty">$1</span>')
     .replace(/(\$[\d.]+|retry|exponential|timeout|api_error|per cycle)/g,'<span class="sp">$1</span>');
 }
@@ -1117,7 +1151,7 @@ let isGreek = false;
 function setLang(greek) {
   isGreek = greek;
   document.getElementById('heroCode').innerHTML = hl(greek ? CODE_EL : CODE_EN);
-  document.getElementById('codeTitle').textContent = greek ? 'trading_pipeline.nous — Ελληνικά' : 'trading_pipeline.nous';
+  document.getElementById('codeTitle').textContent = greek ? 'governance_demo.nous — Ελληνικά' : 'governance_demo.nous';
   document.getElementById('btnEN').className = 'code-lang-btn ' + (greek ? 'inactive' : 'active-en');
   document.getElementById('btnEL').className = 'code-lang-btn ' + (greek ? 'active-el' : 'inactive');
 }
@@ -1174,12 +1208,39 @@ function buildEco() {
 }
 
 function buildStory() {
+  /* __session86_story_collapse_v1__ */
   const el = document.getElementById('timeline');
-  STORY.forEach((s, i) => {
+  const RECENT_N = 6;
+  const itemHTML = (s) => `<div class="timeline-dot"></div><div class="timeline-year">${s.year}</div><div class="timeline-title">${s.title}</div><div class="timeline-text">${s.text}</div>`;
+  const splitAt = Math.max(0, STORY.length - RECENT_N);
+  const earlier = STORY.slice(0, splitAt);
+  const recent = STORY.slice(splitAt);
+  if (earlier.length) {
+    const toggle = document.createElement('button');
+    toggle.className = 'story-toggle';
+    toggle.textContent = `Show ${earlier.length} earlier entries`;
+    const wrap = document.createElement('div');
+    wrap.className = 'timeline-earlier';
+    earlier.forEach((s, i) => {
+      const d = document.createElement('div');
+      d.className = 'timeline-item';
+      d.innerHTML = itemHTML(s);
+      wrap.appendChild(d);
+    });
+    toggle.addEventListener('click', () => {
+      const open = wrap.classList.toggle('open');
+      toggle.textContent = open
+        ? 'Hide earlier entries'
+        : `Show ${earlier.length} earlier entries`;
+    });
+    el.appendChild(toggle);
+    el.appendChild(wrap);
+  }
+  recent.forEach((s, i) => {
     const d = document.createElement('div');
     d.className = 'timeline-item fade-in';
     d.style.transitionDelay = (i * 0.1) + 's';
-    d.innerHTML = `<div class="timeline-dot"></div><div class="timeline-year">${s.year}</div><div class="timeline-title">${s.title}</div><div class="timeline-text">${s.text}</div>`;
+    d.innerHTML = itemHTML(s);
     el.appendChild(d);
   });
 }

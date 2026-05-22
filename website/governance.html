@@ -142,6 +142,8 @@ table.data td.num{text-align:right;color:var(--dim)}
     <label>API Key</label>
     <input type="password" id="apiKey" placeholder="X-API-Key (optional if server has no keys configured)">
     <button onclick="saveKey()">Save</button>
+    <button onclick="refreshAll()" style="background:var(--bg2);border:1px solid var(--border);color:var(--bright);padding:7px 14px;border-radius:5px;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:0.3px;cursor:pointer;transition:all 0.2s">Refresh all</button>
+    <!-- __session66_governance_polish_v1__ -->
     <span class="api-status" id="apiStatus">not tested</span>
   </div>
 
@@ -159,6 +161,8 @@ table.data td.num{text-align:right;color:var(--dim)}
         <input id="worldName" placeholder="e.g. payment_processor" value="trading_floor" style="min-width:240px">
         <button onclick="loadPolicies()" style="background:var(--gold);color:var(--bg);border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;letter-spacing:0.5px">Load</button>
         <span id="policiesStatus" class="muted"></span>
+        <input id="policyFilter" oninput="applyPolicyFilter()" placeholder="filter by name / kind / signal" style="margin-left:auto;background:var(--bg2);border:1px solid var(--border);color:var(--bright);padding:6px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;min-width:240px">
+        <!-- __session66_governance_polish_v1__ -->
       </div>
       <div id="policiesContent">
         <div class="empty">Enter a world template name and click Load.<br><span class="empty-hint">GET /api/v1/governance/policies?world=NAME</span></div>
@@ -170,6 +174,9 @@ table.data td.num{text-align:right;color:var(--dim)}
   <div class="tab-panel" id="tab-interventions">
     <div class="card">
       <div class="filter-bar">
+        <button onclick="discoverLogs(this, 'logPicker', 'logPath')" style="background:var(--bg2);border:1px solid var(--border);color:var(--bright);padding:6px 10px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:11px;letter-spacing:0.3px">Discover</button>
+        <select id="logPicker" onchange="usePickedLog('logPicker', 'logPath')" style="background:var(--bg2);border:1px solid var(--border);color:var(--bright);padding:6px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;min-width:200px"><option value="">(pick discovered log)</option></select>
+        <!-- __session66_governance_polish_v1__ -->
         <label>Log path</label>
         <input id="logPath" placeholder="/var/log/nous_events.jsonl" value="" style="min-width:320px">
         <label>Soul</label>
@@ -198,6 +205,9 @@ table.data td.num{text-align:right;color:var(--dim)}
   <div class="tab-panel" id="tab-stats">
     <div class="card">
       <div class="filter-bar">
+        <button onclick="discoverLogs(this, 'statsLogPicker', 'statsLogPath')" style="background:var(--bg2);border:1px solid var(--border);color:var(--bright);padding:6px 10px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:11px;letter-spacing:0.3px">Discover</button>
+        <select id="statsLogPicker" onchange="usePickedLog('statsLogPicker', 'statsLogPath')" style="background:var(--bg2);border:1px solid var(--border);color:var(--bright);padding:6px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;min-width:200px"><option value="">(pick discovered log)</option></select>
+        <!-- __session66_governance_polish_v1__ -->
         <label>Log path</label>
         <input id="statsLogPath" placeholder="/var/log/nous_events.jsonl" value="" style="min-width:320px">
         <button onclick="loadStats()" style="background:var(--gold);color:var(--bg);border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;letter-spacing:0.5px">Load</button>
@@ -432,6 +442,68 @@ async function loadStats() {
     st.textContent = 'error';
   }
 }
+
+// __session66_governance_polish_v1__
+var govState = { logs: [], replayDir: '' };
+
+async function discoverLogs(btn, selectId, inputId) {
+  var orig = btn.textContent;
+  btn.textContent = '...';
+  btn.disabled = true;
+  try {
+    var data = await apiCall('/replay/list');
+    govState.logs = data.logs || [];
+    govState.replayDir = data.replay_dir || '';
+    var sel = document.getElementById(selectId);
+    var header = '(' + govState.logs.length + ' in ' + govState.replayDir + ')';
+    var opts = ['<option value="">' + header + '</option>'];
+    govState.logs.forEach(function(l) {
+      var sz = (l.size_bytes !== undefined && l.size_bytes !== null) ? l.size_bytes : 0;
+      var seq = (l.last_seq_id !== undefined && l.last_seq_id !== null) ? l.last_seq_id : '-';
+      var label = l.name + ' (' + sz + 'B, last_seq=' + seq + ')';
+      opts.push('<option value="' + l.name + '">' + label + '</option>');
+    });
+    sel.innerHTML = opts.join('');
+  } catch (e) {
+    alert('Discover failed: ' + e.message);
+  } finally {
+    btn.textContent = orig;
+    btn.disabled = false;
+  }
+}
+
+function usePickedLog(selectId, inputId) {
+  var sel = document.getElementById(selectId);
+  if (!sel.value) return;
+  var dir = (govState.replayDir || '').replace(/\/$/, '');
+  document.getElementById(inputId).value = dir + '/' + sel.value;
+}
+
+async function refreshAll() {
+  var jobs = [];
+  if (document.getElementById('worldName').value.trim()) jobs.push(loadPolicies());
+  if (document.getElementById('logPath').value.trim()) jobs.push(loadInterventions());
+  if (document.getElementById('statsLogPath').value.trim()) jobs.push(loadStats());
+  await Promise.allSettled(jobs);
+}
+
+function applyPolicyFilter() {
+  var inp = document.getElementById('policyFilter');
+  var q = (inp && inp.value || '').toLowerCase().trim();
+  var tbody = document.querySelector('#policiesContent table.data tbody');
+  if (!tbody) return;
+  Array.prototype.forEach.call(tbody.querySelectorAll('tr'), function(tr) {
+    if (!q) { tr.style.display = ''; return; }
+    var hay = tr.textContent.toLowerCase();
+    tr.style.display = hay.indexOf(q) !== -1 ? '' : 'none';
+  });
+}
+
+var _session66_origLoadPolicies = loadPolicies;
+loadPolicies = async function() {
+  await _session66_origLoadPolicies.apply(this, arguments);
+  applyPolicyFilter();
+};
 </script>
 </body>
 </html>
