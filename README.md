@@ -1,5 +1,7 @@
 # NOUS (Nous) -- The Living Language
 
+[![PyPI version](https://img.shields.io/pypi/v/nous-lang.svg)](https://pypi.org/project/nous-lang/) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/contrario/nous/blob/main/LICENSE)
+
 The first agentic programming language with end-to-end formal cost-bound verification, in any currency the pricing table declares, with cryptographically signed dossiers anchored to a public transparency log and verifiable by anyone offline.
 
 ```
@@ -7,7 +9,7 @@ The first agentic programming language with end-to-end formal cost-bound verific
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v5.4.0
+ |_| \_|\___/ \___/|____/   v5.9.0
 ```
 
 Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Website: nous-lang.org
@@ -174,7 +176,7 @@ When `nous verify --smt` returns PROVEN, it writes a JSON manifest:
 ```json
 {
   "schema_version": "1.0",
-  "nous_version": "5.4.0",
+  "nous_version": "5.9.0",
   "smt_emit_version": "...",
   "source_path": "trading.nous",
   "source_sha256": "...",
@@ -230,7 +232,7 @@ Key article alignments:
 - **Article 13 (Transparency)** -- public verification endpoint and standalone `nous-lang.org/verify` page give downstream users a no-install path to independently audit any dossier.
 - **Article 14 (Human Oversight)** -- `intervene`, `inject_message`, `block` policy actions plus governance simulator.
 - **Article 15 (Accuracy / Robustness / Cybersecurity)** -- Z3 SMT proofs on every `cost_cap` declaration, currency-aware (USD + EUR), with Ed25519-signed manifests and optional Sigstore Rekor anchoring for tamper-evident durability.
-- **Article 17 (Quality Management)** -- 10-phase release pipeline, 542-test pytest floor, 57-template byte-identical regression harness.
+- **Article 17 (Quality Management)** -- 10-phase release pipeline, 641-test pytest floor, 51-source byte-identical regression harness.
 
 ## Annex IV dossiers from existing SKILL.md skills (v5.1.0+)
 
@@ -260,12 +262,12 @@ NOUS is developed under a non-standard model: single maintainer, chat-driven, id
 
 Security issues should be reported via GitHub Security Advisories, not public issues.
 
-## Stats (v5.4.0)
+## Stats (v5.9.0)
 
 | Metric | Value |
 |---|---|
-| Tests | 542 passing (PYTEST_FLOOR enforced) |
-| Regression | 57 templates, 0 baseline drift |
+| Tests | 641 passing (PYTEST_FLOOR enforced) |
+| Regression | 51 corpus sources, 0 baseline drift |
 | Shipped templates | 9 (`templates/*.nous`) |
 | Grammar rules | 115 (Lark LALR, bilingual EN+GR) |
 | AST node types | 61 (Pydantic V2 strict) |
@@ -274,7 +276,7 @@ Security issues should be reported via GitHub Security Advisories, not public is
 | Pricing schema | v2.0 (currency-agnostic, per-table `_currency`) |
 | Manifest schema | v1.0 (Ed25519-signed, offline-verifiable, optional Rekor transparency_log) |
 | Verification surfaces | 3 (browser endpoint, offline Python, full CLI) |
-| New in v5.4.0 | Public verification API, `nous-lang.org/verify` drag-drop page, `verify_offline.py` static download, granular `RekorVerifyDetail` |
+| Latest changes | See [CHANGELOG.md](CHANGELOG.md) for per-release detail |
 
 ## Commercial Services
 
@@ -318,4 +320,5 @@ The MIT License covers the source code. Trademark rights over "NOUS", "Noosphere
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.4.0](https://github.com/contrario/nous/releases/tag/v5.4.0).
+See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.9.0](https://github.com/contrario/nous/releases/tag/v5.9.0).
+<!-- __session89_readme_freshen_v1__ -->
