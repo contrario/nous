@@ -15,8 +15,8 @@ plus SSH, and released through a 10-phase pipeline. This means
 two things in practice:
 
 1. **The bar for code quality is high.** Every change goes
-   through pytest (floor: 394 as of v5.0.0), regression
-   templates (57 byte-identical fixtures, 0 drift), pyflakes,
+   through pytest (floor: 641 as of v5.9.0), regression
+   corpus (51 byte-identical fixtures, 0 drift), pyflakes,
    wheel-content gates, and a clean-venv smoke. There is no
    "looks fine, let's merge."
 2. **External pull requests follow a non-standard intake.**
@@ -174,8 +174,8 @@ Every change must pass, in this order:
 1. **AST compile.** `python3 -m py_compile <file>` for any
    modified Python.
 2. **Pytest floor.** `python3 -m pytest tests/ -q` must show
-   at least the current floor passing (394 as of v5.0.0; the
-   floor is enforced by `tests/test_release_gate.py`).
+   at least the current floor passing (641 as of v5.9.0; the
+   floor is enforced by `scripts/release.py`, phase 2).
 3. **Regression harness.** `regression_harness.py verify`
    must return `RESULT: OK` for any codegen-adjacent change.
 4. **Pyflakes.** Production files must be pyflakes-clean. The
@@ -359,8 +359,8 @@ A short list of things that must not silently break:
   `_validate_currency_consistency` is the asfaleia floor for
   cost-cap proofs. Removing or weakening it breaks the EU AI
   Act audit chain. Do not.
-- **Codegen byte-stability.** 57 templates are pinned. Any
-  codegen change either preserves all 57 or is shipped with
+- **Codegen byte-stability.** 51 corpus sources are pinned. Any
+  codegen change either preserves all 51 or is shipped with
   an explicit, justified re-baseline.
 
 If you are about to change one of these, open the issue
@@ -422,3 +422,4 @@ Patience appreciated.
 
 *Last updated: Session 71, 3 May 2026 (HEAD post-`4f7e874`,
 v5.0.0).*
+<!-- __session89_contributing_freshen_v1__ -->
