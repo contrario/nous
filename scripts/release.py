@@ -278,7 +278,8 @@ def phase_install_smoke(whl: Path, version: str) -> None:
             raise ReleaseError(f"compile did not produce {py_file}")
         if py_file.stat().st_size < 500:
             raise ReleaseError(f"compiled output suspiciously small: {py_file.stat().st_size}b")
-    print(f"  OK: {TEMPLATE_FOR_SMOKE} extract + compile = exit 0")
+        run([str(nous_bin), "verify", nous_file.name], cwd=td_path)  # __session90_phase9_verify_smoke_v1__
+    print(f"  OK: {TEMPLATE_FOR_SMOKE} extract + compile + verify = exit 0")
 
 
 def phase_upload(whl: Path, sdist: Path) -> None:
