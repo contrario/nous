@@ -47,7 +47,14 @@ from rekor_checkpoint import (
 )
 from rekor_entry import RekorEntryError, parse_rekor_leaf
 
-KNOWN_REKOR_V2_LOG_KEYS: dict[str, str] = {}
+KNOWN_REKOR_V2_LOG_KEYS: dict[str, str] = {
+    # __session90_rekor_v2_logkey_pin_v1__
+    # Sigstore production Rekor v2 (tile-backed) log, sharded ~yearly;
+    # raw Ed25519 public key from the mirrored Sigstore trusted_root.
+    # The 2025 instance will be retired when a 2026 instance deploys;
+    # add the new origin -> key here when that happens.
+    "log2025-1.rekor.sigstore.dev": "t8rlp1knGwjfbcXAYPYAkn0XiLz1x8O4t0YkEhie244=",
+}
 
 
 class RekorV2Error(ValueError):
