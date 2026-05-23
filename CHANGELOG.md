@@ -18,8 +18,30 @@
     Security    -- vulnerability fixes
 -->
 
+## [5.10.0] - 2026-05-23
+
 ### Added
 
+- Rekor transparency-log API v2 verification support.
+  `MAX_SUPPORTED_REKOR_API_VERSION` is now 2;
+  `parse_manifest_json_with_anchor_v2` dispatches a manifest's
+  `transparency_log` block by its `rekor_api_version` discriminator
+  (absent or 1 -> the existing v1 SET-based path, byte-identical;
+  2 -> the v2 checkpoint path; higher -> refused). The v1 read path is
+  unchanged. v2 anchor emission is not part of this release.
+  <!-- __session91_rekor_v2_dispatch_changelog_v1__ -->
+- Portable offline verifier for v2-anchored dossiers:
+  `offline_verifier_builder` assembles a standalone `verify_offline.py`
+  (cryptography + stdlib only) from the shipped Rekor v2 read-path
+  modules, guarded by an anti-drift equivalence test.
+  <!-- __session90_offline_verifier_changelog_v1__ -->
+- Pinned the production Sigstore Rekor v2 log key
+  (`log2025-1.rekor.sigstore.dev`) into the verifier allowlist, proven
+  against a real checkpoint and a synthetic full verify flow.
+  <!-- __session90_rekor_v2_pin_changelog_v1__ -->
+- Release pipeline phase-9 UX smoke now also runs `nous verify` from
+  the clean install venv.
+  <!-- __session90_phase9_verify_changelog_v1__ -->
 - Differential test (`tests/test_runner_codegen_equiv.py`): asserts the
   AST runner and codegen derive an identical semantic surface (souls,
   messages, per-soul model/tier/senses/memory-field names, law

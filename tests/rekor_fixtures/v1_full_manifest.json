@@ -1,0 +1,21 @@
+{
+  "cost_cap_usd": "0.10",
+  "elapsed_ms": 23,
+  "max_ticks": 2,
+  "nous_version": "4.13.0",
+  "pricing_sha256": "2a53e9f7cc5657d76c351efe386c15a8718e97cfba7d23889a8f4b7fe12455da",
+  "schema_version": "1.0",
+  "signature": {
+    "algorithm": "ed25519",
+    "public_key_b64": "yR3OdmS1Sy79MMxBpJtC0nz6aqmht6t+Xmr3DwptV70=",
+    "signature_b64": "1Twv5/cmYioVnSlB8yOkASrdlF/UpbL4taITlP3yROAdVACzM+zcO3zegLM8Guh25FBzGbkb48DvenDtxELGDA=="
+  },
+  "smt_emit_version": "1.0",
+  "smt_spec_sha256": "08932d6791fe82c461a165b7fe7491f584d282f43bd4457c4f3fa164f4ade26c",
+  "solver_name": "z3",
+  "solver_version": "z3 4.16.0",
+  "source_sha256": "unknown",
+  "timestamp_utc": "2026-04-28T00:00:00+00:00",
+  "verdict": "proven",
+  "world_name": "MfTest"
+}

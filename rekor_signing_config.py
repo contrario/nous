@@ -18,7 +18,7 @@ Per the Rekor v2 client specification
     higher-than-supported API version is available, rather than silently
     treating a v2 entry/endpoint as v1.
 
-NOUS supports Rekor API v1 only today (MAX_SUPPORTED_REKOR_API_VERSION).
+NOUS supports Rekor API v1 (emit + verify) and v2 (verify only); see MAX_SUPPORTED_REKOR_API_VERSION.
 Raising support to v2 is a deliberate future change paired with the v2
 verifier (tiles / inclusion-proof / checkpoint), not an accidental
 silent upgrade.
@@ -38,7 +38,7 @@ from typing import Optional
 
 from pydantic import BaseModel, ConfigDict, Field
 
-MAX_SUPPORTED_REKOR_API_VERSION: int = 1
+MAX_SUPPORTED_REKOR_API_VERSION: int = 2
 
 SIGNING_CONFIG_MEDIA_TYPE_V0_2: str = (
     "application/vnd.dev.sigstore.signingconfig.v0.2+json"

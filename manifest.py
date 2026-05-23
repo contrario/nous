@@ -346,3 +346,71 @@ def parse_manifest_json_with_anchor(
     if anchor_block is not None:
         anchor = _RekorAnchor.from_manifest_block(anchor_block)
     return m, sig, pub, anchor
+
+
+
+def parse_manifest_json_with_anchor_v2(
+    text: str,
+) -> tuple[Manifest, bytes, Ed25519PublicKey, "RekorAnchor | None", "dict | None"]:
+    """Version-dispatching inverse of manifest_json.
+
+    Like :func:`parse_manifest_json_with_anchor` but routes the
+    ``transparency_log`` block by its ``rekor_api_version`` discriminator.
+    Returns a 5-tuple ``(manifest, signature_bytes, public_key,
+    v1_anchor_or_None, v2_block_or_None)``.
+
+    Routing:
+      - block absent, or ``rekor_api_version`` absent, or ``== 1``:
+        delegates to :func:`parse_manifest_json_with_anchor`; the v1 anchor
+        is recovered byte-identically and the fifth element is ``None``.
+      - ``rekor_api_version == 2`` (within
+        ``MAX_SUPPORTED_REKOR_API_VERSION``): the raw v2 block is returned
+        as the fifth element; the v1 anchor element is ``None``.
+      - any version above ``MAX_SUPPORTED_REKOR_API_VERSION`` (or any other
+        non-1/2 value): raises ``ValueError`` (refuse over guess; preserves
+        the historical throw-on-unsupported-anchor behaviour).
+
+    The v1 path is delegated, not reimplemented, so this function cannot
+    drift from the proven 4-tuple parser.
+    """
+    # __nous_s91_anchor_v2_dispatch_v1__
+    from rekor_signing_config import MAX_SUPPORTED_REKOR_API_VERSION
+
+    doc = json.loads(text)
+    anchor_block = doc.get("transparency_log")
+    if anchor_block is None:
+        m, sig, pub, anchor = parse_manifest_json_with_anchor(text)
+        return m, sig, pub, anchor, None
+    if not isinstance(anchor_block, dict):
+        raise ValueError("transparency_log is not an object")
+
+    api_version = anchor_block.get("rekor_api_version")
+    if api_version is None:
+        m, sig, pub, anchor = parse_manifest_json_with_anchor(text)
+        return m, sig, pub, anchor, None
+    if isinstance(api_version, bool) or not isinstance(api_version, int):
+        raise ValueError(
+            "transparency_log.rekor_api_version is not an integer "
+            "(got " + repr(api_version) + ")"
+        )
+    if api_version == 1:
+        m, sig, pub, anchor = parse_manifest_json_with_anchor(text)
+        return m, sig, pub, anchor, None
+    if api_version > MAX_SUPPORTED_REKOR_API_VERSION:
+        raise ValueError(
+            "transparency_log.rekor_api_version " + str(api_version)
+            + " exceeds MAX_SUPPORTED_REKOR_API_VERSION "
+            + str(MAX_SUPPORTED_REKOR_API_VERSION)
+        )
+    if api_version == 2:
+        doc_no_anchor = {
+            k: v for k, v in doc.items() if k != "transparency_log"
+        }
+        m, sig, pub, _ = parse_manifest_json_with_anchor(
+            json.dumps(doc_no_anchor)
+        )
+        return m, sig, pub, None, anchor_block
+    raise ValueError(
+        "transparency_log.rekor_api_version " + str(api_version)
+        + " is not a supported version"
+    )

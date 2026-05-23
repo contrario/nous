@@ -55,13 +55,20 @@ class TestSelection:
         assert r.base_url == "https://rekor.sigstore.dev"
 
     def test_v2_present_client_max_1_selects_v1(self) -> None:
-        r = _sel({"rekorTlogUrls": [_V2, _V1]})
+        r = _sel({"rekorTlogUrls": [_V2, _V1]}, max_supported_version=1)
         assert r.major_api_version == 1
         assert r.base_url == "https://rekor.sigstore.dev"
 
     def test_v2_only_fails_closed(self) -> None:
         with pytest.raises(RekorApiVersionUnsupported):
-            _sel({"rekorTlogUrls": [_V2]})
+            _sel({"rekorTlogUrls": [_V2]}, max_supported_version=1)
+
+    def test_default_client_max_selects_v2(self) -> None:
+        # __nous_s91_default_max_v2_test_v1__
+        r = _sel({"rekorTlogUrls": [_V2, _V1]})
+        assert r.major_api_version == 2
+        assert r.submit_path == "/api/v2/log/entries"
+        assert r.base_url == "https://log2025-1.rekor.sigstore.dev"
 
     def test_future_client_max_2_selects_v2(self) -> None:
         r = _sel({"rekorTlogUrls": [_V2, _V1]}, max_supported_version=2)
