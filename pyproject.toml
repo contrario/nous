@@ -81,6 +81,7 @@ py-modules = [
     "rekor_entry",  # __session87_rekor_entry_pyproject_v1__
     "rekor_checkpoint",  # __session87_rekor_checkpoint_pyproject_v1__
     "rekor_verify_v2",  # __session87_rekor_verify_v2_pyproject_v1__
+    "offline_verifier_builder",  # __session90_offline_verifier_builder_pymodule_v1__
 ]
 
 # __cc_dynamic_block_v1__
