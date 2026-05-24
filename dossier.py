@@ -342,12 +342,19 @@ def build_dossier(
             token_der = anchor_timestamp(
                 timestamped_data=leaf.leaf_signature_der,
             )
-            rekor_anchor_obj = v2_anchor.model_copy(
-                update={
-                    "rfc3161_token_b64": base64.b64encode(
-                        token_der
-                    ).decode("ascii"),
-                }
+            # __nous_s93_dossier_rekor_v2_token_reconstruct_v1__
+            rekor_anchor_obj = type(v2_anchor)(
+                rekor_api_version=v2_anchor.rekor_api_version,
+                log_id=v2_anchor.log_id,
+                log_index=v2_anchor.log_index,
+                body_b64=v2_anchor.body_b64,
+                checkpoint_envelope=v2_anchor.checkpoint_envelope,
+                inclusion_proof_hashes=list(
+                    v2_anchor.inclusion_proof_hashes
+                ),
+                rfc3161_token_b64=base64.b64encode(
+                    token_der
+                ).decode("ascii"),
             )
         from manifest import manifest_json as _render_manifest_json
         rendered_manifest_text = _render_manifest_json(
