@@ -18,6 +18,36 @@
     Security    -- vulnerability fixes
 -->
 
+<!-- __session93_release_v5_11_0_changelog__ -->
+## [5.11.0] - 2026-05-24
+
+### Added
+
+- Rekor v2 + RFC 3161 dossier emission (the v2 write path).
+  `nous dossier --anchor rekor_v2` submits a manifest's canonical
+  bytes to the tile-backed Sigstore Rekor v2 log (`log2025-1`),
+  recovers the per-submission ephemeral ECDSA-P-256 leaf signature
+  from the server-returned leaf body, requests an RFC 3161 trusted
+  timestamp over that signature from the Sigstore TSA, and embeds
+  both in the dossier's `transparency_log` block. The emitted
+  `verify_offline.py` is the v2 variant assembled by
+  `offline_verifier_builder` with the pinned production log-key
+  allowlist; it checks the leaf-to-manifest ECDSA tie, the checkpoint
+  Ed25519 signature, the RFC 6962 inclusion proof, and the RFC 3161
+  trusted time, fully offline with only `cryptography` plus stdlib.
+  Proven end-to-end against the live log (log_index 4598985).
+  <!-- __session93_dossier_rekor_v2_emit_changelog_v1__ -->
+
+### Fixed
+
+- v2 emission attached the RFC 3161 token via `model_copy(update=...)`
+  on the frozen `RekorAnchorV2`; on this model the updated value did
+  not reach `model_dump()` / `to_manifest_block()`, so the emitted
+  manifest carried no token and offline timestamp verification
+  failed. Emission now re-constructs the anchor with every field plus
+  the token, which serializes correctly.
+  <!-- __session93_dossier_rekor_v2_token_changelog_v1__ -->
+
 ## [5.10.0] - 2026-05-23
 
 ### Added
