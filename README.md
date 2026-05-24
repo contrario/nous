@@ -9,7 +9,7 @@ The first agentic programming language with end-to-end formal cost-bound verific
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v5.9.0
+ |_| \_|\___/ \___/|____/   v5.11.0
 ```
 
 Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Website: nous-lang.org
@@ -21,7 +21,7 @@ NOUS is a programming language for agentic AI systems where every program is:
 - **Verifiable** -- declare a `cost_cap` in USD or EUR and Z3 proves at compile time that no execution path can ever exceed it.
 - **Auditable** -- every verified program emits an Ed25519-signed manifest with full provenance (source SHA-256, AST SHA-256, pricing SHA-256, SMT obligations SHA-256, solver name+version, verdict, timestamp).
 - **Annex IV-ready** -- `nous dossier` emits an EU AI Act Annex IV-aligned compliance bundle directly from the AST plus the signed manifest plus the pricing table.
-- **Rekor-anchored** -- since v5.3.0, optional `--anchor rekor` anchors emitted manifests into the public Sigstore Rekor transparency log via Path-beta dual signing (per-submission ECDSA-P-256 leaf, long-lived Ed25519 manifest signature preserved). External, third-party-auditable durability with zero NOUS-side trust assumption. See `docs/REKOR_ANCHOR.md`.
+- **Rekor-anchored** -- since v5.3.0, optional `--anchor rekor` anchors emitted manifests into the public Sigstore Rekor transparency log via Path-beta dual signing (per-submission ECDSA-P-256 leaf, long-lived Ed25519 manifest signature preserved). Since v5.10.0 a Rekor v2 path (`--anchor rekor_v2`) targets the tile-backed Sigstore log with an RFC 3161 trusted timestamp over the leaf signature, all re-verifiable offline. External, third-party-auditable durability with zero NOUS-side trust assumption. See `docs/REKOR_ANCHOR.md` and `docs/REKOR_V2_MIGRATION.md`.
 - **Publicly verifiable** -- since v5.4.0, any signed dossier can be verified by anyone via three independent paths: `POST /api/v1/verify-dossier` (browser convenience, no API key, rate-limited), `verify_offline.py` (canonical, single `cryptography` dependency), or `nous dossier verify` (full toolchain with SMT cost-cap re-check). See `docs/VERIFY_DOSSIER.md`.
 - **Governable** -- first-class `policy { on ... signal ... action ... }` declarations, statically lintable (13 rule codes) and live-simulatable.
 - **Deterministically replayable** -- every agent run produces a SHA-256-chained JSONL event log. `nous replay verify` validates chain integrity offline.
@@ -176,7 +176,7 @@ When `nous verify --smt` returns PROVEN, it writes a JSON manifest:
 ```json
 {
   "schema_version": "1.0",
-  "nous_version": "5.9.0",
+  "nous_version": "5.11.0",
   "smt_emit_version": "...",
   "source_path": "trading.nous",
   "source_sha256": "...",
@@ -232,7 +232,7 @@ Key article alignments:
 - **Article 13 (Transparency)** -- public verification endpoint and standalone `nous-lang.org/verify` page give downstream users a no-install path to independently audit any dossier.
 - **Article 14 (Human Oversight)** -- `intervene`, `inject_message`, `block` policy actions plus governance simulator.
 - **Article 15 (Accuracy / Robustness / Cybersecurity)** -- Z3 SMT proofs on every `cost_cap` declaration, currency-aware (USD + EUR), with Ed25519-signed manifests and optional Sigstore Rekor anchoring for tamper-evident durability.
-- **Article 17 (Quality Management)** -- 10-phase release pipeline, 641-test pytest floor, 51-source byte-identical regression harness.
+- **Article 17 (Quality Management)** -- 10-phase release pipeline, 738-test pytest floor, 51-source byte-identical regression harness.
 
 ## Annex IV dossiers from existing SKILL.md skills (v5.1.0+)
 
@@ -262,11 +262,11 @@ NOUS is developed under a non-standard model: single maintainer, chat-driven, id
 
 Security issues should be reported via GitHub Security Advisories, not public issues.
 
-## Stats (v5.9.0)
+## Stats (v5.11.0)
 
 | Metric | Value |
 |---|---|
-| Tests | 641 passing (PYTEST_FLOOR enforced) |
+| Tests | 738 passing (PYTEST_FLOOR enforced) |
 | Regression | 51 corpus sources, 0 baseline drift |
 | Shipped templates | 9 (`templates/*.nous`) |
 | Grammar rules | 115 (Lark LALR, bilingual EN+GR) |
@@ -320,5 +320,6 @@ The MIT License covers the source code. Trademark rights over "NOUS", "Noosphere
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.9.0](https://github.com/contrario/nous/releases/tag/v5.9.0).
+See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.11.0](https://github.com/contrario/nous/releases/tag/v5.11.0).
 <!-- __session89_readme_freshen_v1__ -->
+<!-- __s94_readme_v5_11_0_sync_v1__ -->
