@@ -229,7 +229,10 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "rekor_entry.py",  # __session87_rekor_entry_wheelgate_v1__
                                 "rekor_checkpoint.py",  # __session87_rekor_checkpoint_wheelgate_v1__
                                 "rekor_verify_v2.py",  # __session87_rekor_verify_v2_wheelgate_v1__
-                                "offline_verifier_builder.py"]  # __session90_offline_verifier_builder_wheelgate_v1__
+                                "offline_verifier_builder.py",  # __session90_offline_verifier_builder_wheelgate_v1__
+                                "rekor_anchor_v2.py",  # __session92_rekor_anchor_v2_wheelgate_v1__
+                                "tsa_verify.py",  # __session92_tsa_verify_wheelgate_v1__
+                                "tsa_client.py"]  # __session92_tsa_client_wheelgate_v1__
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
         raise ReleaseError(f"wheel missing files: {missing}")

@@ -71,6 +71,26 @@ _V2_SYMBOLS = (
     "load_trusted_log_keys",
     "verify_rekor_v2_anchor",
 )
+_TSA_SYMBOLS = (
+    "OID_SIGNED_DATA",
+    "OID_CT_TSTINFO",
+    "OID_ATTR_CONTENT_TYPE",
+    "OID_ATTR_MESSAGE_DIGEST",
+    "KNOWN_TSA_ROOT_CERTS",
+    "_ECDSA_SIG_OIDS",
+    "_RSA_SIG_OIDS",
+    "_DIGEST_OIDS",
+    "Rfc3161Error",
+    "Rfc3161Malformed",
+    "Rfc3161VerifyDetail",
+    "_der_len",
+    "_tlv",
+    "_children",
+    "_oid_str",
+    "_parse_token",
+    "_parse_tstinfo",
+    "verify_rfc3161_timestamp",
+)  # __nous_s92_tsa_in_offline_verifier_v1__
 
 
 _HOISTED_IMPORTS = (
@@ -85,12 +105,18 @@ _HOISTED_IMPORTS = (
     "from collections.abc import Mapping\n"
     "from dataclasses import dataclass, field\n"
     "from pathlib import Path\n"
+    "from datetime import datetime, timezone\n"
     "\n"
     "from cryptography.exceptions import InvalidSignature\n"
+    "from cryptography import x509\n"
     "from cryptography.hazmat.primitives import hashes\n"
-    "from cryptography.hazmat.primitives.asymmetric import ec\n"
+    "from cryptography.hazmat.primitives.asymmetric import "
+    "ec, padding\n"
+    "from cryptography.hazmat.primitives.asymmetric.ec import "
+    "ECDSA\n"
     "from cryptography.hazmat.primitives.asymmetric.ed25519 import "
     "Ed25519PublicKey\n"
+    "from cryptography.x509.oid import ExtendedKeyUsageOID\n"
     "from cryptography.hazmat.primitives.serialization import (\n"
     "    Encoding,\n"
     "    PublicFormat,\n"
@@ -110,6 +136,7 @@ _ANCHOR_SHIM_LINES = (
     "    body_b64: str",
     "    checkpoint_envelope: str",
     "    inclusion_proof_hashes: tuple",
+    "    rfc3161_token_b64: str | None = None",
     "",
     "    @classmethod",
     "    def from_manifest_block(cls, block):",
@@ -153,6 +180,11 @@ _ANCHOR_SHIM_LINES = (
     "                checkpoint_envelope=checkpoint_envelope,",
     "                inclusion_proof_hashes=tuple("
     "str(h) for h in hashes_field),",
+    "                rfc3161_token_b64=(",
+    "                    str(block['rfc3161_token_b64'])",
+    "                    if block.get('rfc3161_token_b64') is not None",
+    "                    else None",
+    "                ),",
     "            )",
     "        except (KeyError, TypeError, ValueError) as exc:",
     "            raise RekorV2AnchorMalformed(",
@@ -321,6 +353,17 @@ _DISPATCH_MAIN_LINES = (
     "        + ' origin=' + str(detail.checkpoint_origin)",
     "        + ' tree_size=' + str(detail.tree_size) + ')'",
     "    )",
+    "    if tlog.get('rfc3161_token_b64') is not None:",
+    "        if not detail.timestamp_ok:",
+    "            for err in detail.errors:",
+    "                print('     - ' + err, file=sys.stderr)",
+    "            return _fail(",
+    "                'RFC 3161 trusted-timestamp verification failed'",
+    "            )",
+    "        print(",
+    "            'OK   RFC 3161 trusted timestamp ('",
+    "            + str(detail.trusted_time) + ')'",
+    "        )",
     "",
     "    print()",
     "    print(",
@@ -363,6 +406,7 @@ _DISPATCH_MAIN_LINES = (
 ENTRY_PINS: dict[str, str] = {}
 CHECKPOINT_PINS: dict[str, str] = {}
 V2_PINS: dict[str, str] = {}
+TSA_PINS: dict[str, str] = {}
 
 
 def _extract_segments(
@@ -437,6 +481,9 @@ def build_offline_verifier_v2(allowlist_literal: str = "{}") -> str:
     checkpoint_body = _extract_segments(
         _PKG_DIR / "rekor_checkpoint.py", _CHECKPOINT_SYMBOLS, CHECKPOINT_PINS
     )
+    tsa_body = _extract_segments(
+        _PKG_DIR / "tsa_verify.py", _TSA_SYMBOLS, TSA_PINS
+    )
     v2_body = _extract_segments(
         _PKG_DIR / "rekor_verify_v2.py", _V2_SYMBOLS, V2_PINS
     )
@@ -468,6 +515,7 @@ def build_offline_verifier_v2(allowlist_literal: str = "{}") -> str:
         allowlist_block,
         "\n\n" + entry_body + "\n",
         "\n\n" + checkpoint_body + "\n",
+        "\n\n" + tsa_body + "\n",
         "\n\n" + v2_body + "\n",
         anchor_shim,
         dispatch_main,

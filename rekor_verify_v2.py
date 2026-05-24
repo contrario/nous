@@ -27,6 +27,7 @@ import hashlib
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from datetime import datetime
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes
@@ -46,6 +47,7 @@ from rekor_checkpoint import (
     verify_inclusion_proof,
 )
 from rekor_entry import RekorEntryError, parse_rekor_leaf
+from tsa_verify import Rfc3161Malformed, verify_rfc3161_timestamp
 
 KNOWN_REKOR_V2_LOG_KEYS: dict[str, str] = {
     # __session90_rekor_v2_logkey_pin_v1__
@@ -74,9 +76,10 @@ class RekorAnchorV2(BaseModel):
     body_b64: str = Field(min_length=1)
     checkpoint_envelope: str = Field(min_length=1)
     inclusion_proof_hashes: list[str]
+    rfc3161_token_b64: str | None = Field(default=None)
 
     def to_manifest_block(self) -> dict:
-        return {
+        block: dict = {
             "rekor_api_version": self.rekor_api_version,
             "log_id": self.log_id,
             "log_index": self.log_index,
@@ -84,6 +87,9 @@ class RekorAnchorV2(BaseModel):
             "checkpoint_envelope": self.checkpoint_envelope,
             "inclusion_proof_hashes": list(self.inclusion_proof_hashes),
         }
+        if self.rfc3161_token_b64 is not None:
+            block["rfc3161_token_b64"] = self.rfc3161_token_b64
+        return block
 
     @classmethod
     def from_manifest_block(cls, block: Mapping[str, object]) -> "RekorAnchorV2":
@@ -102,6 +108,11 @@ class RekorAnchorV2(BaseModel):
                 body_b64=str(block["body_b64"]),
                 checkpoint_envelope=str(block["checkpoint_envelope"]),
                 inclusion_proof_hashes=[str(h) for h in hashes_field],
+                rfc3161_token_b64=(
+                    str(block["rfc3161_token_b64"])
+                    if block.get("rfc3161_token_b64") is not None
+                    else None
+                ),
             )
         except (KeyError, TypeError, ValueError, ValidationError) as exc:
             raise RekorV2AnchorMalformed(
@@ -121,6 +132,8 @@ class RekorV2VerifyDetail:
     log_index: int | None
     checkpoint_origin: str | None
     tree_size: int | None
+    timestamp_ok: bool = False
+    trusted_time: datetime | None = None
     errors: tuple[str, ...] = field(default=())
 
     @property
@@ -155,6 +168,7 @@ def verify_rekor_v2_anchor(
     manifest_body_bytes: bytes,
     block: Mapping[str, object],
     trusted_log_keys: Mapping[str, Ed25519PublicKey],
+    trusted_tsa_roots: list[str] | None = None,
 ) -> RekorV2VerifyDetail:
     """Verify a Rekor v2 anchor block against the signed manifest body bytes.
 
@@ -212,6 +226,26 @@ def verify_rekor_v2_anchor(
         except (ValueError, TypeError) as exc:
             errors.append(f"leaf signature verification error: {exc}")
 
+    # __nous_s92_v2_timestamp_wiring_v1__
+    timestamp_ok = False
+    trusted_time: datetime | None = None
+    token_b64 = anchor.rfc3161_token_b64
+    if token_b64 is not None and leaf is not None:
+        try:
+            token_der = base64.b64decode(token_b64, validate=True)
+            ts_detail = verify_rfc3161_timestamp(
+                token_der=token_der,
+                timestamped_data=leaf.leaf_signature_der,
+                trusted_roots=trusted_tsa_roots,
+            )
+            timestamp_ok = ts_detail.ok
+            if ts_detail.ok:
+                trusted_time = ts_detail.gen_time
+            else:
+                errors.extend(f"timestamp: {e}" for e in ts_detail.errors)
+        except (binascii.Error, Rfc3161Malformed) as exc:
+            errors.append(f"timestamp parse failed: {exc}")
+
     checkpoint = None
     try:
         checkpoint = parse_checkpoint(anchor.checkpoint_envelope)
@@ -267,5 +301,7 @@ def verify_rekor_v2_anchor(
             checkpoint.origin if checkpoint is not None else None
         ),
         tree_size=(checkpoint.tree_size if checkpoint is not None else None),
+        timestamp_ok=timestamp_ok,
+        trusted_time=trusted_time,
         errors=tuple(errors),
     )
