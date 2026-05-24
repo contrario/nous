@@ -52,3 +52,10 @@ dist/
 build/
 *.egg-info/
 .pytest_cache/
+
+# __s94_repo_cleanup_v1__
+# Backup development artifacts must never be tracked at repo root.
+*.py.bak
+*.py.bak.*
+*.lark.bak
+*.lark.bak.*
