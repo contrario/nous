@@ -45,7 +45,7 @@ REPO_ROOT: Path = Path("/opt/aetherlang_agents/nous")
 DIST_DIR: Path = REPO_ROOT / "dist"
 TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
-PYTEST_FLOOR: int = 745  # __session95_release_v5_12_0_floor_v1__  # __session93_release_v5_11_0_floor_v1__  # __session86_release_v5_8_1_floor_v1__  # __session86_release_v5_8_0_floor_v1__  # __session86_release_v5_7_1_floor_v1__  # __session85_release_v5_7_0_floor_v1__  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__  # __session80_release_v5_3_0_release_script__  # __nous_aetherproof_release_530_packaging_v1__  # __session81_release_v5_4_0_release_script__  # __session82_release_v5_5_0_release_script__  # __session88_release_v5_9_0_floor_v1__
+PYTEST_FLOOR: int = 753  # __session96_release_floor_v1__  # __session95_release_v5_12_0_floor_v1__  # __session93_release_v5_11_0_floor_v1__  # __session86_release_v5_8_1_floor_v1__  # __session86_release_v5_8_0_floor_v1__  # __session86_release_v5_7_1_floor_v1__  # __session85_release_v5_7_0_floor_v1__  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__  # __session80_release_v5_3_0_release_script__  # __nous_aetherproof_release_530_packaging_v1__  # __session81_release_v5_4_0_release_script__  # __session82_release_v5_5_0_release_script__  # __session88_release_v5_9_0_floor_v1__
 TEMPLATE_FOR_SMOKE: str = "sycophancy_guard"
 _ALLOW_EXISTING_TAG: bool = False  # __NERVE_DISPATCH_RELEASE_ALLOW_EXISTING_TAG_v1__
 PYFLAKES_TARGETS: tuple[str, ...] = (
@@ -232,7 +232,10 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "offline_verifier_builder.py",  # __session90_offline_verifier_builder_wheelgate_v1__
                                 "rekor_anchor_v2.py",  # __session92_rekor_anchor_v2_wheelgate_v1__
                                 "tsa_verify.py",  # __session92_tsa_verify_wheelgate_v1__
-                                "tsa_client.py"]  # __session92_tsa_client_wheelgate_v1__
+                                "tsa_client.py",  # __session92_tsa_client_wheelgate_v1__
+                                "nous_trace.py",  # __session96_trace_wheelgate_v1__
+                                "conformance.py",  # __session96_conformance_wheelgate_v1__
+                                "cli_conformance.py"]  # __session96_cli_conformance_wheelgate_v1__
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
         raise ReleaseError(f"wheel missing files: {missing}")

@@ -39,7 +39,10 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:  # __session96_manifest_smtspec_typecheck_import_v1__
+    from smt_emit import SMTSpec
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (
@@ -91,6 +94,9 @@ class Manifest:
     # Optional safety margin applied during verify (--smt-margin PCT).
     safety_margin_pct: Optional[int] = None
 
+    # Signed per-soul proof assumptions for runtime conformance (S96).
+    proof_assumptions: Optional[dict] = None  # __session96_manifest_proof_assumptions_field_v1__
+
     def canonical_bytes(self) -> bytes:
         """Bytes that get signed — sorted, separator-stable JSON."""
         return json.dumps(
@@ -122,7 +128,32 @@ class Manifest:
             )
         if self.safety_margin_pct is not None:
             d["safety_margin_pct"] = self.safety_margin_pct
-        return d
+        return d  # __session96_revert_m3_canonical_dict_v1__
+
+
+def _build_proof_assumptions(spec: "SMTSpec") -> Optional[dict]:  # __session96_build_proof_assumptions_v1__
+    if not spec.soul_assumptions:
+        return None
+    souls: dict = {}
+    for (name, model, max_in, max_out, in_rate, out_rate, mult) in (
+        spec.soul_assumptions
+    ):
+        souls[name] = {
+            "model": model,
+            "max_input_tokens": max_in,
+            "max_output_tokens": max_out,
+            "input_per_1m": in_rate,
+            "output_per_1m": out_rate,
+            "reasoning_token_multiplier": mult,
+        }
+    return {
+        "cost_cap": str(spec.cost_cap_amount),
+        "currency": spec.cost_cap_currency,
+        "max_ticks": spec.max_ticks,
+        "pricing_sha256": spec.pricing_sha256,
+        "souls": souls,
+        "gated_actions": [],
+    }
 
 
 def manifest_from_verify(
@@ -151,7 +182,7 @@ def manifest_from_verify(
         elapsed_ms=result.elapsed_ms,
         timestamp_utc=result.timestamp_utc,
         counterexample_total_usd=ce_total,
-        safety_margin_pct=(margin if margin > 0 else None),
+        safety_margin_pct=(margin if margin > 0 else None),  # __session96_revert_m5_v1__
     )
 
 
@@ -250,6 +281,7 @@ def manifest_json(
     signature: bytes,
     public_key: Ed25519PublicKey,
     rekor_anchor: "RekorAnchor | None" = None,
+    include_proof_assumptions: bool = False,  # __session96_manifest_json_optin_sig_v1__
 ) -> str:
     """Render the full audit-ready JSON document.
 
@@ -267,6 +299,11 @@ def manifest_json(
     }
     if rekor_anchor is not None:
         doc["transparency_log"] = rekor_anchor.to_manifest_block()
+    if (  # __session96_manifest_json_optin_body_v1__
+        include_proof_assumptions
+        and manifest.proof_assumptions is not None
+    ):
+        doc["proof_assumptions"] = manifest.proof_assumptions
     return json.dumps(doc, indent=2, sort_keys=True) + "\n"
 
 
@@ -298,6 +335,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         counterexample_total_usd=doc.get(
             "counterexample_total_usd"
         ),
+        proof_assumptions=doc.get("proof_assumptions"),  # __session96_parse_manifest_json_sibling_v1__
     )
     return m, sig, pub
 
@@ -341,6 +379,7 @@ def parse_manifest_json_with_anchor(
         counterexample_total_usd=doc.get(
             "counterexample_total_usd"
         ),
+        proof_assumptions=doc.get("proof_assumptions"),  # __session96_parse_with_anchor_sibling_v1__
     )
     anchor: "_RekorAnchor | None" = None
     if anchor_block is not None:

@@ -75,6 +75,9 @@ class SMTSpec:
     cost_assertions: tuple[str, ...] = ()
     obligation: str = ""
     soul_costs: tuple[tuple[str, str, str], ...] = ()
+    soul_assumptions: tuple[
+        tuple[str, str, int, int, str, str, str], ...
+    ] = ()  # __session96_smtspec_soul_assumptions_v1__
 
     def serialize(self) -> str:
         lines: list[str] = []
@@ -323,6 +326,9 @@ def emit_smt(
     ranges: list[str] = []
     asserts: list[str] = []
     soul_costs: list[tuple[str, str, str]] = []
+    soul_assumptions: list[  # __session96_emit_soul_assumptions_decl_v1__
+        tuple[str, str, int, int, str, str, str]
+    ] = []
 
     for s in souls:
         canonical, entry = get_price_for_smt(
@@ -345,6 +351,15 @@ def emit_smt(
             f"(assert (= {total_var} (* {per_call_var} {max_ticks})))"
         )
         soul_costs.append((canonical, s.name, per_call_expr))
+        soul_assumptions.append((  # __session96_emit_soul_assumptions_v1__
+            s.name,
+            canonical,
+            s.tokens.input,
+            s.tokens.output,
+            str(entry.input_per_1m),
+            str(entry.output_per_1m),
+            str(entry.reasoning_token_multiplier),
+        ))
 
     decls.append(("total_cost", "Real"))
     ranges.append("(assert (>= total_cost 0))")
@@ -383,4 +398,5 @@ def emit_smt(
         cost_assertions=tuple(asserts),
         obligation=obligation,
         soul_costs=tuple(soul_costs),
+        soul_assumptions=tuple(soul_assumptions),  # __session96_emit_soul_assumptions_ctor_v1__
     )

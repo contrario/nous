@@ -222,7 +222,7 @@ async def health(request: Request):
         "uptime_seconds": uptime,
         "engines": 8,
         "subsystems": 12,
-        "cli_commands": 44,  # __session77_skill_export_endpoint_v1__
+        "cli_commands": 45,  # __session96_cli_commands_45_v1__
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
