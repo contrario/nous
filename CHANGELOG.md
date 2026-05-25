@@ -18,6 +18,19 @@
     Security    -- vulnerability fixes
 -->
 
+<!-- __session95_release_v5_12_0_changelog__ -->
+## [5.12.0] - 2026-05-25
+### Added
+- `nous dossier --anchor rekor_v2` and `nous dossier-spec --anchor rekor_v2` now expose the tile-backed
+  Rekor v2 + RFC 3161 trusted-timestamp anchor on both CLI dossier
+  paths. The `dossier-spec` (SKILL.md-directory) path gained the v2
+  emit branch and verifier selection mirroring `dossier`, with a
+  `_test_rekor_anchor_v2` hook for offline tests. Proven end-to-end:
+  both paths emit a bundle whose `verify_offline.py` passes with
+  VERDICT PASS against the live log (dossier log_index 4626112,
+  dossier-spec log_index 4626706).
+  <!-- __session95_dossier_spec_rekor_v2_changelog_v1__ -->
+
 <!-- __session93_release_v5_11_0_changelog__ -->
 ## [5.11.0] - 2026-05-24
 
