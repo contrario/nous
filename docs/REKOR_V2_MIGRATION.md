@@ -5,10 +5,14 @@
 > maintenance mode the same day with a 1-year deprecation notice.
 > NOUS currently anchors against Rekor v1.
 
-**Status:** Scoping document, Session 83 (19 May 2026, HEAD post-`66a6dd2`,
-v5.5.0). No code changes yet; this captures the design decisions and
-phasing so the migration patcher in a future session can be authored
-quickly.
+**Status:** <!-- __session95_rekor_v2_status_refresh_v1__ --> The v2 write path has SHIPPED. Originally a
+Session 83 scoping document, this plan is now partly realised: NOUS
+emits v2-anchored, RFC 3161-timestamped dossiers, verifiable offline.
+The v2 anchor is exposed on both CLI dossier paths -- `nous dossier
+--anchor rekor_v2` (v5.11.0) and `nous dossier-spec --anchor rekor_v2`
+(v5.12.0). The v1 path remains the default; v2 is opt-in. Sections 8-11
+below retain the original forward-looking phasing for historical
+context and for the remaining phases (v1 retirement) not yet reached.
 
 ---
 
@@ -44,6 +48,9 @@ goal is to make the migration patcher in S84 or S85 mechanical.
 | NOUS Rekor anchor implementation | `rekor_anchor.py` (Path-beta dual signing, hashedrekord/0.0.1) |
 | NOUS Rekor anchor shipped | v5.3.0 (Session 77) |
 | First live v1 anchor | log_index 1554376230, 2026-05-16T20:08:25Z |
+| NOUS Rekor v2 write path shipped | v5.11.0 (`dossier`), v5.12.0 (`dossier-spec`) |
+| NOUS Rekor v2 anchor implementation | `rekor_anchor_v2.py` + `tsa_client.py` (tile-backed log + RFC 3161 trusted timestamp) |
+| First live v2 anchor | log_index 4598985 (v5.11.0 e2e) |
 
 The 2025 Rekor v2 instance (`log2025-1.rekor.sigstore.dev`) will be
 turned down when a 2026 instance is deployed. Per Sigstore guidance,
