@@ -162,8 +162,10 @@ def build_dossier_spec_parser(
             "default: manifest.default_key_path())"
         ),
     )
+    # __nous_s95_cli_dossier_spec_rekor_v2_choice_v1__
     p.add_argument(
-        "--anchor", default="none", choices=["none", "rekor"],
+        "--anchor", default="none",
+        choices=["none", "rekor", "rekor_v2"],
         help=(
             "Transparency log anchor mode. 'none' (default) emits "
             "a v5.2.0-shape dossier with no transparency log. "
@@ -172,7 +174,12 @@ def build_dossier_spec_parser(
             "log and embeds the inclusion proof in manifest.json; "
             "the emitted verify_offline.py performs ECDSA-P-256 "
             "SignedEntryTimestamp verification against a pinned "
-            "Sigstore key allowlist."
+            "Sigstore key allowlist. "
+            "'rekor_v2' anchors into the tile-backed Rekor v2 log "
+            "and attaches an RFC 3161 trusted timestamp over the "
+            "leaf signature; the emitted verify_offline.py verifies "
+            "the v2 inclusion proof and the RFC 3161 token fully "
+            "offline (cryptography + stdlib)."
         ),
     )
     p.add_argument(

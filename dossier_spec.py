@@ -96,6 +96,7 @@ def build_dossier_spec(
     today: Optional[date] = None,
     anchor: str = "none",
     _test_rekor_anchor: "object | None" = None,
+    _test_rekor_anchor_v2: "object | None" = None,
 ) -> DossierSpecResult:
     """Build an Annex IV-aligned dossier from a SKILL.md skill directory.
 
@@ -245,12 +246,50 @@ def build_dossier_spec(
         signed_json = manifest_json(
             manifest, signature, pub, rekor_anchor=rekor_anchor_obj
         )
+    elif anchor == "rekor_v2":
+        # __nous_s95_dossier_spec_rekor_v2_emit_v1__
+        if _test_rekor_anchor_v2 is not None:
+            rekor_anchor_obj = _test_rekor_anchor_v2
+        else:
+            import json as _json
+            from rekor_anchor_v2 import anchor_manifest_to_rekor_v2
+            from rekor_entry import parse_rekor_leaf
+            from tsa_client import anchor_timestamp
+            v2_anchor = anchor_manifest_to_rekor_v2(
+                manifest_canonical_bytes=manifest.canonical_bytes(),
+            )
+            leaf = parse_rekor_leaf(
+                _json.loads(
+                    base64.b64decode(
+                        v2_anchor.body_b64, validate=True
+                    )
+                )
+            )
+            token_der = anchor_timestamp(
+                timestamped_data=leaf.leaf_signature_der,
+            )
+            rekor_anchor_obj = type(v2_anchor)(
+                rekor_api_version=v2_anchor.rekor_api_version,
+                log_id=v2_anchor.log_id,
+                log_index=v2_anchor.log_index,
+                body_b64=v2_anchor.body_b64,
+                checkpoint_envelope=v2_anchor.checkpoint_envelope,
+                inclusion_proof_hashes=list(
+                    v2_anchor.inclusion_proof_hashes
+                ),
+                rfc3161_token_b64=base64.b64encode(
+                    token_der
+                ).decode("ascii"),
+            )
+        signed_json = manifest_json(
+            manifest, signature, pub, rekor_anchor=rekor_anchor_obj
+        )
     elif anchor == "none":
         signed_json = manifest_json(manifest, signature, pub)
     else:
         raise DossierSpecError(
             f"unsupported anchor mode: {anchor!r} "
-            f"(expected 'none' or 'rekor')"
+            f"(expected 'none', 'rekor', or 'rekor_v2')"
         )
 
     if output is None:
@@ -315,6 +354,14 @@ def build_dossier_spec(
     if anchor == "rekor":
         verify_path.write_text(
             VERIFY_OFFLINE_PY_WITH_REKOR, encoding="utf-8"
+        )
+    elif anchor == "rekor_v2":
+        # __nous_s95_dossier_spec_rekor_v2_verifier_v1__
+        from offline_verifier_builder import build_offline_verifier_v2
+        from rekor_verify_v2 import KNOWN_REKOR_V2_LOG_KEYS
+        verify_path.write_text(
+            build_offline_verifier_v2(repr(KNOWN_REKOR_V2_LOG_KEYS)),
+            encoding="utf-8",
         )
     else:
         verify_path.write_text(VERIFY_OFFLINE_PY, encoding="utf-8")
