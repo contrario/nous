@@ -255,6 +255,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 - [Public Verification API](docs/VERIFY_DOSSIER.md) -- `POST /v1/verify-dossier`, trust model, three verification paths
 - [SKILL.md Sidecar](docs/SKILL_MD_SIDECAR.md) -- emit dossiers from existing agentskills.io skill folders
 - [Skill Export](docs/SKILL_EXPORT.md) -- emit agentskills.io skills from `.nous` programs
+- [Runtime Conformance](docs/RUNTIME_CONFORMANCE.md) -- prove a signed execution trace stayed inside the static proof's envelope; standalone signed certificate, Rekor v2 anchor, offline verifier
 
 ## Contributing
 
