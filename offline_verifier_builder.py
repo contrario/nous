@@ -521,3 +521,226 @@ def build_offline_verifier_v2(allowlist_literal: str = "{}") -> str:
         dispatch_main,
     ]
     return "".join(parts)
+
+
+_CONFORMANCE_DISPATCH_MAIN_LINES = (
+    "",
+    "",
+    "ROOT = Path(__file__).resolve().parent",
+    "",
+    "_BOOLS = (",
+    "    'binding_ok', 'surface_ok', 'assumption_discharge_ok',",
+    "    'bound_transfer_ok', 'authorization_ok', 'trace_signature_ok',",
+    ")",
+    "",
+    "",
+    "def _cfail(msg):",
+    "    print('FAIL: ' + msg, file=sys.stderr)",
+    "    return 1",
+    "",
+    "",
+    "def _canon(doc, drop):",
+    "    body = {k: v for k, v in doc.items() if k not in drop}",
+    "    return json.dumps(",
+    "        body, sort_keys=True, separators=(',', ':')",
+    "    ).encode('utf-8')",
+    "",
+    "",
+    "def _ed25519_ok(pub_b64, sig_b64, body):",
+    "    try:",
+    "        pub = Ed25519PublicKey.from_public_bytes(",
+    "            base64.b64decode(pub_b64, validate=True)",
+    "        )",
+    "        pub.verify(base64.b64decode(sig_b64, validate=True), body)",
+    "        return True",
+    "    except (InvalidSignature, ValueError):",
+    "        return False",
+    "",
+    "",
+    "def main(argv=None):",
+    "    parser = argparse.ArgumentParser(",
+    "        description=(",
+    "            'Offline verification of a NOUS runtime conformance '",
+    "            'certificate anchored in a Sigstore Rekor v2 log'",
+    "        )",
+    "    )",
+    "    parser.add_argument('--allow-unanchored', action='store_true')",
+    "    args = parser.parse_args(argv)",
+    "",
+    "    cert_p = ROOT / 'conformance.json'",
+    "    trace_p = ROOT / 'trace.json'",
+    "    man_p = ROOT / 'manifest.json'",
+    "    for label, pth in (",
+    "        ('conformance.json', cert_p),",
+    "        ('trace.json', trace_p),",
+    "        ('manifest.json', man_p),",
+    "    ):",
+    "        if not pth.is_file():",
+    "            return _cfail(label + ' not found in ' + str(ROOT))",
+    "    try:",
+    "        cert = json.loads(cert_p.read_text(encoding='utf-8'))",
+    "        trace = json.loads(trace_p.read_text(encoding='utf-8'))",
+    "        manifest = json.loads(man_p.read_text(encoding='utf-8'))",
+    "    except json.JSONDecodeError as e:",
+    "        return _cfail('JSON parse error: ' + str(e))",
+    "",
+    "    csig = cert.get('signature')",
+    "    if not isinstance(csig, dict):",
+    "        return _cfail('certificate has no signature block')",
+    "    cert_body = _canon(cert, ('signature', 'transparency_log'))",
+    "    if not _ed25519_ok(",
+    "        csig.get('public_key_b64', ''),",
+    "        csig.get('signature_b64', ''),",
+    "        cert_body,",
+    "    ):",
+    "        return _cfail('certificate Ed25519 signature does NOT verify')",
+    "    print('OK   certificate Ed25519 signature verified')",
+    "",
+    "    trace_sha = hashlib.sha256(",
+    "        _canon(trace, ('signature',))",
+    "    ).hexdigest()",
+    "    if cert.get('trace_sha256') != trace_sha:",
+    "        return _cfail('cert.trace_sha256 != sha256(trace body)')",
+    "    print('OK   certificate bound to this trace (sha256 match)')",
+    "",
+    "    for fld in ('source_sha256', 'smt_spec_sha256', 'pricing_sha256'):",
+    "        if cert.get(fld) != manifest.get(fld):",
+    "            return _cfail('cert.' + fld + ' != manifest.' + fld)",
+    "    print('OK   certificate bound to this manifest (3 shas match)')",
+    "",
+    "    tsig = trace.get('signature')",
+    "    if not isinstance(tsig, dict):",
+    "        return _cfail('trace has no signature block')",
+    "    if not _ed25519_ok(",
+    "        tsig.get('public_key_b64', ''),",
+    "        tsig.get('signature_b64', ''),",
+    "        _canon(trace, ('signature',)),",
+    "    ):",
+    "        return _cfail('trace Ed25519 signature does NOT verify')",
+    "    print('OK   trace Ed25519 signature verified')",
+    "",
+    "    missing = [b for b in _BOOLS if b not in cert]",
+    "    if missing:",
+    "        return _cfail('certificate missing fields: ' + str(missing))",
+    "    derived = all(bool(cert[b]) for b in _BOOLS)",
+    "    recorded = bool(cert.get('conformant'))",
+    "    if derived != recorded:",
+    "        return _cfail(",
+    "            'conformant=' + str(recorded) + ' inconsistent with '",
+    "            'the six obligations (' + str(derived) + ')'",
+    "        )",
+    "    print('OK   recorded verdict consistent with six obligations')",
+    "",
+    "    tlog = cert.get('transparency_log')",
+    "    if tlog is None:",
+    "        if not args.allow_unanchored:",
+    "            return _cfail(",
+    "                'transparency_log block missing; certificate is '",
+    "                'unanchored. Re-run with --allow-unanchored to accept '",
+    "                'Ed25519 + binding verification only.'",
+    "            )",
+    "        print()",
+    "        print('VERDICT: ' + ('PASS' if recorded else 'FAIL')",
+    "              + ' (signed certificate, unanchored)')",
+    "        return 0 if recorded else 1",
+    "",
+    "    if not isinstance(tlog, dict):",
+    "        return _cfail('transparency_log is not an object')",
+    "    if tlog.get('rekor_api_version') != 2:",
+    "        return _cfail('transparency_log.rekor_api_version is not 2')",
+    "",
+    "    trusted = load_trusted_log_keys()",
+    "    detail = verify_rekor_v2_anchor(",
+    "        manifest_body_bytes=cert_body,",
+    "        block=tlog,",
+    "        trusted_log_keys=trusted,",
+    "    )",
+    "    print(",
+    "        '     leaf_digest_ok=' + str(detail.leaf_digest_ok)",
+    "        + ' leaf_sig_ok=' + str(detail.leaf_sig_ok)",
+    "        + ' checkpoint_sig_ok=' + str(detail.checkpoint_sig_ok)",
+    "        + ' inclusion_proof_ok=' + str(detail.inclusion_proof_ok)",
+    "    )",
+    "    if not detail.ok:",
+    "        for err in detail.errors:",
+    "            print('     - ' + err, file=sys.stderr)",
+    "        return _cfail('Rekor v2 anchor verification failed')",
+    "    print(",
+    "        'OK   Rekor v2 anchor verified over certificate body '",
+    "        '(log_index=' + str(detail.log_index) + ')'",
+    "    )",
+    "",
+    "    print()",
+    "    print('VERDICT: ' + ('PASS' if recorded else 'FAIL')",
+    "          + ' (signed certificate + Sigstore Rekor v2 anchor)')",
+    "    print('  world:          ' + str(cert.get('world_name', '?')))",
+    "    print('  realized_total: ' + str(cert.get('realized_total', '?'))",
+    "          + ' ' + str(cert.get('cost_currency', '')))",
+    "    print('  cost_cap:       ' + str(cert.get('cost_cap', '?'))",
+    "          + ' ' + str(cert.get('cost_currency', '')))",
+    "    print('  conformant:     ' + str(recorded))",
+    "    print('  rekor_log_id:   ' + str(tlog.get('log_id')))",
+    "    print('  rekor_index:    ' + str(tlog.get('log_index')))",
+    "    return 0 if recorded else 1",
+    "",
+    "",
+    "if __name__ == '__main__':",
+    "    sys.exit(main())",
+    "",
+)  # __nous_conformance_anchored_verifier_v1__
+
+
+def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
+    """Assemble a standalone conformance verifier with Rekor v2 anchor check.
+
+    Reuses the same extracted v2 read-path segments + hoisted imports + anchor
+    shim as build_offline_verifier_v2 (single source of truth); only the
+    dispatch main() differs (certificate-shaped). __nous_conformance_anchored_verifier_v1__
+    """
+    entry_body = _extract_segments(
+        _PKG_DIR / "rekor_entry.py", _ENTRY_SYMBOLS, ENTRY_PINS
+    )
+    checkpoint_body = _extract_segments(
+        _PKG_DIR / "rekor_checkpoint.py", _CHECKPOINT_SYMBOLS, CHECKPOINT_PINS
+    )
+    tsa_body = _extract_segments(
+        _PKG_DIR / "tsa_verify.py", _TSA_SYMBOLS, TSA_PINS
+    )
+    v2_body = _extract_segments(
+        _PKG_DIR / "rekor_verify_v2.py", _V2_SYMBOLS, V2_PINS
+    )
+    header = (
+        "#!/usr/bin/env python3\n"
+        '"""Offline verification of a NOUS runtime conformance certificate\n'
+        "anchored in a Sigstore Rekor v2 (tile-backed) transparency log.\n"
+        "\n"
+        "Assembled by offline_verifier_builder.build_conformance_verifier_v2\n"
+        "from the NOUS Rekor v2 read-path modules. cryptography + stdlib only.\n"
+        "\n"
+        "Verifies, offline: certificate Ed25519 signature, cert<->trace and\n"
+        "cert<->manifest binding, trace Ed25519 signature, recorded-verdict\n"
+        "consistency, and the Rekor v2 anchor over the certificate body bytes.\n"
+        "SCOPE: authenticity + binding + anchor inclusion; NOT SMT bound\n"
+        "re-derivation (that is the online toolchain path).\n"
+        "\n"
+        "Usage: python3 verify_conformance_offline.py [--allow-unanchored]\n"
+        "Exit:  0 = PASS, 1 = FAIL, 2 = environment error.\n"
+        '"""\n'
+    )
+    allowlist_block = (
+        "\n\nKNOWN_REKOR_V2_LOG_KEYS = " + allowlist_literal + "\n"
+    )
+    anchor_shim = "\n".join(_ANCHOR_SHIM_LINES)
+    dispatch_main = "\n".join(_CONFORMANCE_DISPATCH_MAIN_LINES)
+    parts = [
+        header,
+        _HOISTED_IMPORTS,
+        allowlist_block,
+        "\n\n" + entry_body + "\n",
+        "\n\n" + checkpoint_body + "\n",
+        "\n\n" + tsa_body + "\n",
+        "\n\n" + v2_body + "\n",
+        anchor_shim,
+        dispatch_main,
+    ]
+    return "".join(parts)

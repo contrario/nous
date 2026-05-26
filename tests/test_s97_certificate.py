@@ -1,0 +1,329 @@
+"""S97 runtime conformance CERTIFICATE -- offline end-to-end tests.
+
+Extends S96 (verify_conformance) with the standalone signed certificate:
+build -> sign -> verify -> JSON round-trip -> offline verifier subprocess.
+Drives the real pipeline (emit_smt -> manifest_from_verify -> sign trace ->
+verify_conformance -> build_certificate -> sign_certificate), no network,
+no z3. The anchored Rekor path needs network and is covered structurally
+(the assembled v2 conformance verifier compiles) rather than end-to-end here.
+
+# __nous_s97_certificate_tests_v1__
+"""
+from __future__ import annotations
+
+import ast
+import json
+import subprocess
+import sys
+import tempfile
+import tomllib
+from datetime import date, datetime, timezone
+from pathlib import Path
+
+import pytest
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+from ast_nodes import (
+    CostCap,
+    MindNode,
+    NousProgram,
+    SoulNode,
+    TokensDecl,
+    WorldNode,
+)
+from conformance import (
+    ConformanceCertificate,
+    build_certificate,
+    certificate_json,
+    load_certificate,
+    sign_certificate,
+    verify_certificate_signature,
+    verify_conformance,
+)
+from conformance_verifier import emit_conformance_verifier
+from manifest import manifest_from_verify
+from offline_verifier_builder import build_conformance_verifier_v2
+from pricing import PricingTable as _PricingTable
+from rekor_verify_v2 import KNOWN_REKOR_V2_LOG_KEYS
+from smt_emit import emit_smt
+from smt_verify import VerifyResult
+from nous_trace import TraceEnvelope, TraceEvent, sign_trace
+
+TODAY = date(2026, 4, 28)
+_SOURCE_TEXT = "world Floor { cost_cap: 0.50 USD max_ticks: 5 }\n"
+
+PRICING_TOML = """\
+_schema_version = "2.0"
+_currency = "USD"
+[models."m1"]
+provider = "test"
+pricing_model = "per_token"
+input_per_1m = "1.00"
+output_per_1m = "5.00"
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+[models."m2"]
+provider = "test"
+pricing_model = "per_token"
+input_per_1m = "0.50"
+output_per_1m = "2.00"
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-04-28"
+"""
+
+
+@pytest.fixture
+def pricing() -> _PricingTable:
+    return _PricingTable.model_validate(tomllib.loads(PRICING_TOML))
+
+
+def _program(cost_cap: str = "0.50", max_ticks: int = 5) -> NousProgram:
+    from decimal import Decimal
+    return NousProgram(
+        world=WorldNode(
+            name="Floor",
+            cost_cap=CostCap(amount=Decimal(cost_cap), currency="USD"),
+            max_ticks=max_ticks,
+        ),
+        souls=[
+            SoulNode(
+                name="Analyst",
+                mind=MindNode(model="m1", tier="Tier1"),
+                tokens=TokensDecl(input=1000, output=500),
+            ),
+            SoulNode(
+                name="Trader",
+                mind=MindNode(model="m2", tier="Tier1"),
+                tokens=TokensDecl(input=400, output=200),
+            ),
+        ],
+    )
+
+
+def _spec(pricing: _PricingTable, **kw):
+    return emit_smt(
+        _program(**kw), pricing, source_text=_SOURCE_TEXT, today=TODAY
+    )
+
+
+def _manifest(spec):
+    return manifest_from_verify(
+        VerifyResult(
+            verdict="proven",
+            spec=spec,
+            solver_name="z3",
+            solver_version="z3 4.16.0",
+            elapsed_ms=23,
+            timestamp_utc=datetime.now(timezone.utc).isoformat(
+                timespec="seconds"
+            ),
+        ),
+        nous_version="5.13.0",
+    )
+
+
+def _event(seq, tick, soul, kind="llm_call", it=0, ot=0, tc="0"):
+    return TraceEvent(
+        seq=seq, tick=tick, soul=soul, kind=kind,
+        input_tokens=it, output_tokens=ot, tool_cost=tc,
+        timestamp_utc="2026-05-25T00:00:00Z",
+    )
+
+
+def _signed_trace(spec, events):
+    env = TraceEnvelope(
+        nous_version="5.13.0",
+        world_name=spec.world_name,
+        source_sha256=spec.source_sha256,
+        smt_spec_sha256=spec.sha256(),
+        pricing_sha256=spec.pricing_sha256,
+        events=events,
+    )
+    return sign_trace(env, Ed25519PrivateKey.generate())
+
+
+def _conforming(pricing):
+    spec = _spec(pricing)
+    man = _manifest(spec)
+    tr = _signed_trace(
+        spec,
+        [
+            _event(0, 0, "Analyst", it=900, ot=400),
+            _event(1, 1, "Trader", it=300, ot=150),
+        ],
+    )
+    detail = verify_conformance(tr, man, spec, pricing)
+    return spec, man, tr, detail
+
+
+def test_build_certificate_records_verdict(pricing: _PricingTable) -> None:
+    _spec_, man, tr, detail = _conforming(pricing)
+    cert = build_certificate(
+        detail, tr, man, nous_version="5.13.0", issued_utc="2026-05-26T00:00:00Z"
+    )
+    assert cert.conformant is True
+    assert cert.signature is None
+    assert cert.transparency_log is None
+    assert cert.source_sha256 == man.source_sha256
+    assert cert.smt_spec_sha256 == man.smt_spec_sha256
+    assert cert.pricing_sha256 == man.pricing_sha256
+
+
+def test_certificate_binds_trace_by_hash(pricing: _PricingTable) -> None:
+    import hashlib
+    _spec_, man, tr, detail = _conforming(pricing)
+    cert = build_certificate(
+        detail, tr, man, nous_version="5.13.0", issued_utc="t"
+    )
+    assert cert.trace_sha256 == hashlib.sha256(
+        tr.canonical_body_bytes()
+    ).hexdigest()
+
+
+def test_sign_then_verify_certificate(pricing: _PricingTable) -> None:
+    _spec_, man, tr, detail = _conforming(pricing)
+    cert = build_certificate(
+        detail, tr, man, nous_version="5.13.0", issued_utc="t"
+    )
+    signed = sign_certificate(cert, Ed25519PrivateKey.generate())
+    assert signed.signature is not None
+    assert verify_certificate_signature(signed) is True
+
+
+def test_certificate_byte_determinism(pricing: _PricingTable) -> None:
+    _spec_, man, tr, detail = _conforming(pricing)
+    c1 = build_certificate(
+        detail, tr, man, nous_version="5.13.0", issued_utc="t"
+    )
+    c2 = build_certificate(
+        detail, tr, man, nous_version="5.13.0", issued_utc="t"
+    )
+    assert (
+        c1.certificate_canonical_body_bytes()
+        == c2.certificate_canonical_body_bytes()
+    )
+
+
+def test_certificate_json_round_trip(pricing: _PricingTable) -> None:
+    _spec_, man, tr, detail = _conforming(pricing)
+    signed = sign_certificate(
+        build_certificate(
+            detail, tr, man, nous_version="5.13.0", issued_utc="t"
+        ),
+        Ed25519PrivateKey.generate(),
+    )
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d) / "conformance.json"
+        p.write_text(certificate_json(signed), encoding="utf-8")
+        loaded = load_certificate(str(p))
+    assert loaded == signed
+    assert verify_certificate_signature(loaded) is True
+
+
+def test_tampered_certificate_fails_verify(pricing: _PricingTable) -> None:
+    _spec_, man, tr, detail = _conforming(pricing)
+    signed = sign_certificate(
+        build_certificate(
+            detail, tr, man, nous_version="5.13.0", issued_utc="t"
+        ),
+        Ed25519PrivateKey.generate(),
+    )
+    bad = ConformanceCertificate(
+        **{**signed.model_dump(), "conformant": False}
+    )
+    assert verify_certificate_signature(bad) is False
+
+
+def test_non_conformant_is_certifiable(pricing: _PricingTable) -> None:
+    spec = _spec(pricing, cost_cap="0.0001")
+    man = _manifest(spec)
+    tr = _signed_trace(spec, [_event(0, 0, "Analyst", it=1000, ot=500)])
+    detail = verify_conformance(tr, man, spec, pricing)
+    assert detail.ok is False
+    signed = sign_certificate(
+        build_certificate(
+            detail, tr, man, nous_version="5.13.0", issued_utc="t"
+        ),
+        Ed25519PrivateKey.generate(),
+    )
+    assert signed.conformant is False
+    assert verify_certificate_signature(signed) is True
+    assert signed.errors
+
+
+def test_offline_verifier_passes_conforming(pricing: _PricingTable) -> None:
+    _spec_, man, tr, detail = _conforming(pricing)
+    from manifest import manifest_json, sign_manifest, load_or_create_keypair
+    signed = sign_certificate(
+        build_certificate(
+            detail, tr, man, nous_version="5.13.0", issued_utc="t"
+        ),
+        Ed25519PrivateKey.generate(),
+    )
+    with tempfile.TemporaryDirectory() as d:
+        dp = Path(d)
+        emit_conformance_verifier(str(dp), anchored=False)
+        (dp / "conformance.json").write_text(
+            certificate_json(signed), encoding="utf-8"
+        )
+        (dp / "trace.json").write_text(_trace_json(tr), encoding="utf-8")
+        priv, pub, _ = load_or_create_keypair(dp / "k.key")
+        sig = sign_manifest(man, priv)
+        (dp / "manifest.json").write_text(
+            manifest_json(man, sig, pub), encoding="utf-8"
+        )
+        r = subprocess.run(
+            [sys.executable, str(dp / "verify_conformance_offline.py")],
+            capture_output=True, text=True,
+        )
+    assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_offline_verifier_detects_trace_tamper(
+    pricing: _PricingTable,
+) -> None:
+    _spec_, man, tr, detail = _conforming(pricing)
+    from manifest import manifest_json, sign_manifest, load_or_create_keypair
+    signed = sign_certificate(
+        build_certificate(
+            detail, tr, man, nous_version="5.13.0", issued_utc="t"
+        ),
+        Ed25519PrivateKey.generate(),
+    )
+    with tempfile.TemporaryDirectory() as d:
+        dp = Path(d)
+        emit_conformance_verifier(str(dp), anchored=False)
+        (dp / "conformance.json").write_text(
+            certificate_json(signed), encoding="utf-8"
+        )
+        doc = json.loads(_trace_json(tr))
+        doc["events"][0]["input_tokens"] = 99999
+        (dp / "trace.json").write_text(json.dumps(doc), encoding="utf-8")
+        priv, pub, _ = load_or_create_keypair(dp / "k.key")
+        sig = sign_manifest(man, priv)
+        (dp / "manifest.json").write_text(
+            manifest_json(man, sig, pub), encoding="utf-8"
+        )
+        r = subprocess.run(
+            [sys.executable, str(dp / "verify_conformance_offline.py")],
+            capture_output=True, text=True,
+        )
+    assert r.returncode == 1
+
+
+def test_anchored_verifier_assembles_and_compiles() -> None:
+    src = build_conformance_verifier_v2(repr(KNOWN_REKOR_V2_LOG_KEYS))
+    ast.parse(src)
+    assert "verify_rekor_v2_anchor" in src
+    assert "def main" in src
+
+
+def test_emit_anchored_verifier_compiles() -> None:
+    with tempfile.TemporaryDirectory() as d:
+        p = emit_conformance_verifier(d, anchored=True)
+        ast.parse(p.read_text(encoding="utf-8"))
+
+
+def _trace_json(tr: TraceEnvelope) -> str:
+    doc = tr.model_dump()
+    return json.dumps(doc, sort_keys=True)

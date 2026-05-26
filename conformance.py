@@ -286,3 +286,197 @@ def verify_conformance(
         cost_cap=str(cost_cap),
         errors=tuple(errors),
     )
+
+
+import hashlib  # __nous_conformance_certificate_v1__
+import json as _json_cert  # __nous_conformance_certificate_v1__
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator  # __nous_conformance_certificate_v1__
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (  # __nous_conformance_certificate_v1__
+    Ed25519PrivateKey,
+)
+from cryptography.hazmat.primitives.serialization import (  # __nous_conformance_certificate_v1__
+    Encoding,
+    PublicFormat,
+)
+
+CERTIFICATE_SCHEMA_VERSION: int = 1  # __nous_conformance_certificate_v1__
+
+
+class CertificateSignature(BaseModel):  # __nous_conformance_certificate_v1__
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+
+    algorithm: str = Field(default="ed25519")
+    public_key_b64: str = Field(min_length=1)
+    signature_b64: str = Field(min_length=1)
+
+
+class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
+    """Standalone signed conformance verdict for one execution trace.
+
+    The signed body binds the verdict to the proof artifacts by hash, so a
+    verifier confirms cert -> trace -> manifest identity offline with no
+    re-emit and no Z3. Signature covers certificate_canonical_body_bytes().
+    """
+
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+
+    certificate_schema_version: int = Field(default=CERTIFICATE_SCHEMA_VERSION)
+    nous_version: str = Field(min_length=1)
+    world_name: str = Field(min_length=1)
+    issued_utc: str = Field(min_length=1)
+
+    source_sha256: str = Field(min_length=64, max_length=64)
+    smt_spec_sha256: str = Field(min_length=64, max_length=64)
+    pricing_sha256: str = Field(min_length=64, max_length=64)
+    trace_sha256: str = Field(min_length=64, max_length=64)
+
+    binding_ok: bool
+    surface_ok: bool
+    assumption_discharge_ok: bool
+    bound_transfer_ok: bool
+    authorization_ok: bool
+    trace_signature_ok: bool
+    conformant: bool
+
+    realized_total: str = Field(min_length=1)
+    cost_cap: str = Field(min_length=1)
+    cost_currency: str = Field(min_length=1)
+    errors: tuple[str, ...] = Field(default=())
+
+    signature: Optional[CertificateSignature] = Field(default=None)
+    transparency_log: Optional[dict] = Field(  # __nous_conformance_cert_anchor_v1__
+        default=None
+    )
+
+    @field_validator("errors", mode="before")
+    @classmethod
+    def _coerce_errors(cls, v: object) -> object:
+        if isinstance(v, list):
+            return tuple(v)
+        return v
+
+    def certificate_canonical_body_bytes(self) -> bytes:
+        doc = self.model_dump(  # __nous_conformance_cert_anchor_v1__
+            exclude={"signature", "transparency_log"}
+        )
+        return _json_cert.dumps(
+            doc, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+
+
+def _cert_public_key_raw_b64(public_key: Ed25519PublicKey) -> str:  # __nous_conformance_certificate_v1__
+    raw: bytes = public_key.public_bytes(Encoding.Raw, PublicFormat.Raw)
+    return base64.b64encode(raw).decode("ascii")
+
+
+def build_certificate(  # __nous_conformance_certificate_v1__
+    detail: ConformanceDetail,
+    trace: TraceEnvelope,
+    manifest: Manifest,
+    *,
+    nous_version: str,
+    issued_utc: str,
+) -> ConformanceCertificate:
+    """Record a computed ConformanceDetail as an unsigned certificate.
+
+    No recompute: detail is the authority (it was produced by
+    verify_conformance against the re-derived spec). The certificate binds the
+    verdict to source/spec/pricing (from the manifest's signed shas) and to the
+    trace (by sha256 of its canonical body bytes).
+    """
+    trace_sha = hashlib.sha256(trace.canonical_body_bytes()).hexdigest()
+    return ConformanceCertificate(
+        certificate_schema_version=CERTIFICATE_SCHEMA_VERSION,
+        nous_version=nous_version,
+        world_name=manifest.world_name,
+        issued_utc=issued_utc,
+        source_sha256=manifest.source_sha256,
+        smt_spec_sha256=manifest.smt_spec_sha256,
+        pricing_sha256=manifest.pricing_sha256,
+        trace_sha256=trace_sha,
+        binding_ok=detail.binding_ok,
+        surface_ok=detail.surface_ok,
+        assumption_discharge_ok=detail.assumption_discharge_ok,
+        bound_transfer_ok=detail.bound_transfer_ok,
+        authorization_ok=detail.authorization_ok,
+        trace_signature_ok=detail.trace_signature_ok,
+        conformant=detail.ok,
+        realized_total=detail.realized_total,
+        cost_cap=detail.cost_cap,
+        cost_currency="USD",
+        errors=tuple(detail.errors),
+    )
+
+
+def sign_certificate(  # __nous_conformance_certificate_v1__
+    cert: ConformanceCertificate,
+    private_key: Ed25519PrivateKey,
+) -> ConformanceCertificate:
+    body: bytes = cert.certificate_canonical_body_bytes()
+    raw_sig: bytes = private_key.sign(body)
+    sig = CertificateSignature(
+        algorithm="ed25519",
+        public_key_b64=_cert_public_key_raw_b64(private_key.public_key()),
+        signature_b64=base64.b64encode(raw_sig).decode("ascii"),
+    )
+    return ConformanceCertificate(
+        certificate_schema_version=cert.certificate_schema_version,
+        nous_version=cert.nous_version,
+        world_name=cert.world_name,
+        issued_utc=cert.issued_utc,
+        source_sha256=cert.source_sha256,
+        smt_spec_sha256=cert.smt_spec_sha256,
+        pricing_sha256=cert.pricing_sha256,
+        trace_sha256=cert.trace_sha256,
+        binding_ok=cert.binding_ok,
+        surface_ok=cert.surface_ok,
+        assumption_discharge_ok=cert.assumption_discharge_ok,
+        bound_transfer_ok=cert.bound_transfer_ok,
+        authorization_ok=cert.authorization_ok,
+        trace_signature_ok=cert.trace_signature_ok,
+        conformant=cert.conformant,
+        realized_total=cert.realized_total,
+        cost_cap=cert.cost_cap,
+        cost_currency=cert.cost_currency,
+        errors=tuple(cert.errors),
+        transparency_log=cert.transparency_log,  # __nous_conformance_cert_anchor_v1__
+        signature=sig,
+    )
+
+
+def verify_certificate_signature(  # __nous_conformance_certificate_v1__
+    cert: ConformanceCertificate,
+) -> bool:
+    if cert.signature is None:
+        return False
+    if cert.signature.algorithm != "ed25519":
+        return False
+    try:
+        pub_raw: bytes = base64.b64decode(
+            cert.signature.public_key_b64, validate=True
+        )
+        raw_sig: bytes = base64.b64decode(
+            cert.signature.signature_b64, validate=True
+        )
+        public_key = Ed25519PublicKey.from_public_bytes(pub_raw)
+        public_key.verify(raw_sig, cert.certificate_canonical_body_bytes())
+        return True
+    except (InvalidSignature, ValueError):
+        return False
+
+
+def certificate_json(cert: ConformanceCertificate) -> str:  # __nous_conformance_certificate_v1__
+    doc = cert.model_dump()
+    if doc.get("signature") is None:
+        doc.pop("signature", None)
+    if doc.get("transparency_log") is None:  # __nous_conformance_cert_anchor_v1__
+        doc.pop("transparency_log", None)
+    doc["errors"] = list(cert.errors)
+    return _json_cert.dumps(doc, indent=2, sort_keys=True) + "\n"
+
+
+def load_certificate(path: str) -> ConformanceCertificate:  # __nous_conformance_certificate_v1__
+    with open(path, "r", encoding="utf-8") as fh:
+        data = _json_cert.load(fh)
+    return ConformanceCertificate(**data)
