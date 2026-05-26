@@ -327,3 +327,105 @@ def test_emit_anchored_verifier_compiles() -> None:
 def _trace_json(tr: TraceEnvelope) -> str:
     doc = tr.model_dump()
     return json.dumps(doc, sort_keys=True)
+
+
+_SOULED_SOURCE = (  # __nous_s98_certify_cli_test_fix_v1__
+    "world Floor {\n"
+    "    cost_cap: 0.50 USD\n"
+    "    max_ticks: 5\n"
+    "}\n"
+    "soul Analyst {\n"
+    "    mind: m1 @ Tier1\n"
+    "    tokens: input=1000 output=500\n"
+    "}\n"
+    "soul Trader {\n"
+    "    mind: m2 @ Tier1\n"
+    "    tokens: input=400 output=200\n"
+    "}\n"
+)
+
+
+def test_certify_cli_verdict_print(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    """certify CLI must reach exit 0 through its verdict-print line.
+
+    Regression for the 5.13.0 detail.conformant crash (the attribute is .ok).
+    Builds spec/manifest/trace from a souls-bearing source STRING so the
+    CLI's re-emit from --source is consistent with the manifest. Unanchored
+    (no network).
+    """
+    import argparse
+
+    from parser import parse_nous
+    from cli_conformance import cmd_conformance
+    from manifest import (
+        manifest_json,
+        sign_manifest,
+        load_or_create_keypair,
+    )
+
+    program = parse_nous(_SOULED_SOURCE)
+    spec = emit_smt(
+        program, pricing, source_text=_SOULED_SOURCE, today=TODAY
+    )
+    man = manifest_from_verify(
+        VerifyResult(
+            verdict="proven",
+            spec=spec,
+            solver_name="z3",
+            solver_version="z3 4.16.0",
+            elapsed_ms=11,
+            timestamp_utc=datetime.now(timezone.utc).isoformat(
+                timespec="seconds"
+            ),
+        ),
+        nous_version="5.13.1",
+    )
+
+    env = TraceEnvelope(
+        nous_version="5.13.1",
+        world_name=spec.world_name,
+        source_sha256=spec.source_sha256,
+        smt_spec_sha256=spec.sha256(),
+        pricing_sha256=spec.pricing_sha256,
+        events=[
+            _event(0, 0, "Analyst", it=900, ot=400),
+            _event(1, 1, "Trader", it=300, ot=150),
+        ],
+    )
+    tr = sign_trace(env, Ed25519PrivateKey.generate())
+
+    src_p = tmp_path / "source.nous"
+    src_p.write_text(_SOULED_SOURCE, encoding="utf-8")
+    prices_p = tmp_path / "pricing.toml"
+    prices_p.write_text(PRICING_TOML, encoding="utf-8")
+    trace_p = tmp_path / "trace.json"
+    trace_p.write_text(_trace_json(tr), encoding="utf-8")
+
+    priv, pub, _ = load_or_create_keypair(tmp_path / "m.key")
+    sig = sign_manifest(man, priv)
+    man_p = tmp_path / "manifest.json"
+    man_p.write_text(manifest_json(man, sig, pub), encoding="utf-8")
+
+    out_p = tmp_path / "conformance.json"
+    ns = argparse.Namespace(
+        command="conformance",
+        conformance_cmd="certify",
+        trace=str(trace_p),
+        manifest=str(man_p),
+        prices=str(prices_p),
+        source=str(src_p),
+        out=str(out_p),
+        key_path=str(tmp_path / "cert.key"),
+        issued_utc="2026-05-26T00:00:00Z",
+        anchor=None,
+    )
+    rc = cmd_conformance(ns)
+    assert rc == 0
+    assert out_p.is_file()
+
+    loaded = load_certificate(str(out_p))
+    assert verify_certificate_signature(loaded) is True
+    assert loaded.conformant is True
+    assert loaded.transparency_log is None

@@ -222,7 +222,7 @@ def _cmd_certify(args: argparse.Namespace) -> int:  # __nous_cli_conformance_cer
     if signed.transparency_log is not None:
         print(f"anchored             rekor_v2 "
               f"log_index={signed.transparency_log.get('log_index')}")
-    print(f"VERDICT: {'PASS' if detail.conformant else 'FAIL'} "
+    print(f"VERDICT: {'PASS' if detail.ok else 'FAIL'} "
           f"(signed; trace_sha256={signed.trace_sha256[:16]}...)")
     return 0
 
