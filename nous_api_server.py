@@ -3153,6 +3153,67 @@ async def templates_save(
     }
 
 
+
+# __nous_s98_stage2_endpoint_v1__
+# ====================================================================
+# POST /v1/verify-conformance  (public, unauthenticated, rate-limited)
+#
+# Convenience wrapper around conformance.verify_certificate_from_json.
+# Mirrors the trust model of /v1/verify-dossier: NOT in the trust path;
+# offline verification with the emitted verify_conformance_offline.py
+# remains canonical. This endpoint exists so verify.html and any other
+# browser-native verifier can display structured PASS/FAIL without
+# requiring the user to install Python first.
+# ====================================================================
+
+
+class VerifyConformanceEndpointRequest(BaseModel):
+    """Request body for POST /v1/verify-conformance.
+
+    `certificate_json` is required (the artifact being verified).
+    `trace_json` and `manifest_json` are optional; when absent, the
+    corresponding binding checks are marked skipped (not failed) and the
+    verdict can be INCONCLUSIVE rather than PASS, mirroring the lib API.
+    """
+    model_config = ConfigDict(strict=True, extra="forbid")
+    certificate_json: str = Field(min_length=1, max_length=262144)
+    trace_json: Optional[str] = Field(
+        default=None, max_length=524288
+    )
+    manifest_json: Optional[str] = Field(
+        default=None, max_length=262144
+    )
+
+
+@app.post("/v1/verify-conformance", response_model=None)
+@limiter.limit("30/minute")
+async def verify_conformance_endpoint(
+    request: Request,
+    body: VerifyConformanceEndpointRequest,
+):
+    # No require_api_key call: public by design (parity with verify-dossier).
+    from conformance import verify_certificate_from_json
+    try:
+        result = verify_certificate_from_json(
+            cert_json=body.certificate_json,
+            trace_json=body.trace_json,
+            manifest_json=body.manifest_json,
+        )
+        return result
+    except Exception as exc:  # last-resort: lib promises no raise on bad input
+        return JSONResponse(
+            status_code=500,
+            content={
+                "spec_version": "verify-conformance/v1",
+                "parsed": False,
+                "verdict": "MALFORMED",
+                "errors": [
+                    f"unexpected_server_error: {type(exc).__name__}: {exc}"
+                ],
+            },
+        )
+
+
 @app.exception_handler(500)
 async def internal_error_handler(request: Request, exc):
     logger.error(f"Internal error: {traceback.format_exc()}")

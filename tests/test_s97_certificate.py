@@ -554,6 +554,64 @@ def test_verify_from_json_trace_binding_mismatch(
     assert result.signature.ok is True
 
 
+# __nous_s98_stage2_tests_v1__
+
+
+def _client():
+    from fastapi.testclient import TestClient
+    from nous_api_server import app
+    return TestClient(app)
+
+
+def test_verify_conformance_endpoint_full_bundle_passes(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    cert_s, tr_s, man_s = _full_bundle_json(pricing, tmp_path)
+    r = _client().post(
+        "/v1/verify-conformance",
+        json={
+            "certificate_json": cert_s,
+            "trace_json": tr_s,
+            "manifest_json": man_s,
+        },
+    )
+    assert r.status_code == 200
+    data = r.json()
+    assert data["spec_version"] == "verify-conformance/v1"
+    assert data["verdict"] == "PASS"
+    assert data["signature"]["ok"] is True
+    assert data["trace_binding"]["ok"] is True
+    assert data["manifest_binding"]["ok"] is True
+    assert data["errors"] == []
+
+
+def test_verify_conformance_endpoint_cert_only_inconclusive(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    cert_s, _, _ = _full_bundle_json(pricing, tmp_path)
+    r = _client().post(
+        "/v1/verify-conformance",
+        json={"certificate_json": cert_s},
+    )
+    assert r.status_code == 200
+    data = r.json()
+    assert data["verdict"] == "INCONCLUSIVE"
+    assert data["signature"]["ok"] is True
+    assert data["trace_binding"]["skipped"] is True
+    assert data["manifest_binding"]["skipped"] is True
+
+
+def test_verify_conformance_endpoint_malformed_json() -> None:
+    r = _client().post(
+        "/v1/verify-conformance",
+        json={"certificate_json": "{not valid"},
+    )
+    assert r.status_code == 200
+    data = r.json()
+    assert data["verdict"] == "MALFORMED"
+    assert data["parsed"] is False
+
+
 def test_verify_from_json_manifest_binding_mismatch(
     pricing: _PricingTable, tmp_path
 ) -> None:
