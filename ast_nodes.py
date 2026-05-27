@@ -114,6 +114,21 @@ class LawNode(NousNode):
     expr: LawExpr
 
 
+class LawSequenceNode(NousNode):  # __phase2_stage1_skeleton_ast_v1__
+    """Phase 2 sequence obligation: 'law before(A, B)' etc.
+
+    Carries no expr -- the constraint shape is encoded in `kind` + the
+    two event labels. Kept SEPARATE from LawNode (which is named +
+    expression-shaped) to keep the existing API untouched.
+
+    Stage 1 ships only `kind='before'`. Stage 2+ add 'never_after',
+    'after_only', and counter-shaped constraints.
+    """
+    kind: str  # 'before'
+    before_label: str
+    after_label: str
+
+
 # ═══════════════════════════════════════════
 # WORLD
 # ═══════════════════════════════════════════
@@ -144,6 +159,9 @@ class ReplayConfigNode(NousNode):
 class WorldNode(NousNode):
     name: str
     laws: list[LawNode] = Field(default_factory=list)
+    sequence_laws: list[LawSequenceNode] = Field(
+        default_factory=list
+    )  # __phase2_stage1_skeleton_ast_v1__
     policies: list["PolicyNode"] = Field(default_factory=list)
     cost_cap: Optional["CostCap"] = None  # __cost_cap_field_v1__
     max_ticks: Optional[int] = None  # __cost_cap_max_ticks_field_v1__

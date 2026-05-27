@@ -14,7 +14,7 @@ from decimal import Decimal  # __cost_cap_decimal_v1__
 
 from ast_nodes import (
     ConsciousnessNode, MetabolismNode, SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
-    NousProgram, WorldNode, LawNode, LawCost, LawCurrency, CostCap, TokensDecl, LawDuration,  # __cost_cap_import_v1__ + __cost_cap_tokens_import_v1__
+    NousProgram, WorldNode, LawNode, LawSequenceNode, LawCost, LawCurrency, CostCap, TokensDecl, LawDuration,  # __cost_cap_import_v1__ + __cost_cap_tokens_import_v1__ + __phase2_stage1_skeleton_parser_v1__
     PolicyNode,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
@@ -50,6 +50,18 @@ def _get_parser() -> Lark:
         grammar = _load_grammar()
         _PARSER_CACHE[key] = Lark(grammar, parser="lalr", start="start")
     return _PARSER_CACHE[key]
+
+
+def _is_token_with_type(x: object, t: str) -> bool:  # __phase2_stage1_skeleton_parser_v1__
+    """True iff x is a Lark Token with the given .type name.
+
+    Tolerates non-Token children silently (returns False).
+    """
+    try:
+        from lark import Token
+        return isinstance(x, Token) and x.type == t
+    except Exception:
+        return False
 
 
 class NousTransformer(Transformer):
@@ -366,7 +378,7 @@ class NousTransformer(Transformer):
         s = self._strip(items)
         return LawInt(value=s[0])
 
-    def law_decl(self, items: list) -> LawNode:
+    def law_decl_classic(self, items: list) -> LawNode:  # __phase2_stage1_skeleton_parser_v1__
         s = self._strip(items)
         return LawNode(name=s[0], expr=s[1])
 
@@ -515,6 +527,18 @@ class NousTransformer(Transformer):
     def world_body(self, items: list) -> Any:
         return items[0]
 
+    def law_decl_sequence_before(self, items: list) -> LawSequenceNode:  # __phase2_stage1_skeleton_parser_v1__
+        s = [str(x) for x in items[1:] if not _is_token_with_type(x, 'BEFORE')]
+        # items: [LAW token, BEFORE token, NAME, NAME]
+        # after filtering BEFORE we expect [LAW, NAME, NAME].
+        before_label = s[-2]
+        after_label = s[-1]
+        return LawSequenceNode(
+            kind="before",
+            before_label=before_label,
+            after_label=after_label,
+        )
+
     def world_decl(self, items: list) -> WorldNode:
         s = self._strip(items)
         name = s[0]
@@ -522,6 +546,8 @@ class NousTransformer(Transformer):
         for item in s[1:]:
             if isinstance(item, LawNode):
                 node.laws.append(item)
+            elif isinstance(item, LawSequenceNode):  # __phase2_stage1_skeleton_parser_v1__
+                node.sequence_laws.append(item)
             elif isinstance(item, PolicyNode):
                 node.policies.append(item)
             elif isinstance(item, ReplayConfigNode):

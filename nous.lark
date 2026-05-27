@@ -60,7 +60,9 @@ sense_body: "description" ":" STRING                   -> sense_description
 world_decl: WORLD NAME "{" world_body* "}"
 world_body: law_decl | heartbeat_decl | timezone_decl | telemetry_block | replay_block | policy_decl | config_assign | cost_cap_stmt | max_ticks_stmt  // __cost_cap_world_body_v1__ + __cost_cap_max_ticks_world_body_v1__
 
-law_decl: LAW NAME "=" law_expr
+// __phase2_stage1_skeleton_grammar_v1__
+law_decl: LAW NAME "=" law_expr                        -> law_decl_classic
+        | LAW BEFORE "(" NAME "," NAME ")"            -> law_decl_sequence_before
 law_expr: currency_lit PER CYCLE          -> law_cost
         | currency_lit                    -> law_currency
         | CONSTITUTIONAL "(" INT ")"      -> law_constitutional
@@ -458,6 +460,7 @@ MITOSIS.2: "mitosis" | "μίτωση"
 IMMUNE_SYSTEM.2: "immune_system" | "ανοσία"
 DREAM_SYSTEM.2: "dream_system" | "ονειρεύομαι"
 LAW.2: "law" | "νόμος"
+BEFORE.2: "before"  // __phase2_stage1_skeleton_grammar_v1__
 POLICY.2: "policy" | "πολιτική"
 GUARD.2: "guard" | "φύλακας"
 SLEEP.2: "sleep" | "ύπνος"
