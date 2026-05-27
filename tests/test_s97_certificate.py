@@ -37,6 +37,7 @@ from conformance import (
     certificate_json,
     load_certificate,
     sign_certificate,
+    verify_certificate_from_json,
     verify_certificate_signature,
     verify_conformance,
 )
@@ -429,3 +430,138 @@ def test_certify_cli_verdict_print(
     assert verify_certificate_signature(loaded) is True
     assert loaded.conformant is True
     assert loaded.transparency_log is None
+
+
+# __nous_s98_stage1_tests_v1__
+
+
+def _full_bundle_json(pricing: _PricingTable, tmp_path) -> tuple[str, str, str]:
+    """Build a souls-bearing, signed (cert, trace, manifest) triple as JSON."""
+    import argparse  # noqa: F401
+    from parser import parse_nous
+    from manifest import (
+        manifest_json as _manifest_json,
+        sign_manifest,
+        load_or_create_keypair,
+    )
+
+    src = _SOULED_SOURCE
+    program = parse_nous(src)
+    spec = emit_smt(program, pricing, source_text=src, today=TODAY)
+    man = manifest_from_verify(
+        VerifyResult(
+            verdict="proven",
+            spec=spec,
+            solver_name="z3",
+            solver_version="z3 4.16.0",
+            elapsed_ms=11,
+            timestamp_utc=datetime.now(timezone.utc).isoformat(
+                timespec="seconds"
+            ),
+        ),
+        nous_version="5.13.1",
+    )
+    env = TraceEnvelope(
+        nous_version="5.13.1",
+        world_name=spec.world_name,
+        source_sha256=spec.source_sha256,
+        smt_spec_sha256=spec.sha256(),
+        pricing_sha256=spec.pricing_sha256,
+        events=[
+            _event(0, 0, "Analyst", it=900, ot=400),
+            _event(1, 1, "Trader", it=300, ot=150),
+        ],
+    )
+    tr = sign_trace(env, Ed25519PrivateKey.generate())
+
+    priv, pub, _ = load_or_create_keypair(tmp_path / "mk.key")
+    msig = sign_manifest(man, priv)
+    man_str = _manifest_json(man, msig, pub)
+    tr_str = _trace_json(tr)
+
+    detail = verify_conformance(tr, man, spec, pricing)
+    cert = build_certificate(
+        detail=detail,
+        trace=tr,
+        manifest=man,
+        nous_version="5.13.1",
+        issued_utc="2026-05-26T00:00:00Z",
+    )
+    cpriv = Ed25519PrivateKey.generate()
+    cert_signed = sign_certificate(cert, cpriv)
+    return certificate_json(cert_signed), tr_str, man_str
+
+
+def test_verify_from_json_full_bundle_passes(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    cert_s, tr_s, man_s = _full_bundle_json(pricing, tmp_path)
+    result = verify_certificate_from_json(cert_s, tr_s, man_s)
+    assert result.verdict == "PASS"
+    assert result.parsed is True
+    assert result.signature.ok is True
+    assert result.verdict_consistency.ok is True
+    assert result.trace_binding.ok is True
+    assert result.trace_signature.ok is True
+    assert result.manifest_binding.ok is True
+    assert result.anchor is None
+    assert result.errors == []
+
+
+def test_verify_from_json_cert_only_is_inconclusive(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    cert_s, _, _ = _full_bundle_json(pricing, tmp_path)
+    result = verify_certificate_from_json(cert_s)
+    assert result.verdict == "INCONCLUSIVE"
+    assert result.signature.ok is True
+    assert result.verdict_consistency.ok is True
+    assert result.trace_binding.skipped is True
+    assert result.manifest_binding.skipped is True
+
+
+def test_verify_from_json_malformed_json() -> None:
+    result = verify_certificate_from_json("{not valid json}")
+    assert result.verdict == "MALFORMED"
+    assert result.parsed is False
+    assert any("parse error" in e for e in result.errors)
+
+
+def test_verify_from_json_tampered_signature(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    cert_s, _, _ = _full_bundle_json(pricing, tmp_path)
+    doc = json.loads(cert_s)
+    sig = doc["signature"]["signature_b64"]
+    flipped = ("A" if sig[0] != "A" else "B") + sig[1:]
+    doc["signature"]["signature_b64"] = flipped
+    tampered = json.dumps(doc)
+    result = verify_certificate_from_json(tampered)
+    assert result.verdict == "FAIL"
+    assert result.signature.ok is False
+
+
+def test_verify_from_json_trace_binding_mismatch(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    cert_s, tr_s, man_s = _full_bundle_json(pricing, tmp_path)
+    tr_doc = json.loads(tr_s)
+    tr_doc["nous_version"] = "5.99.99"  # changes canonical body -> sha mismatch
+    bad_trace = json.dumps(tr_doc)
+    result = verify_certificate_from_json(cert_s, bad_trace, man_s)
+    assert result.verdict == "FAIL"
+    assert result.trace_binding.ok is False
+    assert result.signature.ok is True
+
+
+def test_verify_from_json_manifest_binding_mismatch(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    cert_s, tr_s, man_s = _full_bundle_json(pricing, tmp_path)
+    man_doc = json.loads(man_s)
+    man_doc["source_sha256"] = "0" * 64
+    bad_manifest = json.dumps(man_doc)
+    result = verify_certificate_from_json(cert_s, tr_s, bad_manifest)
+    assert result.verdict == "FAIL"
+    assert result.manifest_binding.ok is False
+    assert result.trace_binding.ok is True

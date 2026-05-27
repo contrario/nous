@@ -480,3 +480,364 @@ def load_certificate(path: str) -> ConformanceCertificate:  # __nous_conformance
     with open(path, "r", encoding="utf-8") as fh:
         data = _json_cert.load(fh)
     return ConformanceCertificate(**data)
+
+
+# __nous_s98_stage1_lib_v1__
+# Lib-level verification API used by the public /v1/verify-conformance
+# endpoint and by any caller that has the JSON in hand (no paths required).
+
+from typing import Literal as _Literal
+
+
+class CertificateCheck(BaseModel):
+    """One named verification step + human-readable detail.
+
+    `ok` is True for pass, False for fail. `detail` is None on pass; on
+    failure it carries a short reason string. `skipped` marks checks that
+    were not run because optional input was missing (e.g. trace_json absent
+    -> trace_binding skipped).
+    """
+    model_config = ConfigDict(strict=True, extra="forbid")
+    ok: bool
+    detail: Optional[str] = None
+    skipped: bool = False
+
+
+class AnchorCheck(BaseModel):
+    """Rekor v2 transparency-log anchor sub-checks (when cert is anchored).
+
+    Mirrors the rekor_verify_v2 read path: leaf digest, leaf signature,
+    checkpoint signature, inclusion proof. overall_ok is the AND of all four.
+    Present only when the certificate carries a `transparency_log` block.
+    """
+    model_config = ConfigDict(strict=True, extra="forbid")
+    leaf_digest_ok: bool
+    leaf_sig_ok: bool
+    checkpoint_sig_ok: bool
+    inclusion_proof_ok: bool
+    overall_ok: bool
+    log_index: Optional[int] = None
+    checkpoint_origin: Optional[str] = None
+    detail: Optional[str] = None
+
+
+class CertificateVerificationResult(BaseModel):
+    """Top-level verification result, parity with verify-dossier/v2 shape.
+
+    `verdict` summarizes:
+      PASS         all RUN checks ok and recorded conformant is True
+      FAIL         at least one RUN check failed or recorded conformant False
+      INCONCLUSIVE certificate parsed and signed but binding/anchor checks
+                   could not be run because the optional inputs were absent
+      MALFORMED    the certificate JSON itself failed to parse / validate
+    """
+    model_config = ConfigDict(strict=True, extra="forbid")
+    spec_version: _Literal["verify-conformance/v1"] = "verify-conformance/v1"
+    parsed: bool
+    signature: CertificateCheck
+    verdict_consistency: CertificateCheck
+    trace_binding: CertificateCheck
+    trace_signature: CertificateCheck
+    manifest_binding: CertificateCheck
+    anchor: Optional[AnchorCheck] = None
+    conformant: Optional[bool] = None
+    verdict: _Literal["PASS", "FAIL", "INCONCLUSIVE", "MALFORMED"]
+    errors: list[str] = Field(default_factory=list)
+
+
+_OBLIGATION_FIELDS = (
+    "binding_ok",
+    "surface_ok",
+    "assumption_discharge_ok",
+    "bound_transfer_ok",
+    "authorization_ok",
+    "trace_signature_ok",
+)
+
+
+def _malformed(reason: str) -> "CertificateVerificationResult":
+    skipped = CertificateCheck(ok=False, skipped=True, detail="not run")
+    return CertificateVerificationResult(
+        parsed=False,
+        signature=CertificateCheck(ok=False, skipped=True, detail="not run"),
+        verdict_consistency=skipped,
+        trace_binding=skipped,
+        trace_signature=skipped,
+        manifest_binding=skipped,
+        anchor=None,
+        conformant=None,
+        verdict="MALFORMED",
+        errors=[reason],
+    )
+
+
+def _canonical_body_bytes_dict(doc: dict) -> bytes:
+    import json as _json  # __nous_s98_stage1_imports_hotfix_v1__
+    body = {k: v for k, v in doc.items() if k != "signature"}
+    return _json.dumps(
+        body, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+
+
+def verify_certificate_from_json(
+    cert_json: str,
+    trace_json: Optional[str] = None,
+    manifest_json: Optional[str] = None,
+) -> CertificateVerificationResult:
+    """Verify a runtime conformance certificate from JSON strings.
+
+    Pure function: no I/O, no network. Inputs are JSON text. Optional
+    trace_json / manifest_json enable the binding checks; their absence
+    causes those checks to be marked skipped (not failed).
+
+    The set of checks mirrors the emitted offline verifier:
+      1. certificate Ed25519 signature over its canonical body
+      2. recorded six-obligation booleans consistent with cert.conformant
+      3. cert.trace_sha256 == sha256(trace canonical body)   [needs trace]
+      4. trace Ed25519 signature over trace canonical body   [needs trace]
+      5. cert {source,smt_spec,pricing}_sha256 == manifest's [needs manifest]
+      6. if cert carries transparency_log: Rekor v2 leaf+checkpoint+proof
+    """
+    import base64 as _b64
+    import json  # __nous_s98_stage1_imports_hotfix_v1__
+    import hashlib  # __nous_s98_stage1_imports_hotfix_v1__
+    try:
+        cert_doc = json.loads(cert_json)
+    except json.JSONDecodeError as exc:
+        return _malformed(f"cert_json parse error: {exc}")
+    if not isinstance(cert_doc, dict):
+        return _malformed("cert_json is not a JSON object")
+
+    try:
+        cert = ConformanceCertificate.model_validate(
+            {k: v for k, v in cert_doc.items() if k != "signature"}
+        )
+    except Exception as exc:
+        return _malformed(f"certificate validation failed: {type(exc).__name__}: {exc}")
+
+    skipped = CertificateCheck(ok=False, skipped=True, detail="not run")
+    errors: list[str] = []
+
+    sig_block = cert_doc.get("signature")
+    if not isinstance(sig_block, dict):
+        return _malformed("certificate has no signature block")
+    if sig_block.get("algorithm") != "ed25519":
+        return _malformed("certificate signature algorithm is not ed25519")
+    cpub_b64 = sig_block.get("public_key_b64", "")
+    csig_b64 = sig_block.get("signature_b64", "")
+    if not cpub_b64 or not csig_b64:
+        return _malformed("certificate signature block incomplete")
+
+    body_bytes = _canonical_body_bytes_dict(cert_doc)
+    try:
+        cpub = Ed25519PublicKey.from_public_bytes(
+            _b64.b64decode(cpub_b64, validate=True)
+        )
+        cpub.verify(_b64.b64decode(csig_b64, validate=True), body_bytes)
+        signature_check = CertificateCheck(ok=True)
+    except Exception as exc:
+        signature_check = CertificateCheck(
+            ok=False, detail=f"ed25519 verify failed: {type(exc).__name__}"
+        )
+        errors.append("certificate Ed25519 signature does not verify")
+
+    missing = [b for b in _OBLIGATION_FIELDS if b not in cert_doc]
+    if missing:
+        verdict_check = CertificateCheck(
+            ok=False, detail=f"missing obligation fields: {missing}"
+        )
+        errors.append(f"certificate missing obligation fields: {missing}")
+    else:
+        derived = all(bool(cert_doc[b]) for b in _OBLIGATION_FIELDS)
+        recorded = bool(cert_doc.get("conformant"))
+        if derived == recorded:
+            verdict_check = CertificateCheck(ok=True)
+        else:
+            verdict_check = CertificateCheck(
+                ok=False,
+                detail=(
+                    f"recorded conformant={recorded} but six obligations "
+                    f"imply {derived}"
+                ),
+            )
+            errors.append("recorded verdict inconsistent with obligations")
+
+    if trace_json is None:
+        trace_binding = skipped
+        trace_signature = skipped
+    else:
+        try:
+            trace_doc = json.loads(trace_json)
+            if not isinstance(trace_doc, dict):
+                raise ValueError("trace_json is not a JSON object")
+        except (json.JSONDecodeError, ValueError) as exc:
+            trace_binding = CertificateCheck(
+                ok=False, detail=f"trace_json parse error: {exc}"
+            )
+            trace_signature = CertificateCheck(
+                ok=False, detail="not evaluated (trace_json malformed)"
+            )
+            errors.append("trace_json malformed")
+        else:
+            tbody = _canonical_body_bytes_dict(trace_doc)
+            tsha = hashlib.sha256(tbody).hexdigest()
+            if cert_doc.get("trace_sha256") == tsha:
+                trace_binding = CertificateCheck(ok=True)
+            else:
+                trace_binding = CertificateCheck(
+                    ok=False,
+                    detail=(
+                        f"cert.trace_sha256={str(cert_doc.get('trace_sha256'))[:16]}... "
+                        f"trace_actual={tsha[:16]}..."
+                    ),
+                )
+                errors.append("trace_binding mismatch")
+            tsig_block = trace_doc.get("signature")
+            if not isinstance(tsig_block, dict):
+                trace_signature = CertificateCheck(
+                    ok=False, detail="trace has no signature block"
+                )
+                errors.append("trace missing signature")
+            elif tsig_block.get("algorithm") != "ed25519":
+                trace_signature = CertificateCheck(
+                    ok=False, detail="trace signature algorithm is not ed25519"
+                )
+                errors.append("trace signature non-ed25519")
+            else:
+                try:
+                    tpub = Ed25519PublicKey.from_public_bytes(
+                        _b64.b64decode(
+                            tsig_block.get("public_key_b64", ""), validate=True
+                        )
+                    )
+                    tpub.verify(
+                        _b64.b64decode(
+                            tsig_block.get("signature_b64", ""), validate=True
+                        ),
+                        tbody,
+                    )
+                    trace_signature = CertificateCheck(ok=True)
+                except Exception as exc:
+                    trace_signature = CertificateCheck(
+                        ok=False,
+                        detail=f"trace ed25519 verify failed: {type(exc).__name__}",
+                    )
+                    errors.append("trace signature does not verify")
+
+    if manifest_json is None:
+        manifest_binding = skipped
+    else:
+        try:
+            man_doc = json.loads(manifest_json)
+            if not isinstance(man_doc, dict):
+                raise ValueError("manifest_json is not a JSON object")
+        except (json.JSONDecodeError, ValueError) as exc:
+            manifest_binding = CertificateCheck(
+                ok=False, detail=f"manifest_json parse error: {exc}"
+            )
+            errors.append("manifest_json malformed")
+        else:
+            mismatches = []
+            for fld in ("source_sha256", "smt_spec_sha256", "pricing_sha256"):
+                if cert_doc.get(fld) != man_doc.get(fld):
+                    mismatches.append(fld)
+            if mismatches:
+                manifest_binding = CertificateCheck(
+                    ok=False,
+                    detail=f"manifest binding mismatches in: {mismatches}",
+                )
+                errors.append(f"manifest binding mismatch: {mismatches}")
+            else:
+                manifest_binding = CertificateCheck(ok=True)
+
+    anchor: Optional[AnchorCheck] = None
+    tlog = cert_doc.get("transparency_log")
+    if isinstance(tlog, dict):
+        try:
+            from rekor_verify_v2 import (
+                verify_rekor_v2_anchor,
+                load_trusted_log_keys,
+                RekorV2AnchorMalformed,
+            )
+            keys = load_trusted_log_keys()
+            detail = verify_rekor_v2_anchor(
+                manifest_body_bytes=body_bytes,
+                block=tlog,
+                trusted_log_keys=keys,
+            )
+            anchor = AnchorCheck(
+                leaf_digest_ok=detail.leaf_digest_ok,
+                leaf_sig_ok=detail.leaf_sig_ok,
+                checkpoint_sig_ok=detail.checkpoint_sig_ok,
+                inclusion_proof_ok=detail.inclusion_proof_ok,
+                overall_ok=detail.ok,
+                log_index=detail.log_index,
+                checkpoint_origin=detail.checkpoint_origin,
+                detail="; ".join(detail.errors) if detail.errors else None,
+            )
+            if not detail.ok:
+                errors.append("rekor_v2 anchor verification failed")
+        except RekorV2AnchorMalformed as exc:
+            anchor = AnchorCheck(
+                leaf_digest_ok=False,
+                leaf_sig_ok=False,
+                checkpoint_sig_ok=False,
+                inclusion_proof_ok=False,
+                overall_ok=False,
+                log_index=None,
+                checkpoint_origin=None,
+                detail=f"anchor block malformed: {exc}",
+            )
+            errors.append("rekor_v2 anchor block malformed")
+        except Exception as exc:
+            anchor = AnchorCheck(
+                leaf_digest_ok=False,
+                leaf_sig_ok=False,
+                checkpoint_sig_ok=False,
+                inclusion_proof_ok=False,
+                overall_ok=False,
+                log_index=None,
+                checkpoint_origin=None,
+                detail=f"anchor verify error: {type(exc).__name__}: {exc}",
+            )
+            errors.append("rekor_v2 anchor verify error")
+
+    recorded_conformant = (
+        bool(cert_doc.get("conformant"))
+        if "conformant" in cert_doc
+        else None
+    )
+
+    ran_checks: list[CertificateCheck] = [signature_check, verdict_check]
+    if not trace_binding.skipped:
+        ran_checks.extend([trace_binding, trace_signature])
+    if not manifest_binding.skipped:
+        ran_checks.append(manifest_binding)
+    all_ran_ok = all(c.ok for c in ran_checks)
+    anchor_ok = (anchor is None) or anchor.overall_ok
+
+    inconclusive = (
+        trace_binding.skipped or manifest_binding.skipped
+    ) and all_ran_ok and anchor_ok and recorded_conformant is True
+
+    if not all_ran_ok or not anchor_ok:
+        verdict = "FAIL"
+    elif inconclusive:
+        verdict = "INCONCLUSIVE"
+    elif recorded_conformant is True:
+        verdict = "PASS"
+    else:
+        verdict = "FAIL"
+
+    return CertificateVerificationResult(
+        parsed=True,
+        signature=signature_check,
+        verdict_consistency=verdict_check,
+        trace_binding=trace_binding,
+        trace_signature=trace_signature,
+        manifest_binding=manifest_binding,
+        anchor=anchor,
+        conformant=recorded_conformant,
+        verdict=verdict,  # type: ignore[arg-type]
+        errors=errors,
+    )
