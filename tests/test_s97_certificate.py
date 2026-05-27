@@ -623,3 +623,105 @@ def test_verify_from_json_manifest_binding_mismatch(
     assert result.verdict == "FAIL"
     assert result.manifest_binding.ok is False
     assert result.trace_binding.ok is True
+
+
+# __nous_s98_stage1_anchored_regression_v1__
+
+
+def test_verify_from_json_anchored_signature_ok(
+    pricing: _PricingTable, tmp_path
+) -> None:
+    """Anchored cert: transparency_log MUST be excluded from canonical body.
+
+    Regression for the Stage 1 cert-canon-bytes bug. The signature is
+    computed over cert.certificate_canonical_body_bytes() which excludes
+    BOTH signature and transparency_log. verify_certificate_from_json must
+    use the same exclusion or the signature verify fails on any anchored
+    cert. This test sets a fake transparency_log block on a freshly signed
+    cert and asserts the signature still verifies.
+
+    No network: the transparency_log fields are constructed locally to
+    exercise the body-canonicalization path only. The anchor verification
+    itself will fail (no real Rekor key matches), but the SIGNATURE check
+    is what the bug broke, and that is what this test asserts.
+    """
+    from parser import parse_nous
+    from manifest import (
+        manifest_json as _manifest_json,
+        sign_manifest,
+        load_or_create_keypair,
+    )
+    src = _SOULED_SOURCE
+    program = parse_nous(src)
+    spec = emit_smt(program, pricing, source_text=src, today=TODAY)
+    man = manifest_from_verify(
+        VerifyResult(
+            verdict="proven",
+            spec=spec,
+            solver_name="z3",
+            solver_version="z3 4.16.0",
+            elapsed_ms=11,
+            timestamp_utc=datetime.now(timezone.utc).isoformat(
+                timespec="seconds"
+            ),
+        ),
+        nous_version="5.13.1",
+    )
+    env = TraceEnvelope(
+        nous_version="5.13.1",
+        world_name=spec.world_name,
+        source_sha256=spec.source_sha256,
+        smt_spec_sha256=spec.sha256(),
+        pricing_sha256=spec.pricing_sha256,
+        events=[
+            _event(0, 0, "Analyst", it=900, ot=400),
+            _event(1, 1, "Trader", it=300, ot=150),
+        ],
+    )
+    tr = sign_trace(env, Ed25519PrivateKey.generate())
+
+    priv, pub, _ = load_or_create_keypair(tmp_path / "mk.key")
+    msig = sign_manifest(man, priv)
+    man_str = _manifest_json(man, msig, pub)
+    tr_str = _trace_json(tr)
+
+    detail = verify_conformance(tr, man, spec, pricing)
+    cert = build_certificate(
+        detail=detail,
+        trace=tr,
+        manifest=man,
+        nous_version="5.13.1",
+        issued_utc="2026-05-26T00:00:00Z",
+    )
+    cert = cert.model_copy(update={
+        "transparency_log": {
+            "api_version": "rekor.sigstore.dev/v2alpha1",
+            "log_index": 1,
+            "checkpoint_envelope": "log2025-1.rekor.sigstore.dev\n1\n"
+                                   "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n",
+            "inclusion_proof_hashes": [],
+            "leaf_signature_b64":
+                "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+                "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+        },
+    })
+    cpriv = Ed25519PrivateKey.generate()
+    cert_signed = sign_certificate(cert, cpriv)
+    cert_s = certificate_json(cert_signed)
+
+    parsed = json.loads(cert_s)
+    assert parsed.get("transparency_log") is not None, (
+        "fixture must carry transparency_log to exercise the bug path"
+    )
+
+    result = verify_certificate_from_json(cert_s, tr_str, man_str)
+    assert result.signature.ok is True, (
+        "signature must verify even when transparency_log is present "
+        f"(canonicalization bug): detail={result.signature.detail}"
+    )
+    assert result.verdict_consistency.ok is True
+    assert result.trace_binding.ok is True
+    assert result.trace_signature.ok is True
+    assert result.manifest_binding.ok is True
+    assert result.anchor is not None
+    assert result.anchor.overall_ok is False

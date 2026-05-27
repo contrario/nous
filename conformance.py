@@ -579,6 +579,21 @@ def _canonical_body_bytes_dict(doc: dict) -> bytes:
     ).encode("utf-8")
 
 
+def _cert_canonical_body_bytes_dict(doc: dict) -> bytes:
+    # __nous_s98_stage1_cert_canon_hotfix_v1__
+    # Parity with ConformanceCertificate.certificate_canonical_body_bytes:
+    # signature is excluded (signature signs over body), AND
+    # transparency_log is excluded (anchor is stapled after signing).
+    import json as _json
+    body = {
+        k: v for k, v in doc.items()
+        if k not in ("signature", "transparency_log")
+    }
+    return _json.dumps(
+        body, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+
+
 def verify_certificate_from_json(
     cert_json: str,
     trace_json: Optional[str] = None,
@@ -628,7 +643,7 @@ def verify_certificate_from_json(
     if not cpub_b64 or not csig_b64:
         return _malformed("certificate signature block incomplete")
 
-    body_bytes = _canonical_body_bytes_dict(cert_doc)
+    body_bytes = _cert_canonical_body_bytes_dict(cert_doc)  # __nous_s98_stage1_cert_canon_hotfix_v1__
     try:
         cpub = Ed25519PublicKey.from_public_bytes(
             _b64.b64decode(cpub_b64, validate=True)
