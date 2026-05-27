@@ -1,0 +1,21 @@
+{
+  "cost_cap_usd": "0.5",
+  "elapsed_ms": 26,
+  "max_ticks": 5,
+  "nous_version": "5.13.1",
+  "pricing_sha256": "aa5c9f64e6b23c54aad456d51281871e8bdb98e2522baa44a05d1f1d58d95aca",
+  "schema_version": "1.0",
+  "signature": {
+    "algorithm": "ed25519",
+    "public_key_b64": "kT9t0/P32Rn9skoTYuB8NVNnxqXGW1LA9XguXe8s8zU=",
+    "signature_b64": "P2v5N85XM0KDkTe8eWtGimQ/eiqqTw84QfRVTWy4CNdm3WhSQT7aSoSZ4UsVHfLDN4Y5/gAHX/r6onlXSXmOAg=="
+  },
+  "smt_emit_version": "1.0",
+  "smt_spec_sha256": "26998182a62e6a5a10565c1394ba8c054217654d8e15b274de25cfc282456ed0",
+  "solver_name": "z3",
+  "solver_version": "z3 4.16.0",
+  "source_sha256": "a602394e8b8f96760ac979e9a6075a9f7e052be9050ffd2013ea424fb1d593b8",
+  "timestamp_utc": "2026-05-27T19:37:07+00:00",
+  "verdict": "proven",
+  "world_name": "TradingFloor"
+}
