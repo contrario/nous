@@ -172,6 +172,9 @@ byte-deterministic. The 57-template regression harness
 
 ## 6. Annex IV (3) -- Monitoring, functioning and control
 
+<!-- __session99_docs_second_pass_v1__ -->
+**Runtime evidence:** beyond the dossier (which records what the static SMT proof guarantees about every possible run), NOUS emits a runtime conformance certificate per execution. The certificate is a standalone Ed25519-signed artifact that records, for one specific run, six independent obligations (binding, surface, assumption_discharge, bound_transfer, authorization, trace_signature) against the re-derived static spec; with `--anchor rekor_v2` it is also stapled into the Sigstore Rekor v2 transparency log. The verdict is reproducible offline with `cryptography` plus stdlib only, no NOUS install required. See `RUNTIME_CONFORMANCE.md` for the six obligations, the SCITT-shaped rationale for keeping the certificate standalone (one static proof to many runtime certificates), and the honest scope limits (certificate proves the trace conforms, not that the trace faithfully records reality; full faithfulness against a malicious runtime needs a TEE or hardware attestation).
+
 **Annex IV requirement:** "Detailed information about the monitoring,
 functioning and control of the AI system, in particular with regard
 to: its capabilities and limitations in performance; the foreseeable

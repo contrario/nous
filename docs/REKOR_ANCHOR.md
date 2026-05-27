@@ -196,6 +196,7 @@ NOUS releases will update the allowlist within 30 days of any announced Sigstore
 ## See also
 
 - `EU_AI_ACT_COMPLIANCE.md` -- Article 14 governance trace context that motivates Rekor anchoring.
+- `RUNTIME_CONFORMANCE.md` -- runtime conformance certificate (separate signed artifact, reuses the v2 anchor write path; one static manifest can have many anchored conformance certificates, one per run). <!-- __session99_docs_second_pass_v1__ -->
 - `SKILL_EXPORT.md` -- the `nous skill-export --anchor rekor` customer flow.
 - `SKILL_MD_SIDECAR.md` -- the source schema (`SKILL.md` + `nous.yaml`) that the dossier pipeline anchors.
 - `COST_VERIFICATION_GUIDE.md` -- how `cost_cap` proofs interact with the dossier signing chain.

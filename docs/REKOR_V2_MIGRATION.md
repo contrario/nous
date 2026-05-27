@@ -409,6 +409,10 @@ of each fixture. Run once at fixture-creation time, never in CI.
 
 ## 11. Proposed implementation phases
 
+<!-- __session99_docs_second_pass_v1__ -->
+**Status as of May 2026:** P1 (trust root mirror) shipped in S84 (v5.6.0). P2 (v2 read path: leaf digest + leaf signature + checkpoint signature + RFC 6962 inclusion proof, plus the trusted-timestamp variant) shipped through v5.10.0 and is now the shared read path for both the dossier verifier and the runtime conformance certificate verifier. Rekor v2 is in PRODUCTION USE for runtime conformance certificates as of v5.13.0 (S97); the first publicly demonstrable anchored certificate is at log_index 4679350 (S98, v5.14.0), with its full reproducible bundle served at `nous-lang.org/proofs/cert-4679350/` and verifiable end-to-end in the browser at `/verify.html?demo=cert-4679350`. The dossier write path remains v1-default (P3 unflipped); the v2 write path is available via `--anchor rekor_v2` and is exercised by the conformance certificate flow. P4 (default flip to v2) and P5 (v1 write retirement) remain ahead.
+
+
 | Phase | Scope | Risk |
 |---|---|---|
 | P1 -- Trust root mirror | Add `infra/sigstore/signing_config.json` to repo, refresh via cron / systemd timer. Document refresh procedure. | Low |
