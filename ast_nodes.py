@@ -162,6 +162,7 @@ class WorldNode(NousNode):
     sequence_laws: list[LawSequenceNode] = Field(
         default_factory=list
     )  # __phase2_stage1_skeleton_ast_v1__
+    events: list[str] = Field(default_factory=list)  # __phase2_stage2_events_ast_field_v1__
     policies: list["PolicyNode"] = Field(default_factory=list)
     cost_cap: Optional["CostCap"] = None  # __cost_cap_field_v1__
     max_ticks: Optional[int] = None  # __cost_cap_max_ticks_field_v1__

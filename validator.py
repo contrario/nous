@@ -82,6 +82,7 @@ class NousValidator:
         self._check_noesis()
         self._check_custom_senses()
         self._check_replay()
+        self._check_sequence_law_events()  # __phase2_stage2_events_validator_v1__
         return self.result
 
     def _check_world_exists(self) -> None:
@@ -594,6 +595,42 @@ class NousValidator:
                     f"Policy {policy.name} kind, if provided, must be a non-empty string.",
                     loc,
                 )
+
+    def _check_sequence_law_events(self) -> None:  # __phase2_stage2_events_validator_v1__
+        world = self.program.world
+        if world is None:
+            return
+        loc = f"world {world.name}"
+        declared = list(world.events)
+        seen: set[str] = set()
+        duplicates: list[str] = []
+        for name in declared:
+            if name in seen and name not in duplicates:
+                duplicates.append(name)
+            seen.add(name)
+        for dup in duplicates:
+            self.result.error(
+                "SE003",
+                f"Duplicate event label '{dup}' in world.events.",
+                loc,
+            )
+        if not world.sequence_laws:
+            return
+        if not declared:
+            self.result.error(
+                "SE001",
+                "world has sequence laws but no 'events { ... }' block; declare every event label used by 'law before(...)' etc.",
+                loc,
+            )
+            return
+        for law in world.sequence_laws:
+            for label in (law.before_label, law.after_label):
+                if label not in seen:
+                    self.result.error(
+                        "SE002",
+                        f"Sequence law references undeclared event label '{label}'. Add it to world.events {{ ... }} or remove the law.",
+                        loc,
+                    )
 
 
 def validate_program(program: NousProgram) -> ValidationResult:

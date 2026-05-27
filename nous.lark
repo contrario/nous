@@ -58,7 +58,8 @@ sense_body: "description" ":" STRING                   -> sense_description
 // ═══════════════════════════════════════════
 
 world_decl: WORLD NAME "{" world_body* "}"
-world_body: law_decl | heartbeat_decl | timezone_decl | telemetry_block | replay_block | policy_decl | config_assign | cost_cap_stmt | max_ticks_stmt  // __cost_cap_world_body_v1__ + __cost_cap_max_ticks_world_body_v1__
+world_body: law_decl | heartbeat_decl | timezone_decl | telemetry_block | replay_block | policy_decl | config_assign | cost_cap_stmt | max_ticks_stmt | event_decl  // __cost_cap_world_body_v1__ + __cost_cap_max_ticks_world_body_v1__ + __phase2_stage2_events_grammar_v1__
+event_decl: EVENTS "{" NAME ("," NAME)* "}"  // __phase2_stage2_events_grammar_v1__
 
 // __phase2_stage1_skeleton_grammar_v1__
 law_decl: LAW NAME "=" law_expr                        -> law_decl_classic
@@ -437,6 +438,7 @@ time_lit: INT ":" INT NAME    -> time_hm
 // ═══════════════════════════════════════════
 
 WORLD.2: "world" | "κόσμος"
+EVENTS.2: "events"  // __phase2_stage2_events_grammar_v1__
 SOUL.2: "soul" | "ψυχή"
 MEMORY.2: "memory" | "μνήμη"
 INSTINCT.2: "instinct" | "ένστικτο"

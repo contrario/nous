@@ -539,6 +539,9 @@ class NousTransformer(Transformer):
             after_label=after_label,
         )
 
+    def event_decl(self, items: list) -> dict:  # __phase2_stage2_events_parser_v1__
+        return {"events": [str(x) for x in items[1:]]}
+
     def world_decl(self, items: list) -> WorldNode:
         s = self._strip(items)
         name = s[0]
@@ -563,6 +566,8 @@ class NousTransformer(Transformer):
                     node.cost_cap = item["cost_cap"]
                 elif "max_ticks" in item:  # __cost_cap_max_ticks_dispatch_v1__
                     node.max_ticks = item["max_ticks"]
+                elif "events" in item:  # __phase2_stage2_events_parser_v1__
+                    node.events = list(item["events"])
                 elif "config" in item:
                     k, v = item["config"]
                     node.config[k] = v
