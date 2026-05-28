@@ -12,6 +12,8 @@ Public API:
   CounterExample       frozen dataclass
   verify(spec, ...)    -> VerifyResult
   format_verdict(...)  -> str (human-readable summary)
+  verify_sequence(spec, ...)        -> SequenceVerifyResult
+  format_sequence_verdict(...)      -> str (ASCII summary)
 
 # __nous_smt_verify_module_v1__
 """
@@ -32,6 +34,9 @@ from smt_emit import SMTSpec
 # ─────────────────────────────────────────────────────────────────────
 
 Verdict = Literal["proven", "refuted", "unknown", "error"]
+SequenceVerdict = Literal[  # __phase2_stage4_seq_verify_v1__
+    "consistent", "inconsistent", "vacuous", "unknown", "error"
+]
 
 
 @dataclass(frozen=True)
@@ -73,6 +78,25 @@ class VerifyResult:
     elapsed_ms: int
     timestamp_utc: str
     counterexample: Optional[CounterExample] = None
+    error: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class SequenceVerifyResult:  # __phase2_stage4_seq_verify_v1__
+    """Outcome of running the solver against a spec's sequence script.
+
+    consistent  : z3 sat -- the 'before' laws admit a valid total order.
+    inconsistent: z3 unsat -- the laws contradict (e.g. before(a,b)+before(b,a)).
+    vacuous     : the spec declares no sequence laws; z3 is not invoked.
+    unknown     : z3 timeout / returned unknown.
+    error       : z3 unavailable or a parse/check error.
+    """
+    verdict: SequenceVerdict
+    spec: SMTSpec
+    solver_name: str
+    solver_version: str
+    elapsed_ms: int
+    timestamp_utc: str
     error: Optional[str] = None
 
 
@@ -283,6 +307,112 @@ def verify(
     )
 
 
+def verify_sequence(  # __phase2_stage4_seq_verify_v1__
+    spec: SMTSpec,
+    timeout_ms: int = 30_000,
+) -> SequenceVerifyResult:
+    """Run z3 against the spec's sequence-consistency script.
+
+    Polarity is INVERTED relative to verify(): the sequence script
+    asserts the ordering constraints directly, so SAT means the laws
+    are jointly satisfiable (a valid total order exists) and UNSAT
+    means they contradict. A spec with no sequence laws is 'vacuous'
+    and z3 is not invoked.
+    """
+    started: float = time.monotonic()
+    ts: str = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+    script: Optional[str] = spec.serialize_sequence()
+    if script is None:
+        return SequenceVerifyResult(
+            verdict="vacuous",
+            spec=spec,
+            solver_name="z3",
+            solver_version="n/a",
+            elapsed_ms=0,
+            timestamp_utc=ts,
+        )
+
+    try:
+        import z3
+    except ImportError:
+        return SequenceVerifyResult(
+            verdict="error",
+            spec=spec,
+            solver_name="z3",
+            solver_version="unavailable",
+            elapsed_ms=0,
+            timestamp_utc=ts,
+            error="z3-solver not installed; install with "
+                  "`pip install nous-lang[smt]`",
+        )
+
+    body: str = _strip_check_sat(script)
+    solver = z3.Solver()
+    solver.set("timeout", int(timeout_ms))
+
+    try:
+        solver.from_string(body)
+    except z3.Z3Exception as e:
+        return SequenceVerifyResult(
+            verdict="error",
+            spec=spec,
+            solver_name="z3",
+            solver_version=_solver_version(),
+            elapsed_ms=int((time.monotonic() - started) * 1000),
+            timestamp_utc=ts,
+            error=f"z3 parse error: {e}",
+        )
+
+    try:
+        check = solver.check()
+    except z3.Z3Exception as e:
+        return SequenceVerifyResult(
+            verdict="error",
+            spec=spec,
+            solver_name="z3",
+            solver_version=_solver_version(),
+            elapsed_ms=int((time.monotonic() - started) * 1000),
+            timestamp_utc=ts,
+            error=f"z3 check error: {e}",
+        )
+
+    elapsed_ms: int = int((time.monotonic() - started) * 1000)
+
+    if check == z3.sat:
+        return SequenceVerifyResult(
+            verdict="consistent",
+            spec=spec,
+            solver_name="z3",
+            solver_version=_solver_version(),
+            elapsed_ms=elapsed_ms,
+            timestamp_utc=ts,
+        )
+
+    if check == z3.unsat:
+        return SequenceVerifyResult(
+            verdict="inconsistent",
+            spec=spec,
+            solver_name="z3",
+            solver_version=_solver_version(),
+            elapsed_ms=elapsed_ms,
+            timestamp_utc=ts,
+            error="declared 'before' laws contradict; no total order "
+                  "satisfies all ordering constraints",
+        )
+
+    return SequenceVerifyResult(
+        verdict="unknown",
+        spec=spec,
+        solver_name="z3",
+        solver_version=_solver_version(),
+        elapsed_ms=elapsed_ms,
+        timestamp_utc=ts,
+        error=f"z3 returned unknown (timeout {timeout_ms}ms); reason: "
+              f"{solver.reason_unknown()}",
+    )
+
+
 # ─────────────────────────────────────────────────────────────────────
 # Human-readable formatting
 # ─────────────────────────────────────────────────────────────────────
@@ -426,5 +556,41 @@ def format_verdict(result: VerifyResult) -> str:
         return "\n".join(lines)
 
     # error
+    lines.append(f"ERROR: {result.error}")
+    return "\n".join(lines)
+
+
+def format_sequence_verdict(result: SequenceVerifyResult) -> str:  # __phase2_stage4_seq_verify_v1__
+    """Render a SequenceVerifyResult into a CLI-ready text block (ASCII)."""
+    spec = result.spec
+    lines: list[str] = []
+    lines.append("-" * 60)
+    lines.append(f"World:        {spec.world_name}")
+    lines.append(f"Solver:       {result.solver_version}")
+    lines.append(f"Elapsed:      {result.elapsed_ms}ms")
+    lines.append(f"Spec sha256:  {spec.sha256()[:16]}...")
+    lines.append(f"Seq laws:     {len(spec.sequence_assertions)}")
+    lines.append("-" * 60)
+
+    if result.verdict == "vacuous":
+        lines.append("VACUOUS: no sequence laws declared; nothing to check.")
+        return "\n".join(lines)
+    if result.verdict == "consistent":
+        lines.append(
+            "CONSISTENT: the declared 'before' laws admit a valid total "
+            "order."
+        )
+        lines.append(
+            f"  {len(spec.sequence_assertions)} ordering constraint(s) "
+            f"over {len(spec.sequence_declarations)} event label(s)."
+        )
+        return "\n".join(lines)
+    if result.verdict == "inconsistent":
+        lines.append("INCONSISTENT: the declared 'before' laws contradict.")
+        lines.append(f"  {result.error}")
+        return "\n".join(lines)
+    if result.verdict == "unknown":
+        lines.append(f"UNKNOWN: {result.error}")
+        return "\n".join(lines)
     lines.append(f"ERROR: {result.error}")
     return "\n".join(lines)
