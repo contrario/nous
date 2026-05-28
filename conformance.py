@@ -70,6 +70,7 @@ class ConformanceDetail:
     trace_signature_ok: bool
     realized_total: str
     cost_cap: str
+    sequence_ok: bool = True  # __phase2_stage5_seq_conformance_v1__
     errors: tuple[str, ...] = field(default=())
 
     @property
@@ -81,6 +82,7 @@ class ConformanceDetail:
             and self.bound_transfer_ok
             and self.authorization_ok
             and self.trace_signature_ok
+            and self.sequence_ok  # __phase2_stage5_seq_conformance_v1__
         )
 
 
@@ -106,6 +108,42 @@ def _event_cost(event: TraceEvent, bound: _SoulBound) -> Decimal:
         * Decimal(event.output_tokens)
         * bound.reasoning_token_multiplier
     ) / _MILLION
+
+
+def _check_sequence_obligations(  # __phase2_stage5_seq_conformance_v1__
+    trace: TraceEnvelope,
+    spec: "SMTSpec",
+) -> tuple[bool, list[str]]:
+    """Check every 'before(A, B)' law against the trace's action-labelled events.
+
+    Label = TraceEvent.action (the existing optional domain-action field); a
+    sequence-relevant event is one with action set. before(A, B) holds iff
+    every event with action == B has some earlier event (smaller seq) with
+    action == A. Vacuous (True) when the re-derived spec declares no laws.
+    The laws come from the re-derived spec (recompute-never-trust), not from
+    any unsigned sibling.
+    """
+    laws = spec.sequence_laws
+    if not laws:
+        return True, []
+    by_action: dict[str, list[int]] = {}
+    for ev in trace.events:
+        if ev.action is not None:
+            by_action.setdefault(ev.action, []).append(ev.seq)
+    ok = True
+    errors: list[str] = []
+    for (kind, a, b) in laws:
+        if kind != "before":
+            continue
+        a_positions = by_action.get(a, [])
+        for bpos in by_action.get(b, []):
+            if not any(apos < bpos for apos in a_positions):
+                ok = False
+                errors.append(
+                    f"sequence: action={b!r} at seq={bpos} has no preceding "
+                    f"action={a!r} (law before({a},{b}))"
+                )
+    return ok, errors
 
 
 def verify_conformance(
@@ -275,6 +313,11 @@ def verify_conformance(
     if not trace_signature_ok:
         errors.append("trace_signature: Ed25519 verify failed")
 
+    # 7. sequence obligations (Phase 2 stage 5): every 'before(A,B)' law must
+    #    hold over the trace's action-labelled events. Vacuous (True) when the
+    #    re-derived spec declares no sequence laws.
+    sequence_ok, sequence_errors = _check_sequence_obligations(trace, spec)  # __phase2_stage5_seq_conformance_v1__
+    errors.extend(sequence_errors)
     return ConformanceDetail(
         binding_ok=binding_ok,
         surface_ok=surface_ok,
@@ -284,6 +327,7 @@ def verify_conformance(
         trace_signature_ok=trace_signature_ok,
         realized_total=str(realized_total),
         cost_cap=str(cost_cap),
+        sequence_ok=sequence_ok,  # __phase2_stage5_seq_conformance_v1__
         errors=tuple(errors),
     )
 

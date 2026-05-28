@@ -80,6 +80,7 @@ class SMTSpec:
     ] = ()  # __session96_smtspec_soul_assumptions_v1__
     sequence_declarations: tuple[tuple[str, str], ...] = ()  # __phase2_stage3_seq_emit_v1__
     sequence_assertions: tuple[str, ...] = ()  # __phase2_stage3_seq_emit_v1__
+    sequence_laws: tuple[tuple[str, str, str], ...] = ()  # __phase2_stage5_seq_laws_v1__
 
     def serialize(self) -> str:
         lines: list[str] = []
@@ -421,6 +422,7 @@ def emit_smt(
 
     seq_decls: list[tuple[str, str]] = []  # __phase2_stage3_seq_emit_v1__
     seq_asserts: list[str] = []
+    seq_laws_struct: tuple[tuple[str, str, str], ...] = ()  # __phase2_stage5_seq_laws_v1__
     if world.sequence_laws:
         declared = set(world.events)
         for law in world.sequence_laws:
@@ -442,6 +444,10 @@ def emit_smt(
                 f"(assert (< seqrank_{law.before_label} "
                 f"seqrank_{law.after_label}))"
             )
+        seq_laws_struct = tuple(  # __phase2_stage5_seq_laws_v1__
+            (law.kind, law.before_label, law.after_label)
+            for law in world.sequence_laws
+        )
 
     return SMTSpec(
         nous_version=_import_nous_version(),
@@ -461,4 +467,5 @@ def emit_smt(
         soul_assumptions=tuple(soul_assumptions),  # __session96_emit_soul_assumptions_ctor_v1__
         sequence_declarations=tuple(seq_decls),  # __phase2_stage3_seq_emit_v1__
         sequence_assertions=tuple(seq_asserts),  # __phase2_stage3_seq_emit_v1__
+        sequence_laws=seq_laws_struct,  # __phase2_stage5_seq_laws_v1__
     )
