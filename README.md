@@ -256,6 +256,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 - [SKILL.md Sidecar](docs/SKILL_MD_SIDECAR.md) -- emit dossiers from existing agentskills.io skill folders
 - [Skill Export](docs/SKILL_EXPORT.md) -- emit agentskills.io skills from `.nous` programs
 - [Runtime Conformance](docs/RUNTIME_CONFORMANCE.md) -- prove a signed execution trace stayed inside the static proof's envelope; standalone signed certificate, Rekor v2 anchor, offline verifier
+- [Sequence Laws](docs/SEQUENCE_LAWS.md) -- declare ordering laws over an event alphabet; Z3 consistency proof (`nous verify-sequence`), the seventh runtime conformance obligation, schema-versioned certificate  <!-- __session100_sequence_laws_readme_v1__ -->
 
 ## Contributing
 
