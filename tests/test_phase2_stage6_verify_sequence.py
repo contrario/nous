@@ -109,3 +109,43 @@ def test_parser_registers_subcommand() -> None:
     assert ns.command == "verify-sequence"
     assert ns.file == "x.nous"
     assert ns.timeout_ms == 30000
+
+# __phase2_decouple_tests_v1__
+# Decouple sequence emission from pricing: an unpriced model must
+# still verify for ordering. 'gpt-4o' is intentionally NOT in the
+# pricing table; before the decouple this raised an uncaught KeyError.
+_UNPRICED_CONSISTENT = dedent('''\
+    world Demo {
+        cost_cap: 0.10 USD
+        max_ticks: 2
+        events { a, b }
+        law before(a, b)
+    }
+    soul S {
+        mind: gpt-4o @ Tier1
+        tokens: input = 100 output = 50
+    }
+''')
+_UNPRICED_INCONSISTENT = dedent('''\
+    world Demo {
+        cost_cap: 0.10 USD
+        max_ticks: 2
+        events { a, b }
+        law before(a, b)
+        law before(b, a)
+    }
+    soul S {
+        mind: gpt-4o @ Tier1
+        tokens: input = 100 output = 50
+    }
+''')
+def test_unpriced_model_consistent_exits_0(tmp_path: Path, capsys) -> None:
+    rc = cmd_verify_sequence(_args(_write(tmp_path, "uc.nous", _UNPRICED_CONSISTENT)))
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "CONSISTENT" in out
+def test_unpriced_model_inconsistent_exits_1(tmp_path: Path, capsys) -> None:
+    rc = cmd_verify_sequence(_args(_write(tmp_path, "ui.nous", _UNPRICED_INCONSISTENT)))
+    out = capsys.readouterr().out
+    assert rc == 1
+    assert "INCONSISTENT" in out

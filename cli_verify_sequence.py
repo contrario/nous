@@ -12,6 +12,10 @@ INCONSISTENT means they contradict (e.g. before(a,b)+before(b,a)).
 This is INVERTED from the cost proof, which is why it is a separate
 verb rather than a flag on `nous verify`.
 
+Sequence verification is independent of model cost, so this command
+uses emit_sequence_spec (no pricing). A program whose soul uses a
+model absent from the pricing table still verifies for ordering.
+
 Exit codes:
   0  consistent OR vacuous (no laws to violate)
   1  inconsistent (declared 'before' laws contradict)
@@ -20,26 +24,24 @@ Exit codes:
 
 Usage:
   nous verify-sequence file.nous
-  nous verify-sequence file.nous --prices /path/to/custom.toml
   nous verify-sequence file.nous --timeout-ms 60000
 
 # __nous_cli_verify_sequence_v1__
+# __phase2_decouple_cli_v1__
 """
 from __future__ import annotations
 
 import argparse
 import sys
 from pathlib import Path
-from typing import Optional
 
 from parser import parse_nous
-from pricing import load_pricing
-from smt_emit import EmitError, emit_smt
+from smt_emit import EmitError, emit_sequence_spec
 from smt_verify import format_sequence_verdict, verify_sequence
 
 
 def cmd_verify_sequence(args: argparse.Namespace) -> int:
-    """Parse a .nous file, emit its SMT spec, run the z3 sequence proof."""
+    """Parse a .nous file, emit its sequence spec, run the z3 proof."""
     src_path = Path(args.file)
     if not src_path.is_file():
         print(f"ERROR: file not found: {src_path}", file=sys.stderr)
@@ -52,19 +54,10 @@ def cmd_verify_sequence(args: argparse.Namespace) -> int:
         print(f"ERROR: failed to parse {src_path}: {e}", file=sys.stderr)
         return 3
 
-    custom_prices: Optional[Path] = (
-        Path(args.prices) if args.prices else None
-    )
     try:
-        pricing = load_pricing(custom_prices)
-    except Exception as e:
-        print(f"ERROR: failed to load pricing: {e}", file=sys.stderr)
-        return 3
-
-    try:
-        spec = emit_smt(program, pricing, source_text=source_text)
+        spec = emit_sequence_spec(program, source_text=source_text)
     except EmitError as e:
-        print(f"ERROR: cannot emit SMT for {src_path.name}:", file=sys.stderr)
+        print(f"ERROR: cannot emit sequence spec for {src_path.name}:", file=sys.stderr)
         print(f"  {e}", file=sys.stderr)
         return 3
 
@@ -89,18 +82,14 @@ def build_verify_sequence_parser(
             "Run the Z3 sequence-consistency proof over a .nous program. "
             "CONSISTENT means the declared 'before' laws admit a valid "
             "total order; INCONSISTENT means they contradict (a cycle). "
-            "Sibling of `nous verify --smt` (cost) and `nous conformance "
-            "verify` (runtime). Exit 0 consistent/vacuous, 1 inconsistent, "
-            "2 unknown/error, 3 parse failure."
+            "Independent of model pricing. Sibling of `nous verify --smt` "
+            "(cost) and `nous conformance verify` (runtime). Exit 0 "
+            "consistent/vacuous, 1 inconsistent, 2 unknown/error, 3 parse."
         ),
     )
     p.add_argument(
         "file",
         help="Path to a .nous source file.",
-    )
-    p.add_argument(
-        "--prices", metavar="PATH",
-        help="Override pricing TOML path (highest-priority layer).",
     )
     p.add_argument(
         "--timeout-ms", type=int, default=30_000, metavar="MS",

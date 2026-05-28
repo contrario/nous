@@ -336,6 +336,93 @@ def _per_call_cost_smt(
     )
 
 
+def _build_sequence_block(  # __phase2_decouple_seq_helper_v1__
+    world: WorldNode,
+) -> tuple[
+    list[tuple[str, str]],
+    list[str],
+    tuple[tuple[str, str, str], ...],
+]:
+    """Build the sequence-law SMT fields from a validated world.
+
+    Shared by emit_smt (cost + cert path) and emit_sequence_spec
+    (standalone consistency check). Pricing-independent: depends only
+    on the world's declared events and sequence laws.
+    """
+    seq_decls: list[tuple[str, str]] = []
+    seq_asserts: list[str] = []
+    seq_laws_struct: tuple[tuple[str, str, str], ...] = ()
+    if world.sequence_laws:
+        declared = set(world.events)
+        for law in world.sequence_laws:
+            if law.kind != "before":
+                raise EmitError(
+                    f"unsupported sequence law kind: {law.kind!r} "
+                    f"(stage 3 supports only 'before')"
+                )
+            for lbl in (law.before_label, law.after_label):
+                if lbl not in declared:
+                    raise EmitError(
+                        f"sequence law references undeclared event "
+                        f"label {lbl!r}; declare it in world.events"
+                    )
+        for lbl in sorted(declared):
+            seq_decls.append((f"seqrank_{lbl}", "Real"))
+        for law in world.sequence_laws:
+            seq_asserts.append(
+                f"(assert (< seqrank_{law.before_label} "
+                f"seqrank_{law.after_label}))"
+            )
+        seq_laws_struct = tuple(
+            (law.kind, law.before_label, law.after_label)
+            for law in world.sequence_laws
+        )
+    return seq_decls, seq_asserts, seq_laws_struct
+
+
+def emit_sequence_spec(  # __phase2_decouple_emit_sequence_spec_v1__
+    prog: NousProgram,
+    source_text: Optional[str] = None,
+) -> SMTSpec:
+    """Emit an SMTSpec carrying ONLY sequence fields, without pricing.
+
+    `nous verify-sequence` checks ordering-law consistency, which is
+    independent of model cost. emit_smt resolves a price for every soul
+    and raises on an unpriced model; that coupling forced sequence
+    verification to require a priced model. This path validates the
+    program structurally (world + souls), builds the sequence block, and
+    leaves all cost fields empty, so ordering laws can be checked on any
+    model -- priced or not.
+
+    The world's cost_cap and max_ticks are still required (enforced by
+    _validate_world) and recorded as metadata, but no cost assertions or
+    obligation are emitted and no pricing is consulted.
+    """
+    world = _validate_world(prog)
+    _validate_souls(prog)
+    seq_decls, seq_asserts, seq_laws_struct = _build_sequence_block(world)
+    return SMTSpec(
+        nous_version=_import_nous_version(),
+        smt_emit_version=SMT_EMIT_VERSION,
+        source_sha256=_source_sha256(source_text),
+        pricing_sha256="",
+        world_name=world.name,
+        cost_cap_amount=world.cost_cap.amount,
+        cost_cap_currency=world.cost_cap.currency,
+        max_ticks=world.max_ticks,
+        cost_cap_margin_pct=0,
+        declarations=(),
+        range_assertions=(),
+        cost_assertions=(),
+        obligation="",
+        soul_costs=(),
+        soul_assumptions=(),
+        sequence_declarations=tuple(seq_decls),
+        sequence_assertions=tuple(seq_asserts),
+        sequence_laws=seq_laws_struct,
+    )
+
+
 def emit_smt(
     prog: NousProgram,
     pricing: PricingTable,
@@ -420,34 +507,7 @@ def emit_smt(
     cap_smt = _decimal_to_rational(effective_cap)
     obligation = f"(assert (not (<= total_cost {cap_smt})))"
 
-    seq_decls: list[tuple[str, str]] = []  # __phase2_stage3_seq_emit_v1__
-    seq_asserts: list[str] = []
-    seq_laws_struct: tuple[tuple[str, str, str], ...] = ()  # __phase2_stage5_seq_laws_v1__
-    if world.sequence_laws:
-        declared = set(world.events)
-        for law in world.sequence_laws:
-            if law.kind != "before":
-                raise EmitError(
-                    f"unsupported sequence law kind: {law.kind!r} "
-                    f"(stage 3 supports only 'before')"
-                )
-            for lbl in (law.before_label, law.after_label):
-                if lbl not in declared:
-                    raise EmitError(
-                        f"sequence law references undeclared event "
-                        f"label {lbl!r}; declare it in world.events"
-                    )
-        for lbl in sorted(declared):
-            seq_decls.append((f"seqrank_{lbl}", "Real"))
-        for law in world.sequence_laws:
-            seq_asserts.append(
-                f"(assert (< seqrank_{law.before_label} "
-                f"seqrank_{law.after_label}))"
-            )
-        seq_laws_struct = tuple(  # __phase2_stage5_seq_laws_v1__
-            (law.kind, law.before_label, law.after_label)
-            for law in world.sequence_laws
-        )
+    seq_decls, seq_asserts, seq_laws_struct = _build_sequence_block(world)  # __phase2_decouple_seq_emit_v1__
 
     return SMTSpec(
         nous_version=_import_nous_version(),
