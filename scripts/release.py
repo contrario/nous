@@ -45,7 +45,7 @@ REPO_ROOT: Path = Path("/opt/aetherlang_agents/nous")
 DIST_DIR: Path = REPO_ROOT / "dist"
 TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
-PYTEST_FLOOR: int = 820  # __phase2_stage1_skeleton_floor_v1__  # __session98_release_floor_stage1_anchored_v1__  # __session98_release_floor_stage2_v1__  # __session98_release_floor_stage1_v1__  # __session98_release_floor_v1__  # __session97_release_floor_v1__  # __session96_release_floor_v1__  # __session95_release_v5_12_0_floor_v1__  # __session93_release_v5_11_0_floor_v1__  # __session86_release_v5_8_1_floor_v1__  # __session86_release_v5_8_0_floor_v1__  # __session86_release_v5_7_1_floor_v1__  # __session85_release_v5_7_0_floor_v1__  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__  # __session80_release_v5_3_0_release_script__  # __nous_aetherproof_release_530_packaging_v1__  # __session81_release_v5_4_0_release_script__  # __session82_release_v5_5_0_release_script__  # __session88_release_v5_9_0_floor_v1__  # __phase2_stage2_events_floor_v1__  # __phase2_stage3_seq_floor_v1__  # __phase2_stage4_seq_floor_v1__  # __phase2_stage5_seq_floor_v1__  # __phase2_stage5b_floor_v1__
+PYTEST_FLOOR: int = 826  # __phase2_stage1_skeleton_floor_v1__  # __session98_release_floor_stage1_anchored_v1__  # __session98_release_floor_stage2_v1__  # __session98_release_floor_stage1_v1__  # __session98_release_floor_v1__  # __session97_release_floor_v1__  # __session96_release_floor_v1__  # __session95_release_v5_12_0_floor_v1__  # __session93_release_v5_11_0_floor_v1__  # __session86_release_v5_8_1_floor_v1__  # __session86_release_v5_8_0_floor_v1__  # __session86_release_v5_7_1_floor_v1__  # __session85_release_v5_7_0_floor_v1__  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__  # __session80_release_v5_3_0_release_script__  # __nous_aetherproof_release_530_packaging_v1__  # __session81_release_v5_4_0_release_script__  # __session82_release_v5_5_0_release_script__  # __session88_release_v5_9_0_floor_v1__  # __phase2_stage2_events_floor_v1__  # __phase2_stage3_seq_floor_v1__  # __phase2_stage4_seq_floor_v1__  # __phase2_stage5_seq_floor_v1__  # __phase2_stage5b_floor_v1__  # __phase2_stage6_floor_v1__
 TEMPLATE_FOR_SMOKE: str = "sycophancy_guard"
 _ALLOW_EXISTING_TAG: bool = False  # __NERVE_DISPATCH_RELEASE_ALLOW_EXISTING_TAG_v1__
 PYFLAKES_TARGETS: tuple[str, ...] = (
@@ -236,7 +236,8 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "nous_trace.py",  # __session96_trace_wheelgate_v1__
                                 "conformance.py",  # __session96_conformance_wheelgate_v1__
                                 "conformance_verifier.py",  # __nous_conformance_verifier_wheelgate_v1__
-                                "cli_conformance.py"]  # __session96_cli_conformance_wheelgate_v1__
+                                "cli_conformance.py",  # __session96_cli_conformance_wheelgate_v1__
+                                "cli_verify_sequence.py"]  # __phase2_stage6_wheelgate_v1__
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
         raise ReleaseError(f"wheel missing files: {missing}")

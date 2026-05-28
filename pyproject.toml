@@ -88,6 +88,7 @@ py-modules = [
     "nous_trace",  # __session96_trace_pymodule_v1__
     "conformance",  # __session96_conformance_pymodule_v1__
     "cli_conformance",  # __session96_cli_conformance_pymodule_v1__
+    "cli_verify_sequence",  # __phase2_stage6_pymodule_v1__
     "conformance_verifier",  # __nous_conformance_verifier_pymodule_v1__
 ]
 

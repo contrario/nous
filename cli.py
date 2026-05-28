@@ -23,6 +23,7 @@ from cli_dossier import build_dossier_parser, cmd_dossier
 # __session77_cli_dossier_spec_wiring_v1__
 from cli_dossier_spec import build_dossier_spec_parser, cmd_dossier_spec
 from cli_conformance import build_conformance_parser, cmd_conformance  # __session96_cli_conformance_import_v1__
+from cli_verify_sequence import build_verify_sequence_parser, cmd_verify_sequence  # __phase2_stage6_cli_wiring_v1__
 # __session77_cli_skill_export_wiring_v1__
 from cli_skill_export import build_skill_export_parser, cmd_skill_export
 from cli_prices import build_prices_parser, cmd_prices
@@ -1661,6 +1662,7 @@ def main() -> int:
     # __session64_dossier_v1__
     build_dossier_spec_parser(sub)  # __session77_cli_dossier_spec_wiring_v1__
     build_conformance_parser(sub)  # __session96_cli_conformance_hook_v1__
+    build_verify_sequence_parser(sub)  # __phase2_stage6_cli_wiring_v1__
     build_skill_export_parser(sub)  # __session77_cli_skill_export_wiring_v1__
     # __cost_cap_phase3c_cli_hook_v1__
     build_emit_smt_parser(sub)
@@ -1765,6 +1767,7 @@ def main() -> int:
         "prices": cmd_prices, "dossier": cmd_dossier,
         "dossier-spec": cmd_dossier_spec,  # __session77_cli_dossier_spec_wiring_v1__
         "conformance": cmd_conformance,  # __session96_cli_conformance_dispatch_v1__
+        "verify-sequence": cmd_verify_sequence,  # __phase2_stage6_cli_wiring_v1__
         "skill-export": cmd_skill_export,  # __session77_cli_skill_export_wiring_v1__
         # __cost_cap_phase3c_cli_dispatch_v1__
         "emit-smt": cmd_emit_smt,
