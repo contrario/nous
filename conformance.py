@@ -344,7 +344,7 @@ from cryptography.hazmat.primitives.serialization import (  # __nous_conformance
     PublicFormat,
 )
 
-CERTIFICATE_SCHEMA_VERSION: int = 1  # __nous_conformance_certificate_v1__
+CERTIFICATE_SCHEMA_VERSION: int = 2  # __phase2_stage5b_cert_v1__ (was 1)
 
 
 class CertificateSignature(BaseModel):  # __nous_conformance_certificate_v1__
@@ -381,6 +381,7 @@ class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
     bound_transfer_ok: bool
     authorization_ok: bool
     trace_signature_ok: bool
+    sequence_ok: bool = True  # __phase2_stage5b_cert_v1__
     conformant: bool
 
     realized_total: str = Field(min_length=1)
@@ -404,6 +405,8 @@ class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
         doc = self.model_dump(  # __nous_conformance_cert_anchor_v1__
             exclude={"signature", "transparency_log"}
         )
+        if self.certificate_schema_version < 2:  # __phase2_stage5b_cert_v1__
+            doc.pop("sequence_ok", None)
         return _json_cert.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -445,6 +448,7 @@ def build_certificate(  # __nous_conformance_certificate_v1__
         bound_transfer_ok=detail.bound_transfer_ok,
         authorization_ok=detail.authorization_ok,
         trace_signature_ok=detail.trace_signature_ok,
+        sequence_ok=detail.sequence_ok,  # __phase2_stage5b_cert_v1__
         conformant=detail.ok,
         realized_total=detail.realized_total,
         cost_cap=detail.cost_cap,
@@ -479,6 +483,7 @@ def sign_certificate(  # __nous_conformance_certificate_v1__
         bound_transfer_ok=cert.bound_transfer_ok,
         authorization_ok=cert.authorization_ok,
         trace_signature_ok=cert.trace_signature_ok,
+        sequence_ok=cert.sequence_ok,  # __phase2_stage5b_sign_seqfix_v1__
         conformant=cert.conformant,
         realized_total=cert.realized_total,
         cost_cap=cert.cost_cap,
@@ -516,6 +521,8 @@ def certificate_json(cert: ConformanceCertificate) -> str:  # __nous_conformance
         doc.pop("signature", None)
     if doc.get("transparency_log") is None:  # __nous_conformance_cert_anchor_v1__
         doc.pop("transparency_log", None)
+    if cert.certificate_schema_version < 2:  # __phase2_stage5b_cert_v1__
+        doc.pop("sequence_ok", None)
     doc["errors"] = list(cert.errors)
     return _json_cert.dumps(doc, indent=2, sort_keys=True) + "\n"
 
@@ -598,6 +605,12 @@ _OBLIGATION_FIELDS = (
     "trace_signature_ok",
 )
 
+_OBLIGATION_FIELDS_V2 = _OBLIGATION_FIELDS + ("sequence_ok",)  # __phase2_stage5b_cert_v1__
+
+
+def _obligation_fields_for(schema_version: int) -> tuple:  # __phase2_stage5b_cert_v1__
+    return _OBLIGATION_FIELDS_V2 if schema_version >= 2 else _OBLIGATION_FIELDS
+
 
 def _malformed(reason: str) -> "CertificateVerificationResult":
     skipped = CertificateCheck(ok=False, skipped=True, detail="not run")
@@ -624,15 +637,19 @@ def _canonical_body_bytes_dict(doc: dict) -> bytes:
 
 
 def _cert_canonical_body_bytes_dict(doc: dict) -> bytes:
-    # __nous_s98_stage1_cert_canon_hotfix_v1__
+    # __nous_s98_stage1_cert_canon_hotfix_v1__ + __phase2_stage5b_cert_v1__
     # Parity with ConformanceCertificate.certificate_canonical_body_bytes:
     # signature is excluded (signature signs over body), AND
     # transparency_log is excluded (anchor is stapled after signing).
+    # For schema_version < 2 (v1 certs), sequence_ok is popped to preserve
+    # byte-identity with bodies signed before stage 5b shipped the field.
     import json as _json
     body = {
         k: v for k, v in doc.items()
         if k not in ("signature", "transparency_log")
     }
+    if int(body.get("certificate_schema_version", 1)) < 2:
+        body.pop("sequence_ok", None)
     return _json.dumps(
         body, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")
@@ -700,14 +717,16 @@ def verify_certificate_from_json(
         )
         errors.append("certificate Ed25519 signature does not verify")
 
-    missing = [b for b in _OBLIGATION_FIELDS if b not in cert_doc]
+    schema_v = int(cert_doc.get("certificate_schema_version", 1))  # __phase2_stage5b_cert_v1__
+    obligation_fields = _obligation_fields_for(schema_v)
+    missing = [b for b in obligation_fields if b not in cert_doc]
     if missing:
         verdict_check = CertificateCheck(
             ok=False, detail=f"missing obligation fields: {missing}"
         )
         errors.append(f"certificate missing obligation fields: {missing}")
     else:
-        derived = all(bool(cert_doc[b]) for b in _OBLIGATION_FIELDS)
+        derived = all(bool(cert_doc[b]) for b in obligation_fields)
         recorded = bool(cert_doc.get("conformant"))
         if derived == recorded:
             verdict_check = CertificateCheck(ok=True)
@@ -715,8 +734,8 @@ def verify_certificate_from_json(
             verdict_check = CertificateCheck(
                 ok=False,
                 detail=(
-                    f"recorded conformant={recorded} but six obligations "
-                    f"imply {derived}"
+                    f"recorded conformant={recorded} but "
+                    f"{len(obligation_fields)} obligations imply {derived}"
                 ),
             )
             errors.append("recorded verdict inconsistent with obligations")
