@@ -78,6 +78,8 @@ class SMTSpec:
     soul_assumptions: tuple[
         tuple[str, str, int, int, str, str, str], ...
     ] = ()  # __session96_smtspec_soul_assumptions_v1__
+    sequence_declarations: tuple[tuple[str, str], ...] = ()  # __phase2_stage3_seq_emit_v1__
+    sequence_assertions: tuple[str, ...] = ()  # __phase2_stage3_seq_emit_v1__
 
     def serialize(self) -> str:
         lines: list[str] = []
@@ -130,6 +132,36 @@ class SMTSpec:
         lines.append("(check-sat)")
         return "\n".join(lines) + "\n"
 
+    def serialize_sequence(self) -> Optional[str]:  # __phase2_stage3_seq_emit_v1__
+        if not self.sequence_assertions:
+            return None
+        lines: list[str] = []
+        lines.append("; ---------------------------------------------------------")
+        lines.append(
+            f"; NOUS smt_emit {self.smt_emit_version} - sequence consistency"
+        )
+        lines.append(f"; source.sha256:  {self.source_sha256}")
+        lines.append(f"; world: {self.world_name}")
+        lines.append(
+            "; SAT proves the declared ordering laws admit a valid total order"
+        )
+        lines.append(
+            "; UNSAT proves the laws contradict (e.g. before(a,b)+before(b,a))"
+        )
+        lines.append("; ---------------------------------------------------------")
+        lines.append("")
+        lines.append("(set-logic QF_LRA)")
+        lines.append("")
+        for var, sort in self.sequence_declarations:
+            lines.append(f"(declare-const {var} {sort})")
+        lines.append("")
+        lines.append("; ordering constraints (one per 'before' law)")
+        for a in self.sequence_assertions:
+            lines.append(a)
+        lines.append("")
+        lines.append("(check-sat)")
+        return "\n".join(lines) + "\n"
+
     def sha256(self) -> str:
         canonical: list[str] = []
         canonical.append(f"NV:{self.nous_version}")
@@ -152,6 +184,10 @@ class SMTSpec:
         for a in self.cost_assertions:
             canonical.append(f"A:{a}")
         canonical.append(f"O:{self.obligation}")
+        for var, sort in self.sequence_declarations:  # __phase2_stage3_seq_emit_v1__
+            canonical.append(f"SD:{var}:{sort}")
+        for a in self.sequence_assertions:  # __phase2_stage3_seq_emit_v1__
+            canonical.append(f"SA:{a}")
         encoded: bytes = "\n".join(canonical).encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()
 
@@ -383,6 +419,30 @@ def emit_smt(
     cap_smt = _decimal_to_rational(effective_cap)
     obligation = f"(assert (not (<= total_cost {cap_smt})))"
 
+    seq_decls: list[tuple[str, str]] = []  # __phase2_stage3_seq_emit_v1__
+    seq_asserts: list[str] = []
+    if world.sequence_laws:
+        declared = set(world.events)
+        for law in world.sequence_laws:
+            if law.kind != "before":
+                raise EmitError(
+                    f"unsupported sequence law kind: {law.kind!r} "
+                    f"(stage 3 supports only 'before')"
+                )
+            for lbl in (law.before_label, law.after_label):
+                if lbl not in declared:
+                    raise EmitError(
+                        f"sequence law references undeclared event "
+                        f"label {lbl!r}; declare it in world.events"
+                    )
+        for lbl in sorted(declared):
+            seq_decls.append((f"seqrank_{lbl}", "Real"))
+        for law in world.sequence_laws:
+            seq_asserts.append(
+                f"(assert (< seqrank_{law.before_label} "
+                f"seqrank_{law.after_label}))"
+            )
+
     return SMTSpec(
         nous_version=_import_nous_version(),
         smt_emit_version=SMT_EMIT_VERSION,
@@ -399,4 +459,6 @@ def emit_smt(
         obligation=obligation,
         soul_costs=tuple(soul_costs),
         soul_assumptions=tuple(soul_assumptions),  # __session96_emit_soul_assumptions_ctor_v1__
+        sequence_declarations=tuple(seq_decls),  # __phase2_stage3_seq_emit_v1__
+        sequence_assertions=tuple(seq_asserts),  # __phase2_stage3_seq_emit_v1__
     )
