@@ -549,6 +549,16 @@ class NousTransformer(Transformer):
             after_label=forbidden_label,
         )
 
+    def law_decl_sequence_leads_to(self, items: list) -> LawSequenceNode:  # __phase2_stage7b_leads_to_parser_v1__
+        s = [str(x) for x in items[1:] if not _is_token_with_type(x, 'LEADS_TO')]
+        cause_label = s[-2]
+        effect_label = s[-1]
+        return LawSequenceNode(
+            kind="leads_to",
+            before_label=cause_label,
+            after_label=effect_label,
+        )
+
     def event_decl(self, items: list) -> dict:  # __phase2_stage2_events_parser_v1__
         return {"events": [str(x) for x in items[1:]]}
 

@@ -142,7 +142,7 @@ def test_undeclared_label_raises_emit_error(pricing: PricingTable) -> None:
 
 
 def test_unsupported_kind_raises_emit_error(pricing: PricingTable) -> None:  # __phase2_stage7a_never_after_stage3_fix_v1__
-    bad = LawSequenceNode(kind="after_only", before_label="a", after_label="b")
+    bad = LawSequenceNode(kind="at_most", before_label="a", after_label="b")
     with pytest.raises(EmitError) as exc:
         emit_smt(
             _prog([bad], ["a", "b"]),
@@ -161,6 +161,16 @@ def test_never_after_emits_swapped_rank_assertion(pricing: PricingTable) -> None
     assert ("seqrank_b", "Real") in spec.sequence_declarations
     assert "(assert (< seqrank_b seqrank_a))" in spec.sequence_assertions
     assert "(assert (< seqrank_a seqrank_b))" not in spec.sequence_assertions
+
+
+def test_leads_to_emits_forward_rank_assertion(pricing: PricingTable) -> None:  # __phase2_stage7b_leads_to_stage3_v1__
+    law = LawSequenceNode(kind="leads_to", before_label="a", after_label="b")
+    spec = emit_smt(
+        _prog([law], ["a", "b"]),
+        pricing, source_text="x", today=_TODAY,
+    )
+    assert "(assert (< seqrank_a seqrank_b))" in spec.sequence_assertions
+    assert "(assert (< seqrank_b seqrank_a))" not in spec.sequence_assertions
 
 
 def test_emit_is_deterministic(pricing: PricingTable) -> None:

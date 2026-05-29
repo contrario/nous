@@ -153,3 +153,43 @@ def test_detail_ok_conjoins_sequence_ok() -> None:
     assert _detail().ok is True
     assert _detail(sequence_ok=True).ok is True
     assert _detail(sequence_ok=False).ok is False
+
+
+def _never_after(a, b):  # __phase2_stage7b_leads_to_conformance_tests_v1__
+    return LawSequenceNode(kind="never_after", before_label=a, after_label=b)
+
+
+def _leads_to(a, b):
+    return LawSequenceNode(kind="leads_to", before_label=a, after_label=b)
+
+
+def test_never_after_ok_when_b_precedes_a(pricing) -> None:
+    spec = _spec(pricing, [_never_after("a", "b")], ["a", "b"])
+    ok, errs = _check_sequence_obligations(
+        _trace([_ev(0, "b"), _ev(1, "a")]), spec,
+    )
+    assert ok is True and errs == []
+
+
+def test_never_after_fails_when_b_follows_a(pricing) -> None:
+    spec = _spec(pricing, [_never_after("a", "b")], ["a", "b"])
+    ok, errs = _check_sequence_obligations(
+        _trace([_ev(0, "a"), _ev(1, "b")]), spec,
+    )
+    assert ok is False and len(errs) == 1
+
+
+def test_leads_to_ok_when_b_follows_a(pricing) -> None:
+    spec = _spec(pricing, [_leads_to("a", "b")], ["a", "b"])
+    ok, errs = _check_sequence_obligations(
+        _trace([_ev(0, "a"), _ev(1, "b")]), spec,
+    )
+    assert ok is True and errs == []
+
+
+def test_leads_to_fails_when_a_has_no_following_b(pricing) -> None:
+    spec = _spec(pricing, [_leads_to("a", "b")], ["a", "b"])
+    ok, errs = _check_sequence_obligations(
+        _trace([_ev(0, "a")]), spec,
+    )
+    assert ok is False and len(errs) == 1

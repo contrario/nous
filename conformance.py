@@ -150,6 +150,15 @@ def _check_sequence_obligations(  # __phase2_stage5_seq_conformance_v1__
                         f"sequence: action={b!r} at seq={bpos} occurs after "
                         f"action={a!r} (law never_after({a},{b}))"
                     )
+        elif kind == "leads_to":  # __phase2_stage7b_leads_to_conformance_v1__
+            b_positions = by_action.get(b, [])
+            for apos in a_positions:
+                if not any(bpos > apos for bpos in b_positions):
+                    ok = False
+                    errors.append(
+                        f"sequence: action={a!r} at seq={apos} has no following "
+                        f"action={b!r} (law leads_to({a},{b}))"
+                    )
     return ok, errors
 
 

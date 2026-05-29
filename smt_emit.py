@@ -355,10 +355,10 @@ def _build_sequence_block(  # __phase2_decouple_seq_helper_v1__
     if world.sequence_laws:
         declared = set(world.events)
         for law in world.sequence_laws:
-            if law.kind not in ("before", "never_after"):  # __phase2_stage7a_never_after_seq_emit_v1__
+            if law.kind not in ("before", "never_after", "leads_to"):  # __phase2_stage7a_never_after_seq_emit_v1__  # __phase2_stage7b_leads_to_seq_emit_v1__
                 raise EmitError(
                     f"unsupported sequence law kind: {law.kind!r} "
-                    f"(supported: 'before', 'never_after')"
+                    f"(supported: 'before', 'never_after', 'leads_to')"
                 )
             for lbl in (law.before_label, law.after_label):
                 if lbl not in declared:
