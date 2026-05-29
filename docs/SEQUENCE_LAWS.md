@@ -1,12 +1,15 @@
 <!-- __session100_sequence_laws_doc_v1__ -->
 # Sequence Laws
 
-**Status:** shipped v5.15.0 (28 May 2026). The Phase 2 sequence arc:
-events declaration + validator (S2), sequence-consistency SMT emission
-(S3), Z3 consistency proof (S4), runtime sequence conformance (S5a), the
-seventh certificate obligation (S5b), and the `nous verify-sequence` CLI
-(S6). Currently the `before(A, B)` ordering law is supported;
-`never_after`, `after_only`, and `at_most` are future work.
+**Status:** shipped v5.15.0 (28 May 2026); ordering-law family extended
+in v5.16.0. The Phase 2 sequence arc: events declaration + validator
+(S2), sequence-consistency SMT emission (S3), Z3 consistency proof (S4),
+runtime sequence conformance (S5a), the seventh certificate obligation
+(S5b), and the `nous verify-sequence` CLI (S6). v5.16.0 adds two more
+ordering laws (S7a/S7b). Three ordering laws are now supported --
+`before`, `never_after`, and `leads_to` -- forming the canonical
+Dwyer precedence/absence/response family. `at_most(N, label)` (a
+bounded count) remains future work.
 
 ---
 
@@ -58,6 +61,36 @@ silently inventing the label.
 
 ---
 
+## The ordering-law family
+
+Three ordering laws are supported. All share one static model -- a
+single real-valued rank per event label asserting a strict order -- and
+differ in the runtime obligation they impose on a trace. They map onto
+the canonical Dwyer property-specification patterns.
+
+| Law | Reading | Static assertion | Runtime obligation | Dwyer pattern |
+|-----|---------|------------------|--------------------|---------------|
+| `before(A, B)` | A precedes B | `(< seqrank_A seqrank_B)` | every B has an earlier A | Precedence |
+| `leads_to(A, B)` | A is eventually followed by B | `(< seqrank_A seqrank_B)` | every A has a later B | Response (`~>`) |
+| `never_after(A, B)` | once A, never B | `(< seqrank_B seqrank_A)` | no B has an earlier A | Absence (after scope) |
+
+`before` and `leads_to` are duals over the same static order:
+`before` is the precedence/safety reading (a B without a preceding A
+is the violation), `leads_to` is the response/liveness reading (an A
+without a following B is the violation). Because they assert the same
+rank, `before(A, B)` plus `leads_to(A, B)` over one pair is consistent.
+`never_after` is the prohibition reading and emits the swapped rank, so
+the BOX rejects a contradictory pair such as `before(A, B)` plus
+`never_after(A, B)` (which would force both `seqrank_A < seqrank_B`
+and `seqrank_B < seqrank_A`).
+
+An argument-order note: in `before` and `leads_to` the first argument
+is the earlier event; in `never_after` the first argument is the
+trigger after which the second is forbidden, so the second argument is
+ranked earlier. This asymmetry is inherent to the after-scope reading.
+
+---
+
 ## Validator codes
 
 The structural validator emits three sequence-specific codes:
@@ -81,8 +114,11 @@ nous verify-sequence trading_floor.nous
 ```
 
 Each declared event label becomes a real-valued rank variable
-(`seqrank_<label>`); each `before(A, B)` law emits the assertion
-`(< seqrank_A seqrank_B)`. The script is handed to Z3:
+(`seqrank_<label>`); each ordering law emits a strict-rank assertion.
+`before(A, B)` and `leads_to(A, B)` both emit `(< seqrank_A seqrank_B)`
+(A ranked before B); `never_after(A, B)` emits the operand-swap
+`(< seqrank_B seqrank_A)` (B ranked before A). The combined script is
+handed to Z3:
 
 - **CONSISTENT** (z3 `sat`) -- the laws admit a valid total order. Exit 0.
 - **INCONSISTENT** (z3 `unsat`) -- the laws contradict; no ordering
@@ -118,12 +154,18 @@ the existing signed `action` field, so **no trace schema change** was
 needed -- traces signed before v5.15.0, and the demo certificate's
 `trace_sha256`, are untouched.
 
-For a law `before(A, B)`, the runtime obligation holds iff **every event
-with `action == B` has some earlier event (smaller `seq`) with
-`action == A`.** Equivalently: no B occurs before any A.
+Each ordering law imposes one runtime predicate over the trace's
+`action`-labelled events:
 
-- No events labelled B -> vacuously satisfied (nothing to order).
-- A B with no preceding A -> a violation, reported per occurrence.
+- `before(A, B)` holds iff **every B has some earlier A**. A B with no
+  preceding A is a violation, reported per occurrence.
+- `leads_to(A, B)` holds iff **every A has some later B**. An A with no
+  following B is a violation, reported per occurrence.
+- `never_after(A, B)` holds iff **no B has any earlier A**. A B that
+  follows an A is a violation, reported per occurrence.
+
+In every case, if the relevant label is absent the law is vacuously
+satisfied (nothing to order).
 
 ### Recompute-never-trust
 
@@ -161,17 +203,15 @@ verifies.
 
 ## Honest limitations
 
-- **Only `before(A, B)` is implemented.** `never_after(A, B)` (B may never
-  follow A), `after_only(A, B)` (B only after A), and `at_most(N, label)`
-  (a bounded count) are future operators. Each needs its own grammar,
-  SMT assertion shape, runtime predicate, and tests; the certificate's
-  `sequence_ok` field is already kind-agnostic.
-- **`verify-sequence` currently requires a priced model.** The SMT spec
-  is one artifact carrying both cost bounds and sequence assertions, and
-  the emitter resolves model pricing for the whole spec. A program whose
-  soul uses a model absent from the pricing table cannot emit the spec,
-  even for a sequence-only check. Decoupling sequence emission from
-  pricing is planned.
+- **Only pairwise ordering is implemented; counting is not.** `before`,
+  `never_after`, and `leads_to` cover the canonical pairwise ordering
+  patterns. `at_most(N, label)` (a bounded count) is future work: the
+  single-rank-per-label model cannot express cardinality and needs a
+  counting extension, so it is a separate model-extension arc, not one
+  more assertion shape. (`after_only(A, B)` was considered and
+  dropped: under the single-rank model "B only after A" is identical
+  to `before(A, B)` on both the static and runtime surfaces, so it
+  would add surface without adding meaning.)
 - **Sequence labels ride on `TraceEvent.action`.** This field is also the
   gated-action identifier (validated against declared gated actions only
   for `gated_action`-kind events). A sequence label on any other event
