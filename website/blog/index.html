@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __session102_blog_v5170_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5170-at-most-cardinality');return false">
+      <div class="post-meta">
+        <span class="post-date">29 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.17.0 &mdash; The at_most Cardinality Law</div>
+      <div class="post-excerpt">v5.16.0 completed the pairwise ordering family (<code>before</code>, <code>never_after</code>, <code>leads_to</code>). v5.17.0 adds the one genuinely new shape that remained: <code>at_most(N, label)</code>, a bounded count. Cardinality is orthogonal to ordering and cannot be expressed by a single rank per label, so <code>at_most</code> emits no SMT assertion and is enforced by the runtime occurrence counter. The Phase 2 sequence operator set is now complete. <code>nous-lang 5.17.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
     <!-- __session101_blog_v5160_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v5160-ordering-law-family');return false">
       <div class="post-meta">
@@ -438,6 +448,20 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __session102_blog_v5170_post_v1__ -->
+  <div class="post-full" id="post-v5170-at-most-cardinality">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.17.0 &mdash; The at_most Cardinality Law</h1>
+    <div class="post-full-meta">29 May 2026 &middot; 4 min read</div>
+    <p>v5.16.0 completed the pairwise ordering family &mdash; <code>before</code>, <code>never_after</code>, and <code>leads_to</code>, the canonical Dwyer precedence, absence, and response patterns. All three answer the same kind of question: <em>in what order</em> may two events occur? v5.17.0 adds a different kind of question entirely: <em>how many times</em> may one event occur?</p>
+    <pre><code>events { escalate, resolve }
+law at_most(2, escalate)              # escalate may fire at most twice</code></pre>
+    <p><code>at_most(N, label)</code> takes a non-negative integer and a single event label, and bounds the number of times that label may occur across a run. This is a cardinality property, not an ordering one, and the distinction has a concrete consequence in the proof model.</p>
+    <p>The three ordering laws share a single static model: each event label becomes one real-valued rank, and each law emits a strict inequality between two ranks. That model has exactly one rank per label &mdash; it assumes each label occurs once and asks only where it sits in the order. Counting is invisible to it. A bound on the number of occurrences is a statement about a multiset over ticks, not about a total order over distinct labels, so it cannot be expressed as a rank inequality at all.</p>
+    <p>The honest consequence: <code>at_most</code> contributes <strong>nothing</strong> to the static SMT script &mdash; no rank declaration, no assertion. Its static layer is parse-validation only (the count is a non-negative integer; the label must be declared). A world that declares only <code>at_most</code> laws is therefore trivially consistent under <code>nous verify-sequence</code>: a cardinality bound imposes no ordering, so there is nothing for Z3 to refute. The BOX does not pretend to prove a count it cannot observe.</p>
+    <p>The real obligation lives in the runtime DICE. The conformance check counts occurrences of the label in the signed execution trace &mdash; re-derived from the signed source, never read from an unsigned sibling &mdash; and fails the run if the count exceeds <code>N</code>. An absent label is zero occurrences, which satisfies any non-negative bound. This is the project's split made literal: probabilistic execution on one side, deterministic evidence on the other, with the cardinality guarantee carried by the signed count rather than a static fiction.</p>
+    <p>With <code>at_most</code>, the Phase 2 sequence operator set is complete: three pairwise ordering laws plus one cardinality law, each offline-verifiable with only <code>cryptography</code> and <code>z3-solver</code>. <code>nous-lang 5.17.0</code> is live on PyPI.</p>
+  </div>
   <!-- __session101_blog_v5160_post_v1__ -->
   <div class="post-full" id="post-v5160-ordering-law-family">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
