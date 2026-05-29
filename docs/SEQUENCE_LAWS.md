@@ -6,10 +6,12 @@ in v5.16.0. The Phase 2 sequence arc: events declaration + validator
 (S2), sequence-consistency SMT emission (S3), Z3 consistency proof (S4),
 runtime sequence conformance (S5a), the seventh certificate obligation
 (S5b), and the `nous verify-sequence` CLI (S6). v5.16.0 adds two more
-ordering laws (S7a/S7b). Three ordering laws are now supported --
-`before`, `never_after`, and `leads_to` -- forming the canonical
-Dwyer precedence/absence/response family. `at_most(N, label)` (a
-bounded count) remains future work.
+ordering laws (S7a/S7b), and v5.17.0 adds the cardinality law
+`at_most(N, label)` (S8). The pairwise ordering family is
+complete -- `before`, `never_after`, and `leads_to` form the
+canonical Dwyer precedence/absence/response triad -- and
+`at_most(N, label)` adds the orthogonal cardinality axis: a
+bounded count of how many times a single label may occur. <!-- __v5_17_0_at_most_docs_v1__ -->
 
 ---
 
@@ -91,6 +93,33 @@ ranked earlier. This asymmetry is inherent to the after-scope reading.
 
 ---
 
+## The cardinality law: `at_most(N, label)` <!-- __v5_17_0_at_most_docs_v1__ -->
+
+`at_most(N, label)` is a different shape from the three pairwise
+ordering laws. It takes a non-negative integer `N` and a single
+event label, and asserts that the label occurs **at most N times**
+across a run. Counting is orthogonal to ordering: it is a property
+of the multiset of occurrences over ticks, not of a total order
+over distinct labels, so it cannot be expressed in the
+single-rank-per-label model the ordering laws share.
+
+Consequently `at_most` contributes **nothing** to the static SMT
+script -- no `seqrank` declaration, no assertion. Its static layer
+is parse-validation only: `N` is a non-negative integer (enforced
+by the grammar, which admits only digit literals) and the label
+must be declared in `world.events`. A world that declares only
+`at_most` laws is trivially consistent under the BOX: a cardinality
+bound imposes no ordering, so `nous verify-sequence` reports
+CONSISTENT without invoking z3. The real obligation lives entirely
+in the runtime DICE (below).
+
+Because `at_most` carries a count rather than a second label, the
+in-memory law struct is a typed `SequenceLaw(kind, label_a,
+label_b, count)`; for `at_most`, `label_b` is `None` and `count`
+is `N`. This struct is not part of any signed hash (the certificate
+binds the boolean obligation, not the law list), so the
+representation is free and no certificate schema bump was needed.
+
 ## Validator codes
 
 The structural validator emits three sequence-specific codes:
@@ -163,9 +192,14 @@ Each ordering law imposes one runtime predicate over the trace's
   following B is a violation, reported per occurrence.
 - `never_after(A, B)` holds iff **no B has any earlier A**. A B that
   follows an A is a violation, reported per occurrence.
+- `at_most(N, label)` holds iff **the label occurs at most N
+  times**. The runtime counts occurrences of `label` and reports a
+  single violation when the count exceeds `N`. <!-- __v5_17_0_at_most_docs_v1__ -->
 
-In every case, if the relevant label is absent the law is vacuously
-satisfied (nothing to order).
+For the three ordering laws, if the relevant label is absent the
+law is vacuously satisfied (nothing to order). For `at_most`, an
+absent label means zero occurrences, which is `<= N` for any
+non-negative `N` -- also vacuously satisfied.
 
 ### Recompute-never-trust
 
@@ -203,15 +237,19 @@ verifies.
 
 ## Honest limitations
 
-- **Only pairwise ordering is implemented; counting is not.** `before`,
-  `never_after`, and `leads_to` cover the canonical pairwise ordering
-  patterns. `at_most(N, label)` (a bounded count) is future work: the
-  single-rank-per-label model cannot express cardinality and needs a
-  counting extension, so it is a separate model-extension arc, not one
-  more assertion shape. (`after_only(A, B)` was considered and
-  dropped: under the single-rank model "B only after A" is identical
-  to `before(A, B)` on both the static and runtime surfaces, so it
-  would add surface without adding meaning.)
+- **Cardinality is enforced only at runtime, not statically.** <!-- __v5_17_0_at_most_docs_v1__ -->
+  `at_most(N, label)` is checked by the DICE (the runtime
+  occurrence counter), not the BOX. The static layer cannot prove
+  a count it cannot observe, so an `at_most`-only world is
+  trivially CONSISTENT under `nous verify-sequence`; the real
+  guarantee is the signed runtime count, consistent with the
+  probabilistic-execution / deterministic-evidence split. The
+  three pairwise ordering laws (`before`, `never_after`,
+  `leads_to`) remain the only statically-provable sequence shapes.
+  (`after_only(A, B)` was considered and dropped: under the
+  single-rank model "B only after A" is identical to `before(A, B)`
+  on both the static and runtime surfaces, so it would add surface
+  without adding meaning.)
 - **Sequence labels ride on `TraceEvent.action`.** This field is also the
   gated-action identifier (validated against declared gated actions only
   for `gated_action`-kind events). A sequence label on any other event
