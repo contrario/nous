@@ -64,6 +64,7 @@ event_decl: EVENTS "{" NAME ("," NAME)* "}"  // __phase2_stage2_events_grammar_v
 // __phase2_stage1_skeleton_grammar_v1__
 law_decl: LAW NAME "=" law_expr                        -> law_decl_classic
         | LAW BEFORE "(" NAME "," NAME ")"            -> law_decl_sequence_before
+        | LAW NEVER_AFTER "(" NAME "," NAME ")"      -> law_decl_sequence_never_after  // __phase2_stage7a_never_after_grammar_v1__
 law_expr: currency_lit PER CYCLE          -> law_cost
         | currency_lit                    -> law_currency
         | CONSTITUTIONAL "(" INT ")"      -> law_constitutional
@@ -463,6 +464,7 @@ IMMUNE_SYSTEM.2: "immune_system" | "ανοσία"
 DREAM_SYSTEM.2: "dream_system" | "ονειρεύομαι"
 LAW.2: "law" | "νόμος"
 BEFORE.2: "before"  // __phase2_stage1_skeleton_grammar_v1__
+NEVER_AFTER.2: "never_after"  // __phase2_stage7a_never_after_grammar_v1__
 POLICY.2: "policy" | "πολιτική"
 GUARD.2: "guard" | "φύλακας"
 SLEEP.2: "sleep" | "ύπνος"

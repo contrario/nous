@@ -133,16 +133,23 @@ def _check_sequence_obligations(  # __phase2_stage5_seq_conformance_v1__
     ok = True
     errors: list[str] = []
     for (kind, a, b) in laws:
-        if kind != "before":
-            continue
         a_positions = by_action.get(a, [])
-        for bpos in by_action.get(b, []):
-            if not any(apos < bpos for apos in a_positions):
-                ok = False
-                errors.append(
-                    f"sequence: action={b!r} at seq={bpos} has no preceding "
-                    f"action={a!r} (law before({a},{b}))"
-                )
+        if kind == "before":
+            for bpos in by_action.get(b, []):
+                if not any(apos < bpos for apos in a_positions):
+                    ok = False
+                    errors.append(
+                        f"sequence: action={b!r} at seq={bpos} has no preceding "
+                        f"action={a!r} (law before({a},{b}))"
+                    )
+        elif kind == "never_after":  # __phase2_stage7a_never_after_conformance_v1__
+            for bpos in by_action.get(b, []):
+                if any(apos < bpos for apos in a_positions):
+                    ok = False
+                    errors.append(
+                        f"sequence: action={b!r} at seq={bpos} occurs after "
+                        f"action={a!r} (law never_after({a},{b}))"
+                    )
     return ok, errors
 
 

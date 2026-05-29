@@ -539,6 +539,16 @@ class NousTransformer(Transformer):
             after_label=after_label,
         )
 
+    def law_decl_sequence_never_after(self, items: list) -> LawSequenceNode:  # __phase2_stage7a_never_after_parser_v1__
+        s = [str(x) for x in items[1:] if not _is_token_with_type(x, 'NEVER_AFTER')]
+        trigger_label = s[-2]
+        forbidden_label = s[-1]
+        return LawSequenceNode(
+            kind="never_after",
+            before_label=trigger_label,
+            after_label=forbidden_label,
+        )
+
     def event_decl(self, items: list) -> dict:  # __phase2_stage2_events_parser_v1__
         return {"events": [str(x) for x in items[1:]]}
 

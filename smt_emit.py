@@ -355,10 +355,10 @@ def _build_sequence_block(  # __phase2_decouple_seq_helper_v1__
     if world.sequence_laws:
         declared = set(world.events)
         for law in world.sequence_laws:
-            if law.kind != "before":
+            if law.kind not in ("before", "never_after"):  # __phase2_stage7a_never_after_seq_emit_v1__
                 raise EmitError(
                     f"unsupported sequence law kind: {law.kind!r} "
-                    f"(stage 3 supports only 'before')"
+                    f"(supported: 'before', 'never_after')"
                 )
             for lbl in (law.before_label, law.after_label):
                 if lbl not in declared:
@@ -369,10 +369,16 @@ def _build_sequence_block(  # __phase2_decouple_seq_helper_v1__
         for lbl in sorted(declared):
             seq_decls.append((f"seqrank_{lbl}", "Real"))
         for law in world.sequence_laws:
-            seq_asserts.append(
-                f"(assert (< seqrank_{law.before_label} "
-                f"seqrank_{law.after_label}))"
-            )
+            if law.kind == "never_after":  # __phase2_stage7a_never_after_seq_emit_v1__
+                seq_asserts.append(
+                    f"(assert (< seqrank_{law.after_label} "
+                    f"seqrank_{law.before_label}))"
+                )
+            else:
+                seq_asserts.append(
+                    f"(assert (< seqrank_{law.before_label} "
+                    f"seqrank_{law.after_label}))"
+                )
         seq_laws_struct = tuple(
             (law.kind, law.before_label, law.after_label)
             for law in world.sequence_laws

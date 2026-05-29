@@ -397,7 +397,7 @@ def verify_sequence(  # __phase2_stage4_seq_verify_v1__
             solver_version=_solver_version(),
             elapsed_ms=elapsed_ms,
             timestamp_utc=ts,
-            error="declared 'before' laws contradict; no total order "
+            error="declared ordering laws contradict; no total order "
                   "satisfies all ordering constraints",
         )
 
@@ -577,7 +577,7 @@ def format_sequence_verdict(result: SequenceVerifyResult) -> str:  # __phase2_st
         return "\n".join(lines)
     if result.verdict == "consistent":
         lines.append(
-            "CONSISTENT: the declared 'before' laws admit a valid total "
+            "CONSISTENT: the declared ordering laws admit a valid total "
             "order."
         )
         lines.append(
@@ -586,7 +586,7 @@ def format_sequence_verdict(result: SequenceVerifyResult) -> str:  # __phase2_st
         )
         return "\n".join(lines)
     if result.verdict == "inconsistent":
-        lines.append("INCONSISTENT: the declared 'before' laws contradict.")
+        lines.append("INCONSISTENT: the declared ordering laws contradict.")
         lines.append(f"  {result.error}")
         return "\n".join(lines)
     if result.verdict == "unknown":
