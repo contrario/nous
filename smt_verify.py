@@ -324,8 +324,15 @@ def verify_sequence(  # __phase2_stage4_seq_verify_v1__
 
     script: Optional[str] = spec.serialize_sequence()
     if script is None:
+        # __phase2_stage8b_at_most_verify_v1__: a law set with no SMT assertions
+        # (at_most-only) is trivially consistent -- a cardinality
+        # bound imposes no ordering, so z3 is not invoked. Only an
+        # EMPTY law set is vacuous.
+        verdict_no_script = (
+            "vacuous" if not spec.sequence_laws else "consistent"
+        )
         return SequenceVerifyResult(
-            verdict="vacuous",
+            verdict=verdict_no_script,
             spec=spec,
             solver_name="z3",
             solver_version="n/a",
@@ -569,7 +576,7 @@ def format_sequence_verdict(result: SequenceVerifyResult) -> str:  # __phase2_st
     lines.append(f"Solver:       {result.solver_version}")
     lines.append(f"Elapsed:      {result.elapsed_ms}ms")
     lines.append(f"Spec sha256:  {spec.sha256()[:16]}...")
-    lines.append(f"Seq laws:     {len(spec.sequence_assertions)}")
+    lines.append(f"Seq laws:     {len(spec.sequence_laws)}")  # __phase2_stage8b_at_most_verify_v1__
     lines.append("-" * 60)
 
     if result.verdict == "vacuous":
@@ -580,8 +587,8 @@ def format_sequence_verdict(result: SequenceVerifyResult) -> str:  # __phase2_st
             "CONSISTENT: the declared ordering laws admit a valid total "
             "order."
         )
-        lines.append(
-            f"  {len(spec.sequence_assertions)} ordering constraint(s) "
+        lines.append(  # __phase2_stage8b_at_most_verify_v1__
+            f"  {len(spec.sequence_laws)} ordering law(s) "
             f"over {len(spec.sequence_declarations)} event label(s)."
         )
         return "\n".join(lines)

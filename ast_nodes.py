@@ -126,7 +126,8 @@ class LawSequenceNode(NousNode):  # __phase2_stage1_skeleton_ast_v1__
     """
     kind: str  # 'before'
     before_label: str
-    after_label: str
+    after_label: Optional[str] = None  # __phase2_stage8_at_most_ast_v1__
+    count: Optional[int] = None  # __phase2_stage8_at_most_ast_v1__
 
 
 # ═══════════════════════════════════════════

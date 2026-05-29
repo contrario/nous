@@ -558,6 +558,16 @@ class NousTransformer(Transformer):
             before_label=cause_label,
             after_label=effect_label,
         )
+    def law_decl_sequence_at_most(self, items: list) -> LawSequenceNode:  # __phase2_stage8_at_most_parser_v1__
+        s = [str(x) for x in items[1:] if not _is_token_with_type(x, 'AT_MOST')]
+        count_str = s[-2]
+        label = s[-1]
+        return LawSequenceNode(
+            kind="at_most",
+            before_label=label,
+            after_label=None,
+            count=int(count_str),
+        )
 
     def event_decl(self, items: list) -> dict:  # __phase2_stage2_events_parser_v1__
         return {"events": [str(x) for x in items[1:]]}

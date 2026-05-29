@@ -39,7 +39,7 @@ import hashlib
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
 from decimal import Decimal
-from typing import Optional
+from typing import NamedTuple, Optional  # __phase2_stage8_at_most_seq_emit_v1__
 
 from ast_nodes import NousProgram, SoulNode, WorldNode
 from pricing import (
@@ -55,6 +55,13 @@ class EmitError(ValueError):
     Distinct from generic ValueError so the CLI can format these as
     user-facing diagnostics.
     """
+
+
+class SequenceLaw(NamedTuple):  # __phase2_stage8_at_most_seq_emit_v1__
+    kind: str
+    label_a: str
+    label_b: Optional[str]
+    count: Optional[int]
 
 
 @dataclass(frozen=True)
@@ -80,7 +87,7 @@ class SMTSpec:
     ] = ()  # __session96_smtspec_soul_assumptions_v1__
     sequence_declarations: tuple[tuple[str, str], ...] = ()  # __phase2_stage3_seq_emit_v1__
     sequence_assertions: tuple[str, ...] = ()  # __phase2_stage3_seq_emit_v1__
-    sequence_laws: tuple[tuple[str, str, str], ...] = ()  # __phase2_stage5_seq_laws_v1__
+    sequence_laws: tuple[SequenceLaw, ...] = ()  # __phase2_stage5_seq_laws_v1__  # __phase2_stage8_at_most_seq_emit_v1__
 
     def serialize(self) -> str:
         lines: list[str] = []
@@ -351,15 +358,22 @@ def _build_sequence_block(  # __phase2_decouple_seq_helper_v1__
     """
     seq_decls: list[tuple[str, str]] = []
     seq_asserts: list[str] = []
-    seq_laws_struct: tuple[tuple[str, str, str], ...] = ()
+    seq_laws_struct: tuple[SequenceLaw, ...] = ()  # __phase2_stage8_at_most_seq_emit_v1__
     if world.sequence_laws:
         declared = set(world.events)
         for law in world.sequence_laws:
-            if law.kind not in ("before", "never_after", "leads_to"):  # __phase2_stage7a_never_after_seq_emit_v1__  # __phase2_stage7b_leads_to_seq_emit_v1__
+            if law.kind not in ("before", "never_after", "leads_to", "at_most"):  # __phase2_stage7a_never_after_seq_emit_v1__  # __phase2_stage7b_leads_to_seq_emit_v1__  # __phase2_stage8_at_most_seq_emit_v1__
                 raise EmitError(
                     f"unsupported sequence law kind: {law.kind!r} "
-                    f"(supported: 'before', 'never_after', 'leads_to')"
+                    f"(supported: 'before', 'never_after', 'leads_to', 'at_most')"
                 )
+            if law.kind == "at_most":  # __phase2_stage8_at_most_seq_emit_v1__
+                if law.before_label not in declared:
+                    raise EmitError(
+                        f"sequence law references undeclared event "
+                        f"label {law.before_label!r}; declare it in world.events"
+                    )
+                continue
             for lbl in (law.before_label, law.after_label):
                 if lbl not in declared:
                     raise EmitError(
@@ -369,6 +383,8 @@ def _build_sequence_block(  # __phase2_decouple_seq_helper_v1__
         for lbl in sorted(declared):
             seq_decls.append((f"seqrank_{lbl}", "Real"))
         for law in world.sequence_laws:
+            if law.kind == "at_most":  # __phase2_stage8_at_most_seq_emit_v1__
+                continue
             if law.kind == "never_after":  # __phase2_stage7a_never_after_seq_emit_v1__
                 seq_asserts.append(
                     f"(assert (< seqrank_{law.after_label} "
@@ -379,8 +395,13 @@ def _build_sequence_block(  # __phase2_decouple_seq_helper_v1__
                     f"(assert (< seqrank_{law.before_label} "
                     f"seqrank_{law.after_label}))"
                 )
-        seq_laws_struct = tuple(
-            (law.kind, law.before_label, law.after_label)
+        seq_laws_struct = tuple(  # __phase2_stage8_at_most_seq_emit_v1__
+            SequenceLaw(
+                kind=law.kind,
+                label_a=law.before_label,
+                label_b=(None if law.kind == "at_most" else law.after_label),
+                count=law.count,
+            )
             for law in world.sequence_laws
         )
     return seq_decls, seq_asserts, seq_laws_struct

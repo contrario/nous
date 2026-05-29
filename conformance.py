@@ -132,7 +132,8 @@ def _check_sequence_obligations(  # __phase2_stage5_seq_conformance_v1__
             by_action.setdefault(ev.action, []).append(ev.seq)
     ok = True
     errors: list[str] = []
-    for (kind, a, b) in laws:
+    for law in laws:  # __phase2_stage8_at_most_conformance_v1__
+        kind, a, b, count = law.kind, law.label_a, law.label_b, law.count
         a_positions = by_action.get(a, [])
         if kind == "before":
             for bpos in by_action.get(b, []):
@@ -159,6 +160,14 @@ def _check_sequence_obligations(  # __phase2_stage5_seq_conformance_v1__
                         f"sequence: action={a!r} at seq={apos} has no following "
                         f"action={b!r} (law leads_to({a},{b}))"
                     )
+        elif kind == "at_most":  # __phase2_stage8_at_most_conformance_v1__
+            n_occurrences = len(a_positions)
+            if n_occurrences > count:
+                ok = False
+                errors.append(
+                    f"sequence: action={a!r} occurs {n_occurrences} time(s), "
+                    f"exceeds at_most({count},{a})"
+                )
     return ok, errors
 
 

@@ -624,7 +624,11 @@ class NousValidator:
             )
             return
         for law in world.sequence_laws:
-            for label in (law.before_label, law.after_label):
+            if law.kind == "at_most":  # __phase2_stage8_at_most_validator_v1__
+                labels = (law.before_label,)
+            else:
+                labels = (law.before_label, law.after_label)
+            for label in labels:
                 if label not in seen:
                     self.result.error(
                         "SE002",

@@ -90,7 +90,7 @@ def _detail(**over) -> ConformanceDetail:
 
 def test_emit_populates_sequence_laws(pricing: PricingTable) -> None:
     spec = _spec(pricing, [_before("a", "b")], ["a", "b"])
-    assert spec.sequence_laws == (("before", "a", "b"),)
+    assert spec.sequence_laws == (("before", "a", "b", None),)  # __phase2_stage8_at_most_stage5fix_v1__
 
 
 def test_cost_only_spec_has_no_sequence_laws(pricing: PricingTable) -> None:

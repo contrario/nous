@@ -142,7 +142,8 @@ def test_undeclared_label_raises_emit_error(pricing: PricingTable) -> None:
 
 
 def test_unsupported_kind_raises_emit_error(pricing: PricingTable) -> None:  # __phase2_stage7a_never_after_stage3_fix_v1__
-    bad = LawSequenceNode(kind="at_most", before_label="a", after_label="b")
+    # after_only is permanently dropped; canonical never-supported sentinel.  # __phase2_stage8_at_most_stalefix_v1__
+    bad = LawSequenceNode(kind="after_only", before_label="a", after_label="b")
     with pytest.raises(EmitError) as exc:
         emit_smt(
             _prog([bad], ["a", "b"]),
