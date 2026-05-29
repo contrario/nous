@@ -121,8 +121,72 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __session101_blog_v5160_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5160-ordering-law-family');return false">
+      <div class="post-meta">
+        <span class="post-date">29 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.16.0 &mdash; The Ordering Law Family</div>
+      <div class="post-excerpt">v5.15.0 gave NOUS a way to bound <em>in what order</em> a program's events may occur, with one ordering law: <code>before(A, B)</code>. v5.16.0 completes the family with <code>never_after(A, B)</code> (once A, B is forbidden) and <code>leads_to(A, B)</code> (every A is eventually followed by B) &mdash; the canonical Dwyer precedence, absence, and response patterns. All three share one rank model, so <code>nous verify-sequence</code> rejects a contradictory pair such as <code>before</code> plus <code>never_after</code> as <em>unsat</em>; each adds a dual runtime obligation. <code>nous-lang 5.16.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+    <!-- __session100_blog_v5150_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5150-sequence-laws');return false">
+      <div class="post-meta">
+        <span class="post-date">28 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.15.0 &mdash; Sequence Laws</div>
+      <div class="post-excerpt">The cost proof bounds <em>how much</em> a program can spend. Sequence laws bound <em>in what order</em> its events may occur. v5.15.0 ships the full arc: declare an event alphabet and <code>law before(A, B)</code>, prove the law set is self-consistent with <code>nous verify-sequence</code> (a Z3 proof that the rules admit a valid order), and &mdash; given a signed run &mdash; verify that the run obeyed every law as the seventh obligation inside the conformance certificate. The certificate is schema-versioned v1 to v2, so every certificate signed before this release still verifies byte-identical. <code>nous-lang 5.15.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+    <!-- __session97_blog_v5130_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5130-conformance-certificate');return false">
+      <div class="post-meta">
+        <span class="post-date">26 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.13.0 &mdash; The Runtime Conformance Certificate</div>
+      <div class="post-excerpt">The static cost proof says a program <em>cannot</em> exceed its envelope. The conformance certificate says a specific <em>run did not</em>. v5.13.0 ships <code>nous conformance certify</code>: it re-derives the proof bounds from the signed source, recomputes the realized cost from a signed execution trace, and emits a standalone Ed25519-signed <code>conformance.json</code> recording six independent obligation verdicts. With <code>--anchor rekor_v2</code> the certificate is stapled into the Sigstore Rekor v2 log over its own body bytes. A shipped offline verifier checks authenticity and binding (cert&rarr;trace&rarr;manifest) with <code>cryptography</code> plus stdlib, no NOUS install. 11 new tests (PYTEST_FLOOR 753 &rarr; 764), zero regressions, both servers live. PyPI: <code>nous-lang 5.13.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+    <!-- __blog_session60_v1__ -->
     <!-- __blog_session60_v1__ -->
     <!-- __blog_card_v4133_v1__ -->
+    <!-- __session95_blog_v5120_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5120-rekor-v2-both-paths');return false">
+      <div class="post-meta">
+        <span class="post-date">25 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.12.0 &mdash; Rekor v2 on Both Dossier Paths</div>
+      <div class="post-excerpt">v5.11.0 brought the Rekor v2 + RFC 3161 anchor to <code>nous dossier</code>. v5.12.0 brings it to the second path: <code>nous dossier-spec --anchor rekor_v2</code>, the one that starts from a SKILL.md skill directory. The <code>dossier-spec</code> emit branch and verifier selection now mirror <code>dossier</code>, with an offline test hook so the v2 path is exercised without a live submit. Both paths proven end-to-end against the live log. 7 new tests (PYTEST_FLOOR 738 &rarr; 745), zero regressions, both servers live. PyPI: <code>nous-lang 5.12.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session93_blog_v5110_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5110-rekor-v2-emission');return false">
+      <div class="post-meta">
+        <span class="post-date">24 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.11.0 &mdash; Rekor v2, Part Four: Dossier Emission and Trusted Time</div>
+      <div class="post-excerpt">The v2 write path lands. <code>nous dossier --anchor rekor_v2</code> submits a manifest to the tile-backed Sigstore Rekor v2 log, recovers the ephemeral ECDSA-P-256 leaf signature from the server-returned leaf, and requests an RFC 3161 trusted timestamp over it from the Sigstore TSA. The emitted <code>verify_offline.py</code> checks the leaf-to-manifest ECDSA tie, the checkpoint Ed25519 signature, the RFC 6962 inclusion proof, and the RFC 3161 trusted time &mdash; fully offline with only <code>cryptography</code> plus stdlib. Proven end-to-end against the live log. 7 new tests (PYTEST_FLOOR 687 &rarr; 738), zero regressions, both servers live. PyPI: <code>nous-lang 5.11.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
+    <!-- __session93_blog_v5910_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5910-rekor-v2-read-path');return false">
+      <div class="post-meta">
+        <span class="post-date">23 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Major Release</span>
+      </div>
+      <div class="post-title">NOUS v5.9.0 &amp; v5.10.0 &mdash; Rekor v2, Part Three: The Read Path</div>
+      <div class="post-excerpt">Two releases building the Rekor v2 read path. v5.9.0 ships the verifier as modules: <code>rekor_entry</code> normalizes hashedrekord leaf bodies and refuses dsse, <code>rekor_checkpoint</code> verifies a C2SP signed-note checkpoint and RFC 6962 inclusion proof, and <code>rekor_verify_v2</code> composes both with the Path-beta tie, reporting four independent per-step results so an auditor sees exactly which link broke. v5.10.0 wires it in: <code>parse_manifest_json_with_anchor_v2</code> dispatches by <code>rekor_api_version</code>, <code>offline_verifier_builder</code> assembles a standalone verifier from the shipped modules, and the production log key (<code>log2025-1</code>) is pinned. PYTEST_FLOOR 596 &rarr; 687 across the two releases, zero regressions. PyPI: <code>nous-lang 5.10.0</code>.</div>
+      <span class="post-read">Read post &rarr;</span>
+    </a>
+
     <!-- __session86_blog_v56_v58_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v580-rekor-v2-signing-config');return false">
       <div class="post-meta">
@@ -373,6 +437,116 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- __blog_post_v4133_v1__ -->
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
+  <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __session101_blog_v5160_post_v1__ -->
+  <div class="post-full" id="post-v5160-ordering-law-family">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.16.0 &mdash; The Ordering Law Family</h1>
+    <div class="post-full-meta">29 May 2026 &middot; 5 min read</div>
+    <p>v5.15.0 gave NOUS a second axis of evidence: alongside the SMT cost proof that bounds <em>how much</em> a program may spend, a <strong>sequence law</strong> bounds <em>in what order</em> its events may occur. That release shipped one ordering law, <code>before(A, B)</code>. v5.16.0 completes the family with two more &mdash; and they are not arbitrary: they are the canonical patterns Dwyer's survey of real-world temporal specifications found to cover the overwhelming majority of ordering requirements.</p>
+    <p>The three laws, together:</p>
+    <pre><code>events { authenticate, access, audit }
+law before(authenticate, access)      # access requires an earlier authenticate
+law leads_to(access, audit)           # every access is eventually audited
+law never_after(audit, access)        # once audited, no further access</code></pre>
+    <p><code>before(A, B)</code> is <strong>precedence</strong>: every B must have an earlier A. <code>leads_to(A, B)</code> is <strong>response</strong> (the TLA+ <code>~&gt;</code> operator): every A must be eventually followed by some B. <code>never_after(A, B)</code> is <strong>absence in the after scope</strong>: once A has occurred, B is forbidden. Precedence and response are duals over the same order &mdash; one fails on a B with no preceding A, the other on an A with no following B &mdash; while absence is the prohibition reading.</p>
+    <p>All three share a single static model. Each event label becomes one real-valued rank; each law emits a strict inequality between two ranks. <code>before</code> and <code>leads_to</code> emit <code>(&lt; rank_A rank_B)</code>; <code>never_after</code> emits the operand-swapped <code>(&lt; rank_B rank_A)</code>. Because the model is shared, <code>nous verify-sequence</code> detects a contradictory pair across operators: declaring both <code>before(A, B)</code> and <code>never_after(A, B)</code> forces <code>rank_A &lt; rank_B</code> and <code>rank_B &lt; rank_A</code> at once, which Z3 reports as <em>unsat</em> &mdash; the law set is rejected before any run.</p>
+    <p>At runtime, each law contributes its own check to the seventh conformance obligation, evaluated against the signed execution trace and re-derived from the signed source &mdash; never read from an unsigned sibling. A trace that violates any declared ordering yields <code>conformant: false</code> with the offending occurrence named.</p>
+    <p>One operator was deliberately <em>not</em> added. <code>after_only(A, B)</code> &mdash; "B only after A" &mdash; reduces, under the single-rank model, to exactly <code>before(A, B)</code> on both the static and the runtime surface; shipping it would add a name without adding meaning. The one genuinely new shape still open is <code>at_most(N, label)</code>, a bounded count: cardinality cannot be expressed by a single rank per label, so it is a separate model extension rather than one more assertion, deferred to its own arc.</p>
+    <p>Three operators, one proof model, full offline-verifiable evidence on both the static and the runtime side. <code>nous-lang 5.16.0</code> is live on PyPI.</p>
+  </div>
+  <!-- __session100_blog_v5150_post_v1__ -->
+  <div class="post-full" id="post-v5150-sequence-laws">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.15.0 &mdash; Sequence Laws</h1>
+    <div class="post-full-meta">28 May 2026 &middot; 6 min read</div>
+    <p>Every NOUS release so far has produced one axis of evidence: a static, SMT-backed proof that a governed program <em>cannot</em> exceed its declared <em>cost</em> envelope, and &mdash; since v5.13.0 &mdash; a signed certificate that one specific run stayed inside it. Cost answers <em>how much</em>. It says nothing about <em>order</em>.</p>
+    <p>v5.15.0 adds that second axis. A <strong>sequence law</strong> is a declared ordering constraint over a named event alphabet: <code>authenticate</code> before <code>access</code>, <code>validate</code> before <code>commit</code>. You declare the alphabet up front and write the law:</p>
+    <pre><code>world TradingFloor {
+    cost_cap: 0.50 USD
+    max_ticks: 8
+    events { authenticate, access_ledger, submit_order }
+    law before(authenticate, access_ledger)
+    law before(access_ledger, submit_order)
+}</code></pre>
+    <p>The explicit <code>events</code> block is deliberate. A law that references an undeclared label is a typo, not a new event, and NOUS refuses the program rather than inventing the label &mdash; the same refuse-over-guess discipline the rest of the toolchain follows. The validator enforces it with three codes: SE001 (laws without an alphabet), SE002 (an undeclared label), SE003 (a duplicate label).</p>
+    <p>Like cost, sequence has two halves &mdash; and they mirror the project's central bargain, probabilistic execution but deterministic evidence. Call them the <strong>box</strong> and the <strong>dice</strong>.</p>
+    <p>The <strong>box</strong> is a compile-time proof. <code>nous verify-sequence</code> turns each event label into a rank variable and each <code>before(A, B)</code> into the assertion that A's rank is below B's, then asks Z3 whether the whole set is satisfiable. A coherent rulebook is <em>sat</em> (a valid total order exists) and exits 0; a self-contradicting one &mdash; a cycle such as <code>before(a,b)</code> plus <code>before(b,a)</code> &mdash; is <em>unsat</em> and exits 1. Note the polarity is the opposite of the cost proof, which asserts the negation of the cap and proves <em>unsat</em>. Because <em>sat</em> and <em>unsat</em> mean opposite things in the two checks, sequence verification is its own top-level verb, not a flag bolted onto <code>nous verify</code>.</p>
+    <p>The <strong>dice</strong> is a runtime obligation. The conformance certificate already recorded six booleans (binding, surface, assumption discharge, bound transfer, authorization, trace signature). v5.15.0 adds a seventh, <strong>sequence</strong>, conjoined into the overall verdict. For a law <code>before(A, B)</code> it holds exactly when every event labelled B has some earlier event labelled A &mdash; no B before any A &mdash; checked per occurrence, vacuously true when no B ever occurs. The label rides on the trace event's existing signed <code>action</code> field, so no trace schema changed: traces signed before this release are untouched. And the laws are re-derived from the signed source, never read from an unsigned sibling; a tampered law moves the spec hash and the binding obligation turns false.</p>
+    <p>Itemizing a new boolean <em>inside</em> the signed certificate body is a wire-format change, so the certificate is now schema-versioned. New certificates are v2 and carry <code>sequence_ok</code>; a v1 certificate never had the field, and the canonicalizers exclude it for any certificate whose recorded schema is below 2. The consequence is the one that matters for a transparency log: every certificate signed before v5.15.0 &mdash; including the demo certificate anchored in the public Rekor v2 log &mdash; re-canonicalizes <em>byte-identical</em> and still verifies, across the in-process path, the JSON wire format, and the shipped offline verifier.</p>
+    <p>Stated honestly, the limits: only <code>before(A, B)</code> is implemented today &mdash; <code>never_after</code>, <code>after_only</code>, and a bounded <code>at_most</code> are the next operators, and the certificate field is already kind-agnostic for them. <code>verify-sequence</code> currently needs a priced model, because the spec carries cost and sequence together; decoupling them is planned. And as with cost, the certificate proves the <em>trace</em> conforms, not that the trace faithfully records reality &mdash; emit-from-inside-the-runtime is the mitigation there.</p>
+    <p>53 new tests across the arc, floor 778 to 826, zero regressions, both servers live. <code>pip install nous-lang==5.15.0</code>. The reference is <code>docs/SEQUENCE_LAWS.md</code>.</p>
+  </div>
+  <div class="post-full" id="post-v5130-conformance-certificate">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.13.0 &mdash; The Runtime Conformance Certificate</h1>
+    <div class="post-full-meta">26 May 2026 &middot; 5 min read</div>
+    <p>For eleven versions NOUS has produced one kind of evidence: a static, SMT-backed proof that a governed program <em>cannot</em> exceed its declared cost envelope. That proof is about every possible run. It says nothing about any particular run that actually happened.</p>
+    <p>v5.13.0 closes that gap with the <strong>runtime conformance certificate</strong>. The new <code>nous conformance certify</code> takes a signed execution trace, re-derives the proof bounds from the <em>signed</em> source and pricing (never from an unsigned block), recomputes the realized cost under those exact rates, and checks six independent obligations: binding, surface, assumption discharge, bound transfer, authorization, and trace signature. The result is recorded in a standalone Ed25519-signed <code>conformance.json</code>.</p>
+    <h2>A signed statement, in the SCITT sense</h2>
+    <p>The certificate is deliberately <em>not</em> fused into the dossier manifest. It is a separate signed artifact that references the manifest by its three signed hashes (source, spec, pricing) and the trace by the hash of its canonical body. This mirrors the SCITT architecture's split between a Signed Statement and the artifacts it describes, and it keeps the manifest byte-identical: one static proof can have many conformance certificates, one per run.</p>
+    <h2>Stapled, not phoned-home</h2>
+    <p>With <code>--anchor rekor_v2</code> the certificate's own body bytes are submitted to the tile-backed Sigstore Rekor v2 log, and the returned inclusion proof is stapled into the certificate as a <code>transparency_log</code> sibling &mdash; outside the signed body, so the author signature stays valid whether or not the certificate is later anchored. The reuse is total: the same artifact-agnostic v2 write path and the same read-path verifier the dossier uses, with zero new cryptography.</p>
+    <h2>What it proves, and what it does not</h2>
+    <p>The shipped offline verifier confirms, with <code>cryptography</code> plus stdlib and no NOUS install: the certificate's Ed25519 signature, its binding to this exact trace and manifest, the trace's own signature, and &mdash; when anchored &mdash; the full Rekor v2 inclusion proof over the certificate body. It does <em>not</em> re-derive the SMT bounds offline; that requires the toolchain and remains the online <code>nous conformance verify</code> path. The honest claim is precise: a third party can confirm offline that this signed verdict is authentic and bound to these exact artifacts.</p>
+    <p>11 new tests, floor 753 to 764, zero regressions, both servers live. <code>pip install nous-lang==5.13.0</code>.</p>
+  </div>
+  <div class="post-full" id="post-v5120-rekor-v2-both-paths">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.12.0 &mdash; Rekor v2 on Both Dossier Paths</h1>
+    <div class="post-full-meta">25 May 2026 &middot; 4 min read</div>
+
+    <p>v5.11.0 landed the Rekor v2 + RFC 3161 write path on <code>nous dossier</code> &mdash; the command that anchors a <code>.nous</code> source with an adjacent signed manifest. But NOUS has a second dossier path: <code>nous dossier-spec</code>, which starts from an agentskills.io SKILL.md skill directory (the shape <code>nous skill-export</code> produces). That path still topped out at the v1 anchor. v5.12.0 closes the gap.</p>
+
+    <h2>One capability, both entry points</h2>
+    <p>The v2 emit branch and verifier selection in <code>build_dossier_spec</code> now mirror <code>build_dossier</code> exactly: submit the manifest's canonical bytes to the tile-backed Sigstore Rekor v2 log, recover the ephemeral ECDSA-P-256 leaf signature from the server-returned leaf, request an RFC 3161 trusted timestamp over that signature, and embed both in the dossier. The emitted <code>verify_offline.py</code> is the v2 variant with the production log key pinned. Whichever path you start from &mdash; a raw <code>.nous</code> world or a SKILL.md skill directory &mdash; the evidence is the same.</p>
+
+    <h2>Tested offline, proven live</h2>
+    <p>The new path ships with a <code>_test_rekor_anchor_v2</code> hook so the seven structural tests exercise the v2 emit and verifier selection without a live Rekor submission or TSA call &mdash; deterministic and network-free in CI. The real cryptographic path was then proven end-to-end on the server: a SKILL.md skill exported, anchored via <code>dossier-spec --anchor rekor_v2</code>, and verified offline to a PASS at a live log index.</p>
+
+    <h2>Numbers</h2>
+    <p>7 new tests (PYTEST_FLOOR 738 to 745), zero regressions across the template harness. Both servers report <code>5.12.0</code>; PyPI: <code>nous-lang 5.12.0</code>; tag <code>v5.12.0</code>.</p>
+  </div>
+
+  <div class="post-full" id="post-v5110-rekor-v2-emission">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.11.0 &mdash; Rekor v2, Part Four: Dossier Emission and Trusted Time</h1>
+    <div class="post-full-meta">24 May 2026 &middot; 6 min read</div>
+
+    <p>This is the fourth and final part of the Rekor v2 migration. Parts One and Two pinned the trust root and made the Sigstore SigningConfig the source of truth for which log NOUS submits to; Part Three (v5.9.0 and v5.10.0) built and wired the v2 read path. v5.11.0 closes the loop: NOUS can now emit a v2-anchored, timestamped dossier and verify it offline.</p>
+
+    <h2>Emitting a v2 anchor</h2>
+    <p><code>nous dossier --anchor rekor_v2</code> submits the manifest's canonical bytes to the tile-backed Sigstore Rekor v2 log (<code>log2025-1</code>). The leaf carries a per-submission ephemeral ECDSA-P-256 signature over those bytes &mdash; the same Path-beta dual-signing scheme used on the v1 path: the Ed25519 manifest signature proves authorship, the ECDSA leaf signature ties the manifest bytes to the transparency-log entry. The submission returns the canonicalized leaf body, the signed checkpoint, and the inclusion proof in a single round-trip.</p>
+
+    <h2>Trusted time comes from the TSA, not the log</h2>
+    <p>The v2 tile-backed log returns <code>integratedTime: 0</code> and a null inclusion promise synchronously on submit &mdash; it does not assert a trusted integration time at submission time. So NOUS sources trusted time from an RFC 3161 timestamp authority instead. After submission, NOUS recovers the leaf signature from the server-returned leaf body and requests an RFC 3161 token over exactly that signature from the Sigstore TSA. The token's message imprint binds the trusted time to the same signature an offline verifier later recovers from the anchor &mdash; no separate field to trust, and no assumption that the locally generated signature equals the anchored one.</p>
+
+    <h2>Offline verification</h2>
+    <p>The emitted <code>verify_offline.py</code> is the v2 variant, assembled from the shipped read-path modules with the production log key pinned into its allowlist. It performs five independent checks: the Ed25519 manifest signature, the leaf-to-manifest ECDSA tie, the checkpoint Ed25519 signature, the RFC 6962 inclusion proof, and the RFC 3161 trusted timestamp. All of it runs with only the <code>cryptography</code> library and the standard library &mdash; no NOUS install, no network. The full path was proven end-to-end against the live log: a real emitted dossier, verified offline to a PASS, at log index 4598985.</p>
+
+    <h2>Numbers</h2>
+    <p>7 new tests (PYTEST_FLOOR 687 to 738), zero regressions across the template harness. Both servers report <code>5.11.0</code>; PyPI: <code>nous-lang 5.11.0</code>; tag <code>v5.11.0</code>.</p>
+  </div>
+
+  <div class="post-full" id="post-v5910-rekor-v2-read-path">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.9.0 &amp; v5.10.0 &mdash; Rekor v2, Part Three: The Read Path</h1>
+    <div class="post-full-meta">21-23 May 2026 &middot; 6 min read</div>
+
+    <p>Parts One and Two of the Rekor v2 migration pinned the trust root and made the Sigstore SigningConfig the authoritative source for which log NOUS submits to. Part Three builds the verifier for the new tile-backed log format and wires it into the verification flow &mdash; read side first, write side in Part Four.</p>
+
+    <h2>v5.9.0: the read-path verifier, as modules</h2>
+    <p>v5.9.0 ships the v2 verifier as three composable modules, not yet wired into the live flow. <code>rekor_entry</code> normalizes hashedrekord v0.0.1 and v0.0.2 leaf bodies into a single value object (a DER SubjectPublicKeyInfo public key and a hex digest) and recognizes and refuses DSSE. <code>rekor_checkpoint</code> verifies a C2SP signed-note checkpoint &mdash; the Ed25519 log signature and key ID per the signed-note spec &mdash; and an RFC 6962 inclusion proof, taking the root hash and tree size from the verified checkpoint. <code>rekor_verify_v2</code> composes both with the Path-beta leaf-to-manifest ECDSA tie and reports four independent per-step results (leaf digest, leaf signature, checkpoint signature, inclusion proof), so an auditor inspecting a failed anchor sees exactly which cryptographic link broke rather than a single opaque false.</p>
+    <p>The <code>RekorAnchorV2</code> manifest schema carries a <code>rekor_api_version</code> discriminator present only in v2 blocks. v1 blocks omit it and the reader treats absence as v1, so every historical v1 dossier and its signature remain byte-identical.</p>
+
+    <h2>v5.10.0: dispatch and the portable verifier</h2>
+    <p>v5.10.0 wires the read path in. <code>parse_manifest_json_with_anchor_v2</code> dispatches a manifest's <code>transparency_log</code> block by its <code>rekor_api_version</code>: absent or 1 routes to the existing v1 SET-based path, byte-identical; 2 routes to the v2 checkpoint path; anything higher is refused. The v1 read path is unchanged.</p>
+    <p><code>offline_verifier_builder</code> assembles a standalone <code>verify_offline.py</code> (cryptography plus stdlib only) from the shipped v2 read-path modules, guarded by an anti-drift equivalence test so the bundled verifier cannot silently diverge from the in-package one. The production Sigstore Rekor v2 log key (<code>log2025-1</code>) is pinned into the verifier allowlist, proven against a real checkpoint. The release also adds a <code>nous verify</code> step to the pipeline UX smoke and a differential test asserting the AST runner and codegen derive an identical semantic surface, plus a fix to the runner's per-cycle cost-ceiling handling.</p>
+
+    <h2>Numbers</h2>
+    <p>PYTEST_FLOOR 596 to 687 across the two releases, zero regressions across the template harness. PyPI: <code>nous-lang 5.10.0</code>; tags <code>v5.9.0</code> and <code>v5.10.0</code>.</p>
+  </div>
+
   <div class="post-full" id="post-v580-rekor-v2-signing-config">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
     <h1 class="post-full-title">NOUS v5.8.0 &amp; v5.8.1 &mdash; SigningConfig-Driven Anchoring, and Gating the Runtime</h1>

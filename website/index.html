@@ -333,11 +333,21 @@ img{max-width:100%;display:block}
   <div class="stats-bar">
     <div class="stat"><div class="stat-num" data-target="30">0</div><div class="stat-label">Priorities</div></div>
     <!-- __session77_homepage_tests_441_v1__ -->
-    <!-- __session77_homepage_tests_503_v1__  __session81_homepage_stats_v540_v1__  __session82_homepage_stats_v550_v1__  __session86_homepage_stats_596_v1__ -->
-    <div class="stat"><div class="stat-num" data-target="596">0</div><div class="stat-label">Tests Passing</div></div>
-    <div class="stat"><div class="stat-num" data-target="44">0</div><div class="stat-label">CLI Commands</div></div>
+    <!-- __session77_homepage_tests_503_v1__  __session81_homepage_stats_v540_v1__  __session82_homepage_stats_v550_v1__  __session86_homepage_stats_596_v1__  __session100_homepage_stats_v5150_v1__ -->
+    <div class="stat"><div class="stat-num" data-target="847">0</div><div class="stat-label">Tests Passing</div></div>
+    <div class="stat"><div class="stat-num" data-target="46">0</div><div class="stat-label">CLI Commands</div></div>
     <div class="stat"><div class="stat-num" data-target="7">0</div><div class="stat-label">Proof Categories</div></div>
     <div class="stat"><div class="stat-num" data-target="3">0</div><div class="stat-label">Compile Targets</div></div>
+  </div>
+  <!-- __session98_homepage_anchor_badge_v1__ -->
+  <div style="text-align:center;margin-top:18px">
+    <a href="/verify.html?demo=cert-4679350"  data-session98-stage5-link target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:8px 18px;border:1px solid rgba(56,217,122,0.25);border-radius:20px;background:rgba(56,217,122,0.05);color:rgba(56,217,122,0.85);font-size:11.5px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all 0.2s"
+       onmouseenter="this.style.borderColor='rgba(56,217,122,0.6)';this.style.color='#38d97a'"
+       onmouseleave="this.style.borderColor='rgba(56,217,122,0.25)';this.style.color='rgba(56,217,122,0.85)'">
+      <span style="width:6px;height:6px;border-radius:50%;background:#38d97a;box-shadow:0 0 8px rgba(56,217,122,0.5)"></span>
+      Anchored live &middot; Rekor v2 log_index 4679350
+      <span style="opacity:0.5">&#x2197;</span>
+    </a>
   </div>
 </div>
 
@@ -476,6 +486,19 @@ img{max-width:100%;display:block}
     <div style="text-align:center;margin-top:20px;display:flex;justify-content:center;gap:24px">
       <button onclick="replayVerif()" style="background:none;border:1px solid var(--border);color:var(--dim);padding:8px 20px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:12px;transition:all 0.2s;letter-spacing:0.5px" onmouseenter="this.style.borderColor='var(--green)';this.style.color='var(--green)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--dim)'">↻ Replay</button>
       <a href="/docs#verification" style="color:var(--dim);font-size:12px;padding:8px 20px;border:1px solid var(--border);border-radius:6px;text-decoration:none;transition:all 0.2s;letter-spacing:0.5px;display:inline-block" onmouseenter="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='var(--border)';this.style.color='var(--dim)'">Read the docs →</a>
+    </div>
+    <!-- __session98_proof_of_safety_runtime_callout_v1__ -->
+    <div style="max-width:780px;margin:48px auto 0;padding:24px 28px;border:1px solid rgba(201,165,84,0.18);border-radius:12px;background:linear-gradient(180deg,rgba(201,165,84,0.04),rgba(201,165,84,0.01))" class="fade-in">
+      <div style="font-family:'Playfair Display',serif;font-size:18px;color:var(--bright);margin-bottom:8px;line-height:1.4">
+        Static proof says <em>cannot</em> exceed. Runtime certificate says <em>did not</em>.
+      </div>
+      <div style="color:var(--dim);font-size:13.5px;line-height:1.7;margin-bottom:14px">
+        The static SMT proof bounds every possible run. The runtime conformance certificate &mdash; signed, optionally anchored in the Sigstore Rekor v2 transparency log &mdash; records that one specific run stayed inside that bound. A third party verifies the verdict offline with <code>cryptography</code> plus stdlib, no NOUS install required.
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:12px">
+        <a href="/verify.html?demo=cert-4679350"  data-session98-stage5-link target="_blank" rel="noopener" style="color:rgba(56,217,122,0.85);text-decoration:none;padding:6px 12px;border:1px solid rgba(56,217,122,0.25);border-radius:6px;transition:all 0.2s" onmouseenter="this.style.borderColor='rgba(56,217,122,0.6)'" onmouseleave="this.style.borderColor='rgba(56,217,122,0.25)'">Verify this proof &#x2197;</a>
+        <a href="https://github.com/contrario/nous/blob/main/docs/RUNTIME_CONFORMANCE.md" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;padding:6px 12px;border:1px solid rgba(201,165,84,0.25);border-radius:6px;transition:all 0.2s" onmouseenter="this.style.borderColor='rgba(201,165,84,0.6)'" onmouseleave="this.style.borderColor='rgba(201,165,84,0.25)'">Read the design &#x2197;</a>
+      </div>
     </div>
   </div>
 </div>
@@ -785,7 +808,7 @@ if(term)obs.observe(term);
   <!-- Stats -->
   <div class="fade-in" style="display:flex;justify-content:center;gap:40px;margin-top:40px;flex-wrap:wrap">
     <div style="text-align:center">
-      <div style="font-size:28px;font-weight:700;color:var(--bright);font-family:'Playfair Display',serif">44</div>
+      <div style="font-size:28px;font-weight:700;color:var(--bright);font-family:'Playfair Display',serif">45</div>
       <div style="font-size:11px;color:var(--dim);margin-top:4px">CLI Commands</div>
     </div>
     <div style="text-align:center">
@@ -1097,10 +1120,19 @@ const STORY = [
   {year:"May 2026",title:"v5.7.0 — Compiler Correctness",text:"A correctness pass on codegen, targeting sources that pass every gate yet <code>NameError</code> at runtime. Adds a real <code>null</code>/<code>none</code> literal compiling to <code>None</code> with identity-comparison semantics; makes <code>guard ... else</code> emit its else action (previously silently dropped); and introduces an undefined-name gate that refuses to write Python referencing a name that does not exist, with a typed CodegenSemanticError. 10 new tests, floor 566 to 576."},
   {year:"May 2026",title:"v5.7.1 — Law Constants Always Emitted",text:"A follow-on caught by the new gate. The law constants <code>HEARTBEAT_SECONDS</code> and <code>COST_CEILING</code> were emitted only when a source had a <code>world</code> block, yet the rest of the generated module referenced them unconditionally, so world-less sources produced undefined names. Both constants are now emitted always with safe defaults; world-bearing output stays byte-identical. 5 new tests, floor 576 to 581."},
   {year:"May 2026",title:"v5.8.0 — Rekor v2, Part Two",text:"The Sigstore SigningConfig becomes the single source of truth for which Rekor log NOUS submits to, replacing hardcoded endpoint constants. The new <code>rekor_signing_config</code> module selects the highest Rekor API version the client supports, grouped by operator, honoring validity windows, and fails closed if only an unsupported version is available rather than silently downgrading. Validated against the real mirrored production config. 14 new tests, floor 581 to 595."},
-  {year:"May 2026",title:"v5.8.1 — Gating the Runtime",text:"The undefined-name gate from v5.7.0 was wired only into <code>nous compile</code>. The runtime executes the AST directly, so <code>nous run</code> never produced Python for the gate to scan. v5.8.1 runs a throwaway codegen pass before execution and gates hot-reload before compile, both failing closed. Compile, run, and hot-reload now reject the same sources by the same check. 1 new test, floor 595 to 596."}
+  {year:"May 2026",title:"v5.8.1 — Gating the Runtime",text:"The undefined-name gate from v5.7.0 was wired only into <code>nous compile</code>. The runtime executes the AST directly, so <code>nous run</code> never produced Python for the gate to scan. v5.8.1 runs a throwaway codegen pass before execution and gates hot-reload before compile, both failing closed. Compile, run, and hot-reload now reject the same sources by the same check. 1 new test, floor 595 to 596."},
+  // __session93_story_v59_v511_v1__
+  {year:"May 2026",title:"v5.9.0 — Rekor v2, Part Three: Read-Path Verifier",text:"The Rekor v2 read-path verifier ships as modules. <code>rekor_entry</code> normalizes hashedrekord v0.0.1 and v0.0.2 leaf bodies into one value object and refuses dsse; <code>rekor_checkpoint</code> verifies a C2SP signed-note checkpoint (Ed25519) and an RFC 6962 inclusion proof; <code>rekor_verify_v2</code> composes both with the Path-beta leaf-to-manifest ECDSA tie and reports four independent per-step results, so an auditor sees exactly which link broke. The <code>RekorAnchorV2</code> schema carries a <code>rekor_api_version</code> discriminator present only in v2 blocks, so every historical v1 dossier stays byte-identical. Floor 596 to 641."},
+  {year:"May 2026",title:"v5.10.0 — Rekor v2, Part Three: Dispatch and Offline Verifier",text:"The v2 read path is wired into verification. <code>parse_manifest_json_with_anchor_v2</code> dispatches a manifest's <code>transparency_log</code> block by its <code>rekor_api_version</code> (absent or 1 to the byte-identical v1 path, 2 to the v2 checkpoint path, higher refused). <code>offline_verifier_builder</code> assembles a standalone <code>verify_offline.py</code> from the shipped v2 modules, guarded by an anti-drift equivalence test, and the production Sigstore Rekor v2 log key (<code>log2025-1</code>) is pinned into the verifier allowlist, proven against a real checkpoint. Floor 641 to 687."},
+  {year:"May 2026",title:"v5.11.0 — Rekor v2, Part Four: Dossier Emission and Trusted Time",text:"The v2 write path lands. <code>nous dossier --anchor rekor_v2</code> submits a manifest to the tile-backed Sigstore Rekor v2 log, recovers the ephemeral ECDSA-P-256 leaf signature from the server-returned leaf, requests an RFC 3161 trusted timestamp over that signature from the Sigstore TSA, and embeds both in the dossier. The emitted <code>verify_offline.py</code> checks the leaf-to-manifest ECDSA tie, the checkpoint Ed25519 signature, the RFC 6962 inclusion proof, and the RFC 3161 trusted time, fully offline with only <code>cryptography</code> plus stdlib. Proven end-to-end against the live log (log_index 4598985). 7 new tests, floor 687 to 738."},
+  // __session95_story_v5120_v1__
+  {year:"May 2026",title:"v5.12.0 &mdash; Rekor v2 on Both Dossier Paths",text:"v5.11.0 brought the Rekor v2 + RFC 3161 anchor to <code>nous dossier</code>. v5.12.0 extends it to <code>nous dossier-spec --anchor rekor_v2</code>, the path that starts from a SKILL.md skill directory: the emit branch and verifier selection now mirror <code>dossier</code>, with an offline <code>_test_rekor_anchor_v2</code> hook so the v2 path is tested without a live submit. Both CLI dossier paths now produce the same tile-backed Rekor v2 + RFC 3161 evidence, proven end-to-end against the live log. 7 new tests, floor 738 to 745."},
+  {year:"May 2026",title:"v5.13.0 &mdash; The Runtime Conformance Certificate",text:"The static proof says a program <em>cannot</em> exceed its cost envelope. The conformance certificate says a specific <em>run did not</em>. <code>nous conformance certify</code> re-derives the bounds from the signed source, recomputes realized cost from a signed execution trace, and emits a standalone Ed25519-signed <code>conformance.json</code> with six independent obligation verdicts. With <code>--anchor rekor_v2</code> the certificate is stapled into the Sigstore Rekor v2 log over its own body bytes, reusing the dossier's write and read paths with zero new cryptography. A shipped offline verifier checks authenticity and binding (cert to trace to manifest) with <code>cryptography</code> plus stdlib. 11 new tests, floor 753 to 764."},
+  {year:"May 2026",title:"v5.15.0 &mdash; Sequence Laws",text:"The cost proof bounds <em>how much</em> a program can spend; sequence laws bound <em>in what order</em> its events may occur. Declare an event alphabet and <code>law before(A, B)</code>; <code>nous verify-sequence</code> proves with Z3 that the law set is self-consistent (a valid total order exists, <em>sat</em>; a cycle is <em>unsat</em>) -- the inverse polarity of the cost check, hence its own verb. At runtime the conformance certificate gains a seventh obligation, <code>sequence_ok</code>: for each law every B has an earlier A. The label rides on the trace event's signed <code>action</code> field, so no trace schema changed, and the certificate is schema-versioned v1 to v2 so every certificate signed before this release re-verifies byte-identical. 53 new tests across the arc, floor 778 to 826."}, /* __session100_story_v5150_v1__ */
+  {year:"May 2026",title:"v5.16.0 &mdash; Ordering Law Family",text:"v5.16.0 completes the ordering-law family. <code>before(A, B)</code> (A precedes B) is now joined by <code>never_after(A, B)</code> (once A, B is forbidden) and <code>leads_to(A, B)</code> (every A is eventually followed by B) &mdash; the canonical Dwyer precedence, absence, and response patterns. All three share one rank model, so <code>nous verify-sequence</code> rejects a contradictory pair such as <code>before(A,B)</code> with <code>never_after(A,B)</code> as <em>unsat</em>; each adds a dual runtime obligation. 9 new tests, floor 826 to 842."} /* __session101_story_v5160_v1__ */
 ];
 
-const CMDS = ["compile","run","validate","typecheck","verify","test","watch","debug","shell","profile","docker","plugins","pkg","ast","evolve","nsp","info","bridge","version","crossworld","bench","docs","fmt","noesis","build","init","migrate","viz","lsp","wasm","self-compile","create","diff","cost","dream","immune","mitosis","consciousness","metabolism","symbiosis","telemetry","retire","replay","governance"];
+const CMDS = ["compile","run","validate","typecheck","verify","test","watch","debug","shell","profile","docker","plugins","pkg","ast","evolve","nsp","info","bridge","version","crossworld","bench","docs","fmt","noesis","build","init","migrate","viz","lsp","wasm","self-compile","create","diff","cost","dream","immune","mitosis","consciousness","metabolism","symbiosis","telemetry","retire","replay","governance","conformance"];
 
 const LEGAL = {
   privacy:{title:"Privacy Policy",updated:"14 April 2026",sections:[
