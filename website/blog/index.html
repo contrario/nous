@@ -121,6 +121,36 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s104_blog_v5200_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5200-producer-existence');return false">
+      <div class="post-meta">
+        <span class="post-date">30 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.20.0 &mdash; Producer-Existence for Sequence Laws</div>
+      <div class="post-excerpt">A sequence law over an event that is never emitted passes <em>vacuously</em>. v5.20.0 surfaces it: a conformance verdict lists <code>sequence_vacuous</code> laws separately from proven ones, and the static verifier warns <code>SEQ-PROD</code> when a law references an event no soul speaks. <code>nous-lang 5.20.0</code> (patch <code>5.20.1</code>).</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
+    <!-- __s104_blog_v5190_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5190-action-label-binding');return false">
+      <div class="post-meta">
+        <span class="post-date">30 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.19.0 &mdash; Action-Label Binding</div>
+      <div class="post-excerpt">Sequence laws were fixture-only on real runs because every recorded event carried no label. v5.19.0 binds them: a <code>speak</code> whose message type is declared in <code>world.events</code> stamps that label onto the signed trace, so <code>before</code> / <code>never_after</code> / <code>leads_to</code> / <code>at_most</code> now enforce against actual runs. <code>nous-lang 5.19.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
+    <!-- __s104_blog_v5180_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v5180-trace-emission');return false">
+      <div class="post-meta">
+        <span class="post-date">30 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.18.0 &mdash; Runtime Trace Emission</div>
+      <div class="post-excerpt">Before v5.18.0 the conformance verifier could seal a trace but nothing produced one. Now <code>nous run --emit-trace</code> writes a signed <code>TraceEnvelope</code> from a real interpreter run, bound to the same source / cost-model / constraint-system digests as the dossier and verifiable offline with <code>cryptography</code> alone. <code>nous-lang 5.18.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __session102_blog_v5170_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v5170-at-most-cardinality');return false">
       <div class="post-meta">
@@ -448,6 +478,37 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s104_blog_v5180_post_v1__ -->
+  <div class="post-full" id="post-v5180-trace-emission">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.18.0 &mdash; Runtime Trace Emission</h1>
+    <div class="post-full-meta">30 May 2026 &middot; 4 min read</div>
+    <p>The runtime conformance verifier has always been able to take a signed <code>TraceEnvelope</code> and prove it conforms. The gap was upstream: nothing in the runtime produced a trace on its own. The seven obligations were exercised only against hand-fed fixtures.</p>
+    <p>v5.18.0 closes that gap on the interpreter path. <code>nous run --emit-trace</code> now records each LLM call and inter-soul message as it happens, finalizes the envelope at end of run, and signs it with an ephemeral per-run Ed25519 key. The three subject digests &mdash; source, cost-model, constraint-system &mdash; are computed by the same path as the compliance dossier, so a trace and a dossier for the same program pin identical artifacts.</p>
+    <p>The flag is opt-in: without it, <code>nous run</code> is byte-identical to before, because always-on emission would couple run success to pricing validity (the cost spec needs a priced model; many runnable programs are unpriced). The honest scope is stated in the docs: interpreter path only, signed but not yet transparency-anchored.</p>
+    <p>Available as <code>nous-lang 5.18.0</code>. A third party can now take a real run and confirm offline that its trace is authentic and bound to exactly these artifacts.</p>
+  </div>
+  <!-- __s104_blog_v5190_post_v1__ -->
+  <div class="post-full" id="post-v5190-action-label-binding">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.19.0 &mdash; Action-Label Binding</h1>
+    <div class="post-full-meta">30 May 2026 &middot; 4 min read</div>
+    <p>v5.18.0 made the interpreter emit a signed trace, but every event carried no action label. That left the sequence laws &mdash; <code>before</code>, <code>never_after</code>, <code>leads_to</code>, <code>at_most</code> &mdash; provable only against hand-written fixtures, never against a real run.</p>
+    <p>v5.19.0 binds them. The mechanism is implicit-by-name: a <code>speak</code> whose message type is declared in the world&rsquo;s <code>events</code> block stamps that name onto the trace as the event&rsquo;s action. No new keyword, no grammar change, no AST change &mdash; the binding rides the existing optional action field, and the design deliberately avoided reserving a new word that would have broken an existing program in the regression baseline.</p>
+    <p>Internal think steps stay unlabeled by design: a model call is internal cognition, not a world-observable event, and the ordering laws are about observable message sequence. A run&rsquo;s trace now distinguishes <code>llm_call</code> (no action) from <code>message</code> (the declared label).</p>
+    <p>Available as <code>nous-lang 5.19.0</code>. The sequence laws now enforce against actual interpreter runs.</p>
+  </div>
+  <!-- __s104_blog_v5200_post_v1__ -->
+  <div class="post-full" id="post-v5200-producer-existence">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.20.0 &mdash; Producer-Existence for Sequence Laws</h1>
+    <div class="post-full-meta">30 May 2026 &middot; 5 min read</div>
+    <p>Binding labels to runs (v5.19.0) left one residue: a law over an event that <em>never occurs</em> in a trace still passes &mdash; vacuously. An empty law and a satisfied law looked identical in the verdict. That is fixture-theater by another name.</p>
+    <p>v5.20.0 makes emptiness visible without rejecting valid programs. A never-run law is not malformed; it is inert. So the response is to surface it, not to error. Two surfaces: at conformance time the verdict now lists <code>sequence_vacuous</code> &mdash; laws that passed only because their event had zero occurrences &mdash; separately from genuinely proven ones. Statically, the verifier emits a <code>SEQ-PROD</code> warning when a sequence law references an event that no soul ever emits via <code>speak</code>, so the author learns at design time that a law can never fire.</p>
+    <p>The change is additive: the conformance function signature and the signed conformance certificate are untouched, so signed bytes stay byte-identical and no existing fixture is affected. An auditor reading a verdict can now tell a satisfied law from an empty one.</p>
+    <p>Available as <code>nous-lang 5.20.0</code>.</p>
+    <p style="color:var(--dim);font-size:13px;border-top:1px solid rgba(255,255,255,0.06);padding-top:12px;margin-top:16px"><strong>Patch 5.20.1</strong> &mdash; the <code>/v1/health</code> <code>cli_commands</code> field was a hand-maintained literal that had drifted from the real subcommand count. It is now derived from the parser and locked by a test, so it can never silently diverge again.</p>
+  </div>
   <!-- __session102_blog_v5170_post_v1__ -->
   <div class="post-full" id="post-v5170-at-most-cardinality">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
