@@ -108,3 +108,40 @@ def test_unpriced_program_refused_fail_fast() -> None:
         assert not _TRACE_PATH.exists()
     finally:
         _cleanup()
+
+
+_LABELED = (
+    "world W {\n"
+    "  cost_cap: 0.10 USD\n"
+    "  max_ticks: 4\n"
+    "  events { Signal }\n"
+    "}\n"
+    "soul S {\n"
+    "  mind: claude-sonnet-4-6 @ Tier1\n"
+    "  tokens: input = 100 output = 50\n"
+    "  instinct {\n"
+    "    speak Signal()\n"
+    "  }\n"
+    "}\n"
+)
+
+
+def test_emit_trace_binds_declared_event_to_action() -> None:  # __s104_label_bind_pos_test_v1__
+    _cleanup()
+    program = parse_nous(_LABELED)
+    try:
+        asyncio.run(
+            execute_program(
+                program,
+                mode="dry-run",
+                max_cycles=1,
+                source_text=_LABELED,
+                emit_trace=True,
+            )
+        )
+        assert _TRACE_PATH.is_file(), "trace file was not written"
+        env = load_trace(str(_TRACE_PATH))
+        assert verify_trace_signature(env) is True
+        assert any(e.action == "Signal" for e in env.events), "declared event label not bound to action"
+    finally:
+        _cleanup()

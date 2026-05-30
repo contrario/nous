@@ -4,6 +4,15 @@
 
 ## [Unreleased]
 
+<!-- __s104_changelog_v5_19_0_v1__ -->
+### Added
+- Action-label binding on the interpreter trace path: a `speak` whose
+  message type is declared in `world.events` now stamps that label onto
+  the signed trace `action` field (implicit-by-name). Sequence laws
+  (before/never_after/leads_to/at_most) now enforce against real runs,
+  not fixtures only. Think/llm_call events and undeclared messages stay
+  null. No grammar, AST, or codegen change; regression byte-identity held.
+
 <!--
   Add bullets here under the headings below as work lands on
   `main` between releases. The release pipeline promotes this

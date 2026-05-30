@@ -127,7 +127,10 @@ signed with an ephemeral, per-run Ed25519 key.
 - **What is recorded.** One `llm_call` event per soul cognition step and
   one `message` event per `speak`. In `dry-run` mode the `llm_call` events
   carry zero tokens; in `live` mode they carry the real input/output token
-  counts. The `action` field is left null at this stage; sequence labels
+  counts. Since v5.19.0 the `action` field carries the sequence label for a
+  speak whose message type is declared in `world.events` (implicit-by-name
+  binding); think/llm_call events and undeclared messages stay null. Labels
+  <!-- __s104_doc_action_bind_v1__ -->
   are bound by a later stage.
 - **Verifiable offline.** The written envelope verifies with
   `nous_trace.verify_trace_signature` (or any holder of the embedded public
@@ -160,8 +163,10 @@ artifacts and untampered, with a transparency-log inclusion proof when anchored.
 
 - The certificate proves the **trace** conforms, not that the trace faithfully
   records reality. Interpreter-path trace emission shipped in v5.18.0
-  (`nous run --emit-trace`); compiled-path emission and action-label binding
-  remain. Full faithfulness against a malicious runtime still needs a TEE or
+  (`nous run --emit-trace`); action-label binding for speaks shipped in
+  v5.19.0 (interpreter path); compiled-path emission remains.
+  <!-- __s104_doc_limitation_v1__ -->
+  Full faithfulness against a malicious runtime still needs a TEE or
   hardware attestation.
 - The cost MVP models llm_call token cost only. Priced tool calls and
   sequence/ordering obligations (authenticate-before-access, no-send-after-read,

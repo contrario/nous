@@ -142,7 +142,8 @@ async def _run_soul_cycle(
         for sp in speak_calls:
             msg_type = sp.get("message_type", "Signal")
             channel = f"{name}_{msg_type}"
-            await rt.speak(name, channel, {"from": name, "type": msg_type, "data": response[:200], "cycle": cycle})
+            event_label = msg_type if msg_type in world.events else None  # __s104_label_bind_soul_cycle_v1__
+            await rt.speak(name, channel, {"from": name, "type": msg_type, "data": response[:200], "cycle": cycle}, event_label=event_label)
 
     targets = routes.get(name, [])
     for target in targets:
@@ -188,7 +189,8 @@ async def _run_listener_cycle(
                 for sp in speak_calls:
                     msg_type = sp.get("message_type", "Decision")
                     channel = f"{name}_{msg_type}"
-                    await rt.speak(name, channel, {"from": name, "type": msg_type, "data": response[:200], "cycle": cycle})
+                    event_label = msg_type if msg_type in world.events else None  # __s104_label_bind_listener_cycle_v1__
+                    await rt.speak(name, channel, {"from": name, "type": msg_type, "data": response[:200], "cycle": cycle}, event_label=event_label)
 
 
 async def execute_program(

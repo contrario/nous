@@ -493,9 +493,9 @@ class NousRuntime:
                 soul_name, 0, input_tokens, output_tokens
             )
 
-    def _trace_message(self, from_soul: str) -> None:
+    def _trace_message(self, from_soul: str, action: "Optional[str]" = None) -> None:  # __s104_label_bind_trace_message_v1__
         if self.trace_recorder is not None:
-            self.trace_recorder.record_message(from_soul, 0)
+            self.trace_recorder.record_message(from_soul, 0, action=action)
 
     async def think(self, soul_name: str, query: str, system_prompt: str = "") -> str:
         soul = self.souls.get(soul_name)
@@ -584,13 +584,13 @@ class NousRuntime:
         log.error(f"[{soul_name}] All tiers failed")
         return ""
 
-    async def speak(self, from_soul: str, channel: str, message: Any) -> None:
+    async def speak(self, from_soul: str, channel: str, message: Any, event_label: "Optional[str]" = None) -> None:  # __s104_label_bind_speak_sig_v1__
         if channel not in self.channels:
             self.channels[channel] = asyncio.Queue()
         await self.channels[channel].put(message)
         self.rlog.add({"type": "speak", "soul": from_soul, "channel": channel, "message": str(message)[:100]})
         log.info(f"[{from_soul}] → {channel}: {str(message)[:60]}")
-        self._trace_message(from_soul)  # __nous_runtime_trace_speak_v1__
+        self._trace_message(from_soul, action=event_label)  # __nous_runtime_trace_speak_v1__ __s104_label_bind_speak_call_v1__
 
     async def listen(self, soul_name: str, channel: str, timeout: float = 30.0) -> Any:
         if channel not in self.channels:
