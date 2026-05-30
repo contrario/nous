@@ -5,7 +5,15 @@
 ## [Unreleased]
 
 <!-- __s104_changelog_v5_19_0_v1__ -->
+<!-- __s104_changelog_v5_20_0_v1__ -->
 ### Added
+- Producer-existence for sequence laws (v5.20.0). A conformance verdict
+  now lists `sequence_vacuous`: laws that passed only because their event
+  never occurred in the trace, distinguished from genuinely proven laws.
+  The static verifier additionally warns (SEQ-PROD) when a sequence law
+  references an event no soul emits via speak. Additive: the
+  `_check_sequence_obligations` signature and the signed conformance
+  certificate are unchanged; no existing test or fixture affected.
 - Action-label binding on the interpreter trace path: a `speak` whose
   message type is declared in `world.events` now stamps that label onto
   the signed trace `action` field (implicit-by-name). Sequence laws

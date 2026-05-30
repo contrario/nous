@@ -131,7 +131,11 @@ signed with an ephemeral, per-run Ed25519 key.
   speak whose message type is declared in `world.events` (implicit-by-name
   binding); think/llm_call events and undeclared messages stay null. Labels
   <!-- __s104_doc_action_bind_v1__ -->
-  are bound by a later stage.
+  are bound at the speak site. Since v5.20.0 a conformance verdict also
+  reports `sequence_vacuous`: laws that passed only because their event
+  never occurred in the trace are listed explicitly rather than counted
+  as proven, so an auditor can tell a satisfied law from an empty one.
+  <!-- __s104_doc_vacuous_v1__ -->
 - **Verifiable offline.** The written envelope verifies with
   `nous_trace.verify_trace_signature` (or any holder of the embedded public
   key) using `cryptography` alone -- tamper-evident, no NOUS install needed.
@@ -164,8 +168,10 @@ artifacts and untampered, with a transparency-log inclusion proof when anchored.
 - The certificate proves the **trace** conforms, not that the trace faithfully
   records reality. Interpreter-path trace emission shipped in v5.18.0
   (`nous run --emit-trace`); action-label binding for speaks shipped in
-  v5.19.0 (interpreter path); compiled-path emission remains.
-  <!-- __s104_doc_limitation_v1__ -->
+  v5.19.0 (interpreter path); compiled-path emission remains. Since
+  v5.20.0 the static verifier warns (SEQ-PROD) when a sequence law
+  references an event no soul emits via speak -- the law can never fire.
+  <!-- __s104_doc_limitation_v1__ --> <!-- __s104_doc_seqprod_v1__ -->
   Full faithfulness against a malicious runtime still needs a TEE or
   hardware attestation.
 - The cost MVP models llm_call token cost only. Priced tool calls and

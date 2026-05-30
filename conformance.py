@@ -72,6 +72,7 @@ class ConformanceDetail:
     cost_cap: str
     sequence_ok: bool = True  # __phase2_stage5_seq_conformance_v1__
     errors: tuple[str, ...] = field(default=())
+    sequence_vacuous: tuple[str, ...] = field(default=())  # __s104_seq_vacuous_field_v1__
 
     @property
     def ok(self) -> bool:
@@ -169,6 +170,37 @@ def _check_sequence_obligations(  # __phase2_stage5_seq_conformance_v1__
                     f"exceeds at_most({count},{a})"
                 )
     return ok, errors
+
+
+def _sequence_vacuous_laws(  # __s104_seq_vacuous_helper_v1__
+    trace: TraceEnvelope,
+    spec: "SMTSpec",
+) -> list[str]:
+    laws = spec.sequence_laws
+    if not laws:
+        return []
+    by_action: dict[str, list[int]] = {}
+    for ev in trace.events:
+        if ev.action is not None:
+            by_action.setdefault(ev.action, []).append(ev.seq)
+    vacuous: list[str] = []
+    for law in laws:
+        kind, a, b, count = law.kind, law.label_a, law.label_b, law.count
+        present_a = bool(by_action.get(a, []))
+        present_b = bool(by_action.get(b, [])) if b is not None else False
+        if kind == "at_most":
+            if not present_a:
+                vacuous.append(f"at_most({count},{a}): 0 occurrences of {a!r}")
+        elif kind == "never_after":
+            if not present_a and not present_b:
+                vacuous.append(f"never_after({a},{b}): 0 occurrences of {a!r} and {b!r}")
+        elif kind == "leads_to":
+            if not present_a:
+                vacuous.append(f"leads_to({a},{b}): 0 occurrences of {a!r}")
+        else:
+            if not present_b:
+                vacuous.append(f"before({a},{b}): 0 occurrences of {b!r}")
+    return vacuous
 
 
 def verify_conformance(
@@ -352,6 +384,7 @@ def verify_conformance(
         trace_signature_ok=trace_signature_ok,
         realized_total=str(realized_total),
         cost_cap=str(cost_cap),
+        sequence_vacuous=tuple(_sequence_vacuous_laws(trace, spec)),  # __s104_seq_vacuous_construct_v1__
         sequence_ok=sequence_ok,  # __phase2_stage5_seq_conformance_v1__
         errors=tuple(errors),
     )

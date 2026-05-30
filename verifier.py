@@ -154,6 +154,7 @@ class NousVerifier:
         self._verify_retirement()
         self._verify_immune()
         self._verify_dream()
+        self._verify_sequence_producers()  # __s104_seq_producers_dispatch_v1__
         return self.result
 
     def _collect_metadata(self) -> None:
@@ -201,6 +202,26 @@ class NousVerifier:
                 self._collect_speak_listen(stmt.else_body, soul_name)
             elif isinstance(stmt, ForNode):
                 self._collect_speak_listen(stmt.body, soul_name)
+
+    def _verify_sequence_producers(self) -> None:  # __s104_seq_producers_method_v1__
+        world = self.program.world
+        if world is None or not getattr(world, "sequence_laws", None):
+            return
+        spoken: set[str] = set()
+        for types in self._speaks.values():
+            spoken.update(types)
+        for law in world.sequence_laws:
+            labels = [law.before_label]
+            if law.kind != "at_most" and law.after_label is not None:
+                labels.append(law.after_label)
+            for label in labels:
+                if label not in spoken:
+                    self.result.warning(
+                        "SEQ-PROD", "sequence",
+                        f"sequence law references event {label!r} that no soul emits via speak; "
+                        f"the law can never fire on a real run (vacuously satisfied)",
+                        f"world {world.name}",
+                    )
 
     def _verify_resource_bounds(self) -> None:
         for soul in self.program.souls:
