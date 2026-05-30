@@ -6,6 +6,16 @@
 
 <!-- __s104_changelog_v5_19_0_v1__ -->
 <!-- __s104_changelog_v5_20_0_v1__ -->
+<!-- __s104_changelog_v5_20_1_v1__ -->
+### Fixed
+- `cli_commands` in the `/v1/health` response was a hand-bumped literal
+  (46) that had silently drifted from the real root subcommand count
+  (52). It is now derived: `cli.build_parser()` is extracted from
+  `main()` and `cli.cli_command_count()` returns the live count; a test
+  locks the health literal to that count so the two can never diverge
+  again. Behavior of `main()` is byte-identical (it now calls
+  `build_parser()`); regression byte-identity unaffected.
+
 ### Added
 - Producer-existence for sequence laws (v5.20.0). A conformance verdict
   now lists `sequence_vacuous`: laws that passed only because their event

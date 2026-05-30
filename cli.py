@@ -1501,7 +1501,7 @@ def cmd_templates(args) -> int:
 
 
 
-def main() -> int:
+def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language v2.0")
     sub = ap.add_subparsers(dest="command", required=True)
 
@@ -1762,6 +1762,19 @@ def main() -> int:
     p_tpl_extract.add_argument("--overwrite", action="store_true", help="Replace existing file at destination")
 
 
+    return ap
+
+
+def cli_command_count() -> int:  # __s104_cli_command_count_v1__
+    ap = build_parser()
+    actions = [a for a in ap._actions if isinstance(a, argparse._SubParsersAction)]
+    if not actions:
+        return 0
+    return len(actions[0].choices)
+
+
+def main() -> int:  # __s104_main_uses_build_parser_v1__
+    ap = build_parser()
     args = ap.parse_args()
     commands = {
         # __cost_cap_phase3b_cli_dispatch_v1__
