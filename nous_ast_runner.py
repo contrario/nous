@@ -197,6 +197,8 @@ async def execute_program(
     max_cycles: int = 3,
     daily_budget: float = 0.33,
     monthly_budget: float = 10.0,
+    source_text: "Optional[str]" = None,  # __nous_n2b_execsig_v1__
+    emit_trace: bool = False,
 ) -> str:
     world = program.world
     if not world:
@@ -215,6 +217,29 @@ async def execute_program(
         heartbeat_seconds=heartbeat,
         max_cycles=max_cycles,
     )
+
+    if emit_trace:  # __nous_n2b_build_v1__
+        from run_shas import compute_run_shas
+        from trace_recorder import TraceRecorder
+        if source_text is None:
+            raise RuntimeError(
+                "emit_trace requested but source_text is None; cannot "
+                "derive the trace subject binding"
+            )
+        try:
+            from _version import __version__ as _nous_version
+        except Exception:
+            _nous_version = "0.0.0-unknown"
+        _src_sha, _smt_sha, _pricing_sha = compute_run_shas(source_text)
+        rt.attach_trace_recorder(
+            TraceRecorder(
+                _nous_version,
+                world.name,
+                _src_sha,
+                _smt_sha,
+                _pricing_sha,
+            )
+        )
 
     routes: dict[str, list[str]] = {}
     incoming: dict[str, list[str]] = {}
@@ -278,6 +303,32 @@ async def execute_program(
     rt.rlog.save(log_path)
     log.info(f"Log saved: {log_path}")
 
+    if rt.trace_recorder is not None:  # __nous_n2b_write_v1__
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PrivateKey as _Ed25519PrivateKey,
+        )
+        _trace_env = rt.trace_recorder.finalize(
+            private_key=_Ed25519PrivateKey.generate()
+        )
+        _trace_path = Path(
+            f"/opt/aetherlang_agents/nous/trace_{world.name.lower()}_{mode}.json"
+        )
+        import json as _json
+        import os as _os
+        import tempfile as _tempfile
+        _payload = _json.dumps(
+            _trace_env.model_dump(), indent=2, ensure_ascii=False
+        )
+        _fd, _tmp = _tempfile.mkstemp(
+            suffix=".tmp", prefix=_trace_path.name + ".",
+            dir=str(_trace_path.parent),
+        )
+        with _os.fdopen(_fd, "w", encoding="utf-8") as _fh:
+            _fh.write(_payload)
+        _os.chmod(_tmp, 0o644)
+        _os.replace(_tmp, str(_trace_path))
+        log.info(f"Trace saved (signed): {_trace_path}")
+
     return report
 
 
@@ -287,6 +338,7 @@ def run_program(
     max_cycles: int = 3,
     daily_budget: float = 0.33,
     monthly_budget: float = 10.0,
+    emit_trace: bool = False,  # __nous_n2b_runsig_v1__
 ) -> str:
     path = Path(nous_file)
     if not path.exists():
@@ -307,7 +359,9 @@ def run_program(
     print(f"Parse + validate OK ({len(program.souls)} souls, {len(program.messages)} messages)")
 
     return asyncio.run(execute_program(program, mode=mode, max_cycles=max_cycles,
-                                        daily_budget=daily_budget, monthly_budget=monthly_budget))
+                                        daily_budget=daily_budget, monthly_budget=monthly_budget,
+                                        source_text=path.read_text(encoding="utf-8"),
+                                        emit_trace=emit_trace))  # __nous_n2b_ret_v1__
 
 
 if __name__ == "__main__":

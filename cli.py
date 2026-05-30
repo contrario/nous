@@ -183,7 +183,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         except _GateErr as _gate_exc:
             print(f"semantic gate FAIL: CodegenSemanticError: {_gate_exc}", file=sys.stderr)
             return 1
-        run_program(str(source), mode=mode, max_cycles=cycles, daily_budget=budget)
+        run_program(str(source), mode=mode, max_cycles=cycles, daily_budget=budget, emit_trace=getattr(args, "emit_trace", False))  # __nous_n2b_cli_thread_v1__
         return 0
     except KeyboardInterrupt:
         print("\n\nWorld stopped by user.")
@@ -1518,6 +1518,7 @@ def main() -> int:
     p.add_argument("--budget", type=float, default=0.33, help="Daily budget USD")
 
     p.add_argument("--hot", action="store_true", help="Enable hot reload — swap souls on save")
+    p.add_argument("--emit-trace", action="store_true", help="Emit a signed runtime conformance trace (trace_<world>_<mode>.json)")  # __nous_n2b_cli_arg_v1__
     p = sub.add_parser("validate", help="Validate .nous file")
     p.add_argument("file")
 

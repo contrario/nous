@@ -455,6 +455,7 @@ class NousRuntime:
         self.channels: dict[str, asyncio.Queue] = {}
         self.rlog = RuntimeLog()
         self._noesis_engine = None
+        self.trace_recorder = None  # __nous_runtime_trace_field_v1__
 
     def _get_noesis(self) -> Any:
         if self._noesis_engine is None:
@@ -480,6 +481,21 @@ class NousRuntime:
             memory=memory or {},
         )
         self.rlog.add({"type": "soul_registered", "soul": name, "model": model, "tier": tier})
+
+    def attach_trace_recorder(self, recorder: "Any") -> None:  # __nous_runtime_trace_methods_v1__
+        self.trace_recorder = recorder
+
+    def _trace_llm_call(
+        self, soul_name: str, input_tokens: int, output_tokens: int
+    ) -> None:
+        if self.trace_recorder is not None:
+            self.trace_recorder.record_llm_call(
+                soul_name, 0, input_tokens, output_tokens
+            )
+
+    def _trace_message(self, from_soul: str) -> None:
+        if self.trace_recorder is not None:
+            self.trace_recorder.record_message(from_soul, 0)
 
     async def think(self, soul_name: str, query: str, system_prompt: str = "") -> str:
         soul = self.souls.get(soul_name)
@@ -515,6 +531,7 @@ class NousRuntime:
                 "cost": 0.0,
             })
             log.info(f"[DRY-RUN] [{soul_name}] Would call LLM: {query[:60]}")
+            self._trace_llm_call(soul_name, 0, 0)  # __nous_runtime_trace_dryrun_v1__
             return f"[DRY-RUN] {soul_name} would answer: {query[:60]}"
 
         if not self.budget.can_spend(0.001):
@@ -551,6 +568,9 @@ class NousRuntime:
                     "cost": cost,
                     "elapsed_ms": round(result.get("elapsed_ms", 0), 1),
                 })
+                self._trace_llm_call(
+                    soul_name, result.get("tokens_in", 0), result.get("tokens_out", 0)
+                )  # __nous_runtime_trace_live_v1__
 
                 text = result.get("text", "")
                 if noesis and text:
@@ -570,6 +590,7 @@ class NousRuntime:
         await self.channels[channel].put(message)
         self.rlog.add({"type": "speak", "soul": from_soul, "channel": channel, "message": str(message)[:100]})
         log.info(f"[{from_soul}] → {channel}: {str(message)[:60]}")
+        self._trace_message(from_soul)  # __nous_runtime_trace_speak_v1__
 
     async def listen(self, soul_name: str, channel: str, timeout: float = 30.0) -> Any:
         if channel not in self.channels:

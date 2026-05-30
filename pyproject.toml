@@ -86,6 +86,8 @@ py-modules = [
     "rekor_verify_v2",  # __session87_rekor_verify_v2_pyproject_v1__
     "offline_verifier_builder",  # __session90_offline_verifier_builder_pymodule_v1__
     "nous_trace",  # __session96_trace_pymodule_v1__
+    "trace_recorder",  # __nous_trace_recorder_pymodule_v1__
+    "run_shas",  # __nous_run_shas_pymodule_v1__
     "conformance",  # __session96_conformance_pymodule_v1__
     "cli_conformance",  # __session96_cli_conformance_pymodule_v1__
     "cli_verify_sequence",  # __phase2_stage6_pymodule_v1__

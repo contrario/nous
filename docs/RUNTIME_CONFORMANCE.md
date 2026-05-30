@@ -108,6 +108,36 @@ verifier the dossier uses; no new cryptography is introduced.
 
 ---
 
+<!-- __session103_trace_emission_doc_v1__ -->
+## Emitting a trace from a run
+Since v5.18.0 the interpreter runtime can emit the signed trace it was
+previously only able to verify. `nous run <file>.nous --emit-trace` runs
+the program and writes `trace_<world>_<mode>.json`: a `TraceEnvelope`
+signed with an ephemeral, per-run Ed25519 key.
+
+- **Opt-in.** Without `--emit-trace`, `nous run` behaves exactly as before
+  and writes no trace. The flag adds the evidence; it changes nothing else.
+- **Subject binding computed up front.** Before the first cycle runs, the
+  three subject digests (`source_sha256`, `smt_spec_sha256`,
+  `pricing_sha256`) are derived by `run_shas.compute_run_shas`, using the
+  same parse, pricing load, and `emit_smt` call as the dossier path, so a
+  run's trace binds to the identical artifacts as its compliance dossier.
+  If the program cannot be priced or parsed, the run is refused fail-fast,
+  before any execution -- refuse over guess.
+- **What is recorded.** One `llm_call` event per soul cognition step and
+  one `message` event per `speak`. In `dry-run` mode the `llm_call` events
+  carry zero tokens; in `live` mode they carry the real input/output token
+  counts. The `action` field is left null at this stage; sequence labels
+  are bound by a later stage.
+- **Verifiable offline.** The written envelope verifies with
+  `nous_trace.verify_trace_signature` (or any holder of the embedded public
+  key) using `cryptography` alone -- tamper-evident, no NOUS install needed.
+  Trust-root anchoring of the trace (Rekor) follows the dossier path and is
+  subsequent work.
+- **Scope.** v5.18.0 instruments the interpreter path (`nous run`,
+  `nous_ast_runner`). Emission from the compiled (codegen) runtime and the
+  `POST /v1/run` execute mode are subsequent stages.
+
 ## Offline verification
 
 A standalone `verify_conformance_offline.py` ships alongside the certificate. It
@@ -129,9 +159,10 @@ artifacts and untampered, with a transparency-log inclusion proof when anchored.
 ## Honest limitations
 
 - The certificate proves the **trace** conforms, not that the trace faithfully
-  records reality. Emit-from-inside-the-runtime trace generation (future work)
-  is the mitigation; full faithfulness against a malicious runtime needs a TEE
-  or hardware attestation.
+  records reality. Interpreter-path trace emission shipped in v5.18.0
+  (`nous run --emit-trace`); compiled-path emission and action-label binding
+  remain. Full faithfulness against a malicious runtime still needs a TEE or
+  hardware attestation.
 - The cost MVP models llm_call token cost only. Priced tool calls and
   sequence/ordering obligations (authenticate-before-access, no-send-after-read,
   per-tick call limits) are future work and are where Z3 becomes load-bearing
