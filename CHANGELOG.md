@@ -11,6 +11,18 @@
   Removed / Fixed / Security.
 -->
 
+## [5.24.0] - 2026-05-31  <!-- __s106_changelog_v5_24_0_v1__ -->
+
+### Added
+- Persistent per-world soul memory CLI surface: `nous memory init`,
+  `nous memory append`, `nous memory verify`, `nous memory reindex`. This makes
+  the Phase 0 memory stack reachable: signed hash-chained per-soul entry files
+  are the truth, and a rebuildable SQLite index is a derived lens. `init` is an
+  explicit per-world signing-key ceremony; writes refuse on an uninitialized
+  world; `verify` recomputes the chain and exits 2 on any integrity break.
+  Backing modules (`memory_entry`, `memory_keyring`, `memory_store`,
+  `memory_index`) were already packaged; this release ships their caller.
+
 ## [5.23.0] - 2026-05-31  <!-- __s105_changelog_v5_23_0_v1__ -->
 
 ### Added
