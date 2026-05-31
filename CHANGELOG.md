@@ -2,11 +2,17 @@
 
 <!-- __session71_changelog_unreleased_v1__ -->
 
-## [Unreleased]
+## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
-<!-- __s104_changelog_v5_19_0_v1__ -->
-<!-- __s104_changelog_v5_20_0_v1__ -->
-<!-- __s104_changelog_v5_20_1_v1__ -->
+<!--
+  Add bullets here under the headings below as work lands on `main`
+  between releases, then promote into a versioned heading at release.
+  Headings (Keep a Changelog 1.1.0): Added / Changed / Deprecated /
+  Removed / Fixed / Security.
+-->
+
+## [5.20.1] - 2026-05-30
+
 ### Fixed
 - `cli_commands` in the `/v1/health` response was a hand-bumped literal
   (46) that had silently drifted from the real root subcommand count
@@ -16,14 +22,20 @@
   again. Behavior of `main()` is byte-identical (it now calls
   `build_parser()`); regression byte-identity unaffected.
 
+## [5.20.0] - 2026-05-30
+
 ### Added
-- Producer-existence for sequence laws (v5.20.0). A conformance verdict
-  now lists `sequence_vacuous`: laws that passed only because their event
-  never occurred in the trace, distinguished from genuinely proven laws.
-  The static verifier additionally warns (SEQ-PROD) when a sequence law
+- Producer-existence for sequence laws. A conformance verdict now lists
+  `sequence_vacuous`: laws that passed only because their event never
+  occurred in the trace, distinguished from genuinely proven laws. The
+  static verifier additionally warns (SEQ-PROD) when a sequence law
   references an event no soul emits via speak. Additive: the
   `_check_sequence_obligations` signature and the signed conformance
   certificate are unchanged; no existing test or fixture affected.
+
+## [5.19.0] - 2026-05-30
+
+### Added
 - Action-label binding on the interpreter trace path: a `speak` whose
   message type is declared in `world.events` now stamps that label onto
   the signed trace `action` field (implicit-by-name). Sequence laws
@@ -31,19 +43,56 @@
   not fixtures only. Think/llm_call events and undeclared messages stay
   null. No grammar, AST, or codegen change; regression byte-identity held.
 
-<!--
-  Add bullets here under the headings below as work lands on
-  `main` between releases. The release pipeline promotes this
-  section into the next versioned heading.
+## [5.18.0] - 2026-05-30
 
-  Headings (Keep a Changelog 1.1.0):
-    Added       -- new features
-    Changed     -- changes to existing functionality
-    Deprecated  -- soon-to-be removed features
-    Removed     -- now removed features
-    Fixed       -- bug fixes
-    Security    -- vulnerability fixes
--->
+### Added
+- Runtime trace emission on the interpreter path (S103): `nous run
+  --emit-trace` produces a signed `TraceEnvelope` (ephemeral Ed25519,
+  offline-verifiable). Initial events carried `action=null` (bound in
+  v5.19.0).
+
+## [5.17.0] - 2026-05-29
+
+### Added
+- `at_most(N, label)` cardinality sequence law.
+
+## [5.16.0] - 2026-05-29
+
+### Added
+- `never_after` and `leads_to` ordering sequence laws.
+
+## [5.15.1] - 2026-05-29
+
+### Added
+- `docs/SEQUENCE_LAWS.md` and decoupling of `verify-sequence` from
+  pricing validity (two post-5.15.0 addenda).
+
+## [5.15.0] - 2026-05-28
+
+### Added
+- Phase 2 sequence arc (Stages 2-6), end-to-end: events declaration +
+  validator, sequence-consistency SMT emission, Z3 consistency proof,
+  runtime sequence conformance (`ConformanceDetail.sequence_ok`), the
+  seventh obligation itemized in the signed certificate body (schema
+  v1->v2), and the `nous verify-sequence` CLI. cli_commands 45 -> 46.
+
+## [5.14.0] - 2026-05-27
+
+### Added
+- `POST /v1/verify-conformance` endpoint and the
+  `verify_certificate_from_json` library API.
+
+## [5.13.1] - 2026-05-26
+
+### Fixed
+- CLI verdict-print used `detail.conformant`; `ConformanceDetail`
+  exposes `.ok`. Corrected, with a CLI regression test.
+
+## [5.13.0] - 2026-05-26
+
+### Added
+- S97 standalone signed conformance certificate with Rekor v2 anchoring
+  and an offline verifier.
 
 <!-- __session95_release_v5_12_0_changelog__ -->
 ## [5.12.0] - 2026-05-25
