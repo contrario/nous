@@ -11,6 +11,20 @@
   Removed / Fixed / Security.
 -->
 
+## [5.21.0] - 2026-05-31  <!-- __s105_changelog_v5_21_0_v1__ -->
+
+### Added
+- `POST /v1/run` opt-in dry-run signed trace emission. With
+  `emit_trace: true`, a dry-run returns the signed `TraceEnvelope`
+  (ephemeral Ed25519, offline-verifiable with `cryptography` alone)
+  plus `execution_kind: "dry-run"`; the `execute` branch is tagged
+  `execution_kind: "refused"` (live execution not yet wired). A third
+  party can now obtain and verify a real run's labelled trace over the
+  API without a local install. Additive: `execute_program` gains a
+  keyword `trace_capture` (default None -> all callers byte-identical),
+  `RunRequest.emit_trace` defaults False; no codegen, signature, or
+  signed-certificate change; regression byte-identity held.
+
 ## [5.20.1] - 2026-05-30
 
 ### Fixed
