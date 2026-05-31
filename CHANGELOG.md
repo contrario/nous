@@ -11,6 +11,22 @@
   Removed / Fixed / Security.
 -->
 
+## [5.23.0] - 2026-05-31  <!-- __s105_changelog_v5_23_0_v1__ -->
+
+### Added
+- Trace transparency anchoring (Rekor v2). A signed `TraceEnvelope` can be
+  anchored to the Sigstore Rekor v2 log via
+  `trace_anchor.anchor_trace_to_rekor_v2`, reusing the dossier anchoring
+  path; the returned
+  `RekorAnchorV2` is DETACHED (the frozen signed envelope is unchanged, the
+  binding is cryptographic and checked at verify, matching the Sigstore
+  detached-bundle convention). `compiled_trace.anchor_compiled_run` is the
+  reachable caller: it runs the compiled path, signs the trace, anchors it,
+  and returns `(TraceEnvelope, RekorAnchorV2)`. Anchoring an unsigned
+  envelope is refused. A third party can now prove a run's trace existed at
+  a point in time and was not altered after, in addition to offline
+  signature verification.
+
 ## [5.22.0] - 2026-05-31  <!-- __s105_changelog_v5_22_0_v1__ -->
 
 ### Added
