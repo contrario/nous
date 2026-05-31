@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s106_blog_v524-soul-memory_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v524-soul-memory');return false">
+      <div class="post-meta">
+        <span class="post-date">31 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.24.0 &mdash; Persistent Soul Memory</div>
+      <div class="post-excerpt">The nous memory CLI makes the Phase 0 memory stack reachable. Signed hash-chained per-soul entries are the truth; the SQLite index is a rebuildable lens. Writes refuse on an uninitialized world; verify recomputes the chain and fails on any integrity break. <code>nous-lang 5.24.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s105_blog_v523-trace-anchoring_card_v1__ __s105_web_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v523-trace-anchoring');return false">
       <div class="post-meta">
@@ -508,6 +518,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s106_blog_v524-soul-memory_post_v1__ -->
+  <div class="post-full" id="post-v524-soul-memory">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.24.0 &mdash; Persistent Soul Memory</h1>
+    <div class="post-full-meta">31 May 2026 &middot; 3 min read</div>
+    <p>A soul that cannot remember across runs starts every run from zero. v5.24.0 ships the command surface for a persistent memory that does not compromise the project&rsquo;s central bargain: the memory is evidence, not a side channel. <code>nous memory</code> exposes four verbs &mdash; <code>init</code>, <code>append</code>, <code>verify</code>, <code>reindex</code> &mdash; over the four memory modules shipped earlier as a library.</p>
+    <p>The truth is a set of signed, hash-chained, per-soul entry files, scoped to a world. Each entry is Ed25519-signed over its canonical bytes and carries the hash of the previous entry, so a chain is tamper-evident: a changed field, a broken link, or a missing sequence is caught when the chain is recomputed. The SQLite index is explicitly <em>not</em> the truth &mdash; it is a derived lens, rebuilt from the files by <code>reindex</code>, and never consulted for a trust decision. A read of a database mutates its bytes; an evidence anchor cannot.</p>
+    <p>The per-world signing key is created only by an explicit <code>nous memory init</code> ceremony. Write paths never auto-create trust material: <code>append</code> refuses on an uninitialized world rather than quietly minting a key. <code>verify</code> recomputes the chain from the signed bytes and exits non-zero on any integrity break, so a corrupted store fails loudly rather than returning a plausible answer. This is the refuse-over-guess discipline applied to memory.</p>
+    <p>Phase 0 is deliberately scoped to recording and verifying evidence; the memory does not yet influence what a run does. Consulting memory as a hashed run input, recorded inside the determinism boundary and in the conformance trace, is the next phase. What ships today is offline-verifiable with the <code>cryptography</code> library alone, no NOUS install required. <code>nous-lang 5.24.0</code>.</p>
+  </div>
   <!-- __s105_blog_v523-trace-anchoring_post_v1__ __s105_web_v1__ -->
   <div class="post-full" id="post-v523-trace-anchoring">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
