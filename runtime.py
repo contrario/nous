@@ -196,10 +196,13 @@ class Channel:
 class ChannelRegistry:
     """Thread-safe registry of named channels."""
 
-    def __init__(self, default_maxsize: int = 100) -> None:
+    def __init__(
+        self, default_maxsize: int = 100, trace_ctx: Optional[Any] = None
+    ) -> None:  # __s105_u2_chan_record_v1__
         self._channels: dict[str, Channel] = {}
         self._default_maxsize = default_maxsize
         self._lock = asyncio.Lock()
+        self._trace_ctx = trace_ctx
 
     async def get(self, name: str) -> Channel:
         async with self._lock:
@@ -208,6 +211,10 @@ class ChannelRegistry:
             return self._channels[name]
 
     async def send(self, name: str, message: Any) -> None:
+        if self._trace_ctx is not None:  # __s105_u2_chan_record_v1__
+            self._trace_ctx.record_message(
+                "unknown_soul", 0, action=type(message).__name__
+            )
         ch = await self.get(name)
         await ch.send(message)
 
@@ -425,13 +432,18 @@ class NousRuntime:
         cost_ceiling: float = 0.10,
         channel_maxsize: int = 100,
         replay_config: Optional[Any] = None,
+        trace_config: Optional[Any] = None,  # __s105_u1_trace_ctx_v1__
     ) -> None:
         # __replay_phase_b_wired__
         self.world_name = world_name
         self.heartbeat_seconds = heartbeat_seconds
         self.cost_ceiling = cost_ceiling
 
-        self.channels = ChannelRegistry(default_maxsize=channel_maxsize)
+        self.trace_config = trace_config  # __s105_u2_chan_record_v1__
+        self.trace_ctx: Any = self._build_trace_ctx(trace_config)
+        self.channels = ChannelRegistry(
+            default_maxsize=channel_maxsize, trace_ctx=self.trace_ctx
+        )
         self.cost_tracker = CostTracker(ceiling=cost_ceiling)
 
         # Replay wiring — always create a context (mode="off" = no-op when disabled).
@@ -504,6 +516,26 @@ class NousRuntime:
             fsync=getattr(replay_config, "fsync", "every_event"),
             seed_base=getattr(replay_config, "seed_base", 0),
         )
+
+    @staticmethod
+    def _build_trace_ctx(trace_config: Optional[Any]) -> Any:
+        """Return a conformance trace context; a no-op when disabled.
+
+        When trace_config is None (the default) this returns a null
+        context whose record_* methods do nothing, so the runtime is
+        byte-for-byte unchanged. A live context (wired in U2) carries a
+        nous_trace recorder and observes message sends only.
+        """
+        if trace_config is None:
+            class _NullTraceCtx:
+                enabled = False
+                recorder = None
+                def record_message(self, *args: Any, **kwargs: Any) -> None:
+                    return None
+                def finalize(self, *args: Any, **kwargs: Any) -> Any:
+                    return None
+            return _NullTraceCtx()
+        return trace_config
 
     def add_soul(self, runner: SoulRunner) -> None:
         runner.set_shutdown_event(self._shutdown)

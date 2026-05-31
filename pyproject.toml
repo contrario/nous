@@ -90,7 +90,8 @@ py-modules = [
     "run_shas",  # __nous_run_shas_pymodule_v1__
     "conformance",  # __session96_conformance_pymodule_v1__
     "cli_conformance",  # __session96_cli_conformance_pymodule_v1__
-    "cli_verify_sequence",  # __phase2_stage6_pymodule_v1__
+    "cli_verify_sequence",
+    "compiled_trace",  # __s105_compiled_trace_pymod_v1__  # __phase2_stage6_pymodule_v1__
     "conformance_verifier",  # __nous_conformance_verifier_pymodule_v1__
 ]
 
