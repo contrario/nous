@@ -1066,6 +1066,20 @@ async def run_source(request: Request, body: RunRequest, x_api_key: Optional[str
                 }
 
             if body.mode == "dry-run":
+                _trace_obj = None  # __s105_api_trace_v1__
+                if body.emit_trace:
+                    from nous_ast_runner import execute_program as _exec_prog
+                    _cap: dict[str, Any] = {}
+                    _prog = parse_nous(body.source)
+                    asyncio.run(_exec_prog(
+                        _prog,
+                        mode="dry-run",
+                        max_cycles=body.max_cycles,
+                        source_text=body.source,
+                        emit_trace=True,
+                        trace_capture=_cap,
+                    ))
+                    _trace_obj = _cap.get("envelope")
                 return {
                     "ok": True,
                     "mode": "dry-run",
@@ -1076,6 +1090,8 @@ async def run_source(request: Request, body: RunRequest, x_api_key: Optional[str
                     "world": compile_result["world"],
                     "output": "Dry run complete. Code compiles and verifies successfully.",
                     "warnings": compile_result["warnings"],
+                    "execution_kind": "dry-run",
+                    "trace": _trace_obj,
                 }
 
             return {
@@ -1085,6 +1101,7 @@ async def run_source(request: Request, body: RunRequest, x_api_key: Optional[str
                 "compiled": True,
                 "lines": compile_result["lines"],
                 "souls": compile_result["souls"],
+                "execution_kind": "refused",  # __s105_exec_kind_v1__
             }
 
         result = await asyncio.wait_for(

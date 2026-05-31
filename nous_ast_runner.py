@@ -201,6 +201,7 @@ async def execute_program(
     monthly_budget: float = 10.0,
     source_text: "Optional[str]" = None,  # __nous_n2b_execsig_v1__
     emit_trace: bool = False,
+    trace_capture: "Optional[dict]" = None,  # __s105_capture_sig_v1__
 ) -> str:
     world = program.world
     if not world:
@@ -312,24 +313,27 @@ async def execute_program(
         _trace_env = rt.trace_recorder.finalize(
             private_key=_Ed25519PrivateKey.generate()
         )
-        _trace_path = Path(
-            f"/opt/aetherlang_agents/nous/trace_{world.name.lower()}_{mode}.json"
-        )
-        import json as _json
-        import os as _os
-        import tempfile as _tempfile
-        _payload = _json.dumps(
-            _trace_env.model_dump(), indent=2, ensure_ascii=False
-        )
-        _fd, _tmp = _tempfile.mkstemp(
-            suffix=".tmp", prefix=_trace_path.name + ".",
-            dir=str(_trace_path.parent),
-        )
-        with _os.fdopen(_fd, "w", encoding="utf-8") as _fh:
-            _fh.write(_payload)
-        _os.chmod(_tmp, 0o644)
-        _os.replace(_tmp, str(_trace_path))
-        log.info(f"Trace saved (signed): {_trace_path}")
+        if trace_capture is not None:  # __s105_capture_emit_v1__
+            trace_capture["envelope"] = _trace_env.model_dump()
+        else:
+            _trace_path = Path(
+                f"/opt/aetherlang_agents/nous/trace_{world.name.lower()}_{mode}.json"
+            )
+            import json as _json
+            import os as _os
+            import tempfile as _tempfile
+            _payload = _json.dumps(
+                _trace_env.model_dump(), indent=2, ensure_ascii=False
+            )
+            _fd, _tmp = _tempfile.mkstemp(
+                suffix=".tmp", prefix=_trace_path.name + ".",
+                dir=str(_trace_path.parent),
+            )
+            with _os.fdopen(_fd, "w", encoding="utf-8") as _fh:
+                _fh.write(_payload)
+            _os.chmod(_tmp, 0o644)
+            _os.replace(_tmp, str(_trace_path))
+            log.info(f"Trace saved (signed): {_trace_path}")
 
     return report
 
