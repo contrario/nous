@@ -121,6 +121,36 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s105_blog_v523-trace-anchoring_card_v1__ __s105_web_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v523-trace-anchoring');return false">
+      <div class="post-meta">
+        <span class="post-date">31 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.23.0 &mdash; Trace Transparency Anchoring</div>
+      <div class="post-excerpt">A signed trace proves authorship; a transparency anchor proves <em>existence in time</em>. v5.23.0 anchors a signed <code>TraceEnvelope</code> to the Sigstore Rekor v2 log as a detached proof, reusing the dossier path. The frozen signed bytes are untouched; the binding is cryptographic. <code>nous-lang 5.23.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
+    <!-- __s105_blog_v522-compiled-path-trace_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v522-compiled-path-trace');return false">
+      <div class="post-meta">
+        <span class="post-date">31 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.22.0 &mdash; Compiled-Path Signed Trace</div>
+      <div class="post-excerpt">Until now only the interpreter attested. v5.22.0 makes the compiled runtime emit a signed trace too, via a shared recorder at the message choke-point &mdash; with message-event parity to the interpreter proven by a direct-equality test, and codegen byte-identity held at 0 diffs. <code>nous-lang 5.22.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
+    <!-- __s105_blog_v521-api-dry-run-trace_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v521-api-dry-run-trace');return false">
+      <div class="post-meta">
+        <span class="post-date">31 MAY 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.21.0 &mdash; API Dry-Run Signed Trace</div>
+      <div class="post-excerpt">The <code>/v1/run</code> endpoint gains opt-in <code>emit_trace</code>: a dry-run now returns the signed, offline-verifiable trace, tagged <code>execution_kind=dry-run</code>. Live execution is honestly refused, not faked. A third party can verify a run trace over the API with no local install. <code>nous-lang 5.21.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s104_blog_v5200_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v5200-producer-existence');return false">
       <div class="post-meta">
@@ -478,6 +508,32 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s105_blog_v523-trace-anchoring_post_v1__ __s105_web_v1__ -->
+  <div class="post-full" id="post-v523-trace-anchoring">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.23.0 &mdash; Trace Transparency Anchoring</h1>
+    <div class="post-full-meta">31 May 2026 &middot; 3 min read</div>
+    <p>A signed trace answers <em>who</em>: the holder of the signing key produced these exact bytes. It does not answer <em>when</em>, nor does it stop the signer from quietly replacing one signed trace with another later. Transparency logs close that gap. v5.23.0 anchors a signed <code>TraceEnvelope</code> to the Sigstore Rekor v2 log.</p>
+    <p>The anchor is <strong>detached</strong>. The envelope is frozen and its canonical bytes are already signed, so the inclusion proof &mdash; which only exists after submission &mdash; cannot live inside it. Instead <code>anchor_trace_to_rekor_v2</code> returns a separate <code>RekorAnchorV2</code> whose binding to the trace is cryptographic: the Rekor leaf signs the same canonical bytes, checked at verify time. This matches both the dossier manifest path and the Sigstore detached-bundle convention.</p>
+    <p>The reachable caller is <code>anchor_compiled_run</code>: it runs the compiled path, signs the trace with an ephemeral key, anchors it, and returns the envelope and the detached anchor together. Anchoring an unsigned envelope is refused &mdash; a transparency record should attest a body whose authorship is established. With this, a third party can prove a run trace existed at a point in time and was never altered after, in addition to verifying its signature offline.</p>
+  </div>
+  <!-- __s105_blog_v522-compiled-path-trace_post_v1__ -->
+  <div class="post-full" id="post-v522-compiled-path-trace">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.22.0 &mdash; Compiled-Path Signed Trace</h1>
+    <div class="post-full-meta">31 May 2026 &middot; 4 min read</div>
+    <p>Through v5.21.0 the conformance trace came only from the interpreter. The codegen runtime &mdash; the Python that NOUS compiles a program into, the path that actually runs in production &mdash; was dark: it produced no trace. v5.22.0 closes that, without touching codegen.</p>
+    <p>The design rule was a shared recorder, not a parallel one. Two evidence-producing paths that each invent their own &ldquo;when to record&rdquo; logic will drift, and a silent divergence between them is the worst outcome. So the compiled runtime calls the <em>same</em> <code>nous_trace</code> recorder the interpreter uses, at the one place every compiled message passes through: <code>ChannelRegistry.send</code>. The recorder is injected post-construction, so the emitted module is byte-for-byte unchanged and the 57-template regression gate holds at 0 diffs.</p>
+    <p>Two things are deferred, honestly rather than guessed. <code>llm_call</code> events are not recorded on the compiled path (the call boundary is deeper than the choke-point), and the producer soul is recorded as the reserved <code>unknown_soul</code> sentinel rather than parsed out of a channel-name string. What is recorded &mdash; the message events and their action labels &mdash; is proven equal to the interpreter&rsquo;s for the same program by a direct-equality test. That equality is the evidence: a third party can compare the two paths and get the same answer.</p>
+  </div>
+  <!-- __s105_blog_v521-api-dry-run-trace_post_v1__ -->
+  <div class="post-full" id="post-v521-api-dry-run-trace">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.21.0 &mdash; API Dry-Run Signed Trace</h1>
+    <div class="post-full-meta">31 May 2026 &middot; 3 min read</div>
+    <p>Trace emission shipped for the local CLI in v5.18.0. v5.21.0 brings it to the API surface: <code>POST /v1/run</code> gains an opt-in <code>emit_trace</code> flag. When set, a dry-run returns the signed <code>TraceEnvelope</code> &mdash; ephemeral Ed25519, verifiable offline with <code>cryptography</code> alone &mdash; alongside <code>execution_kind=dry-run</code>. A third party can obtain and verify a run&rsquo;s labelled trace over the network with no local install.</p>
+    <p>The honest move was to keep the boundary sharp. A dry-run trace and a live-execution trace attest different things; conflating them would be the masquerade transparency tooling warns against. So the <code>execute</code> branch is not quietly served a dry-run trace &mdash; it is tagged <code>execution_kind=refused</code> until real live execution is wired. The default response shape is unchanged for callers that do not opt in, and the discriminator was added now, while only the dry-run path is real, so the contract will not break when live execution arrives.</p>
+  </div>
   <!-- __s104_blog_v5180_post_v1__ -->
   <div class="post-full" id="post-v5180-trace-emission">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
