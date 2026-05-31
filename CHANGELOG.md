@@ -11,6 +11,21 @@
   Removed / Fixed / Security.
 -->
 
+## [5.22.0] - 2026-05-31  <!-- __s105_changelog_v5_22_0_v1__ -->
+
+### Added
+- Compiled-path signed conformance trace. The codegen/compiled runtime
+  now emits a signed `TraceEnvelope` (offline-verifiable with
+  `cryptography` alone) via the new `compiled_trace.run_compiled_with_trace`,
+  using the same nous_trace recorder as the interpreter. Message events
+  are recorded at the runtime `ChannelRegistry.send` choke-point
+  (`NousRuntime`/`ChannelRegistry` gain an opt-in trace context, no-op by
+  default). Message-event parity with the interpreter path is proven by a
+  direct-equality test. `llm_call` events and per-soul attribution are
+  authoritatively deferred (soul is the reserved `unknown_soul` sentinel).
+  Additive: codegen is untouched and the 57-template byte-identity gate
+  holds at 0 diffs; signed certificate bytes unchanged.
+
 ## [5.21.0] - 2026-05-31  <!-- __s105_changelog_v5_21_0_v1__ -->
 
 ### Added

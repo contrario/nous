@@ -168,7 +168,11 @@ artifacts and untampered, with a transparency-log inclusion proof when anchored.
 - The certificate proves the **trace** conforms, not that the trace faithfully
   records reality. Interpreter-path trace emission shipped in v5.18.0
   (`nous run --emit-trace`); action-label binding for speaks shipped in
-  v5.19.0 (interpreter path); compiled-path emission remains. Since
+  v5.19.0 (interpreter path); compiled-path emission shipped in v5.22.0
+  (message events only; `llm_call` and per-soul attribution deferred,
+  soul recorded as the reserved `unknown_soul` sentinel; offline-
+  verifiable and proven at message-event parity with the interpreter).
+  <!-- __s105_doc_compiled_path_v1__ --> Since
   v5.20.0 the static verifier warns (SEQ-PROD) when a sequence law
   references an event no soul emits via speak -- the law can never fire.
   <!-- __s104_doc_limitation_v1__ --> <!-- __s104_doc_seqprod_v1__ -->
