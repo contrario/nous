@@ -94,7 +94,8 @@ py-modules = [
     "compiled_trace",  # __s105_compiled_trace_pymod_v1__
     "trace_anchor",  # __s105_trace_anchor_pymod_v1__
     "memory_entry",  # __s105_memory_entry_pymod_v1__
-    "memory_keyring",  # __s105_memory_keyring_pymod_v1__  # __phase2_stage6_pymodule_v1__
+    "memory_keyring",  # __s105_memory_keyring_pymod_v1__
+    "memory_store",  # __s105_memory_store_pymod_v1__  # __phase2_stage6_pymodule_v1__
     "conformance_verifier",  # __nous_conformance_verifier_pymodule_v1__
 ]
 
