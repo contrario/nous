@@ -1501,6 +1501,116 @@ def cmd_templates(args) -> int:
 
 
 
+def cmd_memory(args: argparse.Namespace) -> int:  # __s106_cmd_memory_v1__
+    from pathlib import Path
+    import memory_keyring as _kr
+    import memory_store as _st
+    import memory_index as _ix
+
+    action = getattr(args, "mem_action", None)
+
+    def _require_hex64(label: str, value: str) -> bool:
+        if not isinstance(value, str) or len(value) != 64:
+            print(f"Error: {label} must be 64 hex chars", file=sys.stderr)
+            return False
+        return True
+
+    if action == "init":
+        world = getattr(args, "world")
+        base_dir = Path(getattr(args, "base_dir"))
+        if not _require_hex64("world", world):
+            return 1
+        if _kr.is_initialized(world, base_dir):
+            print(f"Already initialized: world {world}")
+            return 0
+        try:
+            pub_b64, kid = _kr.init_world_memory(world, base_dir)
+        except _kr.MemoryKeyringError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        print(f"Initialized world {world}")
+        print(f"  public_key_b64: {pub_b64}")
+        print(f"  key_id: {kid}")
+        return 0
+
+    if action == "append":
+        world = getattr(args, "world")
+        soul = getattr(args, "soul")
+        base_dir = Path(getattr(args, "base_dir"))
+        for label, value in (
+            ("world", world),
+            ("soul", soul),
+            ("source-sha", getattr(args, "source_sha")),
+            ("manifest-sha", getattr(args, "manifest_sha")),
+            ("event-hash", getattr(args, "event_hash")),
+        ):
+            if not _require_hex64(label, value):
+                return 1
+        timestamp = getattr(args, "timestamp", None)
+        if not timestamp:
+            from datetime import datetime, timezone
+            timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        try:
+            entry = _st.append_entry(
+                world_sha256=world,
+                producing_soul_sha256=soul,
+                source_sha256=getattr(args, "source_sha"),
+                run_manifest_sha256=getattr(args, "manifest_sha"),
+                event_hash=getattr(args, "event_hash"),
+                outcome=getattr(args, "outcome"),
+                trigger_kind=getattr(args, "trigger_kind"),
+                cost=getattr(args, "cost"),
+                timestamp=timestamp,
+                base_dir=base_dir,
+            )
+        except (_kr.MemoryKeyringError, _st.MemoryStoreError) as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        print(f"Appended seq {entry.seq} to world {world} soul {soul}")
+        return 0
+
+    if action == "verify":
+        world = getattr(args, "world")
+        soul = getattr(args, "soul", None)
+        base_dir = Path(getattr(args, "base_dir"))
+        if not _require_hex64("world", world):
+            return 1
+        if soul is not None and not _require_hex64("soul", soul):
+            return 1
+        souls = [soul] if soul is not None else _st.list_soul_chains(world, base_dir)
+        if not souls:
+            print(f"No chains found for world {world}")
+            return 0
+        try:
+            for s in souls:
+                chain = _st.read_chain(world, s, base_dir)
+                head = _st.chain_head(world, s, base_dir)
+                print(f"OK soul {s}: {len(chain)} entries, head {head}")
+        except _st.MemoryStoreError as exc:
+            print(f"Integrity break: {exc}", file=sys.stderr)
+            return 2
+        snapshot = _st.memory_snapshot(world, base_dir)
+        print(f"snapshot {snapshot}")
+        return 0
+
+    if action == "reindex":
+        base_dir = Path(getattr(args, "base_dir"))
+        db = getattr(args, "db", None)
+        db_path = Path(db) if db else _ix.default_index_path()
+        try:
+            count = _ix.build_index(base_dir, db_path)
+            result = _ix.verify_index(base_dir, db_path)
+        except _ix.MemoryIndexError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        print(f"Indexed {count} entries into {db_path}")
+        print(f"verify: {result.model_dump()}")
+        return 0
+
+    print("Usage: nous memory {init|append|verify|reindex}", file=sys.stderr)
+    return 1
+
+
 def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     ap = argparse.ArgumentParser(prog="nous", description="NOUS — The Living Language v2.0")
     sub = ap.add_subparsers(dest="command", required=True)
@@ -1762,6 +1872,39 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     p_tpl_extract.add_argument("--overwrite", action="store_true", help="Replace existing file at destination")
 
 
+    # __s106_memory_subparser_v1__
+    p_mem = sub.add_parser(
+        "memory",
+        help="Persistent per-world soul memory: init, append, verify, reindex",
+    )
+    mem_sub = p_mem.add_subparsers(dest="mem_action")
+
+    p_mem_init = mem_sub.add_parser("init", help="Initialize per-world memory signing key (explicit ceremony)")
+    p_mem_init.add_argument("--world", required=True, help="World SHA-256 (64 hex chars)")
+    p_mem_init.add_argument("--base-dir", default="/var/lib/nous", dest="base_dir", help="Memory base directory (default: /var/lib/nous)")
+
+    p_mem_append = mem_sub.add_parser("append", help="Append a signed entry to a soul chain")
+    p_mem_append.add_argument("--world", required=True, help="World SHA-256 (64 hex chars)")
+    p_mem_append.add_argument("--soul", required=True, help="Producing soul SHA-256 (64 hex chars)")
+    p_mem_append.add_argument("--source-sha", required=True, dest="source_sha", help="Source SHA-256 (64 hex chars)")
+    p_mem_append.add_argument("--manifest-sha", required=True, dest="manifest_sha", help="Run manifest SHA-256 (64 hex chars)")
+    p_mem_append.add_argument("--event-hash", required=True, dest="event_hash", help="Event hash (64 hex chars)")
+    p_mem_append.add_argument("--outcome", required=True, help="Outcome label")
+    p_mem_append.add_argument("--trigger-kind", required=True, dest="trigger_kind", help="Trigger kind label")
+    p_mem_append.add_argument("--cost", required=True, help="Cost (string)")
+    p_mem_append.add_argument("--timestamp", default=None, help="ISO-8601 UTC timestamp (default: now)")
+    p_mem_append.add_argument("--base-dir", default="/var/lib/nous", dest="base_dir", help="Memory base directory (default: /var/lib/nous)")
+
+    p_mem_verify = mem_sub.add_parser("verify", help="Verify a soul chain, or all chains in a world")
+    p_mem_verify.add_argument("--world", required=True, help="World SHA-256 (64 hex chars)")
+    p_mem_verify.add_argument("--soul", default=None, help="Producing soul SHA-256; omit to verify all chains in the world")
+    p_mem_verify.add_argument("--base-dir", default="/var/lib/nous", dest="base_dir", help="Memory base directory (default: /var/lib/nous)")
+
+    p_mem_reindex = mem_sub.add_parser("reindex", help="Rebuild the derived SQLite index from signed chains")
+    p_mem_reindex.add_argument("--base-dir", default="/var/lib/nous", dest="base_dir", help="Memory base directory (default: /var/lib/nous)")
+    p_mem_reindex.add_argument("--db", default=None, help="Index DB path (default: /var/lib/nous/memory_index.db)")
+
+
     return ap
 
 
@@ -1793,6 +1936,7 @@ def main() -> int:  # __s104_main_uses_build_parser_v1__
         "profile": cmd_profile, "plugins": cmd_plugins, "pkg": cmd_pkg,
         "ast": cmd_ast, "evolve": cmd_evolve, "nsp": cmd_nsp,
         "info": cmd_info, "bridge": cmd_bridge, "crossworld": cmd_crossworld, "bench": cmd_bench, "docs": cmd_docs, "fmt": cmd_fmt, "noesis": cmd_noesis, "build": cmd_build, "migrate": cmd_migrate, "init": cmd_init, "viz": cmd_viz, "lsp": cmd_lsp, "wasm": cmd_wasm, "create": cmd_create, "verify": cmd_verify, "self-compile": cmd_selfcompile, "version": cmd_version, "diff": cmd_diff, "cost": cmd_cost, "mitosis": cmd_mitosis, "immune": cmd_immune, "dream": cmd_dream, "retire": cmd_retire, "telemetry": cmd_telemetry, "symbiosis": cmd_symbiosis, "metabolism": cmd_metabolism, "consciousness": cmd_consciousness, "replay": cmd_replay, "governance": cmd_governance, "templates": cmd_templates,
+        "memory": cmd_memory,  # __s106_memory_dispatch_v1__
     }
     return commands[args.command](args)
 
