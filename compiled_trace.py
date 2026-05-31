@@ -102,3 +102,28 @@ def run_compiled_with_trace(
         )
         private_key = Ed25519PrivateKey.generate()
     return recorder.finalize(private_key=private_key)
+
+
+def anchor_compiled_run(
+    source: str,
+    max_cycles: int = 1,
+    private_key: "Optional[Ed25519PrivateKey]" = None,
+    *,
+    client: "Optional[Any]" = None,
+    _test_anchor: "Optional[Any]" = None,
+) -> "tuple[Any, Any]":  # __s105_anchor_compiled_run_v1__
+    """Run the compiled path, sign the trace, and anchor it to Rekor v2.
+
+    Returns (TraceEnvelope, RekorAnchorV2). The envelope is signed (ephemeral
+    Ed25519 when private_key is None); the anchor is detached. _test_anchor is
+    a private hook forwarded to trace_anchor for offline testing.
+    """
+    from trace_anchor import anchor_trace_to_rekor_v2
+
+    envelope = run_compiled_with_trace(
+        source, max_cycles=max_cycles, private_key=private_key
+    )
+    anchor = anchor_trace_to_rekor_v2(
+        envelope, client=client, _test_anchor=_test_anchor
+    )
+    return envelope, anchor
