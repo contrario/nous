@@ -226,6 +226,65 @@ Notes:
 
 ---
 
+## 5a. Signing key provisioning
+
+Memory entries are long-lived evidence consulted across runs, so they are
+signed with a PERSISTENT per-world Ed25519 key, not the ephemeral per-run key
+the trace path uses (axiom 7: long-lived signing uses persistent keys under
+XDG; web-tier uses ephemeral per request). A per-run ephemeral key would make
+the Phase-2 trusted-key-set check (the primary memory-poisoning mitigation)
+vacuous: a fresh key per run leaves nothing stable for the trusted set to
+anchor to. The trace can use ephemeral keys because a trace is self-contained
+and verified once; memory is consulted across runs and needs a stable signer
+identity for the trusted set to mean anything.
+
+Scope: one signing key per world, at `keys/memory/<world_sha>/signing.key`
+(0600). Per-world rather than global so cross-world isolation is cryptographic,
+not merely a world_sha filter: world B's entries are signed by B's key, which
+is not in world A's trusted set. Blast radius of a key compromise is one world.
+
+Provisioning is an EXPLICIT, recorded ceremony, never a lazy side effect:
+
+```
+nous memory init <world_sha>:
+  1. REFUSE if already initialized (idempotent: existing genesis -> no-op + report)
+  2. generate persistent Ed25519 keypair -> keys/memory/<world_sha>/signing.key (0600)
+  3. write a signed genesis keyring entry (the trusted-set root):
+       {world_sha, public_key, created_at, key_id,
+        source_kind: "nous_memory_keyring_v1", signature}
+  4. report public_key + key_id
+```
+
+A memory write to an uninitialized world is REFUSED ("memory not initialized
+for world X; run `nous memory init`"), never auto-created. Rationale, on the
+principles already in force:
+
+- Refuse over guess: auto-creating trust material as a side effect of a write
+  is a guess; the system refuses on an uninitialized world instead.
+- Key creation is a governed, recorded event (a signed genesis keyring entry),
+  not an emergent artifact -- explicit delegation, not server authority. This
+  is the root the Phase-2 trusted set is verified against.
+- No race: one ceremony yields one genesis key; concurrent first-writes cannot
+  produce two competing keys (axiom 1, axiom 8).
+- The key is born in a deliberate CLI ceremony, not inside a serving run, so a
+  freshly generated private key is never resident in an API process's address
+  space (consistent with HX-NOUS-API-PROC-ENVIRON-EXPOSURE).
+
+Rotation: the trusted set is a SET of public keys, not one. On rotation the old
+public key REMAINS in the set (old entries stay verifiable; append-only evidence
+is never retroactively invalidated) and a new key signs new entries. The set
+grows; it never shrinks. This matches invariant 7 (nothing is ever deleted).
+
+Phase 0 scope: the per-world key is used to SIGN entries and the public key /
+genesis keyring entry is recorded. The trusted-set VERIFICATION machinery
+(checking an entry's signer is a member of the world keyring) is Phase 2
+(consultation), not Phase 0 (write). The keyring artifact's own governance --
+where the keyring lives and how its authenticity is rooted (world-definition
+hash vs a separately anchored keyring) -- is a Phase-2 prerequisite, deferred
+here but reserved by the source_kind discriminator.
+
+---
+
 ## 7. Frozen invariants
 
 1. Memory is per-world in scope and per-soul-definition in chain identity. Clones
@@ -249,6 +308,11 @@ Notes:
    record that it learned. File write precedes index update; the file is the
    truth.
 7. Nothing is ever deleted. Pruning and retirement are signed tombstone entries.
+8. Memory entries are signed with a persistent per-world Ed25519 key created by
+   an explicit `nous memory init` ceremony that writes a signed genesis keyring
+   entry; writes to an uninitialized world are refused, never auto-created; the
+   keyring (trusted set) is the Phase-2 verification root and grows by rotation,
+   never shrinks.
 
 ---
 
