@@ -4,8 +4,8 @@
 > of EU AI Act Annex IV (Regulation (EU) 2024/1689, Article 11) and the
 > evidence artifacts NOUS produces.
 
-**Status:** Working reference, Session 83 (19 May 2026, HEAD post-`66a6dd2`,
-v5.5.0). This document is descriptive, not legal advice. Compliance is a
+**Status:** Working reference, Session 106 (31 May 2026, HEAD `3298388`,
+v5.24.0). This document is descriptive, not legal advice. Compliance is a
 provider obligation; NOUS supplies machine-generated evidence to support
 that obligation.
 
@@ -728,6 +728,6 @@ and dossiers. Definitions are operational, not legal.
 
 ---
 
-*Last updated: Session 83, 19 May 2026 (HEAD: post-`66a6dd2`, v5.5.0).*
+*Last updated: Session 106, 31 May 2026 (HEAD: `3298388`, v5.24.0).*
 
-<!-- __session83_annex_iv_mapping_v1__ -->
+<!-- __session83_annex_iv_mapping_v1__ __session106_annex_iv_mapping_v5_24_0_v1__ -->
