@@ -369,6 +369,7 @@ def run_program(
     daily_budget: float = 0.33,
     monthly_budget: float = 10.0,
     emit_trace: bool = False,  # __nous_n2b_runsig_v1__
+    consult_memory: bool = False,  # __s107_u5_runsig_consult_v1__
 ) -> str:
     path = Path(nous_file)
     if not path.exists():
@@ -391,7 +392,8 @@ def run_program(
     return asyncio.run(execute_program(program, mode=mode, max_cycles=max_cycles,
                                         daily_budget=daily_budget, monthly_budget=monthly_budget,
                                         source_text=path.read_text(encoding="utf-8"),
-                                        emit_trace=emit_trace))  # __nous_n2b_ret_v1__
+                                        emit_trace=emit_trace,
+                                        consult_memory=consult_memory))  # __nous_n2b_ret_v1__  # __s107_u5_runcall_consult_v1__
 
 
 if __name__ == "__main__":

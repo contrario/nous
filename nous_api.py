@@ -78,6 +78,7 @@ class RunRequest(BaseModel):
     mode: str = Field(default="dry-run", pattern="^(dry-run|execute)$")
     max_cycles: int = Field(default=3, ge=1, le=100)
     emit_trace: bool = Field(default=False)  # __s105_emit_trace_v1__
+    consult_memory: bool = Field(default=False)  # __s107_u5_consult_field_v1__
 
 class ChatRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=10_000)
