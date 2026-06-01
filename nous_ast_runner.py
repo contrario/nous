@@ -314,7 +314,7 @@ async def execute_program(
             private_key=_Ed25519PrivateKey.generate()
         )
         if trace_capture is not None:  # __s105_capture_emit_v1__
-            trace_capture["envelope"] = _trace_env.model_dump()
+            trace_capture["envelope"] = _trace_env.persisted_dict()  # __s107_u2_persist_capture_v1__
         else:
             _trace_path = Path(
                 f"/opt/aetherlang_agents/nous/trace_{world.name.lower()}_{mode}.json"
@@ -323,7 +323,7 @@ async def execute_program(
             import os as _os
             import tempfile as _tempfile
             _payload = _json.dumps(
-                _trace_env.model_dump(), indent=2, ensure_ascii=False
+                _trace_env.persisted_dict(), indent=2, ensure_ascii=False  # __s107_u2_persist_disk_v1__
             )
             _fd, _tmp = _tempfile.mkstemp(
                 suffix=".tmp", prefix=_trace_path.name + ".",

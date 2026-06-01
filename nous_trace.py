@@ -71,6 +71,16 @@ class TraceSignature(BaseModel):
     signature_b64: str = Field(min_length=1)
 
 
+class MemoryConsultation(BaseModel):  # __s107_u2_consult_model_v1__
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+
+    world_sha256: str = Field(min_length=64, max_length=64)
+    producing_soul_sha256: str = Field(min_length=64, max_length=64)
+    consulted_chain_head: str = Field(min_length=64, max_length=64)
+    consulted_seq_count: int = Field(ge=0)
+    consulted_at_utc: str = Field(min_length=1)
+
+
 class TraceEnvelope(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
@@ -81,13 +91,22 @@ class TraceEnvelope(BaseModel):
     smt_spec_sha256: str = Field(min_length=64, max_length=64)
     pricing_sha256: str = Field(min_length=64, max_length=64)
     events: list[TraceEvent]
+    memory_consultation: Optional[MemoryConsultation] = Field(default=None)  # __s107_u2_consult_field_v1__
     signature: Optional[TraceSignature] = Field(default=None)
 
     def canonical_body_bytes(self) -> bytes:
         doc = self.model_dump(exclude={"signature"})
+        if doc.get("memory_consultation") is None:  # __s107_u2_drop_when_none_v1__
+            doc.pop("memory_consultation", None)
         return json.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
+
+    def persisted_dict(self) -> dict[str, object]:  # __s107_u2_persisted_dict_v1__
+        doc = self.model_dump()
+        if doc.get("memory_consultation") is None:
+            doc.pop("memory_consultation", None)
+        return doc
 
 
 def _public_key_raw_b64(public_key: Ed25519PublicKey) -> str:
@@ -114,6 +133,7 @@ def sign_trace(
         smt_spec_sha256=envelope.smt_spec_sha256,
         pricing_sha256=envelope.pricing_sha256,
         events=list(envelope.events),
+        memory_consultation=envelope.memory_consultation,  # __s107_u2_sign_thread_v1__
         signature=sig,
     )
 

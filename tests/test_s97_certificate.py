@@ -326,7 +326,7 @@ def test_emit_anchored_verifier_compiles() -> None:
 
 
 def _trace_json(tr: TraceEnvelope) -> str:
-    doc = tr.model_dump()
+    doc = tr.persisted_dict()  # __s107_u2_testfix_persisted_v1__
     return json.dumps(doc, sort_keys=True)
 
 
