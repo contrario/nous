@@ -36,6 +36,7 @@ from typing import Callable, Optional
 
 from nous_trace import (
     AuthorizationAttestation,
+    MemoryConsultation,
     TraceEnvelope,
     TraceEvent,
     sign_trace,
@@ -118,6 +119,7 @@ class TraceRecorder:
         self._events: list[TraceEvent] = []
         self._seq: int = 0
         self._finalized: bool = False
+        self._memory_consultation: Optional[MemoryConsultation] = None  # __s107_u3_consult_state_v1__
 
     @property
     def event_count(self) -> int:
@@ -244,6 +246,26 @@ class TraceRecorder:
             authorization=authorization,
         )
 
+    def set_memory_consultation(
+        self,
+        *,
+        consultation: MemoryConsultation,
+    ) -> None:  # __s107_u3_set_consult_v1__
+        if self._finalized:
+            raise TraceRecorderError(
+                "cannot set memory consultation after finalize()"
+            )
+        if not isinstance(consultation, MemoryConsultation):
+            raise TraceRecorderError(
+                "consultation must be a MemoryConsultation instance"
+            )
+        if self._memory_consultation is not None:
+            raise TraceRecorderError(
+                "memory consultation already set; refusing to overwrite "
+                "a recorded run input"
+            )
+        self._memory_consultation = consultation
+
     def _build_envelope(self) -> TraceEnvelope:
         return TraceEnvelope(
             nous_version=self._nous_version,
@@ -252,6 +274,7 @@ class TraceRecorder:
             smt_spec_sha256=self._smt_spec_sha256,
             pricing_sha256=self._pricing_sha256,
             events=list(self._events),
+            memory_consultation=self._memory_consultation,  # __s107_u3_consult_build_v1__
             signature=None,
         )
 
