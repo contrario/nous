@@ -329,6 +329,77 @@ class HealNode(NousNode):
     rules: list[HealRuleNode] = Field(default_factory=list)
 
 
+# __s109_u1_heal_path_digest_v1__
+import hashlib as _s109_hashlib
+import json as _s109_json
+from decimal import Decimal as _S109Decimal
+
+
+class HealPathProjectionError(RuntimeError):
+    """Raised when a heal-rule projection cannot be canonicalized safely."""
+
+
+def _s109_canonical_number(value: object) -> str:
+    if isinstance(value, bool):
+        raise HealPathProjectionError(
+            "bool is not a canonicalizable numeric leaf in a heal projection"
+        )
+    if isinstance(value, (int, float)):
+        return str(_S109Decimal(str(value)))
+    raise HealPathProjectionError(
+        "non-numeric value passed to numeric canonicalizer"
+    )
+
+
+def _s109_normalize_projection(node: object, under_params: bool) -> object:
+    if isinstance(node, bool):
+        if under_params:
+            raise HealPathProjectionError(
+                "bool leaf under params is not canonicalizable"
+            )
+        return node
+    if isinstance(node, (int, float)):
+        if not under_params:
+            raise HealPathProjectionError(
+                "numeric leaf outside params in heal projection: " + repr(node)
+            )
+        return _s109_canonical_number(node)
+    if isinstance(node, dict):
+        out: dict[str, object] = {}
+        for key, val in node.items():
+            if not isinstance(key, str):
+                raise HealPathProjectionError(
+                    "non-string key in heal projection: " + repr(key)
+                )
+            child_under = under_params or (key == "params")
+            out[key] = _s109_normalize_projection(val, child_under)
+        return out
+    if isinstance(node, list):
+        return [_s109_normalize_projection(item, under_params) for item in node]
+    if isinstance(node, str) or node is None:
+        return node
+    raise HealPathProjectionError(
+        "unsupported leaf type in heal projection: " + type(node).__name__
+    )
+
+
+def heal_path_preimage_bytes(rule: HealRuleNode) -> bytes:
+    if not isinstance(rule, HealRuleNode):
+        raise HealPathProjectionError(
+            "heal_path_preimage_bytes requires a HealRuleNode"
+        )
+    projection = _s109_normalize_projection(
+        rule.model_dump(mode="json"), under_params=False
+    )
+    return _s109_json.dumps(
+        projection, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+
+
+def heal_path_digest(rule: HealRuleNode) -> str:
+    return _s109_hashlib.sha256(heal_path_preimage_bytes(rule)).hexdigest()
+
+
 # ═══════════════════════════════════════════
 # MIND
 # ═══════════════════════════════════════════
