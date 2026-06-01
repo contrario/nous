@@ -11,6 +11,24 @@
   Removed / Fixed / Security.
 -->
 
+## [5.25.0] - 2026-06-01  <!-- __s107_changelog_v5_25_0_v1__ -->
+
+### Added
+- Deterministic memory consultation (Memory Phase 1). A run may consult
+  persistent per-world soul memory and record that consultation INSIDE the
+  signed conformance trace: `TraceEnvelope.memory_consultation` pins the
+  consulted chain head (a hash-chain commitment to the consulted prefix),
+  the producing soul, and the entry count. `nous run --consult-memory`
+  (requires `--emit-trace`) opts in; default OFF. NAME-BOUND identity
+  (`run_identity.world_sha256` / `producing_soul_sha256`) keeps memory
+  identity orthogonal to the run subject binding. Phase 1 is single-soul
+  and fail-closed: a multi-soul world refuses with MemoryConsultationError.
+- Optional drop-when-None canonicalization for the signed trace: a
+  non-consulting trace is byte-identical to prior releases and every shipped
+  signature still verifies; the key-agnostic offline verifier accepts both
+  consulting and non-consulting traces unchanged, and now surfaces the
+  consultation in its summary for auditors.
+
 ## [5.24.0] - 2026-05-31  <!-- __s106_changelog_v5_24_0_v1__ -->
 
 ### Added

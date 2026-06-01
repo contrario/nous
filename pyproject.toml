@@ -88,6 +88,7 @@ py-modules = [
     "nous_trace",  # __session96_trace_pymodule_v1__
     "trace_recorder",  # __nous_trace_recorder_pymodule_v1__
     "run_shas",  # __nous_run_shas_pymodule_v1__
+    "run_identity",  # __s107_run_identity_pymodule_v1__
     "conformance",  # __session96_conformance_pymodule_v1__
     "cli_conformance",  # __session96_cli_conformance_pymodule_v1__
     "cli_verify_sequence",
