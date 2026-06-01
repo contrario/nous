@@ -685,6 +685,12 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "    print('  cost_cap:       ' + str(cert.get('cost_cap', '?'))",
     "          + ' ' + str(cert.get('cost_currency', '')))",
     "    print('  conformant:     ' + str(recorded))",
+    "    _mc = trace.get('memory_consultation')",  # __s107_u6_memory_visibility_v1__
+    "    if isinstance(_mc, dict):",
+    "        print('  memory:         consulted (Phase 1)')",
+    "        print('    soul:         ' + str(_mc.get('producing_soul_sha256', '?'))[:16] + '...')",
+    "        print('    chain_head:   ' + str(_mc.get('consulted_chain_head', '?'))[:16] + '...')",
+    "        print('    entries:      ' + str(_mc.get('consulted_seq_count', '?')))",
     "    print('  rekor_log_id:   ' + str(tlog.get('log_id')))",
     "    print('  rekor_index:    ' + str(tlog.get('log_index')))",
     "    return 0 if recorded else 1",
