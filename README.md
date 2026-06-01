@@ -250,6 +250,8 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 - [SMT Verification Design](docs/SMT_VERIFICATION_DESIGN.md) -- soundness contract, Z3 pin rationale
 - [Memory Evidence Design](docs/MEMORY_EVIDENCE_DESIGN.md) -- signed per-soul memory, Phase 0 freeze
 - [Memory CLI](docs/MEMORY_CLI.md) -- nous memory init/append/verify/reindex reference  <!-- __s106_readme_memory_cli_xref_v1__ -->
+- [Memory Phase 1 Design](docs/MEMORY_PHASE1_DESIGN.md) -- NAME-BOUND identity, drop-when-None write-path invariant, single-soul (Option c) freeze  <!-- __s108_readme_memory_phase1_design_xref_v1__ -->
+- [Memory Consultation](docs/MEMORY_CONSULTATION.md) -- consult per-(world,soul) memory inside the signed trace; offline-verifiable chain-head commitment  <!-- __s108_readme_memory_consultation_xref_v1__ -->
 - [EU AI Act Compliance](docs/EU_AI_ACT_COMPLIANCE.md) -- Annex IV / Article 11 mapping
 - [Annex IV Mapping](docs/ANNEX_IV_MAPPING.md) -- per-section Annex IV crosswalk to NOUS evidence artifacts
 - [Rekor Anchoring](docs/REKOR_ANCHOR.md) -- Path-beta dual signing, Sigstore wire format, offline verification
