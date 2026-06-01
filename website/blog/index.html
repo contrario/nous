@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s108_blog_v525-memory-consultation_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v525-memory-consultation');return false">
+      <div class="post-meta">
+        <span class="post-date">01 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.25.0 &mdash; Memory Phase 1: Deterministic Consultation</div>
+      <div class="post-excerpt">A run can now consult per-(world,soul) memory and record it inside the signed trace. The consulted chain head is a commitment to the exact memory state read; drop-when-None canonicalization keeps every prior signature byte-identical. Offline-verifiable with <code>cryptography</code> alone. <code>nous-lang 5.25.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s106_blog_v524-soul-memory_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v524-soul-memory');return false">
       <div class="post-meta">
@@ -518,6 +528,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s108_blog_v525-memory-consultation_post_v1__ -->
+  <div class="post-full" id="post-v525-memory-consultation">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.25.0 &mdash; Memory Phase 1: Deterministic Consultation</h1>
+    <div class="post-full-meta">1 June 2026 &middot; 3 min read</div>
+    <p>Phase 0 gave a soul a memory it could write and verify but not yet read into a run. v5.25.0 closes that: a run may <em>consult</em> its persistent memory, and the consultation is recorded inside the signed conformance trace &mdash; not as a side channel, but as evidence. The memory stays what it has always been in this project: something a third party can check, not something the runtime can quietly lean on.</p>
+    <p>A consulting run reads the per-(world,soul) signed hash chain and computes its head &mdash; genesis if the chain is empty, otherwise the hash of the last entry. That head is a commitment to the <em>entire</em> consulted prefix: change any earlier entry and the head no longer matches. The run folds the head, the NAME-BOUND world and soul identities, and the entry count into the signed <code>TraceEnvelope</code> as an optional <code>memory_consultation</code> field. An auditor reads the chain, recomputes the head, and compares &mdash; offline, with <code>cryptography</code> alone &mdash; to prove the run consulted exactly the memory state it claims.</p>
+    <p>The hard constraint was backward compatibility. The field is canonicalized <strong>drop-when-None</strong>: when a run does not consult, the member is absent from both the signed body and every persisted form of the trace, so a non-consulting trace is byte-identical to traces produced before the field existed. Every previously signed trace and the demo certificate bundle re-verify unchanged, and the key-agnostic offline verifier accepts consulting and non-consulting traces with zero change. This is RFC 8785 wire-versus-canonical discipline: canonicalization defines how present members serialize, not which members are present.</p>
+    <p>Phase 1 is the smallest provable unit: a run consults exactly one soul, and a multi-soul consultation refuses fail-closed. Consultation also requires trace emission, because the consultation only has meaning as a recorded, signed commitment. Multi-soul consultation as a canonicalized set, and memory that influences execution behind a proof, are the next phases. <code>nous-lang 5.25.0</code>.</p>
+  </div>
   <!-- __s106_blog_v524-soul-memory_post_v1__ -->
   <div class="post-full" id="post-v524-soul-memory">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
