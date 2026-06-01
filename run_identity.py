@@ -49,3 +49,37 @@ def producing_soul_sha256(world_name: str, soul_name: str) -> str:
     return hashlib.sha256(
         (_SOUL_LABEL + world_name + "|" + soul_name).encode("utf-8")
     ).hexdigest()
+
+
+class MemoryConsultationError(RuntimeError):
+    """Raised when a run cannot consult memory under Phase 1 rules."""
+
+
+def build_run_consultation(
+    world_name: str,
+    soul_name: str,
+    *,
+    base_dir: "Path",
+) -> "MemoryConsultation":  # __s107_u4_build_consult_v1__
+    from datetime import datetime, timezone
+    from memory_store import read_chain
+    from memory_entry import genesis_head, chain_entry_hash
+    from nous_trace import MemoryConsultation
+
+    world = world_sha256(world_name)
+    soul = producing_soul_sha256(world_name, soul_name)
+    chain = read_chain(world, soul, base_dir)
+    head = (
+        genesis_head(world, soul)
+        if not chain
+        else chain_entry_hash(chain[-1])
+    )
+    return MemoryConsultation(
+        world_sha256=world,
+        producing_soul_sha256=soul,
+        consulted_chain_head=head,
+        consulted_seq_count=len(chain),
+        consulted_at_utc=datetime.now(timezone.utc).strftime(
+            "%Y-%m-%dT%H:%M:%SZ"
+        ),
+    )

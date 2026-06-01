@@ -36,6 +36,7 @@ def run_compiled_with_trace(
     source: str,
     max_cycles: int = 1,
     private_key: "Optional[Ed25519PrivateKey]" = None,
+    consult_memory: bool = False,
 ) -> "TraceEnvelope":
     """Compile source, run the compiled runtime bounded, return a signed trace.
 
@@ -72,6 +73,25 @@ def run_compiled_with_trace(
         smt_sha,
         pricing_sha,
     )
+    if consult_memory:  # __s107_u4_compiled_consult_v1__
+        from pathlib import Path as _Path
+        from run_identity import (
+            MemoryConsultationError as _MCErr,
+            build_run_consultation as _build_consult,
+        )
+        if len(program.souls) != 1:
+            raise _MCErr(
+                "Phase 1 memory consultation requires exactly 1 "
+                "soul defined in the world (found "
+                + str(len(program.souls)) + ")"
+            )
+        recorder.set_memory_consultation(
+            consultation=_build_consult(
+                program.world.name,
+                program.souls[0].name,
+                base_dir=_Path("/var/lib/nous"),
+            )
+        )
 
     fd, tmp = tempfile.mkstemp(suffix=".py", prefix="_compiled_trace_", dir=tempfile.gettempdir())
     os.close(fd)

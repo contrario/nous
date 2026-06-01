@@ -202,11 +202,16 @@ async def execute_program(
     source_text: "Optional[str]" = None,  # __nous_n2b_execsig_v1__
     emit_trace: bool = False,
     trace_capture: "Optional[dict]" = None,  # __s105_capture_sig_v1__
+    consult_memory: bool = False,  # __s107_u4_consult_sig_v1__
 ) -> str:
     world = program.world
     if not world:
         log.error("No world defined")
         return "Error: no world"
+
+    if consult_memory and not emit_trace:  # __s107_u4_consult_guard_v1__
+        from run_identity import MemoryConsultationError as _MCErr0
+        raise _MCErr0("consult_memory requires emit_trace")
 
     heartbeat = _extract_heartbeat(world)
     cost_ceiling = _extract_cost_ceiling(world)
@@ -243,6 +248,25 @@ async def execute_program(
                 _pricing_sha,
             )
         )
+        if consult_memory:  # __s107_u4_consult_read_v1__
+            from pathlib import Path as _Path
+            from run_identity import (
+                MemoryConsultationError as _MCErr,
+                build_run_consultation as _build_consult,
+            )
+            if len(program.souls) != 1:
+                raise _MCErr(
+                    "Phase 1 memory consultation requires exactly 1 "
+                    "soul defined in the world (found "
+                    + str(len(program.souls)) + ")"
+                )
+            rt.trace_recorder.set_memory_consultation(
+                consultation=_build_consult(
+                    world.name,
+                    program.souls[0].name,
+                    base_dir=_Path("/var/lib/nous"),
+                )
+            )
 
     routes: dict[str, list[str]] = {}
     incoming: dict[str, list[str]] = {}
