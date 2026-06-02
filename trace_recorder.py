@@ -35,6 +35,7 @@ from __future__ import annotations
 from typing import Callable, Optional
 
 from nous_trace import (
+    RemedyApplication,  # __s111_u4_remedy_import_v1__
     AuthorizationAttestation,
     MemoryConsultation,
     TraceEnvelope,
@@ -120,6 +121,7 @@ class TraceRecorder:
         self._seq: int = 0
         self._finalized: bool = False
         self._memory_consultation: Optional[MemoryConsultation] = None  # __s107_u3_consult_state_v1__
+        self._remedy_application: Optional[RemedyApplication] = None  # __s111_u4_remedy_state_v1__
 
     @property
     def event_count(self) -> int:
@@ -275,6 +277,7 @@ class TraceRecorder:
             pricing_sha256=self._pricing_sha256,
             events=list(self._events),
             memory_consultation=self._memory_consultation,  # __s107_u3_consult_build_v1__
+            remedy_application=self._remedy_application,  # __s111_u4_remedy_build_v1__
             signature=None,
         )
 

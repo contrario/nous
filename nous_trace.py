@@ -81,6 +81,17 @@ class MemoryConsultation(BaseModel):  # __s107_u2_consult_model_v1__
     consulted_at_utc: str = Field(min_length=1)
 
 
+class RemedyApplication(BaseModel):  # __s111_u4_remedy_model_v1__
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+
+    world_sha256: str = Field(min_length=64, max_length=64)
+    producing_soul_sha256: str = Field(min_length=64, max_length=64)
+    source_entry_seq: int = Field(ge=0)
+    remedy_proof_sha256: str = Field(min_length=64, max_length=64)
+    promoted_heal_path_sha256: str = Field(min_length=64, max_length=64)
+    applied_at_utc: str = Field(min_length=1)
+
+
 class TraceEnvelope(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
@@ -92,12 +103,15 @@ class TraceEnvelope(BaseModel):
     pricing_sha256: str = Field(min_length=64, max_length=64)
     events: list[TraceEvent]
     memory_consultation: Optional[MemoryConsultation] = Field(default=None)  # __s107_u2_consult_field_v1__
+    remedy_application: Optional[RemedyApplication] = Field(default=None)  # __s111_u4_remedy_field_v1__
     signature: Optional[TraceSignature] = Field(default=None)
 
     def canonical_body_bytes(self) -> bytes:
         doc = self.model_dump(exclude={"signature"})
         if doc.get("memory_consultation") is None:  # __s107_u2_drop_when_none_v1__
             doc.pop("memory_consultation", None)
+        if doc.get("remedy_application") is None:  # __s111_u4_drop_when_none_v1__
+            doc.pop("remedy_application", None)
         return json.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -106,6 +120,8 @@ class TraceEnvelope(BaseModel):
         doc = self.model_dump()
         if doc.get("memory_consultation") is None:
             doc.pop("memory_consultation", None)
+        if doc.get("remedy_application") is None:  # __s111_u4_persisted_dict_v1__
+            doc.pop("remedy_application", None)
         return doc
 
 
@@ -134,6 +150,7 @@ def sign_trace(
         pricing_sha256=envelope.pricing_sha256,
         events=list(envelope.events),
         memory_consultation=envelope.memory_consultation,  # __s107_u2_sign_thread_v1__
+        remedy_application=envelope.remedy_application,  # __s111_u4_sign_thread_v1__
         signature=sig,
     )
 
