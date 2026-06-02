@@ -324,3 +324,53 @@ authenticated boundary already documented in remedy_proof.py, restated at
 the trace level: the evidence proves intent and verification, not
 occurrence. Safety rests on the run's own envelope re-proof, not on the
 commitment.
+
+### 10.6 Cardinality limit: at most one promotion per run
+
+<!-- __s111_u5_cardinality_v1__ -->
+
+U3 (admissible_promotions) correctly returns a LIST of admissible digests:
+two proofs promoting recoveries for DIFFERENT (soul, error_type) triggers
+do not conflict under FQ2 and are both admissible. U4
+(TraceEnvelope.remedy_application) is a SINGULAR record carrying one
+promoted_heal_path_sha256 and one source_entry_seq. Phase 2.0 resolves the
+gap by limiting recorded cardinality to at most one, decided at U5 harvest
+time:
+
+- 0 admissible -> record nothing; no set_remedy_application call; the run
+  proceeds in default order; the trace is byte-identical to a non-applying
+  run.
+- exactly 1 admissible -> build the RemedyApplication and seal it. The
+  clean, unambiguous commitment.
+- more than 1 admissible -> record nothing (return None); the run proceeds
+  in default order. A diagnostic is logged (logger.warning) so the operator
+  can see why no promotion was recorded, but the run is NOT aborted.
+
+This cardinality rule is DELIBERATELY DISTINCT from the U3 FQ2 conflict,
+and the distinction is load-bearing:
+
+- FQ2 conflict (U3): two proofs promote DIFFERENT heal-paths for the SAME
+  (soul, error_type). The memory is contradictory -- it gives conflicting
+  direction for one trigger. This is a structural anomaly, so U3 fails
+  closed diagnostically (raises MemoryConsultationError carrying the key
+  and both digests). The memory is wrong.
+- Cardinality > 1 (U5): valid proofs for DIFFERENT triggers (e.g. one for
+  a network error, one for a timeout). The memory is HEALTHY. The only
+  constraint is our own: the Phase 2.0 schema records a singular
+  commitment. Aborting a valid run because memory held several good,
+  non-conflicting suggestions would punish a correct execution for a
+  schema limit. Memory must help or be ignored; it must never drop a run
+  absent a genuine conflict. So U5 degrades safely: record nothing,
+  proceed in default order.
+
+Why not deterministically select one of the several admissible digests
+(e.g. by recency or seq): a deterministic tie-break is a GUESS the auditor
+never sanctioned, and it would introduce silent execution-influence not
+visible in the freeze. That violates refuse-over-guess. Recording nothing
+is the only honest outcome until the schema is upgraded.
+
+Deferral: multi-promotion recording (remedy_application as a Set/list,
+with list-canonicalization handled explicitly) is deferred to Phase 2.x,
+exactly as multi-soul memory was deferred from Phase 1 to Phase 1.x. The
+singular schema keeps U4 canonicalization simple (no JCS-over-list surface)
+and keeps determinism trivially auditable: at most one commitment, or none.
