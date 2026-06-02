@@ -99,6 +99,7 @@ py-modules = [
     "memory_store",  # __s105_memory_store_pymod_v1__
     "memory_index",  # __s105_memory_index_pymod_v1__  # __phase2_stage6_pymodule_v1__
     "conformance_verifier",  # __nous_conformance_verifier_pymodule_v1__
+    "remedy_proof", "build_run_remedy",  # __s112_release_v5_26_0_pyproject__
 ]
 
 # __cc_dynamic_block_v1__
