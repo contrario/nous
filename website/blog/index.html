@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s112_v526_blog_recorded-commitment_card__ -->
+    <a class="post-card" href="#" onclick="showPost('v526-recorded-commitment');return false">
+      <div class="post-meta">
+        <span class="post-date">02 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.26.0 &mdash; Phase 2.0: Promotion as a Recorded Commitment</div>
+      <div class="post-excerpt">Memory can now influence a run &mdash; and the influence is a signed, offline-verifiable record, never a quiet side effect. When a run consults memory and opts in, it seals a <code>remedy_application</code>: six fields binding the cited proof, the promoted heal-path, and the producing soul into the trace. A third party recomputes all of it with <code>cryptography</code> and <code>z3-solver</code> alone. <code>nous-lang 5.26.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s108_blog_v525-memory-consultation_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v525-memory-consultation');return false">
       <div class="post-meta">
@@ -528,6 +538,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s112_v526_blog_recorded-commitment_post__ -->
+  <div class="post-full" id="post-v526-recorded-commitment">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.26.0 &mdash; Phase 2.0: Promotion as a Recorded Commitment</h1>
+    <div class="post-full-meta">2 June 2026 &middot; 3 min read</div>
+    <p>Phase 1 let a run <em>read</em> its memory and record the consultation in the signed trace. v5.26.0 takes the next step: memory can now <em>influence</em> a run. The influence is deliberately narrow and entirely auditable &mdash; a run may <em>promote</em> a previously proven recovery, and the promotion is sealed into the trace as a commitment a third party can verify offline. The runtime never quietly leans on memory; it records what it did and lets you check it.</p>
+    <p>A promotion is not a dispatch reorder. The trace-emitting paths do not execute the heal sequence, so the sealed record attests something stronger and simpler than &ldquo;memory changed the run&rdquo;: that a verified proof exists, and that the promoted heal-path is one <em>this program declares</em>. The commitment is <strong>program-bound, not run-bound</strong>. The recorded <code>remedy_application</code> carries six fields: the world and producing-soul identities, the cited source entry&rsquo;s sequence number, the SHA-256 of the stored proof, the promoted heal-path digest, and an applied-at timestamp.</p>
+    <p>Verification uses only the machinery already in the trusted base. An offline auditor reads the cited chain entry, recomputes the proof SHA over its canonical bytes, re-verifies the embedded conformance certificate with the existing checker, and confirms the promoted digest matches a heal-path the current program declares &mdash; recomputing each rule&rsquo;s digest to do so. No new cryptography, no new trusted code. The promotion is admissible precisely because it selects among already-reachable, already-bounded recoveries: the static envelope proof holds without re-solving.</p>
+    <p>The whole chain is opt-in and fail-closed. <code>--emit-trace</code> enables <code>--consult-memory</code> (the observation), which enables <code>--apply-remedy</code> (the decision). All three default off. A consulting run that does not apply is byte-identical, in its consultation record, to one that cannot. The determinism boundary widens by exactly one attested field; what a third party can verify offline does not regress. <code>nous-lang 5.26.0</code>.</p>
+  </div>
   <!-- __s108_blog_v525-memory-consultation_post_v1__ -->
   <div class="post-full" id="post-v525-memory-consultation">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
