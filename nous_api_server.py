@@ -1078,6 +1078,7 @@ async def run_source(request: Request, body: RunRequest, x_api_key: Optional[str
                         source_text=body.source,
                         emit_trace=True,
                         consult_memory=body.consult_memory,  # __s107_u5_srv_consult_v1__
+                        apply_remedy=body.apply_remedy,  # __s111_u6_srv_apply_v1__
                         trace_capture=_cap,
                     ))
                     _trace_obj = _cap.get("envelope")

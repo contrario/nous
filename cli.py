@@ -183,7 +183,7 @@ def cmd_run(args: argparse.Namespace) -> int:
         except _GateErr as _gate_exc:
             print(f"semantic gate FAIL: CodegenSemanticError: {_gate_exc}", file=sys.stderr)
             return 1
-        run_program(str(source), mode=mode, max_cycles=cycles, daily_budget=budget, emit_trace=getattr(args, "emit_trace", False), consult_memory=getattr(args, "consult_memory", False))  # __nous_n2b_cli_thread_v1__  # __s107_u5_cli_thread_v1__
+        run_program(str(source), mode=mode, max_cycles=cycles, daily_budget=budget, emit_trace=getattr(args, "emit_trace", False), consult_memory=getattr(args, "consult_memory", False), apply_remedy=getattr(args, "apply_remedy", False))  # __nous_n2b_cli_thread_v1__  # __s107_u5_cli_thread_v1__  # __s111_u6_cli_thread_v1__
         return 0
     except KeyboardInterrupt:
         print("\n\nWorld stopped by user.")
@@ -1630,6 +1630,7 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     p.add_argument("--hot", action="store_true", help="Enable hot reload — swap souls on save")
     p.add_argument("--emit-trace", action="store_true", help="Emit a signed runtime conformance trace (trace_<world>_<mode>.json)")  # __nous_n2b_cli_arg_v1__
     p.add_argument("--consult-memory", action="store_true", help="Consult persistent memory for the producing soul and record it in the signed trace (requires --emit-trace; Phase 1: single-soul worlds only)")  # __s107_u5_cli_arg_v1__
+    p.add_argument("--apply-remedy", action="store_true", help="Commit to the promoted remedy from memory and record it in the signed trace (requires --consult-memory; Phase 2.0: at most one promotion)")  # __s111_u6_cli_arg_v1__
     p = sub.add_parser("validate", help="Validate .nous file")
     p.add_argument("file")
 

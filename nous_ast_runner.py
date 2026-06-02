@@ -203,6 +203,7 @@ async def execute_program(
     emit_trace: bool = False,
     trace_capture: "Optional[dict]" = None,  # __s105_capture_sig_v1__
     consult_memory: bool = False,  # __s107_u4_consult_sig_v1__
+    apply_remedy: bool = False,  # __s111_u6_apply_sig_v1__
 ) -> str:
     world = program.world
     if not world:
@@ -212,6 +213,10 @@ async def execute_program(
     if consult_memory and not emit_trace:  # __s107_u4_consult_guard_v1__
         from run_identity import MemoryConsultationError as _MCErr0
         raise _MCErr0("consult_memory requires emit_trace")
+
+    if apply_remedy and not consult_memory:  # __s111_u6_apply_guard_v1__
+        from run_identity import MemoryConsultationError as _MCErr1
+        raise _MCErr1("apply_remedy requires consult_memory")
 
     heartbeat = _extract_heartbeat(world)
     cost_ceiling = _extract_cost_ceiling(world)
@@ -267,19 +272,20 @@ async def execute_program(
                     base_dir=_Path("/var/lib/nous"),
                 )
             )
-            from run_identity import (  # __s111_u5_ar_wire_v1__
-                build_run_remedy_application as _build_remedy,
-            )
-            _ra = _build_remedy(
-                world.name,
-                program.souls[0].name,
-                list(program.souls),
-                base_dir=_Path("/var/lib/nous"),
-            )
-            if _ra is not None:
-                rt.trace_recorder.set_remedy_application(
-                    remedy_application=_ra
+            if apply_remedy:  # __s111_u6_ar_wrap_v1__
+                from run_identity import (
+                    build_run_remedy_application as _build_remedy,
                 )
+                _ra = _build_remedy(
+                    world.name,
+                    program.souls[0].name,
+                    list(program.souls),
+                    base_dir=_Path("/var/lib/nous"),
+                )
+                if _ra is not None:
+                    rt.trace_recorder.set_remedy_application(
+                        remedy_application=_ra
+                    )
 
     routes: dict[str, list[str]] = {}
     incoming: dict[str, list[str]] = {}
@@ -383,6 +389,7 @@ def run_program(
     monthly_budget: float = 10.0,
     emit_trace: bool = False,  # __nous_n2b_runsig_v1__
     consult_memory: bool = False,  # __s107_u5_runsig_consult_v1__
+    apply_remedy: bool = False,  # __s111_u6_runsig_apply_v1__
 ) -> str:
     path = Path(nous_file)
     if not path.exists():
@@ -406,7 +413,8 @@ def run_program(
                                         daily_budget=daily_budget, monthly_budget=monthly_budget,
                                         source_text=path.read_text(encoding="utf-8"),
                                         emit_trace=emit_trace,
-                                        consult_memory=consult_memory))  # __nous_n2b_ret_v1__  # __s107_u5_runcall_consult_v1__
+                                        consult_memory=consult_memory,
+                                        apply_remedy=apply_remedy))  # __nous_n2b_ret_v1__  # __s107_u5_runcall_consult_v1__  # __s111_u6_runcall_apply_v1__
 
 
 if __name__ == "__main__":
