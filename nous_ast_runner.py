@@ -267,6 +267,19 @@ async def execute_program(
                     base_dir=_Path("/var/lib/nous"),
                 )
             )
+            from run_identity import (  # __s111_u5_ar_wire_v1__
+                build_run_remedy_application as _build_remedy,
+            )
+            _ra = _build_remedy(
+                world.name,
+                program.souls[0].name,
+                list(program.souls),
+                base_dir=_Path("/var/lib/nous"),
+            )
+            if _ra is not None:
+                rt.trace_recorder.set_remedy_application(
+                    remedy_application=_ra
+                )
 
     routes: dict[str, list[str]] = {}
     incoming: dict[str, list[str]] = {}

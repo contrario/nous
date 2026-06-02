@@ -268,6 +268,26 @@ class TraceRecorder:
             )
         self._memory_consultation = consultation
 
+    def set_remedy_application(  # __s111_u5_set_remedy_v1__
+        self,
+        *,
+        remedy_application: "RemedyApplication",
+    ) -> None:
+        if self._finalized:
+            raise TraceRecorderError(
+                "cannot set remedy application after finalize()"
+            )
+        if not isinstance(remedy_application, RemedyApplication):
+            raise TraceRecorderError(
+                "remedy_application must be a RemedyApplication instance"
+            )
+        if self._remedy_application is not None:
+            raise TraceRecorderError(
+                "remedy application already set; refusing to overwrite "
+                "a recorded run input"
+            )
+        self._remedy_application = remedy_application
+
     def _build_envelope(self) -> TraceEnvelope:
         return TraceEnvelope(
             nous_version=self._nous_version,

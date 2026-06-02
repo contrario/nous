@@ -92,6 +92,17 @@ def run_compiled_with_trace(
                 base_dir=_Path("/var/lib/nous"),
             )
         )
+        from run_identity import (  # __s111_u5_ct_wire_v1__
+            build_run_remedy_application as _build_remedy,
+        )
+        _ra = _build_remedy(
+            program.world.name,
+            program.souls[0].name,
+            list(program.souls),
+            base_dir=_Path("/var/lib/nous"),
+        )
+        if _ra is not None:
+            recorder.set_remedy_application(remedy_application=_ra)
 
     fd, tmp = tempfile.mkstemp(suffix=".py", prefix="_compiled_trace_", dir=tempfile.gettempdir())
     os.close(fd)
