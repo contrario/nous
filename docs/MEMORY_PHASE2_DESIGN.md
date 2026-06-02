@@ -219,3 +219,108 @@ both that the run stayed inside its declared envelope and that the only memory
 influence was a verified, legal reordering of declared recoveries. The feature
 widens the determinism boundary; it does not regress it. Phase 2.1 (certificate
 remedy obligation) gets its own design freeze first.
+
+---
+
+## 10. Runtime reality and the recorded-commitment redefinition (S111, from source)
+
+<!-- __s111_runtime_reality_section_v1__ -->
+
+Sections 1-9 assumed, implicitly, that the run which consults memory and
+emits a signed trace also executes a reorderable heal sequence at runtime,
+so that promotion could "reorder attempt order". Reading the live source
+in S111 established that this assumption does not hold. This section records
+the actual runtime topology and redefines promotion accordingly. It does
+not relitigate the closure argument (section 2) or the sealed frontier
+questions; it corrects the execution model they were described against.
+
+### 10.1 The three run paths (verified from source)
+
+There are three distinct ways a NOUS program runs, and they differ in
+whether they execute heal, emit a trace, and consult memory:
+
+1. Interpreted -- nous_ast_runner.execute_program. Runs each soul cycle
+   via rt.think / rt.speak / rt.listen (_run_soul_cycle). It has NO heal
+   dispatch: no per-error_type branching, no iteration of soul.heal.rules.
+   It emits a trace and consults memory (set_memory_consultation at the
+   __s107_u4_* markers).
+2. Compiled-only -- cli.py _run_hot_reload -> build_runtime().run(). Runs
+   the codegen-emitted module. The compiled SoulRunner.run() (runtime.py)
+   DOES execute heal: on `except Exception as e` it calls
+   `recovered = await self._heal(e)`, where _heal is the heal_fn the
+   codegen wires (heal_fn=_soul_X.heal). This path emits NO trace and
+   consults NO memory.
+3. Compiled+trace -- compiled_trace.run_compiled_with_trace (S105). Builds
+   the compiled runtime, injects a TraceRecorder, supports consult_memory
+   (__s107_u4_compiled_consult_v1__), and emits a signed trace. BUT its
+   driver calls `await runner._instinct()` directly, bypassing
+   SoulRunner.run() -- so it never reaches the `except -> self._heal(e)`
+   recovery site. It runs cognition, not the heal-on-exception wrapper.
+
+### 10.2 The consequence
+
+Heal is EXECUTED only on the compiled-only path, which neither emits a
+trace nor consults memory. Both trace-emitting paths (interpreted and
+compiled+trace) bypass heal execution: one has no heal dispatch at all,
+the other drives _instinct() directly and never enters the recovery loop.
+Therefore there is no runtime heal sequence to reorder in any path that
+records a promotion. A promotion-as-dispatch-reorder has nothing to act on
+where the evidence is produced.
+
+### 10.3 Promotion is a cryptographically recorded commitment
+
+Phase 2.0 promotion is hereby defined as a CRYPTOGRAPHICALLY RECORDED
+COMMITMENT, not a runtime dispatch reorder. When a run is invoked with
+--consult-memory, it: reads the soul's memory chain; parses and verifies
+each stored remedy_proof (U2 + U3, cert-authentic + program-declared);
+resolves the admissible promotion set, refusing fail-closed on an FQ2
+(soul, error_type) conflict (U3); and SEALS the selected promotion into
+the signed trace via TraceEnvelope.remedy_application (U4). The trace then
+attests: "this run consulted memory, verified the proof, and committed --
+cryptographically, inside the signed body -- that its first-choice recovery
+for (soul, error_type) is the promoted heal-path X."
+
+Whether the hermetic trace driver happens to raise an exception in that
+particular run, and thus whether the committed recovery is exercised, is
+IRRELEVANT to the validity of the evidence. The commitment is sealed and
+offline-verifiable regardless. This is exactly the project's through-line:
+probabilistic execution, deterministic evidence. The evidence is the
+verified, signed commitment -- not a runtime branch that may or may not
+fire.
+
+This redefinition:
+- is consistent with everything built (U1 digest, U2 typed proof, U3 gate,
+  U4 trace field); they are precisely the recorded-commitment machinery.
+- touches neither the S105 compiled-trace driver nor the codegen templates;
+  the 57-template byte-identity gate is unaffected.
+- holds the TCB constant: verification reuses the existing offline machinery
+  (U3 via verify_certificate_from_json), no new cryptography.
+- keeps the closure argument (section 2) intact: the committed heal-path is
+  a declared, closure-conformant recovery; recording the commitment adds no
+  reachable path and changes no proven quantity.
+
+### 10.4 What U5 and U6 become under this definition
+
+- U5: at the consultation point of the trace-emitting path (where
+  set_memory_consultation already fires), compute admissible_promotions
+  (U3) over the stored proofs and the current program's souls, select the
+  single admissible promotion (fail-closed on FQ2 conflict; if the
+  admissible set is empty, record nothing -- default order, byte-identical),
+  build the RemedyApplication record, and seal it via a recorder setter
+  (set_remedy_application, analogous to set_memory_consultation at
+  __s107_u3_set_consult_v1__). No dispatch reorder; no engine change.
+- U6: the opt-in surface, default OFF -- a flag on the existing run path
+  (no new subcommand, so no CLI-count change), threaded the same way
+  --consult-memory is.
+
+### 10.5 Honesty about the boundary (program-bound, not run-bound)
+
+The commitment is PROGRAM-BOUND, not run-bound. It attests that a verified
+proof exists and that the promoted heal-path is one the current program
+declares; it does NOT attest that the heal-path executed in that run (the
+signed trace records no heal-path execution, and on the trace-emitting
+paths heal does not execute at all). This is the same advisory-but-
+authenticated boundary already documented in remedy_proof.py, restated at
+the trace level: the evidence proves intent and verification, not
+occurrence. Safety rests on the run's own envelope re-proof, not on the
+commitment.
