@@ -59,12 +59,13 @@ def test_spec_rekor_v2_emit_writes_eight_files(tmp_path: Path) -> None:
         anchor="rekor_v2",
         _test_rekor_anchor_v2=_fake_v2_anchor(),
     )
-    expected = {
+    expected = {  # __s112_dossier_rekor_nine_set_v1__
         "source.nous",
         "manifest.json",
         "SKILL.md",
         "nous.yaml",
         "pricing.toml",
+        "pricing.canonical.json",
         "public_key.b64",
         "README.md",
         "verify_offline.py",

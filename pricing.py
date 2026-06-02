@@ -209,7 +209,10 @@ class PricingTable(BaseModel):
             n for n, e in self.models.items() if e.alias_of is None
         )
 
-    def sha256(self) -> str:
+    def canonical_bytes(self) -> bytes:  # __s112_pricing_canonical_bytes_v1__
+        """The exact preimage of sha256(): canonical JSON over the
+        resolved pricing model. This is the byte stream a dossier must
+        ship so an auditor can recompute the manifest pricing hash."""
         canonical: dict[str, Any] = {
             "schema_version": self.schema_version,
             "currency": self.currency,
@@ -218,11 +221,13 @@ class PricingTable(BaseModel):
                 for name in sorted(self.models.keys())
             },
         }
-        encoded: bytes = json.dumps(
+        return json.dumps(
             canonical, sort_keys=True, separators=(",", ":"),
             default=str,
         ).encode("utf-8")
-        return hashlib.sha256(encoded).hexdigest()
+
+    def sha256(self) -> str:
+        return hashlib.sha256(self.canonical_bytes()).hexdigest()
 
     @staticmethod
     def _entry_canonical(e: PricingEntry) -> dict[str, Any]:

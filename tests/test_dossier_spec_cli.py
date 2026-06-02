@@ -44,12 +44,13 @@ def test_build_dossier_spec_emits_eight_files(tmp_path: Path) -> None:
         output=tmp_path / "out",
         key_path=_isolated_key(tmp_path),
     )
-    expected = {
+    expected = {  # __s112_dossier_cli_nine_set_v1__
         "source.nous",
         "manifest.json",
         "SKILL.md",
         "nous.yaml",
         "pricing.toml",
+        "pricing.canonical.json",
         "public_key.b64",
         "README.md",
         "verify_offline.py",
@@ -57,6 +58,16 @@ def test_build_dossier_spec_emits_eight_files(tmp_path: Path) -> None:
     assert set(result.files) == expected
     for f in expected:
         assert (tmp_path / "out" / f).is_file()
+    import hashlib as _hashlib  # __s112_dossier_cli_recompute_v1__
+    import json as _json
+    _manifest = _json.loads(
+        (tmp_path / "out" / "manifest.json").read_text(encoding="utf-8")
+    )
+    _canon = (tmp_path / "out" / "pricing.canonical.json").read_bytes()
+    assert (
+        _hashlib.sha256(_canon).hexdigest()
+        == _manifest["pricing_sha256"]
+    ), "shipped pricing.canonical.json must recompute to manifest hash"
 
 
 def test_build_dossier_spec_cap_override_applied(tmp_path: Path) -> None:

@@ -331,6 +331,10 @@ def build_dossier_spec(
         )
     shutil.copy2(pricing.source_path, output / "pricing.toml")
     files.append("pricing.toml")
+    # __s112_dossier_pricing_canonical_v1__: ship the exact sha256 preimage so an
+    # auditor recomputes manifest.pricing_sha256 from a file in the dossier.
+    (output / "pricing.canonical.json").write_bytes(pricing.canonical_bytes())
+    files.append("pricing.canonical.json")
 
     raw_pub_bytes = _public_key_raw_bytes(pub)
     (output / "public_key.b64").write_text(
@@ -413,7 +417,11 @@ def _build_readme(
         f"- source.nous (envelope): `{envelope_sha}`\n",
         f"- SKILL.md (verbatim):    `{skill_md_sha}`\n",
         f"- nous.yaml (verbatim):   `{sidecar_sha}`\n",
-        f"- pricing.toml:           `{manifest.pricing_sha256}`\n",
+        # __s112_readme_pricing_canonical_v1__: pricing_sha256 covers the canonical
+        # JSON (pricing.canonical.json), not the raw TOML, which ships
+        # verbatim for human reading only.
+        f"- pricing.canonical.json: `{manifest.pricing_sha256}`\n",
+        f"- pricing.toml (verbatim, informational; not the hashed form)\n",
         f"- smt_spec:               `{manifest.smt_spec_sha256}`\n",
         "\n",
         "## Verdict\n",
