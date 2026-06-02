@@ -76,6 +76,10 @@ def run_compiled_with_trace(
     )
     if consult_memory:  # __s107_u4_compiled_consult_v1__
         from pathlib import Path as _Path
+        import os as _os_env  # __s112_u7_membase_compiled_v2__
+        _mem_base = _Path(
+            _os_env.environ.get("NOUS_MEMORY_BASE_DIR", "/var/lib/nous")
+        )
         from run_identity import (
             MemoryConsultationError as _MCErr,
             build_run_consultation as _build_consult,
@@ -90,7 +94,7 @@ def run_compiled_with_trace(
             consultation=_build_consult(
                 program.world.name,
                 program.souls[0].name,
-                base_dir=_Path("/var/lib/nous"),
+                base_dir=_mem_base,
             )
         )
         if apply_remedy:  # __s111_u6_ct_wrap_v1__
@@ -101,7 +105,7 @@ def run_compiled_with_trace(
                 program.world.name,
                 program.souls[0].name,
                 list(program.souls),
-                base_dir=_Path("/var/lib/nous"),
+                base_dir=_mem_base,
             )
             if _ra is not None:
                 recorder.set_remedy_application(remedy_application=_ra)
