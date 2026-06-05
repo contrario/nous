@@ -82,6 +82,37 @@ class VerifyResult:
 
 
 @dataclass(frozen=True)
+class CoverageCounterExample:  # __policy_coverage_verify_v1__
+    """A concrete over-threshold input left uncovered (gap witness)."""
+    assignment: tuple[tuple[str, str], ...]
+
+
+CoverageVerdict = Literal[  # __policy_coverage_verify_v1__
+    "proven", "refuted", "unknown", "error", "vacuous"
+]
+
+
+@dataclass(frozen=True)
+class CoverageVerifyResult:  # __policy_coverage_verify_v1__
+    """Outcome of running the solver against a spec's coverage script.
+
+    proven  : z3 unsat -- no over-threshold input is uncovered.
+    refuted : z3 sat   -- a gap exists; counterexample populated.
+    vacuous : the spec declares no coverage obligation; z3 not run.
+    unknown : z3 timeout / returned unknown.
+    error   : z3 unavailable or a parse/check error.
+    """
+    verdict: CoverageVerdict
+    spec: SMTSpec
+    solver_name: str
+    solver_version: str
+    elapsed_ms: int
+    timestamp_utc: str
+    counterexample: Optional[CoverageCounterExample] = None
+    error: Optional[str] = None
+
+
+@dataclass(frozen=True)
 class SequenceVerifyResult:  # __phase2_stage4_seq_verify_v1__
     """Outcome of running the solver against a spec's sequence script.
 
@@ -601,3 +632,100 @@ def format_sequence_verdict(result: SequenceVerifyResult) -> str:  # __phase2_st
         return "\n".join(lines)
     lines.append(f"ERROR: {result.error}")
     return "\n".join(lines)
+
+
+# __policy_coverage_verify_v1__
+def verify_coverage(
+    spec: SMTSpec,
+    timeout_ms: int = 30_000,
+) -> CoverageVerifyResult:
+    """Run z3 against the spec's coverage script.
+
+    Polarity matches verify() (cost): the script asserts the protected
+    region and the negated open-net, so UNSAT proves coverage (no gap)
+    and SAT refutes it (a concrete uncovered over-threshold input).
+    A spec with no coverage obligation is 'vacuous'.
+    """
+    started: float = time.monotonic()
+    ts: str = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+    script: Optional[str] = spec.serialize_coverage()
+    if script is None:
+        return CoverageVerifyResult(
+            verdict="vacuous", spec=spec, solver_name="z3",
+            solver_version="n/a", elapsed_ms=0, timestamp_utc=ts,
+        )
+
+    try:
+        import z3
+    except ImportError:
+        return CoverageVerifyResult(
+            verdict="error", spec=spec, solver_name="z3",
+            solver_version="unavailable", elapsed_ms=0, timestamp_utc=ts,
+            error="z3-solver not installed; install with "
+                  "`pip install nous-lang[smt]`",
+        )
+
+    body: str = _strip_check_sat(script)
+    solver = z3.Solver()
+    solver.set("timeout", int(timeout_ms))
+
+    try:
+        solver.from_string(body)
+    except z3.Z3Exception as e:
+        return CoverageVerifyResult(
+            verdict="error", spec=spec, solver_name="z3",
+            solver_version=_solver_version(),
+            elapsed_ms=int((time.monotonic() - started) * 1000),
+            timestamp_utc=ts, error=f"z3 parse error: {e}",
+        )
+
+    try:
+        check = solver.check()
+    except z3.Z3Exception as e:
+        return CoverageVerifyResult(
+            verdict="error", spec=spec, solver_name="z3",
+            solver_version=_solver_version(),
+            elapsed_ms=int((time.monotonic() - started) * 1000),
+            timestamp_utc=ts, error=f"z3 check error: {e}",
+        )
+
+    elapsed_ms: int = int((time.monotonic() - started) * 1000)
+
+    if check == z3.unsat:
+        return CoverageVerifyResult(
+            verdict="proven", spec=spec, solver_name="z3",
+            solver_version=_solver_version(),
+            elapsed_ms=elapsed_ms, timestamp_utc=ts,
+        )
+
+    if check == z3.sat:
+        try:
+            model = solver.model()
+            assignment = tuple(
+                sorted(
+                    (str(d.name()), str(model[d])) for d in model.decls()
+                )
+            )
+            ce = CoverageCounterExample(assignment=assignment)
+        except Exception as e:
+            return CoverageVerifyResult(
+                verdict="error", spec=spec, solver_name="z3",
+                solver_version=_solver_version(),
+                elapsed_ms=elapsed_ms, timestamp_utc=ts,
+                error=f"counterexample extraction failed: {e}",
+            )
+        return CoverageVerifyResult(
+            verdict="refuted", spec=spec, solver_name="z3",
+            solver_version=_solver_version(),
+            elapsed_ms=elapsed_ms, timestamp_utc=ts,
+            counterexample=ce,
+        )
+
+    return CoverageVerifyResult(
+        verdict="unknown", spec=spec, solver_name="z3",
+        solver_version=_solver_version(),
+        elapsed_ms=elapsed_ms, timestamp_utc=ts,
+        error=f"z3 returned unknown (timeout {timeout_ms}ms); reason: "
+              f"{solver.reason_unknown()}",
+    )

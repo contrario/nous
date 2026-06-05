@@ -222,7 +222,7 @@ async def health(request: Request):
         "uptime_seconds": uptime,
         "engines": 8,
         "subsystems": 12,
-        "cli_commands": 53,  # __s106_cli_count_53_v1__  # __s104_cli_commands_derived_v1__  # __phase2_stage6_cli_commands_46_v1__
+        "cli_commands": 54,  # __s106_cli_count_53_v1__  # __s104_cli_commands_derived_v1__  # __phase2_stage6_cli_commands_46_v1__
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 

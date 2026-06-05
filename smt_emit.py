@@ -88,6 +88,11 @@ class SMTSpec:
     sequence_declarations: tuple[tuple[str, str], ...] = ()  # __phase2_stage3_seq_emit_v1__
     sequence_assertions: tuple[str, ...] = ()  # __phase2_stage3_seq_emit_v1__
     sequence_laws: tuple[SequenceLaw, ...] = ()  # __phase2_stage5_seq_laws_v1__  # __phase2_stage8_at_most_seq_emit_v1__
+    coverage_declarations: tuple[tuple[str, str], ...] = ()  # __policy_coverage_spec_v1__
+    coverage_threshold_assertion: str = ""  # __policy_coverage_spec_v1__
+    coverage_open_net_assertion: str = ""  # __policy_coverage_spec_v1__
+    coverage_threshold_expr: str = ""  # __policy_coverage_spec_v1__
+    coverage_currency_unit: Optional[str] = None  # __policy_coverage_spec_v1__
 
     def serialize(self) -> str:
         lines: list[str] = []
@@ -198,6 +203,32 @@ class SMTSpec:
             canonical.append(f"SA:{a}")
         encoded: bytes = "\n".join(canonical).encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()
+
+    def serialize_coverage(self) -> Optional[str]:  # __policy_coverage_spec_v1__
+        if not self.coverage_threshold_assertion:
+            return None
+        from policy_coverage import CoverageBlock, serialize_coverage
+        block = CoverageBlock(
+            declarations=self.coverage_declarations,
+            threshold_assertion=self.coverage_threshold_assertion,
+            open_net_assertion=self.coverage_open_net_assertion,
+            threshold_expr_human=self.coverage_threshold_expr,
+            currency_unit=self.coverage_currency_unit,
+        )
+        return serialize_coverage(block)
+
+    def coverage_sha256(self) -> Optional[str]:  # __policy_coverage_spec_v1__
+        if not self.coverage_threshold_assertion:
+            return None
+        from policy_coverage import CoverageBlock, coverage_sha256
+        block = CoverageBlock(
+            declarations=self.coverage_declarations,
+            threshold_assertion=self.coverage_threshold_assertion,
+            open_net_assertion=self.coverage_open_net_assertion,
+            threshold_expr_human=self.coverage_threshold_expr,
+            currency_unit=self.coverage_currency_unit,
+        )
+        return coverage_sha256(block)
 
 
 def _decimal_to_rational(d: Decimal) -> str:
@@ -555,4 +586,30 @@ def emit_smt(
         sequence_declarations=tuple(seq_decls),  # __phase2_stage3_seq_emit_v1__
         sequence_assertions=tuple(seq_asserts),  # __phase2_stage3_seq_emit_v1__
         sequence_laws=seq_laws_struct,  # __phase2_stage5_seq_laws_v1__
+    )
+
+
+# __policy_coverage_spec_v1__
+def with_coverage(
+    spec: "SMTSpec",
+    policies: list,
+    threshold: object,
+) -> "SMTSpec":
+    """Return a copy of `spec` with policy-coverage fields populated.
+
+    `threshold` is a policy_coverage.ThresholdClaim. Pure: builds the
+    coverage block and uses dataclasses.replace, so the cost
+    obligation and SMTSpec.sha256()/serialize() are untouched.
+    """
+    import dataclasses
+    from policy_coverage import build_coverage_block
+
+    block = build_coverage_block(policies, threshold)
+    return dataclasses.replace(
+        spec,
+        coverage_declarations=block.declarations,
+        coverage_threshold_assertion=block.threshold_assertion,
+        coverage_open_net_assertion=block.open_net_assertion,
+        coverage_threshold_expr=block.threshold_expr_human,
+        coverage_currency_unit=block.currency_unit,
     )
