@@ -1750,6 +1750,7 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     p.add_argument("--manifest-out", metavar="PATH", help="Manifest output path (--smt only)")
     p.add_argument("--key-path", metavar="PATH", help="ed25519 signing key path (--smt only)")
     p.add_argument("--smt-margin", type=int, default=0, metavar="PCT", help="Conservative safety margin 0..99 (--smt only); proves total_cost stays under (cap * (100-PCT)/100)")
+    p.add_argument("--coverage-threshold", metavar="EXPR", default=None, help="Also prove policy coverage over this NOUS threshold expression (--smt only); binds coverage sha into the manifest, REFUTED fails closed")  # __s115_coverage_threshold_arg_v1__
     # __session64_publish_removal_v1__
     # __session64_smt_margin_v1__
 

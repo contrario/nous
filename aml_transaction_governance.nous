@@ -1,0 +1,62 @@
+world AMLTransactionGovernance {
+    law CostCeiling = $0.50 per cycle
+    heartbeat = 10s
+    cost_cap: 0.50 USD
+    max_ticks: 1
+
+    policy BlockVeryLargeTransfer {
+        kind: "transaction.screen"
+        signal: amount > 50000
+        weight: 10.0
+        action: block
+    }
+    policy AbortHighRiskBand {
+        kind: "transaction.screen"
+        signal: amount > 10000
+        weight: 9.0
+        action: abort_cycle
+    }
+    policy LogAllScreens {
+        kind: "transaction.screen"
+        signal: true
+        weight: 1.0
+        action: log_only
+    }
+}
+
+message Transaction {
+    transaction_id: string
+    amount: float
+    country: string
+    customer_risk: string
+}
+
+message ScreenResult {
+    transaction_id: string
+    decision: string
+    reason: string
+    source: SoulRef
+}
+
+soul Screener {
+    mind: claude-haiku-4-5 @ Tier0A
+    tokens: input = 500 output = 200
+    senses: [http_get]
+
+    memory {
+        screened: int = 0
+        blocked: int = 0
+    }
+
+    instinct {
+        let txn = listen Intake::Transaction
+        guard txn != null else sleep 5s
+        speak ScreenResult(transaction_id: txn.transaction_id, decision: "screened", reason: "amount evaluated against AML thresholds", source: self)
+        remember screened = screened + 1
+    }
+
+    heal {
+        on timeout => retry(2, timeout)
+        on api_error => retry(2, api_error)
+    }
+}

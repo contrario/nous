@@ -96,6 +96,10 @@ class Manifest:
 
     # Signed per-soul proof assumptions for runtime conformance (S96).
     proof_assumptions: Optional[dict] = None  # __session96_manifest_proof_assumptions_field_v1__
+    # Coverage-proof SHA over canonical coverage SMT (S115 P3a).
+    policy_coverage_sha256: Optional[str] = None  # __s115_policy_coverage_sha256_v1__
+    # Crypto-only file binding: sha256 of coverage.smt2 bytes (S115).
+    coverage_smt2_sha256: Optional[str] = None  # __s115_coverage_smt2_sha256_v1__
 
     def canonical_bytes(self) -> bytes:
         """Bytes that get signed — sorted, separator-stable JSON."""
@@ -128,6 +132,10 @@ class Manifest:
             )
         if self.safety_margin_pct is not None:
             d["safety_margin_pct"] = self.safety_margin_pct
+        if self.policy_coverage_sha256 is not None:  # __s115_policy_coverage_sha256_v1__
+            d["policy_coverage_sha256"] = self.policy_coverage_sha256
+        if self.coverage_smt2_sha256 is not None:  # __s115_coverage_smt2_sha256_v1__
+            d["coverage_smt2_sha256"] = self.coverage_smt2_sha256
         return d  # __session96_revert_m3_canonical_dict_v1__
 
 
@@ -336,6 +344,8 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
             "counterexample_total_usd"
         ),
         proof_assumptions=doc.get("proof_assumptions"),  # __session96_parse_manifest_json_sibling_v1__
+        policy_coverage_sha256=doc.get("policy_coverage_sha256"),  # __s115_policy_coverage_sha256_v1__
+        coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
     )
     return m, sig, pub
 
@@ -380,6 +390,8 @@ def parse_manifest_json_with_anchor(
             "counterexample_total_usd"
         ),
         proof_assumptions=doc.get("proof_assumptions"),  # __session96_parse_with_anchor_sibling_v1__
+        policy_coverage_sha256=doc.get("policy_coverage_sha256"),  # __s115_policy_coverage_sha256_v1__
+        coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
     )
     anchor: "_RekorAnchor | None" = None
     if anchor_block is not None:

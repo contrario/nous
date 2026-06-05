@@ -39,6 +39,14 @@ from parser import parse_nous
 from pricing import load_pricing
 from smt_emit import EmitError, emit_smt
 from smt_verify import format_verdict, verify
+from smt_emit import with_coverage  # __s115_coverage_threshold_v1__
+from smt_verify import verify_coverage  # __s115_coverage_threshold_v1__
+from policy_coverage import (  # __s115_coverage_threshold_v1__
+    CoverageEmitError,
+    build_threshold_claim,
+)
+import dataclasses as _dc_s115  # __s115_coverage_threshold_v1__
+import hashlib as _hashlib_s115  # __s115_coverage_smt2_sha_v1__
 
 
 def _import_nous_version() -> str:
@@ -109,9 +117,61 @@ def cmd_verify(args: argparse.Namespace) -> int:
     if result.verdict == "error":
         return 3
 
+    # 4b. Coverage obligation (S115 P3a). __s115_coverage_threshold_v1__
+    coverage_sha: Optional[str] = None
+    coverage_script: Optional[str] = None
+    cov_threshold = getattr(args, "coverage_threshold", None)
+    if cov_threshold:
+        try:
+            cov_src = (
+                "world _ThresholdProbe {\n"
+                "    policy _P { kind: \"x\" signal: "
+                + cov_threshold + " action: log_only }\n}\n"
+            )
+            cov_prog = parse_nous(cov_src)
+            th_ast = cov_prog.world.policies[0].signal
+            claim = build_threshold_claim(th_ast, cov_threshold)
+            policies = list(
+                getattr(program.world, "policies", None) or []
+            )
+            cov_spec = with_coverage(spec, policies, claim)
+        except (CoverageEmitError, Exception) as e:
+            print(
+                f"ERROR: coverage threshold build failed: {e}",
+                file=sys.stderr,
+            )
+            return 3
+        cov_result = verify_coverage(
+            cov_spec, timeout_ms=args.timeout_ms
+        )
+        if cov_result.verdict != "proven":
+            print(
+                f"\nREFUSED: coverage not proven "
+                f"(verdict={cov_result.verdict}); no manifest written. "
+                f"NOUS does not sign a system with an unproven "
+                f"coverage obligation.",
+                file=sys.stderr,
+            )
+            return 1
+        coverage_sha = cov_spec.coverage_sha256()
+        coverage_script = cov_spec.serialize_coverage()
+        coverage_smt2_sha = _hashlib_s115.sha256(  # __s115_coverage_smt2_sha_v1__
+            coverage_script.encode("utf-8")
+        ).hexdigest()
+        print(
+            f"Coverage PROVEN: no gap over threshold "
+            f"'{cov_threshold}' (sha256 {coverage_sha[:16]}...)"
+        )
+
     # 5. Manifest (always built; written if --manifest-out, optionally published)
     nous_version = _import_nous_version()
     manifest = manifest_from_verify(result, nous_version=nous_version)
+    if coverage_sha is not None:  # __s115_coverage_threshold_v1__
+        manifest = _dc_s115.replace(
+            manifest,
+            policy_coverage_sha256=coverage_sha,
+            coverage_smt2_sha256=coverage_smt2_sha,  # __s115_coverage_smt2_sha_v1__
+        )
 
     if args.no_manifest:
         return _exit_for_verdict(result.verdict)
@@ -138,6 +198,10 @@ def cmd_verify(args: argparse.Namespace) -> int:
     )
     try:
         out_path.write_text(doc, encoding="utf-8")
+        if coverage_script is not None:  # __s115_coverage_threshold_v1__
+            cov_path = out_path.parent / "coverage.smt2"
+            cov_path.write_text(coverage_script, encoding="utf-8")
+            print(f"Coverage SMT written: {cov_path}")
         print()
         print(f"Manifest signed: {out_path}")
         print(f"  key:    {key_path}")
@@ -194,5 +258,12 @@ def build_verify_parser(subparsers: argparse._SubParsersAction) -> None:
         "--key-path", metavar="PATH",
         help="ed25519 signing key path "
              "(default: ~/.local/share/nous/keys/signing.key).",
+    )
+    p.add_argument(  # __s115_coverage_threshold_v1__
+        "--coverage-threshold", metavar="EXPR", default=None,
+        help="Also prove policy coverage over this NOUS threshold "
+             "expression (e.g. \"amount > 10000\") and bind its "
+             "sha256 into the signed manifest. REFUTED coverage "
+             "fails closed: no manifest is written.",
     )
     p.set_defaults(func=cmd_verify)
