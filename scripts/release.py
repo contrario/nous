@@ -243,6 +243,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "cli_verify_sequence.py",
                                 "cli_verify_coverage.py",  # __s114_coverage_wheelgate_v1__
                                 "policy_coverage.py",  # __s114_policy_coverage_wheelgate_v1__
+                                "coverage_farkas.py",  # __s115_farkas_v1__
                                 "compiled_trace.py",
                                 "trace_anchor.py",
                                 "memory_entry.py",
