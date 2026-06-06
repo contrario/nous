@@ -41,7 +41,7 @@ def _proven_coverage_run(tmp_path: Path):
     return src, mout
 
 
-def test_dossier_with_coverage_has_seven_files(tmp_path):
+def test_dossier_with_coverage_has_eight_files(tmp_path):  # __s116_dossier_farkas_v1__
     if not TEMPLATE.is_file():
         pytest.skip("aml demo source not present")
     src, manifest_out = _proven_coverage_run(tmp_path)
@@ -50,7 +50,7 @@ def test_dossier_with_coverage_has_seven_files(tmp_path):
     expected = {
         "source.nous", "manifest.json", "pricing.toml",
         "public_key.b64", "README.md", "verify_offline.py",
-        "coverage.smt2",
+        "coverage.smt2", "coverage.farkas.json",
     }
     assert set(result.files) == expected
     for f in expected:
@@ -88,5 +88,42 @@ def test_coverage_verifier_template_selected(tmp_path):
     out = tmp_path / "out"
     build_dossier(src, manifest=manifest_out, output=out)
     vtext = (out / "verify_offline.py").read_text()
-    assert "coverage.smt2 sha256" in vtext
-    assert "z3 reproduced unsat" in vtext
+    assert "coverage.smt2 sha256" in vtext  # __s116_dossier_farkas_v1__
+    assert "Farkas certificate verified by rational arithmetic" in vtext
+
+
+def test_dossier_farkas_sha_matches_manifest(tmp_path):  # __s116_dossier_farkas_v1__
+    if not TEMPLATE.is_file():
+        pytest.skip("aml demo source not present")
+    src, manifest_out = _proven_coverage_run(tmp_path)
+    out = tmp_path / "out"
+    build_dossier(src, manifest=manifest_out, output=out)
+    doc = json.loads((out / "manifest.json").read_text())
+    file_sha = hashlib.sha256(
+        (out / "coverage.farkas.json").read_bytes()
+    ).hexdigest()
+    assert file_sha == doc["coverage_farkas_sha256"]
+
+
+def test_dossier_rejects_tampered_farkas(tmp_path):
+    if not TEMPLATE.is_file():
+        pytest.skip("aml demo source not present")
+    src, manifest_out = _proven_coverage_run(tmp_path)
+    tampered = tmp_path / "coverage.farkas.json"
+    tampered.write_text('{"constraints": [], "multipliers": []}\n',
+                        encoding="utf-8")
+    out = tmp_path / "out"
+    with pytest.raises(DossierError):
+        build_dossier(src, manifest=manifest_out, output=out)
+
+
+def test_farkas_verifier_is_stdlib_arithmetic(tmp_path):
+    if not TEMPLATE.is_file():
+        pytest.skip("aml demo source not present")
+    src, manifest_out = _proven_coverage_run(tmp_path)
+    out = tmp_path / "out"
+    build_dossier(src, manifest=manifest_out, output=out)
+    vtext = (out / "verify_offline.py").read_text()
+    assert "from fractions import Fraction" in vtext
+    assert "_check_serialized" in vtext
+    assert "coverage.farkas.json sha256" in vtext

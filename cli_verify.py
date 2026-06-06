@@ -47,6 +47,11 @@ from policy_coverage import (  # __s115_coverage_threshold_v1__
 )
 import dataclasses as _dc_s115  # __s115_coverage_threshold_v1__
 import hashlib as _hashlib_s115  # __s115_coverage_smt2_sha_v1__
+import json as _json_s116  # __s116_cli_farkas_v1__
+from coverage_farkas import (  # __s116_cli_farkas_v1__
+    serialize_system as _farkas_serialize,
+    FarkasError as _FarkasError,
+)
 
 
 def _import_nous_version() -> str:
@@ -120,6 +125,8 @@ def cmd_verify(args: argparse.Namespace) -> int:
     # 4b. Coverage obligation (S115 P3a). __s115_coverage_threshold_v1__
     coverage_sha: Optional[str] = None
     coverage_script: Optional[str] = None
+    coverage_farkas_script: Optional[str] = None  # __s116_cli_farkas_v1__
+    coverage_farkas_sha: Optional[str] = None  # __s116_cli_farkas_v1__
     cov_threshold = getattr(args, "coverage_threshold", None)
     if cov_threshold:
         try:
@@ -162,6 +169,34 @@ def cmd_verify(args: argparse.Namespace) -> int:
             f"Coverage PROVEN: no gap over threshold "
             f"'{cov_threshold}' (sha256 {coverage_sha[:16]}...)"
         )
+        # S116 P3b: Farkas certificate (stdlib-checkable, drop-when-None).  __s116_cli_farkas_v1__
+        try:
+            _farkas_blocking = [
+                p.signal for p in policies
+                if getattr(p, "action", None) in ("block", "abort_cycle")
+            ]
+            _farkas_doc = _farkas_serialize(
+                th_ast, _farkas_blocking, threshold_expr=cov_threshold
+            )
+            coverage_farkas_script = _json_s116.dumps(
+                _farkas_doc, sort_keys=True, indent=2
+            ) + "\n"
+            coverage_farkas_sha = _hashlib_s115.sha256(
+                coverage_farkas_script.encode("utf-8")
+            ).hexdigest()
+            print(
+                f"Farkas certificate extracted: contradiction "
+                f"{_farkas_doc['contradiction']!r} "
+                f"(sha256 {coverage_farkas_sha[:16]}...)"
+            )
+        except _FarkasError as _fe:
+            coverage_farkas_script = None
+            coverage_farkas_sha = None
+            print(
+                f"NOTE: Farkas certificate not extracted "
+                f"(z3 coverage proof stands): {_fe}",
+                file=sys.stderr,
+            )
 
     # 5. Manifest (always built; written if --manifest-out, optionally published)
     nous_version = _import_nous_version()
@@ -171,6 +206,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
             manifest,
             policy_coverage_sha256=coverage_sha,
             coverage_smt2_sha256=coverage_smt2_sha,  # __s115_coverage_smt2_sha_v1__
+            coverage_farkas_sha256=coverage_farkas_sha,  # __s116_cli_farkas_v1__
         )
 
     if args.no_manifest:
@@ -202,6 +238,16 @@ def cmd_verify(args: argparse.Namespace) -> int:
             cov_path = out_path.parent / "coverage.smt2"
             cov_path.write_text(coverage_script, encoding="utf-8")
             print(f"Coverage SMT written: {cov_path}")
+            if coverage_farkas_script is not None:  # __s116_cli_farkas_v1__
+                farkas_path = (
+                    out_path.parent / "coverage.farkas.json"
+                )
+                farkas_path.write_text(
+                    coverage_farkas_script, encoding="utf-8"
+                )
+                print(
+                    f"Coverage Farkas written: {farkas_path}"
+                )
         print()
         print(f"Manifest signed: {out_path}")
         print(f"  key:    {key_path}")

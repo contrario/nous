@@ -128,3 +128,43 @@ def test_smt2_sha_roundtrips_and_is_signed() -> None:
     except InvalidSignature:
         raised = True
     assert raised
+
+
+def test_farkas_sha_absent_is_byte_identical() -> None:  # __s116_coverage_farkas_sha256_v1__
+    m = _base_manifest()
+    assert "coverage_farkas_sha256" not in m.canonical_dict()
+    assert m.coverage_farkas_sha256 is None
+
+
+def test_farkas_sha_present_is_emitted() -> None:
+    sha = "7" * 64
+    m = _base_manifest(coverage_farkas_sha256=sha)
+    assert m.canonical_dict()["coverage_farkas_sha256"] == sha
+
+
+def test_farkas_sha_roundtrips_and_is_signed() -> None:
+    import base64 as _b64
+    import json as _json
+    from cryptography.exceptions import InvalidSignature
+    sha = "8" * 64
+    priv = Ed25519PrivateKey.generate()
+    pub = priv.public_key()
+    m = _base_manifest(
+        policy_coverage_sha256="a" * 64,
+        coverage_smt2_sha256="b" * 64,
+        coverage_farkas_sha256=sha,
+    )
+    sig = sign_manifest(m, priv)
+    text = manifest_json(m, sig, pub)
+    m2, _s, _p = parse_manifest_json(text)
+    assert m2.coverage_farkas_sha256 == sha
+    doc = _json.loads(text)
+    doc["coverage_farkas_sha256"] = "0" * 64
+    body = {k: v for k, v in doc.items() if k != "signature"}
+    bb = _json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
+    raised = False
+    try:
+        pub.verify(_b64.b64decode(doc["signature"]["signature_b64"]), bb)
+    except InvalidSignature:
+        raised = True
+    assert raised

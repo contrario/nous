@@ -127,3 +127,52 @@ def test_contradiction_string_present():
     bl = [binop(">", "amount", 10000)]
     cert = cf.extract_certificate(th, bl)
     assert "< 0" in cert.contradiction or "<= 0" in cert.contradiction
+
+
+@pytest.mark.parametrize("name,th,bl", PROVEN_CASES)  # __s116_farkas_serialize_v1__
+def test_serialize_roundtrip_proven(name, th, bl):
+    doc = cf.serialize_system(th, bl, threshold_expr=name)
+    assert doc["fragment"] == "linear-real-single-comparison"
+    assert doc["threshold_expr"] == name
+    assert len(doc["constraints"]) == len(doc["multipliers"])
+    assert cf.check_serialized(doc) is True
+
+
+@pytest.mark.parametrize("name,th,bl", GAP_CASES)
+def test_serialize_refuses_gap(name, th, bl):
+    with pytest.raises(cf.FarkasError):
+        cf.serialize_system(th, bl)
+
+
+def test_check_serialized_rejects_negative_multiplier():
+    doc = cf.serialize_system(binop(">", "x", 100), [binop(">", "x", 100)])
+    doc["multipliers"] = ["-1"] + list(doc["multipliers"][1:])
+    assert cf.check_serialized(doc) is False
+
+
+def test_check_serialized_rejects_all_zero_multipliers():
+    doc = cf.serialize_system(binop(">", "x", 100), [binop(">", "x", 100)])
+    doc["multipliers"] = ["0"] * len(doc["multipliers"])
+    assert cf.check_serialized(doc) is False
+
+
+def test_check_serialized_rejects_uncancelled_variable():
+    doc = cf.serialize_system(
+        binop(">", "amount", 10000),
+        [binop(">", "amount", 50000), binop(">", "amount", 10000)],
+    )
+    mults = ["0"] * len(doc["constraints"])
+    mults[0] = "1"
+    doc["multipliers"] = mults
+    assert cf.check_serialized(doc) is False
+
+
+def test_check_serialized_rejects_length_mismatch():
+    doc = cf.serialize_system(binop(">", "x", 100), [binop(">", "x", 100)])
+    doc["multipliers"] = list(doc["multipliers"]) + ["1"]
+    assert cf.check_serialized(doc) is False
+
+
+def test_check_serialized_rejects_malformed():
+    assert cf.check_serialized({}) is False
+    assert cf.check_serialized({"constraints": None, "multipliers": []}) is False

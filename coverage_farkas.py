@@ -388,3 +388,100 @@ def check_certificate(
     if const == 0 and strict:
         return True
     return False
+
+
+def serialize_system(  # __s116_farkas_serialize_v1__
+    threshold_ast,
+    blocking_signals,
+    threshold_expr=None,
+):
+    """Build a self-contained, JSON-serializable Farkas certificate for the
+    single-comparison fragment. The returned dict carries the canonical
+    linear system (each inequality as exact-rational coeffs in 'L (< or
+    <=) 0' form) plus the non-negative multipliers that collapse it to a
+    numeric contradiction. It is checkable by check_serialized() with
+    fractions alone -- no AST, no solver. Raises FarkasError outside the
+    fragment or when no single-system Farkas witness exists."""
+    system = [_comparison_to_ineq(threshold_ast)]
+    for sig in blocking_signals:
+        for disj in _signal_disjuncts(sig):
+            system.append(_negate(disj))
+
+    witness = _find_farkas(system)
+    if witness is None:
+        raise FarkasError(
+            "no Farkas witness: the conjunction is satisfiable or outside "
+            "the single linear system P3b can certify (a gap may exist, or "
+            "the obligation needs case-splitting -> P3b-bool)"
+        )
+
+    constraints = []
+    for ineq in system:
+        constraints.append(
+            {
+                "coeffs": {k: str(v) for k, v in sorted(ineq.coeffs.items())},
+                "strict": bool(ineq.strict),
+            }
+        )
+    return {
+        "fragment": "linear-real-single-comparison",
+        "threshold_expr": threshold_expr,
+        "constraints": constraints,
+        "multipliers": [str(m) for m in witness],
+        "contradiction": _contradiction_str(system, witness),
+    }
+
+
+def check_serialized(doc):  # __s116_farkas_serialize_v1__
+    """Stdlib-only verification of a serialized Farkas certificate (the
+    dict produced by serialize_system). Confirms: equal-length non-negative
+    multipliers (at least one positive), that the multiplier-weighted sum of
+    the carried inequalities cancels every variable, and that the residual
+    constant yields a numeric contradiction. Returns True iff the certificate
+    proves UNSAT. No AST, no solver, no NOUS install. fractions only."""
+    constraints = doc.get("constraints")
+    multipliers = doc.get("multipliers")
+    if not isinstance(constraints, list) or not isinstance(multipliers, list):
+        return False
+    if len(constraints) != len(multipliers):
+        return False
+
+    lam = []
+    for m in multipliers:
+        try:
+            lam.append(Fraction(m))
+        except (ValueError, TypeError, ZeroDivisionError):
+            return False
+    if any(x < 0 for x in lam):
+        return False
+    if not any(x > 0 for x in lam):
+        return False
+
+    combined = {}
+    strict = False
+    for x, c in zip(lam, constraints):
+        if x == 0:
+            continue
+        if not isinstance(c, dict):
+            return False
+        coeffs = c.get("coeffs")
+        if not isinstance(coeffs, dict):
+            return False
+        for k, v in coeffs.items():
+            try:
+                fv = Fraction(v)
+            except (ValueError, TypeError, ZeroDivisionError):
+                return False
+            combined[k] = combined.get(k, Fraction(0)) + x * fv
+        if c.get("strict"):
+            strict = True
+
+    for k, v in combined.items():
+        if k != "" and v != 0:
+            return False
+    const = combined.get("", Fraction(0))
+    if const > 0:
+        return True
+    if const == 0 and strict:
+        return True
+    return False
