@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s116_blog_v527-coverage-farkas_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v527-coverage-farkas');return false">
+      <div class="post-meta">
+        <span class="post-date">06 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.27.0 &mdash; Coverage Proof, Checked Without a Solver</div>
+      <div class="post-excerpt">The cost proof always travelled inside the signed dossier. v5.27.0 puts the policy-coverage proof beside it &mdash; that over a declared threshold no input escapes the blocking-policy net &mdash; then removes the solver from checking it. Coverage now ships as a Farkas certificate an auditor verifies with standard-library arithmetic alone: no z3, no NOUS install. <code>nous-lang 5.27.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s112_v526_blog_recorded-commitment_card__ -->
     <a class="post-card" href="#" onclick="showPost('v526-recorded-commitment');return false">
       <div class="post-meta">
@@ -538,6 +548,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s116_blog_v527-coverage-farkas_post_v1__ -->
+  <div class="post-full" id="post-v527-coverage-farkas">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.27.0 &mdash; Coverage Proof, Checked Without a Solver</h1>
+    <div class="post-full-meta">6 June 2026 &middot; 3 min read</div>
+    <p>A NOUS dossier has always carried a cost proof: a guarantee, checked before execution, that a governed system cannot exceed its declared spend across every path in the proven bound. v5.27.0 puts a second proof beside it &mdash; <em>coverage</em>: that over a declared threshold region, no input escapes the blocking-policy net. The obligation travels inside the one signed dossier, and it is honest about its edge. Declare a threshold your rules cover and coverage is PROVEN; declare one they do not and it is REFUTED, fail-closed &mdash; NOUS writes no manifest for a system with a gap.</p>
+    <p>The harder question is who you must trust to believe the proof. Re-running the same solver does not raise trust: a solver bug is reproduced, not caught, and it forces an auditor to install and trust a solver. So v5.27.0 ships the coverage claim as a <em>Farkas certificate</em>. For this linear-real fragment, an unsatisfiable system has a list of non-negative rational multipliers that combine its inequalities into a numeric contradiction &mdash; here, <code>0 &lt; 0</code>. That list is the certificate, and checking it is multiply-and-add over fractions: about forty lines of standard-library Python.</p>
+    <p>The result is asymmetric verification. Producing the proof uses a solver once, at build time. Checking it needs no solver at all, no NOUS install, and no network &mdash; only the <code>cryptography</code> library, to verify the Ed25519 signature. z3 is demoted to an optional second opinion. The coverage SMT stays in the dossier as a human-inspectable cross-check, but it is no longer on the trust path. Cost-only and earlier coverage dossiers remain byte-identical; the manifest field is drop-when-None.</p>
+    <p>The boundary is stated, not hidden. NOUS proves the cost envelope holds and the control net has no gap &mdash; not that the agent cannot misbehave. The policies are monitors, and the certificate attests that the declared governance is sound and was in force. A third party verifies all of it offline, trusting neither the solver nor the party that produced the dossier. <code>nous-lang 5.27.0</code>.</p>
+  </div>
   <!-- __s112_v526_blog_recorded-commitment_post__ -->
   <div class="post-full" id="post-v526-recorded-commitment">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
