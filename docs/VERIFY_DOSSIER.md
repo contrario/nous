@@ -55,6 +55,8 @@ The verifier is byte-identical to the string embedded in `dossier.py`
 as `VERIFY_OFFLINE_PY_HYBRID`. This is the canonical trust path.
 Exit code 0 is PASS, 1 is FAIL, 2 is environment error.
 
+Coverage-bearing dossiers (emitted with `nous verify --smt --coverage-threshold ...` then `nous dossier ... --anchor none`) ship a different embedded verifier. When a Farkas certificate is present the dossier carries `VERIFY_OFFLINE_PY_FARKAS`, whose coverage trust path is standard-library rational arithmetic with no solver; when only `coverage.smt2` is present it carries `VERIFY_OFFLINE_PY_COVERAGE`, which re-checks unsat with z3 if available. Both add an O(1) sha256 file-provenance gate before any proof check, and both require only the `cryptography` library for the signature. See `docs/COVERAGE_PROOF.md`. <!-- __s116_verify_dossier_coverage_v1__ -->
+
 ### Path 3: Toolchain (full)
 
 For organizations that already have NOUS installed:
@@ -276,6 +278,9 @@ the cap exists to prevent abuse, not to constrain legitimate use.
   Sigstore issue #851.
 - `docs/EU_AI_ACT_COMPLIANCE.md` -- where in Annex IV this surface
   lands.
+- `docs/COVERAGE_PROOF.md` -- the policy-coverage obligation and the
+  stdlib-checkable Farkas certificate; the coverage/Farkas offline
+  verifiers shipped in coverage-bearing dossiers.
 - Source: `nous_api_server.py::verify_dossier_endpoint`,
   `rekor_anchor.py::verify_rekor_anchor_offline_detail`,
   `dossier.py::VERIFY_OFFLINE_PY_HYBRID`.
