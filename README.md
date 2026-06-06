@@ -248,6 +248,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 
 - [Cost Verification Guide](docs/COST_VERIFICATION_GUIDE.md) -- end-to-end walkthrough for USD and EUR
 - [SMT Verification Design](docs/SMT_VERIFICATION_DESIGN.md) -- soundness contract, Z3 pin rationale
+- [Coverage Proof](docs/COVERAGE_PROOF.md) -- policy-coverage SMT obligation, Farkas certificate, stdlib-only offline verification  <!-- __s116_readme_coverage_proof_xref_v1__ -->
 - [Memory Evidence Design](docs/MEMORY_EVIDENCE_DESIGN.md) -- signed per-soul memory, Phase 0 freeze
 - [Memory CLI](docs/MEMORY_CLI.md) -- nous memory init/append/verify/reindex reference  <!-- __s106_readme_memory_cli_xref_v1__ -->
 - [Memory Phase 1 Design](docs/MEMORY_PHASE1_DESIGN.md) -- NAME-BOUND identity, drop-when-None write-path invariant, single-soul (Option c) freeze  <!-- __s108_readme_memory_phase1_design_xref_v1__ -->
