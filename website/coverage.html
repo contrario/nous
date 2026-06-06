@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coverage Proof &amp; the Farkas Certificate — nous-lang.org</title>
+<meta name="description" content="How NOUS proves a governed agent's blocking-policy net has no gap over a declared threshold, and how a third party checks it offline with standard-library arithmetic alone -- no solver, no NOUS install.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+/* __s116_coverage_html_v1__ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#05070e;--bg2:#0a0e1c;--card:rgba(10,14,28,0.85);
+--gold:#c9a554;--gold-d:rgba(201,165,84,0.15);--gold-b:rgba(201,165,84,0.25);--gold-t:rgba(201,165,84,0.08);
+--red:#e05252;--red-d:rgba(224,82,82,0.12);
+--green:#4ade80;--green-d:rgba(74,222,128,0.12);
+--t:#e2e8f0;--td:#94a3b8;--t3:#64748b;
+--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'Playfair Display',serif;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sans);min-height:100vh;line-height:1.5}
+.header{padding:20px 40px;border-bottom:1px solid rgba(201,165,84,0.12);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.brand{font-family:var(--serif);font-size:22px;color:var(--gold);letter-spacing:0.04em}
+.brand-sub{font-family:var(--mono);font-size:11px;color:var(--td);margin-left:12px}
+.nav a{color:var(--td);text-decoration:none;font-family:var(--mono);font-size:12px;margin-left:24px;letter-spacing:0.04em;transition:color 0.2s}
+.nav a:hover{color:var(--gold)}
+.container{max-width:920px;margin:0 auto;padding:48px 24px 80px}
+h1{font-family:var(--serif);font-size:38px;color:var(--gold);font-weight:600;letter-spacing:-0.02em;margin-bottom:14px;line-height:1.15}
+h2{font-family:var(--serif);font-size:22px;color:var(--t);font-weight:600;letter-spacing:-0.01em;margin:38px 0 14px}
+.lede{font-size:16px;color:var(--td);max-width:740px;margin-bottom:14px;line-height:1.7}
+.hook{font-family:var(--serif);font-size:18px;color:var(--gold);font-style:italic;margin:22px 0 8px;line-height:1.4}
+p{font-size:14.5px;color:var(--td);line-height:1.7;margin-bottom:12px;max-width:760px}
+p code,li code{font-family:var(--mono);background:var(--gold-t);color:var(--gold);padding:1px 5px;border-radius:3px;font-size:12.5px}
+.paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:20px 0 8px}
+.path-card{background:var(--card);border:1px solid var(--gold-b);border-radius:10px;padding:18px}
+.path-card-n{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:0.1em;margin-bottom:8px}
+.path-card-t{font-family:var(--serif);font-size:16px;color:var(--t);margin-bottom:10px}
+.path-card-d{font-size:12.5px;color:var(--td);line-height:1.6}
+.path-card-d code{font-family:var(--mono);background:var(--gold-t);color:var(--gold);padding:1px 5px;border-radius:3px;font-size:11px}
+.band{text-align:center;font-family:var(--mono);font-size:13px;color:var(--gold);letter-spacing:0.08em;margin:18px 0 6px}
+.boundary{background:var(--gold-t);border:1px solid var(--gold-b);border-left:3px solid var(--gold);border-radius:8px;padding:16px 18px;margin:18px 0;max-width:760px}
+.boundary .bt{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:0.08em;margin-bottom:8px}
+.boundary p{margin-bottom:6px}
+ul{margin:6px 0 14px 0;padding-left:22px;max-width:760px}
+li{font-size:14.5px;color:var(--td);line-height:1.6;margin-top:6px}
+pre.code{background:var(--bg2);border:1px solid var(--gold-b);border-radius:6px;padding:14px;font-family:var(--mono);font-size:12px;color:var(--t);overflow-x:auto;line-height:1.6;margin:8px 0 16px;max-width:760px}
+.code .c{color:var(--gold)}
+.code .ok{color:var(--green)}
+.code .no{color:var(--red)}
+.link{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-b)}
+.link:hover{border-bottom-style:solid}
+.footer{padding:24px 40px;border-top:1px solid rgba(201,165,84,0.12);font-family:var(--mono);font-size:11px;color:var(--t3);text-align:center;letter-spacing:0.04em}
+@media (max-width: 640px){
+  .header{padding:16px 20px}
+  .nav a{margin-left:14px}
+  .container{padding:32px 18px 64px}
+  h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div><span class="brand">Νοῦς</span><span class="brand-sub">nous-lang.org</span></div>
+  <nav class="nav">
+    <a href="/">Home</a>
+    <a href="/verify.html">Verify</a>
+    <a href="/ide.html">IDE</a>
+    <a href="https://github.com/contrario/nous" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </nav>
+</header>
+<main class="container">
+
+  <h1>Coverage Proof &amp; the Farkas Certificate</h1>
+  <p class="lede">A NOUS dossier has always carried a cost proof: a guarantee, checked before execution, that a governed agent cannot exceed its declared spend. Coverage is the second proof beside it &mdash; that over a declared risk threshold, no input escapes the declared blocking-policy net. And it is checkable by a third party with nothing but standard-library arithmetic.</p>
+  <p class="hook">"The verifier does not trust the producer. It verifies the producer."</p>
+
+  <h2>What is proven, before execution</h2>
+  <ul>
+    <li><b>Cost</b> &mdash; the total cost cannot exceed the declared <code>cost_cap</code> across every execution path in the proven bound. Universal, not sampled.</li>
+    <li><b>Coverage</b> &mdash; over the declared threshold region, no input satisfies the threshold while escaping every blocking policy. No gap in the net.</li>
+  </ul>
+
+  <div class="boundary">
+    <div class="bt">HONEST BOUNDARY</div>
+    <p>Coverage proves there is <b>no gap</b> in the declared blocking net &mdash; not that the agent <i>cannot</i> misbehave. The policies are monitors, and the signed evidence attests the declared governance is sound and was in force. This is coverage, not impossibility. NOUS claims exactly what it can sign, and refuses the rest.</p>
+  </div>
+
+  <h2>The obligation</h2>
+  <p>For a threshold <code>T</code> and blocking signals <code>s1 ... sk</code>, coverage is the unsatisfiability of <code>T AND NOT(s1 OR ... OR sk)</code> over the reals &mdash; "an input that crosses the threshold but trips no blocking policy". If that is unsatisfiable, no such input exists. If it is satisfiable, the solver returns a concrete counterexample &mdash; a gap &mdash; and NOUS <b>refuses to sign</b>:</p>
+  <pre class="code"><span class="c">$</span> nous verify --smt aml_transaction_governance.nous \
+    --coverage-threshold "amount &gt; 10000" --manifest-out out/m.json
+<span class="ok">PROVEN</span>: total_cost &lt;= $0.50 across all execution paths
+<span class="ok">Coverage PROVEN</span>: no gap over threshold 'amount &gt; 10000'
+
+<span class="c">$</span> nous verify --smt aml_transaction_governance.nous \
+    --coverage-threshold "amount &gt; 5000" --manifest-out out/gap.json
+<span class="no">REFUSED</span>: coverage not proven (verdict=refuted); no manifest written.</pre>
+  <p>A transfer of 5,001 satisfies "over 5,000" but escapes rules that only fire above 10,000 and 50,000. The 5,000&ndash;10,000 band is a gap NOUS will not certify. Fail-closed: no evidence is produced for an ungoverned system.</p>
+
+  <h2>Checked without a solver</h2>
+  <p>Re-running the same solver does not raise trust &mdash; a solver bug is reproduced, not caught, and it forces an auditor to install and trust a solver. So the coverage claim ships as a <b>Farkas certificate</b>: for this linear-real fragment, an unsatisfiable system has a list of non-negative rational multipliers that combine its inequalities into a numeric contradiction &mdash; here, <code>0 &lt; 0</code>. That list is the certificate, and checking it is multiply-and-add over fractions: about forty lines of standard-library Python. The solver is used once, at build time, to <i>find</i> the multipliers; it is never needed to <i>check</i> them.</p>
+
+  <div class="paths">
+    <div class="path-card">
+      <div class="path-card-n">1 &mdash; THE BANK'S AI</div>
+      <div class="path-card-t">Probabilistic execution</div>
+      <div class="path-card-d">Build any agent. NOUS sits above as a governance shell and proves the cost ceiling and the coverage net before any model call. If it cannot prove it, it refuses to sign.</div>
+    </div>
+    <div class="path-card">
+      <div class="path-card-n">2 &mdash; THE ARTIFACT</div>
+      <div class="path-card-t">The signed dossier</div>
+      <div class="path-card-d">One self-contained package, <code>Ed25519</code>-signed. Tamper one byte and the signature breaks. Offline and immutable &mdash; it never phones home.</div>
+    </div>
+    <div class="path-card">
+      <div class="path-card-n">3 &mdash; THE AUDITOR</div>
+      <div class="path-card-t">Asymmetric verification</div>
+      <div class="path-card-d">Verifies on a disconnected laptop. No NOUS, no solver, no network. The coverage proof is checked by stdlib rational arithmetic; it collapses to <code>0 &lt; 0</code>.</div>
+    </div>
+  </div>
+  <div class="band">ZERO VENDOR TRUST &middot; ZERO SOLVER DEPENDENCY &middot; PURE MATH</div>
+
+  <h2>Two dependency contexts</h2>
+  <p>The asymmetry is the point. The producer needs the solver; the auditor needs neither it nor NOUS.</p>
+  <pre class="code"><span class="c"># producer (writes the proofs + dossier)</span>
+pip install 'nous-lang[smt]'
+
+<span class="c"># auditor (verifies offline) -- cryptography only, no solver, no NOUS</span>
+pip install 'cryptography&gt;=42'
+cd dossier &amp;&amp; python3 verify_offline.py
+<span class="ok">OK</span>   Ed25519 signature verified
+<span class="ok">OK</span>   Farkas certificate verified by rational arithmetic, no solver (0 &lt; 0)
+VERDICT: PASS</pre>
+  <p>The offline verifier checks, fail-closed: the Ed25519 signature, the source and proof file hashes (an O(1) provenance gate before any proof check), then the Farkas certificate by arithmetic. z3, if installed, runs only as an optional second opinion &mdash; the verdict does not depend on it. The human-inspectable <code>coverage.smt2</code> stays in the dossier as a cross-check.</p>
+
+  <h2>Read more</h2>
+  <ul>
+    <li><a class="link" href="https://github.com/contrario/nous/blob/main/docs/COVERAGE_PROOF.md">docs/COVERAGE_PROOF.md</a> &mdash; the full technical reference (obligation, certificate format, fragment, trust model).</li>
+    <li><a class="link" href="/verify.html">Verify a dossier</a> &mdash; check a signed NOUS dossier in your browser or offline.</li>
+    <li><a class="link" href="/blog/">Blog</a> &mdash; "NOUS v5.27.0 &mdash; Coverage Proof, Checked Without a Solver".</li>
+  </ul>
+
+</main>
+<footer class="footer">
+  Νοῦς · Self-evolving programming language for agentic AI · EU AI Act Annex IV compliance
+</footer>
+</body>
+</html>
