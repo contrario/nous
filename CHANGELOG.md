@@ -11,6 +11,26 @@
   Removed / Fixed / Security.
 -->
 
+## [5.27.0] - 2026-06-06  <!-- __s116_changelog_v5_27_0_v1__ -->
+
+### Added
+- Policy-coverage proof now travels inside the signed dossier as
+  coverage.smt2 (7th dossier file), bound by two drop-when-None manifest
+  fields (policy_coverage_sha256, coverage_smt2_sha256). New flag
+  `nous verify --smt --coverage-threshold "EXPR"`. REFUTED coverage fails
+  closed: no manifest is written for an unproven coverage obligation.
+- Farkas certificate for policy coverage as coverage.farkas.json (8th
+  dossier file), bound by coverage_farkas_sha256. The offline verifier
+  checks the coverage claim by standard-library rational arithmetic alone:
+  no solver, no NOUS install required. z3 becomes an optional second
+  opinion rather than the trust path. New module coverage_farkas.py exposes
+  serialize_system and check_serialized.
+
+### Changed
+- Offline dossier verifier selection: a Farkas-bearing dossier ships the
+  arithmetic-only verifier; coverage-only dossiers keep the z3 re-check
+  verifier; cost-only dossiers remain byte-identical.
+
 ## [5.25.0] - 2026-06-01  <!-- __s107_changelog_v5_25_0_v1__ -->
 
 ### Added
