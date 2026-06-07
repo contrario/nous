@@ -5,17 +5,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOUS (Νοῦς) — EU AI Act Annex IV Compliance Infrastructure</title>
-<meta name="description" content="NOUS is a programming language for agentic AI systems with EU AI Act Annex IV compliance built in. Every run produces cryptographically verifiable evidence: cost-bound SMT proofs, Ed25519-signed manifests, and Sigstore Rekor anchoring. Compliance by architecture, not by assertion.">
+<meta name="description" content="NOUS produces offline-verifiable cryptographic proof that AI agents stayed inside a declared envelope: bounded cost and policy coverage. Signed for EU AI Act Annex IV, checkable with only the cryptography library. Coverage, not impossibility.">
 <meta name="keywords" content="NOUS, EU AI Act, Annex IV, compliance infrastructure, agentic AI, formal verification, cryptographic provenance, Sigstore Rekor, Ed25519">
 <meta name="author" content="Hlias Staurou">
 <meta property="og:title" content="NOUS (Νοῦς) — EU AI Act Annex IV Compliance Infrastructure">
-<meta property="og:description" content="A programming language for agentic AI systems, with EU AI Act Annex IV compliance built into the language itself. Cost-bound SMT proofs, signed manifests, Sigstore Rekor anchoring. Compliance by architecture, not by assertion.">
+<meta property="og:description" content="NOUS produces offline-verifiable cryptographic proof that AI agents stayed inside a declared envelope: bounded cost and policy coverage. Signed for EU AI Act Annex IV, checkable with only the cryptography library. Coverage, not impossibility.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nous-lang.org">
 <meta property="og:image" content="https://nous-lang.org/og-image-v2.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="NOUS — EU AI Act Annex IV Compliance Infrastructure">
-<meta name="twitter:description" content="A programming language for agentic AI systems, with EU AI Act Annex IV compliance built into the language itself.">
+<meta name="twitter:description" content="Offline-verifiable cryptographic proof that AI agents stayed inside a declared envelope. EU AI Act Annex IV. Zero vendor trust.">
 <link rel="canonical" href="https://nous-lang.org">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -267,14 +267,10 @@ img{max-width:100%;display:block}
       <div class="nav-more">
         <button class="nav-more-trigger" aria-haspopup="true" aria-expanded="false">More <span class="nav-more-caret">&#9662;</span></button>
         <div class="nav-more-panel">
-          <a href="#Language" class="nav-link">Language</a>
-          <a href="#Compiler" class="nav-link">Compiler</a>
+          <a href="/runtime.html" class="nav-link">Language &amp; Runtime</a><!-- __web_extract_to_runtime_v1__ -->
           <a href="#Verification" class="nav-link">Verification</a>
           <a href="/coverage.html" class="nav-link">Coverage</a><!-- __s116_nav_coverage_v1__ -->
           <a href="/pitch.html" class="nav-link">For Banking</a><!-- __s117_nav_pitch_v1__ -->
-          <a href="#Ecosystem" class="nav-link">Ecosystem</a>
-          <a href="#ArchDiff" class="nav-link">Diff</a>
-          <a href="#Biology" class="nav-link">Biology</a>
           <a href="/governance" class="nav-link">Governance</a>
           <a href="/replay" class="nav-link">Replay</a>
           <a href="/policies" class="nav-link">Policies</a>
@@ -302,11 +298,11 @@ img{max-width:100%;display:block}
       <div>
         <!-- __session86_badge_removed_v1__ hero badge removed -->
         <h1>NOUS <span>Νοῦς</span></h1>
-        <p class="hero-sub"><!-- __session86_hero_annex_iv_v1__ --><!-- __session86_hero_v2_v1__ -->A programming language for agentic AI systems, with EU AI Act Annex IV compliance built into the language itself.</p>
-        <p class="hero-desc">Define autonomous agents with memory, instincts, senses, and healing. Every run produces cryptographically verifiable evidence for Annex IV: cost-bound SMT proofs, Ed25519-signed manifests, and Sigstore Rekor transparency-log anchoring. Compliance by architecture, not by assertion. Compile to Python, JavaScript, or browser HTML — formally verified before execution.</p>
+        <p class="hero-sub"><!-- __hero_governance_v1__ -->Provable governance for agentic AI. Verifiable offline — with zero trust in the vendor.</p>
+        <p class="hero-desc">Declare the laws your AI agents must obey. NOUS proves they stay inside that envelope — bounded cost, no gap in the blocking net — then emits Ed25519-signed evidence an auditor verifies on an air-gapped laptop with only the cryptography library. EU AI Act Annex IV. Coverage, not impossibility.</p>
         <div class="hero-buttons">
-          <a href="#Install" class="btn-gold">Get Started</a>
-          <a href="/docs" class="btn-outline">Documentation →</a>
+          <a href="#LiveProof" class="btn-gold">See the proof</a>
+          <a href="/verify.html" class="btn-outline">Verify a dossier →</a>
           <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="btn-gh">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             GitHub
@@ -333,14 +329,12 @@ img{max-width:100%;display:block}
 
 <!-- STATS -->
 <div class="container" style="padding-bottom:40px">
-  <div class="stats-bar">
-    <div class="stat"><div class="stat-num" data-target="30">0</div><div class="stat-label">Priorities</div></div>
-    <!-- __session77_homepage_tests_441_v1__ -->
-    <!-- __session77_homepage_tests_503_v1__  __session81_homepage_stats_v540_v1__  __session82_homepage_stats_v550_v1__  __session86_homepage_stats_596_v1__  __session100_homepage_stats_v5150_v1__ -->
-    <div class="stat"><div class="stat-num" data-target="1128">0</div><div class="stat-label">Tests Passing</div><!-- __s106_web_stat_v1__ __s105_web_v1__ --></div><!-- __session102_stat_854_v1__ --><!-- __s104_stat_tests_885_v1__ --><!-- __s112_v526_stat_1045__ -->
-    <div class="stat"><div class="stat-num" data-target="54">0</div><div class="stat-label">CLI Commands</div></div><!-- __s104_stat_cli_52_hero_v1__ -->
+  <div class="stats-bar"><!-- __hero_governance_v1__ -->
+    <div class="stat"><div class="stat-num" data-target="1128">0</div><div class="stat-label">Tests Passing</div></div>
     <div class="stat"><div class="stat-num" data-target="7">0</div><div class="stat-label">Proof Categories</div></div>
-    <div class="stat"><div class="stat-num" data-target="3">0</div><div class="stat-label">Compile Targets</div></div>
+    <div class="stat"><div class="stat-num" data-target="0">0</div><div class="stat-label">Vendor Trust</div></div>
+    <div class="stat"><div class="stat-num" data-target="1">0</div><div class="stat-label">Library to Verify</div></div>
+    <div class="stat"><div class="stat-num">Annex IV</div><div class="stat-label">EU AI Act</div></div>
   </div>
   <!-- __session98_homepage_anchor_badge_v1__ -->
   <div style="text-align:center;margin-top:18px">
@@ -355,81 +349,14 @@ img{max-width:100%;display:block}
 </div>
 
 <!-- LANGUAGE -->
-<section class="section" id="Language">
-<div class="container">
-  <div class="section-head fade-in">
-    <div class="section-tag">Core Concepts</div>
-    <h2 class="section-title">The Language</h2>
-    <p class="section-sub">AI agents are not stateless functions. NOUS models them as long-lived processes with declared laws, bounded cost, and recovery.</p>
-  </div>
-  <div class="features-grid" id="featuresGrid"></div>
-  <div class="two-col fade-in">
-    <div class="kw-table">
-      <div class="kw-header">Bilingual Keywords</div>
-      <div id="kwRows"></div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:20px">
-      <div class="info-box" style="flex:1">
-        <h4>Type System</h4>
-        <div style="color:var(--dim);font-size:13.5px;line-height:2">
-          <div><code class="ty">string</code> · <code class="ty">int</code> · <code class="ty">float</code> · <code class="ty">bool</code></div>
-          <div><code class="ty">timestamp</code> · <code class="ty">duration</code> · <code class="ty">currency</code></div>
-          <div><code class="pu">[type]</code> list · <code class="pu">{key: val}</code> map · <code class="pu">type?</code> optional</div>
-        </div>
-        <div style="color:var(--dim);font-size:12px;margin-top:12px">18 inference rules with full soul-level tracking</div>
-      </div>
-      <div class="info-box" style="flex:1">
-        <h4>Wake Strategies</h4>
-        <div style="color:var(--dim);font-size:13.5px;line-height:1.8">
-          <div><span style="color:var(--blue);font-weight:600">HEARTBEAT</span> — Wakes on timer. Zero-cost idle.</div>
-          <div><span style="color:var(--green);font-weight:600">LISTENER</span> — Wakes on message. True zero-cost sleep.</div>
-        </div>
-        <div style="color:var(--dim);font-size:12px;margin-top:12px">Determined automatically by nervous system topology</div>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-
 <!-- COMPILER -->
-<section class="section" id="Compiler" style="background:linear-gradient(180deg,transparent,var(--bg2),transparent)">
-<div class="container">
-  <div class="section-head fade-in">
-    <div class="section-tag">Pipeline</div>
-    <h2 class="section-title">The Compiler</h2>
-    <p class="section-sub">From .nous source to production code in ~40ms</p>
-  </div>
-  <div class="pipeline-grid">
-    <div id="pipelineSteps"></div>
-    <div class="sticky-col">
-      <div class="info-box fade-in" style="margin-bottom:20px">
-        <h4>Self-Hosting Compiler</h4>
-        <p style="color:var(--dim);font-size:13.5px;line-height:1.65;margin:0 0 16px">The NOUS compiler is written in NOUS. Three souls:</p>
-        <div class="compiler-soul" style="background:rgba(77,158,255,0.04);border:1px solid rgba(77,158,255,0.09)"><span class="compiler-soul-name" style="color:var(--blue)">Reader</span><span class="compiler-soul-desc">file_read, file_list → SourceBundle</span></div>
-        <div class="compiler-soul" style="background:rgba(167,139,250,0.04);border:1px solid rgba(167,139,250,0.09)"><span class="compiler-soul-name" style="color:var(--purple)">Analyzer</span><span class="compiler-soul-desc">parse, validate, typecheck → AnalysisResult</span></div>
-        <div class="compiler-soul" style="background:rgba(56,217,122,0.04);border:1px solid rgba(56,217,122,0.09)"><span class="compiler-soul-name" style="color:var(--green)">Emitter</span><span class="compiler-soul-desc">codegen, file_write → CompileResult</span></div>
-        <div class="compiler-proof">compiler.nous → 289 lines, py_compile ✓</div>
-      </div>
-      <div class="info-box fade-in">
-        <h4>Multi-Target</h4>
-        <div class="targets-grid">
-          <div class="target-card"><div class="target-name">Python</div><div class="target-ext">.py</div><div class="target-rt">asyncio</div></div>
-          <div class="target-card"><div class="target-name">JavaScript</div><div class="target-ext">.mjs</div><div class="target-rt">ES2022</div></div>
-          <div class="target-card"><div class="target-name">Browser</div><div class="target-ext">.html</div><div class="target-rt">Self-contained</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-
 <!-- VERIFICATION -->
 <section class="section" id="Verification">
 <div class="container">
   <div class="section-head fade-in">
     <div class="section-tag">Proofs</div>
     <h2 class="section-title">Formally Verified</h2>
-    <p class="section-sub">Before your agents run, NOUS proves they won't fail. Mathematical guarantees — not unit tests.</p>
+    <p class="section-sub">Before your agents run, NOUS proves a fixed set of properties across every execution path — cost bounds, deadlock freedom, protocol, liveness, reachability, memory safety. Mathematical guarantees, not unit tests.</p><!-- __overclaim_fix_v1__ -->
   </div>
   <div class="two-col">
     <div class="fade-in">
@@ -463,7 +390,7 @@ img{max-width:100%;display:block}
   <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
     <div class="section-tag" style="border-color:rgba(56,217,122,0.19);color:var(--green);background:rgba(56,217,122,0.05)">Live Proof</div>
     <h2 class="section-title">Proof of Safety</h2>
-    <p class="section-sub">Real verification output from a production NOUS program. Every agent system is mathematically proven correct before it runs.</p>
+    <p class="section-sub">Real verification output from a production NOUS program. Each run is proven to stay inside its declared bounds across every execution path before it runs — a mathematical guarantee, not a test sample.</p><!-- __overclaim_fix_v1__ -->
   </div>
   <div style="max-width:780px;margin:0 auto" class="fade-in">
     <div id="verifTerminal" style="position:relative;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 1px rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.06)">
@@ -591,321 +518,76 @@ if(term)obs.observe(term);
 
 
 <!-- ECOSYSTEM -->
+<!-- __evidence_section_v1__ -->
+<section class="section" id="Evidence" style="background:linear-gradient(180deg,transparent,rgba(201,165,84,0.02),transparent)">
+<div class="container">
+  <div class="section-head fade-in" style="text-align:center;margin-bottom:48px">
+    <div class="section-tag">Verifiable Evidence</div>
+    <h2 class="section-title">Proof an auditor checks alone</h2>
+    <p class="section-sub">A NOUS dossier carries proof, not promises. An auditor checks it on a disconnected laptop with only the cryptography library &mdash; no NOUS, no solver, no network.</p>
+    <p style="font-family:'Playfair Display',serif;font-style:italic;color:var(--gold);font-size:18px;margin-top:18px;line-height:1.4">"The verifier does not trust the producer. It verifies the producer."</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;max-width:900px;margin:0 auto 16px" class="fade-in">
+    <div style="padding:24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.4"></div>
+      <div style="color:var(--gold);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:10px">Cost</div>
+      <div style="color:var(--dim);font-size:13.5px;line-height:1.65">Total cost cannot exceed the declared <code style="font-family:'JetBrains Mono',monospace;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan);font-size:11px">cost_cap</code> across every execution path in the proven bound. Universal, not sampled.</div>
+    </div>
+    <div style="padding:24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0.4"></div>
+      <div style="color:var(--green);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:10px">Coverage</div>
+      <div style="color:var(--dim);font-size:13.5px;line-height:1.65">Over the declared risk threshold, no input satisfies it while escaping every blocking policy. No gap in the net.</div>
+    </div>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto 24px;background:rgba(201,165,84,0.06);border:1px solid rgba(201,165,84,0.25);border-left:3px solid var(--gold);border-radius:8px;padding:18px 20px" class="fade-in">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">HONEST BOUNDARY</div>
+    <div style="color:var(--dim);font-size:13.5px;line-height:1.7">Coverage proves there is <b style="color:var(--bright)">no gap</b> in the declared blocking net &mdash; not that the agent <i>cannot</i> misbehave. Policies are monitors; the signed evidence attests the declared governance was sound and in force. This is coverage, not impossibility. NOUS claims exactly what it can sign, and refuses the rest.</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;margin:0 auto" class="fade-in">
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">1 &mdash; THE AGENT</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Probabilistic execution</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Build any agent. NOUS sits above as a governance shell and proves the cost ceiling and the coverage net before any model call. If it cannot prove it, it refuses to sign.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">2 &mdash; THE ARTIFACT</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">The signed dossier</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">One self-contained package, <code style="font-family:'JetBrains Mono',monospace;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan);font-size:11px">Ed25519</code>-signed. Tamper one byte and the signature breaks. Offline and immutable &mdash; it never phones home.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">3 &mdash; THE AUDITOR</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Asymmetric verification</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Verifies on a disconnected laptop. No NOUS, no solver, no network. The coverage proof is checked by stdlib rational arithmetic; it collapses to <code style="font-family:'JetBrains Mono',monospace;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan);font-size:11px">0 &lt; 0</code>.</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:2px;margin:24px 0 6px">ZERO VENDOR TRUST &middot; ZERO SOLVER DEPENDENCY &middot; PURE MATH</div>
+  <div style="text-align:center;color:var(--t3,var(--dim));font-size:12px;margin-bottom:26px">Producer signs with the solver, once. The auditor verifies with only <code style="font-family:'JetBrains Mono',monospace;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan);font-size:11px">cryptography</code>.</div>
+
+  <div style="text-align:center" class="fade-in">
+    <a href="/coverage.html" class="btn-gold">Read the full proof &#x2192;</a>
+    <a href="/verify.html" class="btn-outline">Verify a dossier &#x2192;</a>
+  </div>
+</div>
+</section>
+
 <section class="section" id="Ecosystem" style="background:linear-gradient(180deg,transparent,rgba(201,165,84,0.02),transparent)">
 <div class="container">
   <div class="section-head fade-in">
-    <div class="section-tag">Infrastructure</div>
-    <h2 class="section-title">The Ecosystem</h2>
-    <p class="section-sub">NOUS is part of a larger intelligence platform — built from the ground up.</p>
+    <div class="section-tag">Security</div>
+    <h2 class="section-title">Security Posture</h2>
+    <p class="section-sub">NOUS is built alongside Kerberus — an OWASP Top 10 and MITRE ATT&CK security scanner with NIS2 alignment.</p><!-- __ecosystem_kerberus_v1__ -->
   </div>
-  <div class="eco-grid" id="ecoGrid"></div>
+  <div class="eco-grid" id="ecoGrid" style="grid-template-columns:1fr;max-width:440px;margin:0 auto"><!-- __polish_v1__ --></div>
 </div>
 </section>
-
-<!-- NEW FEATURES UPDATE -->
-<section class="section" id="NewFeatures" style="background:linear-gradient(180deg,transparent,rgba(201,165,84,0.02),transparent)">
-<div class="container">
-  <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
-    <div class="section-tag" style="border-color:rgba(77,158,255,0.19);color:var(--blue);background:rgba(77,158,255,0.05)">Continuous Updates</div>
-    <h2 class="section-title">What's New</h2>
-    <p class="section-sub">MCP integration, 9 LLM providers, and tools no other framework has.</p>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:900px;margin:0 auto" class="fade-in">
-    <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0.4"></div>
-      <div style="color:var(--blue);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">MCP Bridge</div>
-      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Any MCP Server as a Sense</div>
-      <div style="color:var(--dim);font-size:13px;line-height:1.65">Connect to Slack, Google Drive, GitHub, Notion, Stripe — any MCP-compatible service. Two senses: <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">mcp_discover</code> and <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">mcp_call</code>.</div>
-    </div>
-    <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0.4"></div>
-      <div style="color:var(--gold);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">9 LLM Providers</div>
-      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Groq · Together · Fireworks · Cerebras</div>
-      <div style="color:var(--dim);font-size:13px;line-height:1.65">Switch providers with one keyword. <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">mind: llama-70b @ Groq</code> — no config, no API wrappers.</div>
-    </div>
-    <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:0.4"></div>
-      <div style="color:var(--purple);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">Behavioral Diff</div>
-      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Semantic Impact Analysis</div>
-      <div style="color:var(--dim);font-size:13px;line-height:1.65">Change one line — see the impact on cost, topology, deadlock risk, and reachability. <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">nous diff old.nous new.nous</code></div>
-    </div>
-    <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:0.4"></div>
-      <div style="color:var(--green);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">Cost Oracle</div>
-      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Predict Before You Run</div>
-      <div style="color:var(--dim);font-size:13px;line-height:1.65">Daily/monthly cost projections with per-soul breakdown and automatic optimization suggestions. <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">nous cost file.nous</code></div>
-    </div>
-  </div>
-</div>
-
-<section class="section" id="ArchDiff" style="background:linear-gradient(180deg,transparent,rgba(201,165,84,0.02),transparent)">
-<div class="container">
-  <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
-    <div class="section-tag" style="border-color:rgba(224,82,82,0.19);color:#e05252;background:rgba(224,82,82,0.05)">World First</div>
-    <h2 class="section-title">Architecture Diff</h2>
-    <p class="section-sub">Change a .nous file and see the semantic impact before you deploy. Cost deltas, topology mutations, tier shifts — mathematically analyzed.</p>
-  </div>
-  <div id="diffDemo" style="max-width:1100px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(10,14,28,0.85);border:1px solid rgba(201,165,84,0.25);border-radius:10px;margin-bottom:18px;flex-wrap:wrap">
-      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;white-space:nowrap">nous diff</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2e8f0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:5px 10px;flex:1;min-width:120px">gate_alpha.nous</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#94a3b8">vs</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#e2e8f0;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:5px 10px;flex:1;min-width:120px">gate_alpha_v2.nous</span>
-      <button onclick="document.getElementById('diffCards').style.display='flex';document.getElementById('diffFindings').style.display='block';this.textContent='Loaded';this.style.color='#4ade80';this.style.borderColor='rgba(74,222,128,0.3)'" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:6px 16px;border:1px solid rgba(201,165,84,0.3);border-radius:4px;background:rgba(201,165,84,0.1);color:#c9a554;cursor:pointer;white-space:nowrap">&#9654; Run Diff</button>
-    </div>
-    <div style="border-radius:12px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;background:linear-gradient(135deg,rgba(224,82,82,0.08) 0%,rgba(10,14,28,0.95) 60%);border:1px solid rgba(224,82,82,0.3);margin-bottom:18px">
-      <div>
-        <div style="font-family:'Playfair Display',serif;font-size:19px;font-weight:700;color:#e05252;margin-bottom:4px">BREAKING CHANGES DETECTED</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#94a3b8">gate_alpha.nous &#8594; gate_alpha_v2.nous &#183; 9 findings</div>
-      </div>
-      <div style="display:flex;gap:10px">
-        <div style="background:rgba(224,82,82,0.12);border:1px solid rgba(224,82,82,0.2);border-radius:8px;padding:7px 14px;text-align:center;min-width:68px"><div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#e05252">1</div><div style="font-size:10px;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em;color:#e05252">Critical</div></div>
-        <div style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:7px 14px;text-align:center;min-width:68px"><div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#f59e0b">4</div><div style="font-size:10px;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em;color:#f59e0b">Warning</div></div>
-        <div style="background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.2);border-radius:8px;padding:7px 14px;text-align:center;min-width:68px"><div style="font-size:20px;font-weight:700;font-family:'JetBrains Mono',monospace;color:#60a5fa">4</div><div style="font-size:10px;opacity:0.8;text-transform:uppercase;letter-spacing:0.08em;color:#60a5fa">Info</div></div>
-      </div>
-    </div>
-    <div id="diffCards" style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:18px">
-      <div style="background:rgba(10,14,28,0.85);border:1px solid rgba(201,165,84,0.25);border-radius:12px;padding:22px;flex:1 1 340px;min-width:300px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px"><span style="font-size:17px">&#9678;</span><span style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:#c9a554;letter-spacing:0.04em">Cost impact</span></div>
-        <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px;font-family:'JetBrains Mono',monospace">
-          <span style="font-size:26px;font-weight:700;color:#94a3b8;text-decoration:line-through;text-decoration-color:rgba(148,163,184,0.4)">$145.80</span>
-          <span style="font-size:18px;color:#94a3b8">&#8594;</span>
-          <span style="font-size:30px;font-weight:700;color:#4ade80">$45.14</span>
-          <span style="font-size:13px;color:#94a3b8">/month</span>
-        </div>
-        <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.2);border-radius:6px;padding:3px 11px;margin-bottom:18px;font-family:'JetBrains Mono',monospace">
-          <span style="font-size:15px;color:#4ade80">&#8595;</span>
-          <span style="font-size:13px;font-weight:600;color:#4ade80">69.0%</span>
-          <span style="font-size:11px;color:#4ade80;opacity:0.8">&#183; saving $100.66/mo</span>
-        </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace">
-          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:7px 12px;flex:1 1 100px"><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Per cycle</div><div style="font-size:12px;color:#e2e8f0"><span style="opacity:0.5;text-decoration:line-through">$0.0169</span> &#8594; <span style="color:#4ade80">$0.0052</span></div></div>
-          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:7px 12px;flex:1 1 100px"><div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px">Daily</div><div style="font-size:12px;color:#e2e8f0"><span style="opacity:0.5;text-decoration:line-through">$4.86</span> &#8594; <span style="color:#4ade80">$1.50</span></div></div>
-        </div>
-        <div style="margin-top:18px">
-          <div style="font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Per-soul breakdown</div>
-          <div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;margin-bottom:2px;font-family:'JetBrains Mono',monospace"><span style="font-size:12px;color:#e2e8f0">Scout</span><span style="font-size:11px;color:#94a3b8">$4.50 &#8594; $0.35</span></div><div style="position:relative;height:5px;background:rgba(255,255,255,0.04);border-radius:3px"><div style="position:absolute;height:100%;border-radius:3px;background:rgba(148,163,184,0.2);width:60%"></div><div style="position:absolute;height:100%;border-radius:3px;background:#4ade80;width:5%"></div></div></div>
-          <div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;margin-bottom:2px;font-family:'JetBrains Mono',monospace"><span style="font-size:12px;color:#e2e8f0">Hunter</span><span style="font-size:11px;color:#94a3b8">$4.50 &#8594; $4.50</span></div><div style="position:relative;height:5px;background:rgba(255,255,255,0.04);border-radius:3px"><div style="position:absolute;height:100%;border-radius:3px;background:rgba(148,163,184,0.2);width:60%"></div><div style="position:absolute;height:100%;border-radius:3px;background:#c9a554;width:60%"></div></div></div>
-          <div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;margin-bottom:2px;font-family:'JetBrains Mono',monospace"><span style="font-size:12px;color:#e2e8f0">Quant</span><span style="font-size:11px;color:#94a3b8">$0.38 &#8594; $0.38</span></div><div style="position:relative;height:5px;background:rgba(255,255,255,0.04);border-radius:3px"><div style="position:absolute;height:100%;border-radius:3px;background:rgba(148,163,184,0.2);width:5%"></div><div style="position:absolute;height:100%;border-radius:3px;background:#c9a554;width:5%"></div></div></div>
-          <div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;margin-bottom:2px;font-family:'JetBrains Mono',monospace"><span style="font-size:12px;color:#e2e8f0">Monitor</span><span style="font-size:11px;color:#94a3b8">$7.50 &#8594; removed</span></div><div style="position:relative;height:5px;background:rgba(255,255,255,0.04);border-radius:3px"><div style="position:absolute;height:100%;border-radius:3px;background:rgba(148,163,184,0.2);width:100%"></div><div style="position:absolute;height:100%;border-radius:3px;background:#e05252;width:0%"></div></div></div>
-        </div>
-      </div>
-      <div style="background:rgba(10,14,28,0.85);border:1px solid rgba(201,165,84,0.25);border-radius:12px;padding:22px;flex:1 1 280px;min-width:260px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px"><span style="font-size:17px">&#11041;</span><span style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:#c9a554;letter-spacing:0.04em">Mind / tier changes</span></div>
-        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace"><span style="font-size:13px;color:#e2e8f0;min-width:65px">Scout</span><span style="font-size:12px;font-weight:600;padding:3px 11px;border-radius:6px;color:rgba(52,211,153,0.53);background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.13);opacity:0.6">Tier1</span><span style="color:#94a3b8;font-size:15px">&#8594;</span><span style="font-size:12px;font-weight:600;padding:3px 11px;border-radius:6px;color:#f97316;background:rgba(249,115,22,0.14);border:1px solid rgba(249,115,22,0.35)">Groq</span></div>
-        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace"><span style="font-size:13px;color:#94a3b8;min-width:65px;text-decoration:line-through">Monitor</span><span style="font-size:12px;font-weight:600;padding:3px 11px;border-radius:6px;color:rgba(251,191,36,0.53);background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.13);opacity:0.6">Tier2</span><span style="color:#94a3b8;font-size:15px">&#8594;</span><span style="font-size:12px;color:#e05252;background:rgba(224,82,82,0.12);padding:3px 10px;border-radius:4px;border:1px solid rgba(224,82,82,0.2)">REMOVED</span></div>
-        <div style="margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><span style="font-size:15px">&#9671;</span><span style="font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:#c9a554">Topology</span></div>
-          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;padding:5px 9px;border-radius:6px;background:rgba(224,82,82,0.06)"><span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;width:16px;text-align:center;color:#e05252">&#8722;</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#e2e8f0;font-weight:600">Monitor</span><span style="font-size:11px;color:#94a3b8;margin-left:auto">Soul removed</span></div>
-          <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px;padding:5px 9px;border-radius:6px;background:rgba(245,158,11,0.06)"><span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;width:16px;text-align:center;color:#f59e0b">~</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#e2e8f0;font-weight:600">Scout</span><span style="font-size:11px;color:#94a3b8;margin-left:auto">Modified</span></div>
-        </div>
-      </div>
-    </div>
-    <div id="diffFindings" style="display:block;background:rgba(10,14,28,0.85);border:1px solid rgba(201,165,84,0.25);border-radius:12px;padding:22px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><span style="font-size:17px">&#8862;</span><span style="font-family:'Playfair Display',serif;font-size:15px;font-weight:600;color:#c9a554;letter-spacing:0.04em">All findings</span></div>
-      <div style="display:flex;flex-direction:column;gap:5px">
-        <div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:6px;background:rgba(255,255,255,0.02);border-left:3px solid #e05252;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:3px;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;background:rgba(224,82,82,0.12);border:1px solid rgba(224,82,82,0.3);color:#e05252">&#10007; CRITICAL</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;min-width:58px">BD-C001</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a78bfa;min-width:68px">Cost</span><span style="font-size:13px;color:#e2e8f0;flex:1;min-width:200px">Total cost change: -69.0%</span></div>
-        <div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:6px;background:rgba(255,255,255,0.02);border-left:3px solid #f59e0b;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:3px;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b">&#9888; WARNING</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;min-width:58px">BD-W001</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a78bfa;min-width:68px">Topology</span><span style="font-size:13px;color:#e2e8f0;flex:1;min-width:200px">Soul removed: Monitor</span></div>
-        <div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:6px;background:rgba(255,255,255,0.02);border-left:3px solid #f59e0b;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:3px;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b">&#9888; WARNING</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;min-width:58px">BD-W002</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a78bfa;min-width:68px">Cost</span><span style="font-size:13px;color:#e2e8f0;flex:1;min-width:200px">Soul Scout: tier changed Tier1 &#8594; Groq</span></div>
-        <div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:6px;background:rgba(255,255,255,0.02);border-left:3px solid #60a5fa;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:3px;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);color:#60a5fa">&#8505; INFO</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;min-width:58px">BD-I001</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a78bfa;min-width:68px">Topology</span><span style="font-size:13px;color:#e2e8f0;flex:1;min-width:200px">Soul modified: Scout</span></div>
-        <div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:6px;background:rgba(255,255,255,0.02);border-left:3px solid #60a5fa;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:3px;padding:1px 8px;border-radius:4px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);color:#60a5fa">&#8505; INFO</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;min-width:58px">BD-I002</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a78bfa;min-width:68px">Performance</span><span style="font-size:13px;color:#e2e8f0;flex:1;min-width:200px">Scout: wake strategy LISTENER &#8594; HEARTBEAT</span></div>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:28px"><a href="/ide" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border:1px solid rgba(201,165,84,0.3);border-radius:8px;background:rgba(201,165,84,0.08);color:#c9a554;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;letter-spacing:0.03em;transition:all 0.2s" onmouseover="this.style.background='rgba(201,165,84,0.15)';this.style.borderColor='rgba(201,165,84,0.5)'" onmouseout="this.style.background='rgba(201,165,84,0.08)';this.style.borderColor='rgba(201,165,84,0.3)'">Open in NOUS IDE &#8594;</a></div>
-  </div>
-</div>
-</section>
-</section>
-
 
 <!-- STORY -->
 
 <!-- SOUL BIOLOGY — v4.0.0 -->
-<section class="section" id="Biology" style="background:linear-gradient(180deg,transparent,rgba(56,217,122,0.02),transparent)">
-<div class="container">
-  <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
-    <div class="section-tag" style="border-color:rgba(224,82,82,0.19);color:#e05252;background:rgba(224,82,82,0.05)">Runtime Resilience</div>
-    <h2 class="section-title">Soul Resilience</h2>
-    <p class="section-sub">Self-healing under load: adaptive recovery, speculative pre-computation, and verified auto-scaling — each formally proven before it runs.</p>
-  </div>
-
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto" class="fade-in">
-
-    <!-- Mitosis -->
-    <div style="padding:32px 24px;background:var(--card);border:1px solid var(--border);border-radius:12px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#f97316,transparent);opacity:0.6"></div>
-      <div style="font-size:36px;margin-bottom:16px">&#x1F9EC;</div>
-      <div style="color:#f97316;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:10px">Self-Replication</div>
-      <div style="color:var(--bright);font-size:18px;font-weight:600;font-family:'Playfair Display',serif;margin-bottom:10px">Soul Mitosis</div>
-      <div style="color:var(--dim);font-size:13px;line-height:1.7;margin-bottom:16px">Soul detects overload. Spawns a verified clone. Nervous system rewires automatically. Clone is formally proven safe before deployment.</div>
-      <div style="background:rgba(247,115,22,0.06);border:1px solid rgba(247,115,22,0.15);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.8">
-        <div style="color:var(--dim)">mitosis {</div>
-        <div style="color:var(--bright);padding-left:16px">trigger: queue_depth > 10</div>
-        <div style="color:var(--bright);padding-left:16px">max_clones: 3</div>
-        <div style="color:var(--bright);padding-left:16px">cooldown: 60s</div>
-        <div style="color:#f97316;padding-left:16px">verify: true</div>
-        <div style="color:var(--dim)">}</div>
-      </div>
-      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(74,222,128,0.08);color:var(--green);border:1px solid rgba(74,222,128,0.15)">VMI001-005 Proven</span>
-        <span style="font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(247,115,22,0.08);color:#f97316;border:1px solid rgba(247,115,22,0.15)">MT001-006 Validated</span>
-      </div>
-    </div>
-
-    <!-- Immune System -->
-    <div style="padding:32px 24px;background:var(--card);border:1px solid var(--border);border-radius:12px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#22d3ee,transparent);opacity:0.6"></div>
-      <div style="font-size:36px;margin-bottom:16px">&#x1F9E0;</div>
-      <div style="color:#22d3ee;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:10px">Adaptive Recovery</div>
-      <div style="color:var(--bright);font-size:18px;font-weight:600;font-family:'Playfair Display',serif;margin-bottom:10px">Immune System</div>
-      <div style="color:var(--dim);font-size:13px;line-height:1.7;margin-bottom:16px">Error hits. Heal fails. LLM generates a dynamic Python patch. Antibody cached. Broadcast to all clones. They are now immune.</div>
-      <div style="background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.15);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.8">
-        <div style="color:var(--dim)">immune_system {</div>
-        <div style="color:var(--bright);padding-left:16px">adaptive_recovery: true</div>
-        <div style="color:#22d3ee;padding-left:16px">share_with_clones: true</div>
-        <div style="color:var(--bright);padding-left:16px">antibody_lifespan: 3600s</div>
-        <div style="color:var(--dim)">}</div>
-      </div>
-      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(74,222,128,0.08);color:var(--green);border:1px solid rgba(74,222,128,0.15)">VIM001-005 Proven</span>
-        <span style="font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(34,211,238,0.08);color:#22d3ee;border:1px solid rgba(34,211,238,0.15)">7 Builtin Antibodies</span>
-      </div>
-    </div>
-
-    <!-- Dream System -->
-    <div style="padding:32px 24px;background:var(--card);border:1px solid var(--border);border-radius:12px;position:relative;overflow:hidden">
-      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:0.6"></div>
-      <div style="font-size:36px;margin-bottom:16px">&#x1F4AD;</div>
-      <div style="color:var(--purple);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:10px">Speculative Pre-computation</div>
-      <div style="color:var(--bright);font-size:18px;font-weight:600;font-family:'Playfair Display',serif;margin-bottom:10px">Speculative Pre-compute</div>
-      <div style="color:var(--dim);font-size:13px;line-height:1.7;margin-bottom:16px">Soul idle? It dreams. A cheap LLM pre-computes likely scenarios. On wake, cache hit = instant response. Zero wasted cycles.</div>
-      <div style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.8">
-        <div style="color:var(--dim)">dream_system {</div>
-        <div style="color:var(--bright);padding-left:16px">trigger_idle_sec: 30</div>
-        <div style="color:var(--purple);padding-left:16px">dream_mind: llama-8b @ Cerebras</div>
-        <div style="color:var(--bright);padding-left:16px">speculation_depth: 3</div>
-        <div style="color:var(--dim)">}</div>
-      </div>
-      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(74,222,128,0.08);color:var(--green);border:1px solid rgba(74,222,128,0.15)">VDR001-004 Proven</span>
-        <span style="font-size:10px;padding:3px 8px;border-radius:4px;background:rgba(167,139,250,0.08);color:var(--purple);border:1px solid rgba(167,139,250,0.15)">Cache Warm-up</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Defense Layers Diagram -->
-  <div class="fade-in" style="max-width:700px;margin:48px auto 0;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:32px;text-align:center">
-    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px">Defense Architecture</div>
-    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:12px">
-      <span style="padding:6px 14px;border-radius:6px;background:rgba(56,217,122,0.1);color:var(--green);border:1px solid rgba(56,217,122,0.2)">heal {}</span>
-      <span style="color:var(--dim)">&rarr;</span>
-      <span style="padding:6px 14px;border-radius:6px;background:rgba(34,211,238,0.1);color:#22d3ee;border:1px solid rgba(34,211,238,0.2)">immune {}</span>
-      <span style="color:var(--dim)">&rarr;</span>
-      <span style="padding:6px 14px;border-radius:6px;background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.2)">dream {}</span>
-      <span style="color:var(--dim)">&rarr;</span>
-      <span style="padding:6px 14px;border-radius:6px;background:rgba(247,115,22,0.1);color:#f97316;border:1px solid rgba(247,115,22,0.2)">mitosis {}</span>
-    </div>
-    <div style="color:var(--dim);font-size:11px;margin-top:14px;line-height:1.6">Static recovery &rarr; LLM-generated patches &rarr; Pre-computed insights &rarr; Self-replication under load</div>
-  </div>
-
-  <!-- Stats -->
-  <div class="fade-in" style="display:flex;justify-content:center;gap:40px;margin-top:40px;flex-wrap:wrap">
-    <div style="text-align:center">
-      <div style="font-size:28px;font-weight:700;color:var(--bright);font-family:'Playfair Display',serif">54</div>
-      <div style="font-size:11px;color:var(--dim);margin-top:4px">CLI Commands</div><!-- __s104_stat_cli_52_defense_v1__ --><!-- __s116_stat_cli_54_defense_v1__ -->
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:28px;font-weight:700;color:var(--green);font-family:'Playfair Display',serif">31+</div>
-      <div style="font-size:11px;color:var(--dim);margin-top:4px">Formal Proofs</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:28px;font-weight:700;color:#f97316;font-family:'Playfair Display',serif">9</div>
-      <div style="font-size:11px;color:var(--dim);margin-top:4px">Soul Subsystems</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:28px;font-weight:700;color:var(--purple);font-family:'Playfair Display',serif">9</div>
-      <div style="font-size:11px;color:var(--dim);margin-top:4px">LLM Providers</div>
-    </div>
-  </div>
-
-<!-- v4.0 Feature Cards -->
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:48px">
-
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color 0.3s" onmouseover="this.style.borderColor='var(--border-h)'" onmouseout="this.style.borderColor='var(--border)'">
-  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:8px">RETIREMENT</div>
-  <div style="font-size:17px;font-weight:600;color:var(--bright);margin-bottom:8px;font-family:'Playfair Display',serif">Clone Retirement</div>
-  <div style="font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px">Clones die gracefully when load drops. LIFO order with configurable cooldown and minimum clone floor.</div>
-  <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);margin:0;overflow-x:auto"><span style="color:var(--gold)">mitosis</span> {
-    <span style="color:var(--cyan)">retire_trigger</span>: queue_depth &lt; 3
-    <span style="color:var(--cyan)">retire_cooldown</span>: 120s
-    <span style="color:var(--cyan)">min_clones</span>: 1
-}</pre>
-  <div style="margin-top:10px;display:flex;gap:6px"><span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(56,217,122,0.1);color:var(--green);border:1px solid rgba(56,217,122,0.2)">VRT001-003</span></div>
-</div>
-
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color 0.3s" onmouseover="this.style.borderColor='var(--border-h)'" onmouseout="this.style.borderColor='var(--border)'">
-  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:8px">OBSERVABILITY</div>
-  <div style="font-size:17px;font-weight:600;color:var(--bright);margin-bottom:8px;font-family:'Playfair Display',serif">Telemetry</div>
-  <div style="font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px">Built-in span collection with 5 exporters: console, JSONL, HTTP, Langfuse, and OTLP. Sample rate control and LLM tracing.</div>
-  <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);margin:0;overflow-x:auto"><span style="color:var(--gold)">telemetry</span> {
-    <span style="color:var(--cyan)">enabled</span>: <span style="color:var(--green)">true</span>
-    <span style="color:var(--cyan)">exporter</span>: langfuse
-    <span style="color:var(--cyan)">sample_rate</span>: <span style="color:var(--purple)">1.0</span>
-}</pre>
-  <div style="margin-top:10px;display:flex;gap:6px"><span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(56,217,122,0.1);color:var(--green);border:1px solid rgba(56,217,122,0.2)">VTL001-003</span></div>
-</div>
-
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color 0.3s" onmouseover="this.style.borderColor='var(--border-h)'" onmouseout="this.style.borderColor='var(--border)'">
-  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:8px">RUNTIME</div>
-  <div style="font-size:17px;font-weight:600;color:var(--bright);margin-bottom:8px;font-family:'Playfair Display',serif">Hot Reload</div>
-  <div style="font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px">Live soul swapping with zero downtime. Polls source every 2s, reparses, recompiles, diffs souls, and swaps live.</div>
-  <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);margin:0;overflow-x:auto"><span style="color:var(--dim)">$</span> nous run program.nous <span style="color:var(--gold)">--hot</span>
-<span style="color:var(--green)">[hot]</span> Watching program.nous...
-<span style="color:var(--green)">[hot]</span> Change detected → recompile → swap</pre>
-  <div style="margin-top:10px;display:flex;gap:6px"><span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(77,158,255,0.1);color:var(--blue);border:1px solid rgba(77,158,255,0.2)">Zero Downtime</span></div>
-</div>
-
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color 0.3s" onmouseover="this.style.borderColor='var(--border-h)'" onmouseout="this.style.borderColor='var(--border)'">
-  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:8px">COOPERATION</div>
-  <div style="font-size:17px;font-weight:600;color:var(--bright);margin-bottom:8px;font-family:'Playfair Display',serif">Soul Symbiosis</div>
-  <div style="font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px">Souls form bonds with shared memory pools and optional co-evolution. Async-safe sync with configurable intervals.</div>
-  <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);margin:0;overflow-x:auto"><span style="color:var(--gold)">symbiosis</span> {
-    <span style="color:var(--cyan)">bond_with</span>: [Analyst]
-    <span style="color:var(--cyan)">shared_memory</span>: [score]
-    <span style="color:var(--cyan)">sync_interval</span>: 10s
-}</pre>
-  <div style="margin-top:10px;display:flex;gap:6px"><span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(56,217,122,0.1);color:var(--green);border:1px solid rgba(56,217,122,0.2)">VSY001-004</span></div>
-</div>
-
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color 0.3s" onmouseover="this.style.borderColor='var(--border-h)'" onmouseout="this.style.borderColor='var(--border)'">
-  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px">ENERGY</div>
-  <div style="font-size:17px;font-weight:600;color:var(--bright);margin-bottom:8px;font-family:'Playfair Display',serif">Agent Metabolism</div>
-  <div style="font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px">Energy depletes per cycle. Low energy triggers tier downgrade. Critical energy triggers hibernation with automatic recovery.</div>
-  <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);margin:0;overflow-x:auto"><span style="color:var(--gold)">metabolism</span> {
-    <span style="color:var(--cyan)">max_energy</span>: <span style="color:var(--purple)">100</span>
-    <span style="color:var(--cyan)">energy_per_cycle</span>: <span style="color:var(--purple)">8</span>
-    <span style="color:var(--cyan)">hibernate_threshold</span>: <span style="color:var(--purple)">15</span>
-}</pre>
-  <div style="margin-top:10px;display:flex;gap:6px"><span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(56,217,122,0.1);color:var(--green);border:1px solid rgba(56,217,122,0.2)">VMB001-004</span></div>
-</div>
-
-<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:border-color 0.3s" onmouseover="this.style.borderColor='var(--border-h)'" onmouseout="this.style.borderColor='var(--border)'">
-  <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px">Self-Optimization</div>
-  <div style="font-size:17px;font-weight:600;color:var(--bright);margin-bottom:8px;font-family:'Playfair Display',serif">Behavioral Self-Adjustment</div>
-  <div style="font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px">Agents set goals, track progress, and periodically self-reflect. Behavioral self-adjustment based on introspection.</div>
-  <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text);margin:0;overflow-x:auto"><span style="color:var(--gold)">consciousness</span> {
-    <span style="color:var(--cyan)">goals</span>: [maximize_discoveries]
-    <span style="color:var(--cyan)">reflect_every</span>: <span style="color:var(--purple)">5</span>
-    <span style="color:var(--cyan)">self_model</span>: <span style="color:var(--green)">true</span>
-}</pre>
-  <div style="margin-top:10px;display:flex;gap:6px"><span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(56,217,122,0.1);color:var(--green);border:1px solid rgba(56,217,122,0.2)">VCS001-005</span></div>
-</div>
-
-</div>
-<!-- End v4.0 Feature Cards -->
-</div>
-</section>
-
 <!-- __governance_section_v1__ -->
 <section class="section" id="Governance" style="background:linear-gradient(180deg,transparent,rgba(77,158,255,0.02),transparent)">
 <div class="container">
@@ -980,9 +662,6 @@ if(term)obs.observe(term);
     <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">nous compile my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
     <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">nous verify my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
     <div class="cmd-line"><span class="cmd-prompt">$</span><span class="cmd-text">nous run my_system.nous</span><button class="cmd-copy" onclick="copyCmd(this)">Copy</button></div>
-    <div class="divider"></div>
-    <div class="kw-header">54 CLI Commands</div><!-- __s104_stat_cli_52_getstarted_v1__ --><!-- __s116_stat_cli_54_getstarted_v1__ -->
-    <div class="cli-tags" id="cliTags"></div>
   </div>
 </div>
 </section>
@@ -1007,17 +686,14 @@ if(term)obs.observe(term);
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Language</div>
-      <a href="#Language" onclick="showHome()">Documentation</a>
+      <a href="/runtime.html">Documentation</a>
       <a href="/examples">Examples</a>
       <a href="/ide.html">Playground</a>
       <a href="#Install" onclick="showHome()">CLI Reference</a>
     </div>
     <div class="footer-col">
       <div class="footer-col-title">Ecosystem</div>
-      <a href="https://aetherlang.net" target="_blank" rel="noopener">AetherLang Ω</a>
       <a href="https://security.aetherlang.online" target="_blank" rel="noopener">Kerberus Security</a>
-      <a href="https://status.neurodoc.app" target="_blank" rel="noopener">System Health</a>
-      <a href="#" onclick="devLogin();return false">Telegram Bot</a>
       <a href="#" onclick="devAccess();return false" style="color:var(--dim);font-size:11px;margin-top:8px;opacity:0.4">Developer</a>
     </div>
     <div class="footer-col">
@@ -1090,12 +766,7 @@ const VERIFS = [
 ];
 
 const ECOS = [
-  {name:"AetherLang Ω",desc:"AI Workflow Orchestration DSL with 49 node types, 10 AI agent upgrades, real-time collaboration, and AI-powered optimization.",url:"https://aetherlang.net",badge:"DSL",color:"var(--purple)"},
-  {name:"Noesis Engine",desc:"Symbolic reasoning engine. Competes with LLMs without GPUs — knowledge stored as compressed atoms in a lattice structure.",url:null,badge:"Engine",color:"var(--cyan)"},
   {name:"Kerberus Security",desc:"OWASP Top 10 + MITRE ATT&CK security scanner. NIS2 compliance with Greek Law 5160/2024.",url:"https://security.aetherlang.online",badge:"Security",color:"var(--orange)"},
-  {name:"NeuroDOC Platform",desc:"Infrastructure health monitoring across distributed servers, Docker containers, and AI services.",url:"https://status.neurodoc.app",badge:"Infra",color:"var(--green)"},
-  {name:"NOUS Telegram Bot",desc:"14 commands with bare-text routing to /think. Query the NOUS ecosystem directly from Telegram.",url:null,badge:"Bot",color:"var(--blue)"},
-  {name:"Noosphere Inference",desc:"Oracle ARM instance running Ollama models (Gemma, Qwen) for on-premise LLM inference.",url:null,badge:"GPU",color:"var(--gold)"},
 ];
 
 const STORY = [
@@ -1344,6 +1015,7 @@ function initCounters() {
       if (!e.isIntersecting) return;
       const el = e.target;
       const target = parseInt(el.dataset.target);
+      if (isNaN(target)) { obs.unobserve(el); return; }
       let current = 0;
       const step = target / 120;
       const id = setInterval(() => {
@@ -1387,13 +1059,9 @@ function initCanvas() {
 // ── BOOT ──
 document.addEventListener('DOMContentLoaded', () => {
   setLang(false);
-  buildFeatures();
-  buildKWs();
-  buildPipeline();
   buildVerifs();
   buildEco();
   buildStory();
-  buildCLI();
   initCanvas();
   initCounters();
   setTimeout(initObserver, 100);
