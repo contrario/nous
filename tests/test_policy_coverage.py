@@ -72,10 +72,17 @@ def test_translate_addition_supported() -> None:
     assert names == ("amount", "fee")
 
 
-def test_refuse_multiplication() -> None:
-    sig = {"kind": "binop", "op": "*", "left": "a", "right": 2}
+def test_multiplication_fragment_boundary() -> None:  # __s122_mul_fragment_boundary_test_v1__
+    bilinear = {"kind": "binop", "op": "*", "left": "a", "right": "b"}
     with pytest.raises(CoverageEmitError):
-        translate_signal(sig)
+        translate_signal(bilinear)
+    scalar = {"kind": "binop", "op": "*", "left": "a", "right": 2}
+    term, names, _ = translate_signal(scalar)
+    assert term == "(* a 2)"
+    assert names == ("a",)
+    scalar_lhs = {"kind": "binop", "op": "*", "left": 2, "right": "a"}
+    term2, _, _ = translate_signal(scalar_lhs)
+    assert term2 == "(* 2 a)"
 
 
 def test_refuse_division() -> None:
