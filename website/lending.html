@@ -113,6 +113,24 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(29px,5vw,44px);lin
 .nt{padding:14px;border:1px solid var(--line);border-radius:9px;background:rgba(0,0,0,0.2);text-align:center}
 .nt-x{font-family:var(--mono);font-size:11px;color:var(--red);margin-bottom:5px;letter-spacing:0.5px}
 .nt-l{font-family:var(--sans);font-size:12.5px;color:var(--dim)}
+.nt-m{font-family:var(--sans);font-size:10.5px;color:var(--faint);line-height:1.45;margin-top:7px}
+
+.proves{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 8px}
+@media(max-width:680px){.proves{grid-template-columns:1fr}}
+.pcol{padding:18px 20px;border-radius:11px;border:1px solid var(--line);background:rgba(0,0,0,0.2)}
+.pcol.yes{border-color:var(--green-line);background:var(--green-dim)}
+.pcol.no{border-color:var(--gold-line);background:linear-gradient(180deg,var(--gold-dim),transparent)}
+.pcol h3{font-family:var(--mono);font-size:11px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:12px}
+.pcol.yes h3{color:var(--green)}
+.pcol.no h3{color:var(--gold)}
+.pcol ul{list-style:none}
+.pcol li{font-size:13px;color:var(--dim);line-height:1.55;padding:5px 0 5px 18px;position:relative}
+.pcol li::before{position:absolute;left:0;top:4px;font-family:var(--mono);font-size:13px;font-weight:600}
+.pcol.yes li::before{content:"+";color:var(--green)}
+.pcol.no li::before{content:"\2212";color:var(--gold)}
+
+.clauses{font-family:var(--mono);font-size:10.5px;color:var(--faint);text-align:center;margin:0 auto 56px;max-width:620px;line-height:1.7}
+.clauses b{color:var(--dim);font-weight:500}
 
 .boundary{margin:22px 0 56px;font-size:13px;color:var(--faint);line-height:1.65;text-align:center;max-width:660px;margin-left:auto;margin-right:auto}
 .boundary b{color:var(--dim);font-weight:500}
@@ -131,7 +149,7 @@ footer a:hover{color:var(--gold)}
 
   <section class="hero">
     <div class="eyebrow">Verified AI Lending</div>
-    <h1>The model recommends.<br>NOUS proves it stayed in policy.</h1>
+    <h1>The model recommends.<br>NOUS proves the decision stayed in policy.</h1>
     <p class="sub">Banks already know how to audit human decisions. The open problem is auditing AI decisions &mdash; and producing evidence that holds up <b>independently of the system that made them</b>.</p>
 
     <div class="diff">
@@ -152,7 +170,7 @@ footer a:hover{color:var(--gold)}
           <div class="case-type">Corporate Credit Assessment</div>
           <div class="case-id">SME-2026-04817</div>
         </div>
-        <div class="field-row"><span class="field-label">Annual Revenue</span><span class="field-val">&euro;45,000</span></div>
+        <div class="field-row"><span class="field-label">Annual Revenue</span><span class="field-val">&euro;4,500,000</span></div>
         <div class="field-row"><span class="field-label">Debt Ratio</span><span class="field-val">32%</span></div>
         <div class="field-row"><span class="field-label">Credit Score</span><span class="field-val">720</span></div>
 
@@ -232,13 +250,13 @@ footer a:hover{color:var(--gold)}
           <div class="num"><div class="num-v">&lt;0.15s</div><div class="num-l">verify time</div></div>
           <div class="num"><div class="num-v">1</div><div class="num-l">file to run</div></div>
           <div class="num"><div class="num-v">0</div><div class="num-l">servers / API</div></div>
-          <div class="num"><div class="num-v">0</div><div class="num-l">trust assumptions</div></div>
+          <div class="num"><div class="num-v">0</div><div class="num-l">trust in the issuer</div></div>
         </div>
 
         <div class="dl">
           <a class="btn" href="/loan_dossier.zip" download>Download dossier &amp; verify it yourself &darr;</a>
         </div>
-        <div class="runline"><code>unzip loan_dossier.zip &amp;&amp; cd loan_dossier &amp;&amp; python3 verify_offline.py</code></div>
+        <div class="runline">needs only <code>python3</code> &plus; <code>cryptography</code> &middot; z3 optional, for the second opinion<br><code>unzip loan_dossier.zip &amp;&amp; cd loan_dossier &amp;&amp; python3 verify_offline.py</code></div>
       </div>
     </div>
 
@@ -250,14 +268,39 @@ footer a:hover{color:var(--gold)}
   </div>
 
   <div class="notrust">
-    <div class="nt"><div class="nt-x">&#10007; don&rsquo;t trust</div><div class="nt-l">the model</div></div>
-    <div class="nt"><div class="nt-x">&#10007; don&rsquo;t trust</div><div class="nt-l">the operator</div></div>
-    <div class="nt"><div class="nt-x">&#10007; don&rsquo;t trust</div><div class="nt-l">the bank</div></div>
-    <div class="nt"><div class="nt-x">&#10007; don&rsquo;t trust</div><div class="nt-l">NOUS</div></div>
+    <div class="nt"><div class="nt-x">&#10007; don&rsquo;t trust</div><div class="nt-l">the model</div><div class="nt-m">the verifier checks the signed decision record, not the model&rsquo;s reasoning.</div></div>
+    <div class="nt"><div class="nt-x">&#10007; don&rsquo;t trust</div><div class="nt-l">the operator</div><div class="nt-m">the signature covers canonical bytes you recompute yourself.</div></div>
+    <div class="nt"><div class="nt-x">&#10007; don&rsquo;t trust</div><div class="nt-l">the bank</div><div class="nt-m">their public key ships in the dossier; you check the math, not their word.</div></div>
+    <div class="nt"><div class="nt-x">&#10007; don&rsquo;t trust</div><div class="nt-l">NOUS</div><div class="nt-m">the verifier is short, stdlib-only Python you can read end to end.</div></div>
+  </div>
+
+  <div class="proves">
+    <div class="pcol yes">
+      <h3>What this proves</h3>
+      <ul>
+        <li>the recorded decision stayed inside the declared policy</li>
+        <li>the policy had no coverage gap, proven before the model ran</li>
+        <li>every claim is Ed25519-signed and recomputable offline</li>
+        <li>checkable by anyone, with zero trust in the issuer</li>
+      </ul>
+    </div>
+    <div class="pcol no">
+      <h3>What it does not claim</h3>
+      <ul>
+        <li>that the model cannot make a bad recommendation</li>
+        <li>that the runtime faithfully recorded reality against a hostile operator</li>
+        <li>that the system is &ldquo;safe&rdquo; or legally compliant in the abstract</li>
+        <li>anything it cannot itself sign &mdash; it refuses the rest</li>
+      </ul>
+    </div>
   </div>
 
   <div class="boundary">
-    <b>What this proves, exactly:</b> the decision stayed inside the declared policy, and that policy was proven to have no coverage gap before the model ran &mdash; cryptographically signed, independently checkable offline with zero trust in any party. It does <b>not</b> claim the model cannot make a bad recommendation; it makes the model&rsquo;s compliance <b>auditable after the fact</b>. NOUS claims exactly what it can sign, and refuses the rest.
+    <b>In one line:</b> the decision was logged inside its declared policy, that policy was proven gap-free before the model ran, and you can verify all of it yourself &mdash; offline, with zero trust in any party. It makes the model&rsquo;s compliance <b>auditable after the fact</b>; it does not make the model trustworthy.
+  </div>
+
+  <div class="clauses">
+    Maps to EU AI Act Annex IV &sect;2(g) (validation procedures &amp; metrics) and Article 12 (record-keeping). Evidence that <b>supports</b> an audit &mdash; NOUS does not assert legal compliance, which is the auditor&rsquo;s conclusion to draw.
   </div>
 
   <footer>
