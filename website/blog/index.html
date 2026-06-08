@@ -121,6 +121,26 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s120_web_v5_29_0___card -->
+    <a class="post-card" href="#" onclick="showPost('v529-envelope-binding-chain');return false">
+      <div class="post-meta">
+        <span class="post-date">08 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.29.0 &mdash; A Chain an Auditor Can Walk Offline</div>
+      <div class="post-excerpt">A certificate proves one build stayed in its envelope. It says nothing about what changed between versions &mdash; which is the question material-change tracking asks. v5.29.0 binds each re-binding build to its predecessor by a signed <code>prior_digest</code>, carries the prior manifests forward, and ships a verifier that walks the whole lineage with six fail-closed checks &mdash; <code>cryptography</code> and stdlib only, zero issuer trust. The chain attests signature-valid formation envelopes rooted at genesis; it does not claim execution conformance or that the latest build is safer. <code>nous-lang 5.29.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
+    <!-- __s118_blog_v528-compiled-trace-attribution_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v528-compiled-trace-attribution');return false">
+      <div class="post-meta">
+        <span class="post-date">08 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.28.0 &mdash; A Trace That Names Its Author</div>
+      <div class="post-excerpt">A conformance certificate is only as strong as the trace beneath it. The compiled runtime signed its trace but left every event under a placeholder soul, so the certificate could not say which declared soul did what. v5.28.0 records the real soul on every event and one zero-token <code>llm_call</code> per cognition step &mdash; so a compiled-path certificate now evaluates the surface and per-soul discharge obligations, and still verifies offline with <code>cryptography</code> alone. <code>nous-lang 5.28.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s116_blog_v527-coverage-farkas_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v527-coverage-farkas');return false">
       <div class="post-meta">
@@ -548,6 +568,26 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s120_web_v5_29_0___post -->
+  <div class="post-full" id="post-v529-envelope-binding-chain">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.29.0 &mdash; A Chain an Auditor Can Walk Offline</h1>
+    <div class="post-full-meta">8 June 2026 &middot; 3 min read</div>
+    <p>A NOUS conformance certificate makes a narrow, signed claim about a single build: this envelope was formed soundly, and the declared governance was in force. It deliberately says nothing about the build before it. But the EU AI Act&apos;s material-change provisions ask a different question &mdash; not &ldquo;is this version sound?&rdquo; but &ldquo;what changed from the last version, and is the history intact?&rdquo; A signature on the latest manifest cannot answer that. You need the lineage, and you need to check it without trusting whoever produced it.</p>
+    <p>v5.29.0 adds that lineage. Each re-binding build records a signed <code>prior_digest</code> &mdash; the canonical-body hash of the manifest it supersedes &mdash; and the dossier now carries every prior manifest forward in a <code>chain/</code> directory, manifests only, rooted at the original genesis. The emitted <code>verify_offline.py</code> walks the chain with six fail-closed conditions: every link&apos;s Ed25519 signature verifies, each link&apos;s declared predecessor matches the hash of the actual previous link, exactly one genesis exists, every step moved at least one cost-bearing field (no empty re-bindings), and there is no cycle or truncation. Any break is named at the exact link &mdash; <code>chain broken at 003_manifest.json</code>, not a generic failure.</p>
+    <p>The walk trusts nothing about the producer. It recomputes every canonical body itself, using the same rule that signed it &mdash; strip the signature and any transparency-log block, then serialise deterministically &mdash; so a historical link that was once Rekor-anchored verifies correctly next to one that was not. It needs <code>cryptography</code> and the Python standard library, no solver and no NOUS install. The build side refuses fail-closed before it can mislead: a re-binding build asked to also anchor to Rekor is rejected at build time rather than producing a dossier the verifier would under-check.</p>
+    <p>The boundary is stated, not hidden. This chain attests an unbroken sequence of signature-valid formation envelopes, each declaring its predecessor by digest, each a real build change, rooted at genesis. It does <em>not</em> prove execution conformance, does <em>not</em> prove the latest envelope is safer than an earlier one, and does <em>not</em> prove coverage did not regress &mdash; that last one is a separate proof we have not shipped. The through-line holds: NOUS proves what it can sign and refuses the rest. <code>nous-lang 5.29.0</code>.</p>
+  </div>
+  <!-- __s118_blog_v528-compiled-trace-attribution_post_v1__ -->
+  <div class="post-full" id="post-v528-compiled-trace-attribution">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.28.0 &mdash; A Trace That Names Its Author</h1>
+    <div class="post-full-meta">8 June 2026 &middot; 3 min read</div>
+    <p>A NOUS conformance certificate makes a narrow, signed claim: this recorded run stayed inside the cost envelope the static proof assumed, and the declared governance was in force. That claim is only as strong as the trace beneath it &mdash; and a trace is only evidence if it records who did what. The interpreter path has carried real per-soul attribution for several releases. The compiled path did not: it signed a trace, but every event named a placeholder soul and no per-step record existed, so a certificate built over it could not evaluate which declared soul acted or how often.</p>
+    <p>v5.28.0 closes that gap. The compiled runtime now records the real producing soul on every event, and emits one zero-token <code>llm_call</code> event per cognition step &mdash; written only after the step completes, so the trace attests what happened, not what was attempted. A compiled-path certificate now evaluates the surface obligation (every soul in the trace was declared by the proof) and the per-soul assumption-discharge obligation (per-soul call count within the proven tick bound) over the real declared souls. Before, a placeholder soul made both inevaluable; the verifier refused rather than guess. Now it evaluates, and the signed certificate still verifies offline with the <code>cryptography</code> library alone &mdash; no solver, no NOUS install.</p>
+    <p>The attribution is correct by construction, not by convention. The active soul rides a task-scoped context variable rather than a shared mutable field, so even if the runtime is later refactored to run souls concurrently, one soul's record cannot bleed into another's &mdash; the worst failure for signed evidence. If the context is ever lost, the value falls back to the visible placeholder, never to another soul's name: it fails safe, not silent. None of this touches the grammar or the generated code, so the template byte-identity gate stays green.</p>
+    <p>The boundary is stated, not hidden. This release sharpens <em>attribution</em>; it does not claim live-token cost on the compiled path, which stays deferred because threading real token counts out of the generated module would change that code. And the through-line is unchanged: NOUS proves the cost envelope holds and the control net has no gap &mdash; not that the agent cannot misbehave. The policies are monitors, and the certificate attests that the declared governance was sound and in force. <code>nous-lang 5.28.0</code>.</p>
+  </div>
   <!-- __s116_blog_v527-coverage-farkas_post_v1__ -->
   <div class="post-full" id="post-v527-coverage-farkas">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
