@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verified AI Lending &mdash; NOUS</title>
+<meta name="description" content="The model recommends. NOUS proves the recommendation stayed inside declared policy and produces evidence an auditor verifies offline. EU AI Act Annex IV.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070e; --panel:#0a0e1a; --panel-2:#0d1322; --line:rgba(255,255,255,0.07);
+  --gold:#c9a554; --gold-dim:rgba(201,165,84,0.12); --gold-line:rgba(201,165,84,0.25);
+  --green:#5ec27a; --green-dim:rgba(94,194,122,0.1);
+  --red:#e06b6b; --cyan:#4d9eff;
+  --text:#e8ebf2; --bright:#fff; --dim:#8a93a6; --faint:#5a6273;
+  --mono:'JetBrains Mono',monospace; --display:'Playfair Display',serif; --sans:'DM Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text); font-family:var(--sans);
+  line-height:1.6; -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 18% 12%,rgba(201,165,84,0.05),transparent 42%),radial-gradient(circle at 85% 88%,rgba(77,158,255,0.04),transparent 40%);
+  min-height:100vh;
+}
+.wrap{max-width:880px;margin:0 auto;padding:0 24px}
+header{padding:38px 0 0;display:flex;align-items:center;justify-content:space-between}
+.brand{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:0.5px;color:var(--bright)}
+.brand span{color:var(--gold)}
+.back{font-family:var(--mono);font-size:12.5px;color:var(--dim);text-decoration:none;border:1px solid var(--line);padding:7px 13px;border-radius:6px;transition:all .18s}
+.back:hover{color:var(--text);border-color:var(--gold-line)}
+
+.hero{padding:54px 0 30px;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(30px,5.2vw,46px);line-height:1.12;color:var(--bright);letter-spacing:-0.5px}
+.sub{margin:20px auto 0;max-width:560px;font-size:16px;color:var(--dim);line-height:1.6}
+.sub b{color:var(--text);font-weight:500}
+
+.console{margin:40px 0 20px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--panel),var(--panel-2));overflow:hidden;box-shadow:0 30px 80px -40px rgba(0,0,0,0.8)}
+.console-bar{display:flex;align-items:center;gap:8px;padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(0,0,0,0.2)}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.r{background:#e06b6b66}.dot.y{background:#c9a55466}.dot.g{background:#5ec27a66}
+.console-title{font-family:var(--mono);font-size:12px;color:var(--faint);margin-left:8px}
+.console-body{padding:26px 28px}
+
+.field-row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line)}
+.field-row:last-of-type{border-bottom:none}
+.field-label{font-family:var(--mono);font-size:13px;color:var(--dim)}
+.field-val{font-family:var(--mono);font-size:14.5px;color:var(--text);font-weight:500}
+
+.applicant-head{display:flex;align-items:center;gap:13px;margin-bottom:14px}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--gold-dim);border:1px solid var(--gold-line);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:600;color:var(--gold);font-size:17px}
+.applicant-name{font-family:var(--display);font-size:19px;font-weight:600;color:var(--bright)}
+.applicant-id{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:2px}
+
+.rec{margin-top:24px;padding:20px 22px;border-radius:10px;background:var(--green-dim);border:1px solid rgba(94,194,122,0.25);display:flex;align-items:center;justify-content:space-between}
+.rec-left{display:flex;flex-direction:column;gap:4px}
+.rec-label{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+.rec-verdict{font-family:var(--display);font-size:26px;font-weight:700;color:var(--green);letter-spacing:1px}
+.rec-model{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:right}
+
+.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:13.5px;font-weight:500;padding:13px 22px;border-radius:8px;cursor:pointer;border:1px solid var(--gold-line);background:var(--gold-dim);color:var(--gold);transition:all .18s;flex:1;min-width:180px}
+.btn:hover{background:rgba(201,165,84,0.2);border-color:var(--gold)}
+.btn.primary{background:var(--gold);color:#0a0a0a;border-color:var(--gold);font-weight:600}
+.btn.primary:hover{background:#d9b768}
+.btn[disabled]{opacity:0.4;cursor:not-allowed}
+
+.reveal{max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .4s ease;opacity:0}
+.reveal.open{max-height:1400px;opacity:1}
+.reveal-inner{margin-top:22px;padding-top:22px;border-top:1px dashed var(--line)}
+
+.section-tag{font-family:var(--mono);font-size:11px;letter-spacing:1.8px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+
+.policy-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:8px;background:rgba(0,0,0,0.25);border:1px solid var(--line);margin-bottom:9px}
+.policy-rule{font-family:var(--mono);font-size:13.5px;color:var(--text)}
+.policy-rule .op{color:var(--cyan)}
+.pass{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--green);background:var(--green-dim);padding:4px 11px;border-radius:5px;letter-spacing:0.5px}
+
+.evidence{font-family:var(--mono);font-size:12.5px}
+.ev-row{display:flex;flex-direction:column;gap:3px;padding:13px 0;border-bottom:1px solid var(--line)}
+.ev-row:last-child{border-bottom:none}
+.ev-k{color:var(--dim);font-size:11.5px;letter-spacing:0.5px;display:flex;align-items:center;gap:8px}
+.ev-k .tick{color:var(--green)}
+.ev-v{color:var(--text);font-size:12.5px;word-break:break-all;line-height:1.5}
+.ev-v.hash{color:var(--gold)}
+
+.verdict-bar{margin-top:22px;padding:16px 20px;border-radius:10px;background:var(--green-dim);border:1px solid rgba(94,194,122,0.3);display:flex;align-items:center;gap:13px}
+.verdict-bar .big{font-family:var(--display);font-size:17px;font-weight:600;color:var(--green)}
+.verdict-bar .small{font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:2px}
+
+.note{margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--faint);line-height:1.6}
+.note code{color:var(--gold)}
+
+.pitch{margin:36px 0 18px;padding:28px;border-left:2px solid var(--gold);background:linear-gradient(90deg,var(--gold-dim),transparent)}
+.pitch p{font-family:var(--display);font-size:20px;font-weight:500;color:var(--bright);line-height:1.45}
+.pitch p+p{margin-top:10px;font-size:16px;color:var(--dim);font-family:var(--sans)}
+
+.boundary{margin:24px 0 60px;font-size:13px;color:var(--faint);line-height:1.65;text-align:center;max-width:600px;margin-left:auto;margin-right:auto}
+.boundary b{color:var(--dim);font-weight:500}
+
+footer{border-top:1px solid var(--line);padding:28px 0 50px;text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+footer a{color:var(--dim);text-decoration:none}
+footer a:hover{color:var(--gold)}
+
+@media(max-width:560px){
+  .console-body{padding:20px 18px}
+  .rec{flex-direction:column;align-items:flex-start;gap:10px}
+  .rec-model{text-align:left}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">N<span>O</span>US</div>
+    <a class="back" href="/">&larr; nous-lang.org</a>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Verified AI Lending</div>
+    <h1>The model recommends.<br>NOUS proves it stayed in policy.</h1>
+    <p class="sub">Banks already know how to audit human decisions. The open problem is auditing AI decisions. NOUS produces evidence that is <b>independently verifiable after the decision is made</b> &mdash; offline, with the cryptography library alone.</p>
+  </section>
+
+  <div class="console">
+    <div class="console-bar">
+      <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+      <div class="console-title">loan_decision &mdash; LoanApprovalGovernance</div>
+    </div>
+    <div class="console-body">
+
+      <div class="applicant-head">
+        <div class="avatar">JD</div>
+        <div>
+          <div class="applicant-name">John Doe</div>
+          <div class="applicant-id">application_id: LA-2026-04817</div>
+        </div>
+      </div>
+
+      <div class="field-row"><span class="field-label">Income</span><span class="field-val">&euro;45,000</span></div>
+      <div class="field-row"><span class="field-label">Debt Ratio</span><span class="field-val">32%</span></div>
+      <div class="field-row"><span class="field-label">Credit Score</span><span class="field-val">720</span></div>
+
+      <div class="rec">
+        <div class="rec-left">
+          <div class="rec-label">AI Recommendation</div>
+          <div class="rec-verdict">APPROVE</div>
+        </div>
+        <div class="rec-model">model: claude-haiku-4-5<br>tier: Tier0A</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="whyBtn" onclick="showWhy()">Why?</button>
+        <button class="btn primary" id="verifyBtn" onclick="showVerify()" disabled>Verify Decision</button>
+        <a class="btn" id="dlBtn" href="/loan_dossier.zip" download style="text-align:center;text-decoration:none;line-height:1.5">Download dossier &darr;</a>
+      </div>
+
+      <div class="reveal" id="whyReveal">
+        <div class="reveal-inner">
+          <div class="section-tag">Declared policy &mdash; proven before any decision</div>
+          <div class="policy-row">
+            <span class="policy-rule">Debt Ratio <span class="op">&lt;</span> 40%</span>
+            <span class="pass">PASS &middot; 32 &lt; 40</span>
+          </div>
+          <div class="policy-row">
+            <span class="policy-rule">Credit Score <span class="op">&gt;</span> 700</span>
+            <span class="pass">PASS &middot; 720 &gt; 700</span>
+          </div>
+          <div class="note">Both rules are declared in <code>loan_approval.nous</code> and proven to have <b>no coverage gap</b> across every input over the declared threshold &mdash; before the model runs. The policy is a monitor, not a guarantee the model cannot err; the proof attests the declared net is sound and in force.</div>
+        </div>
+      </div>
+
+      <div class="reveal" id="verifyReveal">
+        <div class="reveal-inner">
+          <div class="section-tag">Cryptographic evidence &mdash; verify on a disconnected laptop</div>
+          <div class="evidence">
+            <div class="ev-row">
+              <div class="ev-k"><span class="tick">&check;</span> Source Hash <span style="color:var(--faint)">(sha256, loan_approval.nous)</span></div>
+              <div class="ev-v hash">c1db08c81b9199f6da682cf4ce3336e5578f8bf75d09095eeb337b55769ee438</div>
+            </div>
+            <div class="ev-row">
+              <div class="ev-k"><span class="tick">&check;</span> Policy / Coverage Hash <span style="color:var(--faint)">(sha256)</span></div>
+              <div class="ev-v hash">6d595c0557301fb9 &middot; threshold: debt_ratio &gt;= 40 &middot; PROVEN no gap</div>
+            </div>
+            <div class="ev-row">
+              <div class="ev-k"><span class="tick">&check;</span> Proof Hash <span style="color:var(--faint)">(SMT spec, sha256)</span></div>
+              <div class="ev-v hash">67649fca6eb1528bfadcd41508b9f3ba3b6b008bb993ddb043edbb390fc79ac3</div>
+            </div>
+            <div class="ev-row">
+              <div class="ev-k"><span class="tick">&check;</span> Certificate <span style="color:var(--faint)">(Farkas, stdlib-checkable, no solver trust)</span></div>
+              <div class="ev-v">contradiction <span class="hash">0 &lt; 0</span> &middot; verified by rational arithmetic alone</div>
+            </div>
+            <div class="ev-row">
+              <div class="ev-k"><span class="tick">&check;</span> Signature <span style="color:var(--faint)">(Ed25519)</span></div>
+              <div class="ev-v hash">y1RsIj2q/mE/uKnPlmkVKo3yGLUhoI6U&hellip; &middot; pubkey YcHqU5OIbVxvjP+nZg6z84lDXdZI0o/P&hellip;</div>
+            </div>
+          </div>
+
+          <div class="verdict-bar">
+            <span style="font-size:22px;color:var(--green)">&check;</span>
+            <div>
+              <div class="big">VERDICT: PASS</div>
+              <div class="small">Ed25519 manifest + Farkas coverage certificate &middot; verified offline, no solver, no NOUS install &middot; zero trust in the producer</div>
+            </div>
+          </div>
+
+          <div class="note">This is the exact output of <code>python3 verify_offline.py</code> run against the signed dossier &mdash; reproducible on any disconnected machine with only the <code>cryptography</code> library. <b style="color:var(--dim)">Verify it yourself:</b> download the dossier above, then <code>unzip loan_dossier.zip &amp;&amp; cd loan_dossier &amp;&amp; python3 verify_offline.py</code>.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="pitch">
+    <p>&ldquo;I am not asking you to trust the AI.</p>
+    <p>I am asking you to verify the result.&rdquo;</p>
+  </div>
+
+  <div class="boundary">
+    <b>What this proves, exactly:</b> the decision stayed inside the declared policy, and that policy was proven to have no coverage gap before the model ran &mdash; cryptographically signed, independently checkable offline. It does <b>not</b> claim the model cannot make a bad recommendation; it makes the model&rsquo;s compliance <b>auditable after the fact</b>. NOUS claims exactly what it can sign, and refuses the rest.
+  </div>
+
+  <footer>
+    NOUS &mdash; cryptographically verifiable governance for AI-assisted decisions &middot;
+    <a href="/">nous-lang.org</a> &middot; <a href="/verify.html">how verification works</a>
+  </footer>
+</div>
+
+<script>
+function showWhy(){
+  document.getElementById('whyReveal').classList.add('open');
+  document.getElementById('verifyBtn').disabled=false;
+  document.getElementById('whyBtn').disabled=true;
+}
+function showVerify(){
+  document.getElementById('verifyReveal').classList.add('open');
+  document.getElementById('verifyBtn').disabled=true;
+  setTimeout(function(){
+    document.getElementById('verifyReveal').scrollIntoView({behavior:'smooth',block:'center'});
+  },120);
+}
+</script>
+</body>
+</html>

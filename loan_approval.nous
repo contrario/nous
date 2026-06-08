@@ -1,0 +1,55 @@
+world LoanApprovalGovernance {
+    law CostCeiling = $0.50 per cycle
+    heartbeat = 10s
+    cost_cap: 0.50 USD
+    max_ticks: 1
+    policy RejectHighDebtRatio {
+        kind: "loan.decision"
+        signal: debt_ratio >= 40
+        weight: 10.0
+        action: block
+    }
+    policy RejectLowCreditScore {
+        kind: "loan.decision"
+        signal: credit_score <= 700
+        weight: 10.0
+        action: block
+    }
+    policy LogAllDecisions {
+        kind: "loan.decision"
+        signal: true
+        weight: 1.0
+        action: log_only
+    }
+}
+message LoanApplication {
+    application_id: string
+    income: float
+    debt_ratio: float
+    credit_score: float
+}
+message DecisionResult {
+    application_id: string
+    decision: string
+    reason: string
+    source: SoulRef
+}
+soul Underwriter {
+    mind: claude-haiku-4-5 @ Tier0A
+    tokens: input = 500 output = 200
+    senses: [http_get]
+    memory {
+        evaluated: int = 0
+        rejected: int = 0
+    }
+    instinct {
+        let app = listen Intake::LoanApplication
+        guard app != null else sleep 5s
+        speak DecisionResult(application_id: app.application_id, decision: "evaluated", reason: "application evaluated against declared lending policy", source: self)
+        remember evaluated = evaluated + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+        on api_error => retry(2, api_error)
+    }
+}
