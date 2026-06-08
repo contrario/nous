@@ -102,6 +102,10 @@ class Manifest:
     coverage_smt2_sha256: Optional[str] = None  # __s115_coverage_smt2_sha256_v1__
     # Crypto-only file binding: sha256 of coverage.farkas.json bytes (S116 P3b).
     coverage_farkas_sha256: Optional[str] = None  # __s116_coverage_farkas_sha256_v1__
+    # Chain link to the immediately preceding manifest (S119,
+    # envelope-binding). sha256 of the predecessor's live canonical
+    # body bytes. drop-when-None: genesis omits it, byte-identical.
+    prior_digest: Optional[str] = None  # __s119_prior_digest_field_v1__
 
     def canonical_bytes(self) -> bytes:
         """Bytes that get signed — sorted, separator-stable JSON."""
@@ -140,6 +144,8 @@ class Manifest:
             d["coverage_smt2_sha256"] = self.coverage_smt2_sha256
         if self.coverage_farkas_sha256 is not None:  # __s116_coverage_farkas_sha256_v1__
             d["coverage_farkas_sha256"] = self.coverage_farkas_sha256
+        if self.prior_digest is not None:  # __s119_prior_digest_field_v1__
+            d["prior_digest"] = self.prior_digest
         return d  # __session96_revert_m3_canonical_dict_v1__
 
 
@@ -351,6 +357,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         policy_coverage_sha256=doc.get("policy_coverage_sha256"),  # __s115_policy_coverage_sha256_v1__
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
+        prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
     )
     return m, sig, pub
 
@@ -398,6 +405,7 @@ def parse_manifest_json_with_anchor(
         policy_coverage_sha256=doc.get("policy_coverage_sha256"),  # __s115_policy_coverage_sha256_v1__
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
+        prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
     )
     anchor: "_RekorAnchor | None" = None
     if anchor_block is not None:
