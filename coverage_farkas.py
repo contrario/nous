@@ -485,3 +485,222 @@ def check_serialized(doc):  # __s116_farkas_serialize_v1__
     if const == 0 and strict:
         return True
     return False
+
+
+class MonotonicityOutOfFragment(FarkasError):  # __s121_monotonicity_helpers_v1__
+    """A serialized constraint is malformed or outside the single linear
+    comparison fragment; the containment system cannot be built."""
+
+
+class MonotonicityIncomparable(FarkasError):  # __s121_monotonicity_helpers_v1__
+    """Two thresholds live in different variable spaces; region containment
+    is not a meaningful comparison (refused, never silently passed)."""
+
+
+def negate_serialized(constraint: Any) -> dict:  # __s121_monotonicity_helpers_v1__
+    """NOT of a normalized serialized constraint, as a serialized constraint.
+
+    A normalized LinIneq is 'L (< if strict else <=) 0'.
+      NOT(L < 0)  = (L >= 0) = (-L <= 0)   -> scale -1, strict False
+      NOT(L <= 0) = (L > 0)  = (-L < 0)    -> scale -1, strict True
+    Negation = scale every coeff (including the '' constant) by -1, flip
+    strict. Defensive: refuses non-normalized / malformed input locally,
+    because S121 negation does NOT pass through _comparison_to_ineq (which is
+    what guarantees the normal form elsewhere). Raises MonotonicityOutOfFragment.
+    """
+    if not isinstance(constraint, dict):
+        raise MonotonicityOutOfFragment(
+            "negate_serialized: constraint is not a dict"
+        )
+    coeffs = constraint.get("coeffs")
+    strict = constraint.get("strict")
+    if not isinstance(coeffs, dict) or not isinstance(strict, bool):
+        raise MonotonicityOutOfFragment(
+            "negate_serialized: constraint missing coeffs/strict or wrong type"
+        )
+    neg_coeffs: dict = {}
+    for k, v in coeffs.items():
+        try:
+            neg_coeffs[k] = str(-Fraction(v))
+        except (ValueError, TypeError, ZeroDivisionError) as e:
+            raise MonotonicityOutOfFragment(
+                "negate_serialized: non-rational coefficient "
+                + repr(v) + ": " + str(e)
+            )
+    return {"coeffs": neg_coeffs, "strict": (not strict)}
+
+
+def _serialized_vars(constraint: Any) -> set:  # __s121_monotonicity_helpers_v1__
+    """Variable set of a serialized constraint: coeffs keys minus the ''
+    constant. Used for the comparability gate (cheap, pre-Farkas, no solver)."""
+    if not isinstance(constraint, dict):
+        raise MonotonicityOutOfFragment(
+            "_serialized_vars: constraint is not a dict"
+        )
+    coeffs = constraint.get("coeffs")
+    if not isinstance(coeffs, dict):
+        raise MonotonicityOutOfFragment(
+            "_serialized_vars: constraint has no coeffs dict"
+        )
+    return {k for k in coeffs if k != ""}
+
+
+def _lin_from_serialized(constraint: dict) -> "LinIneq":  # __s121_monotonicity_helpers_v1__
+    """Reconstruct a LinIneq from a serialized constraint (coeffs as rational
+    strings, strict bool). No AST, no re-parse."""
+    coeffs = {
+        k: Fraction(v) for k, v in constraint["coeffs"].items()
+    }
+    return LinIneq(coeffs=coeffs, strict=bool(constraint["strict"]))
+
+
+def serialize_containment(ineq_a: dict, ineq_b: dict) -> Optional[dict]:  # __s121_monotonicity_helpers_v1__
+    """Prove region(T_a) subset-of region(T_b), i.e. T_a => T_b, i.e.
+    T_a AND NOT(T_b) is UNSAT, as a serialized Farkas certificate.
+
+    ineq_a, ineq_b are serialized constraints[0] (the threshold inequality)
+    of the predecessor (a) and current (b) coverage.farkas.json certs, each
+    normalized to 'L (< or <=) 0'. Builds the two-row system
+    [ineq_a, negate(ineq_b)] directly from the serialized coeffs (no AST),
+    then reuses the existing _find_farkas engine (single-source). Returns a
+    check_serialized-compatible cert dict on a witness, or None when no
+    witness exists (the system is satisfiable -> region NOT contained ->
+    a real counterexample input lies in region(T_a) but outside region(T_b)).
+
+    Raises MonotonicityIncomparable if the two thresholds use different
+    variable sets (comparison is meaningless). Raises
+    MonotonicityOutOfFragment on malformed input. NEVER returns a cert for an
+    incomparable or malformed pair -- fail-closed.
+    """
+    vars_a = _serialized_vars(ineq_a)
+    vars_b = _serialized_vars(ineq_b)
+    if vars_a != vars_b:
+        raise MonotonicityIncomparable(
+            "incomparable thresholds: predecessor variables "
+            + str(sorted(vars_a)) + " != current variables "
+            + str(sorted(vars_b))
+            + "; region containment across a changed variable space is not "
+            "assertable (refused, not passed)"
+        )
+    neg_b = negate_serialized(ineq_b)
+    system = [_lin_from_serialized(ineq_a), _lin_from_serialized(neg_b)]
+    witness = _find_farkas(system)
+    if witness is None:
+        return None
+    constraints = []
+    for ineq in system:
+        constraints.append(
+            {
+                "coeffs": {k: str(v) for k, v in sorted(ineq.coeffs.items())},
+                "strict": bool(ineq.strict),
+            }
+        )
+    return {
+        "fragment": "linear-real-single-comparison-containment",
+        "constraints": constraints,
+        "multipliers": [str(m) for m in witness],
+        "contradiction": _contradiction_str(system, witness),
+    }
+
+
+def region_contains(ineq_a: dict, ineq_b: dict) -> "tuple[bool, str]":  # __s121_region_contains_v1__
+    """Closed-form: does region(T_a) lie inside region(T_b)?  i.e. T_a => T_b.
+
+    ineq_a, ineq_b are serialized single-comparison constraints normalized
+    to 'L (< if strict else <=) 0', over the SAME variable set (the caller's
+    comparability gate guarantees this; this function does not assume it and
+    refuses non-proportional geometry). Exact rational arithmetic only;
+    never float. Returns (contained, reason): reason is "" when contained,
+    else names the failed condition. Complete for the 2-row single-comparison
+    fragment, so (False, reason) is a DEFINITIVE regression.
+    """
+    ca = ineq_a.get("coeffs")
+    cb = ineq_b.get("coeffs")
+    if not isinstance(ca, dict) or not isinstance(cb, dict):
+        raise MonotonicityOutOfFragment(
+            "region_contains: a constraint has no coeffs dict"
+        )
+    sa = ineq_a.get("strict")
+    sb = ineq_b.get("strict")
+    if not isinstance(sa, bool) or not isinstance(sb, bool):
+        raise MonotonicityOutOfFragment(
+            "region_contains: a constraint has no boolean strict flag"
+        )
+
+    # Variable union (excluding the '' constant), pivot from a STABLE sorted
+    # order so t is not derived from dict insertion order.
+    var_union = sorted(
+        (set(ca) | set(cb)) - {""}
+    )
+
+    def _f(d: dict, k: str) -> Fraction:
+        try:
+            return Fraction(d.get(k, 0))
+        except (ValueError, TypeError, ZeroDivisionError) as e:
+            raise MonotonicityOutOfFragment(
+                "region_contains: non-rational coefficient for "
+                + repr(k) + ": " + str(e)
+            )
+
+    # Zero-coefficient cross-case, both directions, per variable.
+    for v in var_union:
+        av = _f(ca, v)
+        bv = _f(cb, v)
+        if (av == 0) != (bv == 0):
+            return (
+                False,
+                "non-proportional: variable " + repr(v) + " is zero on one "
+                "threshold and nonzero on the other (different geometry)",
+            )
+
+    # Pivot: first variable nonzero on BOTH sides (equal-zero vars skipped).
+    pivot = None
+    for v in var_union:
+        if _f(ca, v) != 0:
+            pivot = v
+            break
+    if pivot is None:
+        # No nonzero variable coefficient on either side: degenerate
+        # (constant-only) thresholds are outside the comparison fragment.
+        raise MonotonicityOutOfFragment(
+            "region_contains: threshold has no nonzero variable coefficient "
+            "(degenerate, outside the single-comparison fragment)"
+        )
+
+    t = _f(cb, pivot) / _f(ca, pivot)
+    if t <= 0:
+        return (
+            False,
+            "anti-parallel: proportionality factor t=" + str(t)
+            + " is not positive (the half-spaces face opposite directions)",
+        )
+
+    # Every variable coefficient must satisfy coeff_b == t * coeff_a exactly.
+    for v in var_union:
+        if _f(cb, v) != t * _f(ca, v):
+            return (
+                False,
+                "non-proportional: coefficient of " + repr(v)
+                + " does not scale by t=" + str(t),
+            )
+
+    # Offset slack: const_b <= t * const_a, with strict slack required when
+    # T_a is non-strict and T_b is strict (shared-boundary exclusion).
+    const_a = _f(ca, "")
+    const_b = _f(cb, "")
+    scaled_a = t * const_a
+    if const_b > scaled_a:
+        return (
+            False,
+            "insufficient-slack: const_b=" + str(const_b)
+            + " > t*const_a=" + str(scaled_a)
+            + " (region T_b does not cover region T_a)",
+        )
+    if const_b == scaled_a and (sa is False) and (sb is True):
+        return (
+            False,
+            "strictness-violation: at the shared boundary the predecessor "
+            "(<=) includes the boundary point but the current (<) excludes "
+            "it (region shrank at the boundary)",
+        )
+    return (True, "")
