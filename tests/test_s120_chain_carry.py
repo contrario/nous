@@ -183,8 +183,10 @@ def test_rebind_depth2_chain_ordering(tmp_path: Path) -> None:
         c2src, manifest=c2mout, output=out2, supersedes=out1
     )
     links = sorted(f for f in result.files if f.startswith("chain/"))
-    assert links == [
+    assert links == [  # __s121_chain_carry_test_update_v1__
+        "chain/000_coverage.farkas.json",
         "chain/000_manifest.json",
+        "chain/001_coverage.farkas.json",
         "chain/001_manifest.json",
     ]
     assert (
@@ -194,6 +196,14 @@ def test_rebind_depth2_chain_ordering(tmp_path: Path) -> None:
     assert (
         (out2 / "chain" / "001_manifest.json").read_bytes()
         == (out1 / "manifest.json").read_bytes()
+    )
+    assert (
+        (out2 / "chain" / "000_coverage.farkas.json").read_bytes()
+        == (out0 / "coverage.farkas.json").read_bytes()
+    )
+    assert (
+        (out2 / "chain" / "001_coverage.farkas.json").read_bytes()
+        == (out1 / "coverage.farkas.json").read_bytes()
     )
 
 
