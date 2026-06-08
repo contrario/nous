@@ -340,7 +340,7 @@ def build_dossier(
         )
     output.mkdir(parents=True, exist_ok=True)
 
-    chain_links: list[tuple[bytes, "bytes | None", "bytes | None"]] = []  # __s120_chain_carry_v1__ __s121_chain_carry_sidecars_v1__
+    chain_links: list[tuple[bytes, "bytes | None"]] = []  # __s120_chain_carry_v1__ __s121_chain_carry_sidecars_v1__ __s121_revert_monotonic_carry_v1__
     _prior_digest = parsed_manifest.prior_digest
     if _prior_digest is not None and anchor != "none":  # __s120_chain_refuse_hoist_v1__
         raise DossierError(
@@ -407,20 +407,14 @@ def build_dossier(
                 _far = link_path.parent / link_path.name.replace(
                     "_manifest.json", "_coverage.farkas.json"
                 )
-                _mon = link_path.parent / link_path.name.replace(
-                    "_manifest.json", "_coverage.monotonic.json"
-                )
                 chain_links.append((
                     link_path.read_bytes(),
                     _far.read_bytes() if _far.is_file() else None,
-                    _mon.read_bytes() if _mon.is_file() else None,
                 ))
         _pred_far = pred_dir / "coverage.farkas.json"
-        _pred_mon = pred_dir / "coverage.monotonic.json"
         chain_links.append((
             pred_manifest_path.read_bytes(),
             _pred_far.read_bytes() if _pred_far.is_file() else None,
-            _pred_mon.read_bytes() if _pred_mon.is_file() else None,
         ))
 
     files: list[str] = []
@@ -515,7 +509,7 @@ def build_dossier(
     if chain_links:  # __s120_chain_carry_v1__ __s121_chain_carry_sidecars_v1__
         chain_dir = output / "chain"
         chain_dir.mkdir(parents=True, exist_ok=True)
-        for idx, (_mb, _fb, _monb) in enumerate(chain_links):
+        for idx, (_mb, _fb) in enumerate(chain_links):
             _base = "chain/" + str(idx).zfill(3)
             _mn = _base + "_manifest.json"
             (output / _mn).write_bytes(_mb)
@@ -524,10 +518,6 @@ def build_dossier(
                 _fn = _base + "_coverage.farkas.json"
                 (output / _fn).write_bytes(_fb)
                 files.append(_fn)
-            if _monb is not None:
-                _monn = _base + "_coverage.monotonic.json"
-                (output / _monn).write_bytes(_monb)
-                files.append(_monn)
 
     readme = _annex_iv_readme(
         world_name=parsed_manifest.world_name,
