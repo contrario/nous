@@ -221,6 +221,7 @@ def build_dossier(
     output: Optional[Path] = None,
     today: Optional[date] = None,
     anchor: str = "none",
+    supersedes: Optional[Path] = None,  # __s120_chain_carry_v1__
     _test_rekor_anchor: "object | None" = None,
     _test_rekor_anchor_v2: "object | None" = None,
 ) -> DossierResult:
@@ -338,6 +339,67 @@ def build_dossier(
         )
     output.mkdir(parents=True, exist_ok=True)
 
+    chain_links: list[bytes] = []  # __s120_chain_carry_v1__
+    _prior_digest = parsed_manifest.prior_digest
+    if _prior_digest is None and supersedes is not None:
+        raise DossierError(
+            "--supersedes given but the current manifest declares no "
+            "prior_digest; the producer did not record a re-binding "
+            "(run `nous verify --smt --supersedes <prior manifest>` first)"
+        )
+    if _prior_digest is not None and supersedes is None:
+        raise DossierError(
+            "manifest declares prior_digest "
+            + str(_prior_digest)[:16]
+            + "... but no --supersedes predecessor dossier was given; "
+            "the chain of prior manifests cannot be built"
+        )
+    if _prior_digest is not None and supersedes is not None:
+        pred_dir = Path(supersedes).resolve()
+        if not pred_dir.is_dir():
+            raise DossierError(
+                "--supersedes is not a directory: " + str(pred_dir)
+            )
+        pred_manifest_path = pred_dir / "manifest.json"
+        if not pred_manifest_path.is_file():
+            raise DossierError(
+                "predecessor dossier has no manifest.json: "
+                + str(pred_manifest_path)
+            )
+        pred_text = pred_manifest_path.read_text(encoding="utf-8")
+        try:
+            pred_parsed, pred_sig, pred_pub = parse_manifest_json(pred_text)
+        except Exception as e:
+            raise DossierError(
+                "cannot parse predecessor manifest "
+                + str(pred_manifest_path) + ": " + str(e)
+            )
+        if not verify_manifest_signature(pred_parsed, pred_sig, pred_pub):
+            raise DossierError(
+                "predecessor manifest " + str(pred_manifest_path)
+                + " Ed25519 signature does NOT verify; refusing to chain "
+                "onto a non-authentic predecessor"
+            )
+        pred_digest = hashlib.sha256(
+            pred_parsed.canonical_bytes()
+        ).hexdigest()
+        if pred_digest != _prior_digest:
+            raise DossierError(
+                "self-consistency: --supersedes points at a dossier whose "
+                "manifest canonical digest=" + pred_digest[:16]
+                + "... does not equal the prior_digest="
+                + str(_prior_digest)[:16]
+                + "... declared by the producer in the current manifest"
+            )
+        pred_chain_dir = pred_dir / "chain"
+        if pred_chain_dir.is_dir():
+            prior_links = sorted(
+                pred_chain_dir.glob("*_manifest.json")
+            )
+            for link_path in prior_links:
+                chain_links.append(link_path.read_bytes())
+        chain_links.append(pred_manifest_path.read_bytes())
+
     files: list[str] = []
 
     (output / "source.nous").write_bytes(source_bytes)
@@ -426,6 +488,14 @@ def build_dossier(
         encoding="utf-8",
     )
     files.append("public_key.b64")
+
+    if chain_links:  # __s120_chain_carry_v1__
+        chain_dir = output / "chain"
+        chain_dir.mkdir(parents=True, exist_ok=True)
+        for idx, link_bytes in enumerate(chain_links):
+            link_name = "chain/" + str(idx).zfill(3) + "_manifest.json"
+            (output / link_name).write_bytes(link_bytes)
+            files.append(link_name)
 
     readme = _annex_iv_readme(
         world_name=parsed_manifest.world_name,

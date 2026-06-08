@@ -52,6 +52,11 @@ def cmd_dossier(args: argparse.Namespace) -> int:
             prices=Path(args.prices) if args.prices else None,
             output=Path(args.output) if args.output else None,
             anchor=getattr(args, "anchor", "none"),
+            supersedes=(  # __s120_chain_carry_v1__
+                Path(args.supersedes)
+                if getattr(args, "supersedes", None)
+                else None
+            ),
         )
     except DossierError as e:
         print(f"ERROR: dossier build failed: {e}", file=sys.stderr)
@@ -117,6 +122,18 @@ def build_dossier_parser(sub: argparse._SubParsersAction) -> None:
         "--output", metavar="DIR",
         help="Output directory "
              "(default: <source>_dossier_<timestamp>/).",
+    )
+    p.add_argument(  # __s120_chain_carry_v1__
+        "--supersedes", metavar="DIR",
+        default=None,
+        help="Predecessor dossier DIRECTORY this build chains onto "
+             "(envelope-binding). Required when the manifest declares a "
+             "prior_digest; refused otherwise. The predecessor manifest is "
+             "signature-verified and its canonical-body sha256 must equal "
+             "the prior_digest declared in the current manifest, else the "
+             "build is refused. The predecessor's chain/ (if any) is copied "
+             "forward manifests-only; the offline verifier is the actual "
+             "guard, this is build-time admission control.",
     )
     # __nous_s95_cli_dossier_rekor_v2_choice_v1__
     p.add_argument(
