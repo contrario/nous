@@ -57,7 +57,7 @@ _BLOCKING_ACTIONS: frozenset[str] = frozenset({"block", "abort_cycle"})
 _COMPARE_OPS: frozenset[str] = frozenset({">", "<", ">=", "<=", "==", "!="})
 _BOOL_OPS: dict[str, str] = {"&&": "and", "||": "or"}
 _ARITH_OPS: dict[str, str] = {"+": "+", "-": "-"}
-_REFUSED_ARITH: frozenset[str] = frozenset({"*", "/", "%"})
+_REFUSED_ARITH: frozenset[str] = frozenset({"/", "%"})  # __s122_policy_coverage_linear_mul_v1__
 
 
 class CoverageEmitError(ValueError):
@@ -100,6 +100,41 @@ def _is_currency_dict(node: Any) -> bool:
         and "currency" in node
         and "amount" in node
         and "kind" not in node
+    )
+
+def _is_const_ast(node: Any) -> bool:  # __s122_policy_coverage_linear_mul_v1__
+    """True iff a signal-AST subtree carries no free variable: a numeric
+    or currency literal, or a +/-/* composition of constant subtrees.
+    Mirrors coverage_farkas._is_const_only(_linear(node)) so the SMT
+    emitter and the Farkas extractor admit the identical class."""
+    if isinstance(node, bool):
+        return False
+    if isinstance(node, (int, float)):
+        return True
+    if _is_currency_dict(node):
+        return True
+    if isinstance(node, str):
+        return False
+    if isinstance(node, dict) and node.get("kind") == "binop" \
+            and node.get("op") in ("+", "-", "*"):
+        return (_is_const_ast(node["left"])
+                and _is_const_ast(node["right"]))
+    return False
+
+def _scalar_mul_smt(
+    left_ast: Any, right_ast: Any, left_smt: str, right_smt: str,
+) -> str:  # __s122_policy_coverage_linear_mul_v1__
+    """Emit (* left right) iff exactly one side is a constant subtree.
+    variable * variable is bilinear and REFUSED (outside QF_LRA);
+    constant * constant is admitted (folds to a literal in the solver)."""
+    left_const = _is_const_ast(left_ast)
+    right_const = _is_const_ast(right_ast)
+    if left_const or right_const:
+        return f"(* {left_smt} {right_smt})"
+    raise CoverageEmitError(
+        "bilinear term (variable * variable) is refused in coverage "
+        "(P3b-multivar): outside linear real arithmetic (QF_LRA). Only "
+        "constant * variable is admitted."
     )
 
 
@@ -176,6 +211,10 @@ def _translate(
                 )
             left = _translate(node["left"], names, units)
             right = _translate(node["right"], names, units)
+            if op == "*":  # __s122_policy_coverage_linear_mul_v1__
+                return _scalar_mul_smt(
+                    node["left"], node["right"], left, right
+                )
             if op in _COMPARE_OPS:
                 if op == "==":
                     return f"(= {left} {right})"

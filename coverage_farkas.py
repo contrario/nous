@@ -76,6 +76,10 @@ def _linear(node: Any) -> dict:
             return _add(_linear(node["left"]), _linear(node["right"]), 1)
         if op == "-":
             return _add(_linear(node["left"]), _linear(node["right"]), -1)
+        if op == "*":  # __s122_farkas_linear_mul_v1__
+            return _linear_mul(
+                _linear(node["left"]), _linear(node["right"])
+            )
         raise FarkasError(f"non-linear operator {op!r} in term")
     raise FarkasError(f"unsupported term node {type(node).__name__!r}")
 
@@ -89,6 +93,29 @@ def _add(a: dict, b: dict, sign: int) -> dict:
 
 def _scale(a: dict, s: Fraction) -> dict:
     return {k: v * s for k, v in a.items()}
+
+
+def _is_const_only(d: dict) -> bool:  # __s122_farkas_linear_mul_v1__
+    """True iff a linear term has no variable component (constant-only)."""
+    return all(k == "" for k in d)
+
+
+def _linear_mul(a: dict, b: dict) -> dict:  # __s122_farkas_linear_mul_v1__
+    """Linear multiply: exactly one operand must be constant-only.
+    c*x and x*c fold to a scaled term; x*y (both carry a variable) is
+    bilinear and REFUSED as outside linear real arithmetic (QF_LRA)."""
+    a_const = _is_const_only(a)
+    b_const = _is_const_only(b)
+    if a_const and b_const:
+        return {"": a.get("", Fraction(0)) * b.get("", Fraction(0))}
+    if a_const:
+        return _scale(b, a.get("", Fraction(0)))
+    if b_const:
+        return _scale(a, b.get("", Fraction(0)))
+    raise FarkasError(
+        "bilinear term (variable * variable) outside linear real "
+        "arithmetic (QF_LRA); only constant * variable is admitted"
+    )
 
 
 def _comparison_to_ineq(node: Any) -> LinIneq:
