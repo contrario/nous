@@ -121,6 +121,18 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s122_release_v5_31_0___card -->
+    <a class="post-card" href="#" onclick="showPost(&#39;v531-multivariable-coverage&#39;);return false">
+      <div class="post-meta"><span class="post-date">Jun 2026</span><span class="post-tag">verification</span></div>
+      <div class="post-title">NOUS v5.31.0 &mdash; Coverage Over Several Variables</div>
+      <div class="post-excerpt">A single-variable threshold could not express a policy that weighs amount and risk together. v5.31.0 admits linear multi-variable thresholds &mdash; <code>2*amount + risk_score &gt; 10000</code> &mdash; with each variable carrying a constant coefficient. The SMT emitter and the stdlib Farkas extractor admit and refuse the identical class in lockstep, and every obligation is certified twice: a Farkas certificate over the rationals and a z3 <em>unsat</em>. <code>constant*variable</code> is admitted (linear real arithmetic); <code>variable*variable</code> is refused as non-linear. The proof certifies only the declared net, never real-world safety. <code>nous-lang 5.31.0</code>.</div>
+    </a>
+    <!-- __s121_release_v5_30_0___card -->
+    <a class="post-card" href="#" onclick="showPost('v530-coverage-region-monotonicity');return false">
+      <div class="post-meta"><span class="post-date">Jun 2026</span><span class="post-tag">verification</span></div>
+      <div class="post-title">NOUS v5.30.0 &mdash; Proving the Net Did Not Shrink</div>
+      <div class="post-excerpt">The envelope-binding chain proved an unbroken lineage but said nothing about whether each build&rsquo;s declared blocking net stayed at least as wide as its predecessor&rsquo;s. v5.30.0 proves it: the offline verifier re-derives, from the two authenticated endpoint Farkas certificates, that the predecessor&rsquo;s proven coverage region is contained in the current&rsquo;s &mdash; closed-form, no solver, no new signed field, <code>cryptography</code> and stdlib only. It proves only that the declared net did not shrink over the single-comparison fragment; incomparable thresholds and dropped coverage are refused, not asserted. <code>nous-lang 5.30.0</code>.</div>
+    </a>
     <!-- __s120_web_v5_29_0___card -->
     <a class="post-card" href="#" onclick="showPost('v529-envelope-binding-chain');return false">
       <div class="post-meta">
@@ -568,6 +580,25 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s122_release_v5_31_0___post -->
+  <div class="post-full" id="post-v531-multivariable-coverage">
+    <div class="post-body">
+      <p>Through v5.30.0 the policy-coverage proof spoke about a single variable. The obligation it discharged was: for every input where a declared threshold holds &mdash; say <code>amount &gt; 10000</code> &mdash; at least one blocking policy also fires. A real governance policy rarely turns on one number. It weighs several at once: a transaction over an amount <em>and</em> above a risk score, a combined exposure <code>2*amount + risk_score &gt; 10000</code>. Until now that threshold was refused: the coverage fragment accepted only addition and subtraction of bare variables, and the multiplication that a coefficient needs was rejected wholesale.</p>
+      <p>v5.31.0 admits the linear multi-variable case. A threshold may now be linear in several variables, and each variable may carry a constant coefficient. The line that separates what is admitted from what is refused is precise and load-bearing. <code>constant * variable</code> &mdash; <code>2*amount</code> &mdash; is admitted, because it stays inside linear real arithmetic (QF_LRA), the decidable theory the whole proof rests on. <code>variable * variable</code> &mdash; <code>amount*risk_score</code> &mdash; is refused, because a product of two variables is non-linear, and non-linear real arithmetic is a different and far harder theory. Division and modulo stay refused for the same soundness reason they always were.</p>
+      <p>What makes the extension trustworthy is that two independent checkers were made to agree on it. The SMT emitter, which builds the z3 script, and the stdlib Farkas extractor, which builds a solver-independent certificate over the rationals, now admit and refuse the identical class of threshold &mdash; verified case by case in lockstep. Every multi-variable obligation in the test suite is certified both ways: a Farkas certificate that a third party can check with nothing but Python&rsquo;s fractions, and a z3 <em>unsat</em> as a second opinion. A threshold whose blocking net has a gap is refused by both: no Farkas witness exists, and z3 returns <em>sat</em> with a concrete uncovered input.</p>
+      <p>The boundary is the feature, as always. v5.31.0 proves that a linear multi-variable blocking net leaves no gap over its declared threshold. It does not prove the threshold is the right one, that the policy is wise, or that the system is safe in the world. It proves exactly the closed mathematical claim, and refuses every obligation it cannot close. 11 new tests, floor 1191 to 1202. <code>nous-lang 5.31.0</code>.</p>
+    </div>
+  </div>
+  <!-- __s121_release_v5_30_0___post -->
+  <div class="post-full" id="post-v530-coverage-region-monotonicity">
+    <div class="post-body">
+      <p>A conformance certificate proves one build stayed inside its declared envelope. The v5.29.0 envelope-binding chain proved something across builds: an unbroken lineage of signature-valid formation envelopes, each naming its predecessor by digest, rooted at genesis. It said, in plain words, that it did <strong>not</strong> prove coverage non-regression. v5.30.0 supplies that one missing claim &mdash; and nothing more.</p>
+      <p>The coverage proof of a single build certifies that no input crossing a declared threshold escapes a blocking policy: there is no gap in the declared net, for that build. The question across builds is whether the net stayed at least as wide. Formally: is the predecessor&rsquo;s proven region contained in the current&rsquo;s, region(N-1) a subset of region(N)?</p>
+      <p>The verifier answers it without trusting the issuer. For each re-binding hop where both links&rsquo; signature-verified manifests declare a coverage proof, it authenticates both endpoint Farkas certificates against their signed manifest hashes, then re-derives containment itself &mdash; a closed-form algebraic check over the single-comparison linear-real fragment. Two half-spaces, same variable space: the predecessor&rsquo;s region lies inside the current&rsquo;s exactly when their normals are positively proportional and the offset is no tighter. No producer-supplied witness to trust, no solver to invoke, no new signed field on the manifest &mdash; <code>cryptography</code> and the standard library alone, the same zero-trust footing as the chain walk it composes onto.</p>
+      <p>The boundary is stated, not hidden. This proves only that the <strong>declared</strong> blocking net did not shrink across consecutive chain links, over the single-comparison fragment. It is not a scalar comparison of thresholds, not a claim that the signal set improved, not real-world risk, and not that the latest build is safer. When a re-binding moves the threshold to a different variable space the regions are incomparable, and the verifier refuses &mdash; it does not silently pass. When a re-binding drops coverage that a predecessor declared, the verifier refuses. The honest answer to an unanswerable comparison is a refusal, and that is what it returns.</p>
+      <p><code>nous-lang 5.30.0</code> &mdash; the closed-form region check is verified against an independent Farkas oracle across every branch, including the multi-variable proportionality path, before it ships.</p>
+    </div>
+  </div>
   <!-- __s120_web_v5_29_0___post -->
   <div class="post-full" id="post-v529-envelope-binding-chain">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
