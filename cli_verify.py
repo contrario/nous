@@ -33,7 +33,9 @@ from manifest import (
     load_or_create_keypair,
     manifest_from_verify,
     manifest_json,
+    parse_manifest_json,  # __s119_supersedes_producer_v1__
     sign_manifest,
+    verify_manifest_signature,  # __s119_supersedes_producer_v1__
 )
 from parser import parse_nous
 from pricing import load_pricing
@@ -209,6 +211,26 @@ def cmd_verify(args: argparse.Namespace) -> int:
             coverage_farkas_sha256=coverage_farkas_sha,  # __s116_cli_farkas_v1__
         )
 
+    supersedes_path = getattr(args, "supersedes", None)  # __s119_supersedes_producer_v1__
+    if supersedes_path:
+        try:
+            _prior_digest = resolve_prior_digest(
+                manifest, supersedes_path
+            )
+        except SupersedesError as e:
+            print(
+                "REFUSED: " + str(e) + ". No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        manifest = _dc_s115.replace(
+            manifest, prior_digest=_prior_digest
+        )
+        print(
+            "Re-binding: supersedes " + str(supersedes_path)
+            + " (prior_digest " + _prior_digest[:16] + "...)"
+        )
+
     if args.no_manifest:
         return _exit_for_verdict(result.verdict)
 
@@ -267,6 +289,72 @@ def _exit_for_verdict(v: str) -> int:
         "unknown": 2,
         "error": 3,
     }.get(v, 3)
+
+
+_SHA_BEARING_FIELDS = (  # __s119_supersedes_producer_v1__
+    "source_sha256",
+    "pricing_sha256",
+    "smt_spec_sha256",
+    "cost_cap_usd",
+    "max_ticks",
+)
+
+
+class SupersedesError(Exception):  # __s119_supersedes_producer_v1__
+    """Re-binding admission control failed; message starts with the cause."""
+
+
+def resolve_prior_digest(  # __s119_supersedes_producer_v1__
+    manifest: "object", supersedes_path: str
+) -> str:
+    """Verify the immediate predecessor and return its canonical-body sha256.
+
+    Fail-closed: raises SupersedesError on a missing file, a parse failure,
+    an invalid predecessor Ed25519 signature, or a no-op re-binding (no
+    sha-bearing field moved vs the predecessor). Signature-check is of the
+    IMMEDIATE predecessor only; this performs NO chain-walk. This is issuance
+    admission control, NOT the trust boundary -- the offline verifier
+    enforces the same rule with zero issuer trust.
+    """
+    prior_path = Path(supersedes_path)
+    if not prior_path.is_file():
+        raise SupersedesError(
+            "predecessor manifest not found: " + str(prior_path)
+        )
+    try:
+        prior_text = prior_path.read_text(encoding="utf-8")
+        prior_manifest, prior_sig, prior_pub = parse_manifest_json(
+            prior_text
+        )
+    except SupersedesError:
+        raise
+    except Exception as e:
+        raise SupersedesError(
+            "cannot parse predecessor manifest "
+            + str(prior_path) + ": " + str(e)
+        )
+    if not verify_manifest_signature(
+        prior_manifest, prior_sig, prior_pub
+    ):
+        raise SupersedesError(
+            "predecessor manifest " + str(prior_path)
+            + " Ed25519 signature does NOT verify; refusing to chain onto "
+            "a non-authentic predecessor"
+        )
+    moved = [
+        f for f in _SHA_BEARING_FIELDS
+        if getattr(manifest, f) != getattr(prior_manifest, f)
+    ]
+    if not moved:
+        raise SupersedesError(
+            "no-op re-binding: --supersedes given but no sha-bearing "
+            "field moved vs " + str(prior_path) + ". A material change "
+            "must alter at least one of "
+            + ", ".join(_SHA_BEARING_FIELDS)
+        )
+    return _hashlib_s115.sha256(
+        prior_manifest.canonical_bytes()
+    ).hexdigest()
 
 
 def build_verify_parser(subparsers: argparse._SubParsersAction) -> None:
