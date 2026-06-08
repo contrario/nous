@@ -124,10 +124,17 @@ def run_compiled_with_trace(
         runtime = mod.build_runtime()
         runtime.channels._trace_ctx = recorder
 
+        from runtime import _ACTIVE_SOUL  # __s118_u2_driver_attribution_v1__
+
         async def _drive() -> None:
             for _cycle in range(max_cycles):
                 for runner in runtime._runners:
-                    await runner._instinct()
+                    _token = _ACTIVE_SOUL.set(runner.name)
+                    try:
+                        await runner._instinct()
+                        recorder.record_llm_call(runner.name, 0, 0, 0)
+                    finally:
+                        _ACTIVE_SOUL.reset(_token)
 
         asyncio.run(_drive())
     finally:

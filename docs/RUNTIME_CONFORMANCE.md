@@ -169,10 +169,16 @@ artifacts and untampered, with a transparency-log inclusion proof when anchored.
   records reality. Interpreter-path trace emission shipped in v5.18.0
   (`nous run --emit-trace`); action-label binding for speaks shipped in
   v5.19.0 (interpreter path); compiled-path emission shipped in v5.22.0
-  (message events only; `llm_call` and per-soul attribution deferred,
-  soul recorded as the reserved `unknown_soul` sentinel; offline-
-  verifiable and proven at message-event parity with the interpreter).
-  <!-- __s105_doc_compiled_path_v1__ --> Since
+  (S118/v5.28.0: the compiled path now records the real producing soul
+  and emits one zero-token `llm_call` event per cognition step, so a
+  compiled-path certificate evaluates the surface and assumption-
+  discharge obligations over the declared souls at dry-run parity with
+  the interpreter; live-token attribution on the compiled path remains
+  deferred, as threading real token counts out of the generated module
+  would require a codegen change that breaks the template byte-identity
+  gate; events earlier than v5.28.0 carried the reserved `unknown_soul`
+  sentinel and no `llm_call` events).
+  <!-- __s105_doc_compiled_path_v1__ --> <!-- __s118_doc_compiled_attribution_v1__ --> Since
   v5.20.0 the static verifier warns (SEQ-PROD) when a sequence law
   references an event no soul emits via speak -- the law can never fire.
   <!-- __s104_doc_limitation_v1__ --> <!-- __s104_doc_seqprod_v1__ -->

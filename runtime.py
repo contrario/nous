@@ -8,6 +8,7 @@ Sense caching for deduplication. Graceful shutdown.
 from __future__ import annotations
 
 import asyncio
+import contextvars  # __s118_u1_ctxvar_import_v1__
 import logging
 import signal
 import time
@@ -17,6 +18,10 @@ from typing import Any, Callable, Coroutine, Optional
 import httpx
 
 log = logging.getLogger("nous.runtime")
+
+_ACTIVE_SOUL: contextvars.ContextVar[str] = contextvars.ContextVar(  # __s118_u1_ctxvar_def_v1__
+    "nous_active_soul", default="unknown_soul"
+)
 
 TIER_COSTS: dict[str, dict[str, float]] = {
     "Tier0A": {"input_per_1k": 0.00025, "output_per_1k": 0.00125},
@@ -212,8 +217,8 @@ class ChannelRegistry:
 
     async def send(self, name: str, message: Any) -> None:
         if self._trace_ctx is not None:  # __s105_u2_chan_record_v1__
-            self._trace_ctx.record_message(
-                "unknown_soul", 0, action=type(message).__name__
+            self._trace_ctx.record_message(  # __s118_u1_ctxvar_readsite_v1__
+                _ACTIVE_SOUL.get(), 0, action=type(message).__name__
             )
         ch = await self.get(name)
         await ch.send(message)
