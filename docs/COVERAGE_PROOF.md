@@ -293,3 +293,48 @@ Offline replay of the proven dossier (z3 absent):
        manifest field, `coverage.farkas.json` as the 8th dossier file, and
        the stdlib-only offline verifier with z3 demoted to optional second
        opinion.
+
+
+## P3b-bool: the Farkas DNF bundle (v5.32.0)  <!-- __s124_coverage_proof_doc_v1__ -->
+
+Since v5.32.0 the stdlib-checkable certificate covers full Disjunctive
+Linear Arithmetic: boolean combinations of linear comparisons via
+`&&`, `||`, `!` in blocking signals and in the coverage threshold.
+
+Mechanism. The gap search `T && NOT(B_1) && ... && NOT(B_n)` is expanded
+to disjunctive normal form over the NEGATION. Each disjunct is a
+conjunction of linear comparisons, i.e. one linear system, and Farkas'
+lemma is complete for it: the disjunct is unsatisfiable iff non-negative
+multipliers collapse it to a numeric contradiction. Coverage is PROVEN
+iff EVERY disjunct of the negation carries such a witness.
+`coverage.farkas.json` becomes a bundle: `fragment` is
+`"disjunctive-linear-bundle"` and `certs` is an array of per-disjunct
+certificates, each carrying canonical constraints and multipliers.
+Purely linear obligations keep emitting the v1 single-system format
+byte-identically.
+
+Zero-trust verification. The offline verifier does NOT iterate the
+handed bundle. It re-derives the disjunct set independently from the
+SIGNED source: `source.nous` is sha-gated by the signed manifest, the
+threshold expression is sha-gated through `coverage.farkas.json`, and a
+pure-stdlib scanner plus an expression parser that mirrors the grammar
+precedence reconstruct the obligation. The verifier then requires a
+BIJECTION -- exactly one valid certificate per derived disjunct, keyed
+by the full canonical serialization of the disjunct's constraints. A
+bundle that omits the gap disjunct (overclaim-by-omission), carries a
+surplus or duplicate certificate, substitutes a constraint, or forges a
+multiplier FAILS even when the enclosing manifest signature is valid.
+This is boolean ENUMERATION from signed source, never boolean solving;
+the verifier stays solver-free.
+
+Issuance gate. The producer signs a bundle only when an independent
+text-level derivation (`coverage_minilang`) reproduces the Lark-side
+disjunct set; divergence drops the certificate to z3-only evidence
+(drop-when-None), never a mismatched signature.
+
+Bounds and honest boundary. DNF expansion is exponential in the worst
+case; the producer refuses (typed) above `DISJUNCT_BOUND = 64` rather
+than sign an unbounded case-split. `var * var` stays REFUSED: bilinear
+constraints are outside QF_LRA and no cheap stdlib certificate exists.
+Chain (envelope-binding) + bundle composition is REFUSED at dossier
+build until the chain verifier learns bundle certificates.

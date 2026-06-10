@@ -11,6 +11,40 @@
   Removed / Fixed / Security.
 -->
 
+## [5.32.0] - 2026-06-10  <!-- __s124_changelog_v5_32_0_v1__ -->
+
+### Added
+- Farkas DNF bundle for boolean blocking nets (P3b-bool): boolean
+  combinations of linear comparisons (&&, ||, !) are now certifiable by
+  standard-library rational arithmetic. The gap search T && NOT(B) is
+  expanded to disjunctive normal form over the NEGATION; one Farkas
+  certificate per disjunct; coverage is PROVEN iff every disjunct is
+  refuted. coverage.farkas.json becomes a bundle (fragment
+  "disjunctive-linear-bundle") for boolean obligations; v1 single-system
+  certificates remain byte-identical for linear obligations.
+- Offline bundle verifier: re-derives the disjunct set from the SIGNED
+  source (string-aware structural scanner plus a grammar-mirroring
+  expression parser, pure stdlib) and requires a bijection -- exactly
+  one valid certificate per derived disjunct. Omission, surplus,
+  duplicate, substitution, and forged-multiplier bundles FAIL even under
+  a valid manifest signature (zero issuer trust; boolean ENUMERATION
+  from signed source, never boolean solving).
+- coverage_minilang module and an issuance-time cross-derivation gate: a
+  bundle is signed only when the text-level derivation reproduces the
+  Lark-side disjunct set; divergence drops to z3-only evidence
+  (drop-when-None).
+- DNF disjunct count bounded (DISJUNCT_BOUND = 64) with a typed REFUSE
+  (exponential case-split is never signed unbounded).
+
+### Changed
+- `nous verify --coverage-threshold` dispatches through serialize_auto:
+  the v1 single-system path is byte-identical; boolean obligations emit
+  the bundle.
+- Honest boundary: chain + Farkas bundle composition is REFUSED at
+  dossier build (the chain verifier checks single-system certificates
+  only; carry-forward). var*var stays REFUSED (bilinear, outside
+  QF_LRA).
+
 ## [5.27.0] - 2026-06-06  <!-- __s116_changelog_v5_27_0_v1__ -->
 
 ### Added
