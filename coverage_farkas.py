@@ -731,3 +731,334 @@ def region_contains(ineq_a: dict, ineq_b: dict) -> "tuple[bool, str]":  # __s121
             "it (region shrank at the boundary)",
         )
     return (True, "")
+
+
+# ===========================================================================
+# S124 -- Farkas DNF bundle (P3b-bool).  __s124_farkas_dnf_bundle_v1__
+#
+# Lifts the stdlib-checkable certificate from the single-linear-system
+# fragment to Disjunctive Linear Arithmetic. The gap search
+# T && NOT(B_1) && ... && NOT(B_n) is expanded to DNF over the NEGATION,
+# and coverage is PROVEN iff EVERY disjunct of the negation carries a
+# Farkas witness (the disjunct is unsat). The bundle is checkable with
+# fractions alone. The checker does NOT trust the handed enumeration:
+# it re-derives the disjunct set from the caller-supplied ASTs and
+# requires a bijection (exactly one valid certificate per derived
+# disjunct), so a bundle that omits the gap disjunct FAILS
+# (no overclaim-by-omission). The bijection key is the full canonical
+# serialization of the disjunct's constraints, so substitution and
+# omission break the same check. var*var stays REFUSED (bilinear,
+# outside QF_LRA). The DNF disjunct count is bounded with a typed
+# REFUSE (DNF blowup is exponential; an unbounded expansion is never
+# signed).
+# ===========================================================================
+
+DISJUNCT_BOUND: int = 64  # __s124_farkas_dnf_bundle_v1__
+
+BUNDLE_FRAGMENT: str = "disjunctive-linear-bundle"
+
+_FLIP_OP: dict = {">": "<=", ">=": "<", "<": ">=", "<=": ">"}
+
+_CMP_OPS: tuple = (">", ">=", "<", "<=")
+
+
+def _is_comparison(node: Any) -> bool:
+    """True iff the node is a binop over a P3b-comparable operator."""
+    return (
+        isinstance(node, dict)
+        and node.get("kind") == "binop"
+        and node.get("op") in _CMP_OPS
+    )
+
+
+def _nnf(node: Any, negate: bool) -> Any:
+    """Negation normal form over the boolean fragment (&& / || / ! over
+    comparisons). Comparisons are the literals; negation is absorbed by
+    flipping the comparison operator. Refuses (typed) outside the
+    fragment, including ==/!=, bool literals, and bare names."""
+    if _is_comparison(node):
+        if not negate:
+            return node
+        flipped = dict(node)
+        flipped["op"] = _FLIP_OP[node["op"]]
+        return flipped
+    if isinstance(node, dict) and node.get("kind") == "not":
+        return _nnf(node["operand"], not negate)
+    if (
+        isinstance(node, dict)
+        and node.get("kind") == "binop"
+        and node.get("op") in ("&&", "and", "||", "or")
+    ):
+        is_and = node.get("op") in ("&&", "and")
+        if negate:
+            is_and = not is_and
+        return {
+            "kind": "binop",
+            "op": "&&" if is_and else "||",
+            "left": _nnf(node["left"], negate),
+            "right": _nnf(node["right"], negate),
+        }
+    raise FarkasError(
+        f"signal node outside the disjunctive linear fragment "
+        f"(P3b-bool): {node!r}"
+    )
+
+
+def _dnf(node: Any, bound: int) -> list:
+    """NNF tree -> disjunct list (each disjunct is a list of comparison
+    dicts). Refuses (typed) when the disjunct count exceeds `bound`."""
+    if _is_comparison(node):
+        return [[node]]
+    if isinstance(node, dict) and node.get("kind") == "binop":
+        op = node.get("op")
+        if op == "||":
+            out = _dnf(node["left"], bound) + _dnf(node["right"], bound)
+            if len(out) > bound:
+                raise FarkasError(
+                    f"DNF disjunct count exceeds bound {bound}; "
+                    f"case-split refused (coverage stays "
+                    f"z3-checkable-only)"
+                )
+            return out
+        if op == "&&":
+            left = _dnf(node["left"], bound)
+            right = _dnf(node["right"], bound)
+            if len(left) * len(right) > bound:
+                raise FarkasError(
+                    f"DNF disjunct count exceeds bound {bound}; "
+                    f"case-split refused (coverage stays "
+                    f"z3-checkable-only)"
+                )
+            return [a + b for a in left for b in right]
+    raise FarkasError(f"non-NNF node in DNF expansion: {node!r}")
+
+
+def _gap_disjuncts(
+    threshold_ast: Any,
+    blocking_signals: list,
+    bound: int,
+) -> list:
+    """DNF of the gap search T && NOT(B_1) && ... && NOT(B_n)."""
+    conj = _nnf(threshold_ast, False)
+    for sig in blocking_signals:
+        conj = {
+            "kind": "binop",
+            "op": "&&",
+            "left": conj,
+            "right": _nnf(sig, True),
+        }
+    return _dnf(conj, bound)
+
+
+def _canon_constraint(ineq: "LinIneq") -> dict:
+    """Canonical JSON-serializable form of one LinIneq (matches the v1
+    serialize_system constraint shape byte-for-byte)."""
+    return {
+        "coeffs": {k: str(v) for k, v in sorted(ineq.coeffs.items())},
+        "strict": bool(ineq.strict),
+    }
+
+
+def _canon_json(obj: Any) -> str:
+    import json
+
+    return json.dumps(obj, sort_keys=True, separators=(",", ":"))
+
+
+def _canon_system(comparisons: list) -> "tuple[list, list]":
+    """Comparison dicts -> (canonical-sorted constraint dicts, the
+    LinIneq system in the SAME order). Multipliers found against this
+    order align with the canonical constraint order, so an independent
+    checker that re-derives the same canonical system can verify them
+    with zero positional trust."""
+    pairs = []
+    for comp in comparisons:
+        ineq = _comparison_to_ineq(comp)
+        pairs.append((_canon_constraint(ineq), ineq))
+    pairs.sort(key=lambda p: _canon_json(p[0]))
+    return [p[0] for p in pairs], [p[1] for p in pairs]
+
+
+def serialize_bundle(
+    threshold_ast: Any,
+    blocking_signals: list,
+    threshold_expr: "Optional[str]" = None,
+) -> dict:
+    """Build a self-contained, JSON-serializable Farkas certificate
+    BUNDLE for the disjunctive linear fragment (boolean combinations of
+    linear comparisons via && / || / !). One Farkas certificate per
+    DNF disjunct of the negation T && !B; coverage is proven iff every
+    disjunct is refuted. Raises FarkasError outside the fragment, when
+    any disjunct lacks a witness (a gap may exist), or when the
+    disjunct count exceeds DISJUNCT_BOUND."""
+    disjuncts = _gap_disjuncts(
+        threshold_ast, blocking_signals, DISJUNCT_BOUND
+    )
+    certs: dict = {}
+    for comps in disjuncts:
+        constraints, system = _canon_system(comps)
+        key = _canon_json(constraints)
+        if key in certs:
+            continue
+        witness = _find_farkas(system)
+        if witness is None:
+            raise FarkasError(
+                "no Farkas witness for a gap disjunct: the disjunct is "
+                "satisfiable (a coverage gap may exist) or outside the "
+                "linear system the certificate can refute"
+            )
+        certs[key] = {
+            "constraints": constraints,
+            "multipliers": [str(m) for m in witness],
+            "contradiction": _contradiction_str(system, witness),
+        }
+    cert_list = [certs[k] for k in sorted(certs)]
+    doc: dict = {
+        "fragment": BUNDLE_FRAGMENT,
+        "threshold_expr": threshold_expr,
+        "disjunct_count": len(cert_list),
+        "certs": cert_list,
+    }
+    if _is_comparison(threshold_ast):
+        doc["threshold_constraint"] = _canon_constraint(
+            _comparison_to_ineq(threshold_ast)
+        )
+    return doc
+
+
+def _check_multipliers(constraints: list, multipliers: list) -> bool:
+    """Stdlib-only Farkas check of one (constraints, multipliers) pair:
+    non-negative multipliers (at least one positive), the weighted sum
+    cancels every variable, and the residual constant is a numeric
+    contradiction. fractions only."""
+    if not isinstance(constraints, list) or not isinstance(
+        multipliers, list
+    ):
+        return False
+    if len(constraints) != len(multipliers):
+        return False
+    lam = []
+    for m in multipliers:
+        try:
+            lam.append(Fraction(m))
+        except (ValueError, TypeError, ZeroDivisionError):
+            return False
+    if any(x < 0 for x in lam):
+        return False
+    if not any(x > 0 for x in lam):
+        return False
+    combined: dict = {}
+    strict = False
+    for x, c in zip(lam, constraints):
+        if x == 0:
+            continue
+        if not isinstance(c, dict):
+            return False
+        coeffs = c.get("coeffs")
+        if not isinstance(coeffs, dict):
+            return False
+        for k, v in coeffs.items():
+            try:
+                fv = Fraction(v)
+            except (ValueError, TypeError, ZeroDivisionError):
+                return False
+            combined[k] = combined.get(k, Fraction(0)) + x * fv
+        if c.get("strict"):
+            strict = True
+    for k, v in combined.items():
+        if k != "" and v != 0:
+            return False
+    const = combined.get("", Fraction(0))
+    if const > 0:
+        return True
+    if const == 0 and strict:
+        return True
+    return False
+
+
+def check_serialized_bundle(
+    doc: Any,
+    threshold_ast: Any,
+    blocking_signals: list,
+) -> bool:
+    """Zero-trust check of a Farkas bundle. The disjunct set is
+    RE-DERIVED from the supplied ASTs (never taken from the bundle),
+    then a bijection is required: exactly one certificate per derived
+    disjunct, keyed by the full canonical serialization of the
+    disjunct's constraints. Each certificate's multipliers are checked
+    against the RE-DERIVED constraints. A bundle that omits a disjunct,
+    carries a surplus or duplicate certificate, substitutes a
+    constraint, or forges a multiplier returns False."""
+    if not isinstance(doc, dict) or doc.get("fragment") != BUNDLE_FRAGMENT:
+        return False
+    cert_list = doc.get("certs")
+    if not isinstance(cert_list, list):
+        return False
+    try:
+        disjuncts = _gap_disjuncts(
+            threshold_ast, blocking_signals, DISJUNCT_BOUND
+        )
+    except FarkasError:
+        return False
+    derived: dict = {}
+    for comps in disjuncts:
+        try:
+            constraints, _system = _canon_system(comps)
+        except FarkasError:
+            return False
+        derived[_canon_json(constraints)] = constraints
+    carried: dict = {}
+    for cert in cert_list:
+        if not isinstance(cert, dict):
+            return False
+        cons = cert.get("constraints")
+        mults = cert.get("multipliers")
+        if not isinstance(cons, list) or not isinstance(mults, list):
+            return False
+        norm = []
+        for c in cons:
+            if not isinstance(c, dict):
+                return False
+            coeffs = c.get("coeffs")
+            if not isinstance(coeffs, dict):
+                return False
+            try:
+                norm_coeffs = {
+                    str(k): str(Fraction(v))
+                    for k, v in sorted(coeffs.items())
+                }
+            except (ValueError, TypeError, ZeroDivisionError):
+                return False
+            norm.append(
+                {"coeffs": norm_coeffs, "strict": bool(c.get("strict"))}
+            )
+        norm.sort(key=_canon_json)
+        key = _canon_json(norm)
+        if key in carried:
+            return False
+        carried[key] = mults
+    if set(carried) != set(derived):
+        return False
+    for key, constraints in derived.items():
+        if not _check_multipliers(constraints, carried[key]):
+            return False
+    return True
+
+
+def serialize_auto(
+    threshold_ast: Any,
+    blocking_signals: list,
+    threshold_expr: "Optional[str]" = None,
+) -> dict:
+    """Dispatch: the v1 single-system certificate when the obligation
+    fits the v1 fragment (byte-identical emission, zero churn for all
+    prior manifests), the DNF bundle when boolean structure is present.
+    Raises FarkasError when neither path certifies."""
+    try:
+        return serialize_system(
+            threshold_ast, blocking_signals, threshold_expr=threshold_expr
+        )
+    except FarkasError:
+        return serialize_bundle(
+            threshold_ast, blocking_signals, threshold_expr=threshold_expr
+        )
