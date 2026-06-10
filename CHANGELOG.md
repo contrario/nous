@@ -11,6 +11,33 @@
   Removed / Fixed / Security.
 -->
 
+## [5.33.0] - 2026-06-10  <!-- __s125_changelog_v5_33_0_v1__ -->
+
+### Added
+- Chain + Farkas DNF bundle composition. A re-binding (envelope-binding
+  chain) dossier whose current link carries a boolean blocking net is now
+  verifiable offline: the emitted verifier (VERIFY_OFFLINE_PY_CHAIN_BUNDLE)
+  re-derives the current link's gap disjunct set from the SIGNED source
+  (zero issuer trust, no solver) and walks the prior-link chain, asserting
+  coverage-region MONOTONICITY from each link's SIGNED threshold inequality
+  (v1 constraints[0] or bundle threshold_constraint). Prior-link coverage
+  completeness is NOT re-proven (no per-link source is carried); the honest
+  boundary is documented in docs/CHAIN_BUNDLE_COMPOSITION_DESIGN.md.
+
+### Changed
+- `nous dossier --supersedes` lifts the S124 unconditional chain+bundle
+  refuse: it emits the chain+bundle verifier when the chain carries any
+  disjunctive-linear bundle (current link or carried prior) bearing a
+  single-comparison threshold_constraint. Plain v1 chains keep emitting the
+  v1 chain verifier byte-identically.
+
+### Security
+- Boolean-THRESHOLD bundles (no single-comparison threshold_constraint) are
+  refused at issuance -- as current link or carried prior -- because region
+  monotonicity across a boolean threshold is not computed and the emitted
+  verifier would otherwise refuse the dossier it ships with. The verifier's
+  monotonicity reader also refuses such a hop defensively (fail-closed).
+
 ## [5.32.0] - 2026-06-10  <!-- __s124_changelog_v5_32_0_v1__ -->
 
 ### Added
