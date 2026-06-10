@@ -362,6 +362,6 @@ def test_bool_chain_plus_bundle_refused_e2e(tmp_path: Path) -> None:
         "--supersedes", str(dossier1), "--output", str(dossier2),
     ])
     assert r.returncode != 0
-    assert "chain + Farkas bundle not yet supported" in (
+    assert "chain + boolean-threshold Farkas bundle not supported" in (
         r.stdout + r.stderr
     )
