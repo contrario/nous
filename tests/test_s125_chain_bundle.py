@@ -2,11 +2,10 @@
 
 The current link's coverage may be a Farkas DNF bundle (boolean blocking
 net); it is proven by re-derivation from the signed source with zero issuer
-trust. Prior links contribute only their SIGNED threshold inequality for
-region monotonicity (v1 constraints[0] or bundle threshold_constraint). A
-boolean-THRESHOLD bundle carries no single-comparison threshold_constraint:
-it is refused at issuance (current link or carried prior) and, defensively,
-by the emitted verifier's monotonicity reader.
+trust. Per hop, region monotonicity is proven by a hop-containment Farkas
+bundle: the obligation T_prev AND NOT(T_cur) is re-derived from the two
+sha-gated threshold expressions and every disjunct is refuted. Boolean
+thresholds are admitted (S126).
 
 Structural note for the PASS case: a single-comparison threshold yields a
 disjunctive-linear bundle only when a blocking signal carries an AND (its
@@ -144,11 +143,12 @@ def test_chain_bundle_scalar_threshold_e2e_pass(tmp_path: Path) -> None:
     assert "independently re-derived from the signed source" in r.stdout
     assert "bijection holds" in r.stdout
     assert "chain walk verified" in r.stdout
-    assert "coverage-region monotonicity verified" in r.stdout
+    assert "hop containment verified" in r.stdout
+    assert (d2 / "chain" / "000_hop.farkas.json").is_file()  # __s126_realign_v1__
     assert "VERDICT: PASS" in r.stdout
 
 
-def test_chain_over_boolean_threshold_prior_refused(tmp_path: Path) -> None:
+def test_chain_over_boolean_threshold_prior_e2e_pass(tmp_path: Path) -> None:
     nous = _nous_cli()
     s0 = tmp_path / "s0.nous"
     _write(s0, "0.50")
@@ -182,14 +182,16 @@ def test_chain_over_boolean_threshold_prior_refused(tmp_path: Path) -> None:
         nous, "dossier", str(s2), "--manifest", str(m2),
         "--supersedes", str(d0), "--output", str(d2),
     ])
-    assert r.returncode != 0
-    assert "boolean-threshold Farkas bundle not supported" in (
-        r.stdout + r.stderr
-    )
-    assert "carried prior link" in (r.stdout + r.stderr)
+    assert r.returncode == 0, r.stderr
+    assert (d2 / "chain" / "000_hop.farkas.json").is_file()
+    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "hop containment verified" in r.stdout
+    assert "VERDICT: PASS" in r.stdout
 
 
-def test_authenticated_threshold_fragment_branch(tmp_path: Path) -> None:
+def test_authenticated_threshold_returns_expr(tmp_path: Path) -> None:
+    # __s126_realign_v1__
     ns: dict = {
         "__name__": "vcb_unit",
         "__file__": str(tmp_path / "verify_offline.py"),
@@ -208,19 +210,18 @@ def test_authenticated_threshold_fragment_branch(tmp_path: Path) -> None:
         far.write_bytes(b)
         return hashlib.sha256(b).hexdigest()
 
-    tc = {"coeffs": {"amount": "-1", "": "4000"}, "strict": True}
     sha = _put({"fragment": "disjunctive-linear-bundle", "certs": [],
-                "threshold_constraint": tc})
+                "threshold_expr": "amount > 4000"})
     st, val = auth("000_manifest.json", {"coverage_farkas_sha256": sha})
     assert st == "has"
-    assert val == tc
+    assert val == "amount > 4000"
 
     sha = _put({"fragment": "disjunctive-linear-bundle", "certs": []})
     st, _val = auth("000_manifest.json", {"coverage_farkas_sha256": sha})
     assert st == "refuse"
 
-    v1 = {"coeffs": {"x": "1"}, "strict": False}
-    sha = _put({"constraints": [v1], "multipliers": ["1"]})
+    sha = _put({"constraints": [{"coeffs": {"x": "1"}, "strict": False}],
+                "multipliers": ["1"], "threshold_expr": "x > 0"})
     st, val = auth("000_manifest.json", {"coverage_farkas_sha256": sha})
     assert st == "has"
-    assert val == v1
+    assert val == "x > 0"

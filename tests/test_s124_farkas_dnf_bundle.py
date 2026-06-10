@@ -327,7 +327,7 @@ def test_bool_dossier_e2e_offline_bundle_pass(tmp_path: Path) -> None:
     assert "VERDICT: PASS" in r.stdout
 
 
-def test_bool_chain_plus_bundle_refused_e2e(tmp_path: Path) -> None:
+def test_bool_chain_plus_bundle_e2e_pass(tmp_path: Path) -> None:  # __s126_realign_v1__
     nous = _nous_cli()
     src1 = tmp_path / "b1.nous"
     _write_bool_nous(src1, "0.50")
@@ -361,7 +361,9 @@ def test_bool_chain_plus_bundle_refused_e2e(tmp_path: Path) -> None:
         nous, "dossier", str(src2), "--manifest", str(man2),
         "--supersedes", str(dossier1), "--output", str(dossier2),
     ])
-    assert r.returncode != 0
-    assert "chain + boolean-threshold Farkas bundle not supported" in (
-        r.stdout + r.stderr
-    )
+    assert r.returncode == 0, r.stderr
+    assert (dossier2 / "chain" / "000_hop.farkas.json").is_file()
+    r = _run([sys.executable, "verify_offline.py"], cwd=str(dossier2))
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "hop containment verified" in r.stdout
+    assert "VERDICT: PASS" in r.stdout
