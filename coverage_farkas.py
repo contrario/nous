@@ -1062,3 +1062,129 @@ def serialize_auto(
         return serialize_bundle(
             threshold_ast, blocking_signals, threshold_expr=threshold_expr
         )
+HOP_FRAGMENT: str = "hop-containment-bundle"  # __s126_hop_bundle_v1__
+
+
+def _hop_disjuncts(prev_ast: Any, cur_ast: Any, bound: int) -> list:
+    """DNF of the hop containment obligation T_prev AND NOT(T_cur).
+    Region containment T_prev subset-of T_cur over the reals holds iff
+    this conjunction is unsatisfiable; within the disjunctive linear
+    fragment Farkas refutation of every disjunct is complete."""
+    conj = {
+        "kind": "binop",
+        "op": "&&",
+        "left": _nnf(prev_ast, False),
+        "right": _nnf(cur_ast, True),
+    }
+    return _dnf(conj, bound)
+
+
+def serialize_hop_bundle(
+    prev_ast: Any,
+    cur_ast: Any,
+    prev_expr: "Optional[str]" = None,
+    cur_expr: "Optional[str]" = None,
+) -> dict:
+    """Build a self-contained, JSON-serializable hop-containment bundle
+    proving region(T_prev) subset-of region(T_cur): one Farkas
+    certificate per DNF disjunct of T_prev AND NOT(T_cur). Raises
+    FarkasError outside the fragment, when the disjunct count exceeds
+    DISJUNCT_BOUND, or when any disjunct is satisfiable -- i.e. the
+    declared threshold region shrank or is not contained over the
+    joint variable space (a DEFINITIVE non-containment within the
+    fragment, caught at issuance)."""
+    disjuncts = _hop_disjuncts(prev_ast, cur_ast, DISJUNCT_BOUND)
+    certs: dict = {}
+    for comps in disjuncts:
+        constraints, system = _canon_system(comps)
+        key = _canon_json(constraints)
+        if key in certs:
+            continue
+        witness = _find_farkas(system)
+        if witness is None:
+            raise FarkasError(
+                "no Farkas witness for a hop disjunct: T_prev AND "
+                "NOT(T_cur) is satisfiable -- the declared threshold "
+                "region shrank across this re-binding, or the "
+                "predecessor region is not contained in the current "
+                "one over the joint variable space"
+            )
+        certs[key] = {
+            "constraints": constraints,
+            "multipliers": [str(m) for m in witness],
+            "contradiction": _contradiction_str(system, witness),
+        }
+    cert_list = [certs[k] for k in sorted(certs)]
+    return {
+        "fragment": HOP_FRAGMENT,
+        "prev_threshold_expr": prev_expr,
+        "cur_threshold_expr": cur_expr,
+        "disjunct_count": len(cert_list),
+        "certs": cert_list,
+    }
+
+
+def check_serialized_hop_bundle(
+    doc: Any,
+    prev_ast: Any,
+    cur_ast: Any,
+) -> bool:
+    """Zero-trust check of a hop-containment bundle. The disjunct set
+    is RE-DERIVED from the supplied ASTs (never taken from the bundle),
+    then a bijection is required: exactly one certificate per derived
+    disjunct, keyed by the canonical serialization of the disjunct's
+    constraints, each checked by rational arithmetic alone. A bundle
+    that omits a disjunct, carries a surplus or duplicate certificate,
+    substitutes a constraint, or forges a multiplier returns False."""
+    if not isinstance(doc, dict) or doc.get("fragment") != HOP_FRAGMENT:
+        return False
+    cert_list = doc.get("certs")
+    if not isinstance(cert_list, list):
+        return False
+    try:
+        disjuncts = _hop_disjuncts(prev_ast, cur_ast, DISJUNCT_BOUND)
+    except FarkasError:
+        return False
+    derived: dict = {}
+    for comps in disjuncts:
+        try:
+            constraints, _system = _canon_system(comps)
+        except FarkasError:
+            return False
+        derived[_canon_json(constraints)] = constraints
+    carried: dict = {}
+    for cert in cert_list:
+        if not isinstance(cert, dict):
+            return False
+        cons = cert.get("constraints")
+        mults = cert.get("multipliers")
+        if not isinstance(cons, list) or not isinstance(mults, list):
+            return False
+        norm = []
+        for c in cons:
+            if not isinstance(c, dict):
+                return False
+            coeffs = c.get("coeffs")
+            if not isinstance(coeffs, dict):
+                return False
+            try:
+                norm_coeffs = {
+                    str(k): str(Fraction(v))
+                    for k, v in sorted(coeffs.items())
+                }
+            except (ValueError, TypeError, ZeroDivisionError):
+                return False
+            norm.append(
+                {"coeffs": norm_coeffs, "strict": bool(c.get("strict"))}
+            )
+        norm.sort(key=_canon_json)
+        key = _canon_json(norm)
+        if key in carried:
+            return False
+        carried[key] = mults
+    if set(carried) != set(derived):
+        return False
+    for key, constraints in derived.items():
+        if not _check_multipliers(constraints, carried[key]):
+            return False
+    return True
