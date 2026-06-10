@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s124_blog_v532-farkas-dnf-bundle_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v532-farkas-dnf-bundle');return false">
+      <div class="post-meta">
+        <span class="post-date">10 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.32.0 &mdash; Boolean Coverage, Still No Solver</div>
+      <div class="post-excerpt">Real blocking nets are boolean &mdash; block when amount is high <em>and</em> risk is high. Until now those nets were provable only by z3; the stdlib Farkas path refused them, typed and visible. v5.32.0 lifts it to parity: the gap search is case-split into a bundle of Farkas certificates, and the offline verifier re-derives every disjunct from the signed source and demands a bijection &mdash; a bundle that omits the gap disjunct fails even under a valid signature. <code>nous-lang 5.32.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s122_release_v5_31_0___card -->
     <a class="post-card" href="#" onclick="showPost(&#39;v531-multivariable-coverage&#39;);return false">
       <div class="post-meta"><span class="post-date">Jun 2026</span><span class="post-tag">verification</span></div>
@@ -580,6 +590,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s124_blog_v532-farkas-dnf-bundle_post_v1__ -->
+  <div class="post-full" id="post-v532-farkas-dnf-bundle">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.32.0 &mdash; Boolean Coverage, Still No Solver</h1>
+    <div class="post-full-meta">10 June 2026 &middot; 3 min read</div>
+    <p>v5.27.0 shipped the coverage claim &mdash; that over a declared threshold no input escapes the blocking-policy net &mdash; as a Farkas certificate an auditor checks with standard-library arithmetic alone. But the certificate covered a narrow fragment: one linear comparison, or a flat OR of them. Real blocking nets are boolean &mdash; block when the amount is high <em>and</em> the risk score is high; block when either of two exposure conditions trips. Those nets were provable only by z3, and the system said so plainly: the stdlib extractor refused boolean structure with a typed error rather than sign what it could not check. v5.32.0 lifts the stdlib path to parity.</p>
+    <p>The mechanism is a case-split with a certificate per case. The gap search &mdash; threshold AND NOT(blocking net) &mdash; is expanded to disjunctive normal form over the <em>negation</em>. Each disjunct is a conjunction of linear inequalities: one linear system, where Farkas&rsquo; lemma is complete &mdash; the disjunct is impossible exactly when non-negative rational multipliers collapse it to a numeric contradiction. Coverage is PROVEN only if <em>every</em> disjunct carries such a witness, so <code>coverage.farkas.json</code> becomes a bundle: one certificate per disjunct, each checkable by multiply-and-add over fractions. The expansion is bounded &mdash; above 64 disjuncts the producer refuses, typed, rather than sign an unbounded case-split &mdash; and purely linear obligations keep emitting the old single-certificate format byte-for-byte.</p>
+    <p>The harder question is the one that shaped the design: who enumerates the cases? If the verifier simply walked the handed bundle, a producer could omit the one disjunct with the gap and every remaining certificate would check &mdash; an overclaim by omission, under a valid signature. So the verifier trusts nothing about the enumeration. It re-derives the disjunct set itself, from the <em>signed</em> source: <code>source.nous</code> is hash-bound by the manifest, the threshold expression is hash-bound through the certificate file, and a pure-stdlib scanner and expression parser reconstruct the obligation from text. Then it demands a bijection &mdash; exactly one valid certificate per derived disjunct. Omission, surplus, duplication, a substituted constraint, a forged multiplier: each fails, even when the Ed25519 signature over the manifest is genuine. This is enumeration from signed source, never boolean solving; the verifier stays solver-free, and the producer itself signs a bundle only after an independent text-level derivation reproduces its own disjunct set.</p>
+    <p>The boundary is stated, not hidden. Multiplying two variables stays refused &mdash; that is nonlinear arithmetic, where no cheap standard-library certificate exists, and the refusal marks the exact edge of the decidable fragment rather than a convenience. Composing the envelope-binding chain with a bundle is refused at build time until the chain verifier learns bundle certificates. The through-line holds: probabilistic execution, deterministic evidence &mdash; and the coverage of a boolean blocking net now verifies offline with fractions and a signature check, trusting neither a solver nor the party that produced the dossier. <code>nous-lang 5.32.0</code>.</p>
+  </div>
   <!-- __s122_release_v5_31_0___post -->
   <div class="post-full" id="post-v531-multivariable-coverage">
     <div class="post-body">
