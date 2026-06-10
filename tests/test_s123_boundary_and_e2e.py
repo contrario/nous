@@ -11,9 +11,11 @@ Freezes the sound-but-ahead state surfaced in S123:
     verify_offline.py passes offline, including the S121 coverage-region
     monotonicity check across a supersession hop.
 
-This is a regression FREEZE, not a feature. The Farkas DNF bundle (S124) will
-lift Farkas to parity; until then these tests pin that boolean nets are
-z3-checkable-only, and that no boolean net is ever signed as Farkas-proven.
+This is a regression FREEZE, not a feature. Since S124 the Farkas DNF
+bundle lifts the stdlib path to parity (serialize_auto/serialize_bundle,
+tests/test_s124_farkas_dnf_bundle.py); the refusal pins below remain
+correct as pins of the V1 single-system extractor's fragment --
+serialize_system itself still refuses boolean structure by design.
 
 # __s123_boundary_pin_test_v1__
 """
