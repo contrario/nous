@@ -106,6 +106,12 @@ class Manifest:
     # envelope-binding). sha256 of the predecessor's live canonical
     # body bytes. drop-when-None: genesis omits it, byte-identical.
     prior_digest: Optional[str] = None  # __s119_prior_digest_field_v1__
+    # Chain-coverage mode discriminator (S127). Value
+    # "blocking-net-full" opts the dossier build into per-link
+    # source carry and blocking-net containment proofs.
+    # drop-when-None: absent on all pre-S127 manifests,
+    # canonical bytes unchanged.
+    chain_coverage_mode: Optional[str] = None  # __s127_chain_coverage_mode_field_v1__
 
     def canonical_bytes(self) -> bytes:
         """Bytes that get signed — sorted, separator-stable JSON."""
@@ -146,6 +152,8 @@ class Manifest:
             d["coverage_farkas_sha256"] = self.coverage_farkas_sha256
         if self.prior_digest is not None:  # __s119_prior_digest_field_v1__
             d["prior_digest"] = self.prior_digest
+        if self.chain_coverage_mode is not None:  # __s127_chain_coverage_mode_field_v1__
+            d["chain_coverage_mode"] = self.chain_coverage_mode
         return d  # __session96_revert_m3_canonical_dict_v1__
 
 
@@ -358,6 +366,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
+        chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
     )
     return m, sig, pub
 
@@ -406,6 +415,7 @@ def parse_manifest_json_with_anchor(
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
+        chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
     )
     anchor: "_RekorAnchor | None" = None
     if anchor_block is not None:
