@@ -51,7 +51,7 @@ import dataclasses as _dc_s115  # __s115_coverage_threshold_v1__
 import hashlib as _hashlib_s115  # __s115_coverage_smt2_sha_v1__
 import json as _json_s116  # __s116_cli_farkas_v1__
 from coverage_farkas import (  # __s116_cli_farkas_v1__
-    serialize_system as _farkas_serialize,
+    serialize_auto as _farkas_serialize,  # __s124_cli_serialize_auto_v1__
     FarkasError as _FarkasError,
 )
 
@@ -186,11 +186,19 @@ def cmd_verify(args: argparse.Namespace) -> int:
             coverage_farkas_sha = _hashlib_s115.sha256(
                 coverage_farkas_script.encode("utf-8")
             ).hexdigest()
-            print(
-                f"Farkas certificate extracted: contradiction "
-                f"{_farkas_doc['contradiction']!r} "
-                f"(sha256 {coverage_farkas_sha[:16]}...)"
-            )
+            if "contradiction" in _farkas_doc:  # __s124_cli_serialize_auto_v1__
+                print(
+                    f"Farkas certificate extracted: contradiction "
+                    f"{_farkas_doc['contradiction']!r} "
+                    f"(sha256 {coverage_farkas_sha[:16]}...)"
+                )
+            else:
+                print(
+                    f"Farkas bundle extracted: "
+                    f"{_farkas_doc.get('disjunct_count', '?')} "
+                    f"disjunct cert(s) "
+                    f"(sha256 {coverage_farkas_sha[:16]}...)"
+                )
         except _FarkasError as _fe:
             coverage_farkas_script = None
             coverage_farkas_sha = None
