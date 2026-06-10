@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s125_blog_v533-chain-bundle-composition_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v533-chain-bundle-composition');return false">
+      <div class="post-meta">
+        <span class="post-date">10 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.33.0 &mdash; Chain Meets Bundle</div>
+      <div class="post-excerpt">v5.32.0 proved boolean coverage for a single build; v5.29.0 walked a lineage of builds offline. They could not be composed: a chain carries prior manifests but no prior source, so a prior link&rsquo;s boolean bundle could not be re-derived. v5.33.0 composes them by splitting the claim &mdash; the current link&rsquo;s coverage is re-derived in full from its signed source, while prior links contribute only their <em>signed</em> threshold inequality for region monotonicity. No prior source is carried and no new trust is added. Boolean-threshold bundles with no single comparison are refused at issuance, typed. <code>nous-lang 5.33.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s124_blog_v532-farkas-dnf-bundle_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v532-farkas-dnf-bundle');return false">
       <div class="post-meta">
@@ -590,6 +600,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s125_blog_v533-chain-bundle-composition_post_v1__ -->
+  <div class="post-full" id="post-v533-chain-bundle-composition">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.33.0 &mdash; Chain Meets Bundle</h1>
+    <div class="post-full-meta">10 June 2026 &middot; 3 min read</div>
+    <p>Two proofs shipped in the last weeks did not fit together. v5.32.0 lifted the coverage claim to boolean blocking nets: when a net blocks on <em>amount high and risk high</em>, the gap search is case-split into a bundle of Farkas certificates, and the offline verifier re-derives every disjunct from the signed source. v5.29.0 walked an envelope-binding chain &mdash; an unbroken lineage of signed manifests, each naming its predecessor &mdash; and v5.30.0 proved over that chain that the declared net did not shrink. But a chain composed with a bundle was refused at build time. The reason was not laziness; it was honesty about what the chain carries.</p>
+    <p>A chain carries every prior manifest and its Farkas sidecar, but it does <em>not</em> carry each prior link&rsquo;s <code>source.nous</code>. The bundle verifier&rsquo;s whole guarantee rests on re-deriving the disjunct set from signed source and demanding a bijection &mdash; that is how it refuses an overclaim by omission. With no prior source in hand, a prior link&rsquo;s boolean bundle simply cannot be re-derived, so walking it would mean trusting the producer&rsquo;s enumeration: exactly the trust the bundle proof was built to eliminate. Carrying every prior source would dissolve the problem but enlarge the dossier and leak historical policy text, so that path is deferred behind a discriminator, not taken by default.</p>
+    <p>v5.33.0 composes the two by splitting the claim along the line where the evidence actually is. The current link is proven in full: its <code>source.nous</code> is signed and present, so its bundle is re-derived disjunct by disjunct exactly as a standalone build &mdash; zero issuer trust. Prior links contribute only what their signed manifest already authenticates: a single threshold inequality, the <code>threshold_constraint</code> on a bundle or <code>constraints[0]</code> on a v1 certificate. From those signed inequalities alone the verifier re-derives region monotonicity &mdash; the closed-form, solver-free check that the declared net did not shrink across the hop. No prior source is carried, no new signed field is added, and no step trusts the party that produced the dossier.</p>
+    <p>The boundary is stated, not hidden. A prior link whose blocking signal is a pure boolean threshold &mdash; one with no single comparison to authenticate, so no <code>threshold_constraint</code> to stand on &mdash; is refused at issuance, typed, and the verifier fails closed on it rather than walking a region it cannot compute. Region containment of a disjunctive normal-form region is not computed in this release; that is the next edge, not a silent pass. The through-line holds: probabilistic execution, deterministic evidence &mdash; a chain of boolean-coverage builds now verifies offline with fractions and a signature check, the current link in full and the lineage on its signed thresholds, trusting neither a solver nor the issuer. <code>nous-lang 5.33.0</code>.</p>
+  </div>
   <!-- __s124_blog_v532-farkas-dnf-bundle_post_v1__ -->
   <div class="post-full" id="post-v532-farkas-dnf-bundle">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
