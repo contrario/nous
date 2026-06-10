@@ -186,6 +186,28 @@ def cmd_verify(args: argparse.Namespace) -> int:
             coverage_farkas_sha = _hashlib_s115.sha256(
                 coverage_farkas_script.encode("utf-8")
             ).hexdigest()
+            if _farkas_doc.get("fragment") == "disjunctive-linear-bundle":  # __s124_cli_cross_derivation_v1__
+                from coverage_minilang import (
+                    MinilangError as _MlError_s124,
+                    bundle_cert_keys as _ml_keys_s124,
+                    derive_disjunct_constraints as _ml_derive_s124,
+                )
+                try:
+                    _ml_derived_s124 = _ml_derive_s124(
+                        src_path.read_text(encoding="utf-8"),
+                        cov_threshold,
+                    )
+                except (_MlError_s124, _FarkasError) as _me:
+                    raise _FarkasError(
+                        "cross-derivation gate: minilang re-derivation "
+                        "refused (" + str(_me) + "); bundle not signed"
+                    )
+                if set(_ml_derived_s124) != _ml_keys_s124(_farkas_doc):
+                    raise _FarkasError(
+                        "cross-derivation gate: minilang-derived disjunct "
+                        "set differs from the produced bundle; bundle not "
+                        "signed (parser divergence)"
+                    )
             if "contradiction" in _farkas_doc:  # __s124_cli_serialize_auto_v1__
                 print(
                     f"Farkas certificate extracted: contradiction "
