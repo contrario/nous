@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s126_blog_v534-hop-containment-bundles_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v534-hop-containment-bundles');return false">
+      <div class="post-meta">
+        <span class="post-date">10 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.34.0 &mdash; The Hop Proves Itself</div>
+      <div class="post-excerpt">v5.33.0 walked a chain of boolean builds but read region monotonicity from a single signed inequality per link, so a boolean-threshold prior was refused. v5.34.0 proves each hop instead: region containment over the reals is the unsatisfiability of <em>T_prev and not T_cur</em>, and within the linear fragment Farkas refutation of every disjunct is complete, so the hop proof is a theorem object &mdash; not a heuristic. The obligation is re-derived from two hash-bound threshold expressions, never from the hop bundle, and checked with fractions alone. Boolean thresholds are now admitted; region regression is caught at issuance. <code>nous-lang 5.34.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s125_blog_v533-chain-bundle-composition_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v533-chain-bundle-composition');return false">
       <div class="post-meta">
@@ -600,6 +610,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s126_blog_v534-hop-containment-bundles_post_v1__ -->
+  <div class="post-full" id="post-v534-hop-containment-bundles">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.34.0 &mdash; The Hop Proves Itself</h1>
+    <div class="post-full-meta">10 June 2026 &middot; 3 min read</div>
+    <p>v5.33.0 composed a chain with a bundle, but it read region monotonicity across each hop from a single signed inequality &mdash; the <code>threshold_constraint</code> on a bundle or <code>constraints[0]</code> on a v1 certificate &mdash; and checked containment with a closed-form proportionality test over two half-spaces. That test needs a single comparison to stand on. A prior link whose threshold was itself boolean &mdash; <em>amount high and risk high</em> &mdash; carried no single inequality, so the hop was refused at issuance and the verifier failed closed on it. The refusal was honest, but it was a hole.</p>
+    <p>v5.34.0 closes it by noticing that the hop is the same shape as the coverage claim already proven for a single build. Region containment over the reals &mdash; the predecessor&rsquo;s declared threshold region sits inside the current one &mdash; holds exactly when <em>T_prev and not T_cur</em> is unsatisfiable. That is the gap search again: a boolean combination of linear comparisons, expanded to disjunctive normal form, every disjunct refuted by non-negative rational multipliers. Within the linear fragment Farkas&rsquo; lemma is complete &mdash; an unsatisfiable disjunct always has a multiplier witness, a satisfiable one never does &mdash; so a hop proof is a theorem object, not a heuristic that might miss. Boolean thresholds are admitted on both sides of the hop, and the old syntactic &ldquo;incomparable variable spaces&rdquo; refusal becomes a real containment decision over the joint space.</p>
+    <p>The trust model is the same one the coverage bundle established, and it costs nothing new. Each hop ships one bundle, <code>chain/NNN_hop.farkas.json</code>, and the verifier trusts nothing in it. It takes both threshold expressions from the two links&rsquo; hash-bound Farkas sidecars &mdash; never from the hop bundle &mdash; re-derives the disjunct set of <em>T_prev and not T_cur</em> itself, and demands a bijection: exactly one valid certificate per derived disjunct. A forged multiplier fails the arithmetic; an omitted or surplus disjunct fails the bijection; a deleted hop file fails closed; an unexpected hop file on a coverage-less hop is refused. Tampering the hop bundle&rsquo;s own recorded expressions changes nothing, because the obligation is rebuilt from the signed sidecars. The hop bundle carries no signature and binds to no manifest field: it is self-certifying, and that is why it adds no trust. Region regression is caught at issuance &mdash; a satisfiable hop disjunct admits no witness, so the build refuses rather than emit a dossier its own verifier would reject.</p>
+    <p>The boundary is stated, not hidden. This proves the <em>declared</em> threshold region did not shrink across re-bindings &mdash; not execution conformance, not real-world safety, and not that the blocking net itself is contained, which is a future obligation through the same primitive. Prior links&rsquo; coverage completeness is still attested by signature alone, since their source is not carried; full per-link re-derivation remains a deferred, opt-in enrichment. What changed is the second obligation now discharged by one re-derivable Farkas primitive: coverage was the first, hop containment is the second, and any chain claim expressible as a linear-boolean unsatisfiability can follow. The through-line holds &mdash; probabilistic execution, deterministic evidence &mdash; and a lineage of boolean-coverage builds now verifies offline with fractions and a signature check, trusting neither a solver nor the issuer, where before it was a refusal. <code>nous-lang 5.34.0</code>.</p>
+  </div>
   <!-- __s125_blog_v533-chain-bundle-composition_post_v1__ -->
   <div class="post-full" id="post-v533-chain-bundle-composition">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
