@@ -11,6 +11,39 @@
   Removed / Fixed / Security.
 -->
 
+## [5.34.0] - 2026-06-10  <!-- __s126_changelog_v5_34_0_v1__ -->
+
+### Added
+- Hop-containment Farkas bundles for envelope-binding chains. Across a
+  re-binding hop, coverage-region monotonicity (region(T_prev) is
+  contained in region(T_cur)) is now proven by a hop-containment Farkas
+  bundle (chain/NNN_hop.farkas.json) rather than the closed-form
+  proportionality check of v5.30.0. Region containment over the reals is
+  the unsatisfiability of T_prev AND NOT(T_cur); within the disjunctive
+  linear fragment, Farkas refutation of every DNF disjunct is complete,
+  so the hop proof is a theorem object. The emitted chain verifier
+  (VERIFY_OFFLINE_PY_CHAIN_BUNDLE) re-derives each hop obligation from
+  the two links' sha-gated threshold expressions -- never from the hop
+  bundle -- and checks it with rational arithmetic alone (no solver, no
+  issuer trust).
+
+### Changed
+- Boolean-threshold links are now admissible in a chained bundle dossier.
+  The S125 issuance gates that refused a boolean threshold without a
+  single-comparison threshold_constraint are removed: the hop proof no
+  longer needs a single inequality. Region regression is caught at
+  ISSUANCE (a satisfiable hop disjunct admits no Farkas witness, so the
+  build refuses), matching the admission-control pattern.
+
+### Security
+- Hop bundles are unsigned and self-certifying: a forged multiplier
+  fails rational arithmetic, an omitted or surplus disjunct fails the
+  bijection, a deleted hop file fails closed, and an unexpected hop file
+  on a coverage-less hop is refused. Tampering the hop bundle's own
+  prev/cur threshold expression fields changes nothing, because the
+  obligation is re-derived from the two sha-gated, signature-anchored
+  sidecars.
+
 ## [5.33.0] - 2026-06-10  <!-- __s125_changelog_v5_33_0_v1__ -->
 
 ### Added
