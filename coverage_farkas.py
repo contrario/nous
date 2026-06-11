@@ -1188,3 +1188,150 @@ def check_serialized_hop_bundle(
         if not _check_multipliers(constraints, carried[key]):
             return False
     return True
+
+
+NET_FRAGMENT: str = "blocking-net-containment-bundle"  # __s127_net_bundle_v1__
+
+
+def _net_disjuncts(
+    prev_sigs: list, cur_sigs: list, bound: int
+) -> list:
+    """DNF of the blocking-net containment obligation
+    OR(prev_sigs) AND AND(NOT cur_sigs). A real point witnesses
+    non-containment iff it is blocked by some predecessor signal yet
+    by no current signal; region containment net(prev) subset-of
+    net(cur) holds over the reals iff this conjunction is
+    unsatisfiable. Within the disjunctive linear fragment Farkas
+    refutation of every disjunct is complete. An empty predecessor net
+    yields no disjuncts (vacuous containment)."""
+    if not prev_sigs:
+        return []
+    prev_or: Any = _nnf(prev_sigs[0], False)
+    for sig in prev_sigs[1:]:
+        prev_or = {
+            "kind": "binop",
+            "op": "||",
+            "left": prev_or,
+            "right": _nnf(sig, False),
+        }
+    conj: Any = prev_or
+    for sig in cur_sigs:
+        conj = {
+            "kind": "binop",
+            "op": "&&",
+            "left": conj,
+            "right": _nnf(sig, True),
+        }
+    return _dnf(conj, bound)
+
+
+def serialize_net_bundle(
+    prev_sigs: list,
+    cur_sigs: list,
+) -> dict:
+    """Build a self-contained, JSON-serializable blocking-net
+    containment bundle proving net(prev) subset-of net(cur): one
+    Farkas certificate per DNF disjunct of
+    OR(prev_sigs) AND AND(NOT cur_sigs). Raises FarkasError outside
+    the fragment, when the disjunct count exceeds DISJUNCT_BOUND, or
+    when any disjunct is satisfiable -- i.e. the predecessor blocking
+    net is not contained in the current one over the joint variable
+    space (a DEFINITIVE non-containment within the fragment, including
+    the case where the current net is empty while the predecessor net
+    is not: the net vanished). An empty predecessor net produces an
+    empty certificate list (vacuous containment)."""
+    disjuncts = _net_disjuncts(prev_sigs, cur_sigs, DISJUNCT_BOUND)
+    certs: dict = {}
+    for comps in disjuncts:
+        constraints, system = _canon_system(comps)
+        key = _canon_json(constraints)
+        if key in certs:
+            continue
+        witness = _find_farkas(system)
+        if witness is None:
+            raise FarkasError(
+                "no Farkas witness for a blocking-net disjunct: "
+                "OR(prev_sigs) AND AND(NOT cur_sigs) is satisfiable -- "
+                "the predecessor blocking net is not contained in the "
+                "current one over the joint variable space (the net "
+                "shrank or vanished across this re-binding)"
+            )
+        certs[key] = {
+            "constraints": constraints,
+            "multipliers": [str(m) for m in witness],
+            "contradiction": _contradiction_str(system, witness),
+        }
+    cert_list = [certs[k] for k in sorted(certs)]
+    return {
+        "fragment": NET_FRAGMENT,
+        "disjunct_count": len(cert_list),
+        "certs": cert_list,
+    }
+
+
+def check_serialized_net_bundle(
+    doc: Any,
+    prev_sigs: list,
+    cur_sigs: list,
+) -> bool:
+    """Zero-trust check of a blocking-net containment bundle. The
+    disjunct set is RE-DERIVED from the supplied signal ASTs (never
+    taken from the bundle), then a bijection is required: exactly one
+    certificate per derived disjunct, keyed by the canonical
+    serialization of the disjunct's constraints, each checked by
+    rational arithmetic alone. An empty predecessor net derives no
+    disjuncts and requires an empty certificate list. A bundle that
+    omits a disjunct, carries a surplus or duplicate certificate,
+    substitutes a constraint, or forges a multiplier returns False."""
+    if not isinstance(doc, dict) or doc.get("fragment") != NET_FRAGMENT:
+        return False
+    cert_list = doc.get("certs")
+    if not isinstance(cert_list, list):
+        return False
+    try:
+        disjuncts = _net_disjuncts(prev_sigs, cur_sigs, DISJUNCT_BOUND)
+    except FarkasError:
+        return False
+    derived: dict = {}
+    for comps in disjuncts:
+        try:
+            constraints, _system = _canon_system(comps)
+        except FarkasError:
+            return False
+        derived[_canon_json(constraints)] = constraints
+    carried: dict = {}
+    for cert in cert_list:
+        if not isinstance(cert, dict):
+            return False
+        cons = cert.get("constraints")
+        mults = cert.get("multipliers")
+        if not isinstance(cons, list) or not isinstance(mults, list):
+            return False
+        norm = []
+        for c in cons:
+            if not isinstance(c, dict):
+                return False
+            coeffs = c.get("coeffs")
+            if not isinstance(coeffs, dict):
+                return False
+            try:
+                norm_coeffs = {
+                    str(k): str(Fraction(v))
+                    for k, v in sorted(coeffs.items())
+                }
+            except (ValueError, TypeError, ZeroDivisionError):
+                return False
+            norm.append(
+                {"coeffs": norm_coeffs, "strict": bool(c.get("strict"))}
+            )
+        norm.sort(key=_canon_json)
+        key = _canon_json(norm)
+        if key in carried:
+            return False
+        carried[key] = mults
+    if set(carried) != set(derived):
+        return False
+    for key, constraints in derived.items():
+        if not _check_multipliers(constraints, carried[key]):
+            return False
+    return True
