@@ -241,7 +241,17 @@ def cmd_verify(args: argparse.Namespace) -> int:
             coverage_farkas_sha256=coverage_farkas_sha,  # __s116_cli_farkas_v1__
         )
 
+    chain_coverage_mode = getattr(args, "chain_coverage", None)  # __s127_chain_coverage_flag_v1__
     supersedes_path = getattr(args, "supersedes", None)  # __s119_supersedes_producer_v1__
+    if chain_coverage_mode == "full" and not supersedes_path:  # __s127_chain_coverage_flag_v1__
+        print(
+            "REFUSED: --chain-coverage full requires --supersedes "
+            "(full mode carries per-link sources and net-containment "
+            "proofs across hops; there is no chain without a "
+            "predecessor). No manifest written.",
+            file=sys.stderr,
+        )
+        return 1
     if supersedes_path:
         try:
             _prior_digest = resolve_prior_digest(
@@ -254,7 +264,13 @@ def cmd_verify(args: argparse.Namespace) -> int:
             )
             return 1
         manifest = _dc_s115.replace(
-            manifest, prior_digest=_prior_digest
+            manifest,
+            prior_digest=_prior_digest,
+            chain_coverage_mode=(  # __s127_chain_coverage_flag_v1__
+                "blocking-net-full"
+                if chain_coverage_mode == "full"
+                else None
+            ),
         )
         print(
             "Re-binding: supersedes " + str(supersedes_path)
@@ -431,3 +447,15 @@ def build_verify_parser(subparsers: argparse._SubParsersAction) -> None:
              "fails closed: no manifest is written.",
     )
     p.set_defaults(func=cmd_verify)
+
+
+def cmd_verify_impl_guard_for_test(  # __s127_chain_coverage_flag_v1__
+    chain_coverage: "str | None",
+    supersedes: "str | None",
+) -> int:
+    """Test-only shim exposing the full-requires-supersedes admission
+    rule in isolation (the same condition enforced inline in the verify
+    pipeline). Returns 1 if the combination is refused, 0 otherwise."""
+    if chain_coverage == "full" and not supersedes:
+        return 1
+    return 0
