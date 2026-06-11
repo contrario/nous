@@ -11,6 +11,42 @@
   Removed / Fixed / Security.
 -->
 
+## [5.35.0] - 2026-06-11  <!-- __s127_changelog_v5_35_0_v1__ -->
+
+### Added
+- Blocking-net containment for envelope-binding chains
+  (`--chain-coverage full`). A full-mode chain dossier carries
+  per-link `source.nous` (sha-gated by each link's signed
+  `source_sha256`) and one self-certifying blocking-net Farkas
+  bundle per non-vacuous hop (`chain/NNN_net.farkas.json`). The
+  emitted verifier re-derives the obligation
+  `OR(prev_signals) AND AND(NOT cur_signals)` from the two
+  authenticated sources -- never from a bundle -- and refutes every
+  DNF disjunct with rational arithmetic alone (no solver, no issuer
+  trust). This proves the actual blocking net never shrank across
+  the chain, re-derived rather than signature-attested: a third
+  party verifies offline that every prior link's blocking policies
+  are still present (or strengthened) in the current one. Region
+  containment over the reals is the unsatisfiability of
+  `OR(prev) AND AND(NOT cur)`; within the disjunctive linear
+  fragment, Farkas refutation of every disjunct is complete. Net
+  shrink, net vanish, and bilinear signals refuse at issuance (the
+  verifier would refuse the dossier it ships with). Full mode
+  requires `--supersedes`; a full-mode chain must be full from its
+  first full link (depth>=2 requires the predecessor to also carry
+  per-link sources, else the build refuses). Honest boundary: this
+  proves the declared blocking net did not shrink across versions --
+  NOT that the system is safer, NOT real-world risk; policies are
+  monitors, not guards.
+
+### Changed
+- `chain_coverage_mode` discriminator added to the signed manifest
+  (drop-when-None; byte-identity of existing manifests preserved).
+  The emitted verifier decides full-mode vs threshold-only from this
+  signed field, never from file presence (manifest-is-authority). A
+  threshold-only chain emits no net files and selects the unchanged
+  CHAIN_BUNDLE verifier (byte-identical to v5.34.0).
+
 ## [5.34.0] - 2026-06-10  <!-- __s126_changelog_v5_34_0_v1__ -->
 
 ### Added
