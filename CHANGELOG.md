@@ -11,6 +11,23 @@
   Removed / Fixed / Security.
 -->
 
+## [5.36.0] - 2026-06-11  <!-- __s132_changelog_v5_36_0_v1__ -->
+
+### Added
+- Coverage-gap-witness: the dual of the policy-coverage Farkas bundle.
+  `serialize_gap_witness(threshold_ast, blocking_signals, point)` emits
+  a self-contained, JSON-serializable witness -- a concrete rational
+  point lying in a DNF disjunct of `T && NOT(B)` (inside the threshold
+  region while escaping every blocking signal) -- and
+  `check_serialized_gap_witness(doc, threshold_ast, blocking_signals)`
+  verifies it offline by rational arithmetic alone, re-deriving the gap
+  disjunct set from the supplied ASTs with zero issuer trust. Where the
+  Farkas bundle proves NO gap (every disjunct refuted), the witness
+  proves a gap EXISTS at a named point; the two are mutually exclusive
+  over the same `(T, B)`. The witness proves the point is admitted by
+  the threshold and caught by no blocking signal; it does not prove the
+  agent misbehaves there, nor that the gap is unique or maximal.
+
 ## [5.35.0] - 2026-06-11  <!-- __s127_changelog_v5_35_0_v1__ -->
 
 ### Added
