@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s127_blog_v535-blocking-net-containment_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v535-blocking-net-containment');return false">
+      <div class="post-meta">
+        <span class="post-date">11 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.35.0 &mdash; The Net Proves Itself</div>
+      <div class="post-excerpt">v5.34.0 proved the declared threshold region never shrank across a hop, but left the blocking net itself attested by signature alone &mdash; a future obligation through the same primitive. v5.35.0 discharges it. <code>--chain-coverage full</code> carries each link&rsquo;s hash-bound source and proves, hop by hop, that the actual set of blocking policies never shrank: <code>OR(prev) and not(cur)</code> refuted disjunct by disjunct, re-derived offline from signed sources, trusting neither a solver nor the issuer. <code>nous-lang 5.35.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s126_blog_v534-hop-containment-bundles_card_v1__ -->
     <a class="post-card" href="#" onclick="showPost('v534-hop-containment-bundles');return false">
       <div class="post-meta">
@@ -610,6 +620,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+  <!-- __s127_blog_v535-blocking-net-containment_post_v1__ -->
+  <div class="post-full" id="post-v535-blocking-net-containment">
+    <button class="post-back" onclick="showList()">&larr; All posts</button>
+    <h1 class="post-full-title">NOUS v5.35.0 &mdash; The Net Proves Itself</h1>
+    <div class="post-full-meta">11 June 2026 &middot; 3 min read</div>
+    <p>v5.34.0 closed the hop: across a re-binding, the predecessor&rsquo;s declared <em>threshold</em> region was proven to sit inside the current one, by refuting every disjunct of <em>T_prev and not T_cur</em> with rational multipliers. But it named its own hole in the same breath. The threshold is one expression; the <em>blocking net</em> is the whole set of policies whose action is to block, and a chain could hold its threshold steady while quietly dropping a policy from that set. Across v5.34.0 the prior links&rsquo; coverage completeness was still attested by signature alone, because their source was not carried. v5.35.0 carries it.</p>
+    <p>With <code>--chain-coverage full</code>, a re-binding dossier ships each prior link&rsquo;s <code>source.nous</code>, hash-bound by that link&rsquo;s own signed <code>source_sha256</code>, alongside one self-certifying bundle per hop, <code>chain/NNN_net.farkas.json</code>. The obligation is the net analogue of the gap search: a point escapes the predecessor&rsquo;s net but is caught by none of the current one exactly when <em>OR(prev_signals) and AND(not cur_signals)</em> is satisfiable, so net containment holds precisely when that conjunction is unsatisfiable. It is a boolean combination of linear comparisons, expanded to disjunctive normal form, every disjunct refuted by non-negative rational multipliers &mdash; the same Farkas primitive, a third instance after coverage and the hop. Within the linear fragment the witness is complete: a shrunk net leaves a satisfiable disjunct with no multiplier, and the build refuses at issuance rather than emit a dossier its own verifier would reject. Net vanish &mdash; the current net empty while the predecessor&rsquo;s is not &mdash; and bilinear signals outside the linear fragment refuse the same way.</p>
+    <p>The verifier trusts nothing in the carried bundle. For each link it re-reads the carried <code>source.nous</code>, checks its sha256 against the signed manifest, and scans the blocking signals out of the authenticated text itself &mdash; never from the bundle. It re-derives the disjunct set of <em>OR(prev) and not(cur)</em> independently and demands a bijection: exactly one valid certificate per derived disjunct. A forged source byte fails the sha gate; a forged multiplier fails the arithmetic; an omitted or surplus disjunct fails the bijection; a deleted net file on a non-empty predecessor net fails closed; a net bundle present where the predecessor net is empty is refused as unexpected. The mode is read from a signed manifest field, <code>chain_coverage_mode</code>, not from file presence, so a threshold-only chain carries no net files and emits the unchanged verifier &mdash; byte-identical to before. A full-mode chain must be full from its first full link: re-deriving a prior link requires its carried source, so depth beyond the immediate predecessor demands the predecessor itself was full, or the build refuses.</p>
+    <p>The boundary is stated, not hidden. This proves the <em>declared</em> blocking net did not shrink across versions &mdash; re-derived from signed sources rather than asserted &mdash; not that the system is safer, not real-world risk, not that the agent cannot misbehave. Policies are monitors, not guards; coverage proves there is no gap in the blocking net, not that the net catches every wrong. What changed is the trust surface: where v5.34.0 still leaned on a signature for prior-link completeness, a full-mode lineage now lets an independent party re-derive every prior link&rsquo;s blocking net from its hash-bound source and prove offline, with fractions and a signature check alone, that the net never shrank along the chain. Three obligations now ride one re-derivable Farkas primitive &mdash; coverage, hop containment, and net containment &mdash; and the through-line holds: probabilistic execution, deterministic evidence. <code>nous-lang 5.35.0</code>.</p>
+  </div>
   <!-- __s126_blog_v534-hop-containment-bundles_post_v1__ -->
   <div class="post-full" id="post-v534-hop-containment-bundles">
     <button class="post-back" onclick="showList()">&larr; All posts</button>
