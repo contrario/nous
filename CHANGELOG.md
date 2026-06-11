@@ -141,6 +141,50 @@
   only; carry-forward). var*var stays REFUSED (bilinear, outside
   QF_LRA).
 
+## [5.31.0] - 2026-06-08  <!-- __s129_changelog_v5_31_0_backfill_v1__ -->
+
+### Added
+- P3b-multivar: the coverage fragment admits linear scalar
+  multiplication (const*var) in threshold and signal expressions, while
+  bilinear terms (var*var) stay REFUSED (outside QF_LRA). End-to-end
+  through the dossier with a fragment-boundary re-scope.
+
+## [5.30.0] - 2026-06-08  <!-- __s129_changelog_v5_30_0_backfill_v1__ -->
+
+### Added
+- Coverage-region monotonicity in the offline chain verifier: per
+  re-binding hop where both links declare coverage, region(T_prev) is
+  proven contained in region(T_cur) by a closed-form proportionality
+  check (later upgraded to hop-containment Farkas bundles in 5.34.0).
+- Chain-carry sidecar expansion so prior-link coverage thresholds travel
+  with the dossier.
+- Verified AI Lending demo page (nous-lang.org/lending.html) for
+  FinQuest, with the log-vs-evidence differentiation and a no-trust
+  verification panel.
+
+## [5.29.0] - 2026-06-07  <!-- __s129_changelog_v5_29_0_backfill_v1__ -->
+
+### Added
+- Envelope-binding chain: a signed `prior_digest` manifest field, a
+  `nous verify --supersedes` producer that re-binds a new formation
+  envelope to its predecessor by digest, a chain-carrying `build_dossier`
+  that ships prior manifests under `chain/`, and an offline chain-walk
+  verifier that checks an unbroken signature-valid lineage rooted at
+  genesis (six fail-closed conditions), cryptography + stdlib only.
+
+## [5.28.0] - 2026-06-06  <!-- __s129_changelog_v5_28_0_backfill_v1__ -->
+
+### Added
+- S118 compiled-path runtime trace attribution: a real soul and a
+  zero-token llm_call are attributed on the compiled execution path.
+
+### Changed
+- Governance-first public homepage and /runtime.html; softened absolute
+  biology/resilience claims to match what the runtime establishes.
+
+### Security
+- Removed a Developer backdoor from the public homepage.
+
 ## [5.27.0] - 2026-06-06  <!-- __s116_changelog_v5_27_0_v1__ -->
 
 ### Added
@@ -160,6 +204,23 @@
 - Offline dossier verifier selection: a Farkas-bearing dossier ships the
   arithmetic-only verifier; coverage-only dossiers keep the z3 re-check
   verifier; cost-only dossiers remain byte-identical.
+
+## [5.26.1] - 2026-06-02  <!-- __s129_changelog_v5_26_1_backfill_v1__ -->
+
+### Fixed
+- Dossier pricing-canonical hotfix: ship the exact pricing bytes the
+  manifest hashes (the dossier now carries the pricing the signed
+  manifest commits to).
+
+## [5.26.0] - 2026-06-01  <!-- __s129_changelog_v5_26_0_backfill_v1__ -->
+
+### Added
+- Phase 2.0 remedy subsystem close-out: a heal-path digest producer, a
+  typed RemedyProof parse-on-read view, a build_run_remedy admissibility
+  gate, a TraceEnvelope.remedy_application sibling field, recorded-
+  commitment promotion wiring (at most one promotion), and a
+  `--apply-remedy` opt-in surface gated on `--consult-memory`. Adds the
+  NOUS_MEMORY_BASE_DIR seam.
 
 ## [5.25.0] - 2026-06-01  <!-- __s107_changelog_v5_25_0_v1__ -->
 
