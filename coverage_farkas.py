@@ -1335,3 +1335,148 @@ def check_serialized_net_bundle(
         if not _check_multipliers(constraints, carried[key]):
             return False
     return True
+
+
+GAP_WITNESS_FRAGMENT: str = "coverage-gap-witness"  # __s132_gap_witness_v1__
+
+
+def _point_satisfies(point: dict, system: list) -> bool:
+    """True iff the rational assignment `point` satisfies every LinIneq in
+    `system` (each in 'L (< | <=) 0' form). The caller guarantees `point`
+    assigns every non-constant variable referenced by `system`."""
+    for ineq in system:
+        lhs = Fraction(0)
+        for k, v in ineq.coeffs.items():
+            lhs += v if k == "" else v * point[k]
+        if ineq.strict:
+            if not (lhs < 0):
+                return False
+        elif not (lhs <= 0):
+            return False
+    return True
+
+
+def serialize_gap_witness(
+    threshold_ast: Any,
+    blocking_signals: list,
+    point: dict,
+    threshold_expr: "Optional[str]" = None,
+) -> dict:
+    """Build a self-contained, JSON-serializable coverage-gap-witness: a
+    concrete rational point lying in a DNF disjunct of
+    T && NOT(B_1) && ... && NOT(B_n) -- inside the threshold region T while
+    escaping every blocking signal. This is the DUAL of serialize_bundle:
+    where the bundle proves NO gap (every disjunct refuted by a Farkas
+    certificate), the witness proves a gap EXISTS at this point. The two are
+    mutually exclusive over the same (T, B): a satisfying point exists iff
+    some disjunct is satisfiable iff serialize_bundle refuses.
+
+    Raises FarkasError if `point` carries a non-rational coordinate, or if
+    it witnesses no gap disjunct (it lies in no disjunct of T && NOT(B): the
+    threshold region is covered at this point, or the point is not in
+    T-and-unblocked). No solver is used; the point's satisfaction of a
+    disjunct IS the satisfiability proof.
+
+    The witness is checked offline by check_serialized_gap_witness with
+    Fraction arithmetic alone: it proves THIS point is admitted by the
+    threshold and caught by no blocking signal. It does NOT prove the agent
+    misbehaves there, nor that the gap is unique or maximal."""
+    pt: dict = {}
+    for k, v in point.items():
+        try:
+            pt[str(k)] = Fraction(v)
+        except (ValueError, TypeError, ZeroDivisionError):
+            raise FarkasError(
+                "gap-witness point has a non-rational coordinate: " + repr(k)
+            )
+    disjuncts = _gap_disjuncts(threshold_ast, blocking_signals, DISJUNCT_BOUND)
+    for comps in disjuncts:
+        constraints, system = _canon_system(comps)
+        needed = set()
+        for ineq in system:
+            for vk in ineq.coeffs:
+                if vk != "":
+                    needed.add(vk)
+        if not needed.issubset(set(pt)):
+            continue
+        if _point_satisfies(pt, system):
+            return {
+                "fragment": GAP_WITNESS_FRAGMENT,
+                "threshold_expr": threshold_expr,
+                "disjunct": constraints,
+                "point": {k: str(pt[k]) for k in sorted(pt)},
+            }
+    raise FarkasError(
+        "supplied point witnesses no coverage gap: it lies in no DNF "
+        "disjunct of T && NOT(B) (the threshold region is covered here, or "
+        "the point is not in T-and-unblocked)"
+    )
+
+
+def check_serialized_gap_witness(
+    doc: Any,
+    threshold_ast: Any,
+    blocking_signals: list,
+) -> bool:
+    """Zero-trust check of a coverage-gap-witness. The gap disjunct set is
+    RE-DERIVED from the supplied threshold AST and blocking signals (never
+    taken from the document); the document's `disjunct` field only SELECTS
+    which derived disjunct is claimed, by canonical key. The witness point
+    is then evaluated against the RE-DERIVED constraints of that disjunct by
+    rational arithmetic alone. Returns True iff the claimed disjunct
+    actually derives and the point lies in it (in T, blocked by no signal).
+    A document that claims a non-derived disjunct, omits a variable of the
+    disjunct, carries a non-rational coordinate, or supplies a point outside
+    the disjunct returns False."""
+    if not isinstance(doc, dict) or doc.get("fragment") != GAP_WITNESS_FRAGMENT:
+        return False
+    point = doc.get("point")
+    cons = doc.get("disjunct")
+    if not isinstance(point, dict) or not isinstance(cons, list):
+        return False
+    norm = []
+    for c in cons:
+        if not isinstance(c, dict):
+            return False
+        coeffs = c.get("coeffs")
+        if not isinstance(coeffs, dict):
+            return False
+        try:
+            norm_coeffs = {
+                str(k): str(Fraction(v)) for k, v in sorted(coeffs.items())
+            }
+        except (ValueError, TypeError, ZeroDivisionError):
+            return False
+        norm.append({"coeffs": norm_coeffs, "strict": bool(c.get("strict"))})
+    norm.sort(key=_canon_json)
+    key = _canon_json(norm)
+    try:
+        disjuncts = _gap_disjuncts(
+            threshold_ast, blocking_signals, DISJUNCT_BOUND
+        )
+    except FarkasError:
+        return False
+    systems: dict = {}
+    for comps in disjuncts:
+        try:
+            constraints, system = _canon_system(comps)
+        except FarkasError:
+            return False
+        systems[_canon_json(constraints)] = system
+    if key not in systems:
+        return False
+    pt: dict = {}
+    for k, v in point.items():
+        try:
+            pt[str(k)] = Fraction(v)
+        except (ValueError, TypeError, ZeroDivisionError):
+            return False
+    system = systems[key]
+    needed = set()
+    for ineq in system:
+        for vk in ineq.coeffs:
+            if vk != "":
+                needed.add(vk)
+    if not needed.issubset(set(pt)):
+        return False
+    return _point_satisfies(pt, system)
