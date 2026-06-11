@@ -267,3 +267,78 @@ U2 baseline is frozen.
   than a verified transformer): Pnueli et al.; CompCert backend.
 - Horizon: Valiant (IVC); Bitansky-Chiesa-Tromer (PCD); Nova / HyperNova
   (folding); ProtoStar (accumulation).
+## Realization (S130)
+
+All four units shipped, test-only or byte-preserving; no release, no
+version bump, no tag. Full suite 1368 passed / 1 skipped at close
+(baseline 1280 + 78 U1 + 7 U2 + 3 U4); PYTEST_FLOOR unchanged.
+
+- U1 -- differential equivalence harness
+  (tests/test_s130_verifier_embed_equiv.py, 78 cases). Embed checker vs
+  production farkas/minilang: derivation-status equivalence, checker
+  verdict on an issuer-built bundle plus five forged mutants, and an
+  N-version _check_multipliers cross-check. Oracle is serialize_bundle.
+
+- U2 -- verifier-source snapshot + shared-region registry
+  (tests/test_s130_verifier_snapshot.py,
+  tests/baselines/s130_verifier_snapshots.json). Eight VERIFY_OFFLINE_PY*
+  constants plus build_chain_net_verifier output SHA-pinned. Region
+  registry: minilang is strict-equal across both embeds and the
+  coverage_minilang.py marked region (OPEN 6.1 pin 8c9e41b4); farkas is
+  PREFIX-CORE.
+
+  Correction to the plan: the farkas embed is NOT a monolithic shared
+  region. The bundle verifier carries the shared core; the chain-bundle
+  verifier carries the same core followed by chain-only hop functions
+  (_hop_disjuncts / check_hop_bundle, marker __s126_hop_embed_v1__). The
+  invariant is therefore a prefix relation -- every occurrence body must
+  start with the shortest occurrence (the core) byte-for-byte -- which
+  admits the chain-only extension while still naming any edit to the
+  shared core. A probe confirmed the bundle/chain-bundle region SHA
+  difference was the legitimate hop extension (94 added lines, 0 changed,
+  bundle body is a contiguous prefix of chain-bundle), not drift.
+
+  The region guards are orthogonal to the snapshot: re-blessing the
+  snapshot SHA (NOUS_UPDATE_SNAPSHOTS=1) does not silence a divergent-copy
+  or broken-prefix violation.
+
+- U3 -- single-source the minilang embed (dossier.py). The two
+  byte-identical minilang copies were collapsed into one module constant
+  _MINILANG_CORE_EMBED, each verifier constant rebuilt by concatenation.
+  Byte-preserving: the patch extracted the region from the target (no
+  hardcoded copy), split each literal at the region boundary, verified
+  the rebuilt constants by AST reconstruction before any write, and was
+  confirmed after by both external arbiters with no re-bless -- U2 byte
+  snapshot (VERIFY_OFFLINE_PY_BUNDLE 5aebc03f and CHAIN_BUNDLE 51a00548
+  unchanged) and U1 behavioral. The dual arbiter is what made refactoring
+  the TCB strings safe.
+
+- U4 -- production farkas mirror provenance pin
+  (tests/test_s130_farkas_mirror_pin.py,
+  tests/baselines/s130_farkas_mirror_pin.json). The farkas embed stays
+  N-version by design (independence is the trust property; U1 catches a
+  bug in either side). U2 pins the embed side and U1 checks behavioral
+  agreement; the unguarded half was the production side. This pins the
+  source SHA of 18 production mirror-core symbols as an external oracle
+  that flags any production-math change structurally, regardless of
+  corpus coverage (closing the shared-ancestry differential blind spot).
+  On drift it names the symbol(s) and routes to U1 re-validation before
+  re-bless. Its re-bless gate (NOUS_UPDATE_FARKAS_PIN=1) is distinct from
+  the verifier snapshot's, so the two concerns never silence each other.
+
+Net trust triangle for the farkas core: U2 pins the embed bytes, U4 pins
+the production bytes, U1 proves they agree behaviorally. For the minilang
+core: U3 leaves a single edit site, and U2's strict-equal + pin catches
+drift from coverage_minilang.py.
+
+Honest boundary, unchanged: these guards protect the verifier's integrity
+(no silent divergence between issuer and shipped checker). They do not
+enlarge what the verifier proves about the agent. Coverage still proves
+no gap in the blocking net, not that the agent cannot misbehave.
+
+Horizon, still deferred: succinct recursive chain coverage (IVC / folding)
+would let one constant-size proof attest the whole chain, but it needs
+finite-field commitments outside the crypto + z3 + stdlib trust base. The
+NOUS-native analog (a Merkle accumulator over per-link obligation digests)
+remains the reframing to pursue when it can satisfy the offline-verify
+north-star.
