@@ -1480,3 +1480,156 @@ def check_serialized_gap_witness(
     if not needed.issubset(set(pt)):
         return False
     return _point_satisfies(pt, system)
+
+
+# __s134_gap_finder_production_v1__
+_FM_CAP: int = 100000
+
+
+class FMBlowupError(FarkasError):
+    """Fourier-Motzkin elimination exceeded the constraint-count cap."""
+
+
+def _fm_to_constraints(system: list) -> "list[tuple[dict, bool]]":
+    out: list = []
+    for ineq in system:
+        coeffs = {str(k): Fraction(v) for k, v in ineq.coeffs.items()}
+        out.append((coeffs, bool(ineq.strict)))
+    return out
+
+
+def _fm_eliminate(cons: "list[tuple[dict, bool]]", var: str) -> "list[tuple[dict, bool]]":
+    pos: list = []
+    neg: list = []
+    new: list = []
+    for coeffs, strict in cons:
+        a = coeffs.get(var, Fraction(0))
+        if a > 0:
+            pos.append((coeffs, strict))
+        elif a < 0:
+            neg.append((coeffs, strict))
+        else:
+            stripped = {k: v for k, v in coeffs.items() if k != var}
+            new.append((stripped, strict))
+    for cp, sp in pos:
+        ap = cp[var]
+        for cq, sq in neg:
+            aq = cq[var]
+            comb: dict = {}
+            for k in set(cp) | set(cq):
+                if k == var:
+                    continue
+                val = (-aq) * cp.get(k, Fraction(0)) + ap * cq.get(k, Fraction(0))
+                if val != 0:
+                    comb[k] = val
+            new.append((comb, sp or sq))
+            if len(new) > _FM_CAP:
+                raise FMBlowupError("Fourier-Motzkin blowup exceeded cap")
+    return new
+
+
+def _fm_consistent(cons: "list[tuple[dict, bool]]") -> bool:
+    for coeffs, strict in cons:
+        if any(k != "" for k in coeffs):
+            continue
+        const = coeffs.get("", Fraction(0))
+        if strict:
+            if not (const < 0):
+                return False
+        elif not (const <= 0):
+            return False
+    return True
+
+
+def _fm_choose_value(
+    cons: "list[tuple[dict, bool]]", var: str, assigned: dict
+) -> "Optional[Fraction]":
+    lb: "Optional[Fraction]" = None
+    ub: "Optional[Fraction]" = None
+    lb_strict = False
+    ub_strict = False
+    for coeffs, strict in cons:
+        a = coeffs.get(var, Fraction(0))
+        res = Fraction(0)
+        for k, v in coeffs.items():
+            if k == var:
+                continue
+            if k == "":
+                res += v
+            else:
+                res += v * assigned[k]
+        if a == 0:
+            if strict:
+                if not (res < 0):
+                    return None
+            elif not (res <= 0):
+                return None
+            continue
+        bound = -res / a
+        if a > 0:
+            if ub is None or bound < ub:
+                ub, ub_strict = bound, strict
+            elif bound == ub:
+                ub_strict = ub_strict or strict
+        else:
+            if lb is None or bound > lb:
+                lb, lb_strict = bound, strict
+            elif bound == lb:
+                lb_strict = lb_strict or strict
+    if lb is not None and ub is not None:
+        if lb > ub:
+            return None
+        if lb == ub:
+            if lb_strict or ub_strict:
+                return None
+            return lb
+        return (lb + ub) / 2
+    if lb is not None:
+        return lb + 1 if lb_strict else lb
+    if ub is not None:
+        return ub - 1 if ub_strict else ub
+    return Fraction(0)
+
+
+def _fm_find_point(system: list) -> "Optional[dict]":
+    cons = _fm_to_constraints(system)
+    order = sorted({k for coeffs, _ in cons for k in coeffs if k != ""})
+    stack: list = []
+    cur = cons
+    for var in reversed(order):
+        stack.append((var, cur))
+        cur = _fm_eliminate(cur, var)
+    if not _fm_consistent(cur):
+        return None
+    point: dict = {}
+    for var, sys_with_var in reversed(stack):
+        val = _fm_choose_value(sys_with_var, var, point)
+        if val is None:
+            return None
+        point[var] = val
+    return point
+
+
+def find_gap_witness_point(
+    threshold_ast: Any,
+    blocking_signals: list,
+) -> "Optional[dict]":
+    """Produce a rational witness point for a coverage gap, or None if the
+    threshold region is fully covered by the blocking signals. Exact-rational
+    Fourier-Motzkin elimination over the DNF disjuncts of
+    T && NOT(B_1) && ... && NOT(B_n): for each disjunct, eliminate variables
+    then back-substitute a deterministic value (midpoint for two-sided bounds,
+    lb+1 / ub-1 for one-sided, 0 for free), returning the first disjunct's
+    point. No solver. The producer is UNTRUSTED: every emitted point must be
+    validated by check_serialized_gap_witness, which re-derives the disjuncts
+    and checks the point with rational arithmetic alone. This proves a point
+    lies in T and escapes every blocking signal -- a real gap in the net --
+    NOT that the agent misbehaves there, nor that the gap is unique or
+    maximal."""
+    disjuncts = _gap_disjuncts(threshold_ast, blocking_signals, DISJUNCT_BOUND)
+    for comps in disjuncts:
+        _constraints, system = _canon_system(comps)
+        point = _fm_find_point(system)
+        if point is not None:
+            return point
+    return None
