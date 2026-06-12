@@ -920,7 +920,7 @@ def build_chain_net_verifier():
             )
     out = base.replace(
         _NET_EMBED_ANCHOR,
-        _NET_EMBED_BLOCK + _GAPW_EMBED_BLOCK + _NET_EMBED_ANCHOR, 1
+        _NET_EMBED_BLOCK + _NET_EMBED_ANCHOR, 1
     )
     out = out.replace(
         _NET_WALK_ANCHOR, _NET_WALK_BLOCK + _NET_WALK_ANCHOR, 1

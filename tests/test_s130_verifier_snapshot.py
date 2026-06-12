@@ -63,7 +63,7 @@ VERIFIER_CONSTANTS = (
     "VERIFY_OFFLINE_PY_BUNDLE",
     "VERIFY_OFFLINE_PY_CHAIN_BUNDLE",
 )
-VERIFIER_BUILDERS = ("build_chain_net_verifier",)
+VERIFIER_BUILDERS = ("build_chain_net_verifier", "build_gap_witness_verifier")
 
 _MINILANG_START = (
     "# --- minilang core (shared text; do not edit one copy "

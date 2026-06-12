@@ -3,7 +3,7 @@
 Phase 2b of the coverage-gap-witness arc. The production gap-witness API
 (coverage_farkas.serialize_gap_witness / check_serialized_gap_witness, the
 S132 phase-2a promotion) is now mirrored into the offline chain verifier
-embed (dossier _GAPW_EMBED_BLOCK -> build_chain_net_verifier output) as
+embed (dossier _GAPW_EMBED_BLOCK -> build_gap_witness_verifier output) as
 check_gap_witness, so a third party can check a CARRIED gap-witness offline
 with rational arithmetic alone, no solver, zero issuer trust.
 
@@ -13,8 +13,8 @@ forgery class -- the same assurance class as U1 (bundle) and S131/S132
 (hop/net). The embed returns (ok, reason); production returns bool; the
 differential compares the boolean verdicts.
 
-check_gap_witness exists ONLY inside build_chain_net_verifier() output
-(spliced from _GAPW_EMBED_BLOCK after the net block, before the farkas END
+check_gap_witness exists ONLY inside build_gap_witness_verifier() output
+(spliced from _GAPW_EMBED_BLOCK before the farkas END
 marker), not in any static constant, so the embed namespace is obtained by
 exec'ing the builder output.
 
@@ -41,10 +41,10 @@ _GAPW_EMBED_CACHE: dict = {}
 def _gapw_embed_ns() -> dict:
     if _GAPW_EMBED_CACHE:
         return _GAPW_EMBED_CACHE
-    src = dossier.build_chain_net_verifier()
-    code = compile(src, "<embed:build_chain_net_verifier>", "exec")
+    src = dossier.build_gap_witness_verifier()
+    code = compile(src, "<embed:build_gap_witness_verifier>", "exec")
     ns: dict = {
-        "__file__": "<embed:build_chain_net_verifier>",
+        "__file__": "<embed:build_gap_witness_verifier>",
         "__name__": "<embed_chain_net>",
     }
     exec(code, ns)  # noqa: S102
@@ -146,7 +146,7 @@ def test_gapw_embed_exposes_entrypoints() -> None:
     for name in ("check_gap_witness", "_point_satisfies",
                  "GAP_WITNESS_FRAGMENT"):
         assert name in ns, (
-            "build_chain_net_verifier output lacks " + name
+            "build_gap_witness_verifier output lacks " + name
         )
     assert ns["GAP_WITNESS_FRAGMENT"] == "coverage-gap-witness"
 
