@@ -349,6 +349,25 @@ def build_dossier(
                 f"{(parsed_manifest.coverage_farkas_sha256 or '')[:16]}"
                 f"... (Farkas certificate tampered or substituted)"
             )
+    gap_witness_bytes = None  # __s134_gapw_consume_v1__
+    if parsed_manifest.source_kind == "gap-witness":
+        _gw_expected = parsed_manifest.gap_witness_sha256
+        gw_src = manifest.parent / "coverage.gapwitness.json"
+        if not gw_src.is_file():
+            raise DossierError(
+                "manifest declares source_kind gap-witness but "
+                "coverage.gapwitness.json not found next to "
+                "manifest: " + str(gw_src)
+            )
+        gap_witness_bytes = gw_src.read_bytes()
+        _gw_file_sha = hashlib.sha256(gap_witness_bytes).hexdigest()
+        if _gw_file_sha != _gw_expected:
+            raise DossierError(
+                "coverage.gapwitness.json sha256 mismatch: file="
+                + _gw_file_sha[:16] + "... manifest="
+                + str(_gw_expected or "")[:16]
+                + "... (gap-witness tampered or substituted)"
+            )
     if output is None:
         ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         output = source.parent / f"{source.stem}_dossier_{ts}"
@@ -372,6 +391,23 @@ def build_dossier(
         )
     # __s126_hop_gate_lift_v1__ boolean-threshold chain gate removed:
     # hop containment is proven by a Farkas bundle per hop (S126).
+    if (parsed_manifest.source_kind == "gap-witness"  # __s134_gapw_consume_v1__
+            and _prior_digest is not None):
+        raise DossierError(
+            "source_kind is gap-witness but the manifest also "
+            "declares prior_digest; a coverage-gap-witness is a "
+            "standalone refutation artifact with no chain semantics "
+            "(refuse over silently dropping the chain)"
+        )
+    if (parsed_manifest.source_kind == "gap-witness"
+            and anchor != "none"):  # __s134_gapw_consume_v1__
+        raise DossierError(
+            "source_kind is gap-witness but a rekor anchor was "
+            "requested; the gap-witness verifier checks an Ed25519 "
+            "manifest signature only and would never inspect a "
+            "transparency-log anchor (refuse over a silent merge); "
+            "rebuild with --anchor none"
+        )
     if _prior_digest is None and supersedes is not None:
         raise DossierError(
             "--supersedes given but the current manifest declares no "
@@ -811,7 +847,26 @@ def build_dossier(
     if coverage_farkas_bytes is not None:  # __s116_dossier_farkas_v1__
         (output / "coverage.farkas.json").write_bytes(coverage_farkas_bytes)
         files.append("coverage.farkas.json")
+    if gap_witness_bytes is not None:  # __s134_gapw_consume_v1__
+        (output / "coverage.gapwitness.json").write_bytes(
+            gap_witness_bytes
+        )
+        files.append("coverage.gapwitness.json")
 
+    verify_path = output / "verify_offline.py"
+    if parsed_manifest.source_kind == "gap-witness":  # __s134_gapw_consume_v1__
+        verify_path.write_text(
+            build_gap_witness_verifier(), encoding="utf-8"
+        )
+        verify_path.chmod(0o755)
+        files.append("verify_offline.py")
+        return DossierResult(
+            output_dir=output,
+            files=tuple(files),
+            world_name=parsed_manifest.world_name,
+            verdict=parsed_manifest.verdict,
+            safety_margin_pct=parsed_manifest.safety_margin_pct,
+        )
     verify_path = output / "verify_offline.py"
     _any_bundle_link = (
         (
