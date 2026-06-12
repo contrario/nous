@@ -11,6 +11,35 @@
   Removed / Fixed / Security.
 -->
 
+## [5.37.0] - 2026-06-12  <!-- __s134_changelog_v5_37_0_v1__ -->
+
+### Added
+- End-to-end coverage-gap-witness dossiers: the witness primitive is now a
+  full produce -> package -> verify pipeline with zero issuer trust.
+  `nous verify --gap-witness` (with `--coverage-threshold`) issues a
+  REFUTATION dossier when a coverage obligation is not proven: it finds a
+  rational point in the threshold region that escapes every blocking signal
+  (exact Fourier-Motzkin, no solver), serializes the witness, and binds it
+  into the signed manifest as `source_kind="gap-witness"` +
+  `gap_witness_sha256`. `build_dossier` packages such a manifest -- carrying
+  `coverage.gapwitness.json` under its sha gate -- and emits a self-contained
+  `verify_offline.py` that re-derives the gap from the signed `source.nous`
+  by rational arithmetic alone (stdlib + `cryptography` for the Ed25519
+  signature), printing `VERDICT: REFUTATION` on success. A verified
+  gap-witness proves a coverage gap EXISTS at the carried point; it is not a
+  compliance pass, not evidence the agent misbehaves, and not a claim the gap
+  is unique or maximal.
+
+### Changed
+- The dossier verifier ladder leads with the signed `source_kind`
+  discriminator (axiom 8): a `gap-witness` manifest selects the gap-witness
+  verifier ahead of any `prior_digest`-keyed chain arm. `build_dossier`
+  refuses a `gap-witness` manifest that also declares `prior_digest` (a
+  refutation has no chain semantics) or requests a rekor anchor (the
+  gap-witness verifier checks an Ed25519 signature only); both are refused
+  rather than silently merged. All changes are additive: no existing manifest
+  sets `source_kind`, so every prior dossier builds byte-identically.
+
 ## [5.36.0] - 2026-06-11  <!-- __s132_changelog_v5_36_0_v1__ -->
 
 ### Added
