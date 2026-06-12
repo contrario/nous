@@ -130,6 +130,14 @@ def cmd_verify(args: argparse.Namespace) -> int:
     coverage_farkas_script: Optional[str] = None  # __s116_cli_farkas_v1__
     coverage_farkas_sha: Optional[str] = None  # __s116_cli_farkas_v1__
     cov_threshold = getattr(args, "coverage_threshold", None)
+    if getattr(args, "gap_witness", False) and not cov_threshold:  # __s134_gapw_issue_v1__
+        print(
+            "REFUSED: --gap-witness requires --coverage-threshold "
+            "(a refutation needs a threshold to witness a gap "
+            "against). No manifest written.",
+            file=sys.stderr,
+        )
+        return 1
     if cov_threshold:
         try:
             cov_src = (
@@ -154,6 +162,11 @@ def cmd_verify(args: argparse.Namespace) -> int:
             cov_spec, timeout_ms=args.timeout_ms
         )
         if cov_result.verdict != "proven":
+            if getattr(args, "gap_witness", False):  # __s134_gapw_issue_v1__
+                return _issue_gap_witness_dossier(
+                    args, result, th_ast, policies, cov_threshold,
+                    src_path,
+                )
             print(
                 f"\nREFUSED: coverage not proven "
                 f"(verdict={cov_result.verdict}); no manifest written. "
@@ -446,6 +459,15 @@ def build_verify_parser(subparsers: argparse._SubParsersAction) -> None:
              "sha256 into the signed manifest. REFUTED coverage "
              "fails closed: no manifest is written.",
     )
+    p.add_argument(  # __s134_gapw_issue_v1__
+        "--gap-witness", action="store_true", default=False,
+        help="When --coverage-threshold is NOT proven, issue a "
+             "coverage-gap-witness (refutation) dossier instead of "
+             "refusing: find a rational point in the threshold "
+             "region that escapes every blocking signal and bind it "
+             "as source_kind=gap-witness. Requires "
+             "--coverage-threshold.",
+    )
     p.set_defaults(func=cmd_verify)
 
 
@@ -458,4 +480,140 @@ def cmd_verify_impl_guard_for_test(  # __s127_chain_coverage_flag_v1__
     pipeline). Returns 1 if the combination is refused, 0 otherwise."""
     if chain_coverage == "full" and not supersedes:
         return 1
+    return 0
+
+
+def _issue_gap_witness_dossier(  # __s134_gapw_issue_v1__
+    args, result, th_ast, policies, cov_threshold, src_path
+) -> int:
+    """Issue a coverage-gap-witness (refutation) dossier when the coverage
+    obligation over cov_threshold is NOT proven. Returns 0 if a signed
+    gap-witness manifest + coverage.gapwitness.json were written, 1 on any
+    refusal (no usable witness, signing/IO failure, or an incompatible flag).
+    The witness is UNTRUSTED at issuance: it is independently re-checked by
+    the emitted verify_offline.py via rational arithmetic, zero solver, zero
+    issuer trust. It proves a gap EXISTS at the carried point; NOT a
+    compliance pass, NOT misbehavior, NOT uniqueness or maximality.
+    """
+    from coverage_farkas import (
+        find_gap_witness_point as _find_gw_point,
+        serialize_gap_witness as _ser_gw,
+        FarkasError as _FarkasError_gw,
+    )
+
+    if getattr(args, "no_manifest", False):
+        print(
+            "REFUSED: --gap-witness writes a signed refutation dossier and "
+            "is incompatible with --no-manifest. No manifest written.",
+            file=sys.stderr,
+        )
+        return 1
+    if getattr(args, "supersedes", None):
+        print(
+            "REFUSED: --gap-witness issues a standalone refutation artifact "
+            "with no chain semantics; --supersedes is not applicable. No "
+            "manifest written.",
+            file=sys.stderr,
+        )
+        return 1
+
+    blocking = [
+        p.signal for p in policies
+        if getattr(p, "action", None) in ("block", "abort_cycle")
+    ]
+    try:
+        point = _find_gw_point(th_ast, blocking)
+    except _FarkasError_gw as e:
+        print(
+            "REFUSED: coverage not proven and the gap-witness search "
+            "refused (" + str(e) + "); no manifest written.",
+            file=sys.stderr,
+        )
+        return 1
+    if point is None:
+        print(
+            "REFUSED: coverage not proven by the solver, but no rational "
+            "gap-witness point could be constructed over the linear "
+            "fragment (the gap may be non-linear); no manifest written.",
+            file=sys.stderr,
+        )
+        return 1
+    try:
+        gw_doc = _ser_gw(
+            th_ast, blocking, point, threshold_expr=cov_threshold
+        )
+    except _FarkasError_gw as e:
+        print(
+            "REFUSED: gap-witness serialization refused (" + str(e)
+            + "); no manifest written.",
+            file=sys.stderr,
+        )
+        return 1
+
+    gw_script = _json_s116.dumps(gw_doc, sort_keys=True, indent=2) + "\n"
+    gw_sha = _hashlib_s115.sha256(gw_script.encode("utf-8")).hexdigest()
+
+    nous_version = _import_nous_version()
+    manifest = manifest_from_verify(result, nous_version=nous_version)
+    manifest = _dc_s115.replace(
+        manifest,
+        source_kind="gap-witness",
+        gap_witness_sha256=gw_sha,
+    )
+
+    try:
+        priv, pub, key_path = load_or_create_keypair(
+            Path(args.key_path)
+            if getattr(args, "key_path", None) else None
+        )
+    except Exception as e:
+        print(
+            "WARN: keypair unavailable; gap-witness manifest unsigned. "
+            "Reason: " + str(e),
+            file=sys.stderr,
+        )
+        return 1
+    try:
+        sig = sign_manifest(manifest, priv)
+        doc = manifest_json(manifest, sig, pub)
+    except Exception as e:
+        print(
+            "WARN: gap-witness signing failed: " + str(e), file=sys.stderr
+        )
+        return 1
+
+    out_path = (
+        Path(args.manifest_out)
+        if getattr(args, "manifest_out", None)
+        else src_path.with_suffix(".manifest.json")
+    )
+    try:
+        out_path.write_text(doc, encoding="utf-8")
+        gw_path = out_path.parent / "coverage.gapwitness.json"
+        gw_path.write_text(gw_script, encoding="utf-8")
+    except Exception as e:
+        print(
+            "WARN: could not write gap-witness dossier to "
+            + str(out_path) + ": " + str(e),
+            file=sys.stderr,
+        )
+        return 1
+
+    print()
+    print(
+        "REFUTATION ISSUED: coverage NOT proven over threshold '"
+        + cov_threshold + "'; a coverage-gap-witness was constructed."
+    )
+    print(
+        "  gap-witness:  " + str(gw_path) + " (sha256 " + gw_sha[:16] + "...)"
+    )
+    print(
+        "  manifest:     " + str(out_path)
+        + " (source_kind=gap-witness, unsigned-coverage refutation)"
+    )
+    print("  key:          " + str(key_path))
+    print(
+        "  boundary:     proves a gap EXISTS at the carried point; NOT a "
+        "compliance pass, NOT misbehavior, NOT unique or maximal."
+    )
     return 0
