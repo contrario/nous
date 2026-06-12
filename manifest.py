@@ -60,6 +60,10 @@ MANIFEST_SCHEMA_VERSION: str = "1.0"
 # Manifest dataclass
 # ─────────────────────────────────────────────────────────────────────
 
+class ManifestCoherenceError(ValueError):  # __s134_manifest_coherence_error_v1__
+    """A manifest field combination is internally inconsistent."""
+
+
 @dataclass(frozen=True)
 class Manifest:
     """Self-describing audit record of one verify run.
@@ -112,6 +116,57 @@ class Manifest:
     # drop-when-None: absent on all pre-S127 manifests,
     # canonical bytes unchanged.
     chain_coverage_mode: Optional[str] = None  # __s127_chain_coverage_mode_field_v1__
+    # Evidence-claim discriminator (S134, axiom 8). None => coverage (the
+    # implicit, legacy default: a PASS means no gap was found). "gap-witness"
+    # => a REFUTATION artifact: a PASS means a real coverage gap is
+    # demonstrated at a witness point. Mutually exclusive with any coverage
+    # binding. drop-when-None: absent on all pre-S134 manifests, canonical
+    # bytes unchanged.
+    source_kind: Optional[str] = None  # __s134_source_kind_field_v1__
+    # Crypto-only file binding: sha256 of coverage.gapwitness.json bytes
+    # (S134). Present iff source_kind == "gap-witness". drop-when-None.
+    gap_witness_sha256: Optional[str] = None  # __s134_gap_witness_sha256_field_v1__
+
+    def __post_init__(self) -> None:  # __s134_source_kind_coherence_v1__
+        _allowed = (None, "gap-witness")
+        if self.source_kind not in _allowed:
+            raise ManifestCoherenceError(
+                "source_kind " + repr(self.source_kind) + " is not one of "
+                + repr(_allowed) + " (refuse over guess)"
+            )
+        is_gap = self.source_kind == "gap-witness"
+        has_gw = self.gap_witness_sha256 is not None
+        if is_gap and not has_gw:
+            raise ManifestCoherenceError(
+                "source_kind is 'gap-witness' but gap_witness_sha256 is "
+                "absent (a refutation claim must bind its witness sidecar)"
+            )
+        if has_gw and not is_gap:
+            raise ManifestCoherenceError(
+                "gap_witness_sha256 is set but source_kind is not "
+                "'gap-witness' (an unlabeled refutation binding is refused)"
+            )
+        if has_gw:
+            digest = self.gap_witness_sha256
+            if len(digest) != 64 or any(
+                ch not in "0123456789abcdef" for ch in digest
+            ):
+                raise ManifestCoherenceError(
+                    "gap_witness_sha256 is not a 64-char lowercase hex "
+                    "sha256 digest (got " + repr(digest) + ")"
+                )
+        if is_gap and (
+            self.coverage_farkas_sha256 is not None
+            or self.coverage_smt2_sha256 is not None
+            or self.policy_coverage_sha256 is not None
+        ):
+            raise ManifestCoherenceError(
+                "source_kind is 'gap-witness' but the manifest also carries "
+                "a coverage binding (coverage_farkas_sha256 / "
+                "coverage_smt2_sha256 / policy_coverage_sha256); a refutation "
+                "and a coverage proof over the same world are contradictory "
+                "claims (axiom 8: no silent merge across discriminators)"
+            )
 
     def canonical_bytes(self) -> bytes:
         """Bytes that get signed — sorted, separator-stable JSON."""
@@ -154,6 +209,10 @@ class Manifest:
             d["prior_digest"] = self.prior_digest
         if self.chain_coverage_mode is not None:  # __s127_chain_coverage_mode_field_v1__
             d["chain_coverage_mode"] = self.chain_coverage_mode
+        if self.source_kind is not None:  # __s134_source_kind_field_v1__
+            d["source_kind"] = self.source_kind
+        if self.gap_witness_sha256 is not None:  # __s134_gap_witness_sha256_field_v1__
+            d["gap_witness_sha256"] = self.gap_witness_sha256
         return d  # __session96_revert_m3_canonical_dict_v1__
 
 
@@ -367,6 +426,8 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
+        source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
+        gap_witness_sha256=doc.get("gap_witness_sha256"),  # __s134_gap_witness_sha256_field_v1__
     )
     return m, sig, pub
 
@@ -416,6 +477,8 @@ def parse_manifest_json_with_anchor(
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
+        source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
+        gap_witness_sha256=doc.get("gap_witness_sha256"),  # __s134_gap_witness_sha256_field_v1__
     )
     anchor: "_RekorAnchor | None" = None
     if anchor_block is not None:
