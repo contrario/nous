@@ -69,6 +69,7 @@ MIRROR_CORE_SYMBOLS = (
     "_canon_json",
     "_canon_system",
     "_check_multipliers",
+    "_point_satisfies",
 )
 
 
