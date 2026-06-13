@@ -428,3 +428,208 @@ def verify_annex_iv_map(dossier_dir: Path) -> tuple[bool, str]:
             )
 
     return (True, "")
+
+
+# --- standalone offline verifier builder (U3a) ---
+# build_annex_iv_verifier() returns a self-contained verify_annex_iv_map.py
+# source string. The emitted script runs with cryptography + stdlib only (no
+# NOUS install): it re-runs the four checks of verify_annex_iv_map against
+# annex_iv_map.json + manifest.json in its own directory. The canonical item
+# table is INJECTED from ANNEX_IV_ITEMS (single source of truth, axiom 1); the
+# template never carries a second hand-maintained copy.
+# __s135_annex_iv_verifier_builder_v1__
+
+_ANNEX_IV_VERIFIER_TEMPLATE: str = '''#!/usr/bin/env python3
+"""Offline verification of a NOUS Annex IV evidence-map sidecar.
+
+Usage: python3 verify_annex_iv_map.py
+Exit:  0 = PASS, 1 = FAIL, 2 = environment error.
+
+Requires: cryptography (Ed25519 only). Reads annex_iv_map.json and
+manifest.json from this script's directory. No NOUS install, no network,
+no solver.
+
+Checks, fail-closed, in order:
+  1. map Ed25519 signature over its canonical body bytes (signature stripped).
+  2. map.manifest_canonical_sha256 == sha256(manifest canonical body, with
+     signature and transparency_log stripped) -- map is bound to THIS dossier.
+  3. every referenced evidence object is present AND its sha256 matches the
+     recorded hash (raw file bytes).
+  4. indexing completeness: exactly the nine canonical Annex IV items appear,
+     each with the canonical title and a clause kind consistent with its
+     evidence (evidence-backed -> >=1 reference; documentation-clause and
+     operator-responsibility -> zero).
+
+BOUNDARY: proves presence + authenticity + indexing of the declared evidence.
+It does NOT prove legal sufficiency, that a referenced file satisfies its
+Annex IV item, or anything about execution conformance.
+"""
+from __future__ import annotations
+
+import base64
+import hashlib
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).parent
+SCHEMA_VERSION = 1
+EVIDENCE_BACKED = "evidence-backed"
+DOC_CLAUSE = "documentation-clause"
+OPERATOR = "operator-responsibility"
+
+CANONICAL_ITEMS = __ANNEX_IV_ITEMS_LITERAL__
+
+
+def _fail(msg):
+    print("FAIL: " + msg, file=sys.stderr)
+    return 1
+
+
+def _canon_body_bytes(doc):
+    body = {k: v for k, v in doc.items() if k != "signature"}
+    return json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def _manifest_canon_body_bytes(m):
+    body = {k: v for k, v in m.items()
+            if k not in ("signature", "transparency_log")}
+    return json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def _file_sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main():
+    try:
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PublicKey,
+        )
+        from cryptography.exceptions import InvalidSignature
+    except ImportError:
+        print(
+            "ERROR: cryptography library required. "
+            "Install: pip install 'cryptography>=42'",
+            file=sys.stderr,
+        )
+        return 2
+
+    map_path = ROOT / "annex_iv_map.json"
+    manifest_path = ROOT / "manifest.json"
+    if not map_path.is_file():
+        return _fail("annex_iv_map.json not found in " + str(ROOT))
+    if not manifest_path.is_file():
+        return _fail("manifest.json not found in " + str(ROOT))
+
+    try:
+        doc = json.loads(map_path.read_text(encoding="utf-8"))
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        return _fail("JSON parse error: " + str(e))
+    if not isinstance(doc, dict) or not isinstance(manifest, dict):
+        return _fail("annex_iv_map.json or manifest.json is not an object")
+
+    sig_block = doc.get("signature")
+    if not isinstance(sig_block, dict):
+        return _fail("map has no signature block")
+    pub_b64 = sig_block.get("public_key_b64", "")
+    sig_b64 = sig_block.get("signature_b64", "")
+    if not pub_b64 or not sig_b64:
+        return _fail("map signature block incomplete")
+    try:
+        pub = Ed25519PublicKey.from_public_bytes(
+            base64.b64decode(pub_b64, validate=True))
+        pub.verify(base64.b64decode(sig_b64, validate=True),
+                   _canon_body_bytes(doc))
+    except (InvalidSignature, ValueError):
+        return _fail("map Ed25519 signature does NOT verify")
+    print("OK   map Ed25519 signature verified")
+
+    if int(doc.get("annex_iv_map_schema_version", 0)) != SCHEMA_VERSION:
+        return _fail("unsupported annex_iv_map_schema_version")
+
+    expected = hashlib.sha256(_manifest_canon_body_bytes(manifest)).hexdigest()
+    if doc.get("manifest_canonical_sha256") != expected:
+        return _fail(
+            "map is not bound to this dossier "
+            "(manifest_canonical_sha256 mismatch)")
+    print("OK   map bound to this dossier manifest")
+
+    items = doc.get("items")
+    if not isinstance(items, dict):
+        return _fail("map has no items object")
+
+    canon = {cid: (title, kind) for cid, title, kind in CANONICAL_ITEMS}
+    present = set(items.keys())
+    missing = set(canon) - present
+    surplus = present - set(canon)
+    if missing:
+        return _fail("map omits Annex IV item id(s): "
+                     + ", ".join(sorted(missing)))
+    if surplus:
+        return _fail("map carries non-canonical item id(s): "
+                     + ", ".join(sorted(surplus)))
+
+    for cid in sorted(canon):
+        title, kind = canon[cid]
+        entry = items[cid]
+        if not isinstance(entry, dict):
+            return _fail("item " + cid + " is not an object")
+        if entry.get("title") != title:
+            return _fail("item " + cid + " title does not match canonical")
+        if entry.get("clause_kind") != kind:
+            return _fail("item " + cid + " clause_kind does not match canonical")
+        evidence = entry.get("evidence")
+        if not isinstance(evidence, list):
+            return _fail("item " + cid + " evidence is not a list")
+        for ref in evidence:
+            if not isinstance(ref, dict):
+                return _fail("item " + cid + " has a non-object evidence ref")
+            fname = ref.get("file")
+            recorded = ref.get("sha256")
+            if not isinstance(fname, str) or not isinstance(recorded, str):
+                return _fail("item " + cid + " evidence ref missing file/sha256")
+            fpath = ROOT / fname
+            if not fpath.is_file():
+                return _fail("item " + cid + " references " + fname
+                             + " but the file is absent (missing evidence)")
+            if _file_sha256(fpath) != recorded:
+                return _fail("item " + cid + " evidence " + fname
+                             + " sha256 does not match (tampered or substituted)")
+        if kind == EVIDENCE_BACKED and not evidence:
+            return _fail("item " + cid + " is evidence-backed but indexes none")
+        if kind in (DOC_CLAUSE, OPERATOR) and evidence:
+            return _fail("item " + cid + " is a " + kind
+                         + " clause but indexes evidence (over-claim)")
+    print("OK   all nine Annex IV items indexed; evidence present and authentic")
+
+    print()
+    print("VERDICT: PASS (Ed25519 Annex IV evidence-map sidecar, bound to "
+          "this dossier, offline, stdlib-checked)")
+    print("boundary: proves presence + authenticity + indexing; NOT legal "
+          "sufficiency, NOT that any file satisfies its item")
+    print("  manifest_sha: "
+          + str(doc.get("manifest_canonical_sha256", "?"))[:16] + "...")
+    n_refs = sum(len(items[c].get("evidence", [])) for c in items)
+    print("  items:        9 (evidence refs: " + str(n_refs) + ")")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+'''
+
+
+def build_annex_iv_verifier() -> str:
+    """Return a standalone verify_annex_iv_map.py source string with the
+    canonical Annex IV item table injected from ANNEX_IV_ITEMS. The emitted
+    script requires only cryptography + stdlib (no NOUS install)."""
+    triples = [
+        (item_id, title, clause_kind)
+        for item_id, title, _candidates, clause_kind in ANNEX_IV_ITEMS
+    ]
+    literal = repr(triples)
+    return _ANNEX_IV_VERIFIER_TEMPLATE.replace(
+        "__ANNEX_IV_ITEMS_LITERAL__", literal
+    )
