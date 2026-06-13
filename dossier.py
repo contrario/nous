@@ -242,6 +242,8 @@ def build_dossier(
     today: Optional[date] = None,
     anchor: str = "none",
     supersedes: Optional[Path] = None,  # __s120_chain_carry_v1__
+    annex_iv_map: bool = False,  # __s135_annex_iv_emit_v1__
+    annex_iv_key_path: Optional[Path] = None,  # __s135_annex_iv_emit_v1__
     _test_rekor_anchor: "object | None" = None,
     _test_rekor_anchor_v2: "object | None" = None,
 ) -> DossierResult:
@@ -855,6 +857,12 @@ def build_dossier(
 
     verify_path = output / "verify_offline.py"
     if parsed_manifest.source_kind == "gap-witness":  # __s134_gapw_consume_v1__
+        if annex_iv_map:  # __s135_annex_iv_emit_v1__
+            raise DossierError(
+                "--annex-iv-map refused on a coverage-gap-witness "
+                "(refutation) dossier: an Annex IV evidence index "
+                "over a refutation artifact is incoherent"
+            )
         verify_path.write_text(
             build_gap_witness_verifier(), encoding="utf-8"
         )
@@ -922,6 +930,28 @@ def build_dossier(
         verify_path.write_text(VERIFY_OFFLINE_PY, encoding="utf-8")
     verify_path.chmod(0o755)
     files.append("verify_offline.py")
+
+    if annex_iv_map:  # __s135_annex_iv_emit_v1__
+        from manifest import load_or_create_keypair
+        from annex_iv_map import (
+            build_annex_iv_map,
+            build_annex_iv_verifier,
+            serialize_annex_iv_map,
+        )
+        _aiv_priv, _aiv_pub, _aiv_kp = load_or_create_keypair(
+            annex_iv_key_path
+        )
+        _aiv_doc = build_annex_iv_map(output, _aiv_priv)
+        (output / "annex_iv_map.json").write_text(
+            serialize_annex_iv_map(_aiv_doc), encoding="utf-8"
+        )
+        files.append("annex_iv_map.json")
+        _aiv_verify = output / "verify_annex_iv_map.py"
+        _aiv_verify.write_text(
+            build_annex_iv_verifier(), encoding="utf-8"
+        )
+        _aiv_verify.chmod(0o755)
+        files.append("verify_annex_iv_map.py")
 
     return DossierResult(
         output_dir=output,

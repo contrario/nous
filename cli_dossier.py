@@ -57,6 +57,14 @@ def cmd_dossier(args: argparse.Namespace) -> int:
                 if getattr(args, "supersedes", None)
                 else None
             ),
+            annex_iv_map=getattr(  # __s135_annex_iv_cli_v1__
+                args, "annex_iv_map", False
+            ),
+            annex_iv_key_path=(  # __s135_annex_iv_cli_v1__
+                Path(args.annex_iv_key_path)
+                if getattr(args, "annex_iv_key_path", None)
+                else None
+            ),
         )
     except DossierError as e:
         print(f"ERROR: dossier build failed: {e}", file=sys.stderr)
@@ -158,5 +166,21 @@ def build_dossier_parser(sub: argparse._SubParsersAction) -> None:
     p.add_argument(
         "--format", default="annex_iv", choices=["annex_iv"],
         help="Output format (only annex_iv in v4.14.0).",
+    )
+    p.add_argument(  # __s135_annex_iv_cli_v1__
+        "--annex-iv-map", action="store_true", default=False,
+        help="Also emit a signed Annex IV evidence-map sidecar "
+             "(annex_iv_map.json) plus a standalone offline verifier "
+             "(verify_annex_iv_map.py). Default off; when off the "
+             "dossier is byte-identical to before. The sidecar is an "
+             "orthogonal evidence index, never folded into "
+             "verify_offline.py; it proves presence + authenticity + "
+             "indexing of declared Annex IV evidence, not legal "
+             "sufficiency. Refused on a coverage-gap-witness dossier.",
+    )
+    p.add_argument(  # __s135_annex_iv_cli_v1__
+        "--annex-iv-key-path", metavar="PATH", default=None,
+        help="Ed25519 key path for signing the Annex IV map "
+             "(default: the standard NOUS author key).",
     )
     p.set_defaults(func=cmd_dossier)
