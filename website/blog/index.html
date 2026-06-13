@@ -121,6 +121,26 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s138_blog_v539-prior-link-coverage_card_v1__ __s138_web_v5_39_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v539-prior-link-coverage');return false">
+      <div class="post-meta">
+        <span class="post-date">14 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.39.0 &mdash; Coverage, All the Way Back</div>
+      <div class="post-excerpt">v5.35.0 proved the head link&rsquo;s blocking-net coverage and the chain&rsquo;s monotonic growth, but took every PRIOR link&rsquo;s coverage on the issuer signature. v5.39.0 re-runs the zero-trust proof &mdash; net_prev superset-of T_prev &mdash; on every prior link, from artifacts full mode already carries: each link&rsquo;s sha-gated <code>source.nous</code> and its Farkas certificate. The negative now caught is an issuer-signed prior link with a sha-consistent gapped or forged certificate; the sha gate passes, only the re-derived bijection refutes it. No new carried artifact, full mode only. <code>nous-lang 5.39.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
+    <!-- __s138_blog_v538-annex-iv-map_card_v1__ -->
+    <a class="post-card" href="#" onclick="showPost('v538-annex-iv-map');return false">
+      <div class="post-meta">
+        <span class="post-date">13 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.38.0 &mdash; The Evidence, Indexed and Signed</div>
+      <div class="post-excerpt">The dossier already proves cost and coverage offline. v5.38.0 adds an orthogonal claim: that the EU AI Act Annex IV evidence is present, authentic, and indexed. <code>nous dossier --annex-iv-map</code> (default off) emits a signed <code>annex_iv_map.json</code> mapping the nine Annex IV items to artifacts the dossier already carries, each pinned by sha256, the whole map bound to the dossier and signed Ed25519. A self-contained <code>verify_annex_iv_map.py</code> re-runs four fail-closed checks with <code>cryptography</code> and stdlib alone. It proves presence and indexing &mdash; NOT legal sufficiency. <code>nous-lang 5.38.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s134_blog_v537-gap-witness-dossiers_card_v1__ __s134_web_v5_37_0__ -->
     <a class="post-card" href="#" onclick="showPost('v537-gap-witness-dossiers');return false">
       <div class="post-meta">
@@ -640,6 +660,25 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s138_blog_v539-prior-link-coverage_post_v1__ __s138_web_v5_39_0__ -->
+   <div class="post-full" id="post-v539-prior-link-coverage">
+     <button class="post-back" onclick="showList()">&larr; All posts</button>
+     <h1 class="post-full-title">NOUS v5.39.0 &mdash; Coverage, All the Way Back</h1>
+     <div class="post-full-meta">14 June 2026 &middot; 4 min read</div>
+     <p>By v5.35.0 a full-mode lineage could prove a great deal offline: the head link&rsquo;s blocking-net coverage re-derived from its signed source, hop monotonicity across every re-binding, and net containment along the whole chain. But one claim still rode on a signature. Each PRIOR link&rsquo;s coverage &mdash; that its own blocking net actually caught everything its threshold admitted &mdash; was taken on the issuer&rsquo;s word. The full-mode verifier re-derived the current link&rsquo;s coverage from scratch, yet walked the lineage trusting that every earlier link had been issued honestly. A signed prior link could ship a gapped or forged Farkas certificate and the chain still passed.</p>
+     <p>v5.39.0 closes that. <code>build_chain_net_verifier</code> now emits a prior-coverage walk that re-runs the exact zero-trust coverage proof the current link already gets &mdash; net_prev superset-of T_prev, every disjunct of the gap search refuted by non-negative rational multipliers &mdash; on every prior link in the chain. It needs nothing new: full mode already carries each link&rsquo;s <code>source.nous</code> under that link&rsquo;s signed <code>source_sha256</code>, and its <code>coverage.farkas.json</code> under a sha gate. The walk re-reads the authenticated source, re-derives the disjunct set itself, and demands a bijection against the carried certificate. No new artifact travels; the dossier is byte-identical to before.</p>
+     <p>The hole this closes is precise. An issuer signs a prior link, then ships a coverage certificate that omits a disjunct &mdash; a real gap &mdash; or forges its multipliers, and re-points the link&rsquo;s <code>coverage_farkas_sha256</code> at the mutated file so the O(1) sha gate passes. Before v5.39.0 the chain walked past it on the signature. Now the bijection check re-derives the obligation from the link&rsquo;s own hash-bound source and refuses: a missing disjunct has no certificate, a forged multiplier fails the arithmetic. A tamper that does not re-point the sha is still caught by the pre-existing gate; this catches the tamper that does. Links that declare no per-link certificate are skipped &mdash; the walk is vacuous on chains that never carried coverage, and a legitimately-issued chain always re-derives to a holding bijection, so there is no false positive.</p>
+     <p>The boundary is stated, not hidden. This proves every link&rsquo;s <em>declared</em> blocking net covers its <em>declared</em> threshold &mdash; re-derived from signed sources, solver-free, zero issuer trust &mdash; not that any agent is safe, not that the net catches every wrong, not execution conformance. What changed is reach: the artifact set did not grow, but the question the offline verifier can answer did. Before v5.39.0 a full-mode dossier asserted the head&rsquo;s coverage and the chain&rsquo;s monotonic growth and took the rest on trust; after it, the same bytes already on disk answer &lsquo;does every link in this lineage actually cover its declared threshold?&rsquo; with <code>cryptography</code> and the standard library alone. Probabilistic execution, deterministic evidence &mdash; now all the way back. <code>nous-lang 5.39.0</code>.</p>
+   </div>
+   <!-- __s138_blog_v538-annex-iv-map_post_v1__ -->
+   <div class="post-full" id="post-v538-annex-iv-map">
+     <button class="post-back" onclick="showList()">&larr; All posts</button>
+     <h1 class="post-full-title">NOUS v5.38.0 &mdash; The Evidence, Indexed and Signed</h1>
+     <div class="post-full-meta">13 June 2026 &middot; 3 min read</div>
+     <p>Every dossier NOUS ships already proves two things offline: that the system&rsquo;s cost stays inside a declared SMT envelope, and that its blocking net covers its threshold. v5.38.0 adds a third claim that sits orthogonal to both &mdash; not about behavior or cost, but about the EU AI Act Annex IV technical documentation itself: that the evidence the regulation enumerates is present, authentic, and indexed against the artifacts the dossier already carries.</p>
+     <p><code>nous dossier --annex-iv-map</code> &mdash; default off, so every existing dossier stays byte-identical &mdash; emits a signed <code>annex_iv_map.json</code>. It maps the nine Annex IV technical-documentation items to the files the dossier already carries: <code>manifest.json</code>, <code>source.nous</code>, the coverage sidecars. Each reference is pinned by the sha256 of its raw bytes, the whole map is bound to the dossier by the manifest canonical-body sha256, and the map is signed Ed25519. Alongside it ships a self-contained <code>verify_annex_iv_map.py</code> &mdash; <code>cryptography</code> plus the standard library, no NOUS install, no solver &mdash; that re-runs four fail-closed checks: map signature, dossier binding, per-reference presence and integrity, and indexing completeness with clause coherence. Evidence-backed items must index a file; documentation and operator-responsibility items must index none, so the sidecar cannot over-claim.</p>
+     <p>The boundary is printed in the verifier&rsquo;s own verdict, because an evidence index is the kind of artifact most easily mistaken for more than it is. This proves presence, authenticity, and indexing of the declared evidence &mdash; NOT legal sufficiency, NOT that any file actually satisfies its Annex IV item, NOT execution conformance. The sidecar is an orthogonal index: it is never folded into <code>verify_offline.py</code>, and it is refused outright on a coverage-gap-witness dossier, since an evidence index laid over a refutation is incoherent. What it buys is a signed, offline-checkable answer to a narrow question an auditor actually asks first &mdash; is the documentation the regulation names here, intact, and pointing at the right bytes. <code>nous-lang 5.38.0</code>.</p>
+   </div>
    <!-- __s134_blog_v537-gap-witness-dossiers_post_v1__ __s134_web_v5_37_0__ -->
    <div class="post-full" id="post-v537-gap-witness-dossiers">
      <button class="post-back" onclick="showList()">&larr; All posts</button>
