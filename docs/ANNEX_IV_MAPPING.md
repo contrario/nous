@@ -731,3 +731,38 @@ and dossiers. Definitions are operational, not legal.
 *Last updated: Session 106, 31 May 2026 (HEAD: `3298388`, v5.24.0).*
 
 <!-- __session83_annex_iv_mapping_v1__ __session106_annex_iv_mapping_v5_24_0_v1__ -->
+
+---
+
+## Appendix: the signed Annex IV evidence-map sidecar (v5.38.0)
+<!-- __s135_annex_iv_sidecar_appendix_v1__ -->
+
+`nous dossier --annex-iv-map` (default off) emits, alongside the dossier,
+two files that make the crosswalk above machine-checkable offline:
+
+- `annex_iv_map.json` -- a signed index. For each of the nine Annex IV
+  items it records the canonical title, a clause kind (`evidence-backed`,
+  `documentation-clause`, or `operator-responsibility`), and zero or more
+  evidence references. Each reference names a file already present in the
+  dossier and pins its sha256 over the raw file bytes. The whole map is
+  bound to the dossier by `manifest_canonical_sha256` (the sha256 of the
+  manifest canonical body, signature and transparency_log stripped) and
+  signed Ed25519.
+- `verify_annex_iv_map.py` -- a self-contained verifier. It requires only
+  `cryptography` and the standard library; no NOUS install, no network, no
+  solver. It re-runs four checks, fail-closed: (1) the map signature over
+  its canonical body; (2) the dossier binding; (3) for every reference,
+  the file is present and its sha256 matches; (4) indexing completeness --
+  exactly the nine canonical items, each with the canonical title and a
+  clause kind consistent with its evidence (evidence-backed items index at
+  least one reference; documentation-clause and operator-responsibility
+  items index none, so the sidecar cannot over-claim).
+
+Boundary. A passing `verify_annex_iv_map.py` proves presence, authenticity,
+and indexing of the declared evidence. It does NOT prove legal sufficiency,
+does NOT prove that a referenced artifact actually satisfies its Annex IV
+item, and does NOT prove anything about execution conformance. The sidecar
+is orthogonal to `verify_offline.py` (which proves the cost-cap / coverage
+claim) and is never folded into it. It is refused on a coverage-gap-witness
+(refutation) dossier, since an evidence index over a refutation artifact is
+incoherent.

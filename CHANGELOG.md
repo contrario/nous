@@ -11,6 +11,31 @@
   Removed / Fixed / Security.
 -->
 
+## [5.38.0] - 2026-06-13  <!-- __s135_changelog_v5_38_0_v1__ -->
+
+### Added
+- Annex IV evidence-map sidecar for dossiers. `nous dossier --annex-iv-map`
+  (default off) emits a signed `annex_iv_map.json` indexing the nine EU AI
+  Act Annex IV technical-documentation items to the evidence artifacts the
+  dossier already carries (manifest.json, source.nous, coverage sidecars),
+  each reference bound by file-bytes sha256, the whole map bound to the
+  dossier by the manifest canonical-body sha256 and signed Ed25519. A
+  standalone `verify_annex_iv_map.py` is emitted alongside: it re-runs all
+  four checks offline with `cryptography` + stdlib only (no NOUS install)
+  -- map signature, dossier binding, per-reference presence and integrity,
+  and indexing completeness with clause coherence. The sidecar is an
+  orthogonal evidence index; it is never folded into `verify_offline.py`,
+  and is refused on a coverage-gap-witness (refutation) dossier.
+  Boundary, stated in the verifier verdict: it proves presence +
+  authenticity + indexing of declared evidence, NOT legal sufficiency and
+  NOT that any file satisfies its Annex IV item. Default off keeps every
+  existing dossier byte-identical.
+- New module `annex_iv_map.py` (build + verify + standalone-verifier
+  builder), registered in the wheel content gate.
+
+### Changed
+- PYTEST_FLOOR 1557 -> 1587 (+30 tests across the Annex IV map arc).
+
 ## [5.37.0] - 2026-06-12  <!-- __s134_changelog_v5_37_0_v1__ -->
 
 ### Added
