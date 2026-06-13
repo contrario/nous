@@ -11,6 +11,22 @@
   Removed / Fixed / Security.
 -->
 
+## [5.39.0] - 2026-06-14  <!-- __s138_changelog_v5_39_0_v1__ -->
+### Changed
+- Blocking-net full-mode offline chain verifier now re-proves prior-link
+  coverage. The emitted build_chain_net_verifier output previously proved
+  current-link coverage, hop monotonicity (T_prev subset-of T_cur), and
+  net containment (net_prev subset-of net_cur), but took every PRIOR
+  link's blocking-net coverage on the issuer signature. It now re-runs the
+  zero-trust coverage proof (net_prev superset-of T_prev) on every prior
+  link using artifacts full mode already carries (per-link sha-gated
+  source + sha-gated cert), catching an issuer-signed prior link that
+  ships a sha-consistent gapped or forged Farkas certificate. No new
+  carried artifact; full mode only; additive. Chains without per-link
+  certs are vacuous (no false positive on legitimately-issued chains).
+- PYTEST_FLOOR 1587 -> 1597 (+10 tests: S136 Annex IV gap-witness refuse,
+  S137 prior-link coverage teeth).
+
 ## [5.38.0] - 2026-06-13  <!-- __s135_changelog_v5_38_0_v1__ -->
 
 ### Added
