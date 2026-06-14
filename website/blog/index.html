@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s140_blog_v540-authorization-approval_card_v1__ __s140_web_v5_40_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v540-authorization-approval');return false">
+      <div class="post-meta">
+        <span class="post-date">14 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.40.0 &mdash; The Approval That Could Not Exist</div>
+      <div class="post-excerpt">Conformance obligation #5 (authorization) was meant to check that a gated action carried a valid approval &mdash; but it could never admit one. Its attestation signed a preimage built from the canonical trace body, which embeds the attestation&rsquo;s own signature: self-referential, no Ed25519 fixed point, unsatisfiable. v5.40.0 replaces it with a domain-separated, envelope-bound, identity-bound preimage that excludes the signature, and adds the issuer-side signer that never existed. A labelled gated action now carries a non-replayable approval a third party can re-check offline; change the envelope sha or the action and it breaks. Orthogonal to the canonical body &mdash; every prior signature stays byte-identical. <code>nous-lang 5.40.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s138_blog_v539-prior-link-coverage_card_v1__ __s138_web_v5_39_0__ -->
     <a class="post-card" href="#" onclick="showPost('v539-prior-link-coverage');return false">
       <div class="post-meta">
@@ -660,6 +670,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s140_blog_v540-authorization-approval_post_v1__ __s140_web_v5_40_0__ -->
+   <div class="post-full" id="post-v540-authorization-approval">
+     <button class="post-back" onclick="showList()">&larr; All posts</button>
+     <h1 class="post-full-title">NOUS v5.40.0 &mdash; The Approval That Could Not Exist</h1>
+     <div class="post-full-meta">14 June 2026 &middot; 4 min read</div>
+     <p>Conformance obligation #5 &mdash; authorization &mdash; was meant to verify that a gated action carried a valid approval. It could never admit one. Its attestation signed a preimage built from the canonical trace body, and that body embeds each event&rsquo;s own attestation signature: the bytes the approval had to sign depended on the signature being embedded in them. A self-referential preimage with no fixed point over Ed25519, so no verifying attestation could ever be constructed. The obligation read as vacuously true &mdash; which looks like &lsquo;correct and unwired&rsquo; rather than what it was: unsatisfiable.</p>
+     <p>v5.40.0 replaces the preimage with a domain-separated, envelope-bound, identity-bound construction that excludes the attestation&rsquo;s own signature: <code>nous-gated-action-approval:v1|smt_spec_sha256|seq|action|principal_id</code>. It binds the exact decision &mdash; the sequence number and the action &mdash; the approver by <code>principal_id</code>, and the exact proof envelope by <code>smt_spec_sha256</code>. And it adds the issuer-side signer <code>sign_gated_action</code> that never existed, which is precisely why the positive path had never run: there was no way to produce an approval the verifier could accept.</p>
+     <p>What a third party can now check offline is concrete. Given a trace and a public key, the verifier re-derives the approval preimage for a labelled gated action and confirms a valid, non-replayable signature bound to this exact decision and this exact envelope. Change the envelope sha or the action and verification fails: an approval issued for one world cannot be replayed into another. This is the technical form of the EU AI Act Article 14 human-oversight requirement &mdash; a tamper-evident, identity-bound record at the moment a gated decision is approved; Annex IV item 2(e) names the Article 14 assessment explicitly.</p>
+     <p>The boundary is stated, not hidden. This proves presence, binding, and identity for trace-<em>labelled</em> gated actions &mdash; not labelling completeness, since the gated set is still read from an advisory, unsigned sibling (source-derived signed gating is the next arc), and not key-trust, since it proves some key bound to the <code>principal_id</code> label signed, not the right one. And it regressed nothing: the new preimage is orthogonal to the canonical trace body, so every trace signature and conformance certificate already in the wild stays byte-identical. The fix could only open a path that was impossible before. Probabilistic execution, deterministic evidence &mdash; an approval that can finally be re-checked. floor 1597 to 1605. <code>nous-lang 5.40.0</code>.</p>
+   </div>
    <!-- __s138_blog_v539-prior-link-coverage_post_v1__ __s138_web_v5_39_0__ -->
    <div class="post-full" id="post-v539-prior-link-coverage">
      <button class="post-back" onclick="showList()">&larr; All posts</button>
