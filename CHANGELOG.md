@@ -11,6 +11,38 @@
   Removed / Fixed / Security.
 -->
 
+## [5.40.0] - 2026-06-14  <!-- __s140_changelog_v5_40_0_v1__ -->
+### Fixed
+- Conformance obligation #5 (authorization) was unsatisfiable, not
+  vacuously-true-by-design. Its attestation preimage was the canonical trace
+  body (trace.canonical_body_bytes() + seq), which embeds each event's own
+  attestation signature -- a self-referential preimage with no Ed25519 fixed
+  point, so no verifying attestation could ever be constructed and the
+  positive path had never run. Replaced with a domain-separated,
+  envelope-bound, identity-bound preimage that EXCLUDES the attestation's own
+  signature: `nous-gated-action-approval:v1|<smt_spec_sha256>|<seq>|<action>|<principal_id>`.
+  Binds the exact decision (seq, action), the approver (principal_id), and
+  the exact proof envelope (smt_spec_sha256); changing the envelope sha or
+  the action breaks verification (anti-replay across worlds). Orthogonal to
+  canonical_body_bytes, so every existing trace signature and conformance
+  certificate stays byte-identical. Honest scope: proves presence + binding +
+  identity for trace-LABELLED gated actions; does NOT prove labelling
+  completeness (gated_actions is read from the advisory, unsigned
+  proof_assumptions sibling) nor key-trust (proves SOME key bound to the
+  principal_id label signed, not the RIGHT key). See
+  docs/RUNTIME_CONFORMANCE.md.
+### Added
+- conformance.py public signer `sign_gated_action(...)` and preimage helper
+  `_attestation_preimage(...)`; no issuer-side signer for gated-action
+  approvals existed before, which is why obligation #5's positive path was
+  never exercised.
+- scripts/rule0.sh: tracked, auto-enumerating RULE 0 session-startup runner.
+  Computes git rev-list --count <latest-tag>..HEAD and lists every commit
+  since the tag, so seal-count drift can no longer be undercounted by hand.
+### Changed
+- PYTEST_FLOOR 1597 -> 1605 (+8: S139 authorization obligation #5 teeth
+  in tests/test_s139_authorization_obligation.py).
+
 ## [5.39.0] - 2026-06-14  <!-- __s138_changelog_v5_39_0_v1__ -->
 ### Changed
 - Blocking-net full-mode offline chain verifier now re-proves prior-link
