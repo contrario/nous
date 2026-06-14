@@ -277,9 +277,7 @@ def verify_conformance(
 
     cost_cap: Decimal = spec.cost_cap_amount
     max_ticks: int = spec.max_ticks
-    gated_actions = frozenset(
-        (manifest.proof_assumptions or {}).get("gated_actions", [])
-    )
+    gated_actions = frozenset(spec.gated_actions)  # __s141_u5_gated_signed_source_v1__
 
     # Structural preconditions (refuse over guess): a soul or gated action the
     # proof never declared, an unknown kind, or a priced tool_call -- none can
@@ -390,8 +388,8 @@ def verify_conformance(
         )
 
     # 5. authorization: every gated_action event carries a valid approver
-    #    attestation bound to that exact event. (MVP gated_actions == [] makes
-    #    this vacuously True.)
+    #    attestation bound to that exact event. (gated_actions is sourced
+    #    from the signed spec, not the advisory sibling -- S141.)
     authorization_ok = True
     for ev in trace.events:
         if ev.kind != "gated_action":

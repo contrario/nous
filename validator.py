@@ -83,6 +83,7 @@ class NousValidator:
         self._check_custom_senses()
         self._check_replay()
         self._check_sequence_law_events()  # __phase2_stage2_events_validator_v1__
+        self._check_gated_action_events()  # __s141_u3_gated_validator_v1__
         return self.result
 
     def _check_world_exists(self) -> None:
@@ -635,6 +636,35 @@ class NousValidator:
                         f"Sequence law references undeclared event label '{label}'. Add it to world.events {{ ... }} or remove the law.",
                         loc,
                     )
+
+
+    def _check_gated_action_events(self) -> None:  # __s141_u3_gated_validator_v1__
+        world = self.program.world
+        if world is None:
+            return
+        if not world.gated_actions:
+            return
+        loc = f"world {world.name}"
+        declared = set(world.events)
+        if not declared:
+            self.result.error(
+                "GA001",
+                "world has gated actions but no 'events { ... }' "
+                "block; declare every action label used by "
+                "'law gated(...)'.",
+                loc,
+            )
+            return
+        for law in world.gated_actions:
+            if law.action not in declared:
+                self.result.error(
+                    "GA002",
+                    f"Gated action references undeclared event label "
+                    f"'{law.action}'. Add it to world.events {{ ... }} "
+                    f"or remove the 'law gated(...)' declaration.",
+                    loc,
+                )
+
 
 
 def validate_program(program: NousProgram) -> ValidationResult:

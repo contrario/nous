@@ -67,6 +67,7 @@ law_decl: LAW NAME "=" law_expr                        -> law_decl_classic
         | LAW NEVER_AFTER "(" NAME "," NAME ")"      -> law_decl_sequence_never_after  // __phase2_stage7a_never_after_grammar_v1__
         | LAW LEADS_TO "(" NAME "," NAME ")"         -> law_decl_sequence_leads_to  // __phase2_stage7b_leads_to_grammar_v1__
         | LAW AT_MOST "(" INT "," NAME ")"          -> law_decl_sequence_at_most  // __phase2_stage8_at_most_grammar_v1__
+        | LAW GATED "(" NAME ")"                     -> law_decl_gated  // __s141_u1_gated_grammar_v1__
 law_expr: currency_lit PER CYCLE          -> law_cost
         | currency_lit                    -> law_currency
         | CONSTITUTIONAL "(" INT ")"      -> law_constitutional
@@ -469,6 +470,7 @@ BEFORE.2: "before"  // __phase2_stage1_skeleton_grammar_v1__
 NEVER_AFTER.2: "never_after"  // __phase2_stage7a_never_after_grammar_v1__
 LEADS_TO.2: "leads_to"  // __phase2_stage7b_leads_to_grammar_v1__
 AT_MOST.2: "at_most"  // __phase2_stage8_at_most_grammar_v1__
+GATED.2: "gated"  // __s141_u1_gated_grammar_v1__
 POLICY.2: "policy" | "πολιτική"
 GUARD.2: "guard" | "φύλακας"
 SLEEP.2: "sleep" | "ύπνος"

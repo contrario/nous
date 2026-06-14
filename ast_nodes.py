@@ -130,6 +130,17 @@ class LawSequenceNode(NousNode):  # __phase2_stage1_skeleton_ast_v1__
     count: Optional[int] = None  # __phase2_stage8_at_most_ast_v1__
 
 
+class LawGatedNode(NousNode):  # __s141_u2_gated_ast_v1__
+    """S141 authorization-completeness: 'law gated(<action>)'.
+
+    Declares <action> as requiring an approver attestation at
+    conformance time. One field (the action label); kept SEPARATE
+    from LawSequenceNode (ordering) and LawNode (named+expression) so
+    the sequence and classic machinery stay untouched.
+    """
+    action: str
+
+
 # ═══════════════════════════════════════════
 # WORLD
 # ═══════════════════════════════════════════
@@ -163,6 +174,9 @@ class WorldNode(NousNode):
     sequence_laws: list[LawSequenceNode] = Field(
         default_factory=list
     )  # __phase2_stage1_skeleton_ast_v1__
+    gated_actions: list[LawGatedNode] = Field(
+        default_factory=list
+    )  # __s141_u2_gated_ast_v1__
     events: list[str] = Field(default_factory=list)  # __phase2_stage2_events_ast_field_v1__
     policies: list["PolicyNode"] = Field(default_factory=list)
     cost_cap: Optional["CostCap"] = None  # __cost_cap_field_v1__

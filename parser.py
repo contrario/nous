@@ -14,7 +14,7 @@ from decimal import Decimal  # __cost_cap_decimal_v1__
 
 from ast_nodes import (
     ConsciousnessNode, MetabolismNode, SymbiosisNode, TelemetryNode, NoesisConfigNode, ImportNode, TestNode, TestAssertNode, TestSetupNode,
-    NousProgram, WorldNode, LawNode, LawSequenceNode, LawCost, LawCurrency, CostCap, TokensDecl, LawDuration,  # __cost_cap_import_v1__ + __cost_cap_tokens_import_v1__ + __phase2_stage1_skeleton_parser_v1__
+    NousProgram, WorldNode, LawNode, LawSequenceNode, LawGatedNode, LawCost, LawCurrency, CostCap, TokensDecl, LawDuration,  # __cost_cap_import_v1__ + __cost_cap_tokens_import_v1__ + __phase2_stage1_skeleton_parser_v1__
     PolicyNode,
     LawConstitutional, LawBool, LawInt, SoulNode, MindNode,
     MemoryNode, FieldDeclNode, InstinctNode, DnaNode, GeneNode,
@@ -569,6 +569,12 @@ class NousTransformer(Transformer):
             count=int(count_str),
         )
 
+    def law_decl_gated(self, items: list) -> LawGatedNode:  # __s141_u2_gated_parser_v1__
+        s = [str(x) for x in items[1:] if not _is_token_with_type(x, 'GATED')]
+        action = s[-1]
+        return LawGatedNode(action=action)
+
+
     def event_decl(self, items: list) -> dict:  # __phase2_stage2_events_parser_v1__
         return {"events": [str(x) for x in items[1:]]}
 
@@ -581,6 +587,8 @@ class NousTransformer(Transformer):
                 node.laws.append(item)
             elif isinstance(item, LawSequenceNode):  # __phase2_stage1_skeleton_parser_v1__
                 node.sequence_laws.append(item)
+            elif isinstance(item, LawGatedNode):  # __s141_u2_gated_parser_v1__
+                node.gated_actions.append(item)
             elif isinstance(item, PolicyNode):
                 node.policies.append(item)
             elif isinstance(item, ReplayConfigNode):

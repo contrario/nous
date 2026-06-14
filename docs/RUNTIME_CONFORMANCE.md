@@ -41,7 +41,8 @@ probabilistic, the evidence is signed, byte-deterministic, and offline-checkable
    proof's own rates, is at or below the cost cap.
 5. **authorization** -- every gated-action event carries a valid approver
    attestation bound to that exact event (vacuously true when no gated actions
-   are declared; full wiring is future work).
+   are declared; the gated set is declared in signed source via
+   `law gated(<action>)` and re-derived by the verifier -- S141).
 6. **trace_signature** -- the trace's own Ed25519 signature verifies.
 
 Structural impossibilities -- a soul the proof never declared, an unknown event
@@ -232,20 +233,17 @@ about itself.
 
 **What obligation #5 does NOT prove** (honest boundary):
 
-- *Completeness of the labelling.* The set of actions that REQUIRE an
-  approval (`gated_actions`) is read from the manifest's
-  `proof_assumptions` sibling, which is advisory and unsigned. The
-  obligation proves attestations exist for events that ARE labelled
-  gated; it cannot prove that every action which OUGHT to have been
-  gated was labelled. An issuer that omits an action from
-  `gated_actions` (or never emits a `gated_action` event for it)
-  produces no obligation failure. Closing this requires source-derived,
-  signed gating: a grammar construct that binds an action to an
-  approver requirement in the signed source, so the set of gated
-  actions is itself re-derivable and tamper-evident. That is a separate
-  cross-cutting arc (grammar -> parser/AST -> validator -> codegen ->
-  trace emission -> verifier) and is the completeness counterpart to
-  this presence proof.
+- *Completeness of the labelling (CLOSED in v5.41.0).* The set of
+  actions that REQUIRE an approval (`gated_actions`) is declared in
+  the signed source via `law gated(<action>)`, folded into the SMT
+  spec, and covered by `smt_spec_sha256`. The verifier re-derives it
+  from the sha-bound source and never consults the advisory
+  `proof_assumptions` sibling. A tampered sibling can neither remove
+  gating (a no-attestation event still fails) nor add it (an
+  undeclared gated event still refuses). See `docs/GATED_ACTIONS.md`.
+  The remaining honest boundary is trace-emission fidelity (that the
+  runtime labels every occurrence of a gated action) -- a runtime-
+  instrumentation property, not an offline-proof property.
 - *Key trust.* The verifier proves that SOME key bound to the
   `principal_id` label signed the decision, not that it is the key the
   policy authorises. Approver-key trust is a separate layer, exactly as

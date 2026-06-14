@@ -1,24 +1,19 @@
-"""S139 U2 -- conformance obligation #5 (authorization) teeth.
+"""S141 U5 -- conformance obligation #5 (authorization) teeth, now
+source-derived. S139 gave obligation #5 its constructable preimage and
+proved presence + binding + identity of an approval for trace-LABELLED
+gated_action events. The labelling itself was read from the advisory,
+unsigned proof_assumptions sibling -- a documented trust hole.
 
-Obligation #5 was vacuously-true not by design but by IMPOSSIBILITY: the
-verifier signed `trace.canonical_body_bytes() + seq`, a preimage that
-INCLUDES the attestation's own signature, so no verifying attestation could
-ever be constructed (S139 U1 finding). U1 replaced that with a domain-
-separated, envelope-bound, identity-bound preimage and added the issuer-side
-signer `sign_gated_action`. These teeth prove the now-constructable positive
-path and every refuse/negative path, with direct fixtures (no runtime gating
-emission exists yet -- that is the separate grammar arc).
+S141 closes that hole: the gated set is declared in source
+('law gated(<action>)'), folded into the SMTSpec, hashed into
+smt_spec_sha256 (GA: lines), and read by the verifier from the
+re-derived, sha-bound spec -- NOT from the sibling. These teeth migrate
+the S139 presence proofs onto the signed source and add completeness
+teeth proving a tampered sibling cannot change the verdict in either
+direction (cannot remove gating, cannot add it).
 
-SCOPE the teeth pin honestly: obligation #5 proves presence + binding +
-identity of an approval for events the trace LABELS gated_action, bound to
-the exact decision (seq, action), approver (principal_id key), and proof
-envelope (smt_spec_sha256). It does NOT prove COMPLETENESS of the labelling
-(which actions ought to be gated) -- gated_actions is read from the advisory
-proof_assumptions sibling; completeness needs source-derived signed gating
-(documented in RUNTIME_CONFORMANCE.md, future grammar arc). It also proves
-only that SOME key bound to the principal_id label signed the decision, not
-that it is the RIGHT key (key-trust is a separate layer, as for the manifest
-signer).
+Still NOT proven here: key-trust (that the approver key is the RIGHT
+key) -- a separate layer, as for the manifest signer.
 """
 from __future__ import annotations
 
@@ -31,6 +26,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from ast_nodes import (
     CostCap,
+    LawGatedNode,
     MindNode,
     NousProgram,
     SoulNode,
@@ -80,7 +76,7 @@ def pricing() -> _PricingTable:
     return _PricingTable.model_validate(tomllib.loads(PRICING_TOML))
 
 
-def _program(cost_cap: str = "0.50", max_ticks: int = 5) -> NousProgram:
+def _program(cost_cap: str = "0.50", max_ticks: int = 5, gated=()) -> NousProgram:
     from decimal import Decimal
 
     return NousProgram(
@@ -88,6 +84,8 @@ def _program(cost_cap: str = "0.50", max_ticks: int = 5) -> NousProgram:
             name="Floor",
             cost_cap=CostCap(amount=Decimal(cost_cap), currency="USD"),
             max_ticks=max_ticks,
+            gated_actions=[LawGatedNode(action=a) for a in gated],
+            events=list(gated),
         ),
         souls=[
             SoulNode(
@@ -104,11 +102,16 @@ def _program(cost_cap: str = "0.50", max_ticks: int = 5) -> NousProgram:
     )
 
 
-def _spec(pricing: _PricingTable, **kw):
-    return emit_smt(_program(**kw), pricing, source_text=_SOURCE_TEXT, today=TODAY)
+def _spec(pricing: _PricingTable, gated=(), **kw):
+    return emit_smt(
+        _program(gated=gated, **kw), pricing,
+        source_text=_SOURCE_TEXT, today=TODAY,
+    )
 
 
-def _manifest(spec, gated_actions=None):
+def _manifest(spec, sibling_gated=None):
+    """Build a manifest. sibling_gated injects the ADVISORY proof_assumptions
+    sibling -- which the S141 verifier IGNORES (used only by tamper teeth)."""
     man = manifest_from_verify(
         VerifyResult(
             verdict="proven",
@@ -122,9 +125,9 @@ def _manifest(spec, gated_actions=None):
         ),
         nous_version="5.12.0",
     )
-    if gated_actions is not None:
+    if sibling_gated is not None:
         man = dataclasses.replace(
-            man, proof_assumptions={"gated_actions": list(gated_actions)}
+            man, proof_assumptions={"gated_actions": list(sibling_gated)}
         )
     return man
 
@@ -167,11 +170,13 @@ def _approval(spec, seq, action, principal_id="alice",
     )
 
 
+# --- migrated S139 presence teeth (gating now in the signed spec) -----------
+
 def test_gated_action_with_valid_attestation_passes(
     pricing: _PricingTable,
 ) -> None:
-    spec = _spec(pricing)
-    man = _manifest(spec, gated_actions=["escalate"])
+    spec = _spec(pricing, gated=["escalate"])
+    man = _manifest(spec)
     auth = _approval(spec, seq=0, action="escalate")
     tr = _signed_trace(spec, [_gated_event(0, 0, "Analyst", "escalate", auth)])
     d = verify_conformance(tr, man, spec, pricing)
@@ -182,8 +187,8 @@ def test_gated_action_with_valid_attestation_passes(
 def test_gated_action_without_attestation_fails(
     pricing: _PricingTable,
 ) -> None:
-    spec = _spec(pricing)
-    man = _manifest(spec, gated_actions=["escalate"])
+    spec = _spec(pricing, gated=["escalate"])
+    man = _manifest(spec)
     tr = _signed_trace(
         spec, [_gated_event(0, 0, "Analyst", "escalate", authorization=None)]
     )
@@ -195,9 +200,8 @@ def test_gated_action_without_attestation_fails(
 def test_gated_action_wrong_approved_seq_fails(
     pricing: _PricingTable,
 ) -> None:
-    spec = _spec(pricing)
-    man = _manifest(spec, gated_actions=["escalate"])
-    # approval minted for seq=1 but attached to the seq=0 event
+    spec = _spec(pricing, gated=["escalate"])
+    man = _manifest(spec)
     auth = _approval(spec, seq=1, action="escalate")
     tr = _signed_trace(spec, [_gated_event(0, 0, "Analyst", "escalate", auth)])
     d = verify_conformance(tr, man, spec, pricing)
@@ -210,8 +214,8 @@ def test_gated_action_tampered_signature_fails(
 ) -> None:
     import base64
 
-    spec = _spec(pricing)
-    man = _manifest(spec, gated_actions=["escalate"])
+    spec = _spec(pricing, gated=["escalate"])
+    man = _manifest(spec)
     auth = _approval(spec, seq=0, action="escalate")
     bad = AuthorizationAttestation(
         principal_id=auth.principal_id,
@@ -229,9 +233,8 @@ def test_gated_action_tampered_signature_fails(
 def test_gated_action_wrong_action_replay_fails(
     pricing: _PricingTable,
 ) -> None:
-    spec = _spec(pricing)
-    man = _manifest(spec, gated_actions=["escalate", "delete_all"])
-    # approval minted for "escalate" replayed onto a "delete_all" event
+    spec = _spec(pricing, gated=["escalate", "delete_all"])
+    man = _manifest(spec)
     auth = _approval(spec, seq=0, action="escalate")
     tr = _signed_trace(
         spec, [_gated_event(0, 0, "Analyst", "delete_all", auth)]
@@ -244,10 +247,9 @@ def test_gated_action_wrong_action_replay_fails(
 def test_gated_action_wrong_envelope_replay_fails(
     pricing: _PricingTable,
 ) -> None:
-    spec = _spec(pricing)
-    other = _spec(pricing, cost_cap="0.40")  # different smt_spec_sha256
-    man = _manifest(spec, gated_actions=["escalate"])
-    # approval bound to a DIFFERENT envelope's sha, attached to this trace
+    spec = _spec(pricing, gated=["escalate"])
+    other = _spec(pricing, gated=["escalate"], cost_cap="0.40")
+    man = _manifest(spec)
     auth = _approval(spec, seq=0, action="escalate",
                      smt_spec_sha256=other.sha256())
     tr = _signed_trace(spec, [_gated_event(0, 0, "Analyst", "escalate", auth)])
@@ -257,8 +259,8 @@ def test_gated_action_wrong_envelope_replay_fails(
 
 
 def test_gated_action_not_declared_refuses(pricing: _PricingTable) -> None:
-    spec = _spec(pricing)
-    man = _manifest(spec, gated_actions=[])  # "escalate" not declared
+    spec = _spec(pricing, gated=[])  # "escalate" not declared in signed spec
+    man = _manifest(spec)
     auth = _approval(spec, seq=0, action="escalate")
     tr = _signed_trace(spec, [_gated_event(0, 0, "Analyst", "escalate", auth)])
     with pytest.raises(ConformancePreconditionError):
@@ -274,3 +276,41 @@ def test_no_gated_events_authorization_vacuously_true(
     d = verify_conformance(tr, man, spec, pricing)
     assert d.authorization_ok is True
     assert d.ok is True
+
+
+# --- S141 completeness teeth (gating sourced from signed spec) --------------
+
+def test_gating_sourced_from_signed_spec_not_sibling(
+    pricing: _PricingTable,
+) -> None:
+    spec = _spec(pricing, gated=["escalate"])
+    man = _manifest(spec)  # NO advisory sibling at all
+    auth = _approval(spec, seq=0, action="escalate")
+    tr = _signed_trace(spec, [_gated_event(0, 0, "Analyst", "escalate", auth)])
+    d = verify_conformance(tr, man, spec, pricing)
+    assert d.authorization_ok is True
+    assert d.ok is True
+
+
+def test_tampered_sibling_cannot_remove_gating(
+    pricing: _PricingTable,
+) -> None:
+    spec = _spec(pricing, gated=["escalate"])
+    man = _manifest(spec, sibling_gated=[])  # sibling lies: nothing gated
+    tr = _signed_trace(
+        spec, [_gated_event(0, 0, "Analyst", "escalate", authorization=None)]
+    )
+    d = verify_conformance(tr, man, spec, pricing)
+    assert d.authorization_ok is False
+    assert d.ok is False
+
+
+def test_tampered_sibling_cannot_add_gating(
+    pricing: _PricingTable,
+) -> None:
+    spec = _spec(pricing, gated=[])  # signed spec gates nothing
+    man = _manifest(spec, sibling_gated=["escalate"])  # sibling lies: gated
+    auth = _approval(spec, seq=0, action="escalate")
+    tr = _signed_trace(spec, [_gated_event(0, 0, "Analyst", "escalate", auth)])
+    with pytest.raises(ConformancePreconditionError):
+        verify_conformance(tr, man, spec, pricing)
