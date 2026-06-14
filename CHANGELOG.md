@@ -11,6 +11,28 @@
   Removed / Fixed / Security.
 -->
 
+## [5.41.0] - 2026-06-14  <!-- __s141_changelog_v5_41_0_v1__ -->
+### Added
+- `law gated(<action>)` world construct: declare which actions require an
+  approver attestation, in the signed source. New `GATED` grammar token and
+  `law_decl_gated` rule; `LawGatedNode` AST node and `WorldNode.gated_actions`;
+  validator checks GA001 (gated actions but no `events { ... }` block) and
+  GA002 (gated label not in the event alphabet). See `docs/GATED_ACTIONS.md`.
+### Changed
+- Conformance obligation #5 (authorization) now reads the gated-action set
+  from the signed, re-derived SMT spec (`SMTSpec.gated_actions`, folded into
+  `smt_spec_sha256` as sorted, de-duplicated `GA:` lines) instead of the
+  unsigned, tamperable `proof_assumptions` sibling. This closes the
+  advisory-`gated_actions` completeness hole documented in
+  `docs/RUNTIME_CONFORMANCE.md`: a tampered sibling can neither remove gating
+  (a no-attestation gated event still fails) nor add it (an undeclared gated
+  event still refuses). The completeness counterpart to the S139 presence
+  proof. Empty gated set is byte-identical to prior specs (regression harness
+  0 diffs); `serialize()` is unchanged (gated actions emit no solver
+  assertions).
+- PYTEST_FLOOR 1605 -> 1620 (+15 S141 gated-action teeth: validator 6, emit 6,
+  conformance completeness 3).
+
 ## [5.40.0] - 2026-06-14  <!-- __s140_changelog_v5_40_0_v1__ -->
 ### Fixed
 - Conformance obligation #5 (authorization) was unsatisfiable, not
