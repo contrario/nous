@@ -189,3 +189,65 @@ artifacts and untampered, with a transparency-log inclusion proof when anchored.
   per-tick call limits) are future work and are where Z3 becomes load-bearing
   for the runtime path; the cost MVP itself needs only interval checks and a
   Decimal sum.
+
+## Authorization obligation (#5): scope and limits
+<!-- __s139_u3_authorization_scope_doc__ -->
+
+Until S139 the authorization obligation was vacuously true, and the
+reason was not a design choice: the verifier signed
+`trace.canonical_body_bytes() + seq` as the attestation preimage, but
+the canonical trace body INCLUDES each event's attestation, including
+its own `signature_b64`. That is a self-referential preimage with no
+fixed point over Ed25519, so no verifying attestation could ever be
+constructed -- the obligation was unsatisfiable, not merely unwired.
+
+S139 replaced the preimage with a domain-separated, envelope-bound,
+identity-bound construction that excludes the attestation's own
+signature:
+
+```
+nous-gated-action-approval:v1|<smt_spec_sha256>|<seq>|<action>|<principal_id>
+```
+
+and added the issuer-side signer `sign_gated_action(...)`. The
+construction is orthogonal to `canonical_body_bytes`, so every existing
+trace signature and conformance certificate stays byte-identical.
+
+**What obligation #5 now proves**, offline, with `cryptography` +
+stdlib alone, for each event the trace labels `gated_action`:
+
+- an approval attestation is present (absence fails the obligation);
+- it is bound to that exact event by `approved_seq == seq`;
+- its Ed25519 signature verifies over the approval preimage, which
+  binds the exact decision (`seq`, `action`), the approver
+  (`principal_id`), and the exact proof envelope (`smt_spec_sha256`).
+  An attestation therefore cannot be replayed onto a different action
+  or a different world: changing the action or the envelope sha breaks
+  signature verification.
+
+This is the technical form of the EU AI Act Article 14 requirement for
+a tamper-evident, identity-bound record at decision time: the approval
+is evidence a third party can re-check, not a record the system wrote
+about itself.
+
+**What obligation #5 does NOT prove** (honest boundary):
+
+- *Completeness of the labelling.* The set of actions that REQUIRE an
+  approval (`gated_actions`) is read from the manifest's
+  `proof_assumptions` sibling, which is advisory and unsigned. The
+  obligation proves attestations exist for events that ARE labelled
+  gated; it cannot prove that every action which OUGHT to have been
+  gated was labelled. An issuer that omits an action from
+  `gated_actions` (or never emits a `gated_action` event for it)
+  produces no obligation failure. Closing this requires source-derived,
+  signed gating: a grammar construct that binds an action to an
+  approver requirement in the signed source, so the set of gated
+  actions is itself re-derivable and tamper-evident. That is a separate
+  cross-cutting arc (grammar -> parser/AST -> validator -> codegen ->
+  trace emission -> verifier) and is the completeness counterpart to
+  this presence proof.
+- *Key trust.* The verifier proves that SOME key bound to the
+  `principal_id` label signed the decision, not that it is the key the
+  policy authorises. Approver-key trust is a separate layer, exactly as
+  manifest-author-key trust is separate from manifest signature
+  verification.

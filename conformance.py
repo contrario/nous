@@ -29,11 +29,19 @@ from decimal import Decimal
 from typing import TYPE_CHECKING, Optional
 
 from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+)
 
 from manifest import Manifest
 from pricing import PricingTable
-from nous_trace import TraceEnvelope, TraceEvent, verify_trace_signature
+from nous_trace import (  # __s139_u1b_authattest_import__
+    AuthorizationAttestation,
+    TraceEnvelope,
+    TraceEvent,
+    verify_trace_signature,
+)
 
 if TYPE_CHECKING:
     from smt_emit import SMTSpec
@@ -109,6 +117,57 @@ def _event_cost(event: TraceEvent, bound: _SoulBound) -> Decimal:
         * Decimal(event.output_tokens)
         * bound.reasoning_token_multiplier
     ) / _MILLION
+
+
+_GATED_ACTION_PREIMAGE_TAG = b"nous-gated-action-approval:v1|"  # __s139_u1_attestation_preimage__
+
+
+def _attestation_preimage(
+    smt_spec_sha256: str,
+    seq: int,
+    action: str,
+    principal_id: str,
+) -> bytes:
+    """Domain-separated, envelope-bound, identity-bound approval
+    preimage. EXCLUDES the attestation's own signature (so a verifying
+    attestation is constructable) and binds the approval to this exact
+    decision (seq, action), this exact approver (principal_id), and this
+    exact proof envelope (smt_spec_sha256) so an attestation cannot be
+    replayed onto a different decision or a different world."""
+    return (
+        _GATED_ACTION_PREIMAGE_TAG
+        + smt_spec_sha256.encode("utf-8")
+        + b"|"
+        + str(seq).encode("utf-8")
+        + b"|"
+        + action.encode("utf-8")
+        + b"|"
+        + principal_id.encode("utf-8")
+    )
+
+
+def sign_gated_action(
+    private_key: Ed25519PrivateKey,
+    smt_spec_sha256: str,
+    seq: int,
+    action: str,
+    principal_id: str,
+    timestamp_utc: str,
+) -> AuthorizationAttestation:
+    """Issuer-side approver signer: produce an AuthorizationAttestation
+    whose Ed25519 signature covers the envelope-bound approval preimage.
+    The verifier (obligation #5) re-derives the same preimage and checks
+    the signature under the embedded public key."""
+    pre = _attestation_preimage(smt_spec_sha256, seq, action, principal_id)
+    raw_sig = private_key.sign(pre)
+    pub_raw = private_key.public_key().public_bytes_raw()
+    return AuthorizationAttestation(
+        principal_id=principal_id,
+        approved_seq=seq,
+        timestamp_utc=timestamp_utc,
+        public_key_b64=base64.b64encode(pub_raw).decode("ascii"),
+        signature_b64=base64.b64encode(raw_sig).decode("ascii"),
+    )
 
 
 def _check_sequence_obligations(  # __phase2_stage5_seq_conformance_v1__
@@ -351,7 +410,15 @@ def verify_conformance(
                 f"!= event seq {ev.seq}"
             )
             continue
-        payload = trace.canonical_body_bytes() + str(ev.seq).encode("utf-8")
+        if ev.action is None:
+            authorization_ok = False
+            errors.append(
+                f"authorization: gated event seq={ev.seq} has no action label"
+            )
+            continue
+        payload = _attestation_preimage(  # __s139_u1_attestation_preimage__
+            trace.smt_spec_sha256, ev.seq, ev.action, auth.principal_id
+        )
         try:
             pub = Ed25519PublicKey.from_public_bytes(
                 base64.b64decode(auth.public_key_b64, validate=True)
