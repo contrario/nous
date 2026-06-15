@@ -11,6 +11,29 @@
   Removed / Fixed / Security.
 -->
 
+## [5.42.0] - 2026-06-15  <!-- __s142_changelog_v5_42_0_v1__ -->
+### Added
+- Runtime gated-action emission: the conformance trace recorder now
+  routes every occurrence whose action label is in the signed gated
+  set (`SMTSpec.gated_actions`) to `kind=gated_action` instead of
+  `kind=message`, so an honest runtime labels every gated occurrence
+  with no manual step. New `run_shas.compute_run_gated_actions(source)`
+  derives the set from the same `emit_smt` path that produces
+  `smt_spec_sha256` and that the verifier re-derives, so producer
+  emission and verifier check agree by construction; wired into both
+  compiled-path recorder build sites (`compiled_trace.py`,
+  `nous_ast_runner`). `TraceRecorder.__init__` gains an optional
+  `gated_actions` parameter (default empty, byte-identical to prior
+  traces). Closes the honest-but-careless issuer: a `gated_action`
+  event without a valid approver attestation fails conformance
+  obligation #5. PYTEST_FLOOR 1620 -> 1636.
+### Changed
+- Documented honest boundary in `docs/GATED_ACTIONS.md` and
+  `docs/RUNTIME_CONFORMANCE.md`: runtime emission closes the careless
+  case; the malicious case (a hand-built trace mislabelling a gated
+  action as `message`) remains open until the trace is bound to signed
+  instrumentation via a codegen digest -- a separate arc.
+
 ## [5.41.0] - 2026-06-14  <!-- __s141_changelog_v5_41_0_v1__ -->
 ### Added
 - `law gated(<action>)` world construct: declare which actions require an
