@@ -42,6 +42,10 @@ from nous_trace import (  # __s139_u1b_authattest_import__
     TraceEvent,
     verify_trace_signature,
 )
+from attest_apr import (  # __s145_u4a_attest_import_v1__
+    AttestationPinningRecord,
+    verify_trace_attestation,
+)
 
 if TYPE_CHECKING:
     from smt_emit import SMTSpec
@@ -269,6 +273,9 @@ def verify_conformance(
     manifest: Manifest,
     spec: "SMTSpec",
     pricing_table: PricingTable,
+    *,
+    aprs: Optional[list[AttestationPinningRecord]] = None,  # __s145_u4a_signature_v1__
+    attest_trust_root_public_key: Optional[Ed25519PublicKey] = None,
 ) -> ConformanceDetail:
     bounds = _bounds_from_spec(spec)
     if not bounds:
@@ -346,13 +353,22 @@ def verify_conformance(
             f"inconsistent; realized cost requires a witnessed_run and "
             f"vice versa"
         )
-    if _pti == "tee_attested":
-        raise ConformancePreconditionError(
-            "trust: provider_token_integrity='tee_attested' requires an "
-            "attached, verifier-checked inference receipt; none is present "
-            "(attestation-receipt verification is not available in this "
-            "build), so the claim is refused fail-closed"
+    if _pti == "tee_attested":  # __s145_u4a_tee_verify_v1__
+        if aprs is None or attest_trust_root_public_key is None:
+            raise ConformancePreconditionError(
+                "trust: provider_token_integrity='tee_attested' requires an "
+                "attached, verifier-checked inference receipt and a pinned "
+                "trust root; none supplied, so the claim is refused fail-closed"
+            )
+        _attest_verdict = verify_trace_attestation(
+            trace, aprs, attest_trust_root_public_key
         )
+        if not _attest_verdict.attested:
+            raise ConformancePreconditionError(
+                "trust: provider_token_integrity='tee_attested' claim is not "
+                "backed by a verified inference receipt: "
+                + _attest_verdict.reason
+            )
     errors: list[str] = []
 
     # 1. binding: re-derived spec + supplied pricing match the signed shas,

@@ -28,6 +28,14 @@ from pricing import load_pricing
 from parser import parse_nous
 from smt_emit import emit_smt
 from nous_trace import load_trace
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (  # __s145_u4b_cli_attest_import_v1__
+    Ed25519PublicKey,
+)
+from attest_apr import (
+    AttestationPinningRecord,
+    load_trust_root_public_key,
+    verify_trace_attestation,
+)
 from conformance import (  # __nous_cli_conformance_certify_v1__
     ConformanceDetail,
     build_certificate,
@@ -73,6 +81,15 @@ def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
         help="FAIL unless provider_token_integrity == 'tee_attested' "
              "(verified inference receipt). Default: report the tier, "
              "do not gate on it.",
+    )
+    v.add_argument(  # __s145_u4b_apr_args_v1__
+        "--apr", metavar="PATH", action="append", default=None,
+        help="Path to a signed Attestation Pinning Record JSON (repeatable). "
+             "Required to verify a tee_attested claim.",
+    )
+    v.add_argument(
+        "--attest-root", metavar="PATH", default=None,
+        help="Path to the pinned attestation trust-root public key (PEM).",
     )
     v.add_argument(
         "--source", metavar="PATH", required=True,
@@ -126,6 +143,40 @@ def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
     )
 
 
+def _load_aprs(  # __s145_u4b_loader_v1__
+    paths: list[str] | None,
+) -> list[AttestationPinningRecord] | None:
+    if not paths:
+        return None
+    records: list[AttestationPinningRecord] = []
+    for raw in paths:
+        pth = Path(raw)
+        if not pth.is_file():
+            raise ConformancePreconditionError(f"APR file not found: {pth}")
+        try:
+            records.append(
+                AttestationPinningRecord.model_validate_json(
+                    pth.read_text(encoding="utf-8")
+                )
+            )
+        except Exception as exc:
+            raise ConformancePreconditionError(
+                f"APR file {pth} failed to parse: {exc}"
+            ) from exc
+    return records
+
+
+def _load_attest_root(path: str | None) -> Ed25519PublicKey | None:
+    if not path:
+        return None
+    pth = Path(path)
+    if not pth.is_file():
+        raise ConformancePreconditionError(
+            f"attestation trust-root public key not found: {pth}"
+        )
+    return load_trust_root_public_key(pth)
+
+
 def _derive_inputs(args: argparse.Namespace):  # __nous_cli_conformance_certify_v1__
     trace_path = Path(args.trace)
     manifest_path = Path(args.manifest)
@@ -150,7 +201,12 @@ def _derive_inputs(args: argparse.Namespace):  # __nous_cli_conformance_certify_
         program, pricing, source_text=source_text, margin_pct=margin
     )
     trace = load_trace(str(trace_path))
-    detail = verify_conformance(trace, manifest, spec, pricing)
+    _aprs = _load_aprs(getattr(args, "apr", None))  # __s145_u4b_derive_wire_v1__
+    _attest_root = _load_attest_root(getattr(args, "attest_root", None))
+    detail = verify_conformance(
+        trace, manifest, spec, pricing,
+        aprs=_aprs, attest_trust_root_public_key=_attest_root,
+    )
     return manifest, spec, pricing, trace, detail
 
 
@@ -271,9 +327,18 @@ def cmd_conformance(args: argparse.Namespace) -> int:
         print("  failures:")
         for e in detail.errors:
             print(f"    - {e}")
-    _attest_ok = True  # __s144_u4_cert_trust_fields_v1__
+    _attest_ok = True  # __s145_u4b_strict_gate_v1__
     if getattr(args, "require_attestation", False):
         _attest_ok = detail.provider_token_integrity == "tee_attested"
+        if _attest_ok:
+            _strict_aprs = _load_aprs(getattr(args, "apr", None))
+            _strict_root = _load_attest_root(getattr(args, "attest_root", None))
+            if _strict_aprs is None or _strict_root is None:
+                _attest_ok = False
+            else:
+                _attest_ok = verify_trace_attestation(
+                    trace, _strict_aprs, _strict_root, strict_no_test=True
+                ).attested
         if not _attest_ok:
             print(
                 "  attestation         FAIL (require-attestation: tier="
