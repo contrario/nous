@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s144_blog_v543-witnessed-run-evidence_card_v1__ __s144_web_v5_43_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v543-witnessed-run-evidence');return false">
+      <div class="post-meta">
+        <span class="post-date">15 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.43.0 &mdash; Witnessed-Run Evidence</div>
+      <div class="post-excerpt">Every conformance proof so far bounded a cost ENVELOPE: no execution path can exceed the cap. Nothing recorded what an actual run spent. v5.43.0 adds a second evidence type &mdash; a witnessed run: the live runtime finalizes a signed trace carrying the real provider-reported token counts of one execution, with an explicit trust triple (<code>evidence_kind</code> / <code>cost_binding</code> / <code>provider_token_integrity</code>) folded into the signed body. The verifier enforces it fail-closed: realized cost iff witnessed run, and <code>tee_attested</code> refused until a verified inference receipt exists. The honest boundary is now machine-checkable inside the artifact &mdash; it proves the issuer did not tamper with the relayed usage, not that the provider reported it truthfully. <code>nous-lang 5.43.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s142_blog_v542-runtime-gated-emission_card_v1__ __s142_web_v5_42_0__ -->
     <a class="post-card" href="#" onclick="showPost('v542-runtime-gated-emission');return false">
       <div class="post-meta">
@@ -690,6 +700,15 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s144_blog_v543-witnessed-run-evidence_post_v1__ __s144_web_v5_43_0__ -->
+   <div class="post-full" id="post-v543-witnessed-run-evidence">
+     <button class="post-back" onclick="showList()">&larr; All posts</button>
+     <h1 class="post-full-title">NOUS v5.43.0 &mdash; Witnessed-Run Evidence</h1>
+     <div class="post-full-meta">15 June 2026 &middot; 4 min read</div>
+     <p>Every conformance proof NOUS shipped bounded a cost <em>envelope</em>: across every reachable execution path, the total cost cannot exceed the declared cap. That is a design-time guarantee, computed before the agent runs, and it never recorded what an actual run spent. The compiled trace path that produced the proof carried placeholder token counts &mdash; zeros &mdash; because it makes no real model call. The empirical question, what did <em>this</em> run cost, had no signed answer.</p>
+     <p>v5.43.0 adds the second evidence type. The live runtime path now finalizes a signed trace carrying the real provider-reported token counts of one execution, and stamps it with an explicit trust triple folded into the canonical signed body: <code>evidence_kind</code> (envelope or witnessed_run), <code>cost_binding</code> (envelope or realized), and <code>provider_token_integrity</code> (unattested, tee_attested, or unverifiable). Absence of the triple is the canonical envelope form, so every prior trace and signature stays byte-identical. The verifier re-checks the declaration fail-closed and zero-trust: the vocabulary must be well-formed, <code>cost_binding=realized</code> holds if and only if <code>evidence_kind=witnessed_run</code>, and <code>tee_attested</code> is refused unless a verifier-checked inference receipt is attached &mdash; none exists in this build, so that tier is refused, not assumed. The conformance certificate mirrors the two verdict-relevant fields under schema version 3; schema-2 certificates exclude them from their canonical body, so every certificate already in the wild still verifies. A new <code>nous conformance verify --require-attestation</code> flag fails the verdict unless the tier is <code>tee_attested</code> &mdash; the forward gate for deployments that will demand attested inference.</p>
+     <p>The honest boundary is the point of the release, and it is now machine-checkable inside the signed artifact rather than living in prose. Cost and model evidence binds across three links: the verifier binds what the trace asserts (proven), the trace faithfully records what the runtime saw (assumed, but the signature proves the issuer did not tamper after the fact), and the provider reported its token usage truthfully (not verifiable today &mdash; first-party model APIs return an unsigned usage block). A witnessed-run record claims the first two and names the third honestly via <code>provider_token_integrity</code>; it does not claim the provider told the truth. Closing that third link needs a trust root outside the issuer and the provider&rsquo;s plaintext response &mdash; a TEE or attested-inference receipt, which the reserved <code>tee_attested</code> tier and a future receipt verifier are the path to. The same release also lands the S143 converse guard: an event whose action is in the re-derived signed gated set but whose kind is not <code>gated_action</code> is refused as trace tampering, closing the hand-built mislabelling evasion. Probabilistic execution, deterministic evidence &mdash; and now an empirical record whose trust is stratified, not assumed. floor 1636 to 1651. <code>nous-lang 5.43.0</code>.</p>
+   </div>
    <!-- __s142_blog_v542-runtime-gated-emission_post_v1__ __s142_web_v5_42_0__ -->
    <div class="post-full" id="post-v542-runtime-gated-emission">
      <button class="post-back" onclick="showList()">&larr; All posts</button>
