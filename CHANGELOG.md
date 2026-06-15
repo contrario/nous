@@ -11,6 +11,45 @@
   Removed / Fixed / Security.
 -->
 
+## [5.43.0] - 2026-06-15  <!-- __s144_changelog_v5_43_0_v1__ -->
+### Added
+- Witnessed-run evidence, a second evidence type alongside the
+  deterministic cost envelope. The live runtime path now finalizes a
+  signed TraceEnvelope carrying the real provider-reported token counts
+  of an actual run (`mode=live`); a dry-run stays envelope. The envelope
+  carries an explicit, signed trust triple -- `evidence_kind`,
+  `cost_binding`, `provider_token_integrity` -- folded into the canonical
+  body. Absence of the triple is the canonical envelope form, so every
+  pre-S144 trace and signature is byte-identical. Vocabulary is frozen in
+  docs/STRATIFIED_TRUST_DESIGN.md; S144 emits witnessed_run / realized /
+  unattested.
+- Stratified-trust verifier enforcement (fail-closed, zero-trust): the
+  conformance verifier re-checks trust-vocabulary well-formedness,
+  cross-consistency (`cost_binding=realized` iff
+  `evidence_kind=witnessed_run`), and refuses `tee_attested` unless a
+  verifier-checked inference receipt is attached (none exists in this
+  build, so tee_attested is refused fail-closed). The trust tier is not an
+  obligation and does not change obligation #4 math.
+- Conformance certificate mirrors `cost_binding` and
+  `provider_token_integrity` under certificate schema version 3. Existing
+  schema-2 certificates exclude the new fields from their canonical body,
+  so every prior certificate signature still verifies.
+- `nous conformance verify --require-attestation`: fails the verdict unless
+  `provider_token_integrity == tee_attested`. Default reports the tier and
+  does not gate.
+- Verifier converse guard (S143): an event whose action is in the
+  re-derived signed gated set but whose kind is not `gated_action` is
+  refused as trace tampering, closing the hand-built mislabeling evasion
+  left open after S142.
+- New docs: docs/WITNESSED_RUN_EVIDENCE.md (two evidence types, the
+  three-link trust chain, honest boundary) and
+  docs/STRATIFIED_TRUST_DESIGN.md (frozen vocabulary + serialization
+  contract). ANNEX_IV_MAPPING honest-boundary note extended to point at
+  the now-explicit provider-token-integrity declaration.
+### Changed
+- CERTIFICATE_SCHEMA_VERSION 2 -> 3 (trust mirror). PYTEST_FLOOR 1636 ->
+  1641 (S143) -> 1651 (S144).
+
 ## [5.42.0] - 2026-06-15  <!-- __s142_changelog_v5_42_0_v1__ -->
 ### Added
 - Runtime gated-action emission: the conformance trace recorder now
