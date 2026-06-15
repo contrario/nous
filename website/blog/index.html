@@ -121,6 +121,26 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s142_blog_v542-runtime-gated-emission_card_v1__ __s142_web_v5_42_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v542-runtime-gated-emission');return false">
+      <div class="post-meta">
+        <span class="post-date">15 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.42.0 &mdash; Labelling Every Occurrence</div>
+      <div class="post-excerpt">v5.41.0 made the signed source say which actions are gated. Nothing yet made the runtime emit a <code>gated_action</code> event for every occurrence &mdash; an honest issuer could under-label with no obligation failure. v5.42.0 routes every occurrence whose action label is in the signed gated set to <code>kind=gated_action</code>, derived from the same emit path the verifier re-derives, so producer and verifier agree by construction. A gated action without a valid approver attestation now fails obligation #5: the honest-but-careless issuer is caught. The malicious case &mdash; a hand-built trace mislabelling a gated action &mdash; stays open until the trace is bound to signed instrumentation. <code>nous-lang 5.42.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
+    <!-- __s141_blog_v541-signed-gating_card_v1__ __s142_web_v5_42_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v541-signed-gating');return false">
+      <div class="post-meta">
+        <span class="post-date">14 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.41.0 &mdash; Which Actions Need Approval, Signed</div>
+      <div class="post-excerpt">Obligation #5 checks that a gated action carries a valid approval. But which actions are gated was read from an advisory, unsigned sibling &mdash; an issuer could omit one, or a tamperer edit it, with no obligation failure. v5.41.0 declares the gated set in signed source via <code>law gated(&lt;action&gt;)</code>, folds it into <code>smt_spec_sha256</code>, and has the verifier re-derive it. A tampered sibling can neither remove gating (a no-attestation event still fails) nor add it (an undeclared gated event still refuses). The gated set is now as tamper-evident as the cost cap. <code>nous-lang 5.41.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s140_blog_v540-authorization-approval_card_v1__ __s140_web_v5_40_0__ -->
     <a class="post-card" href="#" onclick="showPost('v540-authorization-approval');return false">
       <div class="post-meta">
@@ -670,6 +690,24 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s142_blog_v542-runtime-gated-emission_post_v1__ __s142_web_v5_42_0__ -->
+   <div class="post-full" id="post-v542-runtime-gated-emission">
+     <button class="post-back" onclick="showList()">&larr; All posts</button>
+     <h1 class="post-full-title">NOUS v5.42.0 &mdash; Labelling Every Occurrence</h1>
+     <div class="post-full-meta">15 June 2026 &middot; 3 min read</div>
+     <p>v5.41.0 moved the gated set &mdash; which actions require an approver &mdash; into the signed source, where the verifier re-derives it. That settled which actions are gated. It did not settle whether the runtime actually emits a <code>gated_action</code> event for each occurrence of one. An honest issuer whose runtime recorded a gated action as an ordinary message would produce a trace that passed obligation #5 vacuously: the obligation iterates events already labelled <code>gated_action</code>, and an unlabelled occurrence is invisible to it.</p>
+     <p>v5.42.0 closes that for the careless case. Both compiled-path recorder build sites derive the gated set from <code>run_shas.compute_run_gated_actions(source)</code> &mdash; the same <code>emit_smt</code> path that produces <code>smt_spec_sha256</code> and that the verifier re-derives &mdash; so the producer and the verifier read one sha-bound set, with no trust asymmetry. The recorder then routes any occurrence whose action label is in that set to <code>kind=gated_action</code> instead of <code>kind=message</code>. It attaches no approver: a <code>gated_action</code> event without a valid attestation fails obligation #5. An honest runtime now labels every occurrence with no manual step.</p>
+     <p>The honest boundary, stated plainly: this closes the careless issuer, not the malicious one. An issuer who bypasses the recorder and hand-assembles a trace with <code>kind=message</code> for a gated action still evades obligation #5. Binding the trace to signed instrumentation &mdash; a codegen digest the verifier can re-derive &mdash; is a separate, larger arc, not yet shipped. An ungated world derives an empty set, so every prior trace stays byte-identical. Probabilistic execution, deterministic evidence &mdash; the label now travels with the occurrence. floor 1620 to 1636. <code>nous-lang 5.42.0</code>.</p>
+   </div>
+   <!-- __s141_blog_v541-signed-gating_post_v1__ __s142_web_v5_42_0__ -->
+   <div class="post-full" id="post-v541-signed-gating">
+     <button class="post-back" onclick="showList()">&larr; All posts</button>
+     <h1 class="post-full-title">NOUS v5.41.0 &mdash; Which Actions Need Approval, Signed</h1>
+     <div class="post-full-meta">14 June 2026 &middot; 3 min read</div>
+     <p>v5.40.0 made conformance obligation #5 able to admit an approval: a labelled gated action could finally carry a non-replayable, identity-bound attestation a third party re-checks offline. That fixed the presence proof. It left a completeness hole. The set of actions that <em>require</em> an approval was read from the manifest&rsquo;s unsigned <code>proof_assumptions</code> sibling &mdash; advisory and tamperable. An issuer could omit an action from that set, or a tamperer edit it, and obligation #5 would pass without complaint.</p>
+     <p>v5.41.0 declares the gated set in the signed source. The new construct <code>law gated(&lt;action&gt;)</code> names, in the program text, which actions need an approver. It is folded into the SMT spec and covered by <code>smt_spec_sha256</code>, and the offline verifier re-derives it from the sha-bound source rather than consulting the advisory sibling. Validation checks the gated labels against the world&rsquo;s declared event alphabet (GA001, GA002), the same alphabet sequence laws use.</p>
+     <p>The result is tamper-evidence in both directions: a lying sibling can neither remove gating &mdash; a no-attestation event still fails &mdash; nor add it, since an undeclared gated event still refuses. The gated set is now as tamper-evident as the cost cap. The remaining honest boundary was trace-emission fidelity: whether the runtime labels every occurrence. That is the v5.42.0 arc. floor 1605 to 1620. <code>nous-lang 5.41.0</code>.</p>
+   </div>
    <!-- __s140_blog_v540-authorization-approval_post_v1__ __s140_web_v5_40_0__ -->
    <div class="post-full" id="post-v540-authorization-approval">
      <button class="post-back" onclick="showList()">&larr; All posts</button>
