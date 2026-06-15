@@ -306,6 +306,17 @@ def verify_conformance(
                     f"event seq={ev.seq} gated action {ev.action!r} not in "
                     f"declared gated_actions {sorted(gated_actions)}"
                 )
+        if (
+            ev.action is not None
+            and ev.action in gated_actions
+            and ev.kind != "gated_action"
+        ):
+            raise ConformancePreconditionError(  # __s143_u1_gated_kind_converse_v1__
+                f"event seq={ev.seq} action {ev.action!r} is a declared "
+                f"gated action but kind={ev.kind!r} (expected "
+                f"'gated_action'); a gated action recorded under a "
+                f"non-gated kind is trace tampering"
+            )
 
     errors: list[str] = []
 
