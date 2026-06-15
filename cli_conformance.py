@@ -68,6 +68,12 @@ def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
             "(pricing_sha256 must match)"
         ),
     )
+    v.add_argument(  # __s144_u4_cert_trust_fields_v1__
+        "--require-attestation", action="store_true",
+        help="FAIL unless provider_token_integrity == 'tee_attested' "
+             "(verified inference receipt). Default: report the tier, "
+             "do not gate on it.",
+    )
     v.add_argument(
         "--source", metavar="PATH", required=True,
         help=(
@@ -265,6 +271,16 @@ def cmd_conformance(args: argparse.Namespace) -> int:
         print("  failures:")
         for e in detail.errors:
             print(f"    - {e}")
+    _attest_ok = True  # __s144_u4_cert_trust_fields_v1__
+    if getattr(args, "require_attestation", False):
+        _attest_ok = detail.provider_token_integrity == "tee_attested"
+        if not _attest_ok:
+            print(
+                "  attestation         FAIL (require-attestation: tier="
+                + repr(detail.provider_token_integrity) + ")"
+            )
+    print(f"  provider_token_integrity {detail.provider_token_integrity!r}")
     print("-" * 56)
-    print(f"VERDICT: {'PASS' if detail.ok else 'FAIL'}")
-    return 0 if detail.ok else 1
+    _verdict_ok = detail.ok and _attest_ok
+    print(f"VERDICT: {'PASS' if _verdict_ok else 'FAIL'}")
+    return 0 if _verdict_ok else 1

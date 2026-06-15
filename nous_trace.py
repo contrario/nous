@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import base64
 import json
-from typing import Optional
+from typing import Literal, Optional
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (
@@ -33,7 +33,7 @@ from cryptography.hazmat.primitives.serialization import (
     Encoding,
     PublicFormat,
 )
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 TRACE_SCHEMA_VERSION: int = 1
 
@@ -105,6 +105,30 @@ class TraceEnvelope(BaseModel):
     memory_consultation: Optional[MemoryConsultation] = Field(default=None)  # __s107_u2_consult_field_v1__
     remedy_application: Optional[RemedyApplication] = Field(default=None)  # __s111_u4_remedy_field_v1__
     signature: Optional[TraceSignature] = Field(default=None)
+    evidence_kind: Optional[Literal["envelope", "witnessed_run"]] = Field(
+        default=None
+    )  # __s144_u1_witnessed_trust_fields_v1__
+    cost_binding: Optional[Literal["envelope", "realized"]] = Field(
+        default=None
+    )
+    provider_token_integrity: Optional[
+        Literal["unattested", "tee_attested", "unverifiable"]
+    ] = Field(default=None)
+
+    @model_validator(mode="after")
+    def _trust_triple_all_or_nothing(self) -> "TraceEnvelope":
+        present = [
+            self.evidence_kind,
+            self.cost_binding,
+            self.provider_token_integrity,
+        ]
+        n_set = sum(1 for v in present if v is not None)
+        if n_set not in (0, 3):
+            raise ValueError(
+                "stratified-trust triple must be all-None (envelope) or "
+                "all-set (witnessed_run); partial trust declaration refused"
+            )
+        return self
 
     def canonical_body_bytes(self) -> bytes:
         doc = self.model_dump(exclude={"signature"})
@@ -112,6 +136,13 @@ class TraceEnvelope(BaseModel):
             doc.pop("memory_consultation", None)
         if doc.get("remedy_application") is None:  # __s111_u4_drop_when_none_v1__
             doc.pop("remedy_application", None)
+        for _tk in (  # __s144_u1_witnessed_trust_fields_v1__
+            "evidence_kind",
+            "cost_binding",
+            "provider_token_integrity",
+        ):
+            if doc.get(_tk) is None:
+                doc.pop(_tk, None)
         return json.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -122,6 +153,13 @@ class TraceEnvelope(BaseModel):
             doc.pop("memory_consultation", None)
         if doc.get("remedy_application") is None:  # __s111_u4_persisted_dict_v1__
             doc.pop("remedy_application", None)
+        for _tk in (  # __s144_u1_witnessed_trust_fields_v1__
+            "evidence_kind",
+            "cost_binding",
+            "provider_token_integrity",
+        ):
+            if doc.get(_tk) is None:
+                doc.pop(_tk, None)
         return doc
 
 

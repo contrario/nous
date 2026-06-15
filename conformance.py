@@ -81,6 +81,8 @@ class ConformanceDetail:
     sequence_ok: bool = True  # __phase2_stage5_seq_conformance_v1__
     errors: tuple[str, ...] = field(default=())
     sequence_vacuous: tuple[str, ...] = field(default=())  # __s104_seq_vacuous_field_v1__
+    cost_binding: Optional[str] = None  # __s144_u3_conformance_trust_precondition_v1__
+    provider_token_integrity: Optional[str] = None
 
     @property
     def ok(self) -> bool:
@@ -318,6 +320,39 @@ def verify_conformance(
                 f"non-gated kind is trace tampering"
             )
 
+    _ek = trace.evidence_kind  # __s144_u3_conformance_trust_precondition_v1__
+    _cb = trace.cost_binding
+    _pti = trace.provider_token_integrity
+    if _ek is not None and _ek not in ("envelope", "witnessed_run"):
+        raise ConformancePreconditionError(
+            f"trust: evidence_kind {_ek!r} is not in the frozen vocabulary"
+        )
+    if _cb is not None and _cb not in ("envelope", "realized"):
+        raise ConformancePreconditionError(
+            f"trust: cost_binding {_cb!r} is not in the frozen vocabulary"
+        )
+    if _pti is not None and _pti not in (
+        "unattested", "tee_attested", "unverifiable"
+    ):
+        raise ConformancePreconditionError(
+            f"trust: provider_token_integrity {_pti!r} is not in the "
+            f"frozen vocabulary"
+        )
+    _realized = _cb == "realized"
+    _witnessed = _ek == "witnessed_run"
+    if _realized != _witnessed:
+        raise ConformancePreconditionError(
+            f"trust: cost_binding={_cb!r} and evidence_kind={_ek!r} are "
+            f"inconsistent; realized cost requires a witnessed_run and "
+            f"vice versa"
+        )
+    if _pti == "tee_attested":
+        raise ConformancePreconditionError(
+            "trust: provider_token_integrity='tee_attested' requires an "
+            "attached, verifier-checked inference receipt; none is present "
+            "(attestation-receipt verification is not available in this "
+            "build), so the claim is refused fail-closed"
+        )
     errors: list[str] = []
 
     # 1. binding: re-derived spec + supplied pricing match the signed shas,
@@ -462,6 +497,8 @@ def verify_conformance(
         cost_cap=str(cost_cap),
         sequence_vacuous=tuple(_sequence_vacuous_laws(trace, spec)),  # __s104_seq_vacuous_construct_v1__
         sequence_ok=sequence_ok,  # __phase2_stage5_seq_conformance_v1__
+        cost_binding=trace.cost_binding,  # __s144_u3_conformance_trust_precondition_v1__
+        provider_token_integrity=trace.provider_token_integrity,
         errors=tuple(errors),
     )
 
@@ -478,7 +515,7 @@ from cryptography.hazmat.primitives.serialization import (  # __nous_conformance
     PublicFormat,
 )
 
-CERTIFICATE_SCHEMA_VERSION: int = 2  # __phase2_stage5b_cert_v1__ (was 1)
+CERTIFICATE_SCHEMA_VERSION: int = 3  # __s144_u4_cert_trust_fields_v1__ (was 2; +trust mirror)
 
 
 class CertificateSignature(BaseModel):  # __nous_conformance_certificate_v1__
@@ -522,6 +559,8 @@ class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
     cost_cap: str = Field(min_length=1)
     cost_currency: str = Field(min_length=1)
     errors: tuple[str, ...] = Field(default=())
+    cost_binding: Optional[str] = Field(default=None)  # __s144_u4_cert_trust_fields_v1__
+    provider_token_integrity: Optional[str] = Field(default=None)
 
     signature: Optional[CertificateSignature] = Field(default=None)
     transparency_log: Optional[dict] = Field(  # __nous_conformance_cert_anchor_v1__
@@ -541,6 +580,9 @@ class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
         )
         if self.certificate_schema_version < 2:  # __phase2_stage5b_cert_v1__
             doc.pop("sequence_ok", None)
+        if self.certificate_schema_version < 3:  # __s144_u4_cert_trust_fields_v1__
+            doc.pop("cost_binding", None)
+            doc.pop("provider_token_integrity", None)
         return _json_cert.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -588,6 +630,8 @@ def build_certificate(  # __nous_conformance_certificate_v1__
         cost_cap=detail.cost_cap,
         cost_currency="USD",
         errors=tuple(detail.errors),
+        cost_binding=detail.cost_binding,  # __s144_u4_cert_trust_fields_v1__
+        provider_token_integrity=detail.provider_token_integrity,
     )
 
 
@@ -623,6 +667,8 @@ def sign_certificate(  # __nous_conformance_certificate_v1__
         cost_cap=cert.cost_cap,
         cost_currency=cert.cost_currency,
         errors=tuple(cert.errors),
+        cost_binding=cert.cost_binding,  # __s144_u4_cert_trust_fields_v1__
+        provider_token_integrity=cert.provider_token_integrity,
         transparency_log=cert.transparency_log,  # __nous_conformance_cert_anchor_v1__
         signature=sig,
     )
@@ -784,6 +830,9 @@ def _cert_canonical_body_bytes_dict(doc: dict) -> bytes:
     }
     if int(body.get("certificate_schema_version", 1)) < 2:
         body.pop("sequence_ok", None)
+    if int(body.get("certificate_schema_version", 1)) < 3:  # __s144_u4_cert_trust_fields_v1__
+        body.pop("cost_binding", None)
+        body.pop("provider_token_integrity", None)
     return _json.dumps(
         body, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")

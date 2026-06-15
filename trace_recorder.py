@@ -95,6 +95,10 @@ class TraceRecorder:
         pricing_sha256: str,
         clock: Optional[Callable[[], str]] = None,
         gated_actions: tuple[str, ...] = (),  # __s142_u1_recorder_gated_set_v1__
+        *,
+        evidence_kind: Optional[str] = None,  # __s144_u2_runner_witnessed_stamp_v1__
+        cost_binding: Optional[str] = None,
+        provider_token_integrity: Optional[str] = None,
     ) -> None:
         if not isinstance(nous_version, str) or not nous_version:
             raise TraceRecorderError(
@@ -133,6 +137,23 @@ class TraceRecorder:
                 )
             _ga_norm.append(_a)
         self._gated_actions: frozenset[str] = frozenset(_ga_norm)
+        _trust = (  # __s144_u2_runner_witnessed_stamp_v1__
+            evidence_kind,
+            cost_binding,
+            provider_token_integrity,
+        )
+        _n_trust = sum(1 for _v in _trust if _v is not None)
+        if _n_trust not in (0, 3):
+            raise TraceRecorderError(
+                "stratified-trust triple must be all-None (envelope) or "
+                "all-set (witnessed_run); the recorder refuses a partial "
+                "trust declaration"
+            )
+        self._evidence_kind: Optional[str] = evidence_kind
+        self._cost_binding: Optional[str] = cost_binding
+        self._provider_token_integrity: Optional[str] = (
+            provider_token_integrity
+        )
 
     @property
     def event_count(self) -> int:
@@ -314,6 +335,9 @@ class TraceRecorder:
             events=list(self._events),
             memory_consultation=self._memory_consultation,  # __s107_u3_consult_build_v1__
             remedy_application=self._remedy_application,  # __s111_u4_remedy_build_v1__
+            evidence_kind=self._evidence_kind,  # __s144_u2_runner_witnessed_stamp_v1__
+            cost_binding=self._cost_binding,
+            provider_token_integrity=self._provider_token_integrity,
             signature=None,
         )
 
