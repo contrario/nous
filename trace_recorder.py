@@ -94,6 +94,7 @@ class TraceRecorder:
         smt_spec_sha256: str,
         pricing_sha256: str,
         clock: Optional[Callable[[], str]] = None,
+        gated_actions: tuple[str, ...] = (),  # __s142_u1_recorder_gated_set_v1__
     ) -> None:
         if not isinstance(nous_version, str) or not nous_version:
             raise TraceRecorderError(
@@ -122,6 +123,16 @@ class TraceRecorder:
         self._finalized: bool = False
         self._memory_consultation: Optional[MemoryConsultation] = None  # __s107_u3_consult_state_v1__
         self._remedy_application: Optional[RemedyApplication] = None  # __s111_u4_remedy_state_v1__
+        _ga_norm: list[str] = []  # __s142_u1_recorder_gated_set_v1__
+        for _a in gated_actions:
+            if not isinstance(_a, str) or not _a:
+                raise TraceRecorderError(
+                    "gated_actions entries must be non-empty "
+                    "strings; the recorder refuses an ill-formed "
+                    "gated set"
+                )
+            _ga_norm.append(_a)
+        self._gated_actions: frozenset[str] = frozenset(_ga_norm)
 
     @property
     def event_count(self) -> int:
@@ -215,8 +226,13 @@ class TraceRecorder:
         tick: int,
         action: Optional[str] = None,
     ) -> TraceEvent:
+        _kind = (  # __s142_u2_message_routing_v1__
+            "gated_action"
+            if action is not None and action in self._gated_actions
+            else "message"
+        )
         return self._append(
-            kind="message",
+            kind=_kind,
             tick=tick,
             soul=soul,
             input_tokens=0,

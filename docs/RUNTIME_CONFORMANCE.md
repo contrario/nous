@@ -241,9 +241,14 @@ about itself.
   `proof_assumptions` sibling. A tampered sibling can neither remove
   gating (a no-attestation event still fails) nor add it (an
   undeclared gated event still refuses). See `docs/GATED_ACTIONS.md`.
-  The remaining honest boundary is trace-emission fidelity (that the
-  runtime labels every occurrence of a gated action) -- a runtime-
-  instrumentation property, not an offline-proof property.
+  Runtime emission (v5.42.0) closes the careless case: the recorder
+  derives the gated set from the same signed source the verifier
+  re-derives and labels every occurrence `gated_action` with no
+  manual step. The remaining honest boundary is the malicious case
+  -- a hand-built trace that mislabels a gated action as `message`
+  evades obligation #5 until the trace is bound to signed
+  instrumentation (a codegen digest); that is a separate arc.
+  <!-- __s142_u4_runtime_conformance_doc_v1__ -->
 - *Key trust.* The verifier proves that SOME key bound to the
   `principal_id` label signed the decision, not that it is the key the
   policy authorises. Approver-key trust is a separate layer, exactly as

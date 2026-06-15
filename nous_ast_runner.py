@@ -244,6 +244,8 @@ async def execute_program(
         except Exception:
             _nous_version = "0.0.0-unknown"
         _src_sha, _smt_sha, _pricing_sha = compute_run_shas(source_text)
+        from run_shas import compute_run_gated_actions  # __s142_u3_runner_gated_v1__
+        _gated_actions = compute_run_gated_actions(source_text)
         rt.attach_trace_recorder(
             TraceRecorder(
                 _nous_version,
@@ -251,6 +253,7 @@ async def execute_program(
                 _src_sha,
                 _smt_sha,
                 _pricing_sha,
+                gated_actions=_gated_actions,
             )
         )
         if consult_memory:  # __s107_u4_consult_read_v1__

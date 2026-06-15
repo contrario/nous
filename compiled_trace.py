@@ -67,12 +67,15 @@ def run_compiled_with_trace(
 
     code = NousCodeGen(program).generate()
     src_sha, smt_sha, pricing_sha = compute_run_shas(source)
+    from run_shas import compute_run_gated_actions  # __s142_u3_ct_gated_v1__
+    _gated = compute_run_gated_actions(source)
     recorder = TraceRecorder(
         _version.__version__,
         program.world.name,
         src_sha,
         smt_sha,
         pricing_sha,
+        gated_actions=_gated,
     )
     if consult_memory:  # __s107_u4_compiled_consult_v1__
         from pathlib import Path as _Path

@@ -78,6 +78,32 @@ alphabet governs both ordering laws and gated actions.
 
 ---
 
+<!-- __s142_u4_runtime_emission_doc_v1__ -->
+## Runtime emission (v5.42.0)
+
+The signed gated set now drives trace PRODUCTION, not just
+verification. At both compiled-path recorder build sites
+(`compiled_trace.py` and the `nous_ast_runner` emit-trace path) the
+gated set is derived by `run_shas.compute_run_gated_actions(source)`
+-- the SAME `emit_smt` path that produces `smt_spec_sha256` and that
+the verifier re-derives, so the producer's emission and the
+verifier's check agree by construction, with no trust asymmetry.
+`TraceRecorder.record_message` then routes any occurrence whose
+action label is in that set to `kind=gated_action` instead of
+`kind=message`. The recorder attaches no approver: a `gated_action`
+event without a valid attestation fails obligation #5, which is
+exactly the closure of the honest-but-careless issuer.
+
+The single occurrence site is `record_message` (an agent `speak`
+carrying an event label, bound to `action` since S104).
+`record_llm_call` and `record_tool_call` do not carry gated action
+labels today; if a future tool-call path needs gating, the same
+routing extends there. An ungated world derives an empty set, so
+`record_message` keeps `kind=message` and every prior trace is
+byte-identical.
+
+---
+
 ## What this proves, and what it does not
 
 **Proves (completeness of the gated set):** the set of actions requiring
@@ -92,11 +118,17 @@ without changing `smt_spec_sha256` and failing the binding check.
   policy authorises. Approver-key trust is a separate layer, exactly as
   manifest-author-key trust is separate from manifest signature
   verification.
-- *That the runtime actually emitted a `gated_action` event for every
-  occurrence of a gated action.* The signed set says which actions are
-  gated; trace-emission fidelity (that the runtime labels every
-  occurrence) is a runtime-instrumentation property, not an offline-proof
-  property.
+- *That a hand-built trace could not mislabel a gated action.*
+  Runtime emission (v5.42.0) closes the CARELESS case: both
+  compiled-path build sites derive the gated set from the same signed
+  source the verifier re-derives, and `record_message` routes any
+  occurrence whose action label is in that set to `kind=gated_action`,
+  so an honest runtime labels every occurrence with no manual step
+  (see "Runtime emission" above). It does NOT close the MALICIOUS
+  case: an issuer who bypasses the recorder and hand-assembles a trace
+  with `kind=message` for a gated action evades obligation #5. Binding
+  the trace to signed instrumentation (a codegen digest the verifier
+  can re-derive) is a separate, larger arc, not yet shipped.
 
 ---
 
