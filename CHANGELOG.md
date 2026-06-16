@@ -11,6 +11,36 @@
   Removed / Fixed / Security.
 -->
 
+## [5.45.0] - 2026-06-16  <!-- __s146_changelog_v5_45_0_v1__ -->
+### Added
+- Vendor receipt scheme `phala_response_sig_v1`: verify a genuine redpill /
+  Phala TEE enclave signature offline. Appends to the attestation vocabulary
+  (`scheme`; `pubkey_alg` gains `ecdsa_secp256k1_keccak`); adds Optional
+  `vendor_request_sha256` / `vendor_response_body` to InferenceReceipt
+  (drop-when-None; pre-S146 traces byte-identical).
+- `verify_phala_receipt_signature`: zero-trust, fail-closed secp256k1 +
+  EIP-191 Keccak verification primitive. `_verify_phala_response_sig_v1`
+  re-derives token usage from the signed response body (transitive
+  count-binding) and delegates signature checking to the primitive.
+- `keccak_lite`: vendored pure-Python Keccak-256 (KAT-pinned), keeping the
+  offline verifier free of new dependencies.
+- `scripts/capture_phala_receipt.py`: deterministic, self-validating redpill /
+  Phala receipt capture tool (httpx).
+- Tier-A golden conformance vector: a genuine published redpill enclave
+  receipt verifies offline through the production primitive
+  (tests/test_s146_phala_golden.py).
+- docs/ATTESTATION_RECEIPT.md section 8.
+### Changed
+- `verify_trace_attestation` is now per-scheme: the ed25519
+  `pinned_tee_key_v1` path is unchanged (byte-identical verdicts); the new
+  phala branch is additive.
+- PYTEST_FLOOR 1670 -> 1709.
+### Security
+- The phala verifier is fail-closed on tamper, foreign key, replay, malformed
+  input, and any token-count mismatch. No production pin ships:
+  `strict_no_test` refuses test pins; a real pin awaits the trust-root
+  ceremony plus DCAP verification of a live enclave.
+
 ## [5.44.0] - 2026-06-16  <!-- __s145_changelog_v5_44_0_v1__ -->
 ### Added
 - Attestation-receipt verification: `provider_token_integrity="tee_attested"`
