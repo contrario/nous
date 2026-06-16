@@ -9,7 +9,7 @@ from pathlib import Path
 
 from cli import build_parser, cli_command_count
 
-_EXPECTED = 54  # __s114_cli_count_54_v1__
+_EXPECTED = 55  # __s147_cli_count_55_v1__
 _API = Path(__file__).resolve().parent.parent / "nous_api_server.py"
 
 
