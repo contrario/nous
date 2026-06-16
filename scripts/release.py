@@ -246,6 +246,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "coverage_farkas.py",  # __s115_farkas_v1__
                                 "coverage_minilang.py",  # __s124_minilang_wheelgate_v1__
                                 "attest_apr.py",  # __s145_u1_attest_apr_wheelgate_v1__
+                                "keccak_lite.py",  # __s146_u1_keccak_lite_wheelgate_v1__
                                 "compiled_trace.py",
                                 "trace_anchor.py",
                                 "memory_entry.py",

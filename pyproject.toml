@@ -106,6 +106,7 @@ py-modules = [
     "remedy_proof", "build_run_remedy",  # __s112_release_v5_26_0_pyproject__
     "annex_iv_map",  # __s135_annex_iv_map_pyproject_v1__
     "attest_apr",  # __s145_u1_attest_apr_pyproject_v1__
+    "keccak_lite",  # __s146_u1_keccak_lite_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
