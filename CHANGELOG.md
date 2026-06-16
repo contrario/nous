@@ -11,6 +11,40 @@
   Removed / Fixed / Security.
 -->
 
+## [5.46.0] - 2026-06-17  <!-- __s147_changelog_v5_46_0_v1__ -->
+### Added
+- `.ndec` portable proof-carrying decision attestation: wrap a signed
+  NOUS dossier in a DSSE envelope over an in-toto v1 Statement with a
+  NOUS decision predicate. A single ZIP an external reviewer verifies
+  offline with `python3 verify_ndec.py` (cryptography only, no NOUS
+  install) or `nous verify <file>.ndec`. Media type
+  `application/vnd.nous.decision+zip`.
+- `nous ndec build <dossier-dir>` and `nous ndec verify <file>.ndec`
+  (cli_commands 54 -> 55); `nous verify` detects a `.ndec` path and
+  dispatches to the installed verifier.
+- `ndec.build_ndec` / `ndec.verify_ndec_file`: deterministic ZIP_STORED
+  container, fail-closed DSSE envelope + subject + artifact binding.
+  The carried dossier verifier (`verify_offline.py`) is pinned via
+  `verify_offline_sha256` in the SIGNED predicate, so tampering with it
+  breaks the binding.
+- Canonical-verifier allowlist: the installed verifier confirms the
+  carried `verify_offline.py` is an unmodified official NOUS template by
+  exact-sha membership, closing the trusting-trust gap even against a
+  malicious signer. `nous ndec verify --strict-canonical` refuses
+  anything not confirmed canonical; otherwise the verdict degrades
+  honestly to a signature-pinned-only statement.
+### Security
+- `.ndec` verification is zero-trust and fail-closed: a doctored carried
+  verifier is caught by the signed predicate pin; a non-canonical
+  verifier is reported as not-confirmed-canonical rather than silently
+  trusted.
+### Notes
+- Honest boundary unchanged: `.ndec` PROVES the declared cost/coverage
+  envelope (z3 / Farkas) and EVIDENCES provenance plus issuer
+  non-tampering (Ed25519). It does NOT prove decision correctness, legal
+  sufficiency, or regulatory compliance. A cross-version Rekor-anchored
+  verifier-digest registry is proposed, not yet shipped.
+
 ## [5.45.0] - 2026-06-16  <!-- __s146_changelog_v5_45_0_v1__ -->
 ### Added
 - Vendor receipt scheme `phala_response_sig_v1`: verify a genuine redpill /
