@@ -203,3 +203,84 @@ Result: `tee_attested` is mechanically emittable and offline-verifiable now;
 production-meaningful only after a genuine ceremony. The honest boundary moved
 from prose an auditor takes on faith into a machine-checkable, signature-bound
 field.
+
+---
+
+## 8. S146 vendor scheme: phala_response_sig_v1  <!-- __s146_u5_vendor_scheme_doc_v1__ -->
+
+Section 7 describes the S145 state (a NOUS-canonical test scheme only). S146
+updates it: a real vendor-specific scheme now exists and a genuine vendor
+signature is verified offline -- but a production pin still awaits the ceremony.
+
+S145's `pinned_tee_key_v1` signs a NOUS-canonical payload with a NOUS-controlled
+key (test seed). A real provider signs different bytes. `phala_response_sig_v1`
+is an append-only scheme that reconstructs and verifies a GENUINE redpill / Phala
+enclave signature.
+
+Frozen vocabulary additions (append-only; all pre-S146 artifacts byte-identical):
+- `scheme` gains `phala_response_sig_v1` on both APR and InferenceReceipt.
+- `pubkey_alg` gains `ecdsa_secp256k1_keccak` (ed25519 and ecdsa_p256 unchanged).
+
+What the vendor signs. redpill / Phala generates a secp256k1 (Ethereum) signing
+key inside the TEE; its address is the enclave eth address and the key is bound
+to an Intel TDX DCAP quote, an NVIDIA confidential-compute report, and an on-chain
+dstack compose-hash. The signature is an EIP-191 personal_sign over the message
+`text = sha256(request_body) ":" sha256(response_body)` (lowercase hex, colon-
+joined), i.e. it signs `keccak256("\x19Ethereum Signed Message:\n" + len(text) +
+text)`.
+
+Receipt fields (additive, Optional, drop-when-None; v1 receipts byte-identical):
+- `vendor_request_sha256`: lowercase hex sha256 of the HTTP request body.
+- `vendor_response_body`: the full signed HTTP response body.
+- `signature`: base64 of the 65-byte `r||s||v` Ethereum signature.
+
+Verify rule (zero-trust, fail-closed). Re-derive `text` from `vendor_request_sha256`
+and `sha256(vendor_response_body)`; reconstruct the EIP-191 keccak preimage;
+verify the secp256k1 signature against the APR-pinned enclave key; re-derive the
+token usage from the signed `vendor_response_body` (top-level `usage`, or the last
+streamed chunk under `include_usage`) and require it to equal both the carried
+usage and the run's event total. Any mismatch, foreign key, replay, malformed or
+unparseable input refuses.
+
+Count binding is transitive. The vendor signs the response BYTES, not the token
+counts; the counts live inside those bytes. NOUS recomputes `sha256(body)` (must
+equal the value bound into the signed text) and parses `usage` from the same
+bytes, so a tampered count breaks the hash and therefore the signature.
+
+Keccak cryptography-only boundary. Ethereum Keccak-256 is not provided by
+`cryptography` nor stdlib `hashlib` (`sha3_256` is NIST SHA-3, a different
+padding). NOUS vendors `keccak_lite` -- a pure-Python Keccak-f[1600], KAT-pinned
+against the canonical empty/abc/fox vectors and an independent implementation,
+and cross-checked byte-identical to Ethereum's `eth_hash` keccak on a real
+preimage. The offline verifier stays "cryptography + z3 + stdlib + keccak_lite",
+nothing to install. secp256k1 verification uses `cryptography` with a prehashed
+digest. The DCAP / on-chain chain is pin-time (online), never the runtime path.
+
+Root-pinning model. At ceremony (pin time) the operator recovers the enclave
+secp256k1 public key, verifies the Intel TDX quote / NVIDIA-CC report / on-chain
+compose-hash, and issues an APR pinning the key: `enclave_pubkey` = base64 of the
+65-byte uncompressed point, `measurement` = compose-hash, `pubkey_alg` =
+`ecdsa_secp256k1_keccak`, `vendor` = `phala`. At runtime the verifier uses only
+the pinned key and `cryptography` -- the heavy chain check is recorded as APR
+evidence, not re-walked per verification.
+
+Tier-A golden conformance vector. A genuine, publicly documented redpill / Phala
+enclave receipt (enclave `0xd8414f83c1335627b31d08eba6d2da5fa53a0a83`, recoverable
+by anyone from any redpill response) verifies offline through the production
+primitive `verify_phala_receipt_signature` (tests/test_s146_phala_golden.py), and
+every tamper is refused. This proves the scheme matches real vendor output, not
+merely self-consistency.
+
+Capture tool. `scripts/capture_phala_receipt.py` runs the ceremony against a live
+endpoint (attestation report, then a non-streamed chat call, then the signature
+within the retention window) and emits a self-contained bundle (request and
+response bytes, signature, signing address, quote hashes), asserting that the
+vendor-returned `text` equals the recomputed `request_sha256:response_sha256`.
+
+Honest bound. S146 proves the mechanism and genuine-signature conformance. It
+does NOT ship a production pin: the full usage-binding KAT needs a captured
+response body, and a production APR needs the trust-root ceremony plus DCAP
+verification of a live enclave. Once such an APR is pinned, `--require-attestation`
+is production-passable for genuine phala receipts; `strict_no_test` still refuses
+test pins. A vendor scheme closes link 3 for that vendor's attested endpoint only;
+first-party unsigned-usage APIs remain `unattested`.
