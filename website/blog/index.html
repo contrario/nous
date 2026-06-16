@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s145_blog_v544-attestation-receipt_card_v1__ __s145_web_v5_44_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v544-attestation-receipt');return false">
+      <div class="post-meta">
+        <span class="post-date">16 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.44.0 &mdash; Attestation-Receipt Verifier</div>
+      <div class="post-excerpt">v5.43.0 named three trust links and closed two; the third &mdash; runtime-to-provider &mdash; stayed open because model APIs return an unsigned usage block, so the reserved <code>tee_attested</code> tier was always refused. v5.44.0 builds the verifier for the TEE case: a provider-signed inference receipt, pinned via a NOUS-signed Attestation Pinning Record to a specific enclave measurement, binds per-call token counts to a model build in genuine hardware. Zero-trust and fail-closed &mdash; it even catches a validly-signed receipt that under-reports tokens. The honest boundary holds: first-party unsigned-usage APIs stay <code>unattested</code>, and only a test key is seeded until a real ceremony. <code>nous-lang 5.44.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s144_blog_v543-witnessed-run-evidence_card_v1__ __s144_web_v5_43_0__ -->
     <a class="post-card" href="#" onclick="showPost('v543-witnessed-run-evidence');return false">
       <div class="post-meta">
@@ -700,6 +710,17 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s145_blog_v544-attestation-receipt_post_v1__ __s145_web_v5_44_0__ -->
+   <div class="post-full" id="post-v544-attestation-receipt">
+      <button class="post-back" onclick="showList()">&larr; All posts</button>
+      <h1 class="post-full-title">NOUS v5.44.0 &mdash; Attestation-Receipt Verifier</h1>
+      <div class="post-full-meta">16 June 2026 &middot; 4 min read</div>
+      <p>v5.43.0 made the cost evidence honest by naming three trust links and closing two of them. The verifier binds what the trace asserts (proven). The trace faithfully records what the runtime saw (assumed, but the signature proves the issuer did not tamper after the fact). And the provider reported its token usage truthfully &mdash; not verifiable, because first-party model APIs return an unsigned usage block. That third link was left open and declared, and the reserved <code>tee_attested</code> tier had no verifier, so it was always refused, not assumed.</p>
+      <p>v5.44.0 builds that verifier for the TEE case. Production TEE attested-inference providers sign a receipt over the inference, chained to hardware roots. NOUS turns that into offline-verifiable evidence with two artifacts. An <strong>Attestation Pinning Record</strong> (APR) is a standalone NOUS-signed governed artifact: it records the enclave public key, the pinned build <code>measurement</code>, the model id, the TCB level checked at pin time, and who pinned it &mdash; with the hardware quote retained for re-audit. The pin is evidence, not a hardcoded config line. An <strong>inference receipt</strong> rides on the trace per <code>llm_call</code> event, carrying the provider-reported token counts and an enclave-key signature over a canonical payload that binds the model, the measurement, the token counts, and the trace&rsquo;s source hash.</p>
+      <p>Verification is zero-trust and fail-closed. The verifier re-derives the signed payload itself rather than trusting a producer flag; checks each receipt signature against the enclave key pinned by an APR whose own signature chains to a published NOUS trust root; requires a bijection between token-bearing events and receipts, so an omitted event and an injected receipt both fail; refuses a foreign or replayed receipt because the source hash must match this trace; and &mdash; the point of the whole exercise &mdash; refuses a validly-signed receipt that under-reports tokens, because the receipt usage must equal the event total the verifier recomputed. A receipt thus proves provenance and count-binding: these tokens came from this pinned build in genuine hardware. It does not claim the build counts honestly inside the enclave; that residual is named, not hidden.</p>
+      <p>The trust root is a dedicated Ed25519 key, isolated from the routine dossier signer because the key that says this enclave is trusted is a higher-value target. It is created only by an explicit one-time operator ceremony that prints and records its fingerprint for pinning; it is never generated as a side effect of import, install, or deployment. <code>nous conformance verify --apr ... --attest-root ...</code> makes <code>tee_attested</code> emittable, and <code>--require-attestation</code> gates the verdict on it with a strict mode that refuses test pins for production.</p>
+      <p>The honest boundary holds at every layer. First-party unsigned-usage APIs cannot produce a receipt and stay <code>unattested</code>; closing link 3 for the TEE case does not close it for them, and the docs say so. S145 ships the mechanism, the offline verifier, nineteen tests, and the reference doc &mdash; seeded with a test key only. No production pin, no vendor APR, and no claim of vendor support ships until a real hardware attestation ceremony issues a non-test APR. Probabilistic execution, deterministic evidence &mdash; and now a third party can read, from the signed artifact alone, exactly how much of the cost evidence is cryptographically bound versus assumed. floor 1651 to 1670. <code>nous-lang 5.44.0</code>.</p>
+   </div>
    <!-- __s144_blog_v543-witnessed-run-evidence_post_v1__ __s144_web_v5_43_0__ -->
    <div class="post-full" id="post-v543-witnessed-run-evidence">
      <button class="post-back" onclick="showList()">&larr; All posts</button>
