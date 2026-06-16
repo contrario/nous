@@ -304,6 +304,42 @@ def _verify_pinned_tee_key_v1(
     return None
 
 
+def verify_phala_receipt_signature(
+    enclave_pubkey_b64: str,
+    signature_b64: str,
+    text: str,
+) -> Optional[str]:  # __s146_u4_phala_sig_primitive_v1__
+    try:
+        raw = base64.b64decode(enclave_pubkey_b64, validate=True)
+        enclave_key = ec.EllipticCurvePublicKey.from_encoded_point(
+            ec.SECP256K1(), raw
+        )
+    except Exception:
+        return "enclave_pubkey unparseable as secp256k1 point"
+    try:
+        sig = base64.b64decode(signature_b64, validate=True)
+    except Exception:
+        return "signature not valid base64"
+    if len(sig) != 65:
+        return "signature must be 65 bytes r||s||v"
+    preimage = (
+        b"\x19Ethereum Signed Message:\n"
+        + str(len(text)).encode("ascii")
+        + text.encode("ascii")
+    )
+    digest = keccak256(preimage)
+    r = int.from_bytes(sig[0:32], "big")
+    s = int.from_bytes(sig[32:64], "big")
+    der = encode_dss_signature(r, s)
+    try:
+        enclave_key.verify(der, digest, ec.ECDSA(Prehashed(hashes.SHA256())))
+    except InvalidSignature:
+        return "signature verify failed"
+    except Exception:
+        return "signature verify error"
+    return None
+
+
 def _verify_phala_response_sig_v1(
     receipt: "InferenceReceipt",
     apr: AttestationPinningRecord,
@@ -331,50 +367,15 @@ def _verify_phala_response_sig_v1(
             attested=False,
             reason=f"vendor_response_body missing at event_index {index}",
         )
-    try:
-        raw = base64.b64decode(apr.enclave_pubkey, validate=True)
-        enclave_key = ec.EllipticCurvePublicKey.from_encoded_point(
-            ec.SECP256K1(), raw
-        )
-    except Exception:
-        return AttestationVerdict(
-            attested=False,
-            reason=f"enclave_pubkey unparseable as secp256k1 point for APR {apr.enclave_key_id!r}",
-        )
-    try:
-        sig = base64.b64decode(receipt.signature, validate=True)
-    except Exception:
-        return AttestationVerdict(
-            attested=False,
-            reason=f"receipt signature is not valid base64 at event_index {index}",
-        )
-    if len(sig) != 65:
-        return AttestationVerdict(
-            attested=False,
-            reason=f"phala signature must be 65 bytes r||s||v at event_index {index}",
-        )
     resp_sha = hashlib.sha256(body.encode("utf-8")).hexdigest()
     text = f"{request_sha.lower()}:{resp_sha}"
-    preimage = (
-        b"\x19Ethereum Signed Message:\n"
-        + str(len(text)).encode("ascii")
-        + text.encode("ascii")
+    sig_error = verify_phala_receipt_signature(  # __s146_u4_phala_sig_delegate_v1__
+        apr.enclave_pubkey, receipt.signature, text
     )
-    digest = keccak256(preimage)
-    r = int.from_bytes(sig[0:32], "big")
-    s = int.from_bytes(sig[32:64], "big")
-    der = encode_dss_signature(r, s)
-    try:
-        enclave_key.verify(der, digest, ec.ECDSA(Prehashed(hashes.SHA256())))
-    except InvalidSignature:
+    if sig_error is not None:
         return AttestationVerdict(
             attested=False,
-            reason=f"phala receipt signature verify failed at event_index {index}",
-        )
-    except Exception:
-        return AttestationVerdict(
-            attested=False,
-            reason=f"phala receipt signature verify error at event_index {index}",
+            reason=f"phala {sig_error} at event_index {index}",
         )
     derived = _parse_vendor_usage(body)
     if derived is None:
