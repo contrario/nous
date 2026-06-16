@@ -14,12 +14,19 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
     Ed25519PrivateKey,
     Ed25519PublicKey,
 )
+from cryptography.hazmat.primitives import hashes  # __s146_u3_imports_v1__
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric.utils import (
+    Prehashed,
+    encode_dss_signature,
+)
+from keccak_lite import keccak256
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # __s145_u1_attest_apr_v1__
 
 if TYPE_CHECKING:  # __s145_u3_typecheck_import_v1__
-    from nous_trace import TraceEnvelope
+    from nous_trace import InferenceReceipt, TraceEnvelope  # __s146_u3_typecheck_v1__
 
 
 APR_SCHEMA_VERSION: int = 1
@@ -107,10 +114,10 @@ class AttestationPinningRecord(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
     apr_schema_version: int = Field(default=APR_SCHEMA_VERSION)
-    scheme: Literal["pinned_tee_key_v1"]
+    scheme: Literal["pinned_tee_key_v1", "phala_response_sig_v1"]  # __s146_u3_apr_scheme_v1__
     enclave_key_id: str = Field(min_length=1)
     enclave_pubkey: str = Field(min_length=1)
-    pubkey_alg: Literal["ed25519", "ecdsa_p256"]
+    pubkey_alg: Literal["ed25519", "ecdsa_p256", "ecdsa_secp256k1_keccak"]  # __s146_u3_pubkey_alg_v1__
     measurement: str = Field(min_length=2)
     vendor: str = Field(min_length=1)
     model_id: str = Field(min_length=1)
@@ -220,6 +227,187 @@ def _enclave_ed25519_public_key(
     return Ed25519PublicKey.from_public_bytes(raw)
 
 
+def _parse_vendor_usage(body: str) -> Optional[tuple[int, int]]:
+    def _extract(obj: object) -> Optional[tuple[int, int]]:
+        if not isinstance(obj, dict):
+            return None
+        usage = obj.get("usage")
+        if not isinstance(usage, dict):
+            return None
+        prompt = usage.get("prompt_tokens")
+        completion = usage.get("completion_tokens")
+        if isinstance(prompt, int) and isinstance(completion, int):
+            return (prompt, completion)
+        return None
+
+    try:
+        parsed = json.loads(body)
+    except Exception:
+        parsed = None
+    direct = _extract(parsed) if parsed is not None else None
+    if direct is not None:
+        return direct
+    found: Optional[tuple[int, int]] = None
+    for line in body.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("data:"):
+            continue
+        payload = stripped[len("data:"):].strip()
+        if payload in ("", "[DONE]"):
+            continue
+        try:
+            chunk = json.loads(payload)
+        except Exception:
+            continue
+        candidate = _extract(chunk)
+        if candidate is not None:
+            found = candidate
+    return found
+
+
+def _verify_pinned_tee_key_v1(
+    receipt: "InferenceReceipt",
+    apr: AttestationPinningRecord,
+    index: int,
+) -> Optional[AttestationVerdict]:
+    if apr.pubkey_alg != "ed25519":
+        return AttestationVerdict(
+            attested=False,
+            reason=f"pubkey_alg {apr.pubkey_alg!r} is not supported by verifier v1",
+        )
+    try:
+        enclave_key = _enclave_ed25519_public_key(apr)
+    except Exception:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"enclave_pubkey unparseable for APR {apr.enclave_key_id!r}",
+        )
+    try:
+        signature_bytes = base64.b64decode(receipt.signature, validate=True)
+    except Exception:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"receipt signature is not valid base64 at event_index {index}",
+        )
+    try:
+        enclave_key.verify(signature_bytes, receipt.signed_payload_bytes())
+    except InvalidSignature:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"receipt signature verify failed at event_index {index}",
+        )
+    except Exception:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"receipt signature verify error at event_index {index}",
+        )
+    return None
+
+
+def _verify_phala_response_sig_v1(
+    receipt: "InferenceReceipt",
+    apr: AttestationPinningRecord,
+    index: int,
+) -> Optional[AttestationVerdict]:
+    if apr.pubkey_alg != "ecdsa_secp256k1_keccak":
+        return AttestationVerdict(
+            attested=False,
+            reason=f"pubkey_alg {apr.pubkey_alg!r} is not valid for phala_response_sig_v1",
+        )
+    request_sha = receipt.vendor_request_sha256
+    body = receipt.vendor_response_body
+    if not isinstance(request_sha, str) or len(request_sha) != 64:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"vendor_request_sha256 missing or malformed at event_index {index}",
+        )
+    if any(c not in "0123456789abcdef" for c in request_sha.lower()):
+        return AttestationVerdict(
+            attested=False,
+            reason=f"vendor_request_sha256 not hex at event_index {index}",
+        )
+    if not isinstance(body, str) or not body:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"vendor_response_body missing at event_index {index}",
+        )
+    try:
+        raw = base64.b64decode(apr.enclave_pubkey, validate=True)
+        enclave_key = ec.EllipticCurvePublicKey.from_encoded_point(
+            ec.SECP256K1(), raw
+        )
+    except Exception:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"enclave_pubkey unparseable as secp256k1 point for APR {apr.enclave_key_id!r}",
+        )
+    try:
+        sig = base64.b64decode(receipt.signature, validate=True)
+    except Exception:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"receipt signature is not valid base64 at event_index {index}",
+        )
+    if len(sig) != 65:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"phala signature must be 65 bytes r||s||v at event_index {index}",
+        )
+    resp_sha = hashlib.sha256(body.encode("utf-8")).hexdigest()
+    text = f"{request_sha.lower()}:{resp_sha}"
+    preimage = (
+        b"\x19Ethereum Signed Message:\n"
+        + str(len(text)).encode("ascii")
+        + text.encode("ascii")
+    )
+    digest = keccak256(preimage)
+    r = int.from_bytes(sig[0:32], "big")
+    s = int.from_bytes(sig[32:64], "big")
+    der = encode_dss_signature(r, s)
+    try:
+        enclave_key.verify(der, digest, ec.ECDSA(Prehashed(hashes.SHA256())))
+    except InvalidSignature:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"phala receipt signature verify failed at event_index {index}",
+        )
+    except Exception:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"phala receipt signature verify error at event_index {index}",
+        )
+    derived = _parse_vendor_usage(body)
+    if derived is None:
+        return AttestationVerdict(
+            attested=False,
+            reason=f"usage not derivable from vendor_response_body at event_index {index}",
+        )
+    if (
+        derived[0] != receipt.usage_input_tokens
+        or derived[1] != receipt.usage_output_tokens
+    ):
+        return AttestationVerdict(
+            attested=False,
+            reason=f"vendor usage does not match carried usage at event_index {index}",
+        )
+    return None
+
+
+def _verify_receipt_signature(
+    receipt: "InferenceReceipt",
+    apr: AttestationPinningRecord,
+    index: int,
+) -> Optional[AttestationVerdict]:  # __s146_u3_dispatch_fns_v1__
+    if receipt.scheme == "pinned_tee_key_v1":
+        return _verify_pinned_tee_key_v1(receipt, apr, index)
+    if receipt.scheme == "phala_response_sig_v1":
+        return _verify_phala_response_sig_v1(receipt, apr, index)
+    return AttestationVerdict(
+        attested=False,
+        reason=f"unsupported receipt scheme {receipt.scheme!r} at event_index {index}",
+    )
+
+
 def verify_trace_attestation(
     trace: "TraceEnvelope",
     aprs: list[AttestationPinningRecord],
@@ -296,37 +484,9 @@ def verify_trace_attestation(
                 attested=False,
                 reason=f"source_sha256 mismatch at event_index {index} (foreign or replayed receipt)",
             )
-        if apr.pubkey_alg != "ed25519":
-            return AttestationVerdict(
-                attested=False,
-                reason=f"pubkey_alg {apr.pubkey_alg!r} is not supported by verifier v1",
-            )
-        try:
-            enclave_key = _enclave_ed25519_public_key(apr)
-        except Exception:
-            return AttestationVerdict(
-                attested=False,
-                reason=f"enclave_pubkey unparseable for APR {apr.enclave_key_id!r}",
-            )
-        try:
-            signature_bytes = base64.b64decode(receipt.signature, validate=True)
-        except Exception:
-            return AttestationVerdict(
-                attested=False,
-                reason=f"receipt signature is not valid base64 at event_index {index}",
-            )
-        try:
-            enclave_key.verify(signature_bytes, receipt.signed_payload_bytes())
-        except InvalidSignature:
-            return AttestationVerdict(
-                attested=False,
-                reason=f"receipt signature verify failed at event_index {index}",
-            )
-        except Exception:
-            return AttestationVerdict(
-                attested=False,
-                reason=f"receipt signature verify error at event_index {index}",
-            )
+        sig_verdict = _verify_receipt_signature(receipt, apr, index)  # __s146_u3_dispatch_v1__
+        if sig_verdict is not None:
+            return sig_verdict
 
         event = token_events[index]
         if (
