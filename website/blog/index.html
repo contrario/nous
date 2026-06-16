@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s147_blog_v546_ndec_card_v1__ __s147_web_v5_46_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v546-ndec-portable-decision');return false">
+      <div class="post-meta">
+        <span class="post-date">17 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.46.0 &mdash; A Decision You Can Hand Over</div>
+      <div class="post-excerpt">A NOUS dossier proves its envelope offline but has been a loose folder. v5.46.0 packages it as a <code>.ndec</code>: one portable file an external reviewer verifies in a single command, no NOUS install. It is a standard DSSE envelope over an in-toto v1 Statement with a NOUS decision predicate that binds the canonical manifest and every carried artifact &mdash; including the dossier&rsquo;s own verifier, pinned by sha in the signed predicate. The installed verifier also confirms that carried verifier is an unmodified official NOUS template by exact-sha, closing the trusting-trust gap even against a malicious signer. The honest boundary holds: it proves the cost and coverage envelope and evidences provenance, and claims nothing about decision correctness or compliance. <code>nous-lang 5.46.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s146_blog_v545_phala_card_v1__ __s146_web_v5_45_0__ -->
     <a class="post-card" href="#" onclick="showPost('v545-phala-vendor-scheme');return false">
       <div class="post-meta">
@@ -720,6 +730,19 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s147_blog_v546_ndec_post_v1__ __s147_web_v5_46_0__ -->
+   <div class="post-full" id="post-v546-ndec-portable-decision">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.46.0 &mdash; A Decision You Can Hand Over</h1>
+      <div class="post-full-meta">17 June 2026 &middot; 5 min read</div>
+      <div class="post-full-body">
+        <p>A NOUS dossier already proves what it claims offline: a signed manifest, a source envelope, and a cost or coverage proof a third party re-checks with nothing but <code>cryptography</code> and, optionally, Z3. But it has shipped as a loose directory of files. That is awkward to hand to a bank reviewer, an auditor, or a regulator. v5.46.0 gives the decision a container.</p>
+        <p>A <code>.ndec</code> is a single portable file &mdash; media type <code>application/vnd.nous.decision+zip</code> &mdash; that wraps an existing dossier in a standard <strong>DSSE envelope over an in-toto v1 Statement</strong> with a NOUS decision predicate. The format is the de-facto standard for portable signed evidence, so the envelope is interoperable with existing sigstore and cosign tooling. The Statement&rsquo;s subject digest binds the canonical manifest; the predicate commits to the world, the verdict, the cost and coverage scope, the signer key, and the sha256 of every carried artifact &mdash; including the dossier&rsquo;s own offline verifier.</p>
+        <p>Verification is zero-trust and fail-closed. A reviewer runs <code>python3 verify_ndec.py</code> (or <code>nous verify decision.ndec</code>) and the verifier checks the Ed25519 envelope signature over the DSSE pre-authentication encoding, recomputes the canonical manifest digest and matches it to the subject, recomputes every carried artifact digest and matches it to the signed predicate, and only then runs the inner coverage proof &mdash; Z3, or a stdlib Farkas certificate that needs no solver at all.</p>
+        <p>The subtle part is the verifier itself. A dossier ships its own <code>verify_offline.py</code>; if an outer tool simply runs it, a doctored copy that prints &ldquo;PASS&rdquo; defeats everything. That is Ken Thompson&rsquo;s trusting-trust problem. v5.46.0 answers it on two levels. First, <code>verify_offline.py</code> is pinned by sha in the signed predicate, so tampering with it in transit breaks the binding. Second, the installed <code>nous verify</code> confirms the carried verifier is an <em>unmodified official NOUS template</em> by exact-sha membership in its own template set &mdash; a doctored verifier cannot match an exact hash &mdash; which closes the gap even against a malicious signer. <code>nous ndec verify --strict-canonical</code> refuses anything it cannot confirm.</p>
+        <p>The boundary is stated in the verdict, not buried: a <code>.ndec</code> <strong>proves</strong> the declared cost and coverage envelope and <strong>evidences</strong> provenance and issuer non-tampering. It does <strong>not</strong> prove the decision was correct, that the dossier is legally sufficient, or that compliance is conferred &mdash; that is a notified body&rsquo;s call, not an artifact&rsquo;s. A cross-version transparency-logged verifier registry, which would let the canonical check succeed across releases independent of any single install, is proposed, not yet shipped.</p>
+      </div>
+   </div>
    <!-- __s146_blog_v545_phala_post_v1__ __s146_web_v5_45_0__ -->
    <div class="post-full" id="post-v545-phala-vendor-scheme">
       <button class="post-back" onclick="showList()">&larr; All posts</button>
