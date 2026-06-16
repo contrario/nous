@@ -11,6 +11,37 @@
   Removed / Fixed / Security.
 -->
 
+## [5.44.0] - 2026-06-16  <!-- __s145_changelog_v5_44_0_v1__ -->
+### Added
+- Attestation-receipt verification: `provider_token_integrity="tee_attested"`
+  is now emittable and offline-verifiable. An offline-verifiable, provider-
+  signed inference receipt -- pinned via a NOUS-signed Attestation Pinning
+  Record (APR) to a specific enclave measurement -- closes trust link 3
+  (runtime-to-provider) for the TEE case. New module `attest_apr.py` (APR
+  model, canonical sorted-keys compact JSON, Ed25519 sign/verify, trust-root
+  load-or-fail with NO auto-generation, zero-trust fail-closed
+  `verify_trace_attestation`). New per-llm_call `InferenceReceipt` on
+  `TraceEnvelope` (Optional, drop-when-None, byte-identical to pre-S145
+  traces). Reference: docs/ATTESTATION_RECEIPT.md.
+- Explicit trust-root keygen ceremony (`scripts/gen_trust_root.py`): a one-time
+  operator action that refuses silent overwrite and prints and records the
+  public-key fingerprint for pinning. A long-lived trust root is never created
+  as a side effect of import, install, or patch execution.
+- `nous conformance verify` gains `--apr` (repeatable) and `--attest-root`;
+  `--require-attestation` now gates on a verified receipt with a strict
+  no-test-pin production mode.
+### Changed
+- conformance `verify_conformance`: the `tee_attested` precondition is now
+  refuse-unless-verified (was unconditional refuse). Positional callers are
+  unchanged; the new `aprs` and `attest_trust_root_public_key` parameters are
+  keyword-only and default to None.
+### Security
+- The token-count binding catches a validly-signed receipt that under-reports
+  usage (the receipt usage must equal the event tokens, re-derived by the
+  verifier). Honest boundary preserved: first-party unsigned-usage APIs stay
+  `unattested`; S145 seeds only a test key, with no production or vendor pin
+  until a real hardware attestation ceremony issues one.
+
 ## [5.43.0] - 2026-06-15  <!-- __s144_changelog_v5_43_0_v1__ -->
 ### Added
 - Witnessed-run evidence, a second evidence type alongside the
