@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s146_blog_v545_phala_card_v1__ __s146_web_v5_45_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v545-phala-vendor-scheme');return false">
+      <div class="post-meta">
+        <span class="post-date">16 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.45.0 &mdash; Verifying a Real Vendor Receipt</div>
+      <div class="post-excerpt">v5.44.0 closed trust link 3 for the TEE case with a test key &mdash; a mechanism, not a real vendor signature. v5.45.0 adds the <code>phala_response_sig_v1</code> scheme that verifies a GENUINE redpill / Phala enclave signature offline: the enclave signs an EIP-191 message over <code>sha256(request):sha256(response)</code> with a TEE-held secp256k1 key, and NOUS re-derives the preimage, verifies against the APR-pinned key, and re-derives token usage from the signed body so a tampered count breaks the hash. A genuine published enclave receipt verifies through the production primitive; Keccak-256 ships as a KAT-pinned pure-Python <code>keccak_lite</code>. Mechanism and conformance proven; production pin pending a ceremony. <code>nous-lang 5.45.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s145_blog_v544-attestation-receipt_card_v1__ __s145_web_v5_44_0__ -->
     <a class="post-card" href="#" onclick="showPost('v544-attestation-receipt');return false">
       <div class="post-meta">
@@ -710,6 +720,17 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s146_blog_v545_phala_post_v1__ __s146_web_v5_45_0__ -->
+   <div class="post-full" id="post-v545-phala-vendor-scheme">
+      <button class="post-back" onclick="showList()">&larr; All posts</button>
+      <h1 class="post-full-title">NOUS v5.45.0 &mdash; Verifying a Real Vendor Receipt</h1>
+      <div class="post-full-meta">16 June 2026 &middot; 4 min read</div>
+      <p>v5.44.0 closed trust link 3 for the TEE case, but with a NOUS-canonical receipt signed by a NOUS-controlled key seeded for tests &mdash; a working mechanism, not a real vendor signature. A genuine provider signs different bytes. v5.45.0 adds the append-only <code>phala_response_sig_v1</code> scheme so the verifier can accept a real redpill / Phala enclave signature, leaving <code>pinned_tee_key_v1</code> and every prior trace, APR, and certificate byte-identical.</p>
+      <p>What does the enclave actually sign? redpill / Phala generates a secp256k1 signing key inside the TEE &mdash; its Ethereum address is the enclave identity, bound to an Intel TDX quote, an NVIDIA confidential-compute report, and an on-chain build hash. It signs an EIP-191 message over <code>sha256(request_body):sha256(response_body)</code>. The receipt carries the request hash, the full signed response body, and the 65-byte signature; NOUS pins the enclave public key through an APR at ceremony time.</p>
+      <p>Verification stays zero-trust and fail-closed. NOUS re-derives the signed text from the carried request hash and a fresh <code>sha256</code> of the response body, reconstructs the EIP-191 Keccak preimage, and verifies the signature against the APR-pinned key. The token counts are never signed directly &mdash; only the response bytes are &mdash; so NOUS re-derives usage from that signed body and refuses unless it equals the run&rsquo;s total: a tampered count breaks the hash, and therefore the signature. Ethereum&rsquo;s Keccak-256 lives in neither <code>cryptography</code> nor the standard library, so NOUS vendors a KAT-pinned pure-Python <code>keccak_lite</code> &mdash; the offline verifier still needs nothing but <code>cryptography</code> and <code>z3</code>.</p>
+      <p>The proof is not self-consistency. A genuine, publicly documented redpill / Phala enclave receipt &mdash; signed by enclave <code>0xd8414f83&hellip;a53a0a83</code>, recoverable by anyone from any redpill response &mdash; verifies offline through the production primitive, and every tamper is refused (committed as a conformance test). A deterministic capture tool records a fresh receipt bundle from a live endpoint and self-checks that the vendor&rsquo;s returned text equals the recomputed <code>request_sha:response_sha</code>.</p>
+      <p>The honest boundary holds. v5.45.0 proves the mechanism and genuine-signature conformance; it does not yet ship a production pin. The full usage-binding test needs a captured response body, and a production APR needs the trust-root ceremony plus DCAP verification of a live enclave &mdash; <code>strict_no_test</code> still refuses test pins. A vendor scheme closes link 3 for that vendor&rsquo;s attested endpoint only; first-party unsigned-usage APIs stay <code>unattested</code>. floor 1670 to 1709. <code>nous-lang 5.45.0</code>.</p>
+   </div>
    <!-- __s145_blog_v544-attestation-receipt_post_v1__ __s145_web_v5_44_0__ -->
    <div class="post-full" id="post-v544-attestation-receipt">
       <button class="post-back" onclick="showList()">&larr; All posts</button>
