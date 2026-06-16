@@ -167,3 +167,38 @@ it re-checks the invariant itself.
   codegen byte-identity, not the trace/runtime path.
 - Adding a future provider_token_integrity tier is an APPEND to the Literal and
   is parse-compatible; renaming or removing a value is forbidden.
+
+## 9. Attestation-receipt verification (S145) -- tee_attested becomes emittable
+
+This section supersedes the RESERVED status of `tee_attested` recorded in
+section 4.2. The value is now emittable and offline-verifiable; the vocabulary
+itself is unchanged (append-only honored).
+
+What makes `provider_token_integrity = "tee_attested"` valid is an offline-
+verifiable, provider-signed inference receipt pinned -- via a NOUS-signed
+Attestation Pinning Record (APR) -- to a specific enclave measurement running in
+genuine TEE hardware. The full reference (APR schema, receipt schema, the exact
+signed-payload bytes, the verify rule, the CLI, and the operator key ceremony)
+lives in `docs/ATTESTATION_RECEIPT.md`.
+
+Vocabulary and serialization impact:
+
+- No new value is added to any Literal. `tee_attested` was already reserved in
+  S144; S145 only supplies the verifier that lets it be claimed.
+- Receipts attach as a new optional `inference_receipts` field on the trace,
+  dropped when None, so every pre-S145 trace stays byte-identical and its
+  signature still verifies.
+- A new `scheme` discriminator (`pinned_tee_key_v1`, append-only) is shared by
+  the APR and the receipt and is cross-checked; future vendor schemes are
+  appended, never repurposed (no silent merge across discriminators).
+
+Trust-link closure (the three-link chain of section 3):
+
+- Link 1 (verifier-to-trace): proven, unchanged.
+- Link 2 (trace-to-runtime): assumed, signed against issuer tampering, unchanged.
+- Link 3 (runtime-to-provider): CLOSED for the TEE case by the receipt; left
+  open and declared (`unattested`) for first-party unsigned-usage providers.
+
+S145 ships the mechanism seeded with a TEST key only. `tee_attested` is
+production-meaningful only after a real hardware attestation ceremony issues a
+non-test APR; `--require-attestation` strict mode refuses test pins.

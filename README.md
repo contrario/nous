@@ -265,6 +265,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 - [Gated Actions](docs/GATED_ACTIONS.md) -- declare which actions require an approver attestation via `law gated(<action>)`; the gated set is signed-source-derived and tamper-evident, the completeness counterpart to conformance obligation #5  <!-- __s141_gated_actions_readme_v1__ -->
 - [Witnessed-Run Evidence](docs/WITNESSED_RUN_EVIDENCE.md) -- the second evidence type: a signed realized-run trace with explicit stratified-trust declaration (evidence_kind/cost_binding/provider_token_integrity) and the three-link trust chain  <!-- __s144_u6_docs_v1__ -->
 - [Stratified Trust Design](docs/STRATIFIED_TRUST_DESIGN.md) -- frozen trust vocabulary and serialization contract (the cryptographic interface)
+- [Attestation Receipt](docs/ATTESTATION_RECEIPT.md) -- close trust link 3 for the TEE case: an offline-verifiable provider-signed inference receipt pinned via a NOUS-signed Attestation Pinning Record (APR), making provider_token_integrity=tee_attested emittable and --require-attestation meaningful  <!-- __s145_u6_attest_readme_xref_v1__ -->
 
 ## Contributing
 
