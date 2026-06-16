@@ -97,7 +97,7 @@ class InferenceReceipt(BaseModel):  # __s145_u2_inference_receipt_class_v1__
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
     receipt_schema_version: int = Field(default=RECEIPT_SCHEMA_VERSION)
-    scheme: Literal["pinned_tee_key_v1"]
+    scheme: Literal["pinned_tee_key_v1", "phala_response_sig_v1"]  # __s146_u2_scheme_v1__
     enclave_key_id: str = Field(min_length=1)
     event_index: int = Field(ge=0)
     model_id: str = Field(min_length=1)
@@ -107,6 +107,8 @@ class InferenceReceipt(BaseModel):  # __s145_u2_inference_receipt_class_v1__
     source_sha256: str = Field(min_length=64, max_length=64)
     signature: str = Field(min_length=1)
     quote: Optional[str] = Field(default=None)
+    vendor_request_sha256: Optional[str] = Field(default=None)  # __s146_u2_vendor_fields_v1__
+    vendor_response_body: Optional[str] = Field(default=None)
 
     @field_validator("measurement")
     @classmethod
@@ -161,6 +163,18 @@ class InferenceReceipt(BaseModel):  # __s145_u2_inference_receipt_class_v1__
         return json.dumps(
             payload, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
+
+
+def _s146_prune_vendor_receipt_fields(doc: dict[str, object]) -> None:  # __s146_u2_vendor_prune_fn_v1__
+    receipts = doc.get("inference_receipts")
+    if not isinstance(receipts, list):
+        return
+    for receipt in receipts:
+        if not isinstance(receipt, dict):
+            continue
+        for vendor_key in ("vendor_request_sha256", "vendor_response_body"):
+            if receipt.get(vendor_key) is None:
+                receipt.pop(vendor_key, None)
 
 
 class TraceEnvelope(BaseModel):
@@ -218,6 +232,7 @@ class TraceEnvelope(BaseModel):
         ):
             if doc.get(_tk) is None:
                 doc.pop(_tk, None)
+        _s146_prune_vendor_receipt_fields(doc)  # __s146_u2_canonical_prune_v1__
         return json.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -236,6 +251,7 @@ class TraceEnvelope(BaseModel):
         ):
             if doc.get(_tk) is None:
                 doc.pop(_tk, None)
+        _s146_prune_vendor_receipt_fields(doc)  # __s146_u2_persisted_prune_v1__
         return doc
 
 
