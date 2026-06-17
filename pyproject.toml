@@ -110,6 +110,7 @@ py-modules = [
     "ndec",  # __s147_u1_ndec_pyproject_v1__
     "cli_ndec",  # __s147_u3_cli_ndec_pyproject_v1__
     "verifier_registry",  # __s148_u1_verifier_registry_pyproject_v1__
+    "glm_manifest",  # __s150_u1_glm_manifest_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
