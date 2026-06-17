@@ -239,22 +239,47 @@ def cmd_anchor(args: argparse.Namespace) -> int:
         print("anchor: malformed registry: " + str(exc), file=sys.stderr)
         return 1
 
-    from rekor_anchor_v2 import anchor_manifest_to_rekor_v2
+    from rekor_anchor_v2 import (
+        REKOR_V2_DEFAULT_BASE_URL,
+        anchor_manifest_to_rekor_v2,
+    )
+    from rekor_verify_v2 import KNOWN_REKOR_V2_LOG_KEYS
 
-    base_url = None
+    base_url = REKOR_V2_DEFAULT_BASE_URL  # __s149_u1c_anchor_v2_assert_v1__
     if args.signing_config:
         from rekor_signing_config import resolve_rekor_endpoint_from_file
 
         endpoint = resolve_rekor_endpoint_from_file(
             Path(args.signing_config)
         )
+        if endpoint.major_api_version != 2:
+            print(
+                "anchor: resolved signing-config endpoint is API version "
+                + str(endpoint.major_api_version) + " (base_url="
+                + endpoint.base_url + "); the v2 anchor speaks only Rekor "
+                "v2, refusing to submit (fail closed)",
+                file=sys.stderr,
+            )
+            return 1
         base_url = endpoint.base_url
 
+    from urllib.parse import urlsplit
+
+    anchor_host = urlsplit(base_url).netloc or urlsplit(
+        "//" + base_url
+    ).netloc
+    if anchor_host not in KNOWN_REKOR_V2_LOG_KEYS:
+        print(
+            "anchor: target log " + repr(anchor_host) + " is not in the "
+            "pinned v2 verify allowlist (KNOWN_REKOR_V2_LOG_KEYS); "
+            "anchoring there would produce an anchor this install cannot "
+            "verify offline, refusing (fail closed)",
+            file=sys.stderr,
+        )
+        return 1
+
     try:
-        if base_url is not None:
-            v2 = anchor_manifest_to_rekor_v2(body, base_url=base_url)
-        else:
-            v2 = anchor_manifest_to_rekor_v2(body)
+        v2 = anchor_manifest_to_rekor_v2(body, base_url=base_url)
     except Exception as exc:  # noqa: BLE001
         print("anchor: rekor submission failed: " + str(exc), file=sys.stderr)
         return 1
