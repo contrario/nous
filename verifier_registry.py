@@ -62,7 +62,9 @@ from rekor_verify_v2 import (
 
 REGISTRY_SCHEMA: int = 1
 
-KNOWN_REGISTRY_PUBLIC_KEYS_B64: tuple[str, ...] = ()
+KNOWN_REGISTRY_PUBLIC_KEYS_B64: tuple[str, ...] = (
+    "cDpi1vlquPoXHKsWMowN01UQOigIZHSvmm9AkgzZlcQ=",  # __s149_u4_registry_pin_v1__
+)
 
 
 class RegistryError(ValueError):
