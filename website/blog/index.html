@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s151_blog_v550_authz_decision_card_v1__ __s151_web_v5_50_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v550-authorization-decision-surface');return false">
+      <div class="post-meta">
+        <span class="post-date">17 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.50.0 &mdash; The Authorization Decision Surface</div>
+      <div class="post-excerpt">A gated action in a signed run must carry an attestation that a named principal made a human-oversight decision. Until now that was approval-only; EU AI Act Article 14(4)(d) requires the power to disregard, override or reverse. v5.50.0 extends it to <code>approved</code> / <code>denied</code> / <code>overridden</code> with an asymmetric preimage: approvals keep the exact prior bytes (every existing trace byte-identical), refusals fold the verb into the signature so a decision cannot be replayed as another. A denial is oversight <em>exercised</em>, not a violation. Honest boundary: it evidences a decision was recorded and bound, not that it was correct or meaningful. <code>nous-lang 5.50.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s150_blog_v549_glm_signed_card_v1__ __s150_web_v5_49_0__ -->
     <a class="post-card" href="#" onclick="showPost('v549-signed-formation-manifest');return false">
       <div class="post-meta">
@@ -760,6 +770,19 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s151_blog_v550_authz_decision_post_v1__ __s151_web_v5_50_0__ -->
+   <div class="post-full" id="post-v550-authorization-decision-surface">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.50.0 &mdash; The Authorization Decision Surface</h1>
+      <div class="post-full-meta">17 June 2026 &middot; 4 min read</div>
+      <div class="post-full-body">
+        <p>A NOUS world declares <code>law gated(&lt;action&gt;)</code>. Every <code>gated_action</code> event in a signed run must carry an Ed25519 <code>AuthorizationAttestation</code> &mdash; a record that a named principal made a human-oversight decision about that exact action, bound to the exact decision (seq, action) and proof envelope. This is conformance obligation #5. Until now the attestation modelled one thing: an approval.</p>
+        <p>EU AI Act Article 14(4)(d) requires more. The persons to whom oversight is assigned must be able &ldquo;to decide, in any particular situation, not to use the system or to otherwise disregard, override or reverse the output&rdquo;. An approval-only record cannot evidence a refusal. v5.50.0 extends the attestation to the full decision surface: <code>approved</code>, <code>denied</code>, <code>overridden</code>.</p>
+        <p>The mechanism is an <strong>asymmetric, domain-separated preimage</strong>. For <code>approved</code> the signed preimage is byte-for-byte the prior (v1) bytes &mdash; no verb appended &mdash; so every attestation and every trace ever produced stays byte-identical and verifies unchanged. For a refusal the verb is folded into the signed preimage. The consequence is cryptographic: an approval cannot be relabelled a refusal, nor a refusal stripped to an approval, because the signature covers the verb in one case and its absence in the other. The decision field drops to its default in canonical serialization, so legacy traces are unaffected on the wire.</p>
+        <p>A <code>denied</code> or <code>overridden</code> decision <em>satisfies</em> obligation #5 when its signature is valid and bound. Oversight exercised is the system working as intended, not a conformance failure; a refusal is the strongest available evidence of non-rubber-stamping. The exception-and-escalation record auditors ask for is simply the non-approved subset of a signed run.</p>
+        <p><strong>Honest boundary.</strong> This <em>evidences</em> that a named principal recorded a decision bound to a specific action and envelope. It does <em>not</em> prove the decision was correct, that the principal had authority, or that the oversight was meaningful &mdash; no standard for &ldquo;meaningful&rdquo; oversight exists in the regulation or the literature, and a run of only sub-second approvals is consistent with rubber-stamping. What NOUS adds is a tamper-evident, offline-verifiable record &mdash; including refusals &mdash; so an auditor&rsquo;s own test runs on evidence they can verify rather than trust. Honoring a refusal at runtime is enforcement, a guard, and is explicitly out of scope: the trace records that a decision was made, not its downstream effect. &ldquo;Proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. A third party verifies the decision offline with <code>cryptography</code> and stdlib only. <code>nous-lang 5.50.0</code>.</p>
+      </div>
+   </div>
    <!-- __s150_blog_v549_glm_signed_post_v1__ __s150_web_v5_49_0__ -->
    <div class="post-full" id="post-v549-signed-formation-manifest">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>

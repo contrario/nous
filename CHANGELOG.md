@@ -11,6 +11,32 @@
   Removed / Fixed / Security.
 -->
 
+## [5.50.0] - 2026-06-17  <!-- __s151_changelog_v5_50_0_v1__ -->
+### Added
+- Authorization decision surface (approve/deny/override) on the gated-action
+  attestation, for EU AI Act Article 14(4)(d) human oversight (disregard/
+  override/reverse). `AuthorizationAttestation` gains a signed `decision`
+  verb; `conformance.sign_gated_decision()` signs it. An asymmetric preimage
+  keeps `approved` byte-identical to the prior (v1) approval path -- every
+  existing attestation and trace is unchanged -- and folds the verb into the
+  signed bytes for refusals, so an approval cannot be replayed as a refusal
+  nor a refusal stripped to an approval. `decision` drops to default in
+  canonical/persisted serialization, preserving byte-identity of legacy
+  traces. Conformance obligation #5 reads the verb; a valid signed decision
+  (approve or refuse) satisfies it -- a denial is oversight exercised, not a
+  violation. See `docs/AUTHORIZATION_RUNTIME.md`.
+### Changed
+- PYTEST_FLOOR 1792 -> 1817 (25 new authorization-decision teeth across the
+  decision-surface unit and the conformant-gated-run end-to-end unit).
+### Security
+- The decision verb is cryptographically bound: a tampered decision label on
+  a gated_action attestation fails conformance obligation #5 in either
+  direction. Honest boundary: this evidences that a named principal recorded
+  a decision bound to (seq, action, proof envelope); it does NOT prove the
+  decision correct, the principal authorized, or the oversight meaningful,
+  and does not evidence whether a refusal was honored at runtime
+  (enforcement is a guard, out of scope).
+
 ## [5.47.0] - 2026-06-17  <!-- __s148_changelog_v5_47_0_v1__ -->
 ### Added
 - Verifier-digest registry (`verifier_registry.py`): a signed, optionally
