@@ -11,6 +11,35 @@
   Removed / Fixed / Security.
 -->
 
+## [5.47.0] - 2026-06-17  <!-- __s148_changelog_v5_47_0_v1__ -->
+### Added
+- Verifier-digest registry (`verifier_registry.py`): a signed, optionally
+  Rekor-v2-anchored static allowlist mapping each official
+  `VERIFY_OFFLINE_PY*` dossier-verifier template (by name and emitting NOUS
+  version) to its sha256, across versions. Two honest tiers: `signed`
+  (NOUS-authored cross-version allowlist) and `logged` (publicly logged,
+  append-only, via a hashedrekord inclusion proof and checkpoint over the same
+  canonical body). Composes `verify_rekor_v2_anchor`; no new Rekor crypto.
+- `nous ndec verify --registry PATH`: on a local canonical miss, a logged-tier
+  registry confirmation closes trusting-trust across NOUS versions and lets
+  `--strict-canonical` pass. Signed-tier alone does not satisfy
+  `--strict-canonical`. Default (no `--registry`, empty registry-key pin) is
+  byte-identical to prior behaviour.
+- `scripts/publish_verifier_registry.py` (operator ceremony, not wheel-shipped):
+  `build` serializes this install's local allowlist into the registry and signs
+  it with an operator-supplied Ed25519 key (never auto-generated), `--merge`
+  accretes across versions; `anchor` is the deferred live Rekor v2 step.
+- `docs/VERIFIER_DIGEST_REGISTRY.md`.
+### Security
+- The registry turns "monitors, not guards" on NOUS's own authority: at the
+  logged tier the set of digests NOUS declares official is publicly logged and
+  append-only, so a third party detects via a standard Rekor monitor if NOUS
+  ever blesses a digest it should not. Honest boundary: registry membership
+  evidences officially-published (and, at the logged tier, publicly-logged)
+  template provenance; it does not prove the verifier correct, the decision
+  correct, or compliance. No production registry signing key is pinned and no
+  live anchor ships; mechanism and conformance proven, publish deferred.
+
 ## [5.46.0] - 2026-06-17  <!-- __s147_changelog_v5_46_0_v1__ -->
 ### Added
 - `.ndec` portable proof-carrying decision attestation: wrap a signed
