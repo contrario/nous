@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s148_blog_v547_registry_card_v1__ __s148_web_v5_47_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v547-verifier-digest-registry');return false">
+      <div class="post-meta">
+        <span class="post-date">17 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.47.0 &mdash; An Allowlist You Can Audit</div>
+      <div class="post-excerpt">v5.46.0&rsquo;s <code>.ndec</code> confirms a carried verifier is an official NOUS template by exact-sha &mdash; but only against the local install&rsquo;s template set, so a <code>.ndec</code> from a different release degrades. v5.47.0 adds a verifier-digest registry: a signed, optionally Rekor-v2-anchored allowlist of official verifier-template digests across versions. On a local miss, a logged-tier registry confirmation &mdash; the allowlist present in a public, append-only Sigstore log, re-verified offline &mdash; closes trusting-trust across versions. NOUS stops asking you to trust its allowlist and publishes it, so a standard Rekor monitor catches NOUS if it ever blesses a digest it should not. Honest boundary: it evidences publicly-logged template provenance, not verifier or decision correctness; the publish ceremony is deferred. <code>nous-lang 5.47.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s147_blog_v546_ndec_card_v1__ __s147_web_v5_46_0__ -->
     <a class="post-card" href="#" onclick="showPost('v546-ndec-portable-decision');return false">
       <div class="post-meta">
@@ -730,6 +740,19 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s148_blog_v547_registry_post_v1__ __s148_web_v5_47_0__ -->
+   <div class="post-full" id="post-v547-verifier-digest-registry">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.47.0 &mdash; An Allowlist You Can Audit</h1>
+      <div class="post-full-meta">17 June 2026 &middot; 5 min read</div>
+      <div class="post-full-body">
+        <p>v5.46.0 gave a NOUS decision a portable container, the <code>.ndec</code>, and closed a subtle gap: before trusting the verifier carried inside it, the installed <code>nous verify</code> confirms that <code>verify_offline.py</code> is an <em>unmodified official NOUS template</em> by exact-sha. That confirmation is computed against the templates of the install doing the checking. So a perfectly legitimate <code>.ndec</code>, built by a different NOUS release whose verifier bytes differ, misses the local set and degrades to signature-pinned &mdash; and <code>--strict-canonical</code> refuses it. The closure was real but version-bound.</p>
+        <p>v5.47.0 removes the version coupling with a <strong>verifier-digest registry</strong>: a signed, optionally Rekor-v2-anchored static file that maps each official <code>VERIFY_OFFLINE_PY*</code> template &mdash; by name and emitting NOUS version &mdash; to its sha256, across releases. On a local canonical miss, the installed verifier consults the registry; a confirmation there closes trusting-trust across versions without the carried verifier matching the locally installed template set.</p>
+        <p>There are two honest tiers. <em>Signed</em>: the registry&rsquo;s Ed25519 signature verifies against a pinned NOUS registry key &mdash; a NOUS-authored cross-version allowlist. <em>Logged</em>: the registry&rsquo;s canonical body is additionally present in a public, append-only Sigstore Rekor v2 transparency log, proven by a hashedrekord inclusion proof and a signed checkpoint, all re-verified offline against pinned log keys. <code>--strict-canonical</code> is satisfied by a registry confirmation only at the logged tier, because the public-log anchor is what makes the claim monitorable rather than a bare assertion. The composition reuses the existing Rekor v2 verifier verbatim &mdash; no new cryptography is introduced, and a third party still verifies with only <code>cryptography</code> and <code>z3</code>.</p>
+        <p>The reframing matters more than the mechanism. Today the allowlist asks a reviewer to trust that NOUS&rsquo;s published set of &ldquo;official&rdquo; digests is honest. The registry removes that ask: at the logged tier the set of digests NOUS declares official is itself publicly logged and append-only, so an Alpha Bank auditor runs a standard Rekor monitor and <em>detects</em> if NOUS ever blesses a digest it should not. It is &ldquo;monitors, not guards&rdquo; turned on NOUS&rsquo;s own authority &mdash; NOUS stops saying &ldquo;trust our allowlist&rdquo; and says &ldquo;here is our allowlist, publicly logged; catch us if we cheat.&rdquo;</p>
+        <p>The boundary, stated where it is used: registry membership <strong>evidences</strong> that a verifier digest is an officially-published and, at the logged tier, publicly-logged NOUS template. It does <strong>not</strong> prove the verifier is correct, the decision is correct, or that compliance is conferred &mdash; &ldquo;proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. The registry only ever upgrades a degrade into a confirmation; it never gates the base <code>.ndec</code> verdict. This release ships the mechanism, the offline build ceremony, and the conformance vectors; no production registry signing key is pinned and no live anchor is published yet &mdash; that is a deliberate operator ceremony, deferred, exactly as the attestation trust-root is.</p>
+      </div>
+   </div>
    <!-- __s147_blog_v546_ndec_post_v1__ __s147_web_v5_46_0__ -->
    <div class="post-full" id="post-v546-ndec-portable-decision">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
