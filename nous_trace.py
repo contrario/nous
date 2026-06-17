@@ -47,6 +47,9 @@ class AuthorizationAttestation(BaseModel):
     timestamp_utc: str = Field(min_length=1)
     public_key_b64: str = Field(min_length=1)
     signature_b64: str = Field(min_length=1)
+    decision: Literal["approved", "denied", "overridden"] = Field(  # __s151_u1_decision_field_v1__
+        default="approved"
+    )
 
 
 class TraceEvent(BaseModel):
@@ -177,6 +180,20 @@ def _s146_prune_vendor_receipt_fields(doc: dict[str, object]) -> None:  # __s146
                 receipt.pop(vendor_key, None)
 
 
+def _s151_prune_authorization_decision(doc: dict[str, object]) -> None:  # __s151_u1_decision_prune_fn_v1__
+    events = doc.get("events")
+    if not isinstance(events, list):
+        return
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        auth = event.get("authorization")
+        if not isinstance(auth, dict):
+            continue
+        if auth.get("decision") == "approved":
+            auth.pop("decision", None)
+
+
 class TraceEnvelope(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
 
@@ -233,6 +250,7 @@ class TraceEnvelope(BaseModel):
             if doc.get(_tk) is None:
                 doc.pop(_tk, None)
         _s146_prune_vendor_receipt_fields(doc)  # __s146_u2_canonical_prune_v1__
+        _s151_prune_authorization_decision(doc)  # __s151_u1_decision_canonical_prune_v1__
         return json.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -252,6 +270,7 @@ class TraceEnvelope(BaseModel):
             if doc.get(_tk) is None:
                 doc.pop(_tk, None)
         _s146_prune_vendor_receipt_fields(doc)  # __s146_u2_persisted_prune_v1__
+        _s151_prune_authorization_decision(doc)  # __s151_u1_decision_persisted_prune_v1__
         return doc
 
 

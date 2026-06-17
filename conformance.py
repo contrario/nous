@@ -176,6 +176,65 @@ def sign_gated_action(
     )
 
 
+_DECISION_VERBS = ("approved", "denied", "overridden")  # __s151_u1_decision_verbs_v1__
+
+
+def _attestation_preimage_v2(  # __s151_u1_attestation_preimage_v2__
+    smt_spec_sha256: str,
+    seq: int,
+    action: str,
+    principal_id: str,
+    decision: str,
+) -> bytes:
+    """S151 decision-surface preimage. For decision == 'approved' it returns
+    the EXACT S139/S141 v1 bytes (no verb), so every existing approval
+    attestation verifies unchanged and all prior traces stay byte-identical.
+    For 'denied'/'overridden' it folds the decision verb into the signed
+    preimage, so an approval cannot be replayed as a refusal nor a refusal
+    stripped to an approval. EVIDENCES that a named principal recorded this
+    exact decision bound to this exact (seq, action) and proof envelope; it
+    does NOT prove the decision correct, the principal authorized, or the
+    oversight meaningful, and it does not evidence whether a refusal was
+    honored at runtime (codegen/runtime unit)."""
+    if decision not in _DECISION_VERBS:
+        raise ValueError(
+            f"unknown authorization decision {decision!r}; "
+            f"expected one of {_DECISION_VERBS}"
+        )
+    base = _attestation_preimage(smt_spec_sha256, seq, action, principal_id)
+    if decision == "approved":
+        return base
+    return base + b"|" + decision.encode("utf-8")
+
+
+def sign_gated_decision(  # __s151_u1_sign_gated_decision__
+    private_key: Ed25519PrivateKey,
+    smt_spec_sha256: str,
+    seq: int,
+    action: str,
+    principal_id: str,
+    timestamp_utc: str,
+    decision: str = "approved",
+) -> AuthorizationAttestation:
+    """Issuer-side approver signer for the full Article 14(4)(d) decision
+    surface (approve / disregard-override-reverse). Signs the v2 preimage and
+    records the decision verb. 'approved' is byte-identical to
+    sign_gated_action (the v1 approval path)."""
+    pre = _attestation_preimage_v2(
+        smt_spec_sha256, seq, action, principal_id, decision
+    )
+    raw_sig = private_key.sign(pre)
+    pub_raw = private_key.public_key().public_bytes_raw()
+    return AuthorizationAttestation(
+        principal_id=principal_id,
+        approved_seq=seq,
+        timestamp_utc=timestamp_utc,
+        public_key_b64=base64.b64encode(pub_raw).decode("ascii"),
+        signature_b64=base64.b64encode(raw_sig).decode("ascii"),
+        decision=decision,
+    )
+
+
 def _check_sequence_obligations(  # __phase2_stage5_seq_conformance_v1__
     trace: TraceEnvelope,
     spec: "SMTSpec",
@@ -476,8 +535,12 @@ def verify_conformance(
                 f"authorization: gated event seq={ev.seq} has no action label"
             )
             continue
-        payload = _attestation_preimage(  # __s139_u1_attestation_preimage__
-            trace.smt_spec_sha256, ev.seq, ev.action, auth.principal_id
+        payload = _attestation_preimage_v2(  # __s151_u1_obligation5_decision_v1__
+            trace.smt_spec_sha256,
+            ev.seq,
+            ev.action,
+            auth.principal_id,
+            auth.decision,
         )
         try:
             pub = Ed25519PublicKey.from_public_bytes(
