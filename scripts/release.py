@@ -249,6 +249,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "keccak_lite.py",  # __s146_u1_keccak_lite_wheelgate_v1__
                                 "ndec.py",  # __s147_u1_ndec_wheelgate_v1__
                                 "cli_ndec.py",  # __s147_u3_cli_ndec_wheelgate_v1__
+                                "verifier_registry.py",  # __s148_u1_verifier_registry_wheelgate_v1__
                                 "compiled_trace.py",
                                 "trace_anchor.py",
                                 "memory_entry.py",
