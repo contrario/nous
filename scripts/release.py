@@ -251,6 +251,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "cli_ndec.py",  # __s147_u3_cli_ndec_wheelgate_v1__
                                 "verifier_registry.py",  # __s148_u1_verifier_registry_wheelgate_v1__
                                 "glm_manifest.py",  # __s150_u1_glm_manifest_wheelgate_v1__
+                                "decision_ledger.py",  # __s152_u1_decision_ledger_wheelgate_v1__
                                 "compiled_trace.py",
                                 "trace_anchor.py",
                                 "memory_entry.py",
