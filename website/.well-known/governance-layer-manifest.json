@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.1",
+  "manifest_version": "1.0",
+  "generated_at": "2026-06-17T00:00:00Z",
+  "valid_from": "2026-06-17",
+  "supersedes": "https://nous-lang.org/governance/glm-archive/governance-layer-manifest-5.37.0.json",
+  "supersedes_digest": "c72fb0eb184f9531e50464198fb1b1666ffc4c1ee3033de4147c52bb457dcb23",
+  "definitions": {
+    "formation_proof_object": "A sealed, independently verifiable artifact establishing that declared conditions must hold across every execution path derivable from a specific source artifact, formed before any execution exists. It establishes that conditions must hold; it does not record that conditions held during any specific execution.",
+    "externally_verifiable_artifact": "An artifact structured so that an independent party -- with access only to the artifact itself and publicly declared anchors -- can verify its integrity and interpret its declared content without requiring access to the originating system, its operators, its runtime context, or the producer's explanation. Verification conditions are declared in public_anchors."
+  },
+  "controlling_test": "Interoperability must increase reviewability without silently transferring authority across layers.",
+  "layer": {
+    "layer_type": "formation",
+    "vendor_layer_name": "NOUS",
+    "vendor_layer_full_name": "NOUS Formation Proof Layer",
+    "vendor_layer_descriptor": "Pre-execution formation proof"
+  },
+  "owner": {
+    "name": "Hlias Staurou",
+    "organization": "NOUS",
+    "contact": "support@nous-lang.org",
+    "url": "https://nous-lang.org",
+    "version": "5.49.0",
+    "status": "active"
+  },
+  "timing_axis": {
+    "position": "pre-bind",
+    "description": "Operates before any execution bind exists. The temporal anchor is the source artifact, not a bind event: the proof is formed when the system is formed and holds for every execution path derivable from that source. It exists prior to and independent of any specific execution instantiation. Does not operate at bind or post-bind, and does not attach to any individual execution."
+  },
+  "operational_scope": {
+    "does": [
+      "Seals formation-time proofs over a source artifact into a signed manifest: a cost ceiling, ordering laws, and cardinality bounds, each established by an SMT solver before any execution exists",
+      "Carries a self-contained offline verifier so a third party verifies the seal and the bound claims with a cryptography library and a standard runtime only, with no solver and no vendor software in the verification path",
+      "Where a coverage claim is bound, carries an algebraic certificate the verifier re-derives and checks by rational arithmetic, solver-free on the consumer side",
+      "Binds each new proof to its predecessor by signed digest and walks the chain to genesis under fail-closed conditions, discharging coverage, region containment, and net containment through one re-derivable certificate mechanism",
+      "Emits per-run conformance certificates that check an execution trace against the formation envelope as separate artifacts, bound to the formation proof by digest reference and never folded into it"
+    ],
+    "does_not": [
+      "Resolve admissibility at bind -- that is the boundary layer function",
+      "Preserve evidence of governed-state conditions surrounding a boundary crossing -- that is the witness layer function",
+      "Record behavioral history -- that is the substrate layer function",
+      "Stabilize responsibility-bearing closure states -- that is the closure layer function",
+      "Test artifacts of other layers for independent reviewability -- that is the reviewability layer function",
+      "Enforce, authorize, halt, or intervene in execution",
+      "Attest the behavior of any specific execution",
+      "Certify that the system is safe or compliant with any regulation",
+      "Validate the adequacy of the declared conditions themselves -- the proof establishes consequence from declarations, not the merit of the declarations"
+    ]
+  },
+  "claims_boundary": {
+    "authoritative_layer_claim": "Formation establishes, before any execution exists, that declared conditions must hold across every execution path derivable from a specific source artifact, sealed as an independently verifiable proof object.",
+    "explicit_non_claims": [
+      "Does not determine admissibility",
+      "Does not attest any specific execution",
+      "Does not certify regulatory compliance",
+      "Does not certify overall system safety",
+      "Does not validate the adequacy of declared conditions",
+      "Does not hold or transfer execution authority"
+    ],
+    "consumer_boundary_constraint": "Consumers must not interpret formation outputs as execution authorization, runtime approval, execution-conformance attestation, certification of regulatory compliance, or certification of system safety. A proof that declared conditions must hold across all execution paths must not be re-interpreted as evidence that any particular execution occurred or conformed.",
+    "forbidden_interpretations": [
+      "execution_authorization",
+      "runtime_approval",
+      "authority_transfer",
+      "execution_conformance_attestation",
+      "occurrence_attestation",
+      "compliance_certification",
+      "safety_certification"
+    ]
+  },
+  "interoperability_doctrine": "GLM does not create interoperability through integration agreements. GLM creates interoperability through independently readable boundary declarations.",
+  "composition": {
+    "composable_with_types": [
+      "substrate",
+      "witness",
+      "boundary",
+      "closure",
+      "reviewability"
+    ],
+    "composable_with_manifests": [
+      "https://www.certifywebcontent.com/.well-known/governance-layer-manifest.json"
+    ],
+    "composition_note": "Formation composes with each functional type by function, per the accepted rationale Section 8. A boundary layer is the principal downstream consumer: a formation proof is one admissibility condition resolved at bind, never the admissibility resolution itself. Composability declarations are unilateral; this manifest declares the EVIDE closure manifest, which declares formation reciprocally."
+  },
+  "public_anchors": [
+    {
+      "label": "GLM specification (formation accepted, schema 1.1, carries rationale digest)",
+      "url": "https://www.certifywebcontent.com/supervised-ai/governance-layer-manifest/"
+    },
+    {
+      "label": "Accepted formation layer_type rationale (PDF)",
+      "url": "https://nous-lang.org/docs/GLM_formation_layer_type_rationale.pdf",
+      "sha256": "fad8c5a839f601893114b9072f5bedb96d01837bb844c9635339db321d7404bd"
+    },
+    {
+      "label": "NOUS",
+      "url": "https://nous-lang.org"
+    },
+    {
+      "label": "Source repository (reference implementation, Section 9)",
+      "url": "https://github.com/contrario/nous"
+    },
+    {
+      "label": "PyPI (nous-lang)",
+      "url": "https://pypi.org/project/nous-lang/"
+    },
+    {
+      "label": "Public verify surface (NOUS IDE)",
+      "url": "https://nous-lang.org/ide.html"
+    }
+  ],
+  "machine_readable_status": {
+    "boundary_readiness": "stable",
+    "boundary_readiness_note": "Values: stable | provisional | experimental. Stable indicates the layer definition and schema are versioned, publicly documented, and not subject to undeclared breaking changes.",
+    "reviewability_state": "portable",
+    "reviewability_state_note": "Values: portable | partial | environment_dependent. Portable indicates artifacts are independently verifiable without access to the originating system.",
+    "authority_dependency": "external_to_execution_system",
+    "authority_dependency_note": "Authority over the adequacy of the declared conditions rests with the source author, not with the formation layer. The proof establishes consequence from the declarations; it does not validate their merit, and it holds no execution authority.",
+    "execution_capability": false
+  },
+  "manifest_integrity": {
+    "versioned": true,
+    "hashable": true,
+    "historically_anchored": true,
+    "historically_anchored_note": "Anchoring refers to the practice of archiving each published version with its computed digest at the time of publication, enabling independent reconstruction of the version history. The specific anchoring mechanism is left to the implementor in v1.0 and may be specified in future schema revisions.",
+    "note": "This manifest is versioned, hashable, and historically anchored. It may be updated and superseded. Each published version should be independently archived with its digest at publication time."
+  },
+  "glm_compatibility": {
+    "schema_family": "GLM",
+    "minimum_supported": "1.1",
+    "forward_compatible_until": "1.x",
+    "breaking_change_policy": "major version increment required",
+    "non_breaking_addition_policy": "minor version increment, backward compatible within major version",
+    "note": "This manifest declares layer_type formation, introduced in schema 1.1. A reader limited to schema 1.0 cannot interpret the formation type; minimum_supported is therefore 1.1, not 1.0."
+  },
+  "manifest_digest": {
+    "type": "sha256",
+    "value": "b73a0e2fed0c256ff1d4f231a6de25803024407b4e69253f2d0bccb75e3cdcc4",
+    "canonicalization_method": "SHA-256 over the manifest text as served with manifest_digest.value set to the placeholder string <computed-at-publish-time> and, when a signature is present, manifest_signature.value set to the placeholder string <signed-at-publish-time>, during computation. A verifier reverses both substitutions on the served bytes and recomputes.",
+    "note": "SHA-256 digest of the canonical JSON at publication time. Verifies content integrity. Distinct from a cryptographic signature."
+  },
+  "manifest_signature": {
+    "type": "ed25519",
+    "value": "nFuE3N253YfVFoVrQgGUShb+DX72Eu239+luqhoP4vBEi87vZ0C++5gxX5tfumyLuxtPYzqE4el9wShorj9iCw==",
+    "planned_extensions": [
+      "Ed25519"
+    ],
+    "note": "Ed25519 signature over the 32-byte manifest digest, binding the digest to the signer identity in public_key (raw key, base64). Independently checkable with a cryptography library and a standard runtime only. The digest verifies content integrity; this signature verifies authorship. It does not prove any claim in this manifest.",
+    "public_key": "lC/9LQHWjregBHiEklWdr/Bo0lTJZjAE/IwTf2Mbg1A="
+  },
+  "schema_reference": {
+    "provisional_reference": "https://www.certifywebcontent.com/supervised-ai/governance-layer-manifest/",
+    "note": "Canonical schema location to be determined. This provisional reference will be updated when a vendor-neutral hosting location is formally established."
+  }
+}
