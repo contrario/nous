@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s152_blog_v551_decision_ledger_card_v1__ __s152_web_v5_51_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v551-decision-ledger');return false">
+      <div class="post-meta">
+        <span class="post-date">17 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.51.0 &mdash; The Decision Ledger</div>
+      <div class="post-excerpt">v5.50.0 made the human-oversight decision a signed, verb-bound record. v5.51.0 makes it readable. <code>nous governance ledger &lt;trace.json&gt;</code> walks a signed trace and prints the decision distribution &mdash; approvals, denials, overrides, distinct principals, time spread &mdash; so an auditor&rsquo;s own rubber-stamping test runs on data, not trust. Honest boundary: it is a presentation view, not a verifier. It does not re-verify signatures, prove a decision correct or authorized, score meaningfulness, or gate a verdict; run <code>nous verify</code> for the cryptographic proof. <code>nous-lang 5.51.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s151_blog_v550_authz_decision_card_v1__ __s151_web_v5_50_0__ -->
     <a class="post-card" href="#" onclick="showPost('v550-authorization-decision-surface');return false">
       <div class="post-meta">
@@ -770,6 +780,18 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s152_blog_v551_decision_ledger_post_v1__ __s152_web_v5_51_0__ -->
+   <div class="post-full" id="post-v551-decision-ledger">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.51.0 &mdash; The Decision Ledger</h1>
+      <div class="post-full-meta">17 June 2026 &middot; 3 min read</div>
+      <div class="post-full-body">
+        <p>v5.50.0 turned the human-oversight decision into a signed, verb-bound record: every <code>gated_action</code> in a trace carries an Ed25519 attestation that a named principal <code>approved</code>, <code>denied</code> or <code>overrode</code> that exact action, bound to its (seq, action, proof envelope). The evidence existed. What was missing was a way to <em>read</em> it.</p>
+        <p>v5.51.0 adds the decision ledger. <code>nous governance ledger &lt;trace.json&gt;</code> walks a signed trace and prints the recorded decision distribution: how many approvals, denials and overrides; how many distinct principals decided; the diversity ratio; and the time spread from the earliest to the latest decision. <code>--format json</code> emits the same as a structured report for downstream tooling.</p>
+        <p>The point is the <em>shape</em>. An auditor of an Article 14 human-oversight regime keeps asking one question: what did the oversight actually look like over this run? A trace of forty sub-second approvals by a single account looks nothing like one with refusals and overrides spread across several principals and several hours. Both are conformant &mdash; a denial is oversight exercised, not a violation &mdash; but they tell very different stories, and the regulator&rsquo;s concern is precisely the rubber-stamping the first pattern suggests. The ledger surfaces that distribution so the auditor&rsquo;s own test runs on a record they can verify rather than on assurances.</p>
+        <p><strong>Honest boundary.</strong> The ledger is a <em>presentation</em> view, not a verifier. It does <em>not</em> re-verify signatures &mdash; that is the job of <code>nous verify</code> and the conformance path, which prove each decision verb is cryptographically bound to its exact action and envelope. It does <em>not</em> prove a decision was correct, that the principal had authority, or that the oversight was meaningful: no machine-checkable standard for &ldquo;meaningful&rdquo; oversight exists. It does <em>not</em> prove a refusal was honored at runtime &mdash; enforcement is a guard, out of scope. And it never gates a verdict; it reads and presents, admitting nothing and rejecting nothing. &ldquo;Proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. The module is <code>pydantic</code> plus the standard library; no codegen or runtime change; a third party still verifies everything offline with <code>cryptography</code> and stdlib only. <code>nous-lang 5.51.0</code>.</p>
+      </div>
+   </div>
    <!-- __s151_blog_v550_authz_decision_post_v1__ __s151_web_v5_50_0__ -->
    <div class="post-full" id="post-v550-authorization-decision-surface">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>

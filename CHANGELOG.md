@@ -11,6 +11,27 @@
   Removed / Fixed / Security.
 -->
 
+## [5.51.0] - 2026-06-17  <!-- __s152_changelog_v5_51_0_v1__ -->
+### Added
+- Decision-ledger presentation view (`decision_ledger.py`, stdlib +
+  pydantic): tallies a signed trace's recorded authorization decisions
+  (approved/denied/overridden distribution, distinct-principal diversity,
+  timestamp span, per-action breakdown) for an auditor's own
+  rubber-stamping review.
+- `nous governance ledger <trace.json>` CLI view (text and `--format
+  json`); a sub-command of `governance`, adds no top-level CLI command
+  (cli_commands stays 55).
+- docs/DECISION_LEDGER.md reference.
+### Notes
+- Presentation only: the ledger does NOT verify signatures, prove any
+  decision correct or authorized, score oversight meaningfulness (no such
+  standard exists -- Green 2021), or gate a verdict. Run `nous verify` for
+  the cryptographic proof that each decision is bound to its exact (seq,
+  action, proof envelope). A denial/override is oversight exercised, not a
+  violation.
+- No codegen/runtime change; offline-verify property (cryptography + z3 +
+  stdlib) intact.
+
 ## [5.50.0] - 2026-06-17  <!-- __s151_changelog_v5_50_0_v1__ -->
 ### Added
 - Authorization decision surface (approve/deny/override) on the gated-action
