@@ -20,7 +20,9 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 GLM_DIGEST_PLACEHOLDER = "<computed-at-publish-time>"
 GLM_SIGNATURE_PLACEHOLDER = "<signed-at-publish-time>"
 
-KNOWN_GLM_MANIFEST_PUBLIC_KEYS_B64: tuple[str, ...] = ()
+KNOWN_GLM_MANIFEST_PUBLIC_KEYS_B64: tuple[str, ...] = (
+    "lC/9LQHWjregBHiEklWdr/Bo0lTJZjAE/IwTf2Mbg1A=",  # __s150_u2_glm_pin_v1__
+)
 
 
 class GlmManifestError(ValueError):
