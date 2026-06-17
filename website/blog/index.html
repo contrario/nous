@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s150_blog_v549_glm_signed_card_v1__ __s150_web_v5_49_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v549-signed-formation-manifest');return false">
+      <div class="post-meta">
+        <span class="post-date">17 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.49.0 &mdash; A Signed Formation Manifest</div>
+      <div class="post-excerpt">The public governance-layer-manifest was content-hashed only; v5.49.0 signs it. An operator Ed25519 key signs the manifest digest, anchored to Sigstore Rekor v2 (<code>log2025-1</code>, log_index 5168829) and re-verified offline before the key is pinned. It stays at the <em>flat</em> <code>/.well-known/governance-layer-manifest.json</code> &mdash; RFC 8615 and the GLM interop contract require the symmetric path for cross-manifest discovery. The v5.37.0 predecessor is archived and chained; served artifact and Rekor sidecar are mirrored in-repo. Honest boundary: it evidences authorship and public logging, not any manifest claim or verifier correctness, and never gates verification. <code>nous-lang 5.49.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s149_blog_v548_published_card_v1__ __s149_web_v5_48_0__ -->
     <a class="post-card" href="#" onclick="showPost('v548-registry-published');return false">
       <div class="post-meta">
@@ -750,6 +760,19 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s150_blog_v549_glm_signed_post_v1__ __s150_web_v5_49_0__ -->
+   <div class="post-full" id="post-v549-signed-formation-manifest">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.49.0 &mdash; A Signed Formation Manifest</h1>
+      <div class="post-full-meta">17 June 2026 &middot; 4 min read</div>
+      <div class="post-full-body">
+        <p>NOUS publishes a <strong>governance-layer-manifest</strong> (GLM) at the well-known path: a formation-layer declaration of what the system establishes before any execution exists, with an explicit non-claims boundary. Until now that manifest carried a content digest only &mdash; it verified integrity, not authorship. v5.49.0 adds an Ed25519 <code>manifest_signature</code>, the extension the manifest itself had declared as planned.</p>
+        <p>The signing reuses the ceremony class introduced for the verifier-digest registry: an operator-supplied Ed25519 key, never auto-generated, kept out of the repo. The canonicalization is the manifest&rsquo;s own declared method extended to two placeholders &mdash; the digest value and the signature value are each replaced by a fixed placeholder before hashing, so the signed bytes are reconstructible by any verifier from the served file alone, with no re-serialization. The signature covers the 32-byte manifest digest, binding it to the signer key embedded in the manifest.</p>
+        <p>The signed canonical body was anchored to Sigstore&rsquo;s production Rekor v2 log <code>log2025-1</code> at <code>log_index 5168829</code>, carried in a sidecar beside the manifest. Before the manifest key was pinned into the installed verifier, the logged manifest was re-verified <em>offline</em>: digest recompute, Ed25519 signature against the operator key, and the Rekor inclusion proof and checkpoint against the pinned Sigstore log keys &mdash; using only <code>cryptography</code> and stdlib.</p>
+        <p>One deliberate decision: the manifest stays at the <em>flat</em> <code>/.well-known/governance-layer-manifest.json</code>. RFC 8615 roots well-known resources at the top of the path hierarchy, and the GLM interoperability doctrine discovers composing manifests at the symmetric well-known path. Moving the manifest under a vendor subpath would have broken cross-manifest discovery and violated the manifest&rsquo;s own controlling test &mdash; interoperability must increase reviewability, not silently reduce it. The v5.37.0 predecessor is archived at an immutable URL and chained by <code>supersedes_digest</code>; the served manifest and its Rekor sidecar are now mirrored in the repository, closing the last served-but-unaudited surface.</p>
+        <p><strong>Honest boundary.</strong> The signature <em>evidences</em> authorship of the manifest; the anchor <em>evidences</em> that the manifest was publicly logged. Neither proves any claim the manifest makes, nor that the formation proofs are correct, nor compliance with any regulation. The signature and anchor never gate the manifest&rsquo;s content or any <code>.ndec</code> verdict. A third party fetches the manifest once and verifies authorship, integrity, and public inclusion offline, with <code>cryptography</code> and stdlib only. <code>nous-lang 5.49.0</code>.</p>
+      </div>
+   </div>
    <!-- __s149_blog_v548_published_post_v1__ __s149_web_v5_48_0__ -->
    <div class="post-full" id="post-v548-registry-published">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
