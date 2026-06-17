@@ -1446,8 +1446,18 @@ def cmd_governance(args: Any) -> int:
         strict = getattr(args, "strict", False)
         error_on = getattr(args, "error_on", None)
         return lint_cli(args.source, output_format=fmt, strict=strict, error_on=error_on)
+    # __s152_u2_gov_ledger_dispatch_v1__
+    elif sub == "ledger":
+        from decision_ledger import build_ledger_from_path, render_text
+        fmt = getattr(args, "format", "text")
+        report = build_ledger_from_path(args.trace)
+        if fmt == "json":
+            print(report.model_dump_json(indent=2))
+        else:
+            print(render_text(report))
+        return 0
     else:
-        print("Usage: nous governance {policies|inspect|stats|lint}")
+        print("Usage: nous governance {policies|inspect|stats|lint|ledger}")
         return 1
 
 
@@ -1868,6 +1878,17 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
         default=None,
         metavar="CODES",
         help="Comma-separated rule codes to elevate to error (e.g. L010,L007)",
+    )
+
+    # __s152_u2_gov_ledger_subparser_v1__
+    p_gov_ledger = gov_sub.add_parser(
+        "ledger",
+        help="Decision-ledger view of a signed trace (presentation only)",
+    )
+    p_gov_ledger.add_argument("trace", help="Path to signed trace JSON")
+    p_gov_ledger.add_argument(
+        "--format", default="text", choices=["text", "json"],
+        help="Output format",
     )
 
     # __templates_subparser_v1__
