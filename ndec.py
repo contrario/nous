@@ -400,7 +400,39 @@ def build_ndec(
 
 
 # __s147_u3_verify_file_v1__
-def verify_ndec_file(ndec_path, *, public_key=None, strict_canonical: bool = False) -> int:  # __s147_u4_strict_param_v1__
+def _try_registry_confirm(registry_path, carried_vsha):  # __s148_u2_registry_helper_v1__
+    import sys  # __s148_u2_hotfix_sys_v1__
+    if registry_path is None:
+        return None
+    try:
+        import verifier_registry
+    except ImportError:
+        return None
+    try:
+        reg = json.loads(Path(registry_path).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        print(
+            "NOTE verifier-digest registry could not be read (" + str(exc)
+            + "); not consulted",
+            file=sys.stderr,
+        )
+        return None
+    conf = verifier_registry.confirm_digest(
+        reg,
+        carried_vsha,
+        trusted_registry_keys_b64=verifier_registry.KNOWN_REGISTRY_PUBLIC_KEYS_B64,
+        require_anchor=True,
+    )
+    if not conf.confirmed:
+        print(
+            "NOTE verifier-digest registry supplied but did not confirm the "
+            "carried verifier at logged tier: " + conf.reason,
+            file=sys.stderr,
+        )
+    return conf
+
+
+def verify_ndec_file(ndec_path, *, public_key=None, strict_canonical: bool = False, registry_path=None) -> int:  # __s147_u4_strict_param_v1__  # __s148_u2_registry_param_v1__
     """Installed trusted-path verification of a .ndec file.
 
     Envelope, subject binding, and artifact binding (including the carried
@@ -523,6 +555,7 @@ def verify_ndec_file(ndec_path, *, public_key=None, strict_canonical: bool = Fal
             print("verify: dossier/verify_offline.py missing", file=sys.stderr)
             return 1
         # __s147_u4_canonical_check_v1__
+        registry_conf = None  # __s148_u2_registry_conf_init_v1__
         carried_vsha = _file_sha256(verifier)
         canon = canonical_verifier_digests()
         canon_name = None
@@ -536,7 +569,18 @@ def verify_ndec_file(ndec_path, *, public_key=None, strict_canonical: bool = Fal
                 "template (" + canon_name + "); trusting-trust closed"
             )
         else:
-            if strict_canonical:
+            registry_conf = _try_registry_confirm(  # __s148_u2_registry_attempt_v1__
+                registry_path, carried_vsha
+            )
+            if registry_conf is not None and registry_conf.confirmed:
+                print(
+                    "OK   verify_offline.py confirmed via verifier-digest "
+                    "registry (" + str(registry_conf.template_name) + "@"
+                    + str(registry_conf.nous_version) + ", tier="
+                    + str(registry_conf.tier) + "); publicly logged, "
+                    "append-only -- trusting-trust closed across versions"
+                )
+            elif strict_canonical:
                 print(
                     "verify: carried verify_offline.py is not in this "
                     "installed version's canonical verifier set and "
@@ -544,13 +588,14 @@ def verify_ndec_file(ndec_path, *, public_key=None, strict_canonical: bool = Fal
                     file=sys.stderr,
                 )
                 return 1
-            print(
-                "NOTE verify_offline.py is NOT in this installed "
-                "version's canonical verifier set (different NOUS "
-                "version or non-canonical); it remains bound by the "
-                "signed predicate, but trusting-trust is NOT closed -- "
-                "trust reduces to the signer key plus the pin"
-            )
+            else:
+                print(
+                    "NOTE verify_offline.py is NOT in this installed "
+                    "version's canonical verifier set (different NOUS "
+                    "version or non-canonical); it remains bound by the "
+                    "signed predicate, but trusting-trust is NOT closed -- "
+                    "trust reduces to the signer key plus the pin"
+                )
         try:
             proc = subprocess.run(
                 [sys.executable, str(verifier)],
@@ -587,12 +632,17 @@ def verify_ndec_file(ndec_path, *, public_key=None, strict_canonical: bool = Fal
         print("  proves:       cost envelope + coverage of declared net")
         print("  evidences:    provenance + issuer non-tampering")
         # __s147_u4_verifier_footer_v1__
-        print(
-            "  verifier:     " + (
-                "canonical:" + canon_name if canon_name
-                else "signature-pinned (not confirmed canonical)"
+        if canon_name:  # __s148_u2_footer_v1__
+            _vstate = "canonical:" + canon_name
+        elif registry_conf is not None and registry_conf.confirmed:
+            _vstate = (
+                "registry:" + str(registry_conf.tier) + ":"
+                + str(registry_conf.template_name) + "@"
+                + str(registry_conf.nous_version)
             )
-        )
+        else:
+            _vstate = "signature-pinned (not confirmed canonical)"
+        print("  verifier:     " + _vstate)
         print(
             "  not_claimed:  decision correctness, legal sufficiency, "
             "compliance"

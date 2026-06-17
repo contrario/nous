@@ -43,6 +43,12 @@ def build_ndec_parser(sub: argparse._SubParsersAction) -> None:
         help="Refuse unless the carried dossier verifier is a "
              "confirmed canonical NOUS template",
     )
+    v.add_argument(  # __s148_u2_registry_flag_v1__
+        "--registry", default=None,
+        help="Path to a signed verifier-digest registry; on a local "
+             "canonical miss, a logged-tier registry confirmation closes "
+             "trusting-trust across NOUS versions",
+    )
 
 
 def cmd_ndec(args: argparse.Namespace) -> int:
@@ -66,6 +72,7 @@ def cmd_ndec(args: argparse.Namespace) -> int:
         return ndec.verify_ndec_file(  # __s147_u4_strict_dispatch_v1__
             args.file,
             strict_canonical=getattr(args, "strict_canonical", False),
+            registry_path=getattr(args, "registry", None),  # __s148_u2_registry_dispatch_v1__
         )
     print("ndec: unknown action", file=sys.stderr)
     return 2
