@@ -132,6 +132,44 @@ without changing `smt_spec_sha256` and failing the binding check.
 
 ---
 
+## Legacy: `law RequireApproval = true` <!-- __s153_u4_legacy_requireapproval_doc_v1__ -->
+
+Before the first-class `gated(...)` surface existed, a policy could
+declare a bare world-level boolean `law RequireApproval = true`. This
+predates and is distinct from `law gated(<action>)`. It is retained for
+backward compatibility; it is not recommended for new policies.
+
+What it actually does today:
+
+- It parses as a generic boolean law (`LawBool`), not as an
+  authorization construct. There is no `RequireApproval` grammar
+  production; only `gated(<action>)` is first-class.
+- Codegen emits an inert module constant `LAW_REQUIREAPPROVAL = True`
+  via the generic per-law emit path (the same path that emits a
+  `LAW_<NAME>` constant for every boolean law). Nothing in the runtime
+  reads this constant. The live trading-approval path
+  (`trade_laws["require_approval"]` -> `TradeGuard(require_approval=...)`)
+  is independent of it.
+- It produces no conformance obligation. It is not in the signed gated
+  set, is not re-derived by the verifier, and contributes nothing to
+  obligation #5.
+
+`gated(<action>)` is the construct to use instead, but it is NOT a
+drop-in replacement -- the two have different shapes. `RequireApproval`
+is a single bare world-level flag carrying no action binding;
+`gated(<action>)` is per-action, requires an `events { ... }` block
+declaring the action label, and binds that action into the signed
+source the verifier re-derives. Migrating means naming the specific
+actions that require approval and declaring them, not flipping a global
+boolean.
+
+**Honest boundary.** This note documents a legacy/first-class
+distinction. It does not assert equivalence between `RequireApproval`
+and `gated(...)`, and the legacy boolean remains valid NOUS source
+(it compiles; it simply carries no authorization semantics).
+
+---
+
 ## See also
 
 - `docs/RUNTIME_CONFORMANCE.md` -- the runtime conformance certificate and
