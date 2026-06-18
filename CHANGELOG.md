@@ -4,6 +4,30 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+## [5.52.0]  <!-- __s153_u2_6_changelog_v5_52_0__ -->
+
+### Added
+
+- Gated-action quorum threshold: `law gated(<action>, K)` requires K
+  distinct approving Ed25519 keys among an event's `authorization` and
+  `co_authorizations`. Threaded through grammar, AST (`LawGatedNode.quorum`),
+  parser, validator (`GA003`), `SMTSpec.gated_quorums` (K>1 folded into
+  `smt_spec_sha256`, tamper-evident), and conformance obligation #5
+  (`authorization_ok`). Multisig evidence model (K independent
+  standalone-verifiable signatures), not threshold signatures, so approver
+  identity is preserved. K = 1 is byte-identical to plain `law gated`.
+  General dual-control / segregation-of-duties primitive; Article 14(5)
+  four-eyes is one instance, not a general compliance claim.
+- `TraceEvent.co_authorizations` carrier for quorum co-approvers
+  (`Optional[list]`, drop-when-None, byte-identical for existing traces).
+
+### Changed
+
+- `docs/GATED_ACTIONS.md`: new Quorum section. Legacy
+  `law RequireApproval = true` documented as deprecated vs first-class
+  `gated(...)`.
+
+
 <!--
   Add bullets here under the headings below as work lands on `main`
   between releases, then promote into a versioned heading at release.
