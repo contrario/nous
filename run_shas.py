@@ -110,3 +110,36 @@ def compute_run_gated_actions(  # __s142_u3_gated_helper_v1__
         program, pricing, source_text=source_text, today=today
     )
     return tuple(spec.gated_actions)
+
+
+def compute_codegen_sha256(  # __s155_u2_codegen_digest_helper_v1__
+    source_text: str,
+) -> str:
+    """Return the SHA-256 of the generated Python for a NOUS source.
+
+    The digest binds a runtime trace to the SPECIFIC compiled program
+    that should have produced it: the fourth subject leg alongside
+    source_sha256 / smt_spec_sha256 / pricing_sha256. It is computed
+    over the exact bytes of generate_python(parse_nous(source_text)) --
+    the same artifact the run harness compiles and executes -- so the
+    producer's stamp and the verifier's re-derivation agree by
+    construction. The generated header carries no version string,
+    timestamp, or nonce, so the digest is a pure, deterministic
+    function of the source and the codegen logic; the 57-template
+    byte-identity regression harness pins that logic. Refuse over
+    guess on empty input.
+    """
+    if not isinstance(source_text, str) or not source_text:
+        raise RunShasError(
+            "source_text must be a non-empty string; an empty source "
+            "cannot produce a codegen_sha256"
+        )
+    import hashlib
+    from parser import parse_nous
+    from codegen import generate_python
+    try:
+        program = parse_nous(source_text)
+    except Exception as exc:
+        raise RunShasError(f"parse failed: {exc}") from exc
+    code = generate_python(program)
+    return hashlib.sha256(code.encode("utf-8")).hexdigest()
