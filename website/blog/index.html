@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s154_blog_v553_quorum_ledger_card_v1__ __s154_web_v5_53_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v553-quorum-ledger');return false">
+      <div class="post-meta">
+        <span class="post-date">18 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.53.0 &mdash; The Quorum, Read Per Action</div>
+      <div class="post-excerpt">The decision ledger now carries a per-gated-action quorum section: one row for <em>every</em> gated occurrence (no suppression of K=1 or single-approver rows), reporting <code>valid_distinct_approvers</code> &mdash; counted by the verifier&rsquo;s own rule (the same <code>count_distinct_approving_keys</code> conformance enforces). <code>--source &lt;file.nous&gt;</code> re-derives the spec to attach the declared K, but only when the re-derived <code>smt_spec_sha256</code> matches the trace; a mismatch refuses. Honest boundary: it counts distinct signing KEYS, not natural persons, and never emits a &ldquo;K met&rdquo; verdict. <code>nous-lang 5.53.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s153_blog_v552_dual_control_quorum_card_v1__ __s153_web_v5_52_0__ -->
     <a class="post-card" href="#" onclick="showPost('v552-dual-control-quorum');return false">
       <div class="post-meta">
@@ -790,6 +800,19 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s154_blog_v553_quorum_ledger_post_v1__ __s154_web_v5_53_0__ -->
+   <div class="post-full" id="post-v553-quorum-ledger">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.53.0 &mdash; The Quorum, Read Per Action</h1>
+      <div class="post-full-meta">18 June 2026 &middot; 3 min read</div>
+      <div class="post-full-body">
+        <p>Two prior releases set this up. v5.52.0 let a gated action require K <em>distinct</em> approvers; v5.51.0 made the recorded decision distribution readable as a ledger. But the ledger read only the primary <code>authorization</code> on each event &mdash; the quorum co-approvers, and the declared threshold K, were invisible in it. v5.53.0 joins the two.</p>
+        <p>The decision ledger now carries a per-gated-action quorum section. <code>nous governance ledger &lt;trace.json&gt;</code> emits one row for <em>every</em> <code>gated_action</code> event &mdash; deliberately with no suppression of K=1 or single-approver rows. Suppression would create doubt: an auditor cross-referencing the overall decision tally against a quorum breakdown with gaps cannot tell &ldquo;omitted because trivial&rdquo; from &ldquo;omitted because tampered.&rdquo; An unbroken row-per-occurrence ledger reconciles exactly.</p>
+        <p>Each row reports <code>valid_distinct_approvers</code>: the count of distinct Ed25519 public keys whose attestation &mdash; drawn from the event&rsquo;s <code>authorization</code> and its <code>co_authorizations</code> &mdash; verifies against the exact (seq, action, proof envelope), with <code>approved_seq == seq</code> and <code>decision == approved</code>. Critically, that is the <em>same</em> definition the verifier enforces: the ledger imports the very <code>count_distinct_approving_keys</code> helper that conformance obligation #5 uses, factored out for exactly this reuse. The presented count and the enforced count are one definition, never two &mdash; the false comfort of a ledger that counts &ldquo;approvers&rdquo; one way while <code>nous verify</code> counts them another is structurally impossible.</p>
+        <p>The declared threshold K is not carried in the trace &mdash; the trace carries only <code>smt_spec_sha256</code>, a hash. To show K, pass the source: <code>nous governance ledger trace.json --source program.nous</code> (with <code>--prices</code> / <code>--margin</code> when the proof used them). The source is re-derived to an SMT spec and K is attached <em>only</em> when <code>spec.sha256()</code> equals the trace&rsquo;s <code>smt_spec_sha256</code>. On any mismatch &mdash; or a parse, pricing, or emit failure, or a missing file &mdash; the command refuses with a non-zero exit and prints no ledger. Showing K from a non-matching spec is precisely the false comfort this view exists to defeat.</p>
+        <p><strong>Honest boundary.</strong> <code>valid_distinct_approvers</code> counts distinct signing <em>keys</em> &mdash; the cryptographic floor &mdash; never natural persons; distinct-person is unprovable, since one person may hold several keys. &ldquo;K met&rdquo; is a verdict and is <em>not</em> emitted: the ledger presents the count, it does not adjudicate. The quorum section verifies the specific attestations it counts, but it does not re-verify the trace signature or run a full conformance pass; run <code>nous verify</code> for the conformance verdict. &ldquo;Proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. A third party verifies offline with <code>cryptography</code> and <code>z3</code> only. <code>nous-lang 5.53.0</code>.</p>
+      </div>
+   </div>
    <!-- __s153_blog_v552_dual_control_quorum_post_v1__ __s153_web_v5_52_0__ -->
    <div class="post-full" id="post-v552-dual-control-quorum">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
