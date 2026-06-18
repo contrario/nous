@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s153_blog_v552_dual_control_quorum_card_v1__ __s153_web_v5_52_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v552-dual-control-quorum');return false">
+      <div class="post-meta">
+        <span class="post-date">18 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.52.0 &mdash; Dual-Control Quorum</div>
+      <div class="post-excerpt">A gated action can now require K <em>distinct</em> approvers, not one: <code>law gated(&lt;action&gt;, K)</code>. Conformance counts the distinct valid approving Ed25519 keys across an event&rsquo;s primary attestation and its co-approvers and requires at least K. Multisig, not threshold signatures &mdash; approver identity is preserved, which is the point of an audit trail. A general dual-control primitive; Article 14(5) four-eyes is one instance, not a general claim. <code>nous-lang 5.52.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s152_blog_v551_decision_ledger_card_v1__ __s152_web_v5_51_0__ -->
     <a class="post-card" href="#" onclick="showPost('v551-decision-ledger');return false">
       <div class="post-meta">
@@ -780,6 +790,19 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- POST: NOUS v4.13.3 Conservative Cost Caps with --smt-margin -->
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
+   <!-- __s153_blog_v552_dual_control_quorum_post_v1__ __s153_web_v5_52_0__ -->
+   <div class="post-full" id="post-v552-dual-control-quorum">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.52.0 &mdash; Dual-Control Quorum</h1>
+      <div class="post-full-meta">18 June 2026 &middot; 3 min read</div>
+      <div class="post-full-body">
+        <p>A NOUS world declares <code>law gated(&lt;action&gt;)</code>: every gated action in a signed run must carry an Ed25519 attestation that a named principal made a human-oversight decision. Until now one approver satisfied the gate. Some decisions should not rest on one person.</p>
+        <p>v5.52.0 adds an integer quorum threshold: <code>law gated(&lt;action&gt;, K)</code> requires K <em>distinct</em> approvers. Conformance obligation #5 now counts the distinct valid approving Ed25519 keys across the event&rsquo;s primary <code>authorization</code> and its <code>co_authorizations</code>, each signed over the exact (seq, action, proof envelope), and requires at least K. A denied or overridden decision is a valid signed record but is not an approval, so it does not count toward quorum. The threshold for K&gt;1 is folded into <code>smt_spec_sha256</code>, so an issuer cannot silently lower K without breaking the manifest binding; K=1 stays byte-identical to plain <code>gated</code>.</p>
+        <p>The evidence model is deliberate. Quorum is K independent single signatures &mdash; multisig &mdash; each standalone-verifiable offline with only <code>cryptography</code>. A threshold signature would collapse to one aggregate signature and erase <em>which</em> principals signed; that is the right tool for hiding internal structure and exactly the wrong one for an audit trail, whose whole purpose is to show who approved. The multisig form keeps every approver&rsquo;s identity in the record.</p>
+        <p>This is a general dual-control / segregation-of-duties primitive, older and broader than the AI Act: banking maker-checker, SOX sign-off. Article 14(5) of the EU AI Act &mdash; the requirement that an output of a remote biometric identification system be separately verified by at least two natural persons &mdash; is <em>one</em> narrow instance of the shape, not a general mandate, and NOUS does not claim that using quorum makes a system &ldquo;Article 14(5) compliant.&rdquo;</p>
+        <p><strong>Honest boundary.</strong> Quorum-met <em>evidences</em> that K distinct signing keys each recorded an approval bound to the gated occurrence in a verifiable trace. It does <em>not</em> prove K distinct natural persons (one person may hold several keys), their competence or authority, that the verifications were substantively independent, or that a refusal was enforced at runtime &mdash; enforcement is a guard, out of scope. &ldquo;Proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. A third party verifies the quorum offline with <code>cryptography</code> and <code>z3</code> only. <code>nous-lang 5.52.0</code>.</p>
+      </div>
+   </div>
    <!-- __s152_blog_v551_decision_ledger_post_v1__ __s152_web_v5_51_0__ -->
    <div class="post-full" id="post-v551-decision-ledger">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
