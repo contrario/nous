@@ -94,6 +94,7 @@ class SMTSpec:
     coverage_threshold_expr: str = ""  # __policy_coverage_spec_v1__
     coverage_currency_unit: Optional[str] = None  # __policy_coverage_spec_v1__
     gated_actions: tuple[str, ...] = ()  # __s141_u4_gated_emit_v1__
+    gated_quorums: tuple[tuple[str, int], ...] = ()  # __s153_u2_3_gated_quorums_v1__
 
     def serialize(self) -> str:
         lines: list[str] = []
@@ -204,6 +205,8 @@ class SMTSpec:
             canonical.append(f"SA:{a}")
         for a in self.gated_actions:  # __s141_u4_gated_emit_v1__
             canonical.append(f"GA:{a}")
+        for a, k in self.gated_quorums:  # __s153_u2_3_gated_quorums_v1__
+            canonical.append(f"GQ:{a}:{k}")
         encoded: bytes = "\n".join(canonical).encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()
 
@@ -444,6 +447,12 @@ def _build_sequence_block(  # __phase2_decouple_seq_helper_v1__
 def _gated_actions_tuple(world: "WorldNode") -> tuple[str, ...]:  # __s141_u4_gated_emit_v1__
     return tuple(sorted({g.action for g in world.gated_actions}))
 
+def _gated_quorums_tuple(world: "WorldNode") -> tuple[tuple[str, int], ...]:  # __s153_u2_3_gated_quorums_v1__
+    return tuple(sorted(
+        (g.action, g.quorum) for g in world.gated_actions
+        if g.quorum > 1
+    ))
+
 
 def emit_sequence_spec(  # __phase2_decouple_emit_sequence_spec_v1__
     prog: NousProgram,
@@ -472,6 +481,7 @@ def emit_sequence_spec(  # __phase2_decouple_emit_sequence_spec_v1__
         source_sha256=_source_sha256(source_text),
         pricing_sha256="",
         gated_actions=_gated_actions_tuple(world),  # __s141_u4_gated_emit_v1__
+        gated_quorums=_gated_quorums_tuple(world),  # __s153_u2_3_gated_quorums_v1__
         world_name=world.name,
         cost_cap_amount=world.cost_cap.amount,
         cost_cap_currency=world.cost_cap.currency,
@@ -595,6 +605,7 @@ def emit_smt(
         sequence_assertions=tuple(seq_asserts),  # __phase2_stage3_seq_emit_v1__
         sequence_laws=seq_laws_struct,  # __phase2_stage5_seq_laws_v1__
         gated_actions=_gated_actions_tuple(world),  # __s141_u4_gated_emit_v1__
+        gated_quorums=_gated_quorums_tuple(world),  # __s153_u2_3_gated_quorums_v1__
     )
 
 
