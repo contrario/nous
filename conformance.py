@@ -346,6 +346,7 @@ def verify_conformance(
     cost_cap: Decimal = spec.cost_cap_amount
     max_ticks: int = spec.max_ticks
     gated_actions = frozenset(spec.gated_actions)  # __s141_u5_gated_signed_source_v1__
+    quorum_by_action = dict(spec.gated_quorums)  # __s153_u2_4_quorum_obligation_v1__
 
     # Structural preconditions (refuse over guess): a soul or gated action the
     # proof never declared, an unknown kind, or a priced tool_call -- none can
@@ -554,6 +555,36 @@ def verify_conformance(
             errors.append(
                 f"authorization: seq={ev.seq} attestation signature invalid"
             )
+        k_required = quorum_by_action.get(ev.action, 1)  # __s153_u2_4_quorum_obligation_v1__
+        if k_required > 1:
+            approving_keys: set[str] = set()
+            for _att in [auth, *(ev.co_authorizations or [])]:
+                if _att.approved_seq != ev.seq:
+                    continue
+                if _att.decision != "approved":
+                    continue
+                _payload = _attestation_preimage_v2(
+                    trace.smt_spec_sha256, ev.seq, ev.action,
+                    _att.principal_id, _att.decision,
+                )
+                try:
+                    _pub = Ed25519PublicKey.from_public_bytes(
+                        base64.b64decode(_att.public_key_b64, validate=True)
+                    )
+                    _pub.verify(
+                        base64.b64decode(_att.signature_b64, validate=True),
+                        _payload,
+                    )
+                except (InvalidSignature, ValueError):
+                    continue
+                approving_keys.add(_att.public_key_b64)
+            if len(approving_keys) < k_required:
+                authorization_ok = False
+                errors.append(
+                    f"authorization: gated event seq={ev.seq} quorum not "
+                    f"met: {len(approving_keys)} distinct approving "
+                    f"key(s), need {k_required}"
+                )
 
     # 6. trace signature.
     trace_signature_ok = verify_trace_signature(trace)
