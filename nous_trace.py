@@ -305,18 +305,13 @@ def sign_trace(
         public_key_b64=_public_key_raw_b64(private_key.public_key()),
         signature_b64=base64.b64encode(raw_sig).decode("ascii"),
     )
-    return TraceEnvelope(
-        trace_schema_version=envelope.trace_schema_version,
-        nous_version=envelope.nous_version,
-        world_name=envelope.world_name,
-        source_sha256=envelope.source_sha256,
-        smt_spec_sha256=envelope.smt_spec_sha256,
-        pricing_sha256=envelope.pricing_sha256,
-        events=list(envelope.events),
-        memory_consultation=envelope.memory_consultation,  # __s107_u2_sign_thread_v1__
-        remedy_application=envelope.remedy_application,  # __s111_u4_sign_thread_v1__
-        signature=sig,
-    )
+    fields = {
+        name: getattr(envelope, name)
+        for name in TraceEnvelope.model_fields
+    }
+    fields["events"] = list(envelope.events)
+    fields["signature"] = sig
+    return TraceEnvelope(**fields)  # __s155_u1_sign_no_drop_v1__
 
 
 def verify_trace_signature(envelope: TraceEnvelope) -> bool:
