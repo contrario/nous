@@ -170,6 +170,65 @@ and `gated(...)`, and the legacy boolean remains valid NOUS source
 
 ---
 
+## Quorum: `law gated(<action>, K)` <!-- __s153_u2_6_quorum_doc_v1__ -->
+
+A gated action may declare an integer quorum threshold K:
+`law gated(<action>, K)`. K is the minimum number of DISTINCT
+approvers the action's gated event must carry. The bare form
+`law gated(<action>)` is exactly K = 1.
+
+Conformance rule (obligation #5). For a gated event whose action
+declares K > 1, the verifier counts the DISTINCT valid approving
+Ed25519 keys among the event's `authorization` (the primary
+approver) and its `co_authorizations` (the co-approvers). Each
+attestation must be signed over this exact (seq, action, proof
+envelope), bind `approved_seq` to the event, and carry
+`decision = approved`. A denied or overridden decision is a valid
+signed record but is NOT an approval and does not count toward
+quorum. If fewer than K distinct approving keys are present, the
+event is non-conformant (`authorization_ok` is False) with a
+`quorum not met` error.
+
+Tamper-evidence. For K > 1 the (action, K) pair is folded into
+`smt_spec_sha256` (a `GQ:` line in the canonical spec). An issuer
+cannot silently lower K without changing `smt_spec_sha256` and
+failing the manifest binding (obligation #1). Actions with K = 1
+emit no `GQ:` line, so every spec whose gated actions are all K = 1
+keeps a byte-identical `smt_spec_sha256`.
+
+Evidence model: multisig, not threshold signatures. Quorum is K
+independent single Ed25519 signatures, each standalone-verifiable
+offline with only `cryptography`. This is deliberate: a threshold
+signature would collapse to one aggregate signature and ERASE which
+principals signed -- the opposite of an audit trail. The multisig
+form preserves each approver's identity, which is the point of a
+dual-control record.
+
+Validator. K must be at least 1 (`GA003`); a gated action requires
+at least one approver.
+
+Relationship to Article 14(5). Article 14(5) of Regulation (EU)
+2024/1689 requires, for ONE Annex III category (remote biometric
+identification systems, point 1(a)), that an identification be
+separately verified and confirmed by at least two natural persons
+before action is taken (a 'four-eyes' rule, with a law-enforcement /
+migration / border / asylum derogation). NOUS quorum with K = 2 is
+ONE instantiation of that shape; it is a general dual-control /
+segregation-of-duties primitive (older and broader than the AI Act:
+banking maker-checker, SOX). NOUS does not claim that using quorum
+makes a system 'Article 14(5) compliant': 14(5) is narrow to remote
+biometric identification, and compliance depends on the deployer's
+system and context, not on a language construct.
+
+Honest boundary. Quorum-met EVIDENCES that K distinct signing keys
+each recorded an approval bound to the gated occurrence in a
+verifiable trace. It does NOT prove K distinct natural persons (one
+person may hold several keys), their competence or authority, that
+the verifications were substantively independent, or that a refusal
+was enforced at runtime (enforcement is a guard, out of scope).
+
+---
+
 ## See also
 
 - `docs/RUNTIME_CONFORMANCE.md` -- the runtime conformance certificate and
