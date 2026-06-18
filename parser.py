@@ -574,6 +574,12 @@ class NousTransformer(Transformer):
         action = s[-1]
         return LawGatedNode(action=action)
 
+    def law_decl_gated_quorum(self, items: list) -> LawGatedNode:  # __s153_u2_1_gated_quorum_parser_v1__
+        s = [str(x) for x in items[1:] if not _is_token_with_type(x, 'GATED')]
+        action = s[-2]
+        quorum = int(s[-1])
+        return LawGatedNode(action=action, quorum=quorum)
+
 
     def event_decl(self, items: list) -> dict:  # __phase2_stage2_events_parser_v1__
         return {"events": [str(x) for x in items[1:]]}

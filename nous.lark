@@ -68,6 +68,7 @@ law_decl: LAW NAME "=" law_expr                        -> law_decl_classic
         | LAW LEADS_TO "(" NAME "," NAME ")"         -> law_decl_sequence_leads_to  // __phase2_stage7b_leads_to_grammar_v1__
         | LAW AT_MOST "(" INT "," NAME ")"          -> law_decl_sequence_at_most  // __phase2_stage8_at_most_grammar_v1__
         | LAW GATED "(" NAME ")"                     -> law_decl_gated  // __s141_u1_gated_grammar_v1__
+        | LAW GATED "(" NAME "," INT ")"             -> law_decl_gated_quorum  // __s153_u2_1_gated_quorum_grammar_v1__
 law_expr: currency_lit PER CYCLE          -> law_cost
         | currency_lit                    -> law_currency
         | CONSTITUTIONAL "(" INT ")"      -> law_constitutional

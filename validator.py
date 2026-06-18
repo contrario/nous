@@ -84,6 +84,7 @@ class NousValidator:
         self._check_replay()
         self._check_sequence_law_events()  # __phase2_stage2_events_validator_v1__
         self._check_gated_action_events()  # __s141_u3_gated_validator_v1__
+        self._check_gated_quorum()  # __s153_u2_1_gated_quorum_validator_v1__
         return self.result
 
     def _check_world_exists(self) -> None:
@@ -662,6 +663,21 @@ class NousValidator:
                     f"Gated action references undeclared event label "
                     f"'{law.action}'. Add it to world.events {{ ... }} "
                     f"or remove the 'law gated(...)' declaration.",
+                    loc,
+                )
+
+    def _check_gated_quorum(self) -> None:  # __s153_u2_1_gated_quorum_validator_v1__
+        world = self.program.world
+        if world is None:
+            return
+        loc = f"world {world.name}"
+        for law in world.gated_actions:
+            if law.quorum < 1:
+                self.result.error(
+                    "GA003",
+                    f"Gated action '{law.action}' declares quorum "
+                    f"{law.quorum}; quorum must be at least 1. A gated "
+                    f"action requires at least one approver.",
                     loc,
                 )
 

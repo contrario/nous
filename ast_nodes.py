@@ -139,6 +139,7 @@ class LawGatedNode(NousNode):  # __s141_u2_gated_ast_v1__
     the sequence and classic machinery stay untouched.
     """
     action: str
+    quorum: int = 1  # __s153_u2_1_gated_quorum_ast_v1__
 
 
 # ═══════════════════════════════════════════
