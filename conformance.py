@@ -327,6 +327,53 @@ def _sequence_vacuous_laws(  # __s104_seq_vacuous_helper_v1__
     return vacuous
 
 
+def count_distinct_approving_keys(  # __s154_u1_count_approvers_helper_v1__
+    smt_spec_sha256: str,
+    event: TraceEvent,
+) -> set[str]:
+    """Distinct valid APPROVING Ed25519 public keys bound to this gated event.
+
+    Factored verbatim from verify_conformance obligation #5 (S153 U2.4) so the
+    decision-ledger presentation (S154) and the conformance verdict count an
+    approver by the EXACT same rule, never two definitions. A key counts iff its
+    attestation has approved_seq == event.seq, decision == "approved", and its
+    Ed25519 signature verifies over _attestation_preimage_v2(smt_spec_sha256,
+    seq, action, principal_id, decision). Distinctness is on public_key_b64.
+    EVIDENCES distinct signing keys recorded approvals bound to this exact
+    (seq, action, proof envelope); does NOT prove K natural persons, authority,
+    independence, or runtime enforcement.
+    """
+    approving_keys: set[str] = set()
+    if event.action is None:
+        return approving_keys
+    for _att in [event.authorization, *(event.co_authorizations or [])]:
+        if _att is None:
+            continue
+        if _att.approved_seq != event.seq:
+            continue
+        if _att.decision != "approved":
+            continue
+        _payload = _attestation_preimage_v2(
+            smt_spec_sha256,
+            event.seq,
+            event.action,
+            _att.principal_id,
+            _att.decision,
+        )
+        try:
+            _pub = Ed25519PublicKey.from_public_bytes(
+                base64.b64decode(_att.public_key_b64, validate=True)
+            )
+            _pub.verify(
+                base64.b64decode(_att.signature_b64, validate=True),
+                _payload,
+            )
+        except (InvalidSignature, ValueError):
+            continue
+        approving_keys.add(_att.public_key_b64)
+    return approving_keys
+
+
 def verify_conformance(
     trace: TraceEnvelope,
     manifest: Manifest,
@@ -557,27 +604,9 @@ def verify_conformance(
             )
         k_required = quorum_by_action.get(ev.action, 1)  # __s153_u2_4_quorum_obligation_v1__
         if k_required > 1:
-            approving_keys: set[str] = set()
-            for _att in [auth, *(ev.co_authorizations or [])]:
-                if _att.approved_seq != ev.seq:
-                    continue
-                if _att.decision != "approved":
-                    continue
-                _payload = _attestation_preimage_v2(
-                    trace.smt_spec_sha256, ev.seq, ev.action,
-                    _att.principal_id, _att.decision,
-                )
-                try:
-                    _pub = Ed25519PublicKey.from_public_bytes(
-                        base64.b64decode(_att.public_key_b64, validate=True)
-                    )
-                    _pub.verify(
-                        base64.b64decode(_att.signature_b64, validate=True),
-                        _payload,
-                    )
-                except (InvalidSignature, ValueError):
-                    continue
-                approving_keys.add(_att.public_key_b64)
+            approving_keys = count_distinct_approving_keys(  # __s154_u1_count_approvers_helper_v1__
+                trace.smt_spec_sha256, ev
+            )
             if len(approving_keys) < k_required:
                 authorization_ok = False
                 errors.append(
