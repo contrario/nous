@@ -64,6 +64,9 @@ class TraceEvent(BaseModel):
     tool_cost: str = Field(default="0", min_length=1)
     action: Optional[str] = Field(default=None)
     authorization: Optional[AuthorizationAttestation] = Field(default=None)
+    co_authorizations: Optional[list[AuthorizationAttestation]] = Field(
+        default=None
+    )  # __s153_u2_2_co_authorizations_v1__
     timestamp_utc: str = Field(min_length=1)
 
 
@@ -193,6 +196,16 @@ def _s151_prune_authorization_decision(doc: dict[str, object]) -> None:  # __s15
         if auth.get("decision") == "approved":
             auth.pop("decision", None)
 
+def _s153_prune_absent_co_authorizations(doc: dict[str, object]) -> None:  # __s153_u2_2_co_authorizations_v1__
+    events = doc.get("events")
+    if not isinstance(events, list):
+        return
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        if event.get("co_authorizations") is None:
+            event.pop("co_authorizations", None)
+
 
 class TraceEnvelope(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
@@ -251,6 +264,7 @@ class TraceEnvelope(BaseModel):
                 doc.pop(_tk, None)
         _s146_prune_vendor_receipt_fields(doc)  # __s146_u2_canonical_prune_v1__
         _s151_prune_authorization_decision(doc)  # __s151_u1_decision_canonical_prune_v1__
+        _s153_prune_absent_co_authorizations(doc)  # __s153_u2_2_co_authorizations_v1__
         return json.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -271,6 +285,7 @@ class TraceEnvelope(BaseModel):
                 doc.pop(_tk, None)
         _s146_prune_vendor_receipt_fields(doc)  # __s146_u2_persisted_prune_v1__
         _s151_prune_authorization_decision(doc)  # __s151_u1_decision_persisted_prune_v1__
+        _s153_prune_absent_co_authorizations(doc)  # __s153_u2_2_co_authorizations_v1__
         return doc
 
 
