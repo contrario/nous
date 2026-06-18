@@ -4,6 +4,37 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+## [5.54.0]  <!-- __s155_u6_changelog_v5_54_0__ -->
+
+### Added
+
+- Codegen-digest binding: runtime traces now carry an optional fourth
+  subject leg `codegen_sha256` (sha256 of
+  `generate_python(parse_nous(source))`, the exact artifact the run
+  harness compiles and executes). The run path stamps it; `nous
+  conformance verify --source` re-derives it with the shared
+  `run_shas.compute_codegen_sha256` and folds an equality check into the
+  `binding_ok` obligation, so a trace declaring a codegen digest the
+  source does not re-derive fails binding. Version-independent (the
+  generated header carries no version, timestamp, or nonce; the
+  57-template byte-identity harness pins the codegen logic) and
+  drop-when-None (every prior trace stays byte-identical). EVIDENCES
+  that a trace names the exact compiled program; does NOT prove the run
+  executed (execution attestation is out of scope) and is online-only
+  (the offline portable verifier and the manifest/certificate do not yet
+  carry the leg). See `docs/CODEGEN_BINDING.md`.
+
+### Fixed
+
+- `sign_trace` reconstructed the signed `TraceEnvelope` from a
+  hand-enumerated field list that omitted the stratified-trust triple
+  and inference receipts: signing computed the signature over the full
+  canonical body, then returned an envelope missing those fields, so
+  every signed witnessed-run trace failed its own
+  `verify_trace_signature`. `sign_trace` now reconstructs from
+  `TraceEnvelope.model_fields`, overriding only `signature`, so no field
+  can be silently dropped.
+
 ## [5.53.0]  <!-- __s154_u4b_changelog_v5_53_0__ -->
 
 ### Added
