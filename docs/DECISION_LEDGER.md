@@ -85,6 +85,53 @@ print(report.approved, report.denied, report.overridden)
 depends only on `nous_trace` plus the standard library and `pydantic`; it
 performs no I/O beyond reading the trace path and no signature operations.
 
+## Quorum: distinct-approver count per gated action <!-- __s154_u4a_quorum_section_v1__ -->
+
+When a trace carries gated-action events, the ledger emits one row per
+`gated_action` event (every occurrence, including K = 1 and single-approver
+events -- no suppression, so an auditor can reconcile the quorum breakdown
+against the overall decision tally with no gaps). Each row reports:
+
+- `valid_distinct_approvers` -- the count of DISTINCT Ed25519 public keys
+  whose attestation (drawn from the event's `authorization` and
+  `co_authorizations`) verifies against the exact `(seq, action, proof
+  envelope)`, with `approved_seq == seq` and `decision == approved`. This is
+  the SAME rule `verify_conformance` obligation #5 enforces; the ledger
+  imports the verifier's `count_distinct_approving_keys` helper, so the
+  presented count and the enforced count are one definition, never two.
+- `approver_key_fps` -- short fingerprints of those counted keys.
+- `decision_verbs_seen` -- the distinct decision verbs across the event's
+  attestations (approved / denied / overridden).
+- `k_declared` -- the declared quorum threshold K for the action, or unknown
+  (`K=?`) by default.
+
+### Binding K with `--source`
+
+K is NOT carried in the trace (the trace carries only `smt_spec_sha256`, a
+hash). To show `k_declared`, pass the `.nous` source:
+
+```
+nous governance ledger trace.json --source program.nous
+nous governance ledger trace.json --source program.nous --prices p.toml --margin 20
+```
+
+The source is re-derived to an `SMTSpec` (`parse -> pricing -> emit_smt`) and
+the ledger attaches K per action ONLY if `spec.sha256()` equals the trace's
+`smt_spec_sha256`. On any mismatch -- or a parse / pricing / emit failure, or
+a missing source file -- the command REFUSES with a non-zero exit and prints
+no ledger: showing K from a non-matching spec is exactly the false comfort
+this view exists to defeat. `--prices` and `--margin` exist because the
+spec hash covers the full serialized spec, so a margined or custom-priced
+proof can only be reproduced with the same inputs.
+
+### Honest bound on the quorum count <!-- __s154_u4a_quorum_section_v1__ -->
+
+`valid_distinct_approvers` counts distinct signing KEYS, not natural
+persons. Distinct-KEY is the cryptographic floor; distinct-PERSON is
+unprovable (one person may hold several keys). `K=met` is a verdict and is
+NOT emitted here -- the ledger presents the count, never adjudicates. For the
+conformance verdict that K was met, run `nous verify`.
+
 ## Honest boundary, restated
 
 A NOUS dossier **proves** the declared cost and coverage envelope (Z3 / Farkas)

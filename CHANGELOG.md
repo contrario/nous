@@ -4,6 +4,43 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+## [5.53.0]  <!-- __s154_u4b_changelog_v5_53_0__ -->
+
+### Added
+
+- Decision-ledger per-action quorum section: `nous governance ledger` now
+  emits one row per `gated_action` event (no suppression of K=1 or
+  single-approver rows) reporting `valid_distinct_approvers` (counted by
+  the verifier's exact rule via the new shared
+  `conformance.count_distinct_approving_keys`), approver key fingerprints,
+  the distinct decision verbs seen, and `k_declared`.
+- `nous governance ledger --source <file.nous>` (with `--prices` /
+  `--margin`) re-derives the SMT spec and attaches the declared quorum K
+  per gated action ONLY when the re-derived `smt_spec_sha256` matches the
+  trace; any mismatch or reproduction failure refuses with a non-zero exit
+  and no ledger output.
+- `LedgerReport.quorum` (`QuorumBreakdown` rows);
+  `build_ledger`/`build_ledger_from_path` accept an optional
+  `quorum_by_action` map (default None => K unknown / `K=?`).
+
+### Changed
+
+- `conformance`: obligation #5 distinct-approver counting factored into the
+  shared `count_distinct_approving_keys` helper (behavior byte-identical;
+  K=1 and all prior quorum paths unchanged), so the ledger's presented
+  count and the verifier's enforced count are one definition, not two.
+- `docs/DECISION_LEDGER.md`: new Quorum section (count semantics, `--source`
+  binding, honest distinct-KEY-vs-distinct-PERSON bound); README xref
+  refreshed.
+
+### Honest boundary
+
+- `valid_distinct_approvers` counts distinct signing KEYS (the cryptographic
+  floor), never natural persons (unprovable; one person may hold several
+  keys). `K met` is a verdict and is NOT emitted by the ledger; run
+  `nous verify` for the conformance verdict. The ledger presents; it does
+  not adjudicate.
+
 ## [5.52.0]  <!-- __s153_u2_6_changelog_v5_52_0__ -->
 
 ### Added
