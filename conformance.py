@@ -382,6 +382,7 @@ def verify_conformance(
     *,
     aprs: Optional[list[AttestationPinningRecord]] = None,  # __s145_u4a_signature_v1__
     attest_trust_root_public_key: Optional[Ed25519PublicKey] = None,
+    codegen_sha256: Optional[str] = None,  # __s155_u5_codegen_binding_arg_v1__
 ) -> ConformanceDetail:
     bounds = _bounds_from_spec(spec)
     if not bounds:
@@ -504,6 +505,16 @@ def verify_conformance(
     if trace.pricing_sha256 != manifest.pricing_sha256:
         binding_ok = False
         errors.append("binding: trace.pricing_sha256 != manifest.pricing_sha256")
+    if (  # __s155_u5_codegen_binding_check_v1__
+        trace.codegen_sha256 is not None
+        and codegen_sha256 is not None
+        and trace.codegen_sha256 != codegen_sha256
+    ):
+        binding_ok = False
+        errors.append(
+            "binding: trace.codegen_sha256 != re-derived codegen_sha256 "
+            "(trace claims a compiled program the source does not produce)"
+        )
 
     # 2. surface: all souls/gated actions validated in the precondition loop
     #    (violations raised); reaching here means the surface holds.

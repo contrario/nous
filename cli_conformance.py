@@ -203,9 +203,12 @@ def _derive_inputs(args: argparse.Namespace):  # __nous_cli_conformance_certify_
     trace = load_trace(str(trace_path))
     _aprs = _load_aprs(getattr(args, "apr", None))  # __s145_u4b_derive_wire_v1__
     _attest_root = _load_attest_root(getattr(args, "attest_root", None))
+    from run_shas import compute_codegen_sha256  # __s155_u5_cli_codegen_wire_v1__
+    _codegen = compute_codegen_sha256(source_text)
     detail = verify_conformance(
         trace, manifest, spec, pricing,
         aprs=_aprs, attest_trust_root_public_key=_attest_root,
+        codegen_sha256=_codegen,
     )
     return manifest, spec, pricing, trace, detail
 
