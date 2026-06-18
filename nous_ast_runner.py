@@ -246,6 +246,8 @@ async def execute_program(
         _src_sha, _smt_sha, _pricing_sha = compute_run_shas(source_text)
         from run_shas import compute_run_gated_actions  # __s142_u3_runner_gated_v1__
         _gated_actions = compute_run_gated_actions(source_text)
+        from run_shas import compute_codegen_sha256  # __s155_u4_runner_codegen_import_v1__
+        _codegen_sha = compute_codegen_sha256(source_text)
         _trust_kwargs = {}  # __s144_u2_runner_witnessed_stamp_v1__
         if mode == "live":
             _trust_kwargs = {
@@ -261,6 +263,7 @@ async def execute_program(
                 _smt_sha,
                 _pricing_sha,
                 gated_actions=_gated_actions,
+                codegen_sha256=_codegen_sha,  # __s155_u4_runner_codegen_stamp_v1__
                 **_trust_kwargs,
             )
         )
