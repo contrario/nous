@@ -48,6 +48,16 @@ class ActionBreakdown(BaseModel):
     total: int = Field(ge=0)
 
 
+class QuorumBreakdown(BaseModel):  # __s154_u2_quorum_section_v1__
+    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
+    seq: int = Field(ge=0)
+    action: str = Field(min_length=1)
+    valid_distinct_approvers: int = Field(ge=0)
+    approver_key_fps: tuple[str, ...] = Field(default=())
+    decision_verbs_seen: tuple[str, ...] = Field(default=())
+    k_declared: Optional[int] = Field(default=None)
+
+
 class LedgerReport(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
     world_name: str = Field(min_length=1)
@@ -61,9 +71,13 @@ class LedgerReport(BaseModel):
     earliest_utc: Optional[str] = Field(default=None)
     latest_utc: Optional[str] = Field(default=None)
     per_action: tuple[ActionBreakdown, ...] = Field(default=())
+    quorum: tuple[QuorumBreakdown, ...] = Field(default=())  # __s154_u2_quorum_section_v1__
 
 
-def build_ledger(envelope: TraceEnvelope) -> LedgerReport:
+def build_ledger(
+    envelope: TraceEnvelope,
+    quorum_by_action: Optional[dict[str, int]] = None,  # __s154_u2_quorum_section_v1__
+) -> LedgerReport:
     verb_counts: Counter[str] = Counter()
     principals: set[str] = set()
     parsed_times: list[datetime] = []
@@ -116,6 +130,39 @@ def build_ledger(envelope: TraceEnvelope) -> LedgerReport:
             )
         )
 
+    from conformance import count_distinct_approving_keys
+    quorum_rows: list[QuorumBreakdown] = []
+    for event in envelope.events:
+        if event.kind != "gated_action":
+            continue
+        approvers = count_distinct_approving_keys(
+            envelope.smt_spec_sha256, event
+        )
+        verbs = sorted({
+            att.decision
+            for att in [event.authorization, *(event.co_authorizations or [])]
+            if att is not None
+        })
+        label = (
+            event.action if event.action is not None else "<unspecified>"
+        )
+        declared = None
+        if quorum_by_action is not None and event.action is not None:
+            declared = quorum_by_action.get(event.action)
+        quorum_rows.append(
+            QuorumBreakdown(
+                seq=event.seq,
+                action=label,
+                valid_distinct_approvers=len(approvers),
+                approver_key_fps=tuple(
+                    sorted(key[:8] for key in approvers)
+                ),
+                decision_verbs_seen=tuple(verbs),
+                k_declared=declared,
+            )
+        )
+    quorum_rows.sort(key=lambda q: q.seq)
+
     return LedgerReport(
         world_name=envelope.world_name,
         decisions_total=total,
@@ -128,6 +175,7 @@ def build_ledger(envelope: TraceEnvelope) -> LedgerReport:
         earliest_utc=earliest,
         latest_utc=latest,
         per_action=tuple(breakdowns),
+        quorum=tuple(quorum_rows),
     )
 
 
@@ -141,6 +189,18 @@ _BOUND_FOOTER = (
     "principal authorized, prove the oversight meaningful, or prove a refusal "
     "was enforced at runtime. Run `nous verify` for the cryptographic proof "
     "that each decision is bound to its exact (seq, action, proof envelope)."
+)
+
+
+_QUORUM_FOOTER = (  # __s154_u2_quorum_section_v1__
+    "valid_distinct_approvers counts ONLY attestations whose Ed25519 "
+    "signature verifies against (seq, action, proof envelope), "
+    "approved_seq==seq, and decision==approved -- the same rule nous "
+    "verify enforces. distinct-KEY count is the cryptographic floor; "
+    "distinct-PERSON is unprovable. K_declared (when shown) is "
+    "re-derived from --source and is meaningful only if its "
+    "smt_spec_sha256 matches the trace. This is a presentation; "
+    "\"K met\" is a verdict -- run nous verify."
 )
 
 
@@ -170,6 +230,25 @@ def render_text(report: LedgerReport) -> str:
                 f"denied={item.denied} overridden={item.overridden} "
                 f"total={item.total}"
             )
+    if report.quorum:
+        lines.append("  quorum (gated actions):")
+        for q in report.quorum:
+            k_label = (
+                f"K={q.k_declared}" if q.k_declared is not None else "K=?"
+            )
+            fps = ", ".join(q.approver_key_fps)
+            verbs = (
+                ",".join(q.decision_verbs_seen)
+                if q.decision_verbs_seen else "-"
+            )
+            lines.append(
+                f"    seq={q.seq} {q.action}: "
+                f"valid_distinct_approvers={q.valid_distinct_approvers} "
+                f"{k_label} [{fps}] verbs={verbs}"
+            )
     lines.append("")
     lines.append(_BOUND_FOOTER)
+    if report.quorum:
+        lines.append("")
+        lines.append(_QUORUM_FOOTER)
     return "\n".join(lines)
