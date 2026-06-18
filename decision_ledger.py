@@ -179,8 +179,11 @@ def build_ledger(
     )
 
 
-def build_ledger_from_path(path: str) -> LedgerReport:
-    return build_ledger(load_trace(path))
+def build_ledger_from_path(
+    path: str,
+    quorum_by_action: Optional[dict[str, int]] = None,  # __s154_u3_ledger_source_v1__
+) -> LedgerReport:
+    return build_ledger(load_trace(path), quorum_by_action)
 
 
 _BOUND_FOOTER = (

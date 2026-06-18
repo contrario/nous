@@ -1424,6 +1424,58 @@ def cmd_cost(args: argparse.Namespace) -> int:
     return 0
 
 # __governance_cli_v1__
+class _LedgerSourceError(Exception):  # __s154_u3_ledger_source_v1__
+    pass
+
+
+def _ledger_quorum_map_from_source(
+    source_path: str,
+    trace_smt_spec_sha256: str,
+    prices: str | None,
+    margin_pct: int,
+) -> dict[str, int]:
+    from pathlib import Path
+    from parser import parse_nous
+    from pricing import load_pricing
+    from smt_emit import emit_smt, EmitError
+    src = Path(source_path)
+    if not src.is_file():
+        raise _LedgerSourceError(f"--source file not found: {src}")
+    source_text = src.read_text(encoding="utf-8")
+    try:
+        program = parse_nous(source_text)
+    except Exception as exc:
+        raise _LedgerSourceError(
+            f"--source parse failed: {exc}"
+        ) from exc
+    custom = Path(prices) if prices else None
+    try:
+        pricing = load_pricing(custom)
+    except Exception as exc:
+        raise _LedgerSourceError(
+            f"--source pricing load failed: {exc}"
+        ) from exc
+    try:
+        spec = emit_smt(
+            program, pricing, source_text=source_text,
+            margin_pct=margin_pct,
+        )
+    except EmitError as exc:
+        raise _LedgerSourceError(
+            f"--source emit failed: {exc}"
+        ) from exc
+    derived = spec.sha256()
+    if derived != trace_smt_spec_sha256:
+        raise _LedgerSourceError(
+            "--source smt_spec_sha256 mismatch: source re-derives "
+            f"{derived} but trace declares {trace_smt_spec_sha256}; "
+            "refusing to attach K from a non-matching spec"
+        )
+    quorum_map = {action: 1 for action in spec.gated_actions}
+    quorum_map.update(dict(spec.gated_quorums))
+    return quorum_map
+
+
 def cmd_governance(args: Any) -> int:
     """Governance inspector: policies, interventions, stats."""
     sub = getattr(args, "gov_action", None)
@@ -1448,9 +1500,29 @@ def cmd_governance(args: Any) -> int:
         return lint_cli(args.source, output_format=fmt, strict=strict, error_on=error_on)
     # __s152_u2_gov_ledger_dispatch_v1__
     elif sub == "ledger":
-        from decision_ledger import build_ledger_from_path, render_text
+        from decision_ledger import (
+            build_ledger,
+            build_ledger_from_path,
+            render_text,
+        )
         fmt = getattr(args, "format", "text")
-        report = build_ledger_from_path(args.trace)
+        source = getattr(args, "source", None)
+        if source:  # __s154_u3_ledger_source_v1__
+            from nous_trace import load_trace
+            envelope = load_trace(args.trace)
+            try:
+                quorum_map = _ledger_quorum_map_from_source(
+                    source,
+                    envelope.smt_spec_sha256,
+                    getattr(args, "prices", None),
+                    getattr(args, "margin", 0),
+                )
+            except _LedgerSourceError as exc:
+                print(f"REFUSED: {exc}", file=sys.stderr)
+                return 1
+            report = build_ledger(envelope, quorum_map)
+        else:
+            report = build_ledger_from_path(args.trace)
         if fmt == "json":
             print(report.model_dump_json(indent=2))
         else:
@@ -1889,6 +1961,22 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     p_gov_ledger.add_argument(
         "--format", default="text", choices=["text", "json"],
         help="Output format",
+    )
+    p_gov_ledger.add_argument(  # __s154_u3_ledger_source_v1__
+        "--source", default=None,
+        help="Path to the .nous source; re-derives the SMT spec to "
+             "attach declared quorum K per gated action. Refuses if the "
+             "re-derived smt_spec_sha256 does not match the trace.",
+    )
+    p_gov_ledger.add_argument(
+        "--prices", default=None,
+        help="Custom pricing TOML (must match the proof pricing to "
+             "reproduce smt_spec_sha256)",
+    )
+    p_gov_ledger.add_argument(
+        "--margin", type=int, default=0,
+        help="cost_cap margin pct used in the proof (must match to "
+             "reproduce smt_spec_sha256)",
     )
 
     # __templates_subparser_v1__
