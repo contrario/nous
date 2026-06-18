@@ -232,6 +232,9 @@ class TraceEnvelope(BaseModel):
     inference_receipts: Optional[list[InferenceReceipt]] = Field(
         default=None
     )  # __s145_u2_inference_receipts_field_v1__
+    codegen_sha256: Optional[str] = Field(
+        default=None, min_length=64, max_length=64
+    )  # __s155_u3_codegen_sha256_field_v1__
 
     @model_validator(mode="after")
     def _trust_triple_all_or_nothing(self) -> "TraceEnvelope":
@@ -259,6 +262,7 @@ class TraceEnvelope(BaseModel):
             "cost_binding",
             "provider_token_integrity",
             "inference_receipts",  # __s145_u2_drop_when_none_v1__
+            "codegen_sha256",  # __s155_u3_canonical_drop_v1__
         ):
             if doc.get(_tk) is None:
                 doc.pop(_tk, None)
@@ -280,6 +284,7 @@ class TraceEnvelope(BaseModel):
             "cost_binding",
             "provider_token_integrity",
             "inference_receipts",  # __s145_u2_persisted_drop_v1__
+            "codegen_sha256",  # __s155_u3_persisted_drop_v1__
         ):
             if doc.get(_tk) is None:
                 doc.pop(_tk, None)

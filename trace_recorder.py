@@ -99,6 +99,7 @@ class TraceRecorder:
         evidence_kind: Optional[str] = None,  # __s144_u2_runner_witnessed_stamp_v1__
         cost_binding: Optional[str] = None,
         provider_token_integrity: Optional[str] = None,
+        codegen_sha256: Optional[str] = None,  # __s155_u3_recorder_codegen_arg_v1__
     ) -> None:
         if not isinstance(nous_version, str) or not nous_version:
             raise TraceRecorderError(
@@ -153,6 +154,11 @@ class TraceRecorder:
         self._cost_binding: Optional[str] = cost_binding
         self._provider_token_integrity: Optional[str] = (
             provider_token_integrity
+        )
+        self._codegen_sha256: Optional[str] = (  # __s155_u3_recorder_codegen_store_v1__
+            _require_sha256(codegen_sha256, "codegen_sha256")
+            if codegen_sha256 is not None
+            else None
         )
 
     @property
@@ -338,6 +344,7 @@ class TraceRecorder:
             evidence_kind=self._evidence_kind,  # __s144_u2_runner_witnessed_stamp_v1__
             cost_binding=self._cost_binding,
             provider_token_integrity=self._provider_token_integrity,
+            codegen_sha256=self._codegen_sha256,  # __s155_u3_recorder_codegen_build_v1__
             signature=None,
         )
 
