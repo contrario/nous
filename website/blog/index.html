@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s157_blog_v556_vsa_card_v1__ __s157_web_v5_56_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v556-vsa');return false">
+      <div class="post-meta">
+        <span class="post-date">19 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.56.0 &mdash; A Verification Summary That Travels</div>
+      <div class="post-excerpt">The signed manifest, trace, and certificate are offline-checkable, but a third party still had to run the full verifier to learn the verdict. v5.56.0 adds a SLSA Verification Summary Attestation: <code>nous vsa emit</code> wraps the already-signed evidence in a DSSE / in-toto Statement v1 and writes a self-contained bundle with a portable <code>verify_vsa_offline.py</code> that re-derives the verdict from the eight obligations &mdash; rejecting a lying <code>verificationResult</code> &mdash; and re-checks any coverage Farkas with pure rational arithmetic. Honest boundary: evidences a verification occurred over named artifacts with a re-derivable verdict; adds no new trust root; does not prove the run executed. <code>nous-lang 5.56.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s156_blog_v555_codegen_offline_card_v1__ __s156_web_v5_55_0__ -->
     <a class="post-card" href="#" onclick="showPost('v555-codegen-offline');return false">
       <div class="post-meta">
@@ -821,6 +831,20 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
    <!-- __s154_blog_v553_quorum_ledger_post_v1__ __s154_web_v5_53_0__ -->
+   <!-- __s157_blog_v556_vsa_post_v1__ __s157_web_v5_56_0__ -->
+   <div class="post-full" id="post-v556-vsa">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.56.0 &mdash; A Verification Summary That Travels</h1>
+      <div class="post-full-meta">19 June 2026 &middot; 4 min read</div>
+      <div class="post-full-body">
+        <p>v5.55.0 took the codegen leg offline: the manifest, the trace, and the conformance certificate are each signed and each independently checkable with <code>cryptography</code> and the standard library. But a consumer who trusted the NOUS verifier still had to re-run the whole thing to learn the verdict, and there was no single signed object that named what was checked and what it concluded. v5.56.0 adds that object: a <strong>Verification Summary Attestation</strong>.</p>
+        <p>A VSA is an in-toto Statement v1 carrying a SLSA verification-summary predicate (<code>predicateType https://slsa.dev/verification_summary/v1</code>, <code>slsaVersion 1.1</code>), wrapped in a DSSE envelope and signed with a persistent NOUS VSA key. <code>nous vsa emit</code> computes the manifest, trace, and certificate digests by the exact canonical file-strip method the verifier recomputes &mdash; strip <code>signature</code> and <code>transparency_log</code>, serialize sorted and compact, sha256 &mdash; so the emitted digests are byte-identical to what a verifier derives. It re-derives the <code>verificationResult</code> from the eight conformance obligations rather than trusting the recorded boolean, and writes a self-contained bundle: the input artifacts copied byte-for-byte, <code>vsa.intoto.json</code>, and a portable <code>verify_vsa_offline.py</code> pinned to the public half of the signing key.</p>
+        <p>The emitted verifier is zero-trust by construction. It verifies the DSSE envelope over the exact PAE preimage and parses only the verified payload bytes, never the unverified envelope. It recomputes every input digest and checks it against the VSA subject and <code>inputAttestations</code>. It verifies the manifest, trace, and certificate Ed25519 signatures against their own embedded public keys. It re-derives the conformance verdict from the eight obligations and rejects a <code>verificationResult</code> that disagrees &mdash; a lying verdict is reported, not honored. It checks the codegen leg by sha-equality across certificate, trace, and manifest. And when a coverage Farkas certificate is carried, it re-checks the infeasibility certificate with <code>Fraction</code>; a forged sha-match that does not actually prove unsat is rejected.</p>
+        <p>The output banner names each leg as PROVES or EVIDENCES, so a reader can never mistake one for the other. The coverage Farkas leg <em>proves</em> policy coverage offline: the infeasibility certificate is re-checkable by pure rational arithmetic, with no solver and no NOUS code. The eight obligations, the codegen leg, and the cost cap <em>evidence</em>: they are sha-equality and signature checks over signed artifacts. The cost cap was proven by Z3 at emission time, but no Farkas certificate is carried for it, so offline it is evidence, not proof.</p>
+        <p>The point of the VSA is delegation of confirmation, not a new proof. A consumer who trusts the NOUS VSA key reads one small signed object instead of re-running the verifier; a consumer who trusts nothing re-derives everything from the carried artifacts with crypto and stdlib. <code>nous vsa verify</code> is the internal validation path: it copies the bundle into a temp directory, emits a fresh verifier pinned to the local key, and runs it &mdash; the exact artifact a third party runs, single-source and non-mutating.</p>
+        <p><strong>Honest boundary.</strong> A VSA <em>evidences</em> that a verification occurred over the named artifacts and that its verdict is re-derivable. It adds <em>no new trust root</em>: the manifest, trace, and certificate signatures and the Farkas math remain the only things to trust. It does <em>not</em> attest that the agent run executed &mdash; execution attestation is out of scope, NOUS is a monitor, not a guard &mdash; and it makes no EU AI Act conformity claim by itself. <code>dependencyLevels</code> is omitted deliberately: an absent field is a no-claim, where an empty object would falsely assert no dependencies. Cross-party trusted-key resolution &mdash; a registry mapping <code>verifier.id</code> to an anchored key and pinning the offline-template digest, so a third party can confirm the signer without first receiving the bundle &mdash; needs a Rekor-anchored key and is built with the anchoring arc, not faked as a signed-tier-only shortcut. &ldquo;Proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. A third party verifies offline with <code>cryptography</code> and <code>z3</code> only. <code>nous-lang 5.56.0</code>.</p>
+      </div>
+   </div>
    <!-- __s156_blog_v555_codegen_offline_post_v1__ __s156_web_v5_55_0__ -->
    <div class="post-full" id="post-v555-codegen-offline">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
