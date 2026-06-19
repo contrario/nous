@@ -4,6 +4,42 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+## [5.56.0]  <!-- __s157_changelog_v5_56_0__ -->
+
+### Added
+
+- SLSA Verification Summary Attestation (VSA): `nous vsa emit` builds a
+  DSSE-wrapped in-toto Statement v1 (`predicateType
+  https://slsa.dev/verification_summary/v1`, `slsaVersion 1.1`) over an
+  already-signed manifest, trace, and conformance certificate, signs it
+  with a persistent NOUS VSA key, and writes a self-contained bundle: the
+  input artifacts, `vsa.intoto.json`, and a portable
+  `verify_vsa_offline.py`. `nous vsa verify` runs that emitted verifier
+  against a temp copy of the bundle (single-source, non-mutating). The
+  offline verifier is zero-trust: it re-derives the conformance verdict
+  from the eight certificate obligations and rejects a lying
+  `verificationResult`, recomputes every input digest by the canonical
+  file-strip method, verifies the DSSE envelope against a pinned key, and
+  re-checks any carried coverage Farkas certificate with pure rational
+  arithmetic. The coverage Farkas leg PROVES policy coverage offline; the
+  eight obligations, the codegen leg, and the cost cap EVIDENCES.
+  EVIDENCES that a verification occurred over named artifacts with a
+  re-derivable verdict; does NOT attest that the run executed and adds no
+  new trust root (the artifact signatures and the Farkas math remain the
+  root). See `docs/NOUS_VSA.md`.
+
+### Changed
+
+- CLI grows the `vsa` root command (`emit`, `verify`); health
+  `cli_commands` count 55 -> 56.
+
+### Deferred
+
+- VSA `verifier.id` registry pin and offline-template digest pin
+  (cross-party trusted-key resolution) are deferred to the Rekor-anchoring
+  arc; they require an anchored key and are not faked as a signed-tier-only
+  shortcut.
+
 ## [5.55.0]  <!-- __s156_u6_changelog_v5_55_0__ -->
 
 ### Added
