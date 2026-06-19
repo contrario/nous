@@ -112,6 +112,9 @@ py-modules = [
     "verifier_registry",  # __s148_u1_verifier_registry_pyproject_v1__
     "glm_manifest",  # __s150_u1_glm_manifest_pyproject_v1__
     "decision_ledger",  # __s152_u1_decision_ledger_pyproject_v1__
+    "vsa",  # __s157_u1_vsa_pyproject_v1__
+    "vsa_verifier",  # __s157_u2_vsa_verifier_pyproject_v1__
+    "cli_vsa",  # __s157_u3_cli_vsa_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
