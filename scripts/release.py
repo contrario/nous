@@ -34,6 +34,7 @@ Any failure aborts BEFORE upload. No partial PyPI publish.
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -65,12 +66,17 @@ class ReleaseError(RuntimeError):
 
 def run(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:
     print(f"  $ {' '.join(cmd)}")
+    # Force all child Python processes (incl. temp-venv wheels of any
+    # version) to skip bytecode caching, preventing /tmp/__pycache__
+    # .pyc orphans from conformance/verify subprocesses.
+    _env = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}
     result = subprocess.run(
         cmd,
         cwd=str(cwd) if cwd else None,
         capture_output=True,
         text=True,
         check=False,
+        env=_env,
     )
     if check and result.returncode != 0:
         print(f"    stdout: {result.stdout[-500:]}")

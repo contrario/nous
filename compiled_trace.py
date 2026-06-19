@@ -17,6 +17,7 @@ from __future__ import annotations
 import asyncio
 import importlib.util
 import os
+import sys
 import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
@@ -121,7 +122,15 @@ def run_compiled_with_trace(
         if spec is None or spec.loader is None:
             raise CompiledTraceError("could not load emitted module spec")
         mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
+        # Throwaway single-use module: suppress bytecode cache so the
+        # import machinery never writes /tmp/__pycache__/*.pyc (orphaned
+        # by the os.unlink(tmp) below, which only removes the .py source).
+        _prev_dwb = sys.dont_write_bytecode
+        sys.dont_write_bytecode = True
+        try:
+            spec.loader.exec_module(mod)
+        finally:
+            sys.dont_write_bytecode = _prev_dwb
         if not hasattr(mod, "build_runtime"):
             raise CompiledTraceError("emitted module has no build_runtime()")
         runtime = mod.build_runtime()
