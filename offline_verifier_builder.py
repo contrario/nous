@@ -533,8 +533,11 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "    'bound_transfer_ok', 'authorization_ok', 'trace_signature_ok',",
     ")",
     "_BOOLS_V2 = _BOOLS_V1 + ('sequence_ok',)",
+    "_BOOLS_V4 = _BOOLS_V2 + ('codegen_binding_ok',)",
     "",
     "def _bools_for(schema_version):",
+    "    if schema_version >= 4:",
+    "        return _BOOLS_V4",
     "    return _BOOLS_V2 if schema_version >= 2 else _BOOLS_V1",
     "",
     "",
@@ -611,6 +614,16 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "        if cert.get(fld) != manifest.get(fld):",
     "            return _cfail('cert.' + fld + ' != manifest.' + fld)",
     "    print('OK   certificate bound to this manifest (3 shas match)')",
+    "",
+    "    cert_cg = cert.get('codegen_sha256')",
+    "    if cert_cg is not None:",
+    "        man_cg = manifest.get('codegen_sha256')",
+    "        if man_cg is not None and man_cg != cert_cg:",
+    "            return _cfail('cert.codegen_sha256 != manifest.codegen_sha256')",
+    "        tr_cg = trace.get('codegen_sha256')",
+    "        if tr_cg is not None and tr_cg != cert_cg:",
+    "            return _cfail('cert.codegen_sha256 != trace.codegen_sha256')",
+    "        print('OK   codegen leg: one compiled program (sha-equality)')",
     "",
     "    tsig = trace.get('signature')",
     "    if not isinstance(tsig, dict):",
@@ -732,8 +745,9 @@ def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
         "Verifies, offline: certificate Ed25519 signature, cert<->trace and\n"
         "cert<->manifest binding, trace Ed25519 signature, recorded-verdict\n"
         "consistency, and the Rekor v2 anchor over the certificate body bytes.\n"
-        "SCOPE: authenticity + binding + anchor inclusion; NOT SMT bound\n"
-        "re-derivation (that is the online toolchain path).\n"
+        "SCOPE: authenticity + binding (including the codegen leg by\n"
+        "sha-equality) + anchor inclusion; NOT SMT bound or program\n"
+        "re-derivation (those are the online toolchain path).\n"
         "\n"
         "Usage: python3 verify_conformance_offline.py [--allow-unanchored]\n"
         "Exit:  0 = PASS, 1 = FAIL, 2 = environment error.\n"
