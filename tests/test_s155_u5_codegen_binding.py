@@ -1,4 +1,9 @@
-"""S155 U5: verify_conformance folds the codegen digest into binding_ok.
+"""S155 U5 (amended S156 U3): verify_conformance checks the codegen digest.
+
+S156 U3 decoupled the codegen check from binding_ok into a dedicated
+codegen_binding_ok obligation (axiom 8); the manifest and certificate now
+carry the signed leg. The S155 prose below describes the original online
+folding; the mechanism is now a sha-equality across present legs.
 
 nous conformance verify --source already re-derives the SMT spec from the
 signed source; codegen is a pure function of that same parsed program, so
@@ -110,14 +115,16 @@ def test_matching_codegen_sha256_keeps_binding_ok() -> None:
     assert detail.binding_ok is True
 
 
-def test_mismatched_codegen_sha256_fails_binding() -> None:
+def test_mismatched_codegen_sha256_fails_codegen_binding() -> None:  # __s156_u3_decouple_test_v1__
     spec, pricing = _spec_pricing()
     man = _manifest(spec)
     trace = _trace(spec, with_codegen=True)
     detail = verify_conformance(
         trace, man, spec, pricing, codegen_sha256="0" * 64,
     )
-    assert detail.binding_ok is False
+    assert detail.binding_ok is True
+    assert detail.codegen_binding_ok is False
+    assert detail.ok is False
     assert any("codegen_sha256" in e for e in detail.errors)
 
 

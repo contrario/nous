@@ -87,6 +87,7 @@ class ConformanceDetail:
     sequence_vacuous: tuple[str, ...] = field(default=())  # __s104_seq_vacuous_field_v1__
     cost_binding: Optional[str] = None  # __s144_u3_conformance_trust_precondition_v1__
     provider_token_integrity: Optional[str] = None
+    codegen_binding_ok: bool = True  # __s156_u3_detail_codegen_binding_ok_v1__
 
     @property
     def ok(self) -> bool:
@@ -98,6 +99,7 @@ class ConformanceDetail:
             and self.authorization_ok
             and self.trace_signature_ok
             and self.sequence_ok  # __phase2_stage5_seq_conformance_v1__
+            and self.codegen_binding_ok  # __s156_u3_ok_folds_codegen_v1__
         )
 
 
@@ -505,15 +507,25 @@ def verify_conformance(
     if trace.pricing_sha256 != manifest.pricing_sha256:
         binding_ok = False
         errors.append("binding: trace.pricing_sha256 != manifest.pricing_sha256")
-    if (  # __s155_u5_codegen_binding_check_v1__
-        trace.codegen_sha256 is not None
-        and codegen_sha256 is not None
-        and trace.codegen_sha256 != codegen_sha256
-    ):
-        binding_ok = False
+    # __s156_u3_codegen_binding_obligation_v1__ decoupled from binding_ok
+    # (axiom 8: codegen gets its own obligation). sha-equality across the
+    # present legs (trace, manifest, re-derived); vacuous when fewer than
+    # two are present. EVIDENCES that the trace names the exact compiled
+    # program; does NOT prove the run executed.
+    codegen_binding_ok = True
+    _codegen_legs = [
+        v for v in (
+            trace.codegen_sha256,
+            manifest.codegen_sha256,
+            codegen_sha256,
+        ) if v is not None
+    ]
+    if len(set(_codegen_legs)) > 1:
+        codegen_binding_ok = False
         errors.append(
-            "binding: trace.codegen_sha256 != re-derived codegen_sha256 "
-            "(trace claims a compiled program the source does not produce)"
+            "codegen_binding: trace/manifest/re-derived codegen_sha256 "
+            "disagree (trace names a compiled program the source "
+            "does not produce)"
         )
 
     # 2. surface: all souls/gated actions validated in the precondition loop
@@ -649,6 +661,7 @@ def verify_conformance(
         sequence_ok=sequence_ok,  # __phase2_stage5_seq_conformance_v1__
         cost_binding=trace.cost_binding,  # __s144_u3_conformance_trust_precondition_v1__
         provider_token_integrity=trace.provider_token_integrity,
+        codegen_binding_ok=codegen_binding_ok,  # __s156_u3_detail_return_v1__
         errors=tuple(errors),
     )
 
@@ -787,6 +800,8 @@ def build_certificate(  # __nous_conformance_certificate_v1__
         errors=tuple(detail.errors),
         cost_binding=detail.cost_binding,  # __s144_u4_cert_trust_fields_v1__
         provider_token_integrity=detail.provider_token_integrity,
+        codegen_sha256=manifest.codegen_sha256,  # __s156_u3_build_cert_codegen_v1__
+        codegen_binding_ok=detail.codegen_binding_ok,
     )
 
 
