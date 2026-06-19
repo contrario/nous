@@ -91,6 +91,36 @@ threaded through the recorder would have vanished on signing. `sign_trace`
 now reconstructs from `TraceEnvelope.model_fields`, overriding only the
 signature, so `codegen_sha256` (and every future field) survives signing.
 
+## S156: the leg goes offline
+
+S156 promotes `codegen_sha256` from a trace-only field to a signed
+first-class leg of the Manifest and the conformance Certificate, adds a
+dedicated conformance obligation `codegen_binding_ok` (decoupled from
+`binding_ok`, axiom 8), and adds an independent sha-equality check to the
+portable offline verifier.
+
+- Manifest: `codegen_sha256` is stamped on the `nous verify` path and
+  carried drop-when-None, so every prior signed Manifest stays
+  byte-identical.
+- Certificate: schema v3 -> v4 adds `codegen_sha256` and
+  `codegen_binding_ok` (eight obligations at v4), schema-gated so prior
+  signed Certificates stay byte-identical.
+- Obligation: `codegen_binding_ok` is sha-equality across the present
+  legs (trace, manifest, re-derived); vacuous when fewer than two are
+  present.
+- Offline verifier: when the certificate carries `codegen_sha256`, the
+  portable verifier confirms it equals the trace's and the manifest's
+  with `cryptography` + Python stdlib only. It does NOT trust the
+  recorded `codegen_binding_ok` bool; it re-derives the equality and
+  fails closed.
+
+Residual honest boundary: the offline check confirms the certificate,
+trace, and manifest name ONE compiled-program digest. It still does not
+re-derive that program from source (that needs the toolchain; it is the
+online path) and it still does not prove the run executed (a key-holder
+can compute the genuine digest and stamp a fabricated trace; execution
+attestation remains out of scope).
+
 ## Scope summary
 
 | Concern | State |
@@ -98,6 +128,6 @@ signature, so `codegen_sha256` (and every future field) survives signing.
 | Trace carries codegen_sha256 | yes, optional, drop-when-None, signed |
 | Producer stamps it | yes (run harness) |
 | Online verifier re-derives + binds | yes (verify_conformance binding_ok) |
-| Offline portable verifier checks it | no (toolchain required; later arc) |
-| Manifest / certificate carry it | no (later arc) |
+| Offline portable verifier checks it | yes (sha-equality; program re-derivation still online; S156) |
+| Manifest / certificate carry it | yes (signed legs; S156) |
 | Proves the run executed | no (execution attestation, out of scope) |

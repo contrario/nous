@@ -4,6 +4,33 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+## [5.55.0]  <!-- __s156_u6_changelog_v5_55_0__ -->
+
+### Added
+
+- Offline-checkable codegen leg: `codegen_sha256` is promoted from a
+  trace-only field to a signed first-class leg of the Manifest and the
+  conformance Certificate, with a dedicated conformance obligation
+  `codegen_binding_ok` (decoupled from `binding_ok`) and an independent
+  sha-equality check in the portable offline verifier. A third party now
+  confirms the codegen leg with `cryptography` + Python stdlib alone, no
+  toolchain: the certificate, trace, and manifest must name one compiled
+  program. The offline check does not trust the recorded
+  `codegen_binding_ok` bool; it re-derives the equality and fails closed.
+  Manifest uses drop-when-None (prior signed Manifests byte-identical);
+  the Certificate bumps schema v3 -> v4 with schema-gated canonical
+  bodies (prior signed Certificates byte-identical). EVIDENCES that a
+  trace names the exact compiled program offline; program re-derivation
+  remains the online path and execution attestation remains out of
+  scope. See `docs/CODEGEN_BINDING.md`.
+
+### Changed
+
+- Conformance Certificate schema v3 -> v4: adds `codegen_sha256` and the
+  `codegen_binding_ok` obligation (eight obligations at v4). The codegen
+  check moved out of `binding_ok` into its own obligation (axiom 8: no
+  silent merge across discriminators).
+
 ## [5.54.0]  <!-- __s155_u6_changelog_v5_54_0__ -->
 
 ### Added
