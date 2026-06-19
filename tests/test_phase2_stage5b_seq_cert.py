@@ -57,8 +57,8 @@ def _bare_cert(schema_version: int, sequence_ok: bool = True, conformant: bool =
     )
 
 
-def test_constant_bumped_to_v3() -> None:
-    assert CERTIFICATE_SCHEMA_VERSION == 3
+def test_constant_bumped_to_v4() -> None:  # __s156_u2_stage5b_schema_v4__
+    assert CERTIFICATE_SCHEMA_VERSION == 4
 
 
 def test_obligation_fields_for() -> None:

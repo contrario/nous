@@ -665,7 +665,7 @@ from cryptography.hazmat.primitives.serialization import (  # __nous_conformance
     PublicFormat,
 )
 
-CERTIFICATE_SCHEMA_VERSION: int = 3  # __s144_u4_cert_trust_fields_v1__ (was 2; +trust mirror)
+CERTIFICATE_SCHEMA_VERSION: int = 4  # __s156_u2_cert_schema_v4__ (was 3; +codegen leg)  # __s144_u4_cert_trust_fields_v1__ (was 2; +trust mirror)
 
 
 class CertificateSignature(BaseModel):  # __nous_conformance_certificate_v1__
@@ -712,6 +712,8 @@ class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
     cost_binding: Optional[str] = Field(default=None)  # __s144_u4_cert_trust_fields_v1__
     provider_token_integrity: Optional[str] = Field(default=None)
 
+    codegen_sha256: Optional[str] = Field(default=None)  # __s156_u2_cert_codegen_field_v1__
+    codegen_binding_ok: bool = True  # __s156_u2_cert_codegen_binding_ok__
     signature: Optional[CertificateSignature] = Field(default=None)
     transparency_log: Optional[dict] = Field(  # __nous_conformance_cert_anchor_v1__
         default=None
@@ -733,6 +735,9 @@ class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
         if self.certificate_schema_version < 3:  # __s144_u4_cert_trust_fields_v1__
             doc.pop("cost_binding", None)
             doc.pop("provider_token_integrity", None)
+        if self.certificate_schema_version < 4:  # __s156_u2_canon_method_gate_v1__
+            doc.pop("codegen_sha256", None)
+            doc.pop("codegen_binding_ok", None)
         return _json_cert.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -819,6 +824,8 @@ def sign_certificate(  # __nous_conformance_certificate_v1__
         errors=tuple(cert.errors),
         cost_binding=cert.cost_binding,  # __s144_u4_cert_trust_fields_v1__
         provider_token_integrity=cert.provider_token_integrity,
+        codegen_sha256=cert.codegen_sha256,  # __s156_u2_sign_reconstruct_v1__
+        codegen_binding_ok=cert.codegen_binding_ok,
         transparency_log=cert.transparency_log,  # __nous_conformance_cert_anchor_v1__
         signature=sig,
     )
@@ -853,6 +860,9 @@ def certificate_json(cert: ConformanceCertificate) -> str:  # __nous_conformance
         doc.pop("transparency_log", None)
     if cert.certificate_schema_version < 2:  # __phase2_stage5b_cert_v1__
         doc.pop("sequence_ok", None)
+    if cert.certificate_schema_version < 4:  # __s156_u2_cert_json_gate_v1__
+        doc.pop("codegen_sha256", None)
+        doc.pop("codegen_binding_ok", None)
     doc["errors"] = list(cert.errors)
     return _json_cert.dumps(doc, indent=2, sort_keys=True) + "\n"
 
@@ -936,9 +946,12 @@ _OBLIGATION_FIELDS = (
 )
 
 _OBLIGATION_FIELDS_V2 = _OBLIGATION_FIELDS + ("sequence_ok",)  # __phase2_stage5b_cert_v1__
+_OBLIGATION_FIELDS_V4 = _OBLIGATION_FIELDS_V2 + ("codegen_binding_ok",)  # __s156_u2_oblig_v4_tuple_v1__
 
 
 def _obligation_fields_for(schema_version: int) -> tuple:  # __phase2_stage5b_cert_v1__
+    if schema_version >= 4:  # __s156_u2_oblig_for_v4_v1__
+        return _OBLIGATION_FIELDS_V4
     return _OBLIGATION_FIELDS_V2 if schema_version >= 2 else _OBLIGATION_FIELDS
 
 
@@ -983,6 +996,9 @@ def _cert_canonical_body_bytes_dict(doc: dict) -> bytes:
     if int(body.get("certificate_schema_version", 1)) < 3:  # __s144_u4_cert_trust_fields_v1__
         body.pop("cost_binding", None)
         body.pop("provider_token_integrity", None)
+    if int(body.get("certificate_schema_version", 1)) < 4:  # __s156_u2_canon_dict_gate_v1__
+        body.pop("codegen_sha256", None)
+        body.pop("codegen_binding_ok", None)
     return _json.dumps(
         body, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")

@@ -186,8 +186,8 @@ def test_verifier_rederives_enum_guard_on_unvalidated_input():
     assert "frozen vocabulary" in str(ei.value)
 
 
-def test_certificate_schema_is_v3():
-    assert CERTIFICATE_SCHEMA_VERSION == 3
+def test_certificate_schema_is_v4():  # __s156_u2_s144_schema_v4__
+    assert CERTIFICATE_SCHEMA_VERSION == 4
 
 
 def test_certificate_mirrors_trust_and_signs():
@@ -201,7 +201,7 @@ def test_certificate_mirrors_trust_and_signs():
     detail = verify_conformance(env, man, spec, pricing)
     issued = datetime.now(timezone.utc).isoformat(timespec="seconds")
     cert = build_certificate(detail, env, man, nous_version="5.42.0", issued_utc=issued)
-    assert cert.certificate_schema_version == 3
+    assert cert.certificate_schema_version == 4  # __s156_u2_s144_mirror_v4__
     assert cert.cost_binding == "realized"
     assert cert.provider_token_integrity == "unattested"
     body = cert.certificate_canonical_body_bytes().decode()
