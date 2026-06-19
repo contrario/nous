@@ -126,6 +126,12 @@ class Manifest:
     # Crypto-only file binding: sha256 of coverage.gapwitness.json bytes
     # (S134). Present iff source_kind == "gap-witness". drop-when-None.
     gap_witness_sha256: Optional[str] = None  # __s134_gap_witness_sha256_field_v1__
+    # Fourth subject leg (S156): sha256 of generate_python(parse_nous(source)).
+    # Binds the manifest to the EXACT compiled program a conforming trace
+    # must name; offline-verifiable as a sha-equality vs trace + certificate.
+    # drop-when-None: absent on all pre-S156 manifests, canonical bytes
+    # unchanged. EVIDENCES program identity; does NOT prove the program ran.
+    codegen_sha256: Optional[str] = None  # __s156_u1_codegen_sha256_field_v1__
 
     def __post_init__(self) -> None:  # __s134_source_kind_coherence_v1__
         _allowed = (None, "gap-witness")
@@ -213,6 +219,8 @@ class Manifest:
             d["source_kind"] = self.source_kind
         if self.gap_witness_sha256 is not None:  # __s134_gap_witness_sha256_field_v1__
             d["gap_witness_sha256"] = self.gap_witness_sha256
+        if self.codegen_sha256 is not None:  # __s156_u1_codegen_sha256_canonical_v1__
+            d["codegen_sha256"] = self.codegen_sha256
         return d  # __session96_revert_m3_canonical_dict_v1__
 
 
@@ -244,6 +252,8 @@ def _build_proof_assumptions(spec: "SMTSpec") -> Optional[dict]:  # __session96_
 def manifest_from_verify(
     result: VerifyResult,
     nous_version: str,
+    *,  # __s156_u1_codegen_kw_v1__
+    codegen_sha256: Optional[str] = None,
 ) -> Manifest:
     """Build a Manifest from a VerifyResult (any verdict)."""
     spec = result.spec
@@ -268,6 +278,7 @@ def manifest_from_verify(
         timestamp_utc=result.timestamp_utc,
         counterexample_total_usd=ce_total,
         safety_margin_pct=(margin if margin > 0 else None),  # __session96_revert_m5_v1__
+        codegen_sha256=codegen_sha256,  # __s156_u1_codegen_passthrough_v1__
     )
 
 
@@ -428,6 +439,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
         source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
         gap_witness_sha256=doc.get("gap_witness_sha256"),  # __s134_gap_witness_sha256_field_v1__
+        codegen_sha256=doc.get("codegen_sha256"),  # __s156_u1_codegen_roundtrip_v1__
     )
     return m, sig, pub
 
@@ -479,6 +491,7 @@ def parse_manifest_json_with_anchor(
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
         source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
         gap_witness_sha256=doc.get("gap_witness_sha256"),  # __s134_gap_witness_sha256_field_v1__
+        codegen_sha256=doc.get("codegen_sha256"),  # __s156_u1_codegen_roundtrip_anchor_v1__
     )
     anchor: "_RekorAnchor | None" = None
     if anchor_block is not None:

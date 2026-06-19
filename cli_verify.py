@@ -245,7 +245,11 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
     # 5. Manifest (always built; written if --manifest-out, optionally published)
     nous_version = _import_nous_version()
-    manifest = manifest_from_verify(result, nous_version=nous_version)
+    from run_shas import compute_codegen_sha256  # __s156_u1_cli_codegen_import_v1__
+    _codegen_sha = compute_codegen_sha256(source_text)
+    manifest = manifest_from_verify(
+        result, nous_version=nous_version, codegen_sha256=_codegen_sha,
+    )
     if coverage_sha is not None:  # __s115_coverage_threshold_v1__
         manifest = _dc_s115.replace(
             manifest,
