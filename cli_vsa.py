@@ -100,6 +100,19 @@ def build_vsa_parser(sub: "argparse._SubParsersAction") -> None:
         "--out", required=True, help="Output bundle directory"
     )
     e.add_argument(
+        "--registry", default=None,
+        help="Optional signed verifier-registry.json to bundle; its "
+        "pinned operator key is baked into the emitted verifier so a "
+        "consumer can resolve the VSA key by verifier_id. Off by "
+        "default; bundles are byte-identical unless passed.",
+    )
+    e.add_argument(
+        "--no-inline-pin", action="store_true",
+        help="Emit a registry-only verifier: leave the inline VSA key "
+        "unprovisioned so the consumer MUST resolve it from the bundled "
+        "registry. Requires --registry.",
+    )
+    e.add_argument(
         "--key-path", default=None,
         help="VSA signing key path (default: ~/.local/share/nous/keys/"
              "vsa_signing.key)",
@@ -130,6 +143,69 @@ def _cmd_emit(args: argparse.Namespace) -> int:
     manifest_path = Path(args.manifest)
     cert_path = Path(args.cert)
     out_dir = Path(args.out)
+
+    _registry_arg = getattr(args, "registry", None)  # __s158_u2b_fix_getattr_v1__
+    registry_src = Path(_registry_arg) if _registry_arg else None
+    registry_pin = None
+    reg_vsa_pub = None
+    if getattr(args, "no_inline_pin", False) and registry_src is None:
+        print(
+            "PRECONDITION ERROR: --no-inline-pin requires --registry "
+            "(registry-only mode needs a registry to resolve the VSA "
+            "key)",
+            file=sys.stderr,
+        )
+        return 2
+    if registry_src is not None:
+        import verifier_registry
+        if not registry_src.is_file():
+            print(
+                "PRECONDITION ERROR: registry not found: "
+                + str(registry_src),
+                file=sys.stderr,
+            )
+            return 2
+        try:
+            registry_doc = json.loads(
+                registry_src.read_text(encoding="utf-8")
+            )
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            print(
+                "PRECONDITION ERROR: registry parse error: " + str(exc),
+                file=sys.stderr,
+            )
+            return 2
+        det = verifier_registry.verify_registry(registry_doc)
+        if not det.signature_ok:
+            print(
+                "PRECONDITION ERROR: registry signature does not verify "
+                "against a pinned operator key (errors: "
+                + str(det.errors) + ")",
+                file=sys.stderr,
+            )
+            return 2
+        sigblock = registry_doc.get("signature") or {}
+        registry_pin = sigblock.get("public_key_b64")
+        if not registry_pin:
+            print(
+                "PRECONDITION ERROR: registry has no signer public key",
+                file=sys.stderr,
+            )
+            return 2
+        for pin in registry_doc.get("verifier_pins") or []:
+            if (
+                isinstance(pin, dict)
+                and pin.get("verifier_id") == vsa.NOUS_VSA_VERIFIER_ID
+            ):
+                reg_vsa_pub = pin.get("public_key_b64")
+                break
+        if reg_vsa_pub is None:
+            print(
+                "PRECONDITION ERROR: registry has no verifier_pins entry "
+                "for " + vsa.NOUS_VSA_VERIFIER_ID,
+                file=sys.stderr,
+            )
+            return 2
 
     try:
         manifest_doc = _load_json(manifest_path, "manifest")
@@ -233,13 +309,37 @@ def _cmd_emit(args: argparse.Namespace) -> int:
             dst.write_bytes(src.read_bytes())
     if coverage_bytes is not None:
         (out_dir / "coverage.farkas.json").write_bytes(coverage_bytes)
+    if registry_src is not None:
+        (out_dir / "verifier-registry.json").write_bytes(
+            registry_src.read_bytes()
+        )
 
     (out_dir / "vsa.intoto.json").write_text(
         json.dumps(envelope, sort_keys=True, indent=2),
         encoding="utf-8",
     )
+    inline_pin = (
+        None if getattr(args, "no_inline_pin", False)
+        else vsa.public_key_raw_b64(pub)
+    )
+    if (
+        registry_src is not None
+        and not getattr(args, "no_inline_pin", False)
+        and reg_vsa_pub != vsa.public_key_raw_b64(pub)
+    ):
+        print(
+            "PRECONDITION ERROR: the registry pinned VSA key does not "
+            "match this bundle signing key; emitting would ship a bundle "
+            "the offline verifier rejects (hard-fail-on-conflict). "
+            "Re-anchor the registry for this VSA identity, or use "
+            "--no-inline-pin.",
+            file=sys.stderr,
+        )
+        return 2
     verifier_path = vsa_verifier.emit_vsa_verifier(
-        str(out_dir), vsa.public_key_raw_b64(pub)
+        str(out_dir),
+        pinned_pubkey_b64=inline_pin,
+        pinned_registry_pubkey_b64=registry_pin,
     )
 
     print("VSA bundle written to " + str(out_dir))
