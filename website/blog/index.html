@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s159_blog_v558_provenance_card_v1__ __s159_web_v5_58_0__ -->
+    <a class="post-card" href="#" onclick="showPost(&#39;v558-provenance&#39;);return false">
+      <div class="post-meta">
+        <span class="post-date">20 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.58.0 &mdash; Provenance for Our Own Build</div>
+      <div class="post-excerpt">Every NOUS evidence artifact so far described a customer&rsquo;s run &mdash; manifest, trace, conformance certificate, VSA &mdash; never how the NOUS package itself was built. v5.58.0 adds SLSA Provenance v1 over NOUS&rsquo;s own release: <code>phase_provenance</code> sha256s the built wheel and sdist as in-toto subjects, builds a <code>https://slsa.dev/provenance/v1</code> predicate, and Ed25519-signs it in a DSSE statement with a dedicated builder key (distinct from the VSA verifier key &mdash; separation of duties). Honestly labeled <strong>SLSA Build Level 1</strong>: an ad-hoc, operator-run release script, neither hosted nor isolated; <code>--anchor</code> adds an opt-in Rekor v2 anchor. Honest boundary: evidences build composition, does not prove builder integrity, hermeticity, isolation, or reproducibility; no PROVES leg, no guard. <code>nous-lang 5.58.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s158_blog_v557_registry_card_v1__ __s158_web_v5_57_0__ -->
     <a class="post-card" href="#" onclick="showPost('v557-registry');return false">
       <div class="post-meta">
@@ -841,6 +851,19 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
    <!-- __s154_blog_v553_quorum_ledger_post_v1__ __s154_web_v5_53_0__ -->
+   <!-- __s159_blog_v558_provenance_post_v1__ __s159_web_v5_58_0__ -->
+   <div class="post-full" id="post-v558-provenance">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.58.0 &mdash; Provenance for Our Own Build</h1>
+      <div class="post-full-meta">20 June 2026 &middot; 5 min read</div>
+      <div class="post-full-body">
+        <p>Every NOUS evidence artifact so far has answered a question about a <em>customer&rsquo;s</em> run: the signed manifest bounds the cost, the trace records what happened, the conformance certificate proves the run stayed inside the envelope, the VSA summarises the verdict. None of them said how the NOUS package itself reached your machine. That is the supply-chain question &mdash; what source, what commit, what build produced the wheel you installed from PyPI &mdash; and v5.58.0 answers it with the missing leg: SLSA Provenance v1 over NOUS&rsquo;s own release artifacts.</p>
+        <p>When <code>scripts/release.py</code> builds the wheel and sdist, a new pipeline phase computes the sha256 of each as in-toto subjects and assembles a <code>https://slsa.dev/provenance/v1</code> predicate. The <code>buildDefinition</code> records the external parameters a tenant would recognise &mdash; repository, ref, commit, version &mdash; and a resolved dependency pinning the source tree by git commit. The <code>runDetails</code> name the builder and the toolchain versions. The whole statement is wrapped in a DSSE / in-toto Statement v1 and Ed25519-signed, then written next to the artifacts as <code>dist/nous_lang-&lt;version&gt;.provenance.intoto.json</code>. The DSSE payload is canonical sorted-keys JSON, so the statement is byte-deterministic given fixed inputs; the wall-clock timestamps and the invocation id are the only event-specific fields, exactly as in the runtime trace.</p>
+        <p>The statement is signed by a <strong>dedicated builder key</strong>, not the VSA verifier key. This is deliberate. The principal that builds the artifacts (the Builder) and the principal that audits and attests to policy conformance (the Verifier) are different roles, and conflating their keys would be a silent merge across two distinct identities. So the builder key lives at its own path &mdash; <code>~/.local/share/nous/keys/provenance_signing.key</code>, created on first emission with 0600 permissions &mdash; and the emitter carries its own canonicalisation and DSSE encoding rather than importing the VSA module, so the byte-stability of the two legs is independent. Separation of duties, enforced cryptographically, even in a single-operator project.</p>
+        <p>The honest part is the level. The NOUS release is built by running a script ad-hoc on one operator-controlled host. Under the SLSA build track that is precisely <strong>Build Level 1</strong>: the provenance exists, is complete, is signed, and &mdash; with the opt-in <code>--anchor</code> flag &mdash; is anchored into Sigstore Rekor v2, but the build platform is neither hosted nor isolated. The two identifying URIs say so literally: <code>buildType</code> is <code>&hellip;/buildtypes/release-script/v1</code> and <code>builder.id</code> is <code>&hellip;/builders/release-script-adhoc/v1</code>. A <code>slsaBuildLevel: 1</code> field caps the claim in machine-readable form. Build Level 2 would need a hosted platform signing the provenance independently of the operator; Level 3 a hardened, isolated build that prevents operator interference. NOUS has neither, so it claims neither. Anchoring is opt-in so a Rekor outage can never block a release; the default build is hermetic.</p>
+        <p><strong>Honest boundary.</strong> This provenance <em>evidences</em> build composition: these exact wheel and sdist bytes came from this build definition, under this builder key, at this commit &mdash; and, when anchored, that the statement is in a public transparency log. It does <em>not</em> prove builder integrity, hermeticity, isolation, or that the source actually reproduces to these artifacts; those are the guarantees L1 explicitly does not make. There is no PROVES leg here and no guard &mdash; NOUS is a monitor, not a guard, and &ldquo;proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. A third party verifies the provenance offline with <code>cryptography</code> and the standard library alone: check the DSSE Ed25519 signature against the published builder key, confirm the predicate type, then re-derive the subject digests by hashing the wheel and sdist downloaded from PyPI. <code>nous-lang 5.58.0</code>.</p>
+      </div>
+   </div>
    <!-- __s158_blog_v557_registry_post_v1__ __s158_web_v5_57_0__ -->
    <div class="post-full" id="post-v557-registry">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
