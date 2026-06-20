@@ -174,3 +174,26 @@ library only:
 
 The builder public key is published as part of the release; pin it the way you
 would pin any other long-lived signing key.
+
+## Durable publication
+
+<!-- __s160_u1_durable_provenance_v1__:doc -->
+The v5.58.0 provenance, the sdist it names, and the builder public key are
+mirrored to a fetchable, git-tracked, served location so a third party can
+retrieve and pin them without trusting any single host's filesystem:
+
+    https://nous-lang.org/.well-known/nous/provenance/
+
+Files at that path:
+
+- `nous_lang-5.58.0.provenance.intoto.json` (+ `.sha256`): the signed DSSE provenance envelope.
+- `nous_lang-5.58.0.tar.gz` (+ `.sha256`): the sdist. This is NOT on PyPI for
+  5.58.0, so the mirror is its authoritative durable home. The wheel is on
+  PyPI with an identical sha256 and is not mirrored as a binary blob.
+- `builder-key.json` (+ `.sha256`): the raw Ed25519 builder public key,
+  keyid, and SLSA build level, so pinning is a single fetch.
+- `index.json` (+ `.sha256`): a manifest of the above with each artifact's
+  sha256, size, and source (`pypi` or `mirror`), plus the honest boundary.
+
+Publication EVIDENCES availability and integrity; it proves nothing new.
+The provenance remains an emitted-at event record at SLSA Build Level 1.
