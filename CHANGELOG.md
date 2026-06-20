@@ -4,6 +4,29 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+## [5.58.0]  <!-- __s159_changelog_v5_58_0__ -->
+
+### Added
+
+- SLSA Provenance v1 over the release artifacts (build leg). The release
+  pipeline now emits a DSSE-wrapped in-toto Statement v1 carrying a
+  `https://slsa.dev/provenance/v1` predicate over the built wheel and
+  sdist (sha256 subjects), Ed25519-signed by a dedicated builder key
+  (`~/.local/share/nous/keys/provenance_signing.key`, cryptographically
+  distinct from the VSA verifier key: separation of duties). The build is
+  honestly labeled SLSA Build Level 1 -- an ad-hoc, operator-run
+  `scripts/release.py`, neither hosted nor isolated (`buildType`
+  `https://nous-lang.org/buildtypes/release-script/v1`, `builder.id`
+  `https://nous-lang.org/builders/release-script-adhoc/v1`,
+  `slsaBuildLevel` 1). `phase_provenance` writes
+  `dist/nous_lang-<version>.provenance.intoto.json` on `--build` and
+  `--upload`; a new `--anchor` flag additionally submits the canonical
+  statement to Sigstore Rekor v2 and writes a `.provenance.rekor.json`
+  sidecar (opt-in; the default run is hermetic). Evidences build
+  composition; does not prove builder integrity, hermeticity, isolation,
+  or source-to-artifact reproducibility. No PROVES leg, no guard. See
+  `docs/SLSA_PROVENANCE.md`.
+
 ## [5.57.0]  <!-- __s158_changelog_v5_57_0__ -->
 
 ### Added
