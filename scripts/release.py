@@ -38,6 +38,10 @@ import os
 import shutil
 import subprocess
 import sys
+import hashlib  # __s159_u2_provenance_imports_v1__
+import json
+import uuid
+from datetime import datetime, timezone
 import tempfile
 import zipfile
 from pathlib import Path
@@ -269,6 +273,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "memory_index.py",
                                 "remedy_proof.py",  # __s112_release_v5_26_0_wheelgate__
                                 "build_run_remedy.py",
+                                "provenance.py",  # __s159_u1_provenance_wheelgate_v1__
                                 "annex_iv_map.py"]  # __s135_annex_iv_map_wheelgate_v1__  # __s105_compiled_trace_wheelgate_v1__ __s105_trace_anchor_wheelgate_v1__ __s105_memory_entry_wheelgate_v1__ __s105_memory_keyring_wheelgate_v1__ __s105_memory_store_wheelgate_v1__ __s105_memory_index_wheelgate_v1__  # __phase2_stage6_wheelgate_v1__
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
@@ -356,6 +361,117 @@ def phase_upload(whl: Path, sdist: Path) -> None:
         print(f"  OK: uploaded {whl.name} + {sdist.name}")
 
 
+# __s159_u2_provenance_phase_v1__
+PROVENANCE_REPO_URI: str = "https://github.com/contrario/nous"
+
+
+def _now_utc() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _file_sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 16), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def phase_provenance(
+    whl: Path,
+    sdist: Path,
+    version: str,
+    *,
+    started_on: str,
+    anchor: bool = False,
+    out_dir: Path = DIST_DIR,
+    key_path: Path | None = None,
+    git_commit: str | None = None,
+    invocation_id: str | None = None,
+    finished_on: str | None = None,
+    anchor_fn: object | None = None,
+) -> Path:
+    print("\n[9b/10] SLSA PROVENANCE (build leg)")
+    import provenance
+
+    if git_commit is None:
+        git_commit = run(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT).stdout.strip()
+    if invocation_id is None:
+        invocation_id = str(uuid.uuid4())
+    if finished_on is None:
+        finished_on = _now_utc()
+
+    artifacts = [
+        (whl.name, _file_sha256(whl)),
+        (sdist.name, _file_sha256(sdist)),
+    ]
+    builder_versions = {"python": sys.version.split()[0]}
+    for dep in ("build", "setuptools", "twine"):
+        try:
+            from importlib.metadata import version as _pkg_version
+
+            builder_versions[dep] = _pkg_version(dep)
+        except Exception:
+            pass
+
+    statement = provenance.build_provenance_statement(
+        artifacts=artifacts,
+        source_repo_uri=PROVENANCE_REPO_URI,
+        git_commit=git_commit,
+        version=version,
+        ref="refs/tags/v" + version,
+        started_on=started_on,
+        finished_on=finished_on,
+        invocation_id=invocation_id,
+        build_script="scripts/release.py",
+        builder_versions=builder_versions,
+    )
+    priv, pub, key_resolved = provenance.load_or_create_provenance_keypair(
+        key_path
+    )
+    envelope = provenance.sign_provenance(statement, priv)
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    prov_path = out_dir / ("nous_lang-" + version + ".provenance.intoto.json")
+    prov_path.write_text(
+        json.dumps(envelope, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    keyid = provenance.provenance_keyid(pub)
+    print("  OK: " + prov_path.name)
+    print("      builder keyid " + keyid[:16] + "... (" + str(key_resolved) + ")")
+    print("      subjects: " + ", ".join(a[0] for a in artifacts))
+
+    if anchor:
+        canonical = provenance.statement_canonical_bytes(statement)
+        if anchor_fn is None:
+            from rekor_anchor_v2 import anchor_manifest_to_rekor_v2 as anchor_fn
+        try:
+            entry = anchor_fn(canonical)
+        except Exception as exc:
+            raise ReleaseError("rekor anchor failed: " + repr(exc))
+        sidecar = {
+            "provider": "sigstore-rekor-v2",
+            "rekor_api_version": getattr(entry, "rekor_api_version", None),
+            "log_id": getattr(entry, "log_id", None),
+            "log_index": getattr(entry, "log_index", None),
+            "body_b64": getattr(entry, "body_b64", None),
+            "checkpoint_envelope": getattr(entry, "checkpoint_envelope", None),
+            "inclusion_proof_hashes": list(
+                getattr(entry, "inclusion_proof_hashes", []) or []
+            ),
+            "provenance_canonical_sha256": hashlib.sha256(canonical).hexdigest(),
+        }
+        rekor_path = out_dir / (
+            "nous_lang-" + version + ".provenance.rekor.json"
+        )
+        rekor_path.write_text(
+            json.dumps(sidecar, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        print("      anchored: log_index " + str(sidecar["log_index"]))
+    return prov_path
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="NOUS atomic release pipeline")
     parser.add_argument("--check", action="store_true", help="dry-run through phase 4")
@@ -366,6 +482,10 @@ def main() -> int:
         "--allow-existing-tag", action="store_true",
         help="permit re-publish when tag already exists at HEAD",
     )
+    parser.add_argument(
+        "--anchor", action="store_true",
+        help="emit and Rekor-anchor SLSA provenance (network; opt-in)",
+    )  # __s159_u2_provenance_arg_v1__
     args = parser.parse_args()
     global _ALLOW_EXISTING_TAG
     _ALLOW_EXISTING_TAG = bool(args.allow_existing_tag)
@@ -386,9 +506,14 @@ def main() -> int:
             print(f"\n[CHECK] all gates green for v{version}; build/upload skipped")
             return 0
 
+        prov_started = _now_utc()  # __s159_u2_provenance_started_v1__
         whl, sdist = phase_build()
         phase_wheel_gate(whl, version)
         phase_install_smoke(whl, version)
+        phase_provenance(
+            whl, sdist, version, started_on=prov_started,
+            anchor=bool(args.anchor),
+        )  # __s159_u2_provenance_call_v1__
 
         if args.build:
             print(f"\n[BUILD] artifacts ready: {whl.name} + {sdist.name}")

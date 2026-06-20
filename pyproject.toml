@@ -52,6 +52,8 @@ nous = "cli:main"
 packages = ["templates"]
 # __cc_pymodule_v1__
 py-modules = [
+    "provenance",  # __s159_u1_provenance_pymodule_v1__
+
     "_version", "cli", "parser", "ast_nodes", "validator", "typechecker",
     "codegen", "codegen_js", "runtime", "bridge", "nsp",
     "formatter", "profiler", "debugger", "repl", "test_runner",
