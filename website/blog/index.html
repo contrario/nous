@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s158_blog_v557_registry_card_v1__ __s158_web_v5_57_0__ -->
+    <a class="post-card" href="#" onclick="showPost('v557-registry');return false">
+      <div class="post-meta">
+        <span class="post-date">20 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.57.0 &mdash; The Verifier Resolves Its Key</div>
+      <div class="post-excerpt">The offline VSA verifier learned its trusted key only from a pin baked in at emit time. v5.57.0 adds cross-party resolution: <code>verify_vsa_offline.py</code> can resolve its VSA key from a bundled <code>verifier-registry.json</code> by <code>verifier_id</code>, after Ed25519-verifying that registry against a pinned operator key (the one re-anchored to Rekor v2, log_index 5223328). <code>nous vsa emit</code> gains <code>--registry</code> (defense-in-depth) and <code>--no-inline-pin</code> (registry-only, no inline key). Conflict policy is hard-fail-on-disagreement. Honest boundary: resolution evidences logged-allowlist membership via Ed25519; the Rekor inclusion proof stays toolchain-tier; no verifier correctness is imparted. <code>nous-lang 5.57.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s157_blog_v556_vsa_card_v1__ __s157_web_v5_56_0__ -->
     <a class="post-card" href="#" onclick="showPost('v556-vsa');return false">
       <div class="post-meta">
@@ -831,6 +841,20 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
    <!-- __s154_blog_v553_quorum_ledger_post_v1__ __s154_web_v5_53_0__ -->
+   <!-- __s158_blog_v557_registry_post_v1__ __s158_web_v5_57_0__ -->
+   <div class="post-full" id="post-v557-registry">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.57.0 &mdash; The Verifier Resolves Its Key</h1>
+      <div class="post-full-meta">20 June 2026 &middot; 4 min read</div>
+      <div class="post-full-body">
+        <p>v5.56.0 made a verification summary that travels: a small signed object &mdash; a SLSA Verification Summary Attestation &mdash; that a consumer who trusts the NOUS VSA key can read instead of re-running the whole verifier. But the trust still flowed through a key <em>baked into the verifier at emit time</em>. A third party who received a bundle had to take that embedded key on faith; there was no way to confirm, from the bundle alone, that the signer was an identity NOUS had actually published. v5.57.0 closes that with cross-party key resolution through the logged verifier registry.</p>
+        <p>The mechanism reuses an object that already exists and is already anchored. NOUS publishes a <code>verifier-registry.json</code> &mdash; an Ed25519-signed, Rekor v2-anchored allowlist of verifier-template digests &mdash; at a stable URL. For this release it was re-anchored (<code>log2025-1</code>, log_index 5223328) to carry a <code>verifier_pins</code> entry mapping the VSA <code>verifier_id</code> to its raw Ed25519 public key. The pin is drop-when-empty, so every prior signed registry body stays byte-identical. The emitted offline verifier gains a second pin slot: when its inline VSA key is absent, it reads the bundled registry, verifies the registry&rsquo;s own Ed25519 signature against a pinned operator key, recomputes the canonical registry body, and extracts the public key whose <code>verifier_id</code> matches. That key becomes the trust anchor for the DSSE check.</p>
+        <p>The honest line about the anchor matters. The registry carries its Rekor v2 inclusion proof and checkpoint into the bundle, but the stdlib-only verifier does <em>not</em> re-derive that proof &mdash; <code>cryptography</code> and the standard library cannot reconstruct a tile-backed Merkle inclusion proof, and pulling in the full Rekor stack (which needs Pydantic) would destroy the zero-dependency property the offline verifier exists to preserve. So resolution <em>evidences</em> logged-allowlist membership of the VSA identity by Ed25519-verifying the signed registry; the deeper &lsquo;this key is in the public log&rsquo; check is toolchain-tier, available to anyone running the full NOUS verifier against the carried anchor. The boundary is stated in the verdict banner itself, not just the docs.</p>
+        <p><code>nous vsa emit</code> gains two flags, both opt-in so default bundles are byte-identical to before. <code>--registry PATH</code> bundles a registry: NOUS first verifies it with <code>verify_registry</code> against a pinned operator key, refuses if that fails, bakes the registry&rsquo;s signer key into the verifier as a second pin (defense-in-depth alongside the inline key), and copies the registry into the bundle. <code>--no-inline-pin</code> goes further: it emits a registry-only verifier with <em>no</em> inline VSA key at all, so the consumer must resolve the key from the logged allowlist &mdash; the true cross-party path. It requires <code>--registry</code>.</p>
+        <p>The conflict policy is the load-bearing safety property: <strong>hard-fail on disagreement</strong>. If a verifier carries both an inline pin and a registry, and they name different keys for the <code>verifier_id</code>, the bundle is incoherent &mdash; it was pinned to a key the logged allowlist does not list &mdash; and it is rejected. This is enforced twice: at emit time, a pre-flight refuses to ship a bundle whose inline signing key disagrees with the registry pin; and at verify time, the offline verifier refuses rather than silently prefer one. A verifier provisioned with neither an inline pin nor a registry pin fails closed. The cross-party path was proven end to end: a registry-only verifier, carrying no inline key, accepted a VSA purely by Ed25519-checking the bundled registry and matching <code>verifier_id</code>.</p>
+        <p><strong>Honest boundary.</strong> Registry resolution <em>evidences</em> that the VSA signing key is the one NOUS published and signed, present in the publicly-logged allowlist; it does <em>not</em> prove the verifier correct, the decision correct, or the run executed, and it adds no new trust root &mdash; the operator key was already the registry&rsquo;s root, and the Rekor anchor was already public. The stdlib verifier evidences membership; the deep log check is toolchain-tier. NOUS is a monitor, not a guard. &ldquo;Proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. A third party verifies offline with <code>cryptography</code> and <code>z3</code> only. <code>nous-lang 5.57.0</code>.</p>
+      </div>
+   </div>
    <!-- __s157_blog_v556_vsa_post_v1__ __s157_web_v5_56_0__ -->
    <div class="post-full" id="post-v556-vsa">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
