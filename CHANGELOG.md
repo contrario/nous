@@ -4,6 +4,38 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+## [5.57.0]  <!-- __s158_changelog_v5_57_0__ -->
+
+### Added
+
+- Cross-party VSA key resolution via the logged verifier registry. The
+  offline VSA verifier (`verify_vsa_offline.py`) can now resolve its
+  trusted signing key from a bundled `verifier-registry.json` by
+  `verifier_id`, after Ed25519-verifying that registry against a pinned
+  operator key. The registry Sigstore Rekor v2 anchor travels in the
+  bundle but is not re-derived in the stdlib-only verifier (toolchain-
+  tier). `nous vsa emit` gains `--registry PATH` (bundle a verified
+  registry; bake its operator key into the verifier as defense-in-depth)
+  and `--no-inline-pin` (registry-only mode: emit a verifier with no
+  inline key, so a consumer must resolve it from the logged allowlist).
+  Conflict policy is hard-fail-on-disagreement, enforced at emit time
+  and at verify time.
+
+### Changed
+
+- `verifier_registry.build_registry` accepts an optional `verifier_pins`
+  array (`verifier_id` -> raw Ed25519 `public_key_b64`), drop-when-empty
+  so prior signed registry bodies stay byte-identical. The published
+  5.56.0 registry was re-anchored to Rekor v2 (log2025-1, log_index
+  5223328) to carry the VSA verifier identity pin.
+
+### Security
+
+- Registry resolution EVIDENCES logged-allowlist membership of the VSA
+  identity via Ed25519 plus the published Rekor v2 anchor; it does not
+  impart verifier correctness. A verifier provisioned with neither an
+  inline pin nor a registry pin fails closed.
+
 ## [5.56.0]  <!-- __s157_changelog_v5_56_0__ -->
 
 ### Added
