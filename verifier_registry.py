@@ -123,10 +123,61 @@ def canonical_registry_body_bytes(registry: Mapping[str, object]) -> bytes:
     ).encode("utf-8")
 
 
+def _is_raw_ed25519_b64(value: object) -> bool:  # __s158_u1_verifier_pins_v1__
+    if not isinstance(value, str) or len(value) != 44:
+        return False
+    try:
+        return len(base64.b64decode(value, validate=True)) == 32
+    except (binascii.Error, ValueError):
+        return False
+
+
+def _normalize_verifier_pins(  # __s158_u1_verifier_pins_v1__
+    pins: Sequence[Mapping[str, object]],
+) -> list[dict[str, str]]:
+    """Normalize and validate verifier-identity pins. Each pin must
+    carry ``verifier_id`` (a non-empty string) and ``public_key_b64`` (a
+    32-byte raw Ed25519 public key, base64). Refuses (RegistryError,
+    fail-closed) any malformed or duplicate pin, mirroring the entries
+    discipline. Deterministically sorted by (verifier_id,
+    public_key_b64) so the canonical body is byte-stable across
+    producers."""
+    if not isinstance(pins, Sequence) or isinstance(pins, (str, bytes)):
+        raise RegistryError("verifier_pins is not a sequence")
+    seen: set[str] = set()
+    normalized: list[dict[str, str]] = []
+    for idx, pin in enumerate(pins):
+        if not isinstance(pin, Mapping):
+            raise RegistryError(f"verifier_pins[{idx}] is not an object")
+        vid = pin.get("verifier_id")
+        pub = pin.get("public_key_b64")
+        if not isinstance(vid, str) or not vid:
+            raise RegistryError(
+                f"verifier_pins[{idx}].verifier_id is missing or not a "
+                f"non-empty string: {vid!r}"
+            )
+        if not _is_raw_ed25519_b64(pub):
+            raise RegistryError(
+                f"verifier_pins[{idx}].public_key_b64 is not a 32-byte "
+                f"raw Ed25519 public key (base64): {pub!r}"
+            )
+        if vid in seen:
+            raise RegistryError(
+                f"duplicate verifier_pins entry for verifier_id={vid!r}"
+            )
+        seen.add(vid)
+        normalized.append(
+            {"public_key_b64": pub, "verifier_id": vid}  # type: ignore[dict-item]
+        )
+    normalized.sort(key=lambda p: (p["verifier_id"], p["public_key_b64"]))
+    return normalized
+
+
 def build_registry(
     entries: Sequence[Mapping[str, object]],
     *,
     registry_schema: int = REGISTRY_SCHEMA,
+    verifier_pins: Sequence[Mapping[str, object]] | None = None,  # __s158_u1_verifier_pins_v1__
 ) -> dict:
     """Assemble an unsigned, un-anchored registry from verifier entries.
 
@@ -187,7 +238,13 @@ def build_registry(
             e["template_sha256"],
         )
     )
-    return {"registry_schema": int(registry_schema), "entries": normalized}
+    registry: dict = {  # __s158_u1_verifier_pins_v1__
+        "registry_schema": int(registry_schema),
+        "entries": normalized,
+    }
+    if verifier_pins:  # drop-when-empty: absent => prior body byte-identical
+        registry["verifier_pins"] = _normalize_verifier_pins(verifier_pins)
+    return registry
 
 
 def sign_registry(

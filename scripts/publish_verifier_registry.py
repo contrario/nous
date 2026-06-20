@@ -132,8 +132,42 @@ def _union_entries(
     return list(by_key.values())
 
 
+def _build_vsa_pin(vsa_key_path: Path) -> dict:  # __s158_u1b_vsa_pin_v1__
+    """Read the dedicated VSA signing key (raw 32-byte Ed25519), derive
+    its public key, and return a verifier_pins entry mapping the VSA
+    verifier identity to that public key. Refuses (PublishError,
+    fail-closed) if the key file is absent or malformed; the key is
+    NEVER created here."""
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+        Ed25519PrivateKey,
+    )
+    import vsa
+
+    if not vsa_key_path.is_file():
+        raise PublishError(
+            "VSA signing key not found at " + str(vsa_key_path)
+            + " (the key is never created here; run 'nous vsa emit' "
+            "once to create it, or pass the correct --vsa-key path)"
+        )
+    raw = vsa_key_path.read_bytes()
+    if len(raw) != 32:
+        raise PublishError(
+            "VSA signing key at " + str(vsa_key_path)
+            + " is not a 32-byte raw Ed25519 private key (length "
+            + str(len(raw)) + ")"
+        )
+    private_key = Ed25519PrivateKey.from_private_bytes(raw)
+    return {
+        "verifier_id": vsa.NOUS_VSA_VERIFIER_ID,
+        "public_key_b64": vsa.public_key_raw_b64(private_key.public_key()),
+    }
+
+
 def build_registry_doc(
-    entries: list[dict], *, merge_path: Path | None = None
+    entries: list[dict],
+    *,
+    merge_path: Path | None = None,
+    verifier_pins: list[dict] | None = None,  # __s158_u1b_vsa_pin_v1__
 ) -> dict:
     all_entries = list(entries)
     if merge_path is not None:
@@ -141,7 +175,9 @@ def build_registry_doc(
         all_entries = _union_entries(
             all_entries, _entries_from_signed(prior)
         )
-    return verifier_registry.build_registry(all_entries)
+    return verifier_registry.build_registry(
+        all_entries, verifier_pins=verifier_pins
+    )
 
 
 def _load_operator_key(key_path: Path) -> Ed25519PrivateKey:
@@ -199,9 +235,15 @@ def cmd_build(args: argparse.Namespace) -> int:
         return 1
     key_path = Path(args.key)
     merge_path = Path(args.merge) if args.merge else None
+    vsa_key = Path(args.vsa_key) if args.vsa_key else None  # __s158_u1b_vsa_pin_v1__
     try:
+        verifier_pins = (
+            [_build_vsa_pin(vsa_key)] if vsa_key is not None else None
+        )
         unsigned = build_registry_doc(
-            current_entries(), merge_path=merge_path
+            current_entries(),
+            merge_path=merge_path,
+            verifier_pins=verifier_pins,
         )
         signed = sign_doc(unsigned, key_path)
         pub_b64 = registry_public_key_b64(key_path)
@@ -324,6 +366,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     b.add_argument(
         "--output", required=True, help="path to write the signed registry"
+    )
+    b.add_argument(  # __s158_u1b_vsa_pin_v1__
+        "--vsa-key", default=None,
+        help="path to the dedicated VSA signing key (raw Ed25519, e.g. "
+        "~/.local/share/nous/keys/vsa_signing.key); when given, its "
+        "public key is pinned into the registry as a verifier_pins "
+        "entry. Refused if the file is absent (the key is never created "
+        "here).",
     )
     b.add_argument(
         "--merge", default=None,
