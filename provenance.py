@@ -41,6 +41,7 @@ import json
 import os
 import re
 import tempfile
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Optional, Sequence
 
@@ -69,6 +70,50 @@ HONEST_SCOPE: str = (
     "operator-run script, neither hosted nor isolated. No PROVES leg, no "
     "guard. NOUS is a monitor, not a guard."
 )
+
+
+@dataclass(frozen=True, slots=True)
+class BuilderProfile:
+    # __s161_u1_builder_profile_v1__
+    # Truthful description of the principal + platform that built the
+    # artifacts named by a provenance Statement. The default profile
+    # preserves the historical L1 ad-hoc constants byte-for-byte; the GitHub
+    # profile describes a hosted, isolated runner (SLSA Build Level 2). The
+    # operator key may sign under EITHER profile -- the trust root (operator
+    # key) is orthogonal to the build platform it describes.
+    build_type: str
+    builder_id: str
+    slsa_build_level: int
+    build_platform_class: str
+    honest_scope: str
+
+
+BUILDER_PROFILE_L1_ADHOC: BuilderProfile = BuilderProfile(
+    build_type=BUILD_TYPE,
+    builder_id=BUILDER_ID,
+    slsa_build_level=SLSA_BUILD_LEVEL,
+    build_platform_class=BUILD_PLATFORM_CLASS,
+    honest_scope=HONEST_SCOPE,
+)
+
+
+BUILDER_PROFILE_L2_GITHUB: BuilderProfile = BuilderProfile(
+    build_type="https://nous-lang.org/buildtypes/github-actions-release/v1",
+    builder_id="https://github.com/contrario/nous/.github/workflows/release.yml",
+    slsa_build_level=2,
+    build_platform_class="github-hosted-isolated-runner",
+    honest_scope=(
+        "SLSA Build Level 2: built on a GitHub-hosted, ephemeral, isolated "
+        "runner; the platform mints a keyless Sigstore identity that signs "
+        "the SLSA provenance and the PEP 740 publish attestation. This "
+        "operator-key leg COUNTER-ATTESTS the same published wheel and sdist "
+        "for offline, zero-Sigstore-trust verification. EVIDENCES build "
+        "composition and subject identity via an Ed25519 signature (and a "
+        "Rekor anchor when emitted); does NOT prove source-to-artifact "
+        "correctness or hermeticity. NOUS is a monitor, not a guard."
+    ),
+)
+
 
 DEFAULT_PROVENANCE_KEY_PATH: Path = (
     Path.home() / ".local" / "share" / "nous" / "keys" / "provenance_signing.key"
@@ -188,6 +233,7 @@ def build_provenance_statement(
     invocation_id: Optional[str] = None,
     build_script: Optional[str] = None,
     builder_versions: Optional[Mapping[str, str]] = None,
+    profile: BuilderProfile = BUILDER_PROFILE_L1_ADHOC,
 ) -> dict:
     """Build the in-toto Statement v1 carrying the SLSA Provenance v1
     predicate over the released artifacts. Optional legs are dropped when
@@ -213,7 +259,7 @@ def build_provenance_statement(
             )
 
     build_definition: dict = {
-        "buildType": BUILD_TYPE,
+        "buildType": profile.build_type,
         "externalParameters": {
             "repository": source_repo_uri,
             "ref": ref,
@@ -232,7 +278,7 @@ def build_provenance_statement(
             raise ProvenanceError("build_script, when given, must be non-empty")
         build_definition["internalParameters"] = {"buildScript": build_script}
 
-    builder: dict = {"id": BUILDER_ID}
+    builder: dict = {"id": profile.builder_id}
     if builder_versions:
         builder["version"] = {
             str(k): str(v) for k, v in builder_versions.items()
@@ -250,9 +296,9 @@ def build_provenance_statement(
         "buildDefinition": build_definition,
         "runDetails": {"builder": builder, "metadata": metadata},
         NOUS_PROV_EXT_KEY: {
-            "slsaBuildLevel": SLSA_BUILD_LEVEL,
-            "buildPlatformClass": BUILD_PLATFORM_CLASS,
-            "scope": HONEST_SCOPE,
+            "slsaBuildLevel": profile.slsa_build_level,
+            "buildPlatformClass": profile.build_platform_class,
+            "scope": profile.honest_scope,
         },
     }
     return {
