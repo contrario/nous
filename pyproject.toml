@@ -117,6 +117,7 @@ py-modules = [
     "vsa",  # __s157_u1_vsa_pyproject_v1__
     "vsa_verifier",  # __s157_u2_vsa_verifier_pyproject_v1__
     "cli_vsa",  # __s157_u3_cli_vsa_pyproject_v1__
+    "provenance_verifier",  # __s160_u2_provenance_verifier_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__

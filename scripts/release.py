@@ -274,6 +274,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "remedy_proof.py",  # __s112_release_v5_26_0_wheelgate__
                                 "build_run_remedy.py",
                                 "provenance.py",  # __s159_u1_provenance_wheelgate_v1__
+                                "provenance_verifier.py",  # __s160_u2_provenance_verifier_wheelgate_v1__
                                 "annex_iv_map.py"]  # __s135_annex_iv_map_wheelgate_v1__  # __s105_compiled_trace_wheelgate_v1__ __s105_trace_anchor_wheelgate_v1__ __s105_memory_entry_wheelgate_v1__ __s105_memory_keyring_wheelgate_v1__ __s105_memory_store_wheelgate_v1__ __s105_memory_index_wheelgate_v1__  # __phase2_stage6_wheelgate_v1__
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
