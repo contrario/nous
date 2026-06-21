@@ -1,0 +1,156 @@
+{
+  "coverage": [
+    {
+      "boundary": "EVIDENCES",
+      "concept": "governance evidence and receipts; evidence continuity",
+      "nous_evidence": "signed manifest, execution trace, conformance certificate, VSA",
+      "relationship": "equivalent-to",
+      "secure_by_design": [
+        "accountability",
+        "auditability"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "evidence provenance",
+      "nous_evidence": "SLSA build provenance leg (Ed25519 over DSSE/in-toto)",
+      "relationship": "equivalent-to",
+      "secure_by_design": [
+        "auditability",
+        "supply-chain integrity"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "governance replayability",
+      "nous_evidence": "byte-deterministic canonical serialization; run_shas; offline re-derivation",
+      "relationship": "equivalent-to",
+      "secure_by_design": [
+        "auditability",
+        "forensic reconstruction"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "deterministic governance",
+      "nous_evidence": "plain sorted-key compact JSON canonicalization across all signed bodies",
+      "relationship": "equivalent-to",
+      "secure_by_design": [
+        "auditability"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "independent verification of governance outcomes",
+      "nous_evidence": "portable offline verifiers (cryptography + stdlib, zero install, well-known published)",
+      "relationship": "equivalent-to",
+      "secure_by_design": [
+        "auditability",
+        "independent assurance"
+      ]
+    },
+    {
+      "boundary": "PROVES",
+      "concept": "machine-verifiable governance",
+      "note": "For the cost cap and policy coverage only, NOUS exceeds the category's determinism bar: the claim is proven, not merely reproducible. This is the one PROVES row.",
+      "nous_evidence": "Z3 cost-cap verification; Farkas coverage certificates re-checked offline by rational arithmetic",
+      "relationship": "subset-of",
+      "secure_by_design": [
+        "operational assurance",
+        "auditability"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "execution-bound authorization",
+      "note": "NOUS records and attests the authorization binding; it does not enforce it at execution.",
+      "nous_evidence": "obligation shell; Requester/Authority; law gated(<action>) with signed smt_spec_sha256; kind=gated_action trace",
+      "relationship": "intersects-with",
+      "secure_by_design": [
+        "least privilege",
+        "complete mediation"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "admissibility evaluation",
+      "note": "NOUS makes inadmissibility observable and attributable; it does not block the action.",
+      "nous_evidence": "Admission/Admissibility verdict in the conformance certificate",
+      "relationship": "intersects-with",
+      "secure_by_design": [
+        "complete mediation",
+        "secure defaults"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "delegated / multi-agent authority governance",
+      "nous_evidence": "dual-control N-of-M quorum (co_authorizations, gated_quorums)",
+      "relationship": "subset-of",
+      "secure_by_design": [
+        "least privilege",
+        "accountability"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "governance interoperability",
+      "nous_evidence": "GLM formation layer; cross-party VSA registry",
+      "relationship": "intersects-with",
+      "secure_by_design": [
+        "resilience",
+        "accountability"
+      ]
+    },
+    {
+      "boundary": "EVIDENCES",
+      "concept": "constitutional governance",
+      "nous_evidence": "constitutional constraints compiled from law into signed specs",
+      "relationship": "intersects-with",
+      "secure_by_design": [
+        "secure defaults"
+      ]
+    },
+    {
+      "boundary": "NOT-COVERED",
+      "concept": "structural refusal as execution prevention (commit-blocking guard)",
+      "note": "DELIBERATE DIVERGENCE. The category's structural refusal PREVENTS execution at the commit boundary (a guard role). NOUS is a monitor: it refuses to PRODUCE a governed attestation on ambiguity and can record a non-conformant verdict, but it does not interpose in the execution path to block the commit. Enforcement, if any, belongs to the operator's surrounding system acting on NOUS evidence.",
+      "nous_evidence": null,
+      "relationship": "no-relationship",
+      "secure_by_design": []
+    },
+    {
+      "boundary": "NOT-COVERED",
+      "concept": "commit-boundary enforcement / action blocking",
+      "note": "Same monitor-not-guard boundary: NOUS evidences at the commit boundary; it does not gate it.",
+      "nous_evidence": null,
+      "relationship": "no-relationship",
+      "secure_by_design": []
+    }
+  ],
+  "honest_boundary": "This profile EVIDENCES which runtime-governance concepts NOUS evidence types discharge; it does NOT PROVE those concepts are correctly implemented. A future GCA signature would evidence authorship and integrity of this coverage claim, not conformance. 'proves' is reserved for the Z3/Farkas legs. NOUS is a monitor, not a guard.",
+  "reference_category": {
+    "name": "runtime governance (execution-layer governance)",
+    "source": "Willis JM. Operationalizing Secure-by-Design AI Through Deterministic Runtime Governance. 2026. Zenodo DOI 10.5281/zenodo.20749457. Framework-neutral terminology only."
+  },
+  "references": [
+    "Willis JM. Operationalizing Secure-by-Design AI Through Deterministic Runtime Governance. 2026. Zenodo DOI 10.5281/zenodo.20749457.",
+    "NIST OSCAL Control Mapping Model. https://pages.nist.gov/OSCAL/",
+    "in-toto Attestation Framework. https://github.com/in-toto/attestation",
+    "docs/RUNTIME_GOVERNANCE_CROSSWALK.md"
+  ],
+  "relationship_vocabulary": {
+    "note": "Aligned to the OSCAL Control Mapping vocabulary. This profile is OSCAL-aligned, NOT OSCAL-conformant: it has not been validated against the NIST OSCAL schema. A validated OSCAL Control Mapping Model serialization is a separate, deferred step.",
+    "source": "OSCAL Control Mapping Model relationship types",
+    "values": [
+      "equivalent-to",
+      "subset-of",
+      "intersects-with",
+      "no-relationship"
+    ]
+  },
+  "schema": "nous.governance_coverage_profile.v1",
+  "schema_note": "Human-readable reference profile. The signed Governance Coverage Attestation (GCA) will use this content as its canonical body, serialized in the standard NOUS compact sorted-key form before Ed25519 signing. This committed file is reference content, NOT a signed evidence artifact and NOT published to any well-known path.",
+  "subject_kind": "nous_release",
+  "version": "1.0"
+}
