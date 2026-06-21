@@ -487,6 +487,11 @@ def main() -> int:
         "--anchor", action="store_true",
         help="emit and Rekor-anchor SLSA provenance (network; opt-in)",
     )  # __s159_u2_provenance_arg_v1__
+    parser.add_argument(
+        "--no-provenance", action="store_true",
+        help="build + wheel-gate + install-smoke WITHOUT emitting the "
+             "operator-key provenance leg (CI builds; key stays offline)",
+    )  # __s161_u4_no_provenance_arg_v1__
     args = parser.parse_args()
     global _ALLOW_EXISTING_TAG
     _ALLOW_EXISTING_TAG = bool(args.allow_existing_tag)
@@ -511,10 +516,14 @@ def main() -> int:
         whl, sdist = phase_build()
         phase_wheel_gate(whl, version)
         phase_install_smoke(whl, version)
-        phase_provenance(
-            whl, sdist, version, started_on=prov_started,
-            anchor=bool(args.anchor),
-        )  # __s159_u2_provenance_call_v1__
+        if not args.no_provenance:  # __s161_u4_no_provenance_guard_v1__
+            phase_provenance(
+                whl, sdist, version, started_on=prov_started,
+                anchor=bool(args.anchor),
+            )  # __s159_u2_provenance_call_v1__
+        else:
+            print("\n[9b/10] SLSA PROVENANCE skipped (--no-provenance; "
+                  "operator key not minted in this environment)")
 
         if args.build:
             print(f"\n[BUILD] artifacts ready: {whl.name} + {sdist.name}")
