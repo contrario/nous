@@ -194,6 +194,11 @@ Files at that path:
   keyid, and SLSA build level, so pinning is a single fetch.
 - `index.json` (+ `.sha256`): a manifest of the above with each artifact's
   sha256, size, and source (`pypi` or `mirror`), plus the honest boundary.
+- `verify_provenance_offline.py` (+ `.sha256`): a self-contained offline verifier
+  (cryptography + standard library only) that checks the DSSE Ed25519
+  signature against the pinned builder key and re-derives the wheel/sdist
+  digests from local bytes. Place it next to the downloaded artifacts and
+  run `python3 verify_provenance_offline.py` (or pass a directory argument).  <!-- __s160_u3_publish_verifier_v1__ -->
 
 Publication EVIDENCES availability and integrity; it proves nothing new.
 The provenance remains an emitted-at event record at SLSA Build Level 1.
