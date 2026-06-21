@@ -195,7 +195,7 @@ def phase_pyflakes() -> None:
         if not path.is_file():
             raise ReleaseError(f"pyflakes target missing: {target}")
         result = subprocess.run(
-            ["pyflakes", str(path)],
+            ["python3", "-m", "pyflakes", str(path)],  # __s163_p5_pyflakes_m_v1__
             capture_output=True,
             text=True,
             check=False,

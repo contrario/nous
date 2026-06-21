@@ -363,7 +363,11 @@ async def execute_program(
     report = rt.report()
     print(f"\n{report}")
 
-    log_path = Path(f"/opt/aetherlang_agents/nous/runtime_{world.name.lower()}_{mode}.json")
+    import os as _os_out  # __s163_p5_outdir_v1__
+    _trace_dir_env = _os_out.environ.get("NOUS_TRACE_DIR")
+    _out_dir = Path(_trace_dir_env) if _trace_dir_env else Path.cwd()
+    _out_dir.mkdir(parents=True, exist_ok=True)
+    log_path = _out_dir / f"runtime_{world.name.lower()}_{mode}.json"
     rt.rlog.save(log_path)
     log.info(f"Log saved: {log_path}")
 
@@ -377,9 +381,7 @@ async def execute_program(
         if trace_capture is not None:  # __s105_capture_emit_v1__
             trace_capture["envelope"] = _trace_env.persisted_dict()  # __s107_u2_persist_capture_v1__
         else:
-            _trace_path = Path(
-                f"/opt/aetherlang_agents/nous/trace_{world.name.lower()}_{mode}.json"
-            )
+            _trace_path = _out_dir / f"trace_{world.name.lower()}_{mode}.json"  # __s163_p5_outdir_v1__
             import json as _json
             import os as _os
             import tempfile as _tempfile

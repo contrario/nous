@@ -23,7 +23,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path("/opt/aetherlang_agents/nous")
+ROOT = Path(__file__).resolve().parent.parent  # __s163_p5_repo_root_v1__
 CLI = ROOT / "cli.py"
 BASELINE_LOG = Path("/tmp/nous_replay_e2e.jsonl")
 TAMPERED_LOG = Path("/tmp/nous_phase_c_tampered.jsonl")
