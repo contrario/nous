@@ -46,7 +46,7 @@ import tempfile
 import zipfile
 from pathlib import Path
 
-REPO_ROOT: Path = Path("/opt/aetherlang_agents/nous")
+REPO_ROOT: Path = Path(__file__).resolve().parent.parent  # __s162_p1_portable_repo_root_v1__
 DIST_DIR: Path = REPO_ROOT / "dist"
 TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
