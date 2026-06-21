@@ -1,7 +1,7 @@
 name: release
 
-# TestPyPI DRY-RUN variant (S162 P1). Pinned from reviewed sha 338eda35.
-# Targets test.pypi.org; flip environment+repository-url to pypi for prod.
+# Production PyPI release workflow (S163 P2). __s163_p2_flip_pypi_v1__ ; from reviewed sha 338eda35.
+# Targets pypi.org (production). TestPyPI dry-run was v5.59.0 (S162).
 # Reviewed-not-applied. Supersedes all prior release.yml drafts.
 # Prerequisites before this can run (all go-gated, IRREVERSIBLE-class):
 #   1. PyPI/TestPyPI Trusted Publisher: owner=contrario repo=nous
@@ -70,8 +70,8 @@ jobs:
     needs: build
     runs-on: ubuntu-24.04
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/nous-lang
+      name: pypi
+      url: https://pypi.org/p/nous-lang
     permissions:
       id-token: write        # OIDC: Trusted Publishing + Sigstore attestation identity
       attestations: write    # SLSA build-provenance attestation
@@ -88,5 +88,4 @@ jobs:
       - name: Publish to PyPI (Trusted Publishing; PEP 740 publish attestation auto)
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # v1.14.0
         with:
-          repository-url: https://test.pypi.org/legacy/
           print-hash: true
