@@ -121,6 +121,16 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s167_blog_v5620_card_v1__ __s167_web_v5_62_0__ -->
+    <a class="post-card" href="#" onclick="showPost(&#39;v5620-build-attest-verify&#39;);return false">
+      <div class="post-meta">
+        <span class="post-date">23 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.62.0 &mdash; Two Roots, One Artifact, Checked Offline</div>
+      <div class="post-excerpt">v5.61.0 anchored a verification digest in Rekor v2 and shipped the offline re-checker. v5.62.0 makes it a command and a single verdict: <code>nous build-attest-verify</code>, an offline <strong>dual-root convergence</strong> verifier. It confirms two independent roots agree on the same release VSA &mdash; <strong>Root 1</strong> the operator Ed25519 endorsement against the pinned release-operator key, <strong>Root 2</strong> public Rekor v2 transparency-log inclusion with its signed checkpoint and RFC 3161 timestamp &mdash; plus the <strong>binding</strong> leg proving the log-anchored digest equals <code>sha256</code> of the exact VSA payload Root 1 verified. <code>cryptography</code> + stdlib only, no network; core exposed as <code>verify_convergence()</code> for agentic use. Verified offline against the 5.60.1 bundle: all five legs PASS. Honest boundary: evidences the operator endorsement and the timestamped public-log inclusion of its payload digest; proves nothing, re-derives no federation leg. <code>nous-lang 5.62.0</code>.</div>
+      <div class="post-readmore">Read post &rarr;</div>
+    </a>
     <!-- __s166_blog_v5610_card_v1__ __s166_web_v5_61_0__ -->
     <a class="post-card" href="#" onclick="showPost(&#39;v5610-rekor-offline&#39;);return false">
       <div class="post-meta">
@@ -871,6 +881,20 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
    <!-- __s154_blog_v553_quorum_ledger_post_v1__ __s154_web_v5_53_0__ -->
+   <!-- __s167_blog_v5620_post_v1__ __s167_web_v5_62_0__ -->
+   <div class="post-full" id="post-v5620-build-attest-verify">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.62.0 &mdash; Two Roots, One Artifact, Checked Offline</h1>
+      <div class="post-full-meta">23 June 2026 &middot; 5 min read</div>
+      <div class="post-full-body">
+        <p>v5.61.0 did two things for the strongest piece of NOUS evidence: it <strong>anchored</strong> a verification digest in a public transparency log, and it <strong>shipped a verifier</strong> that re-checks that anchor with <code>cryptography</code> and the Python standard library alone. Both halves lived as separate artifacts and a low-level module. v5.62.0 makes the capability a first-class command and folds the separate roots into one verdict: <code>nous build-attest-verify</code>, an offline <strong>dual-root convergence</strong> verifier.</p>
+        <p>The question it answers is narrow and strong: do two <em>independent</em> roots agree about the same artifact? The artifact is the release Verification Summary Attestation &mdash; the operator&rsquo;s signed statement that a published wheel and sdist carry the federation attestations the project relies on. <strong>Root 1</strong> is the operator endorsement itself: the verifier checks the VSA&rsquo;s DSSE Ed25519 signature against the <em>pinned</em> NOUS release-operator key &mdash; a first-party, version-controlled constant, never read from the bundle under test &mdash; then confirms the statement names the expected verifier identity, carries the expected release-federation policy fingerprint, and records a PASSED result. It reuses <code>build_vsa</code>&rsquo;s canonical pre-authentication encoding and its identity and policy constants, so there is one implementation of that logic, not a drifting second copy.</p>
+        <p><strong>Root 2</strong> is the public transparency log. The VSA payload digest is shown included in the append-only Rekor v2 log by re-deriving, fully offline, the RFC 6962 Merkle inclusion of the entry under a checkpoint root, the C2SP signed-note checkpoint signature against the TUF-pinned log key, and the RFC 3161 timestamp against the pinned TSA chain. This is the committed <code>rekor_v2_offline</code> orchestrator called as-is &mdash; again, no second implementation of the cryptography.</p>
+        <p>Between the two sits the leg that makes the word &ldquo;convergence&rdquo; honest: the <strong>binding</strong>. The digest Root 2 proves inclusion of is read from the same canonicalized log body the Merkle proof covers, and is required to be byte-equal to <code>sha256</code> of the exact VSA payload that Root 1 verified. Without this check, a passing Root 2 would only say &ldquo;some entry is in the log,&rdquo; not &ldquo;the log entry is about this VSA.&rdquo; With it, the two roots are pinned to one and the same bytes. Tamper any one input and exactly the right leg flips to FAIL: a flipped signature byte fails Root 1, a flipped proof hash fails Root 2, a swapped anchored digest fails the binding.</p>
+        <p>The whole verdict is computed with <code>cryptography</code> and the standard library only &mdash; no network, no Sigstore client, no <code>rfc3161-client</code> shipped. The core is a library function, <code>verify_convergence(bundle_dir, pins_dir)</code>, returning a clinical matrix; the CLI is a thin shell over it, which means a future NOUS agent can call the same offline check to audit a release&rsquo;s provenance before it acts on it. Run against the published 5.60.1 bundle, all five legs pass and the anchored digest and the VSA payload sha are the same value, <code>1b3c4034&hellip;c753410</code>.</p>
+        <p><strong>Honest boundary.</strong> A convergence PASS <em>evidences</em> that the pinned operator key endorsed this VSA and that the endorsement&rsquo;s payload digest is included in a public, append-only, timestamped log &mdash; two independent roots agreeing on one artifact, re-checkable offline by anyone. It does <em>not</em> re-derive the named federation attestations (the SLSA build provenance and PEP 740 publish attestation remain the toolchain tier, fetched and checked with Sigstore tooling), and it <em>proves</em> nothing. There is no new PROVES leg and no guard: NOUS is a monitor, not a guard, and &ldquo;proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. <code>nous-lang 5.62.0</code>.</p>
+      </div>
+   </div>
    <!-- __s166_blog_v5610_post_v1__ __s166_web_v5_61_0__ -->
    <div class="post-full" id="post-v5610-rekor-offline">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
