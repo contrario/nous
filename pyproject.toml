@@ -120,6 +120,7 @@ py-modules = [
     "cli_vsa",  # __s157_u3_cli_vsa_pyproject_v1__
     "provenance_verifier",  # __s160_u2_provenance_verifier_pyproject_v1__
     "build_vsa",  # __s164_p3_u2_build_vsa_pyproject_v1__
+    "rekor_v2_offline",  # __s166_p2_rekor_v2_offline_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
