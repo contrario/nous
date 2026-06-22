@@ -52,6 +52,20 @@
       "payloadSha256": "b1ff46ff0b9f6cbe6cd488b9fada561790a745e1c6cd39492741b6cb3737f8f2",
       "predicateType": "https://docs.pypi.org/attestations/publish/v1",
       "uri": "https://pypi.org/integrity/nous-lang/5.60.1/nous_lang-5.60.1.tar.gz/provenance"
+    },
+    {
+      "anchoredDigestSha256": "1b3c40343044eba57ae0befde8050f2c5ed9938f2a5a0d49b69eab879c753410",
+      "boundary": "EVIDENCES public, append-only, RFC3161-timestamped inclusion of the VSA payload digest in the Rekor v2 transparency log. The bundle is self-contained: it carries the RFC6962 inclusion proof, the C2SP signed-note checkpoint, and the RFC3161 timestamp token, and is verifiable fully offline with cryptography + Python stdlib only. It PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard.",
+      "entryKind": "hashedrekord/0.0.2",
+      "kind": "rekor_v2_transparency_log",
+      "leafHash": "17e07e828041c0240b0c0d4e754f531db64795973d1d314eeee8cfd0aab0638e",
+      "logIndex": 5272998,
+      "name": "nous_lang-5.60.1.rekor-v2-bundle.json",
+      "rekorShard": "https://log2025-1.rekor.sigstore.dev",
+      "rfc3161GenTime": "2026-06-22T10:02:24Z",
+      "sha256": "7c0a4c7637fc0002f74524e48c6c96194afd95b081aeab09de34c3a494e0f5b7",
+      "treeSize": 5272999,
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.60.1/nous_lang-5.60.1.rekor-v2-bundle.json"
     }
   ],
   "boundary": "This release VSA EVIDENCES that the NOUS release operator verified, with standard Sigstore tooling, that these exact published wheel and sdist bytes carry a SLSA build provenance (keyless GitHub Actions, Fulcio/Rekor) and a PEP 740 PyPI publish attestation, both naming these bytes, at SLSA Build Level 2. It is an operator-key root ALONGSIDE the federation roots; it is not a second build. The offline verifier checks the operator signature and re-derives the subject digests, but does NOT re-derive the named federation attestations (toolchain tier: fetch + Sigstore). It PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard.",
