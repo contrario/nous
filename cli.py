@@ -24,6 +24,7 @@ from cli_dossier import build_dossier_parser, cmd_dossier
 from cli_dossier_spec import build_dossier_spec_parser, cmd_dossier_spec
 from cli_conformance import build_conformance_parser, cmd_conformance  # __session96_cli_conformance_import_v1__
 from cli_vsa import build_vsa_parser, cmd_vsa  # __s157_u3_cli_vsa_import_v1__
+from cli_verify_release import build_verify_release_parser, cmd_verify_release  # __s167_p2_cli_verify_release_import_v1__
 from cli_ndec import build_ndec_parser, cmd_ndec  # __s147_u3b_cli_ndec_import_v1__
 from cli_verify_sequence import build_verify_sequence_parser, cmd_verify_sequence  # __phase2_stage6_cli_wiring_v1__
 from cli_verify_coverage import build_verify_coverage_parser, cmd_verify_coverage  # __s114_coverage_cli_v1__
@@ -1868,6 +1869,7 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     build_dossier_spec_parser(sub)  # __session77_cli_dossier_spec_wiring_v1__
     build_conformance_parser(sub)  # __session96_cli_conformance_hook_v1__
     build_vsa_parser(sub)  # __s157_u3_cli_vsa_hook_v1__
+    build_verify_release_parser(sub)  # __s167_p2_cli_verify_release_hook_v1__
     build_ndec_parser(sub)  # __s147_u3b_ndec_parser_hook_v1__
     build_verify_sequence_parser(sub)  # __phase2_stage6_cli_wiring_v1__
     build_verify_coverage_parser(sub)  # __s114_coverage_cli_v1__
@@ -2050,6 +2052,7 @@ def main() -> int:  # __s104_main_uses_build_parser_v1__
         "conformance": cmd_conformance,  # __session96_cli_conformance_dispatch_v1__
         "ndec": cmd_ndec,  # __s147_u3b_ndec_dispatch_v1__
         "vsa": cmd_vsa,  # __s157_u3_cli_vsa_dispatch_v1__
+        "build-attest-verify": cmd_verify_release,  # __s167_p2_cli_verify_release_dispatch_v1__
         "verify-sequence": cmd_verify_sequence,  # __phase2_stage6_cli_wiring_v1__
         "verify-coverage": cmd_verify_coverage,  # __s114_coverage_cli_v1__
         "skill-export": cmd_skill_export,  # __session77_cli_skill_export_wiring_v1__

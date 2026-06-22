@@ -265,6 +265,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "vsa.py",  # __s157_u1_vsa_wheelgate_v1__
                                 "vsa_verifier.py",  # __s157_u2_vsa_verifier_wheelgate_v1__
                                 "cli_vsa.py",  # __s157_u3_cli_vsa_wheelgate_v1__
+                                "cli_verify_release.py",  # __s167_p2_cli_verify_release_wheelgate_v1__
                                 "compiled_trace.py",
                                 "trace_anchor.py",
                                 "memory_entry.py",
