@@ -1,4 +1,5 @@
 # __session87_runner_codegen_equiv_v1__
+# __s167_p1_manifest_corpus_v1__
 """GAP 1: runner vs codegen semantic-surface differential test (v1).
 
 Six-element surface (routes excluded by design -- see SemanticSurface
@@ -52,11 +53,19 @@ STRUCTURAL_SELF_ATTRS = frozenset(
 )
 
 
+CORPUS_MANIFEST = REPO / "tests" / "fixtures" / "codegen_equiv_corpus.txt"
+
+
 def _iter_corpus():
-    for p in sorted(REPO.rglob("*.nous")):
-        if any(part in EXCLUDE_DIRS for part in p.relative_to(REPO).parts):
+    rels = [
+        line.strip()
+        for line in CORPUS_MANIFEST.read_text(encoding="ascii").splitlines()
+        if line.strip()
+    ]
+    for rel in sorted(rels):
+        if any(part in EXCLUDE_DIRS for part in Path(rel).parts):
             continue
-        yield p
+        yield REPO / rel
 
 
 def _parse_validate(path: Path):
