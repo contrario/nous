@@ -249,6 +249,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "cli_conformance.py",  # __session96_cli_conformance_wheelgate_v1__
                                 "trace_recorder.py",  # __nous_trace_recorder_wheelgate_v1__
                                 "run_shas.py",  # __nous_run_shas_wheelgate_v1__
+                                "cost_farkas.py",  # __s168_cost_farkas_wheelgate_v1__
                                 "run_identity.py",  # __s107_run_identity_wheelgate_v1__
                                 "cli_verify_sequence.py",
                                 "cli_verify_coverage.py",  # __s114_coverage_wheelgate_v1__

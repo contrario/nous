@@ -99,6 +99,7 @@ py-modules = [
     "cli_verify_coverage",  # __s114_coverage_pymodule_v1__
     "policy_coverage",  # __s114_policy_coverage_pymodule_v1__
     "coverage_farkas",  # __s115_farkas_v1__
+    "cost_farkas",  # __s168_cost_farkas_v1__
     "compiled_trace",  # __s105_compiled_trace_pymod_v1__
     "trace_anchor",  # __s105_trace_anchor_pymod_v1__
     "memory_entry",  # __s105_memory_entry_pymod_v1__

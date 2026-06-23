@@ -132,6 +132,14 @@ class Manifest:
     # drop-when-None: absent on all pre-S156 manifests, canonical bytes
     # unchanged. EVIDENCES program identity; does NOT prove the program ran.
     codegen_sha256: Optional[str] = None  # __s156_u1_codegen_sha256_field_v1__
+    # Crypto-only file binding: sha256 of cost.farkas.json bytes
+    # (S168 arc B). Present iff a cost-cap Farkas certificate was
+    # emitted (the cap is PROVEN under the declared per-call token and
+    # max_ticks bounds). Orthogonal to the coverage / gap-witness
+    # discriminator (a cost proof and a coverage claim are independent
+    # legs). drop-when-None: absent on all pre-S168 manifests, canonical
+    # bytes unchanged.
+    cost_farkas_sha256: Optional[str] = None  # __s168_cost_farkas_sha256_field_v1__
 
     def __post_init__(self) -> None:  # __s134_source_kind_coherence_v1__
         _allowed = (None, "gap-witness")
@@ -221,6 +229,8 @@ class Manifest:
             d["gap_witness_sha256"] = self.gap_witness_sha256
         if self.codegen_sha256 is not None:  # __s156_u1_codegen_sha256_canonical_v1__
             d["codegen_sha256"] = self.codegen_sha256
+        if self.cost_farkas_sha256 is not None:  # __s168_cost_farkas_sha256_canonical_v1__
+            d["cost_farkas_sha256"] = self.cost_farkas_sha256
         return d  # __session96_revert_m3_canonical_dict_v1__
 
 
@@ -440,6 +450,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
         gap_witness_sha256=doc.get("gap_witness_sha256"),  # __s134_gap_witness_sha256_field_v1__
         codegen_sha256=doc.get("codegen_sha256"),  # __s156_u1_codegen_roundtrip_v1__
+        cost_farkas_sha256=doc.get("cost_farkas_sha256"),  # __s168_cost_farkas_roundtrip_v1__
     )
     return m, sig, pub
 
@@ -492,6 +503,7 @@ def parse_manifest_json_with_anchor(
         source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
         gap_witness_sha256=doc.get("gap_witness_sha256"),  # __s134_gap_witness_sha256_field_v1__
         codegen_sha256=doc.get("codegen_sha256"),  # __s156_u1_codegen_roundtrip_anchor_v1__
+        cost_farkas_sha256=doc.get("cost_farkas_sha256"),  # __s168_cost_farkas_roundtrip_anchor_v1__
     )
     anchor: "_RekorAnchor | None" = None
     if anchor_block is not None:
