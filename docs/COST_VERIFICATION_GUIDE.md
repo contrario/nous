@@ -546,6 +546,51 @@ nous prices age
 
 ---
 
+## Offline re-check: the cost-cap Farkas certificate
+
+<!-- __s170_docs_verify_cost_v1__ -->
+
+The `--smt` proof above runs once, at verify time, inside Z3. Since
+v5.63.0 NOUS can also **emit** that proof as a standalone artifact and
+**re-check** it later with no solver at all.
+
+When the cap is provable, `nous verify --smt` writes `cost.farkas.json`:
+a Farkas certificate -- a vector of non-negative multipliers that combine
+the cost system's constraints into a numeric contradiction. If the
+multipliers check out, no admissible execution under the declared per-call
+token and tick estimates can reach the cap. The manifest records the
+certificate's SHA-256 in `cost_farkas_sha256`.
+
+The certificate then travels with every evidence surface: it is carried in
+the Annex IV dossier, attested in the Verification Summary Attestation
+(VSA), and packaged into the portable `.ndec` bundle.
+
+To re-check it offline:
+
+```
+nous verify-cost cost.farkas.json
+nous verify-cost cost.farkas.json --manifest manifest.json
+```
+
+`nous verify-cost` re-derives the refutation in exact rational arithmetic
+-- no Z3, no model, no trust in the solver that produced it. This is the
+certificate-checking discipline that SAT solvers (DRAT) and mixed-integer
+solvers (VIPR) have used for over a decade: the prover emits a witness, and
+a small independent checker re-verifies it.
+
+**What it proves.** The certificate is a valid refutation, so under the
+declared per-call estimates the cost cap holds. With `--manifest` it also
+**evidences** that this is the certificate a signed manifest committed to.
+
+**What it does not do.** It does not re-derive the cost model from your
+source -- that is the online `nous verify --smt` path. It does not prove
+your agent stayed within the declared estimates at runtime -- the signed
+execution trace evidences that. "Proves" stays reserved for Z3 and Farkas;
+NOUS is a monitor, not a guard.
+
+**Exit codes.** `0` proven, `1` refuted, `2` precondition/error (file
+missing, not a cost-cap certificate, or `--manifest` binding failure).
+
 ## Web roadmap
 
 - `nous-lang.org/blog/` hosts the v5.0.0 release narrative
@@ -558,6 +603,6 @@ nous prices age
 
 ---
 
-*Last updated: Session 71, 3 May 2026 (HEAD: post-`1a6dd1c`).*
+*Last updated: Session 71, 3 May 2026 (HEAD: post-`1a6dd1c`); offline cost-cert re-check (`nous verify-cost`) documented Session 170, 23 June 2026.*
 *Companion documents: `SMT_VERIFICATION_DESIGN.md`,
 `EU_AI_ACT_COMPLIANCE.md`.*

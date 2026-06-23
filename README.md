@@ -96,6 +96,8 @@ nous verify file.nous           # governance lint as build gate
 nous verify file.nous --smt     # SMT cost proof + signed manifest
 nous verify file.nous --smt --smt-margin 10
                                 # prove total_cost <= cap * 90/100
+nous verify-cost cost.farkas.json
+                                # offline re-check of the cost-cap Farkas cert (no solver)
 nous emit-smt file.nous         # SMT-LIB 2.6 source (re-usable across solvers)
 nous dossier file.nous          # EU AI Act Annex IV compliance bundle
 nous dossier file.nous --anchor rekor
@@ -126,7 +128,7 @@ nous lsp                        # start LSP server (stdio)
 nous version
 ```
 
-The full `nous --help` lists 44 top-level subcommands; the above covers the most-used surface.
+The full `nous --help` lists 58 top-level subcommands; the above covers the most-used surface.  <!-- __s170_docs_verify_cost_v1__ -->
 
 ## Language at a glance
 
@@ -291,7 +293,7 @@ Security issues should be reported via GitHub Security Advisories, not public is
 | Grammar rules | 115 (Lark LALR, bilingual EN+GR) |
 | AST node types | 61 (Pydantic V2 strict) |
 | Lint rule codes | 13 (L000 - L012, L100) |
-| CLI subcommands | 44 (`nous --help`) |
+| CLI subcommands | 58 (`nous --help`) |  <!-- __s170_docs_verify_cost_v1__ -->
 | Pricing schema | v2.0 (currency-agnostic, per-table `_currency`) |
 | Manifest schema | v1.0 (Ed25519-signed, offline-verifiable, optional Rekor transparency_log) |
 | Verification surfaces | 3 (browser endpoint, offline Python, full CLI) |
