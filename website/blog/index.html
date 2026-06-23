@@ -121,6 +121,15 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s170_blog_v5630_verify_cost_card_v1__ __s170_web_v5_63_0__ -->
+    <a class="post-card" href="#" onclick="showPost(&#39;v5630-verify-cost&#39;);return false">
+      <div class="post-meta">
+        <span class="post-date">23 JUN 2026</span>
+        <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
+      </div>
+      <div class="post-title">NOUS v5.63.0 &mdash; The Cost Cap, Re-Checked Offline</div>
+      <div class="post-excerpt">The cost-cap Farkas certificate now travels through every evidence surface and gets a command of its own: <code>nous verify-cost</code>, an offline re-checker in exact rational arithmetic &mdash; no Z3, no model, no trust in the solver. It <strong>proves</strong> the certificate refutes cap-exceedance under the declared per-call estimates; with <code>--manifest</code> it binds to the signed manifest.</div>
+    </a>
     <!-- __s167_blog_v5620_card_v1__ __s167_web_v5_62_0__ -->
     <a class="post-card" href="#" onclick="showPost(&#39;v5620-build-attest-verify&#39;);return false">
       <div class="post-meta">
@@ -881,6 +890,20 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
    <!-- __s154_blog_v553_quorum_ledger_post_v1__ __s154_web_v5_53_0__ -->
+   <!-- __s170_blog_v5630_verify_cost_post_v1__ __s170_web_v5_63_0__ -->
+   <div class="post-full" id="post-v5630-verify-cost">
+      <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
+      <h1 class="post-full-title">NOUS v5.63.0 &mdash; The Cost Cap, Re-Checked Offline</h1>
+      <div class="post-full-meta">23 June 2026 &middot; 4 min read</div>
+      <div class="post-full-body">
+        <p>v5.62.0 made two independent roots agree on one release, offline. v5.63.0 turns the most mathematical piece of NOUS evidence &mdash; the cost-cap proof &mdash; into something anyone can re-check with a single command.</p>
+        <p>When a NOUS soul declares per-call token and tick estimates together with a cost cap, the compiler can emit a <strong>Farkas certificate</strong>: a set of non-negative multipliers that collapse the cost system to a numeric contradiction. If those multipliers check out, no admissible execution under the declared estimates can exceed the cap. The certificate carries its own linear system and its own witness &mdash; it is self-contained.</p>
+        <p>v5.63.0 wires that certificate through every evidence surface NOUS already ships. It is emitted at <code>nous verify</code> as <code>cost.farkas.json</code>, carried in the Annex IV dossier, attested in the Verification Summary Attestation, and packaged into the portable <code>.ndec</code> bundle. Every surface re-checks it with the same stdlib grader &mdash; one kernel, no divergence.</p>
+        <p>The new piece is <code>nous verify-cost</code>. Point it at a <code>cost.farkas.json</code> and it re-derives the refutation in exact rational arithmetic &mdash; no Z3, no model, no trust in the solver that produced it. This is the certificate-checking tradition that SAT solvers (DRAT) and mixed-integer solvers (VIPR) have used for a decade: the prover emits a witness, and a small, independent checker re-verifies it. <code>nous verify-cost</code> brings that discipline to AI cost governance &mdash; the first standalone offline certificate re-checker in the toolchain.</p>
+        <p>What it <em>proves</em>: the certificate is a valid refutation, so under the declared per-call estimates the cap holds. With <code>--manifest</code> it also <em>evidences</em> that this is the certificate a signed manifest committed to. What it does not do: it does not re-derive the cost model from your source &mdash; that is the online <code>nous verify --smt</code> path &mdash; and it does not prove your agent stayed within the estimates at runtime; the signed trace evidences that. &ldquo;Proves&rdquo; stays reserved for Z3 and Farkas. NOUS is a monitor, not a guard.</p>
+        <p><code>nous-lang 5.63.0</code> is on PyPI, built and published from CI with SLSA Build Level 2 provenance and a PEP 740 publish attestation. <code>pip install nous-lang</code>, then <code>nous verify-cost --help</code>.</p>
+      </div>
+   </div>
    <!-- __s167_blog_v5620_post_v1__ __s167_web_v5_62_0__ -->
    <div class="post-full" id="post-v5620-build-attest-verify">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
