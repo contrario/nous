@@ -61,6 +61,7 @@ def test_build_dossier_happy_path(proven_run, tmp_path):
         "public_key.b64",
         "README.md",
         "verify_offline.py",
+        "cost.farkas.json",  # __s170_leg2b_dossier_goldens_v1__
     }
     assert set(result.files) == expected
     for f in expected:

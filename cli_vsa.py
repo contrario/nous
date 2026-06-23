@@ -41,6 +41,7 @@ _INPUT_NAMES = (
     "trace.json",
     "conformance.json",
     "coverage.farkas.json",
+    "cost.farkas.json",  # __s170_leg3b_cli_vsa_cost_v1__
 )
 
 
@@ -95,6 +96,11 @@ def build_vsa_parser(sub: "argparse._SubParsersAction") -> None:
     e.add_argument(
         "--coverage", default=None,
         help="Optional coverage.farkas.json (adds the offline PROVES leg)",
+    )
+    e.add_argument(  # __s170_leg3b_cli_vsa_cost_v1__
+        "--cost", default=None,
+        help="Optional cost.farkas.json (adds the offline cost-cap "
+             "Farkas PROVES leg, bounded to declared token/tick)",
     )
     e.add_argument(
         "--out", required=True, help="Output bundle directory"
@@ -272,6 +278,48 @@ def _cmd_emit(args: argparse.Namespace) -> int:
             )
             return 2
 
+    cost_sha = None  # __s170_leg3b_cli_vsa_cost_v1__
+    cost_doc = None
+    cost_bytes = None
+    _cost_arg = getattr(args, "cost", None)  # __s170_leg3b_hotfix_getattr_v1__
+    if _cost_arg is not None:
+        cost_path = Path(_cost_arg)
+        if not cost_path.is_file():
+            print(
+                "PRECONDITION ERROR: cost file not found: "
+                + str(cost_path),
+                file=sys.stderr,
+            )
+            return 2
+        cost_bytes = cost_path.read_bytes()
+        cost_sha = hashlib.sha256(cost_bytes).hexdigest()
+        man_cost = manifest_doc.get("cost_farkas_sha256")
+        if man_cost is None:
+            print(
+                "PRECONDITION ERROR: --cost given but the manifest "
+                "declares no cost_farkas_sha256 (no cost-cap proof was "
+                "bound at verification time)",
+                file=sys.stderr,
+            )
+            return 2
+        if man_cost != cost_sha:
+            print(
+                "PRECONDITION ERROR: cost.farkas.json sha256 does not "
+                "match manifest.cost_farkas_sha256 (wrong or tampered "
+                "Farkas certificate)",
+                file=sys.stderr,
+            )
+            return 2
+        try:
+            cost_doc = json.loads(cost_bytes.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            print(
+                "PRECONDITION ERROR: cost.farkas.json parse error: "
+                + str(exc),
+                file=sys.stderr,
+            )
+            return 2
+
     nous_version = cert_doc.get("nous_version")
     if not nous_version:
         from _version import __version__ as nous_version
@@ -290,6 +338,8 @@ def _cmd_emit(args: argparse.Namespace) -> int:
         certificate_schema_version=schema_v,
         coverage_farkas_sha256=coverage_sha,
         coverage_farkas_doc=coverage_doc,
+        cost_farkas_sha256=cost_sha,  # __s170_leg3b_cli_vsa_cost_v1__
+        cost_farkas_doc=cost_doc,
     )
 
     priv, pub, key_path = vsa.load_or_create_vsa_keypair(
@@ -309,6 +359,8 @@ def _cmd_emit(args: argparse.Namespace) -> int:
             dst.write_bytes(src.read_bytes())
     if coverage_bytes is not None:
         (out_dir / "coverage.farkas.json").write_bytes(coverage_bytes)
+    if cost_bytes is not None:  # __s170_leg3b_cli_vsa_cost_v1__
+        (out_dir / "cost.farkas.json").write_bytes(cost_bytes)
     if registry_src is not None:
         (out_dir / "verifier-registry.json").write_bytes(
             registry_src.read_bytes()
@@ -349,6 +401,8 @@ def _cmd_emit(args: argparse.Namespace) -> int:
         print("  " + name)
     if coverage_bytes is not None:
         print("  coverage.farkas.json")
+    if cost_bytes is not None:  # __s170_leg3b_cli_vsa_cost_v1__
+        print("  cost.farkas.json")
     print(
         "verificationResult   "
         + statement["predicate"]["verificationResult"]
@@ -365,6 +419,11 @@ def _cmd_emit(args: argparse.Namespace) -> int:
         print("coverageProof        PROVES (Farkas, offline-re-provable)")
     else:
         print("coverageProof        none (no Farkas leg carried)")
+    if cost_sha is not None:  # __s170_leg3b_cli_vsa_cost_v1__
+        print("costProof            PROVES (Farkas, offline-re-provable, "
+              "bounded to declared token/tick)")
+    else:
+        print("costProof            none (no Farkas leg carried)")
     return 0
 
 

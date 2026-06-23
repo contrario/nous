@@ -97,6 +97,7 @@ py-modules = [
     "cli_conformance",  # __session96_cli_conformance_pymodule_v1__
     "cli_verify_sequence",
     "cli_verify_coverage",  # __s114_coverage_pymodule_v1__
+    "cli_verify_cost",  # __s170_leg6a_verify_cost_v1__
     "policy_coverage",  # __s114_policy_coverage_pymodule_v1__
     "coverage_farkas",  # __s115_farkas_v1__
     "cost_farkas",  # __s168_cost_farkas_v1__

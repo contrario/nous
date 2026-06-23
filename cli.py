@@ -28,6 +28,7 @@ from cli_verify_release import build_verify_release_parser, cmd_verify_release  
 from cli_ndec import build_ndec_parser, cmd_ndec  # __s147_u3b_cli_ndec_import_v1__
 from cli_verify_sequence import build_verify_sequence_parser, cmd_verify_sequence  # __phase2_stage6_cli_wiring_v1__
 from cli_verify_coverage import build_verify_coverage_parser, cmd_verify_coverage  # __s114_coverage_cli_v1__
+from cli_verify_cost import build_verify_cost_parser, cmd_verify_cost  # __s170_leg6b_verify_cost_v1__
 # __session77_cli_skill_export_wiring_v1__
 from cli_skill_export import build_skill_export_parser, cmd_skill_export
 from cli_prices import build_prices_parser, cmd_prices
@@ -1873,6 +1874,7 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     build_ndec_parser(sub)  # __s147_u3b_ndec_parser_hook_v1__
     build_verify_sequence_parser(sub)  # __phase2_stage6_cli_wiring_v1__
     build_verify_coverage_parser(sub)  # __s114_coverage_cli_v1__
+    build_verify_cost_parser(sub)  # __s170_leg6b_verify_cost_v1__
     build_skill_export_parser(sub)  # __session77_cli_skill_export_wiring_v1__
     # __cost_cap_phase3c_cli_hook_v1__
     build_emit_smt_parser(sub)
@@ -2055,6 +2057,7 @@ def main() -> int:  # __s104_main_uses_build_parser_v1__
         "build-attest-verify": cmd_verify_release,  # __s167_p2_cli_verify_release_dispatch_v1__
         "verify-sequence": cmd_verify_sequence,  # __phase2_stage6_cli_wiring_v1__
         "verify-coverage": cmd_verify_coverage,  # __s114_coverage_cli_v1__
+        "verify-cost": cmd_verify_cost,  # __s170_leg6b_verify_cost_v1__
         "skill-export": cmd_skill_export,  # __session77_cli_skill_export_wiring_v1__
         # __cost_cap_phase3c_cli_dispatch_v1__
         "emit-smt": cmd_emit_smt,

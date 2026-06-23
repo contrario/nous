@@ -351,6 +351,24 @@ def build_dossier(
                 f"{(parsed_manifest.coverage_farkas_sha256 or '')[:16]}"
                 f"... (Farkas certificate tampered or substituted)"
             )
+    cost_farkas_bytes = None  # __s170_leg2_cost_carry_v1__
+    if parsed_manifest.cost_farkas_sha256 is not None:  # __s170_leg2_cost_carry_v1__
+        cost_src = manifest.parent / "cost.farkas.json"
+        if not cost_src.is_file():
+            raise DossierError(
+                f"manifest declares a cost-cap Farkas certificate but "
+                f"cost.farkas.json not found next to manifest: "
+                f"{cost_src}"
+            )
+        cost_farkas_bytes = cost_src.read_bytes()
+        cost_file_sha = hashlib.sha256(cost_farkas_bytes).hexdigest()
+        if cost_file_sha != parsed_manifest.cost_farkas_sha256:
+            raise DossierError(
+                f"cost.farkas.json sha256 mismatch: file="
+                f"{cost_file_sha[:16]}... manifest="
+                f"{(parsed_manifest.cost_farkas_sha256 or '')[:16]}"
+                f"... (cost-cap Farkas certificate tampered or substituted)"
+            )
     gap_witness_bytes = None  # __s134_gapw_consume_v1__
     if parsed_manifest.source_kind == "gap-witness":
         _gw_expected = parsed_manifest.gap_witness_sha256
@@ -849,6 +867,9 @@ def build_dossier(
     if coverage_farkas_bytes is not None:  # __s116_dossier_farkas_v1__
         (output / "coverage.farkas.json").write_bytes(coverage_farkas_bytes)
         files.append("coverage.farkas.json")
+    if cost_farkas_bytes is not None:  # __s170_leg2_cost_carry_v1__
+        (output / "cost.farkas.json").write_bytes(cost_farkas_bytes)
+        files.append("cost.farkas.json")
     if gap_witness_bytes is not None:  # __s134_gapw_consume_v1__
         (output / "coverage.gapwitness.json").write_bytes(
             gap_witness_bytes

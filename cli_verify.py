@@ -50,6 +50,12 @@ from policy_coverage import (  # __s115_coverage_threshold_v1__
 import dataclasses as _dc_s115  # __s115_coverage_threshold_v1__
 import hashlib as _hashlib_s115  # __s115_coverage_smt2_sha_v1__
 import json as _json_s116  # __s116_cli_farkas_v1__
+from cost_farkas import (  # __s170_leg1_cost_emit_v1__
+    CostFarkasError,
+    cost_certificate_from_smtspec,
+    cost_farkas_json_bytes,
+    cost_farkas_sha256,
+)
 from coverage_farkas import (  # __s116_cli_farkas_v1__
     serialize_auto as _farkas_serialize,  # __s124_cli_serialize_auto_v1__
     FarkasError as _FarkasError,
@@ -258,6 +264,28 @@ def cmd_verify(args: argparse.Namespace) -> int:
             coverage_farkas_sha256=coverage_farkas_sha,  # __s116_cli_farkas_v1__
         )
 
+    _cost_doc_s170: Optional[dict] = None  # __s170_leg1_cost_emit_v1__
+    _cost_sha_s170: Optional[str] = None  # __s170_leg1_cost_emit_v1__
+    _cost_bytes_s170: Optional[bytes] = None  # __s170_leg1_cost_emit_v1__
+    try:  # __s170_leg1_cost_emit_v1__
+        _cost_doc_s170 = cost_certificate_from_smtspec(spec)
+    except CostFarkasError as _ce_s170:  # __s170_leg1_cost_emit_v1__
+        print(
+            f"NOTE: cost-cap Farkas certificate not extracted "
+            f"(z3 cost proof stands): {_ce_s170}",
+            file=sys.stderr,
+        )
+    if _cost_doc_s170 is not None:  # __s170_leg1_cost_emit_v1__
+        _cost_bytes_s170 = cost_farkas_json_bytes(_cost_doc_s170)
+        _cost_sha_s170 = cost_farkas_sha256(_cost_doc_s170)
+        manifest = _dc_s115.replace(
+            manifest, cost_farkas_sha256=_cost_sha_s170
+        )
+        print(
+            f"Cost-cap Farkas certificate extracted "
+            f"(sha256 {_cost_sha_s170[:16]}...)"
+        )
+
     chain_coverage_mode = getattr(args, "chain_coverage", None)  # __s127_chain_coverage_flag_v1__
     supersedes_path = getattr(args, "supersedes", None)  # __s119_supersedes_producer_v1__
     if chain_coverage_mode == "full" and not supersedes_path:  # __s127_chain_coverage_flag_v1__
@@ -333,6 +361,10 @@ def cmd_verify(args: argparse.Namespace) -> int:
                 print(
                     f"Coverage Farkas written: {farkas_path}"
                 )
+        if _cost_bytes_s170 is not None:  # __s170_leg1_cost_emit_v1__
+            cost_path = out_path.parent / "cost.farkas.json"  # __s170_leg1_cost_emit_v1__
+            cost_path.write_bytes(_cost_bytes_s170)  # __s170_leg1_cost_emit_v1__
+            print(f"Cost-cap Farkas written: {cost_path}")  # __s170_leg1_cost_emit_v1__
         print()
         print(f"Manifest signed: {out_path}")
         print(f"  key:    {key_path}")

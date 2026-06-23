@@ -238,6 +238,36 @@ def _coverage_proof(
     return proof
 
 
+def _cost_proof(  # __s170_leg3a_vsa_cost_v1__
+    cost_farkas_sha256: Optional[str],
+    cost_farkas_doc: Optional[dict],
+) -> Optional[dict]:
+    if cost_farkas_sha256 is None:
+        return None
+    proof: dict = {
+        "method": "PROVES",
+        "class": "farkas-rational",
+        "artifact": "cost.farkas.json",
+        "sha256": cost_farkas_sha256,
+        "rechecker": "fractions-stdlib",
+        "note": (
+            "the cost-cap Farkas certificate proves, under the declared "
+            "per-call token/tick estimates, that no admissible execution "
+            "exceeds the cap; re-provable offline with the Python standard "
+            "library (fractions), no solver, no NOUS install. Runtime "
+            "adherence to those estimates stays EVIDENCES via the trace."
+        ),
+    }
+    if isinstance(cost_farkas_doc, dict):
+        fragment = cost_farkas_doc.get("fragment")
+        if fragment is not None:
+            proof["fragment"] = fragment
+        contradiction = cost_farkas_doc.get("contradiction")
+        if contradiction is not None:
+            proof["contradiction"] = contradiction
+    return proof
+
+
 def build_vsa_statement(
     *,
     world_name: str,
@@ -253,6 +283,8 @@ def build_vsa_statement(
     certificate_schema_version: int,
     coverage_farkas_sha256: Optional[str] = None,
     coverage_farkas_doc: Optional[dict] = None,
+    cost_farkas_sha256: Optional[str] = None,  # __s170_leg3a_vsa_cost_v1__
+    cost_farkas_doc: Optional[dict] = None,
 ) -> dict:
     """Build the in-toto Statement v1 carrying the VSA v1.1 predicate.
 
@@ -303,6 +335,13 @@ def build_vsa_statement(
                 "digest": {"sha256": coverage_farkas_sha256},
             }
         )
+    if cost_farkas_sha256 is not None:  # __s170_leg3a_vsa_cost_v1__
+        input_attestations.append(
+            {
+                "uri": "cost.farkas.json",
+                "digest": {"sha256": cost_farkas_sha256},
+            }
+        )
 
     verification_result = "PASSED" if conformant else "FAILED"
     verified_levels = [NOUS_CONFORMANT_LEVEL] if conformant else []
@@ -317,6 +356,11 @@ def build_vsa_statement(
     )
     if coverage_proof is not None:
         ext["coverageProof"] = coverage_proof
+    cost_proof = _cost_proof(  # __s170_leg3a_vsa_cost_v1__
+        cost_farkas_sha256, cost_farkas_doc
+    )
+    if cost_proof is not None:
+        ext["costProof"] = cost_proof
     if not conformant:
         violations = _policy_violations(errors)
         if violations:

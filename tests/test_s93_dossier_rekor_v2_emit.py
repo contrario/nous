@@ -86,6 +86,7 @@ def test_rekor_v2_emit_writes_standard_files(proven_run, tmp_path: Path) -> None
         "public_key.b64",
         "README.md",
         "verify_offline.py",
+        "cost.farkas.json",  # __s170_leg2b_dossier_goldens_v1__
     }
     assert set(result.files) == expected
     for f in expected:

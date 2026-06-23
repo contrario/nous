@@ -34,6 +34,7 @@ _BASELINE_FILES = {
     "public_key.b64",
     "README.md",
     "verify_offline.py",
+    "cost.farkas.json",  # __s170_leg2b_dossier_goldens_v1__
 }
 
 
