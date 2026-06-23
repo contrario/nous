@@ -1415,7 +1415,13 @@ def cmd_mitosis(args: argparse.Namespace) -> int:
 def cmd_diff(args: argparse.Namespace) -> int:
     """Behavioral diff between two .nous files."""
     from behavioral_diff import diff_files
-    output = diff_files(args.file, args.target, output_json=getattr(args, 'json_output', False))
+    output = diff_files(
+        args.file,
+        args.target,
+        output_json=getattr(args, 'json_output', False),
+        verdict=getattr(args, 'verdict', False),  # __s171_leg1_cli_diff_verdict_v1__
+        threshold_pct=getattr(args, 'threshold_pct', None),
+    )
     print(output)
     return 0
 
@@ -1905,6 +1911,8 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     p.add_argument("file", help="Original .nous file")
     p.add_argument("target", help="Modified .nous file")
     p.add_argument("--json", action="store_true", help="Output as JSON")
+    p.add_argument("--verdict", action="store_true", help="Append a materiality classification (minor vs material) advising the governance route; classification, not an Article 25 proof. Default output is unchanged without this flag.")  # __s171_leg1_diff_verdict_args_v1__
+    p.add_argument("--threshold-pct", dest="threshold_pct", type=float, default=10.0, help="Absolute total cost delta percent at or above which --verdict classifies a change as material (default 10.0).")  # __s171_leg1_diff_verdict_args_v1__
 
     # __cli_replay_register_v1__
     p = sub.add_parser(

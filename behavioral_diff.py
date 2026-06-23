@@ -512,8 +512,17 @@ def format_diff(result: BehavioralDiffResult, old_name: str, new_name: str) -> s
     return "\n".join(lines)
 
 
-def diff_files(old_path: str, new_path: str, output_json: bool = False) -> str:
+def diff_files(
+    old_path: str,
+    new_path: str,
+    output_json: bool = False,
+    verdict: bool = False,  # __s171_leg1_diff_files_verdict_v1__
+    threshold_pct: "float | None" = None,
+) -> str:
     from parser import parse_nous
+
+    if threshold_pct is None:  # __s171_leg1_diff_files_verdict_v1__
+        threshold_pct = _MATERIALITY_THRESHOLD_PCT_DEFAULT
 
     old_source = Path(old_path).read_text()
     new_source = Path(new_path).read_text()
@@ -524,6 +533,92 @@ def diff_files(old_path: str, new_path: str, output_json: bool = False) -> str:
     result = behavioral_diff(old_program, new_program)
 
     if output_json:
-        return json.dumps(result.to_dict(), indent=2)
+        payload = result.to_dict()
+        if verdict:  # __s171_leg1_diff_files_verdict_v1__
+            payload["materiality"] = classify_materiality(result, threshold_pct)
+        return json.dumps(payload, indent=2)
 
-    return format_diff(result, Path(old_path).name, Path(new_path).name)
+    text = format_diff(result, Path(old_path).name, Path(new_path).name)
+    if verdict:  # __s171_leg1_diff_files_verdict_v1__
+        m = classify_materiality(result, threshold_pct)
+        vlines = [
+            "  == Materiality (classification, not proof) ==",
+            "  verdict:        " + m["verdict"],
+            "  cost delta:     " + format(m["cost_delta_pct"], "+.1f")
+            + "% (threshold " + format(m["threshold_pct"], ".1f") + "%)",
+        ]
+        if m["reasons"]:
+            vlines.append("  reasons:")
+            for r in m["reasons"]:
+                vlines.append("    - " + r)
+        vlines.append("  route:          " + m["route"])
+        vlines.append("")
+        text = text + "\n".join(vlines) + "\n"
+    return text
+
+
+# __s171_leg1_materiality_classifier_v1__
+_MATERIALITY_THRESHOLD_PCT_DEFAULT: float = 10.0
+
+
+def classify_materiality(
+    result: BehavioralDiffResult, threshold_pct: float = _MATERIALITY_THRESHOLD_PCT_DEFAULT
+) -> dict[str, Any]:
+    """Operator-declared materiality roll-up over a behavioral diff.
+
+    This EVIDENCES the size and shape of a change and ADVISES which
+    governance route applies. It does NOT prove that a change is a
+    substantial modification within the meaning of Article 25; materiality
+    is a declared classification against `threshold_pct`, not a proof. The
+    proof of envelope preservation is produced separately by
+    `nous verify --smt --supersedes <prior manifest>`.
+
+    material when any of: a soul is removed, a message is removed, a
+    CRITICAL diff item is present, or the absolute total cost delta percent
+    meets or exceeds threshold_pct. Otherwise minor.
+    """
+    old_total = result.total_old_cost
+    new_total = result.total_new_cost
+    if old_total > 0:
+        cost_delta_pct = ((new_total - old_total) / old_total) * 100.0
+    elif new_total > 0:
+        cost_delta_pct = 100.0
+    else:
+        cost_delta_pct = 0.0
+
+    reasons: list[str] = []
+    if result.souls_removed:
+        reasons.append("soul(s) removed: " + ", ".join(result.souls_removed))
+    if result.messages_removed:
+        reasons.append(
+            "message(s) removed: " + ", ".join(result.messages_removed)
+        )
+    if result.has_critical:
+        reasons.append("a CRITICAL diff item is present")
+    if abs(cost_delta_pct) >= threshold_pct:
+        reasons.append(
+            "absolute cost delta " + format(abs(cost_delta_pct), ".1f")
+            + "% >= threshold " + format(threshold_pct, ".1f") + "%"
+        )
+
+    is_material = bool(reasons)
+    if is_material:
+        route = (
+            "material change: bind a fresh signed dossier proving the new "
+            "build still satisfies the same proven properties -- run "
+            "`nous verify --smt --supersedes <prior manifest>`"
+        )
+    else:
+        route = (
+            "minor revision: record an Article 12 log entry; no "
+            "envelope-binding re-proof required by this classification"
+        )
+
+    return {
+        "verdict": "material" if is_material else "minor",
+        "threshold_pct": threshold_pct,
+        "cost_delta_pct": round(cost_delta_pct, 1),
+        "reasons": reasons,
+        "route": route,
+        "basis": "classification, not proof; not an Article 25 determination",
+    }
