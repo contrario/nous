@@ -236,6 +236,40 @@ VERIFY_OFFLINE_PY_FARKAS: str = '#!/usr/bin/env python3\n"""Offline verification
 VERIFY_OFFLINE_PY_COVERAGE: str = '#!/usr/bin/env python3\n"""Offline verification of NOUS dossier (Annex IV) with coverage proof.\n\nUsage: python3 verify_offline.py\nExit:  0 = PASS, 1 = FAIL, 2 = environment error (e.g. z3 missing).\nRequires: cryptography (always); z3-solver (only for the coverage step).\n\nChecks, in order, fail-closed:\n  1. Ed25519 signature over canonical manifest body bytes.\n  2. source.nous sha256 == manifest.source_sha256.\n  3. coverage.smt2 sha256 == manifest.coverage_smt2_sha256  (O(1) crypto\n     provenance gate: proves the .smt2 is exactly what was signed, BEFORE\n     any solver runs -- blocks the tampered-but-still-unsat substitution).\n  4. z3 over coverage.smt2 returns unsat (the coverage claim: no input\n     crossing the declared threshold escapes a blocking policy).\n"""\nfrom __future__ import annotations\n\nimport base64\nimport hashlib\nimport json\nimport sys\nfrom pathlib import Path\n\nROOT = Path(__file__).parent\n\n\ndef _fail(msg):\n    print("FAIL: " + msg, file=sys.stderr)\n    return 1\n\n\ndef main():\n    try:\n        from cryptography.hazmat.primitives.asymmetric.ed25519 import (\n            Ed25519PublicKey,\n        )\n        from cryptography.exceptions import InvalidSignature\n    except ImportError:\n        print(\n            "ERROR: cryptography library required.\\n"\n            "Install: pip install \'cryptography>=42\'",\n            file=sys.stderr,\n        )\n        return 2\n\n    manifest_path = ROOT / "manifest.json"\n    if not manifest_path.is_file():\n        return _fail("manifest.json not found in " + str(ROOT))\n    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))\n\n    sig_block = manifest.get("signature")\n    if not sig_block:\n        return _fail("manifest has no signature block")\n    pub_b64 = sig_block.get("public_key_b64", "")\n    sig_b64 = sig_block.get("signature_b64", "")\n    if not pub_b64 or not sig_b64:\n        return _fail("manifest signature block incomplete")\n\n    body = {k: v for k, v in manifest.items() if k != "signature"}\n    body_bytes = json.dumps(\n        body, sort_keys=True, separators=(",", ":")\n    ).encode("utf-8")\n\n    try:\n        pub_key = Ed25519PublicKey.from_public_bytes(\n            base64.b64decode(pub_b64)\n        )\n        pub_key.verify(base64.b64decode(sig_b64), body_bytes)\n    except InvalidSignature:\n        return _fail("Ed25519 signature does NOT verify")\n    except Exception as e:\n        return _fail("signature verification error: " + str(e))\n    print("OK   Ed25519 signature verified")\n\n    source_path = ROOT / "source.nous"\n    if not source_path.is_file():\n        return _fail("source.nous not found in " + str(ROOT))\n    src_sha = hashlib.sha256(source_path.read_bytes()).hexdigest()\n    expected = manifest.get("source_sha256", "")\n    if src_sha != expected:\n        return _fail(\n            "source.sha256 mismatch: file=" + src_sha[:16] + "... "\n            "manifest=" + expected[:16] + "..."\n        )\n    print("OK   source.sha256 matches manifest (" + src_sha[:16] + "...)")\n\n    cov_expected = manifest.get("coverage_smt2_sha256", "")\n    if not cov_expected:\n        return _fail(\n            "manifest has no coverage_smt2_sha256; this verifier ships "\n            "with a coverage-bearing dossier and expects the field"\n        )\n    cov_path = ROOT / "coverage.smt2"\n    if not cov_path.is_file():\n        return _fail("coverage.smt2 not found in " + str(ROOT))\n    cov_bytes = cov_path.read_bytes()\n    cov_sha = hashlib.sha256(cov_bytes).hexdigest()\n    if cov_sha != cov_expected:\n        return _fail(\n            "coverage.smt2 sha256 mismatch: file=" + cov_sha[:16] + "... "\n            "manifest=" + cov_expected[:16] + "... "\n            "(the coverage proof was tampered or substituted)"\n        )\n    print("OK   coverage.smt2 sha256 matches manifest (" + cov_sha[:16]\n          + "...)")\n\n    try:\n        import z3\n    except ImportError:\n        print(\n            "ERROR: z3-solver required to check the coverage proof.\\n"\n            "Install: pip install z3-solver\\n"\n            "The crypto provenance gate above already PASSED; only the "\n            "semantic unsat re-check is skipped.",\n            file=sys.stderr,\n        )\n        return 2\n\n    solver = z3.Solver()\n    try:\n        solver.from_string(cov_bytes.decode("utf-8"))\n    except z3.Z3Exception as e:\n        return _fail("z3 parse error on coverage.smt2: " + str(e))\n    res = solver.check()\n    if str(res) != "unsat":\n        return _fail(\n            "coverage proof did NOT reproduce unsat (z3 returned "\n            + str(res) + "); the signed claim does not hold under this "\n            "solver -- treat as a coverage gap"\n        )\n    print("OK   z3 reproduced unsat: coverage proof holds (no gap)")\n\n    print()\n    print("VERDICT: PASS (Ed25519 manifest + coverage proof)")\n    print("  world:        " + str(manifest.get("world_name", "?")))\n    print("  cost_cap:     $" + str(manifest.get("cost_cap_usd", "?"))\n          + " USD")\n    print("  verdict:      " + str(manifest.get("verdict", "?")))\n    print("  coverage_sha: "\n          + str(manifest.get("policy_coverage_sha256", "?"))[:16] + "...")\n    print("  solver:       " + str(manifest.get("solver_version", "?")))\n    print("  timestamp:    " + str(manifest.get("timestamp_utc", "?")))\n    return 0\n\n\nif __name__ == "__main__":\n    sys.exit(main())\n'  # __s115_dossier_coverage_v1__
 
 
+def _splice_materiality_check(verify_src: str) -> str:
+    # __s171_splice_fn_v1__ build-time splice: insert the self-contained
+    # _check_materiality function and a final call into the SELECTED
+    # verifier. Applied only when the dossier carries a materiality
+    # classification, so verifiers without one stay byte-identical.
+    # The call is the LAST check in main(): in a chain verifier,
+    # reaching it means the chain walk already passed, so the
+    # verified-above route is sound by control flow, not declaration.
+    n_def = verify_src.count("\n\n\ndef main(")
+    if n_def != 1:
+        raise DossierError(
+            "materiality splice: expected exactly one 'def main(' "
+            "anchor in the selected verifier, found " + str(n_def)
+        )
+    verify_src = verify_src.replace(
+        "\n\n\ndef main(",
+        "\n\n\n" + _MATERIALITY_CHECK_EMBED + "\n\ndef main(",
+        1,
+    )
+    call_anchor = "    return 0\n\n\nif __name__ == \"__main__\":"
+    if verify_src.count(call_anchor) != 1:
+        raise DossierError(
+            "materiality splice: expected exactly one main-return "
+            "anchor in the selected verifier"
+        )
+    call_block = (
+        "    _rc_mat = _check_materiality(manifest, ROOT)\n"
+        "    if _rc_mat != 0:\n"
+        "        return _rc_mat\n"
+        "    return 0\n\n\nif __name__ == \"__main__\":"
+    )
+    return verify_src.replace(call_anchor, call_block, 1)
+
+
 def build_dossier(
     source: Path,
     *,
@@ -979,6 +1013,13 @@ def build_dossier(
         )
     else:
         verify_path.write_text(VERIFY_OFFLINE_PY, encoding="utf-8")
+    if parsed_manifest.materiality_sha256 is not None:  # __s171_materiality_splice_v1__
+        verify_path.write_text(
+            _splice_materiality_check(
+                verify_path.read_text(encoding="utf-8")
+            ),
+            encoding="utf-8",
+        )
     verify_path.chmod(0o755)
     files.append("verify_offline.py")
 
