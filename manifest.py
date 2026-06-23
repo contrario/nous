@@ -140,6 +140,11 @@ class Manifest:
     # legs). drop-when-None: absent on all pre-S168 manifests, canonical
     # bytes unchanged.
     cost_farkas_sha256: Optional[str] = None  # __s168_cost_farkas_sha256_field_v1__
+    # Adjacent materiality classification sidecar (S171). Present iff a
+    # nous diff --verdict materiality.json was bound to this build.
+    # drop-when-None: absent on all pre-S171 manifests, canonical bytes
+    # unchanged. Sha-pins a CLASSIFICATION, not a proof.
+    materiality_sha256: Optional[str] = None  # __s171_materiality_sha256_field_v1__
 
     def __post_init__(self) -> None:  # __s134_source_kind_coherence_v1__
         _allowed = (None, "gap-witness")
@@ -231,6 +236,8 @@ class Manifest:
             d["codegen_sha256"] = self.codegen_sha256
         if self.cost_farkas_sha256 is not None:  # __s168_cost_farkas_sha256_canonical_v1__
             d["cost_farkas_sha256"] = self.cost_farkas_sha256
+        if self.materiality_sha256 is not None:  # __s171_materiality_sha256_canonical_v1__
+            d["materiality_sha256"] = self.materiality_sha256
         return d  # __session96_revert_m3_canonical_dict_v1__
 
 
@@ -445,6 +452,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         policy_coverage_sha256=doc.get("policy_coverage_sha256"),  # __s115_policy_coverage_sha256_v1__
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
+        materiality_sha256=doc.get("materiality_sha256"),  # __s171_materiality_sha256_parse1_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
         source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
@@ -498,6 +506,7 @@ def parse_manifest_json_with_anchor(
         policy_coverage_sha256=doc.get("policy_coverage_sha256"),  # __s115_policy_coverage_sha256_v1__
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
+        materiality_sha256=doc.get("materiality_sha256"),  # __s171_materiality_sha256_parse2_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
         source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
