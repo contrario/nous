@@ -682,38 +682,65 @@ VDR004  Dream coverage</code></pre>
 <table class="doc-table">
 <thead><tr><th>Command</th><th>Description</th></tr></thead>
 <tbody>
-<tr><td><code>compile [--target py|js|wasm]</code></td><td>Compile .nous to target</td></tr>
-<tr><td><code>run [--node]</code></td><td>Compile and execute</td></tr>
-<tr><td><code>validate</code></td><td>Validate laws</td></tr>
-<tr><td><code>typecheck</code></td><td>Type check</td></tr>
-<tr><td><code>verify</code></td><td>Formal verification (7 proofs)</td></tr>
-<tr><td><code>test</code></td><td>Run test blocks</td></tr>
-<tr><td><code>watch</code></td><td>Auto-recompile on save</td></tr>
+<!-- __s170_cli_table_v58__ count=58 -->
+<tr><td><code>compile</code></td><td>Compile .nous to Python</td></tr>
+<tr><td><code>run</code></td><td>Compile and execute</td></tr>
+<tr><td><code>validate</code></td><td>Validate .nous file</td></tr>
+<tr><td><code>typecheck</code></td><td>Type check .nous file</td></tr>
+<tr><td><code>docker</code></td><td>Generate Docker deployment</td></tr>
 <tr><td><code>debug</code></td><td>Interactive debugger</td></tr>
-<tr><td><code>shell</code></td><td>REPL v3</td></tr>
-<tr><td><code>profile</code></td><td>Per-soul cost analysis</td></tr>
-<tr><td><code>docker</code></td><td>Generate Dockerfile + compose</td></tr>
-<tr><td><code>plugins [list|check]</code></td><td>Plugin manager</td></tr>
-<tr><td><code>pkg [install|list|publish]</code></td><td>Package manager</td></tr>
-<tr><td><code>ast [--json]</code></td><td>Print Living AST</td></tr>
-<tr><td><code>evolve [--cycles N]</code></td><td>Run evolution cycles</td></tr>
-<tr><td><code>nsp [--compress]</code></td><td>Neural Signal Protocol</td></tr>
-<tr><td><code>info</code></td><td>Program summary</td></tr>
-<tr><td><code>bridge</code></td><td>Noosphere analysis</td></tr>
-<tr><td><code>version</code></td><td>Show version</td></tr>
+<tr><td><code>shell</code></td><td>Interactive REPL v3</td></tr>
+<tr><td><code>test</code></td><td>Run test blocks</td></tr>
+<tr><td><code>watch</code></td><td>Watch mode &mdash; auto-recompile on save</td></tr>
+<tr><td><code>profile</code></td><td>Per-soul cost and performance analysis</td></tr>
+<tr><td><code>plugins</code></td><td>Plugin manager</td></tr>
+<tr><td><code>pkg</code></td><td>Package manager</td></tr>
+<tr><td><code>ast</code></td><td>Print Living AST</td></tr>
+<tr><td><code>evolve</code></td><td>Run evolution cycles</td></tr>
+<tr><td><code>nsp</code></td><td>Parse/compress NSP tokens</td></tr>
+<tr><td><code>info</code></td><td>Show program summary</td></tr>
+<tr><td><code>bridge</code></td><td>Analyze Noosphere integration</td></tr>
 <tr><td><code>crossworld</code></td><td>Cross-world type check</td></tr>
-<tr><td><code>bench [--save-baseline]</code></td><td>Benchmarks</td></tr>
-<tr><td><code>docs [-o output]</code></td><td>Generate HTML docs</td></tr>
-<tr><td><code>fmt [-w] [--check]</code></td><td>Format .nous source</td></tr>
-<tr><td><code>noesis [stats|search|think]</code></td><td>Noesis engine</td></tr>
-<tr><td><code>build</code></td><td>Build workspace from nous.toml</td></tr>
-<tr><td><code>init [--name]</code></td><td>Initialize nous.toml</td></tr>
-<tr><td><code>migrate [-o output]</code></td><td>Migrate Python → .nous</td></tr>
-<tr><td><code>viz [-o output]</code></td><td>Visualize nervous system</td></tr>
-<tr><td><code>lsp [check]</code></td><td>Language Server Protocol</td></tr>
-<tr><td><code>wasm [--target html|js]</code></td><td>Build browser bundle</td></tr>
-<tr><td><code>self-compile</code></td><td>Self-hosting compiler</td></tr>
-<tr><td><code>create [--template-only]</code></td><td>Natural language → .nous</td></tr>
+<tr><td><code>bench</code></td><td>Run benchmarks</td></tr>
+<tr><td><code>docs</code></td><td>Generate HTML documentation</td></tr>
+<tr><td><code>fmt</code></td><td>Format .nous file</td></tr>
+<tr><td><code>noesis</code></td><td>Noesis intelligence engine</td></tr>
+<tr><td><code>build</code></td><td>Build entire workspace from nous.toml</td></tr>
+<tr><td><code>init</code></td><td>Initialize nous.toml in current directory</td></tr>
+<tr><td><code>migrate</code></td><td>Migrate Python/YAML agents to .nous</td></tr>
+<tr><td><code>viz</code></td><td>Visualize nervous system as HTML graph</td></tr>
+<tr><td><code>lsp</code></td><td>Language Server Protocol / code check</td></tr>
+<tr><td><code>create</code></td><td>Generate .nous from natural language description</td></tr>
+<tr><td><code>verify</code></td><td>Formal verification of .nous program</td></tr>
+<tr><td><code>self-compile</code></td><td>Self-hosting: compile .nous via compiler.nous</td></tr>
+<tr><td><code>wasm</code></td><td>Build browser-ready WASM/JS bundle</td></tr>
+<tr><td><code>cost</code></td><td>Cost Oracle - predictive cost analysis</td></tr>
+<tr><td><code>version</code></td><td>Show version</td></tr>
+<tr><td><code>prices</code></td><td>Inspect and manage the LLM pricing table used by --smt.</td></tr>
+<tr><td><code>dossier</code></td><td>Emit EU AI Act Annex IV compliance bundle</td></tr>
+<tr><td><code>dossier-spec</code></td><td>Emit EU AI Act Annex IV compliance bundle from a SKILL.md skill directory</td></tr>
+<tr><td><code>conformance</code></td><td>Runtime conformance: prove a signed execution trace stayed inside the envelope the static cost proof assumed</td></tr>
+<tr><td><code>vsa</code></td><td>Emit/verify a SLSA Verification Summary Attestation (VSA)</td></tr>
+<tr><td><code>build-attest-verify</code></td><td>Offline dual-root convergence verify of a release bundle (operator Ed25519 + Rekor v2 transparency log)</td></tr>
+<tr><td><code>ndec</code></td><td>Build or verify a portable .ndec decision attestation</td></tr>
+<tr><td><code>verify-sequence</code></td><td>Z3 proof that declared 'before' ordering laws are consistent.</td></tr>
+<tr><td><code>verify-coverage</code></td><td>Z3 proof that blocking policies cover a numeric threshold.</td></tr>
+<tr><td><code>verify-cost</code></td><td>Offline re-check of a cost-cap Farkas certificate (no solver).</td></tr>
+<tr><td><code>skill-export</code></td><td>Export a .nous program as an agentskills.io-compliant skill (SKILL.md + nous.yaml)</td></tr>
+<tr><td><code>emit-smt</code></td><td>Emit SMT-LIB 2.6 constraints for cost_cap proof.</td></tr>
+<tr><td><code>dream</code></td><td>Dream system analysis</td></tr>
+<tr><td><code>immune</code></td><td>Immune system analysis</td></tr>
+<tr><td><code>mitosis</code></td><td>Mitosis analysis &mdash; self-replication config</td></tr>
+<tr><td><code>consciousness</code></td><td>Consciousness/self-reflection analysis</td></tr>
+<tr><td><code>metabolism</code></td><td>Metabolism/energy analysis</td></tr>
+<tr><td><code>symbiosis</code></td><td>Symbiosis bond analysis</td></tr>
+<tr><td><code>telemetry</code></td><td>Telemetry configuration analysis</td></tr>
+<tr><td><code>retire</code></td><td>Clone retirement analysis</td></tr>
+<tr><td><code>diff</code></td><td>Behavioral diff between two .nous files</td></tr>
+<tr><td><code>replay</code></td><td>Inspect/verify/diff/mutate a deterministic replay event log</td></tr>
+<tr><td><code>governance</code></td><td>Governance inspector: policies, interventions, stats</td></tr>
+<tr><td><code>templates</code></td><td>Manage shipped .nous templates</td></tr>
+<tr><td><code>memory</code></td><td>Persistent per-world soul memory: init, append, verify, reindex</td></tr>
 </tbody>
 </table>
 </div>
@@ -1840,7 +1867,7 @@ const sections = [
   {id:'topology',title:'Topology',keywords:'topology node distributed deployment multi machine'},
   {id:'verification',title:'Formal Verification',keywords:'verification formal proofs mathematical guarantees resource deadlock protocol liveness'},
   {id:'proof-codes',title:'Proof Codes',keywords:'proof codes VR001 VD001 VP001 VL001 VE001 VM001 VT001'},
-  {id:'cli',title:'CLI Commands',keywords:'cli commands compile run validate typecheck verify test watch debug shell profile docker'},
+  {id:'cli',title:'CLI Commands',keywords:'cli commands compile run validate typecheck verify test watch debug shell profile docker verify-cost verify-coverage verify-sequence dossier dossier-spec vsa conformance emit-smt skill-export ndec memory build-attest-verify cost prices governance templates replay annex iv farkas'},
   {id:'ide',title:'IDE',keywords:'ide editor verify graph create playground'},
   {id:'lsp',title:'LSP Server',keywords:'lsp language server protocol code actions auto fix vscode'},
   {id:'nl-interface',title:'Natural Language',keywords:'natural language create template llm english description'},
