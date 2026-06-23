@@ -369,6 +369,24 @@ def build_dossier(
                 f"{(parsed_manifest.cost_farkas_sha256 or '')[:16]}"
                 f"... (cost-cap Farkas certificate tampered or substituted)"
             )
+    materiality_bytes = None  # __s171_materiality_carry_read_v1__
+    if parsed_manifest.materiality_sha256 is not None:  # __s171_materiality_carry_read_v1__
+        mat_src = manifest.parent / "materiality.json"
+        if not mat_src.is_file():
+            raise DossierError(
+                f"manifest declares a materiality classification but "
+                f"materiality.json not found next to manifest: "
+                f"{mat_src}"
+            )
+        materiality_bytes = mat_src.read_bytes()
+        mat_file_sha = hashlib.sha256(materiality_bytes).hexdigest()
+        if mat_file_sha != parsed_manifest.materiality_sha256:
+            raise DossierError(
+                f"materiality.json sha256 mismatch: file="
+                f"{mat_file_sha[:16]}... manifest="
+                f"{(parsed_manifest.materiality_sha256 or '')[:16]}"
+                f"... (materiality classification tampered or substituted)"
+            )
     gap_witness_bytes = None  # __s134_gapw_consume_v1__
     if parsed_manifest.source_kind == "gap-witness":
         _gw_expected = parsed_manifest.gap_witness_sha256
@@ -870,6 +888,9 @@ def build_dossier(
     if cost_farkas_bytes is not None:  # __s170_leg2_cost_carry_v1__
         (output / "cost.farkas.json").write_bytes(cost_farkas_bytes)
         files.append("cost.farkas.json")
+    if materiality_bytes is not None:  # __s171_materiality_carry_write_v1__
+        (output / "materiality.json").write_bytes(materiality_bytes)
+        files.append("materiality.json")
     if gap_witness_bytes is not None:  # __s134_gapw_consume_v1__
         (output / "coverage.gapwitness.json").write_bytes(
             gap_witness_bytes
