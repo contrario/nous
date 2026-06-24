@@ -121,6 +121,12 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s171vsa_blog_v5640_materiality_card_v1__ __s171vsa_web_v5_64_0__ -->
+    <a class="post-card" href="#" onclick="showPost(&#39;v5640-materiality&#39;);return false">
+      <div class="post-meta"><span class="post-date">Jun 24, 2026</span><span class="post-tag">Release</span></div>
+      <h2 class="post-title">v5.64.0 &mdash; Material or Minor, Classified and Carried</h2>
+      <div class="post-excerpt">An auditor asks on every change: minor revision, or material one? <code>nous verify --materiality-against</code> classifies the current build against a prior source build and carries the verdict as a sha-pinned <code>materiality.json</code> sidecar in the signed manifest and dossier. The dossier verifier authenticates it offline and routes a material change toward the hop-containment Farkas proof leg. The verdict <strong>evidences</strong> &mdash; it is never a proof.</div>
+    </a>
     <!-- __s170_blog_v5630_verify_cost_card_v1__ __s170_web_v5_63_0__ -->
     <a class="post-card" href="#" onclick="showPost(&#39;v5630-verify-cost&#39;);return false">
       <div class="post-meta">
@@ -890,6 +896,17 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
    <!-- __s154_blog_v553_quorum_ledger_post_v1__ __s154_web_v5_53_0__ -->
+   <!-- __s171vsa_blog_v5640_materiality_post_v1__ __s171vsa_web_v5_64_0__ -->
+   <div class="post-full" id="post-v5640-materiality">
+      <div class="post-meta"><span class="post-date">Jun 24, 2026</span><span class="post-tag">Release</span></div>
+      <h1>v5.64.0 &mdash; Material or Minor, Classified and Carried</h1>
+        <p>Every release so far sharpened the evidence about a single build. v5.64.0 addresses the question that spans two: when a governed agent changes, is the change <em>minor</em> or <em>material</em>? The software-evolution literature has a precise frame &mdash; a change from a contract A to A&rsquo; is breaking when the new contract does not imply the old one &mdash; and an honest admission that routinely checking that implication is, in its own words, largely unfulfilled. Industry practice falls back to human designation plus testing.</p>
+        <p>NOUS already carries the exact contract the literature describes but cannot check. The hop-containment Farkas certificate <em>proves</em>, offline and with no solver in the loop, that the prior proof envelope is contained in the new one. So materiality is built as the entrance to a three-level honest gradient, not as a verdict that pretends to be a proof:</p>
+        <p><strong>1. minor</strong> &mdash; a behavioral-diff classification, evidenced and logged (Article 12). <strong>2. material</strong> &mdash; requires an envelope-binding leg (<code>--supersedes</code>), evidenced. <strong>3. material + cover-preserving</strong> &mdash; the hop-containment Farkas certificate <em>proves</em> the prior envelope is preserved.</p>
+        <p><code>nous verify --materiality-against &lt;prior.nous&gt;</code> classifies the current build against a prior <em>source</em> build and emits a <code>materiality.json</code> verdict. It is sha-pinned into the signed manifest (drop-when-None, so every prior signed manifest stays byte-identical) and carried in the Annex IV dossier under a sha gate. The dossier&rsquo;s offline verifier re-derives the sidecar digest, schema-validates the verdict, reads proof-leg presence from the <em>signed manifest</em> (never a build-time flag), and prints the honest route. The check runs last, so in a chain verifier the chain walk has already passed before the &lsquo;verified above&rsquo; route is reachable &mdash; the routing is sound by control flow, not by declaration.</p>
+        <p>Honest boundary: the verdict is a <em>classification</em> that <em>evidences</em> &mdash; authenticated as carried and signed &mdash; and it is never a proof, nor an Article 25 substantial-modification determination. &ldquo;Proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates: here, the hop-containment leg the material route points at. NOUS is a monitor, not a guard. A third party verifies offline with <code>cryptography</code> and <code>z3</code> only.</p>
+        <p><code>nous-lang 5.64.0</code> is on PyPI, built and published from CI with SLSA Build Level 2 provenance and a PEP 740 publish attestation. <code>pip install nous-lang</code>, then <code>nous verify --materiality-against --help</code>.</p>
+   </div>
    <!-- __s170_blog_v5630_verify_cost_post_v1__ __s170_web_v5_63_0__ -->
    <div class="post-full" id="post-v5630-verify-cost">
       <a href="#" class="back-link" onclick="showList();return false">&larr; All posts</a>
