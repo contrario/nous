@@ -76,6 +76,17 @@ def cmd_verify(args: argparse.Namespace) -> int:
               "deferred to future phases)", file=sys.stderr)
         return 3
 
+    if (
+        getattr(args, "materiality_against", None) is not None
+        and getattr(args, "gap_witness", False)
+    ):  # __s171_materiality_gapw_refuse_v1__
+        print(
+            "REFUSED: --materiality-against is incoherent with "
+            "--gap-witness (a refutation artifact carries no minor/"
+            "material change classification). No manifest written.",
+            file=sys.stderr,
+        )
+        return 1
     src_path = Path(args.file)
     if not src_path.is_file():
         print(f"ERROR: file not found: {src_path}", file=sys.stderr)
@@ -286,6 +297,47 @@ def cmd_verify(args: argparse.Namespace) -> int:
             f"(sha256 {_cost_sha_s170[:16]}...)"
         )
 
+    materiality_against = getattr(args, "materiality_against", None)  # __s171_materiality_emit_v1__
+    _mat_bytes = None  # __s171_materiality_emit_v1__
+    if materiality_against is not None:
+        if getattr(args, "gap_witness", False):
+            print(
+                "REFUSED: --materiality-against is incoherent with "
+                "--gap-witness (a refutation artifact carries no minor/"
+                "material change classification). No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        from parser import parse_nous as _parse_nous_mat
+        from behavioral_diff import (
+            behavioral_diff as _bdiff_mat,
+            classify_materiality as _classify_mat,
+        )
+        _prior_src_mat = Path(materiality_against).read_text(
+            encoding="utf-8"
+        )
+        _mat_threshold = float(
+            getattr(args, "materiality_threshold_pct", 10.0)
+        )
+        _mat_verdict = _classify_mat(
+            _bdiff_mat(
+                _parse_nous_mat(_prior_src_mat),
+                _parse_nous_mat(source_text),
+            ),
+            _mat_threshold,
+        )
+        _mat_bytes = _json_s116.dumps(
+            _mat_verdict, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+        _mat_sha = _hashlib_s115.sha256(_mat_bytes).hexdigest()
+        manifest = _dc_s115.replace(
+            manifest, materiality_sha256=_mat_sha
+        )
+        print(
+            "Materiality classified vs " + str(materiality_against)
+            + ": " + _mat_verdict["verdict"]
+            + " (sha256 " + _mat_sha[:16] + "...)"
+        )
     chain_coverage_mode = getattr(args, "chain_coverage", None)  # __s127_chain_coverage_flag_v1__
     supersedes_path = getattr(args, "supersedes", None)  # __s119_supersedes_producer_v1__
     if chain_coverage_mode == "full" and not supersedes_path:  # __s127_chain_coverage_flag_v1__
@@ -365,6 +417,10 @@ def cmd_verify(args: argparse.Namespace) -> int:
             cost_path = out_path.parent / "cost.farkas.json"  # __s170_leg1_cost_emit_v1__
             cost_path.write_bytes(_cost_bytes_s170)  # __s170_leg1_cost_emit_v1__
             print(f"Cost-cap Farkas written: {cost_path}")  # __s170_leg1_cost_emit_v1__
+        if _mat_bytes is not None:  # __s171_materiality_emit_v1__
+            mat_path = out_path.parent / "materiality.json"
+            mat_path.write_bytes(_mat_bytes)
+            print(f"Materiality written: {mat_path}")
         print()
         print(f"Manifest signed: {out_path}")
         print(f"  key:    {key_path}")
