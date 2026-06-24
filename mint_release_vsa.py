@@ -835,6 +835,162 @@ def build_release_index(
     }
 
 
+# __s172_p0b2_anchor_orchestrator_v1__
+def anchor(
+    version: str,
+    out_dir: Path,
+    *,
+    pins_dir: Path,
+    anchor_fn: Any = None,
+    timestamp_fn: Any = None,
+    verify_fn: Any = None,
+    rekor_base_url: str | None = None,
+    tsa_base_url: str | None = None,
+) -> int:
+    """Anchor a minted release-VSA bundle to Rekor v2 (IRREVERSIBLE) + index.
+
+    anchor_fn / timestamp_fn / verify_fn are injectable seams (defaults = the
+    live rekor_anchor_v2 / tsa_client / cli_verify_release functions) so this
+    orchestrator is testable offline. The single irreversible act is the one
+    Rekor POST inside anchor_fn.
+    """
+    import datetime as _dt
+
+    if anchor_fn is None:
+        import rekor_anchor_v2
+
+        anchor_fn = rekor_anchor_v2.anchor_manifest_to_rekor_v2
+        if rekor_base_url is None:
+            rekor_base_url = rekor_anchor_v2.REKOR_V2_DEFAULT_BASE_URL
+    if timestamp_fn is None:
+        import tsa_client
+
+        timestamp_fn = tsa_client.anchor_timestamp
+        if tsa_base_url is None:
+            tsa_base_url = tsa_client.TSA_DEFAULT_URL
+    if verify_fn is None:
+        import cli_verify_release
+
+        verify_fn = cli_verify_release.verify_convergence
+
+    vsa_name = "nous_lang-" + version + ".build-vsa.intoto.json"
+    bundle_name = "nous_lang-" + version + ".rekor-v2-bundle.json"
+    verifier_name = "verify_build_vsa_offline.py"
+    verifier_key_name = "release-verifier-key.json"
+
+    vsa_path = out_dir / vsa_name
+    if not vsa_path.is_file():
+        raise MintError("minted VSA not found (run mint first): " + str(vsa_path))
+    if not (out_dir / verifier_name).is_file():
+        raise MintError("offline verifier not found in dir: " + verifier_name)
+    if not (out_dir / verifier_key_name).is_file():
+        raise MintError("release verifier key not found in dir: " + verifier_key_name)
+    tr = pins_dir / "trusted_root.json"
+    tsa = pins_dir / "tsa_chain.pem"
+    if not tr.is_file():
+        raise MintError("durable pin not found: " + str(tr))
+    if not tsa.is_file():
+        raise MintError("durable pin not found: " + str(tsa))
+
+    bundle_path = out_dir / bundle_name
+    if bundle_path.exists():
+        raise MintError(
+            "rekor bundle already exists; refusing to re-anchor (a second "
+            "Rekor write would create a divergent entry): " + str(bundle_path)
+        )
+
+    try:
+        envelope = json.loads(vsa_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        raise MintError("cannot read minted VSA: " + str(exc)) from exc
+    canonical = canonical_bytes_to_anchor(envelope)
+    vsa_sha = vsa_payload_sha256(envelope)
+    statement = decode_build_vsa_statement(envelope)
+
+    print("ANCHOR: submitting VSA payload digest to Rekor v2 (IRREVERSIBLE)")
+    print("  version:          " + version)
+    print("  vsaPayloadSha256: " + vsa_sha)
+    if rekor_base_url is not None:
+        anchor_obj = anchor_fn(canonical, base_url=rekor_base_url)
+    else:
+        anchor_obj = anchor_fn(canonical)
+    print("  log_index:        " + str(anchor_obj.log_index))
+
+    entry_sig_b64 = _derive_entry_signature(str(anchor_obj.body_b64))
+    entry_sig_raw = base64.b64decode(entry_sig_b64, validate=True)
+    if tsa_base_url is not None:
+        token_der = timestamp_fn(
+            timestamped_data=entry_sig_raw, base_url=tsa_base_url
+        )
+    else:
+        token_der = timestamp_fn(timestamped_data=entry_sig_raw)
+
+    bundle = assemble_rekor_bundle(anchor_obj, token_der)
+    bundle_bytes = json.dumps(bundle, sort_keys=True, indent=2).encode("utf-8")
+    _write_with_sidecar(bundle_path, bundle_bytes)
+
+    with tempfile.TemporaryDirectory() as td:
+        tdir = Path(td)
+        (tdir / "build-vsa.intoto.json").write_bytes(vsa_path.read_bytes())
+        (tdir / "rekor-v2-bundle.json").write_bytes(bundle_bytes)
+        (tdir / "trusted_root.json").write_bytes(tr.read_bytes())
+        (tdir / "tsa_chain.pem").write_bytes(tsa.read_bytes())
+        result = verify_fn(str(tdir), str(tdir))
+
+    convergence = str(result.get("convergence"))
+    if convergence != "PASS":
+        legs = result.get("legs", {})
+        detail = ""
+        if isinstance(legs, dict):
+            detail = "; ".join(
+                str(k) + "=" + str(v.get("status"))
+                for k, v in legs.items()
+                if isinstance(v, dict)
+            )
+        raise MintError(
+            "post-anchor dual-root self-verify did NOT converge (convergence="
+            + convergence + "); index NOT written. legs: " + detail
+        )
+    gen_time = str(result.get("evidence", {}).get("rfc3161_gen_time"))
+
+    emitted_at = (
+        _dt.datetime.now(_dt.timezone.utc)
+        .isoformat(timespec="seconds")
+        .replace("+00:00", "Z")
+    )
+    index = build_release_index(
+        version,
+        out_dir,
+        statement=statement,
+        bundle=bundle,
+        bundle_filename=bundle_name,
+        vsa_filename=vsa_name,
+        verifier_filename=verifier_name,
+        verifier_key_filename=verifier_key_name,
+        operator_pin_b64=COMMITTED_RELEASE_PIN_B64,
+        vsa_payload_sha256_hex=vsa_sha,
+        rfc3161_gen_time=gen_time,
+        emitted_at=emitted_at,
+    )
+    index_bytes = json.dumps(index, sort_keys=True, indent=2).encode("utf-8")
+    _write_with_sidecar(out_dir / "index.json", index_bytes)
+
+    ip = bundle["transparency_log_entry"]["inclusion_proof"]
+    print("ANCHOR complete for nous-lang " + version)
+    print("  bundle:      " + bundle_name)
+    print("  index:       index.json")
+    print("  log_index:   " + str(anchor_obj.log_index))
+    print("  tree_size:   " + str(ip["tree_size"]))
+    print("  gen_time:    " + gen_time)
+    print("  convergence: PASS (offline dual-root)")
+    print()
+    print(
+        "Reversible from here: stage <dir> to /var/www + website/ mirror, "
+        "commit. The Rekor entry is permanent."
+    )
+    return 0
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="mint_release_vsa",
@@ -854,26 +1010,51 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Scratch dir for artifact downloads (default: a temp dir under --out)",
     )
+    a = sub.add_parser(
+        "anchor",
+        help="Anchor a minted bundle to Rekor v2 (IRREVERSIBLE) + write index",
+    )
+    a.add_argument("version", help="Published version, e.g. 5.64.0")
+    a.add_argument(
+        "--dir", required=True, help="Minted bundle directory (from mint --out)"
+    )
+    a.add_argument(
+        "--pins-dir",
+        required=True,
+        help="Durable operator pins dir (trusted_root.json + tsa_chain.pem)",
+    )
     return p
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_arg_parser().parse_args(argv)
-    if args.command != "mint":
-        print("usage: mint_release_vsa mint <version> --out <dir>", file=sys.stderr)
-        return 1
-    out_dir = Path(args.out)
-    work_dir = Path(args.work_dir) if args.work_dir else out_dir / ".mint-work"
-    try:
-        return mint(
-            args.version,
-            out_dir,
-            key_path=Path(args.key_path),
-            work_dir=work_dir,
+    if args.command == "mint":
+        out_dir = Path(args.out)
+        work_dir = (
+            Path(args.work_dir) if args.work_dir else out_dir / ".mint-work"
         )
-    except MintError as exc:
-        print("MINT REFUSED: " + str(exc), file=sys.stderr)
-        return 2
+        try:
+            return mint(
+                args.version,
+                out_dir,
+                key_path=Path(args.key_path),
+                work_dir=work_dir,
+            )
+        except MintError as exc:
+            print("MINT REFUSED: " + str(exc), file=sys.stderr)
+            return 2
+    if args.command == "anchor":
+        try:
+            return anchor(
+                args.version,
+                Path(args.dir),
+                pins_dir=Path(args.pins_dir),
+            )
+        except MintError as exc:
+            print("ANCHOR REFUSED: " + str(exc), file=sys.stderr)
+            return 2
+    print("usage: mint_release_vsa {mint,anchor} ...", file=sys.stderr)
+    return 1
 
 
 if __name__ == "__main__":
