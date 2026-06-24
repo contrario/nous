@@ -438,6 +438,275 @@ img{max-width:100%;display:block}
 </div>
 </section>
 
+<!-- __s171vsa_narrative_sections_v1__ NOUS narrative block: 9 sections --><!-- __s171vsa_narrative_move_v1__ -->
+
+<!-- __s171vsa_howitworks_v1__ -->
+<section class="section" id="HowItWorks">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">How It Works</div>
+    <h2 class="section-title">How NOUS Works</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;margin:0 auto" class="fade-in">
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">1</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Declare the rules</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">You write the policies your agent must obey. These are not suggestions &mdash; they are the law the agent declares for itself.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">2</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">NOUS proves the envelope</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">NOUS builds a mathematical region that proves the declared rules hold across every path the agent could take. This is the envelope: a formal, all-paths proof of conformance.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">3</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Runtime conformance is evidenced</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">When the agent runs, NOUS does not guard or block. It records a signed trace that evidences whether the run stayed inside the proven envelope. Evidence, not intervention.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">4</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Everything is offline-verifiable</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">The envelope proof, the signatures, the dossier, and the materiality verdict are all re-checkable on a disconnected laptop with only cryptography + stdlib. Zero issuer trust. Not even NOUS.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- __s171vsa_whydifferent_v1__ -->
+<section class="section" id="WhyDifferent" style="background:linear-gradient(180deg,transparent,rgba(77,158,255,0.02),transparent)">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">Why Different</div>
+    <h2 class="section-title">Why NOUS Is Different</h2>
+  </div>
+  <div style="max-width:680px;margin:0 auto 20px;color:var(--dim);font-size:14.5px;line-height:1.75" class="fade-in">
+    <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">The part the academic papers call &ldquo;an unfulfilled vision&rdquo;</div>
+    <p>In formal methods, there&rsquo;s a clean definition for when a change breaks a system: the new contract must imply the old one. If it doesn&rsquo;t, the proof is dead.</p>
+    <p>The theory is elegant. The problem is practical: nobody has a routine way to check that implication in real systems. The research itself admits this &mdash; it calls it &ldquo;a largely unfulfilled vision.&rdquo;</p>
+    <p>Most tools fall back to judgment: semver, test suites, &ldquo;this feels minor.&rdquo;</p>
+    <p>NOUS doesn&rsquo;t.</p>
+  </div>
+  <div style="max-width:680px;margin:0 auto 20px;color:var(--dim);font-size:14.5px;line-height:1.75" class="fade-in">
+    <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">The contract the papers describe &mdash; NOUS already carries it</div>
+    <p>The coverage proof in NOUS is exactly the contract the literature talks about: a mathematical region that proves the declared rules hold across every path the agent could take.</p>
+    <p>And when the system changes, NOUS can check whether the new region still contains the old one &mdash; offline, deterministically, with Farkas arithmetic, no solver to trust.</p>
+    <p>This is the part the papers don&rsquo;t have. NOUS does.</p>
+  </div>
+  <div style="max-width:680px;margin:0 auto 20px;color:var(--dim);font-size:14.5px;line-height:1.75" class="fade-in">
+    <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">From theory &rarr; to evidence that travels</div>
+    <p>What the research frames as a definition, NOUS turns into: a deterministic sidecar, a sha-pinned artifact, carried inside the Annex IV dossier, re-verifiable offline, bound to the envelope-proof, and routed by the verifier with honest boundaries.</p>
+    <p>The result is a three-level gradient:</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;margin:0 auto" class="fade-in">
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">MINOR</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">A classification, evidenced</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">A classification, evidenced.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">MATERIAL</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Needs a fresh proof</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Needs a fresh proof.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">MATERIAL + COVERAGE-PRESERVING</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Proven by Farkas</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Proven by Farkas.</div>
+    </div>
+  </div>
+  <div style="max-width:680px;margin:0 auto 20px;color:var(--dim);font-size:14.5px;line-height:1.75;margin-top:24px" class="fade-in">
+    <p>The verifier never pretends to prove the classification. It authenticates it, and points at the leg that does prove preservation.</p>
+    <p>This is not theory. This is running code.</p>
+    <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px;margin-top:20px">Why this matters</div>
+    <p>Because for the first time, &ldquo;how much did it change&rdquo; stops being an opinion. It becomes: deterministic, cryptographically bound, offline-verifiable, reproducible, and independent of the vendor.</p>
+    <p>The academic idea becomes a practical artifact. The proof becomes something that travels. And the system becomes something an auditor can check without trusting anyone &mdash; not the vendor, not even NOUS.</p>
+  </div>
+</div>
+</section>
+
+<!-- __s171vsa_whatproves_v1__ -->
+<section class="section" id="WhatProves">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">What It Proves</div>
+    <h2 class="section-title">What NOUS Proves</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;margin:0 auto" class="fade-in">
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">ENVELOPE CONFORMANCE</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">All-paths region</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">A mathematical region that proves the declared rules hold across every path the agent could take.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">COVERAGE PRESERVATION</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">New contains old</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">When the system changes, NOUS can prove whether the new region still contains the old one &mdash; offline, with Farkas arithmetic.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">COST, SEQUENCE, COVERAGE</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Internally consistent</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Deterministic proofs that the declared constraints are internally consistent and fully covered.</div>
+    </div>
+  </div>
+  <div style="max-width:680px;margin:24px auto 0;background:rgba(201,165,84,0.06);border:1px solid rgba(201,165,84,0.25);border-left:3px solid var(--gold);border-radius:8px;padding:18px 20px" class="fade-in">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">WHAT NOUS DOES NOT PROVE</div>
+    <div style="color:var(--dim);font-size:13.5px;line-height:1.7">NOUS does not prove what happened at runtime. Runtime is evidenced, not proven.</div>
+  </div>
+</div>
+</section>
+
+<!-- __s171vsa_evidencesurfaces_v1__ -->
+<section class="section" id="EvidenceSurfaces" style="background:linear-gradient(180deg,transparent,rgba(201,165,84,0.02),transparent)">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">Evidence Surfaces</div>
+    <h2 class="section-title">Evidence Surfaces</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;margin:0 auto" class="fade-in">
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">1</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Envelope proof</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Formal, all-paths proof of the declared rules.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">2</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Signed manifest</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Cryptographically bound declaration of the system&rsquo;s identity and obligations.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">3</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Dossier</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Deterministic bundle carrying the envelope, signatures, materiality verdict, and conformance artifacts.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">4</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Runtime trace</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">A signed record that evidences whether a run stayed inside the proven envelope.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">5</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Release VSA</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Dual-root, offline-verifiable attestation of the build and publish chain.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- __s171vsa_materialitygradient_v1__ -->
+<section class="section" id="MaterialityGradient">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">Materiality</div>
+    <h2 class="section-title">Materiality Gradient</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;margin:0 auto" class="fade-in">
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">MINOR</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">A classification, evidenced</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">A classification, evidenced. Logged as Article 12 record.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">MATERIAL</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Requires a fresh proof</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Requires a fresh proof. If no proof leg is present, the envelope must be superseded.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">MATERIAL + COVERAGE-PRESERVING</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Proven by Farkas</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Proven by Farkas. The envelope remains valid.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- __s171vsa_annexivdossier_v1__ -->
+<section class="section" id="AnnexIVDossier" style="background:linear-gradient(180deg,transparent,rgba(201,165,84,0.02),transparent)">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">Annex IV</div>
+    <h2 class="section-title">Annex IV Dossier</h2>
+  </div>
+  <div style="max-width:680px;margin:0 auto;color:var(--dim);font-size:14px;line-height:1.9" class="fade-in">
+    <div>&middot; deterministic</div>
+    <div>&middot; sha-pinned</div>
+    <div>&middot; offline-verifiable</div>
+    <div>&middot; includes envelope proof</div>
+    <div>&middot; includes signatures</div>
+    <div>&middot; includes materiality verdict</div>
+    <div>&middot; includes runtime evidence</div>
+    <div>&middot; includes operator keys</div>
+    <div>&middot; includes provenance anchors</div>
+    <div style="color:var(--bright);margin-top:14px">Everything an auditor needs, without trusting the vendor.</div>
+  </div>
+</div>
+</section>
+
+<!-- __s171vsa_zerotrust_v1__ -->
+<section class="section" id="ZeroTrust" style="background:linear-gradient(180deg,transparent,rgba(56,217,122,0.02),transparent)">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">Zero-Trust</div>
+    <h2 class="section-title">Zero-Trust Verification</h2>
+    <p class="section-sub">Anyone can verify:</p>
+  </div>
+  <div style="max-width:680px;margin:0 auto;color:var(--dim);font-size:14px;line-height:1.9" class="fade-in">
+    <div>&middot; the envelope proof</div>
+    <div>&middot; the signatures</div>
+    <div>&middot; the dossier</div>
+    <div>&middot; the materiality verdict</div>
+    <div>&middot; the release VSA</div>
+    <div style="color:var(--bright);margin-top:14px">on a disconnected laptop, with only cryptography + stdlib.</div>
+    <div style="margin-top:8px">Not the vendor. Not the runtime. Not even NOUS.</div>
+  </div>
+</div>
+</section>
+
+<!-- __s171vsa_releaseevidence_v1__ -->
+<section class="section" id="ReleaseEvidence">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">Release Evidence</div>
+    <h2 class="section-title">Release Evidence (VSA)</h2>
+  </div>
+  <div style="max-width:680px;margin:0 auto;color:var(--dim);font-size:14px;line-height:1.9" class="fade-in">
+    <div>&middot; build provenance</div>
+    <div>&middot; publish provenance</div>
+    <div>&middot; dual-root verification</div>
+    <div>&middot; offline verifier</div>
+    <div>&middot; deterministic payload</div>
+    <div>&middot; Rekor v2 anchor</div>
+    <div style="color:var(--bright);margin-top:14px">The release itself becomes evidence.</div>
+  </div>
+</div>
+</section>
+
+<!-- __s171vsa_forwhom_v1__ -->
+<section class="section" id="ForWhom" style="background:linear-gradient(180deg,transparent,rgba(77,158,255,0.02),transparent)">
+<div class="container">
+  <div class="section-head fade-in">
+    <div class="section-tag">Audiences</div>
+    <h2 class="section-title">For Auditors / Engineers / Regulators</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:900px;margin:0 auto" class="fade-in">
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">FOR AUDITORS</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Deterministic dossiers</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Deterministic dossiers, offline proofs, zero-trust verification.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">FOR ENGINEERS</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">A formal envelope</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">A formal envelope that proves the declared rules hold across every path.</div>
+    </div>
+    <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">FOR REGULATORS</div>
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Annex IV alignment</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Annex IV alignment, Article 12 records, transparent evidence surfaces.</div>
+    </div>
+  </div>
+</div>
+</section>
+
 <style>
 @keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
 .vt-dim{color:#5a6a7e}.vt-green{color:#38d97a}.vt-gold{color:#c9a554}.vt-blue{color:#4d9eff}.vt-cyan{color:#45d1c8}.vt-bright{color:#e2e8f0}.vt-info{color:#4d9eff}
