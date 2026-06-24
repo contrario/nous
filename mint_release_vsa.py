@@ -526,6 +526,315 @@ def _root1_self_verify(out_dir: Path, vsa_name: str) -> int:
     return result.returncode
 
 
+# __s172_p0b1_release_bundle_index_v1__
+NOUS_BUILD_VSA_EXT_KEY = "https://nous-lang.org/build-vsa/ext/v1"
+RELEASE_VSA_INDEX_SCHEMA = "nous.release_vsa.index.v1"
+RELEASE_VSA_BASE_URL = "https://nous-lang.org/.well-known/nous/release-vsa/"
+PYPI_PROJECT_URL = "https://pypi.org/project/nous-lang/"
+REKOR_LEG_BOUNDARY = (
+    "EVIDENCES public, append-only, RFC3161-timestamped inclusion of the VSA "
+    "payload digest in the Rekor v2 transparency log. The bundle is "
+    "self-contained: it carries the RFC6962 inclusion proof, the C2SP "
+    "signed-note checkpoint, and the RFC3161 timestamp token, and is "
+    "verifiable fully offline with cryptography + Python stdlib only. It "
+    "PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard."
+)
+
+
+def decode_build_vsa_statement(envelope: dict[str, Any]) -> dict[str, Any]:
+    payload_b64 = envelope.get("payload")
+    if not isinstance(payload_b64, str) or not payload_b64:
+        raise MintError("build-vsa envelope has no payload")
+    try:
+        raw = base64.b64decode(payload_b64, validate=True)
+    except (ValueError, TypeError) as exc:
+        raise MintError(
+            "build-vsa payload is not valid base64: " + str(exc)
+        ) from exc
+    try:
+        statement = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise MintError(
+            "build-vsa payload is not valid JSON: " + str(exc)
+        ) from exc
+    if not isinstance(statement, dict):
+        raise MintError("build-vsa payload is not a JSON object")
+    return statement
+
+
+def vsa_payload_sha256(envelope: dict[str, Any]) -> str:
+    payload_b64 = envelope.get("payload")
+    if not isinstance(payload_b64, str) or not payload_b64:
+        raise MintError("build-vsa envelope has no payload")
+    return hashlib.sha256(
+        base64.b64decode(payload_b64, validate=True)
+    ).hexdigest()
+
+
+def canonical_bytes_to_anchor(envelope: dict[str, Any]) -> bytes:
+    payload_b64 = envelope.get("payload")
+    if not isinstance(payload_b64, str) or not payload_b64:
+        raise MintError("build-vsa envelope has no payload")
+    return base64.b64decode(payload_b64, validate=True)
+
+
+def _decode_canonicalized_body(body_b64: str) -> dict[str, Any]:
+    try:
+        body = json.loads(
+            base64.b64decode(body_b64, validate=True).decode("utf-8")
+        )
+    except (ValueError, TypeError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise MintError(
+            "canonicalized_body is not valid base64/JSON: " + str(exc)
+        ) from exc
+    if not isinstance(body, dict):
+        raise MintError("canonicalized_body is not a JSON object")
+    return body
+
+
+def _hashedrekord_leaf(body: dict[str, Any]) -> dict[str, Any]:
+    spec = body.get("spec")
+    if not isinstance(spec, dict):
+        raise MintError("canonicalized_body has no spec object")
+    leaf = spec.get("hashedRekordV002") or spec.get("hashedRekord") or spec
+    if not isinstance(leaf, dict):
+        raise MintError("canonicalized_body spec leaf is not an object")
+    return leaf
+
+
+def _derive_entry_signature(body_b64: str) -> str:
+    leaf = _hashedrekord_leaf(_decode_canonicalized_body(body_b64))
+    try:
+        content = leaf["signature"]["content"]
+    except (KeyError, TypeError) as exc:
+        raise MintError(
+            "cannot derive entry_signature from canonicalized_body: " + str(exc)
+        ) from exc
+    if not isinstance(content, str) or not content:
+        raise MintError("entry_signature content is not a non-empty string")
+    return content
+
+
+def _anchored_digest_hex(body_b64: str) -> str:
+    leaf = _hashedrekord_leaf(_decode_canonicalized_body(body_b64))
+    try:
+        digest_b64 = leaf["data"]["digest"]
+    except (KeyError, TypeError) as exc:
+        raise MintError(
+            "cannot derive anchored digest from canonicalized_body: " + str(exc)
+        ) from exc
+    return base64.b64decode(str(digest_b64), validate=True).hex()
+
+
+def _entry_kind(body_b64: str) -> str:
+    body = _decode_canonicalized_body(body_b64)
+    kind = str(body.get("kind", ""))
+    api = str(body.get("apiVersion", ""))
+    if not kind or not api:
+        raise MintError("canonicalized_body missing kind/apiVersion")
+    return kind + "/" + api
+
+
+def _leaf_hash_hex(body_b64: str) -> str:
+    leaf = base64.b64decode(body_b64, validate=True)
+    return hashlib.sha256(b"\x00" + leaf).hexdigest()
+
+
+def _checkpoint_tree_size(checkpoint_envelope: str) -> int:
+    import rekor_v2_offline
+
+    cp = rekor_v2_offline.parse_checkpoint(checkpoint_envelope)
+    return int(cp.tree_size)
+
+
+def _checkpoint_origin(checkpoint_envelope: str) -> str:
+    lines = checkpoint_envelope.splitlines()
+    if not lines or not lines[0]:
+        raise MintError("checkpoint envelope has no origin line")
+    return lines[0]
+
+
+def assemble_rekor_bundle(anchor: Any, rfc3161_token_der: bytes) -> dict[str, Any]:
+    """Assemble the offline rekor-v2-bundle.json dict from a live Rekor anchor.
+
+    anchor is duck-typed as rekor_anchor_v2.RekorAnchorV2 (reads only
+    .body_b64, .checkpoint_envelope, .inclusion_proof_hashes, .log_index);
+    typed Any so this pure-assembly path does not import the live httpx anchor
+    client. Shape matches the rekor_v2_offline consumer.
+    """
+    body_b64 = str(anchor.body_b64)
+    checkpoint_envelope = str(anchor.checkpoint_envelope)
+    return {
+        "entry_signature": _derive_entry_signature(body_b64),
+        "rfc3161_timestamp": base64.b64encode(rfc3161_token_der).decode("ascii"),
+        "transparency_log_entry": {
+            "canonicalized_body": body_b64,
+            "inclusion_proof": {
+                "checkpoint": checkpoint_envelope,
+                "hashes": [str(h) for h in anchor.inclusion_proof_hashes],
+                "tree_size": _checkpoint_tree_size(checkpoint_envelope),
+            },
+            "log_index": int(anchor.log_index),
+        },
+    }
+
+
+def _sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def build_release_index(
+    version: str,
+    out_dir: Path,
+    *,
+    statement: dict[str, Any],
+    bundle: dict[str, Any],
+    bundle_filename: str,
+    vsa_filename: str,
+    verifier_filename: str,
+    verifier_key_filename: str,
+    operator_pin_b64: str,
+    vsa_payload_sha256_hex: str,
+    rfc3161_gen_time: str,
+    emitted_at: str,
+) -> dict[str, Any]:
+    predicate = statement["predicate"]
+    ext = predicate[NOUS_BUILD_VSA_EXT_KEY]
+    build_identity = ext["buildIdentity"]
+    subject_federation = ext["subjectFederation"]
+    subjects = statement["subject"]
+
+    base = RELEASE_VSA_BASE_URL + version + "/"
+
+    name_to_sha: dict[str, str] = {}
+    for s in subjects:
+        name_to_sha[str(s["name"])] = str(s["digest"]["sha256"])
+    wheel_name = None
+    sdist_name = None
+    for name in name_to_sha:
+        if name.endswith(".whl"):
+            wheel_name = name
+        elif name.endswith(".tar.gz"):
+            sdist_name = name
+    if wheel_name is None or sdist_name is None:
+        raise MintError("statement subjects missing wheel or sdist")
+
+    artifacts: list[dict[str, Any]] = []
+    artifacts.append({
+        "kind": "release_vsa_dsse",
+        "name": vsa_filename,
+        "sha256": _sha256_file(out_dir / vsa_filename),
+        "url": base + vsa_filename,
+    })
+    artifacts.append({
+        "kind": "offline_verifier",
+        "name": verifier_filename,
+        "sha256": _sha256_file(out_dir / verifier_filename),
+        "url": base + verifier_filename,
+        "verifierKeyPinned": operator_pin_b64,
+    })
+    artifacts.append({
+        "kind": "release_verifier_key",
+        "name": verifier_key_filename,
+        "sha256": _sha256_file(out_dir / verifier_key_filename),
+        "url": base + verifier_key_filename,
+    })
+    artifacts.append({
+        "kind": "wheel",
+        "name": wheel_name,
+        "sha256": name_to_sha[wheel_name],
+        "source": "pypi",
+        "url": PYPI_PROJECT_URL + version + "/",
+    })
+    artifacts.append({
+        "kind": "sdist",
+        "name": sdist_name,
+        "sha256": name_to_sha[sdist_name],
+        "source": "pypi",
+        "url": PYPI_PROJECT_URL + version + "/",
+    })
+
+    wheel_entry = None
+    for entry in subject_federation:
+        if str(entry["name"]).endswith(".whl"):
+            wheel_entry = entry
+    if wheel_entry is None:
+        raise MintError("subjectFederation has no wheel entry")
+    bl = wheel_entry["buildLeg"]
+    for entry in subject_federation:
+        if str(entry["buildLeg"]["payloadSha256"]) != str(bl["payloadSha256"]):
+            raise MintError(
+                "federation build legs do not share one provenance payloadSha256"
+            )
+    artifacts.append({
+        "kind": "federation_build_leg",
+        "payloadSha256": str(bl["payloadSha256"]),
+        "predicateType": str(bl["predicateType"]),
+        "uri": str(bl["uri"]),
+    })
+
+    for entry in subject_federation:
+        pl = entry["publishLeg"]
+        artifacts.append({
+            "kind": "federation_publish_leg",
+            "name": str(entry["name"]),
+            "payloadSha256": str(pl["payloadSha256"]),
+            "predicateType": str(pl["predicateType"]),
+            "uri": str(pl["uri"]),
+        })
+
+    tle = bundle["transparency_log_entry"]
+    body_b64 = str(tle["canonicalized_body"])
+    ip = tle["inclusion_proof"]
+    checkpoint_envelope = str(ip["checkpoint"])
+    anchored = _anchored_digest_hex(body_b64)
+    if anchored != vsa_payload_sha256_hex:
+        raise MintError(
+            "binding self-check failed: anchored digest "
+            + anchored[:16] + "... != vsaPayloadSha256 "
+            + vsa_payload_sha256_hex[:16] + "..."
+        )
+    artifacts.append({
+        "anchoredDigestSha256": anchored,
+        "boundary": REKOR_LEG_BOUNDARY,
+        "entryKind": _entry_kind(body_b64),
+        "kind": "rekor_v2_transparency_log",
+        "leafHash": _leaf_hash_hex(body_b64),
+        "logIndex": int(tle["log_index"]),
+        "name": bundle_filename,
+        "rekorShard": "https://" + _checkpoint_origin(checkpoint_envelope),
+        "rfc3161GenTime": rfc3161_gen_time,
+        "sha256": _sha256_file(out_dir / bundle_filename),
+        "treeSize": int(ip["tree_size"]),
+        "url": base + bundle_filename,
+    })
+
+    return {
+        "artifacts": artifacts,
+        "boundary": str(ext["boundary"]),
+        "buildIdentity": {
+            "buildType": str(build_identity["buildType"]),
+            "builderId": str(build_identity["builderId"]),
+            "path": str(build_identity["path"]),
+            "ref": str(build_identity["ref"]),
+            "repository": str(build_identity["repository"]),
+            "sourceCommit": str(build_identity["sourceCommit"]),
+        },
+        "emittedAt": emitted_at,
+        "policyDigest": str(predicate["policy"]["digest"]["sha256"]),
+        "policyId": str(predicate["policy"]["uri"]),
+        "schema": RELEASE_VSA_INDEX_SCHEMA,
+        "verifiedLevels": [str(x) for x in predicate["verifiedLevels"]],
+        "verifierId": str(predicate["verifier"]["id"]),
+        "verifierKeyid": hashlib.sha256(
+            base64.b64decode(operator_pin_b64, validate=True)
+        ).hexdigest(),
+        "verifierPublicKeyRaw": operator_pin_b64,
+        "version": version,
+        "vsaPayloadSha256": vsa_payload_sha256_hex,
+    }
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="mint_release_vsa",
