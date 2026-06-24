@@ -61,3 +61,4 @@ build/
 *.lark.bak.*
 runtime_*.json
 trace_*.json
+noesis_metrics.json
