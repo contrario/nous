@@ -4,7 +4,7 @@ S85 v5.7.0 codegen-correctness coverage:
   - null/none literal -> None / is None / is not None
   - guard ... else <action> honored (sleep + speak before return)
   - undefined-name gate: refuses unbound names, silent on unused imports
-  - release.py phase-10 idempotency (duplicate upload treated as success)
+  - release.py upload path retired (twine token path removed; publish CI-only)
 """
 from __future__ import annotations
 
@@ -162,8 +162,9 @@ class TestUndefinedNameGate:
 
 
 class TestPhase10Idempotency:
-    def test_release_phase_upload_uses_skip_existing(self) -> None:
+    def test_release_upload_path_retired_no_twine(self) -> None:
         text = (ROOT / "scripts" / "release.py").read_text(encoding="utf-8")
-        assert "__session85_phase10_idempotent_v1__" in text
-        assert "--skip-existing" in text
-        assert "already exists" in text
+        assert "__s175_p1_upload_refused_v1__" in text
+        assert "def phase_upload" not in text
+        assert "twine upload" not in text
+        assert "--skip-existing" not in text

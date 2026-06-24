@@ -9,8 +9,8 @@ a Session-57-class incident structurally impossible.
 Usage:
     python3 scripts/release.py --check         # dry-run, no upload
     python3 scripts/release.py --build         # build + verify wheel, no upload
-    python3 scripts/release.py --upload        # full pipeline up to PyPI
-    python3 scripts/release.py --upload --skip-tests  # emergency bypass
+    python3 scripts/release.py --build         # gates + build (CI uploads via Trusted Publisher)
+    # publish: git tag vX.Y.Z && git push; CI release.yml does the upload
 
 Phases:
     0. Pre-flight: working tree clean, on master, tag for current version
@@ -335,37 +335,8 @@ def phase_install_smoke(whl: Path, version: str) -> None:
     print(f"  OK: {TEMPLATE_FOR_SMOKE} extract + compile + verify = exit 0")
 
 
-def phase_upload(whl: Path, sdist: Path) -> None:
-    print("\n[10/10] PYPI UPLOAD")
-    if not TWINE_VENV.exists():
-        raise ReleaseError(
-            f"twine venv missing at {TWINE_VENV}; create with: "
-            f"python3 -m venv {TWINE_VENV} && {TWINE_VENV}/bin/pip install twine packaging>=24.2"
-        )
-    twine = TWINE_VENV / "bin" / "twine"
-    run([str(twine), "check", str(whl), str(sdist)])
-    print("  twine check OK")
-    # __session85_phase10_idempotent_v1__
-    result = run(
-        [str(twine), "upload", "--skip-existing", str(whl), str(sdist)],
-        check=False,
-    )
-    combined = (result.stdout + result.stderr).lower()
-    duplicate = (
-        "already exists" in combined
-        or "skipping" in combined
-        or "this filename has already been used" in combined
-    )
-    if result.returncode != 0 and not duplicate:
-        print(f"    stdout: {result.stdout[-500:]}")
-        print(f"    stderr: {result.stderr[-500:]}")
-        raise ReleaseError(
-            f"twine upload failed (exit {result.returncode}); not a duplicate"
-        )
-    if duplicate:
-        print(f"  OK: {whl.name} + {sdist.name} already on PyPI (idempotent)")
-    else:
-        print(f"  OK: uploaded {whl.name} + {sdist.name}")
+# __s175_p1_upload_refused_v1__ phase_upload (twine token path) retired;
+# publishing is CI-only via .github/workflows/release.yml (Trusted Publisher).
 
 
 # __s159_u2_provenance_phase_v1__
@@ -483,7 +454,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="NOUS atomic release pipeline")
     parser.add_argument("--check", action="store_true", help="dry-run through phase 4")
     parser.add_argument("--build", action="store_true", help="run through phase 8 (no upload)")
-    parser.add_argument("--upload", action="store_true", help="full pipeline incl. PyPI upload")
+    parser.add_argument("--upload", action="store_true", help="RETIRED: refuses; publish is CI-only (Trusted Publisher)")
     parser.add_argument("--skip-tests", action="store_true", help="emergency: skip pytest floor")
     parser.add_argument(
         "--allow-existing-tag", action="store_true",
@@ -505,6 +476,19 @@ def main() -> int:
     if not (args.check or args.build or args.upload):
         parser.print_help()
         return 1
+
+    if args.upload:  # __s175_p1_upload_refused_v1__
+        print(
+            "REFUSED: --upload (twine token path) is retired. Publishing is "
+            "CI-only via .github/workflows/release.yml (PyPI Trusted Publisher, "
+            "OIDC; PEP 740 publish + SLSA build attestations)."
+        )
+        print("Canonical release:")
+        print("  1) gates:  python3 scripts/release.py --check")
+        print("  2) tag:    git tag vX.Y.Z && git push origin vX.Y.Z")
+        print("  3) approve the 'pypi' environment in GitHub Actions")
+        print("  4) anchor: python3 mint_release_vsa.py mint X.Y.Z")
+        return 2
 
     try:
         version: str = phase_preflight()
@@ -533,13 +517,14 @@ def main() -> int:
 
         if args.build:
             print(f"\n[BUILD] artifacts ready: {whl.name} + {sdist.name}")
-            print("        next: python3 scripts/release.py --upload")
+            print(f"        next: git tag v{version} && git push origin v{version}")
+            print("        publish runs in CI via Trusted Publisher; approve "
+                  "the 'pypi' environment to release")
             return 0
 
-        phase_upload(whl, sdist)
-        print(f"\n[UPLOAD] v{version} live on PyPI")
-        print(f"         next: git tag v{version} && git push origin v{version}")
-        return 0
+        raise ReleaseError(  # __s175_p1_upload_refused_v1__
+            "unreachable: --upload is retired (refused before any phase runs)"
+        )
 
     except ReleaseError as exc:
         print(f"\nABORT: {exc}")
