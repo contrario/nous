@@ -34,7 +34,7 @@ _RELEASE = _REPO / "scripts" / "release.py"
 _RELEASE_VSA_DIR = _REPO / "website" / ".well-known" / "nous" / "release-vsa"
 
 _RELEASE_VSA_FLOOR = (5, 60, 1)
-_RELEASE_VSA_WAIVERS = frozenset({"5.61.0", "5.62.0", "5.63.0", "5.64.0"})
+_RELEASE_VSA_WAIVERS = frozenset({"5.61.0", "5.62.0", "5.63.0"})  # __s172_p0c_anchor_5640_dewaiver__
 
 
 def _pyproject_py_modules() -> set[str]:
