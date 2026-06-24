@@ -5,17 +5,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOUS (Νοῦς) — EU AI Act Annex IV Compliance Infrastructure</title>
-<meta name="description" content="NOUS produces offline-verifiable cryptographic proof that AI agents stayed inside a declared envelope: bounded cost and policy coverage. Signed for EU AI Act Annex IV, checkable with only the cryptography library. Coverage, not impossibility.">
+<meta name="description" content="NOUS is a monitor, not a guard. It provides formal, offline-verifiable proofs that your AI systems stay inside the rules you declare -- without trusting the vendor, or even NOUS itself. EU AI Act Annex IV compliance infrastructure.">
 <meta name="keywords" content="NOUS, EU AI Act, Annex IV, compliance infrastructure, agentic AI, formal verification, cryptographic provenance, Sigstore Rekor, Ed25519">
 <meta name="author" content="Hlias Staurou">
 <meta property="og:title" content="NOUS (Νοῦς) — EU AI Act Annex IV Compliance Infrastructure">
-<meta property="og:description" content="NOUS produces offline-verifiable cryptographic proof that AI agents stayed inside a declared envelope: bounded cost and policy coverage. Signed for EU AI Act Annex IV, checkable with only the cryptography library. Coverage, not impossibility.">
+<meta property="og:description" content="NOUS is a monitor, not a guard. It provides formal, offline-verifiable proofs that your AI systems stay inside the rules you declare -- without trusting the vendor, or even NOUS itself. EU AI Act Annex IV compliance infrastructure.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nous-lang.org">
 <meta property="og:image" content="https://nous-lang.org/og-image-v2.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="NOUS — EU AI Act Annex IV Compliance Infrastructure">
-<meta name="twitter:description" content="Offline-verifiable cryptographic proof that AI agents stayed inside a declared envelope. EU AI Act Annex IV. Zero vendor trust.">
+<meta name="twitter:description" content="A monitor, not a guard. Formal, offline-verifiable proofs that your AI systems stay inside the rules you declare -- without trusting the vendor, or even NOUS. EU AI Act Annex IV.">
 <link rel="canonical" href="https://nous-lang.org">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,8 +93,8 @@ img{max-width:100%;display:block}
 .hero h1{font-size:62px;font-weight:300;line-height:1.08;margin:0 0 20px;font-family:'Playfair Display',Georgia,serif;color:var(--bright)}
 .hero h1 span{color:var(--gold);font-weight:600;font-style:italic}
 .hero-sub{font-size:19px;color:var(--text);line-height:1.55;max-width:420px;margin:0 0 12px}
+.hero-headline{font-size:38px;font-weight:600;color:var(--bright);font-family:'Playfair Display',Georgia,serif;line-height:1.15;letter-spacing:-0.5px;max-width:520px;margin:0 0 18px}
 .hero-desc{font-size:14px;color:var(--dim);line-height:1.7;max-width:420px;margin:0 0 36px}
-.hero-note{font-size:12.5px;color:var(--gold);line-height:1.6;max-width:420px;margin:0 0 28px;letter-spacing:0.2px}
 .hero-buttons{display:flex;gap:12px;flex-wrap:wrap}
 .btn-gold{padding:13px 30px;background:linear-gradient(135deg,var(--gold),#b8923e);color:var(--bg);border-radius:6px;font-size:14px;font-weight:600;letter-spacing:0.5px;box-shadow:0 4px 24px rgba(201,165,84,0.15)}
 .btn-outline{padding:13px 30px;background:transparent;border:1px solid var(--border);color:var(--bright);border-radius:6px;font-size:14px;letter-spacing:0.3px}
@@ -126,6 +126,11 @@ img{max-width:100%;display:block}
 .stat+.stat{border-left:1px solid var(--border)}
 .stat-num{font-size:46px;font-weight:300;color:var(--gold);font-family:'Playfair Display',Georgia,serif;letter-spacing:-1px}
 .stat-label{color:var(--dim);font-size:11px;margin-top:6px;letter-spacing:2.5px;text-transform:uppercase}
+.prose-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px}
+.prose-tile{padding:22px 20px;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.prose-tile h4{color:var(--gold);font-size:14px;font-weight:600;margin:0 0 8px;font-family:'Playfair Display',serif;letter-spacing:0.2px}
+.prose-tile p{color:var(--dim);font-size:12px;line-height:1.6;margin:0}
+@media(max-width:820px){.prose-tiles{grid-template-columns:repeat(2,1fr)}}
 /* Feature Cards */
 .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:64px}
 .feature-card{padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;transition:all 0.3s;cursor:default;position:relative;overflow:hidden}
@@ -302,12 +307,12 @@ img{max-width:100%;display:block}
       <div>
         <!-- __session86_badge_removed_v1__ hero badge removed -->
         <h1>NOUS <span>Νοῦς</span></h1>
-        <p class="hero-sub"><!-- __hero_governance_v1__ -->Provable governance for agentic AI. Verifiable offline — with zero trust in the vendor.</p>
-        <p class="hero-desc">Declare the laws your AI agents must obey. NOUS proves they stay inside that envelope, then emits signed evidence an auditor checks on a disconnected laptop with only the cryptography library. EU AI Act Annex IV.</p>
-        <p class="hero-note"><!-- __s171vsa_monitor_not_guard_v1__ -->NOUS proves the law holds and evidences that a run stayed inside it. It never sits in the execution path. A monitor, not a guard.</p>
+        <p class="hero-headline"><!-- __s171vsa_hero_repos_v1__ -->Proofs that need no one. Not even NOUS.</p>
+        <p class="hero-sub"><!-- __hero_governance_v1__ -->A monitor, not a guard. NOUS proves the rules you declare hold across every path your AI agents could take -- and anyone can check the proof offline, without trusting the vendor. Not even NOUS. EU AI Act Annex IV.</p>
+        <p class="hero-desc">AI governance that doesn't rely on trust -- only on evidence.</p>
         <div class="hero-buttons">
-          <a href="#LiveProof" class="btn-gold">See the proof</a>
-          <a href="/verify.html" class="btn-outline">Verify a dossier →</a>
+          <a href="#LiveProof" class="btn-gold">See how the proofs work</a>
+          <a href="/verify.html" class="btn-outline">Explore the evidence →</a>
           <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="btn-gh">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
             GitHub
@@ -341,6 +346,12 @@ img{max-width:100%;display:block}
     <div class="stat"><div class="stat-num" data-target="0">0</div><div class="stat-label">Vendor Trust</div></div>
     <div class="stat"><div class="stat-num" data-target="1">0</div><div class="stat-label">Library to Verify</div></div>
     <div class="stat"><div class="stat-num">Annex IV</div><div class="stat-label">EU AI Act</div></div>
+  </div>
+  <div class="prose-tiles"><!-- __s171vsa_hero_repos_v1__ -->
+    <div class="prose-tile"><h4>Offline-verifiable</h4><p>Proofs and signatures checkable on a disconnected laptop with only the cryptography library and stdlib. Zero issuer trust.</p></div>
+    <div class="prose-tile"><h4>All-paths envelope</h4><p>The system proves the declared rules hold across every path the agent could take -- not just the one it happened to run.</p></div>
+    <div class="prose-tile"><h4>Monitor, not guard</h4><p>Runtime conformance is evidenced, not controlled. Evidence, not intervention.</p></div>
+    <div class="prose-tile"><h4>Annex IV ready</h4><p>Deterministic dossiers, signed manifests, dual-root verification.</p></div>
   </div>
   <!-- __session98_homepage_anchor_badge_v1__ -->
   <div style="text-align:center;margin-top:18px">
