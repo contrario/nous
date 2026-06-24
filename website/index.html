@@ -271,7 +271,6 @@ img{max-width:100%;display:block}
       <a href="/blog" class="nav-link">Blog</a>
       <!-- __session82_homepage_nav_verify_v1__ -->
       <a href="/verify.html" class="nav-link">Verify</a>
-      <a href="#Story" class="nav-link">Story</a>
       <div class="nav-more">
         <button class="nav-more-trigger" aria-haspopup="true" aria-expanded="false">More <span class="nav-more-caret">&#9662;</span></button>
         <div class="nav-more-panel">
@@ -591,16 +590,7 @@ if(term)obs.observe(term);
 </div>
 </section>
 
-<section class="section" id="Ecosystem" style="background:linear-gradient(180deg,transparent,rgba(201,165,84,0.02),transparent)">
-<div class="container">
-  <div class="section-head fade-in">
-    <div class="section-tag">Security</div>
-    <h2 class="section-title">Security Posture</h2>
-    <p class="section-sub">NOUS is built alongside Kerberus — an OWASP Top 10 and MITRE ATT&CK security scanner with NIS2 alignment.</p><!-- __ecosystem_kerberus_v1__ -->
-  </div>
-  <div class="eco-grid" id="ecoGrid" style="grid-template-columns:1fr;max-width:440px;margin:0 auto"><!-- __polish_v1__ --></div>
-</div>
-</section>
+<!-- Ecosystem/Security Posture section removed from front page (S171: Kerberus kept as footer link only) __s171vsa_frontpage_trim_v1__ -->
 
 <!-- STORY -->
 
@@ -611,7 +601,7 @@ if(term)obs.observe(term);
   <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
     <div class="section-tag" style="border-color:rgba(201,165,84,0.19);color:var(--gold);background:rgba(201,165,84,0.05)">Governance Layer</div>
     <h2 class="section-title">Governance &amp; Replay</h2>
-    <p class="section-sub">Declare policies in the source. Enforce them at runtime. Replay every decision deterministically.</p>
+    <p class="section-sub"><!-- __s171vsa_frontpage_trim_v1__ -->Declare policies in the source. NOUS proves they hold, and records every decision for deterministic replay.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:900px;margin:0 auto" class="fade-in">
 
@@ -631,9 +621,9 @@ if(term)obs.observe(term);
 
     <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
       <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:0.4"></div>
-      <div style="color:var(--purple);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">Intervention Engine</div>
-      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">Block. Inject. Abort. Audit.</div>
-      <div style="color:var(--dim);font-size:13px;line-height:1.65">Five actions at three sites (<code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">sense.invoke</code>, <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">llm.request</code>, <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">memory.write</code>). Prompt-hash recompute on message injection closes the audit gap.</div>
+      <div style="color:var(--purple);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px">Declared Policy Actions</div>
+      <div style="color:var(--bright);font-size:16px;font-weight:500;font-family:'Playfair Display',serif;margin-bottom:8px">The Law the Agent Declares.</div>
+      <div style="color:var(--dim);font-size:13px;line-height:1.65">A policy can declare <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">block</code>, <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">inject</code>, or <code style="font-size:11px;background:rgba(77,158,255,0.08);padding:2px 6px;border-radius:3px;color:var(--cyan)">abort</code> at three sites. These are the law the agent declares, not actions NOUS performs. NOUS proves the declared policy is consistent and covered; the signed trace records what the runtime did.</div>
     </div>
 
     <div style="padding:28px 24px;background:var(--card);border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden">
@@ -647,19 +637,7 @@ if(term)obs.observe(term);
 </div>
 </section>
 
-<section class="section" id="Story">
-<div class="container">
-  <div class="section-head fade-in">
-    <div class="section-tag">Origin</div>
-    <h2 class="section-title">The Story</h2>
-  </div>
-  <div class="timeline" id="timeline"></div>
-  <div class="quote-box fade-in">
-    <div class="quote-text">"Νοῦς — the intellect that grasps truth directly,<br>without the mediation of sensory experience."</div>
-    <div class="quote-author">Aristotle</div>
-  </div>
-</div>
-</section>
+<!-- STORY section removed from front page (S171: covered by blog) __s171vsa_frontpage_trim_v1__ -->
 
 <!-- INSTALL -->
 <section class="section" id="Install">
@@ -968,6 +946,7 @@ function buildVerifs() {
 
 function buildEco() {
   const el = document.getElementById('ecoGrid');
+  if (!el) return;
   ECOS.forEach((e, i) => {
     const d = document.createElement('div');
     d.className = 'fade-in';
@@ -980,6 +959,7 @@ function buildEco() {
 function buildStory() {
   /* __session86_story_collapse_v1__ */
   const el = document.getElementById('timeline');
+  if (!el) return;
   const RECENT_N = 6;
   const itemHTML = (s) => `<div class="timeline-dot"></div><div class="timeline-year">${s.year}</div><div class="timeline-title">${s.title}</div><div class="timeline-text">${s.text}</div>`;
   const splitAt = Math.max(0, STORY.length - RECENT_N);
