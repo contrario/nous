@@ -212,6 +212,30 @@ def build_dossier_spec(
 
     manifest = manifest_from_verify(verify_result, nous_version)
 
+    from cost_farkas import (  # __s175_g2_cost_emit_v1__
+        CostFarkasError,
+        cost_certificate_from_smtspec,
+        cost_farkas_json_bytes,
+        cost_farkas_sha256,
+    )
+    import dataclasses as _dc_s175  # __s175_g2_cost_emit_v1__
+    import sys as _sys_s175  # __s175_g2_cost_emit_v1__
+    cost_farkas_bytes = None
+    try:
+        _cost_doc_s175 = cost_certificate_from_smtspec(spec)
+    except CostFarkasError as _ce_s175:
+        _cost_doc_s175 = None
+        print(
+            "NOTE: cost-cap Farkas certificate not extracted "
+            "(z3 cost proof stands): " + str(_ce_s175),
+            file=_sys_s175.stderr,
+        )
+    if _cost_doc_s175 is not None:
+        cost_farkas_bytes = cost_farkas_json_bytes(_cost_doc_s175)
+        manifest = _dc_s175.replace(
+            manifest, cost_farkas_sha256=cost_farkas_sha256(_cost_doc_s175)
+        )
+
     key_path_resolved = (
         Path(key_path).resolve()
         if key_path is not None
@@ -318,6 +342,10 @@ def build_dossier_spec(
         signed_json, encoding="utf-8"
     )
     files.append("manifest.json")
+
+    if cost_farkas_bytes is not None:  # __s175_g2_cost_emit_v1__
+        (output / "cost.farkas.json").write_bytes(cost_farkas_bytes)
+        files.append("cost.farkas.json")
 
     (output / "SKILL.md").write_bytes(skill_md_bytes)
     files.append("SKILL.md")
