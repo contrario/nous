@@ -121,6 +121,18 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
 
   <!-- POST LIST -->
   <div class="post-list" id="postList">
+    <!-- __s175_blog_v5660_card_v1__ __s175_web_v5_66_0__ -->
+    <a class="post-card" href="#" onclick="showPost(&#39;v5660-dossier-cost&#39;);return false">
+      <div class="post-meta"><span class="post-date">Jun 25, 2026</span><span class="post-tag">Release</span></div>
+      <h2 class="post-title">v5.66.0 &mdash; The Cost Cap Reaches the Dossier, On a Path That Proves Itself</h2>
+      <div class="post-excerpt">The cost-cap Farkas certificate now rides inside the Annex IV dossier specification itself: <code>build_dossier_spec</code> derives it in-process, sha-pins it into the signed manifest, and writes <code>cost.farkas.json</code> beside the spec. The dossier&rsquo;s own offline verifier re-proves the refutation in exact rational arithmetic. And this is the first release cut through the corrected supply-chain path &mdash; OIDC Trusted Publishing only, with the SLSA build attestation and the PEP 740 publish attestation present by construction, then anchored same-day in Rekor v2 with no waiver. It <strong>proves</strong> the cap; it <strong>evidences</strong> the chain of custody.</div>
+    </a>
+    <!-- __s175_blog_v5650_card_v1__ __s175_web_v5_65_0__ -->
+    <a class="post-card" href="#" onclick="showPost(&#39;v5650-cost-everywhere&#39;);return false">
+      <div class="post-meta"><span class="post-date">Jun 24, 2026</span><span class="post-tag">Release</span></div>
+      <h2 class="post-title">v5.65.0 &mdash; The Cost Cap, Re-Proved at Every Surface</h2>
+      <div class="post-excerpt">v5.63.0 gave the cost-cap Farkas certificate a standalone offline re-checker. v5.65.0 makes the re-proof a property of the evidence surfaces themselves: every <code>verify_offline</code> verifier NOUS emits now re-derives the cost refutation in exact rational arithmetic at verification time, rather than trusting a recorded verdict. The honest boundary is unchanged &mdash; it <strong>proves</strong> the certificate refutes cap-exceedance under the declared per-call estimates, nothing more. NOUS is a monitor, not a guard.</div>
+    </a>
     <!-- __s171vsa_blog_v5640_materiality_card_v1__ __s171vsa_web_v5_64_0__ -->
     <a class="post-card" href="#" onclick="showPost(&#39;v5640-materiality&#39;);return false">
       <div class="post-meta"><span class="post-date">Jun 24, 2026</span><span class="post-tag">Release</span></div>
@@ -896,6 +908,26 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
   <!-- __session82_blog_v550_post_v1__ -->
   <!-- __session97_blog_v5130_post_v1__ -->
    <!-- __s154_blog_v553_quorum_ledger_post_v1__ __s154_web_v5_53_0__ -->
+   <!-- __s175_blog_v5660_post_v1__ __s175_web_v5_66_0__ -->
+   <div class="post-full" id="post-v5660-dossier-cost">
+      <div class="post-meta"><span class="post-date">Jun 25, 2026</span><span class="post-tag">Release</span></div>
+      <h1>v5.66.0 &mdash; The Cost Cap Reaches the Dossier, On a Path That Proves Itself</h1>
+        <p>Two threads close in this release. The first is the cost-cap proof finishing its journey across every evidence surface. The second is the release pipeline itself becoming something a third party can audit &mdash; and the honest account of how it got there.</p>
+        <p><strong>The cost leg reaches the dossier specification.</strong> A NOUS soul that declares per-call token and tick estimates with a cost cap can emit a <strong>Farkas certificate</strong>: non-negative multipliers that collapse the cost system to a numeric contradiction, so no admissible execution under the declared estimates can exceed the cap. That certificate already travelled through <code>nous verify</code>, the standalone <code>nous verify-cost</code> re-checker, and the portable bundle. v5.66.0 wires it into the Annex IV <em>dossier specification</em>: <code>build_dossier_spec</code> now derives the certificate in-process from the same SMT cost spec, sha-pins it into the signed manifest before signing (drop-when-None, so every prior signed manifest stays byte-identical), and writes <code>cost.farkas.json</code> beside the spec. The verifier the dossier emits re-derives the refutation offline, in exact rational arithmetic &mdash; one kernel, no divergence from the other surfaces.</p>
+        <p><strong>The path that proves itself.</strong> This is the first NOUS release published exclusively through OIDC <strong>Trusted Publishing</strong>. The legacy token-upload path was retired; a tag push runs a GitHub Actions workflow that builds the wheel and sdist, mints a <strong>SLSA Build Level 2</strong> provenance attestation under a keyless Sigstore identity bound to the exact workflow and commit, and publishes to PyPI, which records a <strong>PEP 740</strong> publish attestation. Both federation legs are present <em>by construction</em> &mdash; not added afterward, but the only way the bytes can reach the index. A third party reads them back from PyPI&rsquo;s Integrity API and GitHub&rsquo;s attestation API and confirms 200/200. The release Verification Summary Attestation was then anchored in Rekor v2 the same day, dual-root convergence PASS, with <strong>no waiver</strong>.</p>
+        <p><strong>The honest part.</strong> The release-readiness check that enforces this discipline had a bootstrap flaw: it demanded every shipped version carry a published attestation bundle, which a version being released cannot yet have &mdash; the bundle is minted after publication. The gate forbade the very release that would satisfy it. The fix exempts the in-flight version from its own drift check while still catching any older version that genuinely lacks evidence. The pipeline now proves its own provenance instead of merely asserting it.</p>
+        <p>Honest boundary: the Farkas leg <em>proves</em> the cap holds under the declared estimates; the supply-chain attestations <em>evidence</em> who built and published the bytes and that their digest is in a public, timestamped log. &ldquo;Proves&rdquo; stays reserved for Z3 cost bounds and Farkas certificates. NOUS is a monitor, not a guard. A third party verifies the cost leg offline with <code>cryptography</code> and stdlib, and the supply-chain legs against PyPI and GitHub under their own roots.</p>
+        <p><code>nous-lang 5.66.0</code> is on PyPI, built and published from CI with SLSA Build Level 2 provenance and a PEP 740 publish attestation. <code>pip install nous-lang</code>.</p>
+   </div>
+   <!-- __s175_blog_v5650_post_v1__ __s175_web_v5_65_0__ -->
+   <div class="post-full" id="post-v5650-cost-everywhere">
+      <div class="post-meta"><span class="post-date">Jun 24, 2026</span><span class="post-tag">Release</span></div>
+      <h1>v5.65.0 &mdash; The Cost Cap, Re-Proved at Every Surface</h1>
+        <p>v5.63.0 turned the cost-cap proof into a standalone command, <code>nous verify-cost</code>, that re-checks a Farkas certificate offline in exact rational arithmetic. v5.65.0 takes the next step: it makes that re-proof a property of the <em>evidence surfaces themselves</em>, not a separate tool a reviewer has to remember to run.</p>
+        <p>Every <code>verify_offline</code> verifier NOUS emits &mdash; the ones carried in dossiers and portable bundles &mdash; now re-derives the cost refutation at verification time. Before, such a verifier could read a recorded cost verdict and trust it. Now it re-runs the certificate check itself, with the same stdlib grader the online path uses, so a tampered or stale verdict cannot pass. The certificate is self-contained &mdash; it carries its own linear system and its own witness &mdash; so the re-derivation needs no solver, no model, and no network.</p>
+        <p>What it <em>proves</em> is unchanged and narrow: the certificate is a valid refutation, so under the declared per-call estimates the cap holds. It does not re-derive the cost model from source &mdash; that is the online <code>nous verify --smt</code> path &mdash; and it does not prove an agent stayed within the estimates at runtime; the signed trace evidences that. &ldquo;Proves&rdquo; stays reserved for Z3 and Farkas. NOUS is a monitor, not a guard.</p>
+        <p><code>nous-lang 5.65.0</code> is on PyPI. <code>pip install nous-lang</code>, then <code>nous verify-cost --help</code>.</p>
+   </div>
    <!-- __s171vsa_blog_v5640_materiality_post_v1__ __s171vsa_web_v5_64_0__ -->
    <div class="post-full" id="post-v5640-materiality">
       <div class="post-meta"><span class="post-date">Jun 24, 2026</span><span class="post-tag">Release</span></div>
