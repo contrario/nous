@@ -36,6 +36,15 @@ a{text-decoration:none;color:inherit;transition:opacity 0.2s}
 .nav-link:hover{color:var(--bright)}
 .nav-link.active{color:var(--gold)}
 .nav-sep{width:1px;height:20px;background:var(--border);margin:0 8px}
+.nav-more{position:relative;display:inline-block}
+.nav-more-trigger{color:var(--dim);font-size:13px;padding:7px 14px;border-radius:5px;transition:color 0.2s;letter-spacing:0.3px;background:none;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+.nav-more:hover .nav-more-trigger,.nav-more:focus-within .nav-more-trigger{color:var(--bright)}
+.nav-more-caret{font-size:9px;transition:transform 0.2s;opacity:0.7}
+.nav-more:hover .nav-more-caret,.nav-more:focus-within .nav-more-caret{transform:rotate(180deg)}
+.nav-more-panel{position:absolute;top:100%;right:0;margin-top:6px;min-width:190px;background:var(--bg2,#0b0e16);border:1px solid var(--border);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:2px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity 0.18s,transform 0.18s,visibility 0.18s;box-shadow:0 12px 40px rgba(0,0,0,0.5);z-index:300}
+.nav-more:hover .nav-more-panel,.nav-more:focus-within .nav-more-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.nav-more-panel .nav-link{display:block;text-align:left;width:100%}
+.nav-more-panel .nav-link:hover{background:rgba(255,255,255,0.04)}
 .nav-gh{color:var(--dim);font-size:13px;padding:7px 14px;display:flex;align-items:center;gap:6px;transition:color 0.2s}
 .nav-gh:hover{color:var(--bright)}
 @media(max-width:900px){.nav-links{display:none!important}}
@@ -125,20 +134,33 @@ a{text-decoration:none;color:inherit;transition:opacity 0.2s}
   <div class="nav-inner">
     <div style="display:flex;align-items:baseline">
       <button class="nav-logo" onclick="location.href='/'">ΝΟΥΣ</button>
-      <span class="nav-ver" data-nous-version>v4.12.0</span>
+      <span class="nav-ver" data-nous-version>v5.66.0</span>
     </div>
-    <div class="nav-links">
+    <div class="nav-links" id="navLinks">
+      <!-- __s171vsa_canon_nav_v1__ -->
       <a href="/docs" class="nav-link">Docs</a>
       <a href="/blog" class="nav-link">Blog</a>
-      <a href="/ide" class="nav-link">Playground</a>
-      <a href="/governance" class="nav-link">Governance</a>
-      <a href="/replay" class="nav-link">Replay</a>
-      <a href="/policies" class="nav-link active">Policies</a>
+      <a href="/verify.html" class="nav-link">Verify</a>
+      <div class="nav-more">
+        <button class="nav-more-trigger" aria-haspopup="true" aria-expanded="false">More <span class="nav-more-caret">&#9662;</span></button>
+        <div class="nav-more-panel">
+          <a href="/runtime.html" class="nav-link">Language &amp; Runtime</a>
+          <a href="/index.html#Verification" class="nav-link">Verification</a>
+          <a href="/coverage.html" class="nav-link">Coverage</a>
+          <a href="/pitch.html" class="nav-link">For Banking</a>
+          <a href="/lending.html" class="nav-link">Verified Lending</a>
+          <a href="/high-assurance.html" class="nav-link">High-Assurance AI</a>
+          <a href="/governance" class="nav-link">Governance</a>
+          <a href="/replay" class="nav-link">Replay</a>
+          <a href="/policies" class="nav-link active">Policies</a>
+        </div>
+      </div>
       <div class="nav-sep"></div>
       <a href="https://github.com/contrario/nous" target="_blank" rel="noopener" class="nav-gh">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
         GitHub
       </a>
+      <a href="#Install" class="nav-cta">Get Started</a>
     </div>
   </div>
 </nav>

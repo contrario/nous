@@ -203,8 +203,8 @@ pre code{background:none;padding:0;font-size:inherit;color:inherit}
 <div class="doc-section" id="overview">
 <h1>NOUS Language Reference</h1>
 <p class="doc-updated">v5.8.1 · Last updated 21 May 2026</p><!-- __session86_docs_refresh_v1__ -->
-<p>NOUS (Νοῦς — Greek for "mind/intellect") is a self-evolving programming language purpose-built for agentic AI systems. It is not a framework, not a library, not a wrapper. It is a complete language with its own grammar, parser, type system, compiler, runtime, and IDE.</p>
-<div class="callout callout-info"><strong>The core insight:</strong> AI agents are not functions. They are living systems with memory, instincts, senses, healing ability, and evolution. NOUS models them as such.</div>
+<p>NOUS (Νοῦς — Greek for "mind/intellect") is a formally-verified language and runtime for governed agentic AI. It is not a framework, not a library, not a wrapper. It is a complete language with its own grammar, parser, type system, compiler, runtime, and offline verifier. NOUS is a monitor, not a guard: it does not sit in the execution path. It produces deterministic, offline-verifiable evidence that an agent operated within its declared policy envelope.</p><!-- __s171vsa_docs_positioning_v1__ -->
+<div class="callout callout-info"><strong>The core insight:</strong> probabilistic execution, deterministic evidence. The runtime is probabilistic; the evidence is not. NOUS proves the declared policy envelope with Z3 and Farkas certificates, and evidences runtime conformance with Ed25519 signatures and transparency anchors &mdash; all re-checkable offline, by anyone, with only standard cryptographic libraries.</div>
 <p>NOUS lets you describe multi-agent AI systems in a declarative, human-readable syntax. You define <strong>Souls</strong> (autonomous agents), <strong>Messages</strong> (typed data contracts), a <strong>Nervous System</strong> (routing between souls), and <strong>World Laws</strong> (constraints like cost ceilings). The compiler generates production-ready Python or JavaScript.</p>
 </div>
 
