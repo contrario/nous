@@ -34,6 +34,7 @@ from cli_skill_export import build_skill_export_parser, cmd_skill_export
 from cli_prices import build_prices_parser, cmd_prices
 # __cost_cap_phase3c_cli_import_v1__
 from cli_emit_smt import build_emit_smt_parser, cmd_emit_smt
+from cli_continuity import build_continuity_parser, cmd_continuity  # __s177_p1_cli_continuity_import_v1__
 # __cost_cap_phase4_cli_import_v1__
 # (verify subparser is integrated into existing cmd_verify;
 #  cli_verify module imports happen lazily inside the function)
@@ -1878,6 +1879,7 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     build_dossier_spec_parser(sub)  # __session77_cli_dossier_spec_wiring_v1__
     build_conformance_parser(sub)  # __session96_cli_conformance_hook_v1__
     build_vsa_parser(sub)  # __s157_u3_cli_vsa_hook_v1__
+    build_continuity_parser(sub)  # __s177_p1_cli_continuity_hook_v1__
     build_verify_release_parser(sub)  # __s167_p2_cli_verify_release_hook_v1__
     build_ndec_parser(sub)  # __s147_u3b_ndec_parser_hook_v1__
     build_verify_sequence_parser(sub)  # __phase2_stage6_cli_wiring_v1__
@@ -2064,6 +2066,7 @@ def main() -> int:  # __s104_main_uses_build_parser_v1__
         "conformance": cmd_conformance,  # __session96_cli_conformance_dispatch_v1__
         "ndec": cmd_ndec,  # __s147_u3b_ndec_dispatch_v1__
         "vsa": cmd_vsa,  # __s157_u3_cli_vsa_dispatch_v1__
+        "continuity": cmd_continuity,  # __s177_p1_cli_continuity_dispatch_v1__
         "build-attest-verify": cmd_verify_release,  # __s167_p2_cli_verify_release_dispatch_v1__
         "verify-sequence": cmd_verify_sequence,  # __phase2_stage6_cli_wiring_v1__
         "verify-coverage": cmd_verify_coverage,  # __s114_coverage_cli_v1__
