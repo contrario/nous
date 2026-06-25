@@ -173,7 +173,7 @@ footer a:hover{color:var(--gold)}
   <section class="sec">
     <div class="sec-eyebrow">Built on NOUS</div>
     <div class="sec-title">An evidence layer, not a runtime control</div>
-    <div class="sec-lead">NOUS does not enforce, block, or intervene in runtime behavior. Instead, it generates cryptographic evidence that an execution remained within its declared policy envelope. These artifacts can be verified by any third party, offline, using only standard cryptographic libraries &mdash; without access to the original system and without trust in the operator.</div>
+    <div class="sec-lead"><!-- __s171vsa_ha_proof_evidence_v1__ -->NOUS does not enforce, block, or intervene in runtime behavior. It proves the declared policy envelope before any run &mdash; all paths, with Z3 and Farkas certificates &mdash; and then, for each specific run, produces signed artifacts evidencing that the run conformed to that envelope. The proof is about the policy: all paths, ahead of time. The evidence is about the run: this one, after the fact. The run is not itself &ldquo;proven&rdquo; &mdash; it is evidenced. Both proof and evidence are verifiable by any third party, offline, using only standard cryptographic libraries &mdash; without access to the original system and without trust in the operator.</div>
     <div class="proves">
       <div class="pcol no">
         <h3>What NOUS does not do</h3>
