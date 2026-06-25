@@ -125,6 +125,7 @@ py-modules = [
     "build_vsa",  # __s164_p3_u2_build_vsa_pyproject_v1__
     "rekor_v2_offline",  # __s166_p2_rekor_v2_offline_pyproject_v1__
     "mint_release_vsa",  # __s172_p0a_mint_release_vsa_pyproject_v1__
+    "continuity_ledger",  # __s176_p1_continuity_ledger_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
