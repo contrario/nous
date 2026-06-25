@@ -117,7 +117,7 @@ def _emitted_verdict(script: Path, ledger: Path, key: Path) -> dict:
     return {"rc": r.returncode, "out": r.stdout, "err": r.stderr}
 
 
-def test_parser_exposes_continuity_with_four_actions() -> None:
+def test_parser_exposes_continuity_with_five_actions() -> None:  # __s178_p1b_five_actions_v1__
     import argparse
     import cli
     ap = cli.build_parser()
@@ -128,7 +128,7 @@ def test_parser_exposes_continuity_with_four_actions() -> None:
     actions = [a for a in cont._actions
                if isinstance(a, argparse._SubParsersAction)][0]
     assert set(actions.choices) == {"link", "receipt", "verify",
-                                    "emit-verifier"}
+                                    "emit-verifier", "checkpoint"}
 
 
 def test_link_action_carries_no_private_key_option() -> None:

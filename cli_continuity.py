@@ -19,6 +19,7 @@ from pathlib import Path
 
 import continuity_ledger as cl
 from continuity_verifier import emit_continuity_verifier
+import continuity_checkpoint as cc  # __s178_p1_cc_import_v1__
 
 
 def build_continuity_parser(sub: "argparse._SubParsersAction") -> None:
@@ -91,6 +92,34 @@ def build_continuity_parser(sub: "argparse._SubParsersAction") -> None:
     pe.add_argument(
         "--out", required=True,
         help="Dir to write verify_continuity_offline.py into",
+    )
+
+    pc = cs.add_parser(  # __s178_p1_checkpoint_parser_v1__
+        "checkpoint",
+        help="Operator: write a C2SP tlog-checkpoint signed note over "
+             "the ledger head (optional budget envelope extension)",
+    )
+    pc.add_argument("--ledger", required=True, help="Dir of link subdirs")
+    pc.add_argument(
+        "--log-key", default=None,
+        help="Operator log key PEM path (default: auto-provision under "
+             "~/.local/share/nous/keys/continuity-log/)",
+    )
+    pc.add_argument(
+        "--budget", default=None,
+        help="Authorized budget (USD); emits an offline-reprovable "
+             "budget envelope over the committed links cost caps",
+    )
+    pc.add_argument(
+        "--key", default=None,
+        help="Counterparty Ed25519 PUBLIC key (PEM) to verify receipts",
+    )
+    pc.add_argument("--iss", default=None, help="Expected receipt issuer URI")
+    pc.add_argument("--aud", default=None, help="Expected receipt audience")
+    pc.add_argument(
+        "--emit-inclusion", action="store_true",
+        help="Also write per-link RFC 6962 inclusion proofs into "
+             "<ledger>/inclusion/",
     )
 
 
@@ -247,8 +276,48 @@ def _cmd_emit(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_checkpoint(args: argparse.Namespace) -> int:
+    ledger = Path(args.ledger)
+    cp_pem = None
+    if args.key:
+        try:
+            cp_pem = Path(args.key).read_bytes()
+        except OSError as e:
+            print("checkpoint: cannot read --key: " + str(e), file=sys.stderr)
+            return 2
+        if not args.iss:
+            print("checkpoint: --key requires --iss", file=sys.stderr)
+            return 2
+        if not args.aud:
+            print("checkpoint: --key requires --aud", file=sys.stderr)
+            return 2
+    try:
+        summary = cc.build_continuity_checkpoint(
+            ledger,
+            log_key_path=(Path(args.log_key) if args.log_key else None),
+            budget=args.budget,
+            counterparty_public_key_pem=cp_pem,
+            expected_issuer=args.iss,
+            expected_audience=args.aud,
+            emit_inclusion=args.emit_inclusion,
+        )
+    except cc.ContinuityCheckpointError as e:
+        print("checkpoint refused: " + str(e), file=sys.stderr)
+        return 1
+    print("checkpoint.note written: origin " + summary["origin"])
+    print("  tree_size " + str(summary["tree_size"])
+          + "  root " + summary["root_b64"][:16] + "...")
+    print("  log key " + summary["log_key_path"]
+          + " (id " + summary["log_key_id_hex"] + ")")
+    if summary["budget"] is not None:
+        print("  budget envelope: <= $" + summary["budget"]
+              + " over " + str(summary["tree_size"]) + " committed link(s)")
+    return 0
+
+
 def cmd_continuity(args: argparse.Namespace) -> int:
     actions = {
+        "checkpoint": _cmd_checkpoint,  # __s178_p1_checkpoint_dispatch_v1__
         "link": _cmd_link,
         "receipt": _cmd_receipt,
         "verify": _cmd_verify,

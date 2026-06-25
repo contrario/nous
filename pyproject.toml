@@ -128,6 +128,7 @@ py-modules = [
     "continuity_ledger",  # __s176_p1_continuity_ledger_pyproject_v1__
     "continuity_verifier",  # __s177_p1_continuity_verifier_pyproject_v1__
     "cli_continuity",  # __s177_p1_cli_continuity_pyproject_v1__
+    "continuity_checkpoint",  # __s178_p1_continuity_checkpoint_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
