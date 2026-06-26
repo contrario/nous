@@ -47,6 +47,7 @@ from rekor_checkpoint import ed25519_key_id
 CONTINUITY_ORIGIN_PREFIX: str = "nous-lang.org/continuity/"
 BUDGET_EXTENSION_TAG: str = "nous.aggregate.cost.farkas"
 BUDGET_EXTENSION_VERSION: str = "v1"
+BUDGET_LEAF_PREFIX: bytes = b"nous.budget.leaf.v1\n"  # __s180_p1_budget_in_tree__
 LOG_KEY_DEFAULT_PATH: Path = Path(
     "~/.local/share/nous/keys/continuity-log/log_ed25519.pem"
 )
@@ -180,6 +181,11 @@ def _budget_extension_line(
     return line, sidecar
 
 
+def _budget_leaf_bytes(sidecar: dict) -> bytes:  # __s180_p1_budget_in_tree__
+    cert_hex = hashlib.sha256(_canonical_bytes(sidecar)).hexdigest()
+    return BUDGET_LEAF_PREFIX + bytes.fromhex(cert_hex)
+
+
 def build_continuity_checkpoint(
     ledger_dir: Path,
     *,
@@ -232,18 +238,14 @@ def build_continuity_checkpoint(
         if isinstance(d, str):
             digest_to_manifest[d] = b["manifest"]
 
-    leaves = [bytes.fromhex(d) for d in order]
-    root = rkt._naive_root(leaves)
+    link_leaves = [bytes.fromhex(d) for d in order]
     origin = CONTINUITY_ORIGIN_PREFIX + order[0]
 
-    body_lines: list[str] = [
-        origin,
-        str(len(leaves)),
-        base64.b64encode(root).decode("ascii"),
-    ]
     sidecar: Optional[dict] = None
     budget_str: Optional[str] = None
-    if budget is not None:
+    ext_line: Optional[str] = None
+    budget_leaf: Optional[bytes] = None
+    if budget is not None:  # __s180_p1_budget_in_tree__
         try:
             budget_q = Fraction(str(budget))
         except (ValueError, ZeroDivisionError):
@@ -254,8 +256,18 @@ def build_continuity_checkpoint(
             raise ContinuityCheckpointError("budget must be non-negative")
         caps = _ordered_caps(order, digest_to_manifest)
         ext_line, sidecar = _budget_extension_line(order, caps, budget_q)
-        body_lines.append(ext_line)
+        budget_leaf = _budget_leaf_bytes(sidecar)
         budget_str = str(budget_q)
+
+    leaves = link_leaves if budget_leaf is None else link_leaves + [budget_leaf]
+    root = rkt._naive_root(leaves)
+    body_lines: list[str] = [
+        origin,
+        str(len(leaves)),
+        base64.b64encode(root).decode("ascii"),
+    ]
+    if ext_line is not None:
+        body_lines.append(ext_line)
 
     note_text = "".join(ln + "\n" for ln in body_lines)
 

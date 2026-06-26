@@ -163,7 +163,7 @@ def test_emitted_verifier_accepts_budget_checkpoint(tmp_path) -> None:
     cpk = v["checkpoint"]
     assert cpk["present"] and cpk["verified"]
     assert cpk["mode"] == "budget"
-    assert cpk["tree_size"] == 2
+    assert cpk["tree_size"] == 3  # __s180_p1_budget_in_tree__
     assert cpk["budget"] == str(Fraction("1.00"))
 
 
