@@ -65,6 +65,42 @@ class ManifestCoherenceError(ValueError):  # __s134_manifest_coherence_error_v1_
 
 
 @dataclass(frozen=True)
+class Attribution:  # __s180_attribution_model_v1__
+    """Who authorized this run, recorded as co-signed evidence.
+
+    actor_identity/role/key_id are OPERATOR-ASSERTED. authorization_receipt
+    is a compact EdDSA JWS by the authorizer's OWN key over the manifest
+    run_digest; authorizer_pubkey_b64 is the raw Ed25519 public key the
+    standalone verifier checks that receipt against. attribution_kind
+    'attested' carries a receipt; 'asserted' is declared-only (weaker,
+    no receipt). Inside the manifest canonical body, so the operator
+    signature covers it (tamper-evident). EVIDENCES co-signing; PROVES
+    no intent, identity, or accountability. The name-to-key binding is
+    operator-asserted; NOUS runs no CA.
+    """
+
+    actor_identity: str
+    role: str
+    key_id: str
+    attribution_kind: str
+    authorizer_pubkey_b64: Optional[str] = None
+    authorization_receipt: Optional[str] = None
+
+    def canonical_dict(self) -> dict:
+        d: dict = {
+            "actor_identity": self.actor_identity,
+            "role": self.role,
+            "key_id": self.key_id,
+            "attribution_kind": self.attribution_kind,
+        }
+        if self.authorizer_pubkey_b64 is not None:
+            d["authorizer_pubkey_b64"] = self.authorizer_pubkey_b64
+        if self.authorization_receipt is not None:
+            d["authorization_receipt"] = self.authorization_receipt
+        return d
+
+
+@dataclass(frozen=True)
 class Manifest:
     """Self-describing audit record of one verify run.
 
@@ -145,6 +181,7 @@ class Manifest:
     # drop-when-None: absent on all pre-S171 manifests, canonical bytes
     # unchanged. Sha-pins a CLASSIFICATION, not a proof.
     materiality_sha256: Optional[str] = None  # __s171_materiality_sha256_field_v1__
+    attribution: Optional["Attribution"] = None  # __s180_attribution_field_v1__
 
     def __post_init__(self) -> None:  # __s134_source_kind_coherence_v1__
         _allowed = (None, "gap-witness")
@@ -238,7 +275,24 @@ class Manifest:
             d["cost_farkas_sha256"] = self.cost_farkas_sha256
         if self.materiality_sha256 is not None:  # __s171_materiality_sha256_canonical_v1__
             d["materiality_sha256"] = self.materiality_sha256
+        if self.attribution is not None:  # __s180_attribution_canonical_v1__
+            d["attribution"] = self.attribution.canonical_dict()
         return d  # __session96_revert_m3_canonical_dict_v1__
+
+    def run_digest(self) -> str:  # __s180_run_digest_v1__
+        """Stable run identity the authorizer co-signs: sha256 of the
+        canonical body with attribution dropped. Because attribution is
+        drop-when-None, this equals sha256(canonical_bytes()) for any
+        manifest without attribution, so it is independent of who
+        authorized the run.
+        """
+        import hashlib as _hashlib
+        d = self.canonical_dict()
+        d.pop("attribution", None)
+        body = json.dumps(
+            d, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+        return _hashlib.sha256(body).hexdigest()
 
 
 def _build_proof_assumptions(spec: "SMTSpec") -> Optional[dict]:  # __session96_build_proof_assumptions_v1__
@@ -420,6 +474,19 @@ def manifest_json(
     return json.dumps(doc, indent=2, sort_keys=True) + "\n"
 
 
+def _attribution_from_doc(a):  # __s180_attribution_parse_v1__
+    if a is None:
+        return None
+    return Attribution(
+        actor_identity=a["actor_identity"],
+        role=a["role"],
+        key_id=a["key_id"],
+        attribution_kind=a["attribution_kind"],
+        authorizer_pubkey_b64=a.get("authorizer_pubkey_b64"),
+        authorization_receipt=a.get("authorization_receipt"),
+    )
+
+
 def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
                                             Ed25519PublicKey]:
     """Inverse of manifest_json — for `nous audit` flows."""
@@ -453,6 +520,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
         materiality_sha256=doc.get("materiality_sha256"),  # __s171_materiality_sha256_parse1_v1__
+        attribution=_attribution_from_doc(doc.get("attribution")),  # __s180_attribution_parse1_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
         source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__
@@ -507,6 +575,7 @@ def parse_manifest_json_with_anchor(
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
         coverage_farkas_sha256=doc.get("coverage_farkas_sha256"),  # __s116_coverage_farkas_sha256_v1__
         materiality_sha256=doc.get("materiality_sha256"),  # __s171_materiality_sha256_parse2_v1__
+        attribution=_attribution_from_doc(doc.get("attribution")),  # __s180_attribution_parse2_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
         source_kind=doc.get("source_kind"),  # __s134_source_kind_field_v1__

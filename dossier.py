@@ -270,6 +270,166 @@ def _splice_materiality_check(verify_src: str) -> str:
     return verify_src.replace(call_anchor, call_block, 1)
 
 
+_ATTRIBUTION_CHECK_EMBED: str = '''def _check_attribution(manifest, ROOT):
+    import base64 as _b64
+    import hashlib as _hashlib
+    import json as _json
+    import sys as _sys
+    attr = manifest.get("attribution")
+    if attr is None:
+        return 0
+    if not isinstance(attr, dict):
+        print("FAIL: attribution is not a JSON object", file=_sys.stderr)
+        return 1
+    kind = attr.get("attribution_kind")
+    actor = attr.get("actor_identity", "?")
+    declared_kid = attr.get("key_id", "")
+    if kind == "asserted":
+        print("UNVERIFIED attribution (asserted): actor=" + str(actor)
+              + " key_id=" + str(declared_kid))
+        print("The operator declared this actor; no independent "
+              "co-signature is present.")
+        return 0
+    if kind != "attested":
+        print("FAIL: attribution_kind is " + repr(kind)
+              + ", not 'attested' or 'asserted'", file=_sys.stderr)
+        return 1
+    pub_b64 = attr.get("authorizer_pubkey_b64")
+    compact = attr.get("authorization_receipt")
+    if not isinstance(pub_b64, str) or not pub_b64:
+        print("FAIL: attested attribution has no authorizer_pubkey_b64",
+              file=_sys.stderr)
+        return 1
+    if not isinstance(compact, str) or not compact:
+        print("FAIL: attested attribution has no authorization_receipt",
+              file=_sys.stderr)
+        return 1
+    try:
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+            Ed25519PublicKey,
+        )
+        from cryptography.exceptions import InvalidSignature
+    except ImportError:
+        print("ERROR: cryptography library required for attribution check.",
+              file=_sys.stderr)
+        return 2
+    try:
+        pub_raw = _b64.b64decode(pub_b64, validate=True)
+    except Exception as e:
+        print("FAIL: authorizer_pubkey_b64 does not decode: " + str(e),
+              file=_sys.stderr)
+        return 1
+    recomputed_kid = "sha256:" + _hashlib.sha256(pub_raw).hexdigest()
+    if recomputed_kid != declared_kid:
+        print("FAIL: authorizer key_id mismatch: recomputed "
+              + recomputed_kid[:23] + "... != declared "
+              + str(declared_kid)[:23] + "... (the declared key_id does "
+              "not name the embedded key)", file=_sys.stderr)
+        return 1
+    parts = compact.split(".")
+    if len(parts) != 3:
+        print("FAIL: authorization_receipt is not a compact JWS "
+              "(protected.payload.signature)", file=_sys.stderr)
+        return 1
+    protected_b64, payload_b64, signature_b64 = parts
+
+    def _b64url_decode(segment):
+        pad = "=" * (-len(segment) % 4)
+        return _b64.urlsafe_b64decode(segment + pad)
+
+    try:
+        protected = _json.loads(_b64url_decode(protected_b64))
+        payload = _json.loads(_b64url_decode(payload_b64))
+        sig_raw = _b64url_decode(signature_b64)
+    except Exception as e:
+        print("FAIL: authorization_receipt JWS does not decode: " + str(e),
+              file=_sys.stderr)
+        return 1
+    if protected.get("alg") != "EdDSA":
+        print("FAIL: authorization receipt alg is not EdDSA",
+              file=_sys.stderr)
+        return 1
+    if protected.get("typ") != "application/nous-authorization-receipt+jwt":
+        print("FAIL: authorization receipt typ is not the authorization "
+              "media type", file=_sys.stderr)
+        return 1
+    body = {k: v for k, v in manifest.items()
+            if k not in ("signature", "transparency_log", "attribution")}
+    expected_run_digest = _hashlib.sha256(
+        _json.dumps(body, sort_keys=True, separators=(",", ":")).encode(
+            "utf-8")).hexdigest()
+    signing_input = (protected_b64 + "." + payload_b64).encode("ascii")
+    try:
+        pub = Ed25519PublicKey.from_public_bytes(pub_raw)
+        pub.verify(sig_raw, signing_input)
+    except InvalidSignature:
+        print("FAIL: authorization receipt signature does NOT verify under "
+              "the embedded authorizer key (co-signature forged or "
+              "tampered)", file=_sys.stderr)
+        return 1
+    except Exception as e:
+        print("FAIL: authorization receipt verification error: " + str(e),
+              file=_sys.stderr)
+        return 1
+    if payload.get("run_digest") != expected_run_digest:
+        print("FAIL: authorization receipt run_digest does not match this "
+              "manifest's run identity (receipt replayed from another run)",
+              file=_sys.stderr)
+        return 1
+    if payload.get("key_id") != declared_kid:
+        print("FAIL: authorization receipt payload key_id does not match "
+              "the declared attribution key_id", file=_sys.stderr)
+        return 1
+    print("OK   authorizer co-signature verified: actor=" + str(actor)
+          + " key_id=" + recomputed_kid)
+    print("Cryptographic Attribution Disclosure: an authorizer "
+          "co-signature is present and was verified against an Ed25519 "
+          "public key embedded in this manifest and covered by the "
+          "operator signature, so the key cannot have been swapped after "
+          "signing. To confirm that this key belongs to the named "
+          "authorizer, compare the printed key_id against your own "
+          "out-of-band record -- that identity check is YOUR step, not "
+          "this verifier's. NOUS does not certify the key-to-identity "
+          "binding; the name is operator-asserted. This evidences "
+          "co-signing, not proof of identity, intent, or accountability.")
+    return 0
+'''
+
+
+def _splice_attribution_check(verify_src: str) -> str:
+    # __s180_splice_fn_v1__ build-time splice: insert the self-contained
+    # _check_attribution function (after the ROOT definition) and a final
+    # call into the SELECTED verifier. Applied only when the dossier
+    # carries an attribution, so verifiers without one stay byte-identical.
+    # Composes with the materiality splice in either order: distinct insert
+    # anchor (ROOT, not the def-main anchor) and a shared return-0 call
+    # anchor that both splices re-emit in their call block.
+    anchor = "ROOT = Path(__file__).parent\n"
+    n_root = verify_src.count(anchor)
+    if n_root != 1:
+        raise DossierError(
+            "attribution splice: expected exactly one ROOT anchor in the "
+            "selected verifier, found " + str(n_root)
+        )
+    verify_src = verify_src.replace(
+        anchor, anchor + "\n\n" + _ATTRIBUTION_CHECK_EMBED + "\n", 1
+    )
+    call_anchor = "    return 0\n\n\nif __name__ == \"__main__\":"
+    if verify_src.count(call_anchor) != 1:
+        raise DossierError(
+            "attribution splice: expected exactly one main-return anchor "
+            "in the selected verifier"
+        )
+    call_block = (
+        "    _rc_attr = _check_attribution(manifest, ROOT)\n"
+        "    if _rc_attr != 0:\n"
+        "        return _rc_attr\n"
+        "    return 0\n\n\nif __name__ == \"__main__\":"
+    )
+    return verify_src.replace(call_anchor, call_block, 1)
+
+
+
 def build_dossier(
     source: Path,
     *,
@@ -1016,6 +1176,13 @@ def build_dossier(
     if parsed_manifest.materiality_sha256 is not None:  # __s171_materiality_splice_v1__
         verify_path.write_text(
             _splice_materiality_check(
+                verify_path.read_text(encoding="utf-8")
+            ),
+            encoding="utf-8",
+        )
+    if parsed_manifest.attribution is not None:  # __s180_attribution_splice_v1__
+        verify_path.write_text(
+            _splice_attribution_check(
                 verify_path.read_text(encoding="utf-8")
             ),
             encoding="utf-8",

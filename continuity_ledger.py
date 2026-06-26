@@ -39,6 +39,7 @@ WITNESS_KIND: str = "counterparty"
 RECEIPT_FORMAT: str = "jws_eddsa_v1"
 RECEIPT_ALG: str = "EdDSA"
 RECEIPT_TYP: str = "application/nous-counterparty-receipt+jwt"
+AUTHORIZATION_TYP: str = "application/nous-authorization-receipt+jwt"  # __s180_authz_typ_v1__
 
 _GENESIS_PREIMAGE: bytes = b"nous:continuity-ledger:genesis:v1"
 GENESIS_PREV_RUN_DIGEST: str = hashlib.sha256(_GENESIS_PREIMAGE).hexdigest()
@@ -293,6 +294,104 @@ def receipt_compact(receipt: Mapping[str, str]) -> str:
         receipt["protected"] + "." + receipt["payload"] + "."
         + receipt["signature"]
     )
+
+
+def authorizer_key_id(public_key_raw: bytes) -> str:  # __s180_authz_receipt_v1__
+    """Derive a self-checking key id from the raw Ed25519 public key.
+    The verifier recomputes this from the embedded key and rejects a
+    mismatch, so the declared key_id cannot name a key it is not."""
+    import hashlib as _hashlib
+    return "sha256:" + _hashlib.sha256(public_key_raw).hexdigest()
+
+
+def build_authorization_receipt(
+    *,
+    run_digest: str,
+    authorizer_signing_key: "Ed25519PrivateKey",
+    authorizer_kid: str,
+) -> "dict[str, str]":
+    """Detached EdDSA JWS by the authorizer's OWN key over the manifest
+    run_digest. Mirrors build_counterparty_receipt's wire format; new TYP.
+    EVIDENCES the holder of the key authorized this run; PROVES nothing
+    about intent, identity, or accountability."""
+    _require_sha256_hex("run_digest", run_digest)
+    if not authorizer_kid:
+        raise ContinuityLedgerError("authorizer_kid must be non-empty")
+    if not isinstance(authorizer_signing_key, Ed25519PrivateKey):
+        raise ContinuityLedgerError(
+            "authorizer_signing_key must be an Ed25519PrivateKey"
+        )
+    protected: "dict[str, object]" = {
+        "alg": RECEIPT_ALG,
+        "typ": AUTHORIZATION_TYP,
+        "kid": authorizer_kid,
+    }
+    claims: "dict[str, object]" = {
+        "run_digest": run_digest,
+        "key_id": authorizer_kid,
+    }
+    protected_b64 = _b64url(_canonical_bytes(protected))
+    payload_b64 = _b64url(_canonical_bytes(claims))
+    signing_input = (protected_b64 + "." + payload_b64).encode("ascii")
+    signature_b64 = _b64url(authorizer_signing_key.sign(signing_input))
+    return {
+        "protected": protected_b64,
+        "payload": payload_b64,
+        "signature": signature_b64,
+    }
+
+
+def verify_authorization_receipt(
+    *,
+    receipt: "Mapping[str, str]",
+    authorizer_public_key_pem: bytes,
+    expected_run_digest: str,
+    expected_key_id: str,
+) -> bool:
+    """Verify a co-signed authorization receipt. Trust root is the
+    supplied authorizer public key, NOT the kid. Returns True iff the
+    JWS verifies AND payload.run_digest == expected_run_digest AND
+    payload.key_id == expected_key_id. Raises on malformed input."""
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+        Ed25519PublicKey,
+    )
+    from cryptography.exceptions import InvalidSignature
+    for fld in ("protected", "payload", "signature"):
+        if not isinstance(receipt.get(fld), str) or not receipt.get(fld):
+            raise ContinuityLedgerError(
+                "authorization receipt missing JWS field: " + fld
+            )
+    try:
+        pub = serialization.load_pem_public_key(authorizer_public_key_pem)
+    except ValueError as e:
+        raise ContinuityLedgerError(
+            "authorizer public key PEM does not load: " + str(e)
+        )
+    if not isinstance(pub, Ed25519PublicKey):
+        raise ContinuityLedgerError(
+            "authorizer public key is not Ed25519"
+        )
+    protected = json.loads(_b64url_decode(receipt["protected"]))
+    if protected.get("alg") != RECEIPT_ALG:
+        raise ContinuityLedgerError("receipt alg is not EdDSA")
+    if protected.get("typ") != AUTHORIZATION_TYP:
+        raise ContinuityLedgerError(
+            "receipt typ is not the authorization media type"
+        )
+    signing_input = (
+        receipt["protected"] + "." + receipt["payload"]
+    ).encode("ascii")
+    try:
+        pub.verify(_b64url_decode(receipt["signature"]), signing_input)
+    except InvalidSignature:
+        return False
+    claims = json.loads(_b64url_decode(receipt["payload"]))
+    if claims.get("run_digest") != expected_run_digest:
+        return False
+    if claims.get("key_id") != expected_key_id:
+        return False
+    return True
 
 
 def link_json_bytes(link: Mapping[str, object]) -> bytes:
