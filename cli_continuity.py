@@ -13,7 +13,9 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -85,6 +87,22 @@ def build_continuity_parser(sub: "argparse._SubParsersAction") -> None:
     pv.add_argument("--iss", default=None, help="Expected receipt issuer URI")
     pv.add_argument("--aud", default=None, help="Expected receipt audience")
     pv.add_argument("--json", action="store_true", help="Emit a JSON report")
+    pv.add_argument(  # __s180_p4_checkpoint_verify_v1__
+        "--log-key", default=None,
+        help="Operator log PUBLIC key (PEM); enables checkpoint.note "
+             "verification (RFC 6962 root + budget Lock 1/2) via the "
+             "zero-NOUS offline verifier",
+    )
+    pv.add_argument(
+        "--witness-key", default=None,
+        help="Witness/counterparty Ed25519 PUBLIC key (PEM) for the 0x04 "
+             "cosignature leg; requires --witness-name and --log-key",
+    )
+    pv.add_argument(
+        "--witness-name", default=None,
+        help="Pinned witness cosigner name (the 0x04 signed message does not "
+             "bind the name, so the verifier must pin it)",
+    )
 
     pe = cs.add_parser(
         "emit-verifier",
@@ -226,7 +244,42 @@ def _cmd_receipt(args: argparse.Namespace) -> int:
     return 0
 
 
+def _verify_with_checkpoint(args: argparse.Namespace) -> int:  # __s180_p4_checkpoint_verify_v1__
+    if args.witness_key and not args.witness_name:
+        print("verify: --witness-key requires --witness-name (the Ed25519 "
+              "cosignature signed message does not bind the cosigner name, "
+              "so the verifier must pin it)", file=sys.stderr)
+        return 2
+    work = Path(tempfile.mkdtemp(prefix="nous-continuity-verify-"))
+    try:
+        script = emit_continuity_verifier(work)
+        argv = [sys.executable, str(script), str(Path(args.ledger)),
+                "--log-key", str(args.log_key)]
+        if args.key:
+            argv += ["--key", str(args.key)]
+        if args.iss:
+            argv += ["--iss", str(args.iss)]
+        if args.aud:
+            argv += ["--aud", str(args.aud)]
+        if args.witness_key:
+            argv += ["--witness-key", str(args.witness_key)]
+        if args.witness_name:
+            argv += ["--witness-name", str(args.witness_name)]
+        if args.json:
+            argv += ["--json"]
+        proc = subprocess.run(argv, capture_output=True, text=True)
+        if proc.stdout:
+            sys.stdout.write(proc.stdout)
+        if proc.stderr:
+            sys.stderr.write(proc.stderr)
+        return proc.returncode
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+
+
 def _cmd_verify(args: argparse.Namespace) -> int:
+    if getattr(args, "log_key", None):  # __s180_p4_checkpoint_verify_v1__
+        return _verify_with_checkpoint(args)
     ledger = Path(args.ledger)
     if not ledger.is_dir():
         print("verify: ledger dir not found: " + str(ledger), file=sys.stderr)
