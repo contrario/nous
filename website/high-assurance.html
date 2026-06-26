@@ -136,6 +136,24 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(29px,5vw,44px);lin
 footer{border-top:1px solid var(--line);padding:28px 0 50px;text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--faint)}
 footer a{color:var(--dim);text-decoration:none}
 footer a:hover{color:var(--gold)}
+/* __s171vsa_ha_visual_v1__ visual pass */
+section.sec{margin:62px 0}
+section.sec.major{padding-top:30px;border-top:1px solid var(--line)}
+.sec-title.lead{font-size:clamp(23px,3.7vw,33px);color:var(--bright)}
+.sec-title.lead::after{content:"";display:block;width:46px;height:2px;margin:14px auto 0;background:var(--gold-line);border-radius:2px}
+/* lifecycle as a framed diagram block */
+.lifecycle{border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--panel),var(--panel-2));padding:22px 18px;gap:0;max-width:440px}
+.lc-step{min-width:248px;transition:none}
+.lc-arrow{font-size:13px;color:var(--faint);padding:2px 0;line-height:1.0}
+/* evidence bundle caption */
+.bundle-cap{font-family:var(--mono);font-size:10.5px;letter-spacing:1px;text-transform:uppercase;color:var(--faint);text-align:center;margin-top:10px}
+/* diff-table readability: row striping + nous column emphasis */
+.dtable tbody tr:nth-child(odd) td{background:rgba(255,255,255,0.015)}
+.dtable td.nous{font-weight:500;border-left:1px solid var(--gold-line)}
+.dtable th.nous{border-left:1px solid var(--gold-line)}
+/* boundary as engineering note/aside */
+.boundary{max-width:720px;padding:18px 22px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,0.18);text-align:left;font-size:13px}
+.boundary b{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -154,7 +172,7 @@ footer a:hover{color:var(--gold)}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec major">
     <div class="sec-eyebrow">The Problem</div>
     <div class="sec-title">Evidence that outlives access and trust</div>
     <div class="sec-body">
@@ -164,7 +182,7 @@ footer a:hover{color:var(--gold)}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec major">
     <div class="sec-eyebrow">Why Existing Evidence Falls Short</div>
     <div class="sec-title">Built for operations, not for independent verification</div>
     <div class="sec-lead">Most organizations rely on internal logs, platform dashboards, vendor attestations, and ad-hoc reports. While these may serve operational needs, they are rarely sufficient for independent verification.</div>
@@ -183,9 +201,9 @@ footer a:hover{color:var(--gold)}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec major">
     <div class="sec-eyebrow">Built on NOUS</div>
-    <div class="sec-title">An evidence layer, not a runtime control</div>
+    <div class="sec-title lead">An evidence layer, not a runtime control</div>
     <div class="sec-lead"><!-- __s171vsa_ha_proof_evidence_v1__ -->NOUS does not enforce, block, or intervene in runtime behavior.</div>
     <div class="sec-lead" style="margin-top:12px">It proves the declared policy envelope before any run &mdash; all paths, with Z3 and Farkas certificates &mdash; and then, for each specific run, produces signed artifacts evidencing that the run conformed to that envelope.</div>
     <div class="sec-lead" style="margin-top:12px">The proof is about the policy: all paths, ahead of time. The evidence is about the run: this one, after the fact. The run is not itself &ldquo;proven&rdquo; &mdash; it is evidenced.</div>
@@ -238,7 +256,7 @@ footer a:hover{color:var(--gold)}
     <div class="sec-lead" style="margin-top:22px">Runtime controls and post-execution evidence serve different purposes. NOUS focuses on the evidence layer &mdash; it runs side by side with your system and requires no integration into the execution path.</div>
   </section>
 
-  <section class="sec">
+  <section class="sec major">
     <div class="sec-eyebrow">What You Can Verify</div>
     <div class="sec-title">What an independent third party can verify</div>
     <div class="grid2">
@@ -258,6 +276,7 @@ footer a:hover{color:var(--gold)}
           <div class="bfile"><span class="fn">coverage.farkas.json</span><span class="ft">stdlib proof</span></div>
           <div class="bfile"><span class="fn">receipts/</span><span class="ft">attestations</span></div>
           <div class="bfile"><span class="fn">verify_offline.py</span><span class="ft">no network</span></div>
+          <!-- __s171vsa_ha_visual_v1__ --><div class="bundle-cap">Example verification package</div>
         </div>
       </div>
     </div>
@@ -296,7 +315,7 @@ footer a:hover{color:var(--gold)}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec major">
     <div class="sec-eyebrow">Assurance Lifecycle</div>
     <div class="sec-title">From policy to independent audit</div>
     <div class="lifecycle">
@@ -314,7 +333,7 @@ footer a:hover{color:var(--gold)}
     </div>
   </section>
 
-  <section class="sec">
+  <section class="sec major">
     <div class="sec-eyebrow">Why NOUS Is Different</div>
     <div class="sec-title">Independent verification, not runtime dependency</div>
     <table class="dtable"><!-- __s171vsa_ha_lifecycle_v1__ -->
