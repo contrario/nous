@@ -123,6 +123,12 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(29px,5vw,44px);lin
 .dtable td{padding:12px 16px;font-size:14.5px;color:var(--dim);border-bottom:1px solid rgba(255,255,255,0.05)}
 .dtable td.nous{color:var(--bright)}
 .dtable tr:last-child td{border-bottom:none}
+/* lifecycle */
+.lifecycle{display:flex;flex-direction:column;align-items:center;gap:0;margin:8px auto 0;max-width:420px}
+.lc-step{font-family:var(--mono);font-size:13px;letter-spacing:1px;color:var(--text);padding:11px 22px;border:1px solid var(--line);border-radius:9px;background:rgba(0,0,0,0.2);min-width:230px;text-align:center}
+.lc-step.proof{color:var(--gold);border-color:var(--gold-line)}
+.lc-step.evidence{color:var(--bright)}
+.lc-arrow{font-family:var(--mono);font-size:15px;color:var(--dim);padding:6px 0}
 
 .boundary{margin:30px auto 56px;font-size:13px;color:var(--faint);line-height:1.65;text-align:center;max-width:680px}
 .boundary b{color:var(--dim);font-weight:500}
@@ -172,7 +178,7 @@ footer a:hover{color:var(--gold)}
 
   <section class="sec">
     <div class="pitch" style="margin:0 auto;max-width:760px;padding:28px;border-left:2px solid var(--gold);background:linear-gradient(90deg,var(--gold-dim),transparent)">
-      <p style="font-family:var(--display);font-size:23px;font-weight:500;color:var(--bright);line-height:1.4">Evidence over trust.</p>
+      <p style="font-family:var(--display);font-size:23px;font-weight:500;color:var(--bright);line-height:1.4">Designed for environments where trust alone is insufficient.</p>
       <p style="margin-top:10px;font-size:15px;color:var(--dim);font-family:var(--sans);line-height:1.65"><!-- __s171vsa_ha_copy_fixes_v1__ -->Most AI governance approaches depend on runtime controls, platform assurances, or the continued availability and cooperation of the original operator. These serve real purposes. High-assurance environments also need evidence of a different kind: evidence that can be verified offline, independently, and after the fact &mdash; without requiring trust in the operator.</p>
     </div>
   </section>
@@ -180,7 +186,10 @@ footer a:hover{color:var(--gold)}
   <section class="sec">
     <div class="sec-eyebrow">Built on NOUS</div>
     <div class="sec-title">An evidence layer, not a runtime control</div>
-    <div class="sec-lead"><!-- __s171vsa_ha_proof_evidence_v1__ -->NOUS does not enforce, block, or intervene in runtime behavior. It proves the declared policy envelope before any run &mdash; all paths, with Z3 and Farkas certificates &mdash; and then, for each specific run, produces signed artifacts evidencing that the run conformed to that envelope. The proof is about the policy: all paths, ahead of time. The evidence is about the run: this one, after the fact. The run is not itself &ldquo;proven&rdquo; &mdash; it is evidenced. Both proof and evidence are verifiable by any third party, offline, using only standard cryptographic libraries &mdash; without access to the original system and without trust in the operator.</div>
+    <div class="sec-lead"><!-- __s171vsa_ha_proof_evidence_v1__ -->NOUS does not enforce, block, or intervene in runtime behavior.</div>
+    <div class="sec-lead" style="margin-top:12px">It proves the declared policy envelope before any run &mdash; all paths, with Z3 and Farkas certificates &mdash; and then, for each specific run, produces signed artifacts evidencing that the run conformed to that envelope.</div>
+    <div class="sec-lead" style="margin-top:12px">The proof is about the policy: all paths, ahead of time. The evidence is about the run: this one, after the fact. The run is not itself &ldquo;proven&rdquo; &mdash; it is evidenced.</div>
+    <div class="sec-lead" style="margin-top:12px">Both proof and evidence are verifiable by any third party, offline, using only standard cryptographic libraries &mdash; without access to the original system and without trust in the operator.</div>
     <div class="proves">
       <div class="pcol no">
         <h3>What NOUS does not do</h3>
@@ -288,16 +297,34 @@ footer a:hover{color:var(--gold)}
   </section>
 
   <section class="sec">
+    <div class="sec-eyebrow">Assurance Lifecycle</div>
+    <div class="sec-title">From policy to independent audit</div>
+    <div class="lifecycle">
+      <div class="lc-step">Policy</div>
+      <div class="lc-arrow">&darr;</div>
+      <div class="lc-step proof">Proof</div>
+      <div class="lc-arrow">&darr;</div>
+      <div class="lc-step">Execution</div>
+      <div class="lc-arrow">&darr;</div>
+      <div class="lc-step evidence">Evidence</div>
+      <div class="lc-arrow">&darr;</div>
+      <div class="lc-step">Offline Verification</div>
+      <div class="lc-arrow">&darr;</div>
+      <div class="lc-step">Independent Audit</div>
+    </div>
+  </section>
+
+  <section class="sec">
     <div class="sec-eyebrow">Why NOUS Is Different</div>
-    <div class="sec-title">Independent evidence, not runtime dependency</div>
-    <table class="dtable">
-      <thead><tr><th>Traditional Governance</th><th class="nous">NOUS</th></tr></thead>
+    <div class="sec-title">Independent verification, not runtime dependency</div>
+    <table class="dtable"><!-- __s171vsa_ha_lifecycle_v1__ -->
+      <thead><tr><th>Conventional approaches</th><th class="nous">NOUS</th></tr></thead>
       <tbody>
-        <tr><td>Runtime enforcement</td><td class="nous">Offline evidence</td></tr>
-        <tr><td>Operator trust required</td><td class="nous">Independent verification</td></tr>
-        <tr><td>Platform access required</td><td class="nous">Standalone verifier</td></tr>
-        <tr><td>Centralized</td><td class="nous">Counterparty-witnessed</td></tr>
+        <tr><td>Runtime enforcement</td><td class="nous">Independent evidence</td></tr>
+        <tr><td>Platform access required</td><td class="nous">Offline verification</td></tr>
+        <tr><td>Vendor trust required</td><td class="nous">Third-party verification</td></tr>
         <tr><td>Runtime dependency</td><td class="nous">Runs beside existing systems</td></tr>
+        <tr><td>Operational artifacts</td><td class="nous">Cryptographic evidence</td></tr>
       </tbody>
     </table>
   </section>
