@@ -4,6 +4,25 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+## [5.67.0]  <!-- __s180_changelog_v5_67_0__ -->
+
+### Added
+
+- User-facing checkpoint verification. `nous continuity verify` now accepts
+  `--log-key`, `--witness-key`, and `--witness-name`. With `--log-key`, the
+  command verifies the C2SP tlog-checkpoint head: the RFC 6962 Merkle root over
+  the ledger link digests (Lock 1, head-fixity), the opt-in Farkas budget
+  envelope (Lock 2, `sum(declared caps) <= B`, proven offline in rational
+  arithmetic), the S180 in-tree budget-commitment leaf, and -- with
+  `--witness-key`/`--witness-name` -- the independent timestamped 0x04 witness
+  cosignature. Verification delegates to the canonical zero-NOUS offline
+  verifier, so the in-process verdict equals a hand-run verifier by
+  construction (no logic duplication). Without `--log-key`, the in-process
+  ledger walk is byte-identical to prior behavior. `--witness-key` without
+  `--witness-name` fails closed: the Ed25519 0x04 cosignature signed message
+  does not bind the cosigner name, so the verifier must pin it.
+
+
 ## [5.58.0]  <!-- __s159_changelog_v5_58_0__ -->
 
 ### Added
