@@ -164,7 +164,15 @@ and 2 on an environment or usage error.
 The next step is a dual Ed25519 + ML-DSA-44 (FIPS 204; signed-note type 0x06)
 signature over the checkpoint, backward-compatible because clients ignore unknown
 signatures. Because 0x06 signs the root, S180's in-tree budget leaf places the
-cost-cap proof under that future signature. Gamma is gated on whether the
-zero-NOUS verifier can verify ML-DSA-44 under the stdlib + `cryptography`
-invariant; that library-surface question is answered before the gamma topology
-is chosen.
+cost-cap proof under that future signature. The library-surface question is now resolved: `cryptography` exposes ML-DSA
+(FIPS 204) through `hazmat.primitives.asymmetric.mldsa` when built against
+OpenSSL 3.5+ (shipped March 2026), AWS-LC, or BoringSSL, so ML-DSA-44
+verification is available under the stdlib + `cryptography` invariant with no new
+dependency. Because a third-party auditor's `cryptography` build is not under
+NOUS control, the offline verifier capability-gates the 0x06 leg: it verifies the
+ML-DSA-44 cosignature when the local `cryptography` exposes `mldsa`, and otherwise
+reports that leg un-checked rather than failing -- the Ed25519 legs (0x01
+operator, 0x04 witness) always verify. ML-DSA-44 is NIST Level 2 (1312-byte
+public key, 2420-byte signature); its cosignature key id is
+`SHA-256(name || 0x0A || 0x06 || 1312-byte pub)[:4]`, and the note line is
+drop-when-absent on size.
