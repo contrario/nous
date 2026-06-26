@@ -128,7 +128,7 @@ h1{font-family:var(--display);font-weight:600;font-size:clamp(29px,5vw,44px);lin
 .lc-step{font-family:var(--mono);font-size:13px;letter-spacing:1px;color:var(--text);padding:11px 22px;border:1px solid var(--line);border-radius:9px;background:rgba(0,0,0,0.2);min-width:230px;text-align:center}
 .lc-step.proof{color:var(--gold);border-color:var(--gold-line)}
 .lc-step.evidence{color:var(--bright)}
-.lc-arrow{font-family:var(--mono);font-size:15px;color:var(--dim);padding:6px 0}
+.lc-arrow{font-family:var(--mono);font-size:14px;color:var(--dim);padding:1px 0;line-height:1.05}
 
 .boundary{margin:30px auto 56px;font-size:13px;color:var(--faint);line-height:1.65;text-align:center;max-width:680px}
 .boundary b{color:var(--dim);font-weight:500}
@@ -148,7 +148,7 @@ footer a:hover{color:var(--gold)}
   <section class="hero">
     <div class="eyebrow">High-Assurance AI Systems</div>
     <h1>High-Assurance AI Systems</h1>
-    <p class="sub"><!-- __s171vsa_ha_vision_align_v1__ __s171vsa_ha_e1e4e5_v1__ -->Verifiable assurance for AI systems. NOUS provides cryptographically signed, offline-verifiable evidence that makes system behavior independently auditable.</p>
+    <p class="sub"><!-- __s171vsa_ha_vision_align_v1__ __s171vsa_ha_e1e4e5_v1__ __s171vsa_ha_pass4_v1__ -->NOUS produces cryptographically signed, offline-verifiable artifacts that independently evidence conformance to a declared policy envelope.</p>
     <div class="diff">
       <p><b>Built on NOUS. Verified independently.</b></p>
     </div>
@@ -203,9 +203,9 @@ footer a:hover{color:var(--gold)}
       <div class="pcol yes">
         <h3>What NOUS does</h3>
         <ul>
-          <li>generate cryptographic evidence of conformance</li>
-          <li>bind the evidence to the declared policy envelope</li>
           <li>make every artifact offline-verifiable by any third party</li>
+          <li>bind the evidence to the declared policy envelope</li>
+          <li>generate cryptographic evidence of conformance</li>
           <li>require zero trust in the operator &mdash; the evidence survives the operator</li>
           <li>chain evidence to two independent signers &mdash; the operator and a witnessing counterparty</li>
         </ul>
@@ -243,7 +243,7 @@ footer a:hover{color:var(--gold)}
     <div class="sec-title">What an independent third party can verify</div>
     <div class="grid2">
       <div class="vlist">
-        <div class="vrow"><span class="vtick">&check;</span><div class="vmain">The execution as evidenced by the artifacts produced</div></div>
+        <div class="vrow"><span class="vtick">&check;</span><div class="vmain">The recorded execution, as represented by signed conformance artifacts.</div></div>
         <div class="vrow"><span class="vtick">&check;</span><div class="vmain">The declared policy envelope</div></div>
         <div class="vrow"><span class="vtick">&check;</span><div class="vmain">The conformance artifacts produced during the run</div></div>
         <div class="vrow"><span class="vtick">&check;</span><div class="vmain">The counterparty identities that independently witnessed and attested conformance</div></div>
@@ -300,16 +300,16 @@ footer a:hover{color:var(--gold)}
     <div class="sec-eyebrow">Assurance Lifecycle</div>
     <div class="sec-title">From policy to independent audit</div>
     <div class="lifecycle">
-      <div class="lc-step">Policy</div>
-      <div class="lc-arrow">&darr;</div>
-      <div class="lc-step proof">Proof</div>
-      <div class="lc-arrow">&darr;</div>
+      <div class="lc-step">Declared Policy</div>
+      <div class="lc-arrow">&#9474;<br>&#9660;</div>
+      <div class="lc-step proof">Formal Proof</div>
+      <div class="lc-arrow">&#9474;<br>&#9660;</div>
       <div class="lc-step">Execution</div>
-      <div class="lc-arrow">&darr;</div>
-      <div class="lc-step evidence">Evidence</div>
-      <div class="lc-arrow">&darr;</div>
+      <div class="lc-arrow">&#9474;<br>&#9660;</div>
+      <div class="lc-step evidence">Signed Evidence</div>
+      <div class="lc-arrow">&#9474;<br>&#9660;</div>
       <div class="lc-step">Offline Verification</div>
-      <div class="lc-arrow">&darr;</div>
+      <div class="lc-arrow">&#9474;<br>&#9660;</div>
       <div class="lc-step">Independent Audit</div>
     </div>
   </section>
@@ -325,8 +325,13 @@ footer a:hover{color:var(--gold)}
         <tr><td>Vendor trust required</td><td class="nous">Third-party verification</td></tr>
         <tr><td>Runtime dependency</td><td class="nous">Runs beside existing systems</td></tr>
         <tr><td>Operational artifacts</td><td class="nous">Cryptographic evidence</td></tr>
+        <tr><td>Single operator</td><td class="nous">Counterparty-witnessed evidence</td></tr>
       </tbody>
     </table>
+  </section>
+
+  <section class="sec">
+    <div class="sec-lead">Organizations increasingly need to demonstrate how AI-assisted decisions were governed without requiring continuous access to the original platform, vendor, or execution environment. Independent evidence reduces dependency during audits, contractual reviews, incident investigations, and long-term record retention.</div>
   </section>
 
   <section class="cta">
