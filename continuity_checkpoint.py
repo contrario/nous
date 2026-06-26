@@ -197,7 +197,9 @@ def build_continuity_checkpoint(
     emit_inclusion: bool = False,
 ) -> dict:
     """Walk the ledger, build the RFC 6962 root over the committed link
-    digests, serialize the C2SP checkpoint body, optionally append a budget
+    digests (plus, when priced, an in-tree budget-commitment leaf binding
+    sha256(canonical sidecar) so the root commits the cost-cap proof, S180),
+    serialize the C2SP checkpoint body, optionally append a budget
     extension, sign the note with the dedicated operator log key, and write
     checkpoint.note (plus optional per-link inclusion proofs) into ledger_dir.
 
