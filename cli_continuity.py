@@ -20,6 +20,7 @@ from pathlib import Path
 import continuity_ledger as cl
 from continuity_verifier import emit_continuity_verifier
 import continuity_checkpoint as cc  # __s178_p1_cc_import_v1__
+import continuity_cosign as ccs  # __s179_p1_cosign_import_v1__
 
 
 def build_continuity_parser(sub: "argparse._SubParsersAction") -> None:
@@ -120,6 +121,30 @@ def build_continuity_parser(sub: "argparse._SubParsersAction") -> None:
         "--emit-inclusion", action="store_true",
         help="Also write per-link RFC 6962 inclusion proofs into "
              "<ledger>/inclusion/",
+    )
+
+    pco = cs.add_parser(  # __s179_p1_cosign_parser_v1__
+        "cosign",
+        help="Witness/counterparty: append a C2SP tlog-cosignature "
+             "(Ed25519 type 0x04) to an existing checkpoint.note",
+    )
+    pco.add_argument(
+        "--note", required=True,
+        help="Path to the checkpoint.note to cosign",
+    )
+    pco.add_argument(
+        "--witness-key", required=True,
+        help="Witness/counterparty Ed25519 PRIVATE key (PEM)",
+    )
+    pco.add_argument(
+        "--witness-name", required=True,
+        help="Cosigner name (schemaless URL) bound into the cosignature "
+             "key id; the verifier must pin the same name",
+    )
+    pco.add_argument(
+        "--time", type=int, default=None,
+        help="POSIX timestamp for the cosignature (default: now); "
+             "MUST be a positive integer",
     )
 
 
@@ -315,9 +340,51 @@ def _cmd_checkpoint(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_cosign(args: argparse.Namespace) -> int:  # __s179_p1_cosign_handler_v1__
+    import time
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+        Ed25519PrivateKey,
+    )
+    note_path = Path(args.note)
+    try:
+        wpem = Path(args.witness_key).read_bytes()
+    except OSError as e:
+        print("cosign: cannot read --witness-key: " + str(e), file=sys.stderr)
+        return 2
+    try:
+        wpriv = serialization.load_pem_private_key(wpem, password=None)
+    except (ValueError, TypeError):
+        print("cosign: --witness-key is not a valid PEM private key",
+              file=sys.stderr)
+        return 2
+    if not isinstance(wpriv, Ed25519PrivateKey):
+        print("cosign: --witness-key is not an Ed25519 private key",
+              file=sys.stderr)
+        return 2
+    ts = args.time if args.time is not None else int(time.time())
+    try:
+        summary = ccs.append_cosignature(
+            note_path, args.witness_name, wpriv, ts
+        )
+    except ccs.CosignatureError as e:
+        print("cosign refused: " + str(e), file=sys.stderr)
+        return 1
+    if summary["appended"]:
+        print("cosignature appended to " + summary["note_path"])
+        print("  cosigner " + summary["cosigner"]
+              + " (key id " + summary["key_id_hex"] + ")")
+        print("  time " + str(summary["timestamp"]))
+    else:
+        print("cosign: already cosigned by " + summary["cosigner"]
+              + " (key id " + summary["key_id_hex"] + "); no change")
+    return 0
+
+
 def cmd_continuity(args: argparse.Namespace) -> int:
     actions = {
         "checkpoint": _cmd_checkpoint,  # __s178_p1_checkpoint_dispatch_v1__
+        "cosign": _cmd_cosign,  # __s179_p1_cosign_dispatch_v1__
         "link": _cmd_link,
         "receipt": _cmd_receipt,
         "verify": _cmd_verify,
