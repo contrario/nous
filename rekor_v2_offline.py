@@ -582,6 +582,108 @@ def _naive_proof(leaves: list[bytes], index: int) -> list[bytes]:
     return proof
 
 
+def _chain_inner_right(
+    seed: bytes, proof: list[bytes], index: int
+) -> bytes:
+    acc = seed
+    for i, h in enumerate(proof):
+        if (index >> i) & 1 == 1:
+            acc = _hash_children(h, acc)
+    return acc
+
+
+def _consistency_subproof(
+    m: int, leaves: list[bytes], complete: bool
+) -> list[bytes]:
+    n = len(leaves)
+    if m == n:
+        return [] if complete else [_naive_root(leaves)]
+    k = 1
+    while k * 2 < n:
+        k *= 2
+    if m <= k:
+        return _consistency_subproof(m, leaves[:k], complete) + [
+            _naive_root(leaves[k:])
+        ]
+    return _consistency_subproof(m - k, leaves[k:], False) + [
+        _naive_root(leaves[:k])
+    ]
+
+
+def naive_consistency_proof(leaves: list[bytes], m: int) -> list[bytes]:
+    """RFC 9162 2.1.4.2 consistency proof from size m to size len(leaves).
+    __s182_consistency_primitive_v1__"""
+    n = len(leaves)
+    if not 0 < m <= n:
+        raise VerificationError(
+            "consistency proof requires 0 < m <= n; got m=%d n=%d" % (m, n)
+        )
+    if m == n:
+        return []
+    return _consistency_subproof(m, leaves, True)
+
+
+def verify_consistency(
+    first: int,
+    second: int,
+    first_root: bytes,
+    second_root: bytes,
+    proof: list[bytes],
+) -> None:
+    """Verify a size-first tree is a Merkle prefix of a size-second tree,
+    reconstructing both roots from the proof alone (RFC 9162 2.1.4.2,
+    Trillian decomposition). Raises VerificationError on any mismatch.
+    __s182_consistency_primitive_v1__"""
+    if first > second:
+        raise VerificationError(
+            "consistency first %d > second %d" % (first, second)
+        )
+    if first == second:
+        if first_root != second_root:
+            raise VerificationError("consistency equal-size roots differ")
+        if proof:
+            raise VerificationError(
+                "consistency equal-size proof must be empty"
+            )
+        return
+    if first == 0:
+        if proof:
+            raise VerificationError(
+                "consistency first=0 proof must be empty"
+            )
+        return
+    inner, border = _decomp_inclusion_proof(first - 1, second)
+    shift = (first & -first).bit_length() - 1
+    inner -= shift
+    if first == (1 << shift):
+        seed = first_root
+        start = 0
+    else:
+        if not proof:
+            raise VerificationError("consistency proof missing seed node")
+        seed = proof[0]
+        start = 1
+    if len(proof) != start + inner + border:
+        raise VerificationError(
+            "consistency proof wrong size: expected %d got %d"
+            % (start + inner + border, len(proof))
+        )
+    rest = proof[start:]
+    mask = (first - 1) >> shift
+    h1 = _chain_inner_right(seed, rest[:inner], mask)
+    h1 = _chain_border_right(h1, rest[inner:])
+    if h1 != first_root:
+        raise VerificationError(
+            "consistency reconstructed first root mismatch"
+        )
+    h2 = _chain_inner(seed, rest[:inner], mask)
+    h2 = _chain_border_right(h2, rest[inner:])
+    if h2 != second_root:
+        raise VerificationError(
+            "consistency reconstructed second root mismatch"
+        )
+
+
 def _selftest() -> int:
     import os
 
