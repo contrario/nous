@@ -117,6 +117,51 @@ not an RFC 6962 prefix of a later priced tree. This regresses nothing shipped
 A future witnessed-liveness ribbon must run its consistency proof over the link
 sub-tree, not the full tree.
 
+## Append-only continuity (S183)
+
+Single-checkpoint verification fixes one head; it cannot detect that an
+earlier, already-witnessed head was later rolled back, rewritten, reordered, or
+truncated. The append-only leg closes that gap with an RFC 9162 Merkle
+consistency proof between two rail checkpoints.
+
+`build_continuity_proof(ledger_dir, prior_checkpoint_path, out_path)` walks the
+current ledger, parses the prior checkpoint, and refuses cause-first on any of:
+a priced (extension-bearing) prior (rail scope only), an origin mismatch
+(different log), `prior.tree_size > current size` (rollback/truncation), or a
+prefix root that does not reproduce the prior root (rewrite/reorder). When all
+gates pass it writes an unsigned `continuity.proof` carrying the two tree sizes,
+both roots, and the consistency hash path -- and nothing about the leaves, which
+is the offline-auditor position.
+
+The standalone offline verifier consumes it with `--prior-checkpoint` (also
+surfaced as `nous continuity verify --prior-checkpoint`): it parses the prior
+checkpoint, reads `continuity.proof` from the ledger dir, recomputes the current
+rail root from the walked link set, cross-checks both sizes and both roots
+against the proof, and runs `verify_consistency`. On success it prints
+`EVIDENCES: Cryptographic consistency proof verified. ...`.
+
+Honest boundary. The proof EVIDENCES append-only structure between two roots. It
+does not, alone, defeat split-view equivocation (that requires the witness
+quorum), and it does not detect never-logged omission. No new proves-leg: the
+consistency math is Merkle structure, not a cost bound.
+
+Rail scope. A priced checkpoint's leaf stream is `[link_0 .. link_{n-1},
+budget_leaf]`, so the trailing budget leaf interleaves and naive prefix
+consistency over two priced signed roots does not hold. Rail checkpoints (signed
+root == link-only root) are consistency-clean; priced-checkpoint continuity is a
+banked tree-reshape sub-arc.
+
+Root-anchoring invariant. PQ-witnessable evidence lives under the Merkle root,
+never on an extension line. A 0x04 Ed25519 cosignature signs the whole
+checkpoint note body, including extension lines; a 0x06 ML-DSA-44 cosignature
+signs only the root and excludes extension lines. So any evidence that must
+survive post-quantum witnessing -- the budget cost-cap proof above all -- is a
+committed in-tree leaf under the signed root (S180), not an extension line. The
+consistency proof runs over rail roots, which are exactly the link-only roots a
+future 0x06 signature will protect.
+
+<!-- __s183_continuity_appendonly_doc_v1__ -->
+
 ## Witness cosignature (S179)
 
 The checkpoint head can carry an independent, timestamped Ed25519 cosignature

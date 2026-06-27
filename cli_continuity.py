@@ -104,6 +104,14 @@ def build_continuity_parser(sub: "argparse._SubParsersAction") -> None:
              "bind the name, so the verifier must pin it)",
     )
 
+    pv.add_argument(  # __s183_p3_prior_checkpoint_arg_v1__
+        "--prior-checkpoint", default=None,
+        help="Path to a prior checkpoint.note; verifies the RFC 9162 "
+             "consistency proof (continuity.proof in the ledger dir) so the "
+             "ledger is append-only between the two heads (no rollback, "
+             "rewrite, or truncation). Rail scope; routes through the "
+             "zero-NOUS offline verifier.",
+    )
     pe = cs.add_parser(
         "emit-verifier",
         help="Write the zero-NOUS standalone offline verifier into a dir",
@@ -253,8 +261,11 @@ def _verify_with_checkpoint(args: argparse.Namespace) -> int:  # __s180_p4_check
     work = Path(tempfile.mkdtemp(prefix="nous-continuity-verify-"))
     try:
         script = emit_continuity_verifier(work)
-        argv = [sys.executable, str(script), str(Path(args.ledger)),
-                "--log-key", str(args.log_key)]
+        argv = [sys.executable, str(script), str(Path(args.ledger))]  # __s183_p3_argv_v1__
+        if args.log_key:
+            argv += ["--log-key", str(args.log_key)]
+        if getattr(args, "prior_checkpoint", None):
+            argv += ["--prior-checkpoint", str(args.prior_checkpoint)]
         if args.key:
             argv += ["--key", str(args.key)]
         if args.iss:
@@ -278,7 +289,7 @@ def _verify_with_checkpoint(args: argparse.Namespace) -> int:  # __s180_p4_check
 
 
 def _cmd_verify(args: argparse.Namespace) -> int:
-    if getattr(args, "log_key", None):  # __s180_p4_checkpoint_verify_v1__
+    if getattr(args, "log_key", None) or getattr(args, "prior_checkpoint", None):  # __s180_p4_checkpoint_verify_v1__  # __s183_p3_prior_dispatch_v1__
         return _verify_with_checkpoint(args)
     ledger = Path(args.ledger)
     if not ledger.is_dir():
