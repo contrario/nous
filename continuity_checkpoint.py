@@ -42,7 +42,7 @@ from typing import Optional
 import continuity_ledger as cl
 import rekor_v2_offline as rkt
 from manifest import load_or_create_keypair
-from rekor_checkpoint import ed25519_key_id
+from rekor_checkpoint import ed25519_key_id, parse_checkpoint
 
 CONTINUITY_ORIGIN_PREFIX: str = "nous-lang.org/continuity/"
 BUDGET_EXTENSION_TAG: str = "nous.aggregate.cost.farkas"
@@ -320,3 +320,82 @@ def build_continuity_checkpoint(
         "witnessed_ratio": report.get("witnessed_ratio"),
         "written": written,
     }
+
+
+def build_continuity_proof(
+    ledger_dir: Path,
+    prior_checkpoint_path: Path,
+    out_path: Path,
+) -> dict:  # __s183_p1b_continuity_proof_producer_v1__
+    """Emit an UNSIGNED RFC 9162 consistency proof binding a prior rail
+    checkpoint to the current ledger head, so an offline auditor can detect
+    rollback, rewrite/reorder, or truncation of already-witnessed rail
+    records. Rail scope only: a priced (extension-bearing) prior is refused
+    because the trailing budget leaf interleaves and naive prefix-consistency
+    over priced signed roots does not hold (tree-reshape sub-arc).
+
+    Honest boundary: the proof EVIDENCES append-only structure between two
+    roots. It does NOT, alone, defeat split-view equivocation and does NOT
+    detect never-logged omission. Refuses cause-first on any consistency
+    violation; never emits a proof it cannot itself verify."""
+    parsed = parse_checkpoint(
+        prior_checkpoint_path.read_text(encoding="utf-8")
+    )
+    if parsed.extensions:
+        raise ContinuityCheckpointError(
+            "prior checkpoint carries extension line(s); continuity proofs "
+            "are rail-only (priced-checkpoint continuity needs the tree-"
+            "reshape sub-arc): refusing"
+        )
+    loaded = _load_bundles(ledger_dir)
+    bundles = [b for _sub, b in loaded]
+    for b in bundles:
+        b.pop("receipt", None)
+    try:
+        report = cl.walk_continuity_ledger(bundles)
+    except cl.ContinuityLedgerError as e:
+        raise ContinuityCheckpointError(
+            "current ledger does not walk fail-closed: " + str(e)
+        )
+    order: list[str] = list(report["order"])
+    n = len(order)
+    if n == 0:
+        raise ContinuityCheckpointError("current ledger order is empty")
+    leaves = [bytes.fromhex(d) for d in order]
+    expected_origin = CONTINUITY_ORIGIN_PREFIX + order[0]
+    if parsed.origin != expected_origin:
+        raise ContinuityCheckpointError(
+            "origin mismatch: prior checkpoint origin " + repr(parsed.origin)
+            + " != expected " + repr(expected_origin)
+            + " (different log / wrong genesis): refusing"
+        )
+    m = parsed.tree_size
+    if m > n:
+        raise ContinuityCheckpointError(
+            "rollback: prior tree_size " + str(m) + " exceeds current "
+            "ledger size " + str(n) + " (truncation/rollback): refusing"
+        )
+    if m < 1:
+        raise ContinuityCheckpointError(
+            "prior tree_size must be >= 1; got " + str(m)
+        )
+    prefix_root = rkt._naive_root(leaves[:m])
+    if prefix_root != parsed.root_hash:
+        raise ContinuityCheckpointError(
+            "rewrite: the first " + str(m) + " current leaves do not "
+            "reproduce the prior root (history rewritten/reordered): refusing"
+        )
+    current_root = rkt._naive_root(leaves)
+    proof = rkt.naive_consistency_proof(leaves, m)
+    rkt.verify_consistency(m, n, parsed.root_hash, current_root, proof)
+    doc: dict = {
+        "kind": "nous.continuity.consistency.v1",
+        "origin": expected_origin,
+        "prior_tree_size": m,
+        "current_tree_size": n,
+        "prior_root_b64": base64.b64encode(parsed.root_hash).decode("ascii"),
+        "current_root_b64": base64.b64encode(current_root).decode("ascii"),
+        "proof": [base64.b64encode(h).decode("ascii") for h in proof],
+    }
+    out_path.write_bytes(_canonical_bytes(doc))
+    return doc
