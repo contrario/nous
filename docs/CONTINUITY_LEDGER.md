@@ -162,6 +162,43 @@ future 0x06 signature will protect.
 
 <!-- __s183_continuity_appendonly_doc_v1__ -->
 
+## Segment in-envelope conformance (S185)
+
+Layered on the S183 consistency proof, the segment in-envelope leg PROVES that
+every run appended across the witnessed segment stayed inside its own declared
+envelope. When a prior checkpoint and a verified consistency proof establish the
+ledger as an append-only extension from tree size `m` to `n`, the verifier
+checks, for every appended link in `[m, n)`, that the link's conformance
+certificate is `conformant == True` (and `bound_transfer_ok == True`). Any
+appended link that is not fails the verification closed; on success the verifier
+prints a `PROVES:` line.
+
+This earns `proves` because the verdict is read from root-committed bytes, not
+from a sidecar. Each certificate's body digest is bound into the leaf through
+`cert_body_sha256 -> run_identity_digest -> this_link_digest`, and the link
+digests are the leaves of the signed Merkle root. The check is therefore boolean
+arithmetic over data the signed root already commits -- no solver, no new
+dependency in the offline verifier.
+
+Enforcement, not restatement. The ledger walk records, but does not gate, a
+self-consistent non-conformant run (NOUS is a monitor: it records what happened,
+including a run that honestly reports `conformant == False`). This leg adds
+segment-scoped enforcement: it refuses the `PROVES:` line and fails the
+verification when the consistency-proven append contains an honestly-recorded
+non-conformant run.
+
+The honest boundary. It PROVES the witnessed segment is conformance-certified
+`bound_transfer_ok` under the signed root, and EVIDENCES (unchanged) that the
+segment is the actual append via the S183 consistency proof. It does NOT prove
+that the declared cost ceiling did not rise across the segment; cap-value
+monotonicity would require the cost cap value itself to be committed under the
+root (it is currently sidecar-only) and remains future work.
+
+Under `--json` the verifier emits a drop-when-absent `segment_inenvelope` object
+(`prior_tree_size`, `current_tree_size`, `proven`) alongside the `consistency`
+object; both are `null` when no prior checkpoint is supplied.
+<!-- __s185_segment_inenvelope_doc_v1__ -->
+
 ## Witness cosignature (S179)
 
 The checkpoint head can carry an independent, timestamped Ed25519 cosignature

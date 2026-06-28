@@ -173,3 +173,20 @@ def test_drop_when_absent_no_prior_checkpoint(tmp_path) -> None:
     assert res["rc"] == 0, res["err"]
     assert _PROVES not in res["out"]
     assert _EVID not in res["out"]
+
+
+def test_segment_inenvelope_json_field(tmp_path) -> None:
+    op, cp = _keys(tmp_path)
+    ledger = _build_priced_ledger(tmp_path, op, cp, _CAPS9)
+    prior_note = _prior_and_proof(tmp_path, ledger)
+    script = _emit(tmp_path)
+    res = _verify(script, ledger, cp_pub=tmp_path / "cp_pub.pem",
+                  prior_note=prior_note, as_json=True)
+    assert res["rc"] == 0, res["err"]
+    v = json.loads(res["out"].strip().splitlines()[-1])
+    assert v["segment_inenvelope"] == {
+        "prior_tree_size": 5, "current_tree_size": 9, "proven": True}
+    res2 = _verify(script, ledger, cp_pub=tmp_path / "cp_pub.pem",
+                   prior_note=None, as_json=True)
+    v2 = json.loads(res2["out"].strip().splitlines()[-1])
+    assert v2["segment_inenvelope"] is None
