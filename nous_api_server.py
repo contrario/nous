@@ -246,6 +246,23 @@ async def compile_source(request: Request, body: CompileRequest, x_api_key: Opti
         raise HTTPException(status_code=422, detail={"error": str(e), "code": "COMPILE001"})
 
 
+# __s189_vr003_default_pricing_v2__
+_DEFAULT_PRICING = None
+_DEFAULT_PRICING_LOADED = False
+
+
+def _get_default_pricing():
+    global _DEFAULT_PRICING, _DEFAULT_PRICING_LOADED
+    if not _DEFAULT_PRICING_LOADED:
+        try:
+            from pricing import load_pricing
+            _DEFAULT_PRICING = load_pricing()
+        except Exception:
+            _DEFAULT_PRICING = None
+        _DEFAULT_PRICING_LOADED = True
+    return _DEFAULT_PRICING
+
+
 @app.post("/v1/verify")
 @limiter.limit("100/minute")
 async def verify_source(request: Request, body: VerifyRequest, x_api_key: Optional[str] = Header(None)):
@@ -266,7 +283,7 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
                     "warnings": [{"code": w.code, "message": w.message} for w in val_result.warnings],
                 }
 
-            ver_result = verify_program(program)
+            ver_result = verify_program(program, _get_default_pricing())  # __s189_vr003_wire_pricing_v2__
 
             proven = []
             warnings = []

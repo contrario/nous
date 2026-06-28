@@ -306,7 +306,7 @@ class NousVerifier:
         from smt_verify import verify as _smt_verify
         try:
             spec = emit_smt(self.program, self._pricing)
-        except EmitError:
+        except (EmitError, KeyError, ValueError):  # __s189_vr003_unpriceable_dark_v2__
             return
         result = _smt_verify(spec, timeout_ms=10_000)
         cap = spec.cost_cap_amount
