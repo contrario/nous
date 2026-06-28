@@ -13,7 +13,10 @@ Static analysis engine providing mathematical guarantees:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:  # __s189_vr003_pricing_typeonly_v1__
+    from pricing import PricingTable
 
 from ast_nodes import (
     NousProgram, SoulNode, WorldNode, MessageNode,
@@ -146,8 +149,9 @@ class VerificationResult:
 
 class NousVerifier:
 
-    def __init__(self, program: NousProgram) -> None:
+    def __init__(self, program: NousProgram, pricing: Optional[PricingTable] = None) -> None:  # __s189_vr003_init_pricing_v1__
         self.program = program
+        self._pricing: Optional[PricingTable] = pricing
         self.result = VerificationResult()
         self._soul_map: dict[str, SoulNode] = {}
         self._message_map: dict[str, MessageNode] = {}
@@ -291,6 +295,60 @@ class NousVerifier:
                 "VR002", "resource_bound",
                 f"Total cascade cost ${total_max:.6f} ≤ ${self._cost_ceiling:.2f}",
                 "world",
+            )
+
+        # __s189_vr003_gate_v1__
+        if self._pricing is not None:
+            self._verify_smt_cost_bound()
+
+    def _verify_smt_cost_bound(self) -> None:  # __s189_vr003_smt_cost_proof_v1__
+        from smt_emit import EmitError, emit_smt
+        from smt_verify import verify as _smt_verify
+        try:
+            spec = emit_smt(self.program, self._pricing)
+        except EmitError:
+            return
+        result = _smt_verify(spec, timeout_ms=10_000)
+        cap = spec.cost_cap_amount
+        ccy = spec.cost_cap_currency
+        if result.verdict == "proven":
+            self.result.prove(
+                "VR003", "resource_bound",
+                f"Total declared cost provably <= world cost_cap {cap} {ccy} "
+                f"(Z3/Farkas over declared pricing). This binds the WORLD "
+                f"cost_cap, which is distinct from the law cost ceiling bound "
+                f"by VR001/VR002.",
+                "world",
+                f"solver={result.solver_name} {result.solver_version}, "
+                f"elapsed_ms={result.elapsed_ms}",
+            )
+        elif result.verdict == "refuted":
+            ce = result.counterexample
+            detail = ""
+            if ce is not None:
+                from smt_verify import _suggest_min_cap
+                suggested = _suggest_min_cap(ce)
+                detail = (
+                    f"declared total_cost {ce.total_cost_usd} {ccy} can exceed "
+                    f"world cost_cap {ce.cap_usd} {ccy} (overage "
+                    f"{ce.overage_usd} {ccy}); minimum sufficient world "
+                    f"cost_cap = {suggested} {ccy}"
+                )
+            self.result.error(
+                "VR003", "resource_bound",
+                f"Cost bound UNPROVEN: declared total cost can exceed world "
+                f"cost_cap {cap} {ccy} (the WORLD cost_cap, distinct from the "
+                f"law cost ceiling bound by VR001/VR002).",
+                "world",
+                detail,
+            )
+        else:
+            self.result.error(
+                "VR003", "resource_bound",
+                f"Cost bound UNPROVEN against world cost_cap {cap} {ccy}: "
+                f"{result.error or result.verdict}.",
+                "world",
+                f"solver={result.solver_name} {result.solver_version}",
             )
 
     def _estimate_cascade_cost(self, soul_name: str, visited: set[str]) -> float:
@@ -1031,8 +1089,8 @@ class NousVerifier:
         )
 
 
-def verify_program(program: NousProgram) -> VerificationResult:
-    verifier = NousVerifier(program)
+def verify_program(program: NousProgram, pricing: Optional[PricingTable] = None) -> VerificationResult:  # __s189_vr003_verify_program_pricing_v1__
+    verifier = NousVerifier(program, pricing)
     return verifier.verify()
 
 
