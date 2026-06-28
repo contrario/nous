@@ -45,6 +45,13 @@ class VerificationSeverity:
     PROVEN = "PROVEN"
 
 
+class VerificationTier:  # __s_verify_tier_v1__
+    PROVEN = "PROVEN"
+    VERIFIED = "VERIFIED"
+    ESTIMATED = "ESTIMATED"
+    REPORTED = "REPORTED"
+
+
 @dataclass
 class VerificationItem:
     severity: str
@@ -53,6 +60,7 @@ class VerificationItem:
     message: str
     location: str = ""
     detail: str = ""
+    tier: str = "PROVEN"
 
     def __str__(self) -> str:
         icon = {"ERROR": "✗", "WARNING": "⚠", "INFO": "ℹ", "PROVEN": "✓"}.get(self.severity, "?")
@@ -85,8 +93,8 @@ class VerificationResult:
     def ok(self) -> bool:
         return len(self.errors) == 0
 
-    def add(self, severity: str, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
-        self.items.append(VerificationItem(severity, code, category, message, location, detail))
+    def add(self, severity: str, code: str, category: str, message: str, location: str = "", detail: str = "", tier: str = "PROVEN") -> None:
+        self.items.append(VerificationItem(severity, code, category, message, location, detail, tier))
 
     def error(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
         self.add(VerificationSeverity.ERROR, code, category, message, location, detail)
@@ -95,7 +103,16 @@ class VerificationResult:
         self.add(VerificationSeverity.WARNING, code, category, message, location, detail)
 
     def prove(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
-        self.add(VerificationSeverity.PROVEN, code, category, message, location, detail)
+        self.add(VerificationSeverity.PROVEN, code, category, message, location, detail, tier=VerificationTier.PROVEN)
+
+    def verify(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
+        self.add(VerificationSeverity.PROVEN, code, category, message, location, detail, tier=VerificationTier.VERIFIED)
+
+    def estimate(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
+        self.add(VerificationSeverity.PROVEN, code, category, message, location, detail, tier=VerificationTier.ESTIMATED)
+
+    def report(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
+        self.add(VerificationSeverity.PROVEN, code, category, message, location, detail, tier=VerificationTier.REPORTED)
 
     def info(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
         self.add(VerificationSeverity.INFO, code, category, message, location, detail)
@@ -114,11 +131,16 @@ class VerificationResult:
                 lines.append(str(item))
         err_count = len(self.errors)
         warn_count = len(self.warnings)
-        proven_count = len(self.proven)
+        _affirm = [i for i in self.items if i.severity == VerificationSeverity.PROVEN]
+        tproven = len([i for i in _affirm if getattr(i, "tier", "PROVEN") == VerificationTier.PROVEN])
+        tverified = len([i for i in _affirm if getattr(i, "tier", "PROVEN") == VerificationTier.VERIFIED])
+        testimated = len([i for i in _affirm if getattr(i, "tier", "PROVEN") == VerificationTier.ESTIMATED])
+        treported = len([i for i in _affirm if getattr(i, "tier", "PROVEN") == VerificationTier.REPORTED])
+        proven_count = tproven
         total = len(self.items)
         lines.append(f"\n  ══════════════════════════════════════")
         status = "VERIFIED" if self.ok else "FAILED"
-        lines.append(f"  {status}: {proven_count} proven, {warn_count} warnings, {err_count} errors ({total} checks)")
+        lines.append(f"  {status}: {tproven} proven, {tverified} verified, {testimated} estimated, {treported} reported, {warn_count} warnings, {err_count} errors ({total} checks)")
         return "\n".join(lines)
 
 
@@ -244,7 +266,7 @@ class NousVerifier:
                 )
             else:
                 ratio = est_cost / self._cost_ceiling if self._cost_ceiling > 0 else 0
-                self.result.prove(
+                self.result.estimate(
                     "VR001", "resource_bound",
                     f"Soul {soul.name} cost bounded: ${est_cost:.6f} ≤ ${self._cost_ceiling:.2f} ({ratio:.0%} of ceiling)",
                     loc,
@@ -265,7 +287,7 @@ class NousVerifier:
                 "Sum of all entrypoint cascades through nervous_system",
             )
         else:
-            self.result.prove(
+            self.result.estimate(
                 "VR002", "resource_bound",
                 f"Total cascade cost ${total_max:.6f} ≤ ${self._cost_ceiling:.2f}",
                 "world",
@@ -367,7 +389,7 @@ class NousVerifier:
                     break
 
         if not has_cycle:
-            self.result.prove(
+            self.result.verify(
                 "VD001", "deadlock",
                 f"No circular dependencies in nervous_system ({len(self._routes)} routes checked)",
                 "nervous_system",
@@ -418,7 +440,7 @@ class NousVerifier:
                 if msg_type in self._message_map:
                     checked += 1
         if checked > 0:
-            self.result.prove(
+            self.result.verify(
                 "VP003", "protocol",
                 f"All {checked} speak calls reference defined message types",
             )
@@ -449,7 +471,7 @@ class NousVerifier:
                 "nervous_system",
             )
         elif entrypoints:
-            self.result.prove(
+            self.result.verify(
                 "VL002", "liveness",
                 f"Pipeline has {len(entrypoints)} entrypoint(s): {', '.join(sorted(entrypoints))}",
             )
@@ -481,7 +503,7 @@ class NousVerifier:
                 "These souls have no path from any entrypoint",
             )
         else:
-            self.result.prove(
+            self.result.verify(
                 "VE001", "reachability",
                 f"All {len(soul_names)} souls reachable from entrypoints",
             )
@@ -500,7 +522,7 @@ class NousVerifier:
             for s in self.program.souls
         )
         if checked > 0:
-            self.result.prove(
+            self.result.verify(
                 "VM001", "memory_safety",
                 f"All {checked} memory fields validated for type-safe access",
             )
@@ -557,7 +579,7 @@ class NousVerifier:
             )
 
         if not unassigned and not multi_assigned and assigned_souls == all_souls:
-            self.result.prove(
+            self.result.verify(
                 "VT001", "topology",
                 f"All {len(all_souls)} souls correctly assigned to {len(topo.servers)} node(s)",
                 "topology",
@@ -590,14 +612,14 @@ class NousVerifier:
             self.result.info("VTL001", "telemetry", "Telemetry declared but disabled", loc)
             return
 
-        self.result.prove(
+        self.result.report(
             "VTL001", "telemetry",
             f"Telemetry enabled: exporter={t.exporter}, sample_rate={t.sample_rate}",
             loc,
         )
 
         if t.trace_senses and t.trace_llm:
-            self.result.prove(
+            self.result.report(
                 "VTL002", "telemetry",
                 "Full observability: senses and LLM calls traced",
                 loc,
@@ -633,7 +655,7 @@ class NousVerifier:
         if has_dream:
             subsystems.append("dream")
         sub_str = ", ".join(subsystems) if subsystems else "none"
-        self.result.prove(
+        self.result.report(
             "VTL003", "telemetry",
             f"Telemetry covers {soul_count} soul(s), subsystems: {sub_str}",
             loc,
@@ -651,15 +673,15 @@ class NousVerifier:
             loc = f"soul {soul.name}"
             mutual = [b for b in sym.bond_with if b in bonds and soul.name in bonds[b]]
             if mutual:
-                self.result.prove("VSY001", "symbiosis", f"Soul {soul.name} has mutual bonds with: {', '.join(mutual)}", loc)
+                self.result.report("VSY001", "symbiosis", f"Soul {soul.name} has mutual bonds with: {', '.join(mutual)}", loc)
             else:
                 self.result.warning("VSY001", "symbiosis", f"Soul {soul.name} bonds are one-directional", loc)
             if sym.shared_memory:
-                self.result.prove("VSY002", "symbiosis", f"Soul {soul.name} shares {len(sym.shared_memory)} field(s): {', '.join(sym.shared_memory)}", loc)
+                self.result.report("VSY002", "symbiosis", f"Soul {soul.name} shares {len(sym.shared_memory)} field(s): {', '.join(sym.shared_memory)}", loc)
             if sym.evolve_together:
                 has_dna = soul.dna is not None
                 if has_dna:
-                    self.result.prove("VSY003", "symbiosis", f"Soul {soul.name} co-evolution viable", loc)
+                    self.result.report("VSY003", "symbiosis", f"Soul {soul.name} co-evolution viable", loc)
                 else:
                     self.result.warning("VSY003", "symbiosis", f"Soul {soul.name} co-evolution: missing dna", loc)
         visited = set()
@@ -676,7 +698,7 @@ class NousVerifier:
                         if neighbor in bonds:
                             stack.append(neighbor)
                 cluster_count += 1
-        self.result.prove("VSY004", "symbiosis", f"Symbiosis coverage: {len(sym_souls)} soul(s) in {cluster_count} cluster(s)")
+        self.result.report("VSY004", "symbiosis", f"Symbiosis coverage: {len(sym_souls)} soul(s) in {cluster_count} cluster(s)")
 
     def _verify_consciousness(self) -> None:
         con_souls = [s for s in self.program.souls if s.consciousness is not None]
@@ -685,19 +707,19 @@ class NousVerifier:
         for soul in con_souls:
             c = soul.consciousness
             loc = f"soul {soul.name}"
-            self.result.prove("VCS001", "consciousness", f"Soul {soul.name} has {len(c.goals)} goal(s): {', '.join(c.goals)}", loc)
-            self.result.prove("VCS002", "consciousness", f"Soul {soul.name} reflects every {c.reflect_every} cycles (depth={c.introspection_depth})", loc)
+            self.result.report("VCS001", "consciousness", f"Soul {soul.name} has {len(c.goals)} goal(s): {', '.join(c.goals)}", loc)
+            self.result.report("VCS002", "consciousness", f"Soul {soul.name} reflects every {c.reflect_every} cycles (depth={c.introspection_depth})", loc)
             if c.self_model:
-                self.result.prove("VCS003", "consciousness", f"Soul {soul.name} maintains self-model for behavioral adaptation", loc)
+                self.result.report("VCS003", "consciousness", f"Soul {soul.name} maintains self-model for behavioral adaptation", loc)
             else:
                 self.result.info("VCS003", "consciousness", f"Soul {soul.name} self-model disabled", loc)
             has_mem = soul.memory is not None
             has_mind = soul.mind is not None
             if has_mem and has_mind:
-                self.result.prove("VCS004", "consciousness", f"Soul {soul.name} has mind + memory for full introspection", loc)
+                self.result.report("VCS004", "consciousness", f"Soul {soul.name} has mind + memory for full introspection", loc)
             elif has_mind:
                 self.result.warning("VCS004", "consciousness", f"Soul {soul.name} can reflect but has no memory to examine", loc)
-        self.result.prove("VCS005", "consciousness", f"Consciousness coverage: {len(con_souls)}/{len(self.program.souls)} soul(s) are self-aware")
+        self.result.report("VCS005", "consciousness", f"Consciousness coverage: {len(con_souls)}/{len(self.program.souls)} soul(s) are self-aware")
 
     def _verify_metabolism(self) -> None:
         metab_souls = [s for s in self.program.souls if s.metabolism is not None]
@@ -707,18 +729,18 @@ class NousVerifier:
             m = soul.metabolism
             loc = f"soul {soul.name}"
             cycles = m.max_energy / m.energy_per_cycle if m.energy_per_cycle > 0 else float('inf')
-            self.result.prove("VMB001", "metabolism", f"Soul {soul.name} energy budget: {m.max_energy}, {m.energy_per_cycle}/cycle, exhausts in {cycles:.0f} cycles", loc)
+            self.result.verify("VMB001", "metabolism", f"Soul {soul.name} energy budget: {m.max_energy}, {m.energy_per_cycle}/cycle, exhausts in {cycles:.0f} cycles", loc)
             if m.recovery_rate >= m.energy_per_cycle:
-                self.result.prove("VMB002", "metabolism", f"Soul {soul.name} sustainable: recovery ({m.recovery_rate}/s) >= drain ({m.energy_per_cycle}/cycle)", loc)
+                self.result.verify("VMB002", "metabolism", f"Soul {soul.name} sustainable: recovery ({m.recovery_rate}/s) >= drain ({m.energy_per_cycle}/cycle)", loc)
             else:
                 self.result.warning("VMB002", "metabolism", f"Soul {soul.name} will fatigue: recovery ({m.recovery_rate}/s) < drain ({m.energy_per_cycle}/cycle)", loc)
             if m.fatigue_tier:
                 primary = soul.mind.tier.value if soul.mind else "Tier1"
                 if m.fatigue_tier != primary:
-                    self.result.prove("VMB003", "metabolism", f"Soul {soul.name} downgrades to {m.fatigue_tier} when fatigued (primary: {primary})", loc)
+                    self.result.report("VMB003", "metabolism", f"Soul {soul.name} downgrades to {m.fatigue_tier} when fatigued (primary: {primary})", loc)
                 else:
                     self.result.warning("VMB003", "metabolism", f"Soul {soul.name} fatigue_tier same as primary", loc)
-        self.result.prove("VMB004", "metabolism", f"Metabolism coverage: {len(metab_souls)}/{len(self.program.souls)} soul(s) have energy management")
+        self.result.report("VMB004", "metabolism", f"Metabolism coverage: {len(metab_souls)}/{len(self.program.souls)} soul(s) have energy management")
 
     def _verify_mitosis(self) -> None:
         mitosis_souls = [s for s in self.program.souls if s.mitosis is not None]
@@ -755,14 +777,14 @@ class NousVerifier:
                 )
             else:
                 ratio = worst_case / self._cost_ceiling if self._cost_ceiling > 0 else 0
-                self.result.prove(
+                self.result.estimate(
                     "VMI001", "mitosis",
                     f"Soul {soul.name} mitosis cost bounded: ${worst_case:.6f} ≤ ${self._cost_ceiling:.2f} ({ratio:.0%})",
                     loc,
                 )
 
             if m.verify:
-                self.result.prove(
+                self.result.report(
                     "VMI002", "mitosis",
                     f"Soul {soul.name} clones require verification gate before deployment",
                     loc,
@@ -779,7 +801,7 @@ class NousVerifier:
                 clone_rate = clone_tier_info["input_per_1k"] + clone_tier_info["output_per_1k"]
                 if clone_rate < parent_rate:
                     savings = ((parent_rate - clone_rate) / parent_rate) * 100
-                    self.result.prove(
+                    self.result.report(
                         "VMI003", "mitosis",
                         f"Soul {soul.name} clones use cheaper tier {m.clone_tier} ({savings:.0f}% savings)",
                         loc,
@@ -819,7 +841,7 @@ class NousVerifier:
             loc = f"soul {soul.name}"
 
             retire_window = m.max_clones - m.min_clones
-            self.result.prove(
+            self.result.report(
                 "VRT001", "retirement",
                 f"Soul {soul.name} retirement policy: min_clones={m.min_clones}, "
                 f"max_clones={m.max_clones}, retire window={retire_window}",
@@ -827,7 +849,7 @@ class NousVerifier:
             )
 
             if m.min_clones < m.max_clones:
-                self.result.prove(
+                self.result.verify(
                     "VRT002", "retirement",
                     f"Soul {soul.name} retirement feasible: min_clones ({m.min_clones}) < max_clones ({m.max_clones})",
                     loc,
@@ -843,7 +865,7 @@ class NousVerifier:
             coverage = len(retire_souls)
             total = len(mitosis_souls)
             if coverage == total:
-                self.result.prove(
+                self.result.report(
                     "VRT003", "retirement",
                     f"Retirement coverage: {coverage}/{total} mitosis souls have retirement policy",
                 )
@@ -878,7 +900,7 @@ class NousVerifier:
                 primary_rate = primary_cost["input_per_1k"] + primary_cost["output_per_1k"]
                 if dream_rate < primary_rate:
                     savings = ((primary_rate - dream_rate) / primary_rate) * 100
-                    self.result.prove(
+                    self.result.report(
                         "VDR001", "dream",
                         f"Soul {soul.name} dream_mind {dream_tier} is {savings:.0f}% cheaper than primary {primary_tier}",
                         loc,
@@ -898,7 +920,7 @@ class NousVerifier:
             dream_cost_per = (200 / 1000) * dream_tier_info["input_per_1k"] + (200 / 1000) * dream_tier_info["output_per_1k"]
             total_dream_cost = dream_cost_per * worst_dreams
             if total_dream_cost < self._cost_ceiling * 0.1:
-                self.result.prove(
+                self.result.estimate(
                     "VDR002", "dream",
                     f"Soul {soul.name} dream cost ${total_dream_cost:.6f} is <10% of ceiling",
                     loc,
@@ -912,13 +934,13 @@ class NousVerifier:
 
             is_listener = soul.name in self._incoming
             if is_listener:
-                self.result.prove(
+                self.result.report(
                     "VDR003", "dream",
                     f"Listener {soul.name} will dream during message wait — zero wasted idle time",
                     loc,
                 )
             else:
-                self.result.prove(
+                self.result.report(
                     "VDR003", "dream",
                     f"Heartbeat {soul.name} will dream between cycles — productive idle time",
                     loc,
@@ -940,7 +962,7 @@ class NousVerifier:
             loc = f"soul {soul.name}"
 
             if im.adaptive_recovery:
-                self.result.prove(
+                self.result.report(
                     "VIM001", "immune",
                     f"Soul {soul.name} has adaptive immune recovery enabled",
                     loc,
@@ -958,7 +980,7 @@ class NousVerifier:
                     s.mitosis for s in self.program.souls if s.name != soul.name
                 )
                 if has_mitosis:
-                    self.result.prove(
+                    self.result.report(
                         "VIM002", "immune",
                         f"Soul {soul.name} antibodies broadcast to up to {soul.mitosis.max_clones} clone(s)",
                         loc,
@@ -990,14 +1012,14 @@ class NousVerifier:
                         "Long-lived antibodies may mask evolving error patterns",
                     )
                 else:
-                    self.result.prove(
+                    self.result.report(
                         "VIM003", "immune",
                         f"Soul {soul.name} antibody_lifespan={im.antibody_lifespan} within safe bounds",
                         loc,
                     )
 
             if im.adaptive_recovery and soul.heal:
-                self.result.prove(
+                self.result.report(
                     "VIM004", "immune",
                     f"Soul {soul.name} has layered defense: heal (static) + immune (adaptive)",
                     loc,
