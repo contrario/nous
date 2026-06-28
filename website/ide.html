@@ -1753,16 +1753,29 @@ document.getElementById('btn-verify').addEventListener('click', function() {
   .then(function(d){
     var t = '';
     if(d.ok!==false&&(d.proven||[]).length>0){
-      t += '\u2550\u2550\u2550 VERIFIED \u2550\u2550\u2550\n\n';
-      t += d.proven.length+' proven \u00b7 '+(d.warnings||[]).length+' warnings \u00b7 '+(d.errors||[]).length+' errors\n\n';
-      var cats={};(d.proven||[]).forEach(function(p){var c=p.category||'General';if(!cats[c])cats[c]=[];cats[c].push(p);});
-      Object.keys(cats).forEach(function(c){
-        t += '\u2500\u2500 '+c+' \u2500\u2500\n';
-        cats[c].forEach(function(p){t += '\u2713 ['+p.code+'] '+(p.message||'Proven')+'\n';});
+      var _it=d.proven||[];
+      var _T=function(x){return x.tier||'PROVEN';};
+      var _P=_it.filter(function(x){return _T(x)==='PROVEN';});
+      var _V=_it.filter(function(x){return _T(x)==='VERIFIED';});
+      var _E=_it.filter(function(x){return _T(x)==='ESTIMATED';});
+      var _R=_it.filter(function(x){return _T(x)==='REPORTED';});
+      t += '\u2550\u2550\u2550 RESULT \u2550\u2550\u2550\n\n';
+      t += _P.length+' proven \u00b7 '+_V.length+' verified \u00b7 '+_E.length+' estimated \u00b7 '+_R.length+' reported \u00b7 '+(d.warnings||[]).length+' warnings \u00b7 '+(d.errors||[]).length+' errors\n\n';
+      var _TIERS=[
+        ['PROVEN',_P,'\u2713','Established by SMT (Z3) or a Farkas certificate.'],
+        ['VERIFIED',_V,'\u2713','Decidable static analysis; the property holds by construction.'],
+        ['ESTIMATED',_E,'~','Heuristic cost estimate, not a proof. Run the SMT cost proof for a bounded guarantee.'],
+        ['REPORTED',_R,'\u00b7','Declared configuration echoed for the record; evidences the declaration, proves nothing.']
+      ];
+      _TIERS.forEach(function(g){
+        if(!g[1].length) return;
+        t += '\u2500\u2500 '+g[0]+' ('+g[1].length+') \u2500\u2500\n   '+g[3]+'\n';
+        g[1].forEach(function(p){t += g[2]+' ['+p.code+'] '+(p.message||'')+'\n';});
         t += '\n';
       });
       if((d.warnings||[]).length){t += '\u2500\u2500 Warnings \u2500\u2500\n';(d.warnings||[]).forEach(function(w){t += '\u26a0 ['+w.code+'] '+(w.message||'')+'\n';});t += '\n';}
-      t += 'RESULT: '+d.proven.length+' proven, '+(d.errors||[]).length+' errors';
+      if((d.info||[]).length){t += '\u2500\u2500 Info \u2500\u2500\n';(d.info||[]).forEach(function(x){t += '\u2139 ['+x.code+'] '+(x.message||'')+'\n';});t += '\n';}
+      t += 'RESULT: '+_P.length+' proven, '+_V.length+' verified, '+_E.length+' estimated, '+_R.length+' reported, '+(d.errors||[]).length+' errors';
     } else {
       t += '\u2550\u2550\u2550 VERIFICATION FAILED \u2550\u2550\u2550\n\nStage: '+(d.stage||'unknown')+'\n\n';
       (d.errors||[]).forEach(function(e){t += '\u2717 '+(e.message||e.error||JSON.stringify(e))+'\n';});

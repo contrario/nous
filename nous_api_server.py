@@ -271,17 +271,22 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
             proven = []
             warnings = []
             errors = []
+            info = []
             for item in ver_result.items:
                 entry = {
                     "code": item.code,
                     "category": item.category,
                     "message": item.message,
                     "severity": item.severity.value if hasattr(item.severity, 'value') else str(item.severity),
+                    "tier": getattr(item, "tier", "PROVEN"),
                 }
-                if item.severity.value == "ERROR" if hasattr(item.severity, 'value') else str(item.severity) == "ERROR":
+                _sev = entry["severity"]
+                if _sev == "ERROR":
                     errors.append(entry)
-                elif item.severity.value == "WARN" if hasattr(item.severity, 'value') else str(item.severity) == "WARN":
+                elif _sev == "WARNING":
                     warnings.append(entry)
+                elif _sev == "INFO":
+                    info.append(entry)
                 else:
                     proven.append(entry)
 
@@ -291,6 +296,7 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
                 "proven": proven,
                 "errors": errors,
                 "warnings": warnings,
+                "info": info,
                 "total_checks": len(ver_result.items),
             }
 
