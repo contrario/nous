@@ -727,6 +727,7 @@ class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
 
     codegen_sha256: Optional[str] = Field(default=None)  # __s156_u2_cert_codegen_field_v1__
     codegen_binding_ok: bool = True  # __s156_u2_cert_codegen_binding_ok__
+    obligations_canon: Optional[str] = Field(default=None)  # __s187b_1a_cert_obligations_canon_field_v1__
     signature: Optional[CertificateSignature] = Field(default=None)
     transparency_log: Optional[dict] = Field(  # __nous_conformance_cert_anchor_v1__
         default=None
@@ -751,6 +752,8 @@ class ConformanceCertificate(BaseModel):  # __nous_conformance_certificate_v1__
         if self.certificate_schema_version < 4:  # __s156_u2_canon_method_gate_v1__
             doc.pop("codegen_sha256", None)
             doc.pop("codegen_binding_ok", None)
+        if doc.get("obligations_canon") is None:  # __s187b_1a_canon_drop_none_method_v1__
+            doc.pop("obligations_canon", None)
         return _json_cert.dumps(
             doc, sort_keys=True, separators=(",", ":")
         ).encode("utf-8")
@@ -768,6 +771,7 @@ def build_certificate(  # __nous_conformance_certificate_v1__
     *,
     nous_version: str,
     issued_utc: str,
+    obligations_canon: Optional[str] = None,  # __s187b_1a_build_cert_arg_v1__
 ) -> ConformanceCertificate:
     """Record a computed ConformanceDetail as an unsigned certificate.
 
@@ -802,6 +806,7 @@ def build_certificate(  # __nous_conformance_certificate_v1__
         provider_token_integrity=detail.provider_token_integrity,
         codegen_sha256=manifest.codegen_sha256,  # __s156_u3_build_cert_codegen_v1__
         codegen_binding_ok=detail.codegen_binding_ok,
+        obligations_canon=obligations_canon,  # __s187b_1a_build_cert_set_v1__
     )
 
 
@@ -841,6 +846,7 @@ def sign_certificate(  # __nous_conformance_certificate_v1__
         provider_token_integrity=cert.provider_token_integrity,
         codegen_sha256=cert.codegen_sha256,  # __s156_u2_sign_reconstruct_v1__
         codegen_binding_ok=cert.codegen_binding_ok,
+        obligations_canon=cert.obligations_canon,  # __s187b_1a_sign_reconstruct_v1__
         transparency_log=cert.transparency_log,  # __nous_conformance_cert_anchor_v1__
         signature=sig,
     )
@@ -873,6 +879,8 @@ def certificate_json(cert: ConformanceCertificate) -> str:  # __nous_conformance
         doc.pop("signature", None)
     if doc.get("transparency_log") is None:  # __nous_conformance_cert_anchor_v1__
         doc.pop("transparency_log", None)
+    if doc.get("obligations_canon") is None:  # __s187b_1a_cert_json_drop_none_v1__
+        doc.pop("obligations_canon", None)
     if cert.certificate_schema_version < 2:  # __phase2_stage5b_cert_v1__
         doc.pop("sequence_ok", None)
     if cert.certificate_schema_version < 4:  # __s156_u2_cert_json_gate_v1__
@@ -1014,6 +1022,8 @@ def _cert_canonical_body_bytes_dict(doc: dict) -> bytes:
     if int(body.get("certificate_schema_version", 1)) < 4:  # __s156_u2_canon_dict_gate_v1__
         body.pop("codegen_sha256", None)
         body.pop("codegen_binding_ok", None)
+    if body.get("obligations_canon") is None:  # __s187b_1a_canon_drop_none_dict_v1__
+        body.pop("obligations_canon", None)
     return _json.dumps(
         body, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")

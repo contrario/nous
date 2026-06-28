@@ -141,6 +141,14 @@ def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
         "--anchor", metavar="MODE", default=None, choices=["rekor_v2"],
         help="anchor the certificate in a transparency log (S97 step 5)",
     )
+    c.add_argument(
+        "--emit-obligations-canon", action="store_true",  # __s187b_1a_cli_flag_v1__
+        help=(
+            "embed the governing spec canonical preimage (obligations_canon) "
+            "as a root-committed cert field for governance-change "
+            "attestation; off by default to keep certificates byte-identical"
+        ),
+    )
 
 
 def _load_aprs(  # __s145_u4b_loader_v1__
@@ -257,9 +265,12 @@ def _cmd_certify(args: argparse.Namespace) -> int:  # __nous_cli_conformance_cer
     priv, _pub, _key_path = load_or_create_keypair(
         Path(args.key_path) if args.key_path else None
     )
+    _ob_canon = (_spec.canonical_str()  # __s187b_1a_cli_pass_canon_v1__
+                 if getattr(args, "emit_obligations_canon", False) else None)
     cert = build_certificate(
         detail, trace, manifest,
         nous_version=_NOUS_VERSION, issued_utc=issued,
+        obligations_canon=_ob_canon,
     )
     signed = sign_certificate(cert, priv)
 

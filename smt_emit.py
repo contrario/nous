@@ -177,7 +177,7 @@ class SMTSpec:
         lines.append("(check-sat)")
         return "\n".join(lines) + "\n"
 
-    def sha256(self) -> str:
+    def canonical_str(self) -> str:  # __s187b_1a_canonical_str_v1__
         canonical: list[str] = []
         canonical.append(f"NV:{self.nous_version}")
         canonical.append(f"EV:{self.smt_emit_version}")
@@ -207,7 +207,10 @@ class SMTSpec:
             canonical.append(f"GA:{a}")
         for a, k in self.gated_quorums:  # __s153_u2_3_gated_quorums_v1__
             canonical.append(f"GQ:{a}:{k}")
-        encoded: bytes = "\n".join(canonical).encode("utf-8")
+        return "\n".join(canonical)
+
+    def sha256(self) -> str:  # __s187b_1a_sha256_calls_canonical_v1__
+        encoded: bytes = self.canonical_str().encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()
 
     def serialize_coverage(self) -> Optional[str]:  # __policy_coverage_spec_v1__
