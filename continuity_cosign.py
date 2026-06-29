@@ -281,3 +281,209 @@ def append_cosignature(
         "raw_pub_b64": base64.b64encode(raw_pub).decode("ascii"),
         "note_path": str(note_path),
     }
+
+
+# --- ML-DSA-44 (C2SP 0x06) cosignature -----------------------------------
+# __s189_mldsa_cosign_v1__
+# Additive and availability-gated. ML-DSA requires cryptography >= 49 built
+# against a PQC-enabled OpenSSL; Server A on 46.x does not have it, so these
+# functions raise CosignatureError there and the Ed25519 leg above is
+# unaffected. An 0x06 line is ignored (not fatal) by the Ed25519 verifier
+# because its key id will not match cosig_key_id (0x04). The ML-DSA-44 signed
+# message is a structured cosigned_message (NOT the Ed25519 text message); it
+# binds the cosigner name, the log origin, the tree size, and the root hash.
+# No external known-answer vector is published for this struct; its byte layout
+# is pinned by tests/test_s189_mldsa_cosign.py against a hand-computed vector
+# derived from the c2sp.org/tlog-cosignature example checkpoint.
+
+_MLDSA_SIG_TYPE: bytes = b"\x06"
+_MLDSA_PUB_LEN: int = 1312
+_MLDSA_SIG_LEN: int = 2420
+_MLDSA_LABEL: bytes = b"subtree/v1\n\x00"
+_MLDSA_PAYLOAD_LEN: int = _TS_LEN + _MLDSA_SIG_LEN
+_SHA256_HASH_LEN: int = 32
+
+
+def _load_mldsa():
+    try:
+        from cryptography.hazmat.primitives.asymmetric import mldsa
+    except ImportError as exc:
+        raise CosignatureError(
+            "ML-DSA-44 cosignatures require cryptography >= 49 built against a "
+            "PQC-enabled OpenSSL; the mldsa module is unavailable: " + str(exc)
+        )
+    return mldsa
+
+
+def _mldsa_raw_public_bytes(public_key) -> bytes:
+    raw = public_key.public_bytes_raw()
+    if len(raw) != _MLDSA_PUB_LEN:
+        raise CosignatureError(
+            "ML-DSA-44 public key is " + str(len(raw)) + " bytes, expected "
+            + str(_MLDSA_PUB_LEN)
+        )
+    return raw
+
+
+def mldsa_cosig_key_id(cosigner_name: str, public_key) -> bytes:
+    """C2SP tlog-cosignature key id for an ML-DSA-44 cosigner (4 bytes).
+
+    SHA-256(name || 0x0a || 0x06 || 1312-byte raw public key)[:4]. Unlike the
+    Ed25519 type, the ML-DSA-44 signed message also commits the name, so the
+    name binding is enforced both here and in the signed message.
+    """
+    _validate_cosigner_name(cosigner_name)
+    raw = _mldsa_raw_public_bytes(public_key)
+    digest = hashlib.sha256(
+        cosigner_name.encode("utf-8") + b"\x0a" + _MLDSA_SIG_TYPE + raw
+    ).digest()
+    return digest[:4]
+
+
+def mldsa_cosigned_message(
+    cosigner_name: str,
+    timestamp: int,
+    log_origin: str,
+    tree_size: int,
+    root_hash: bytes,
+) -> bytes:
+    """The exact bytes an ML-DSA-44 checkpoint cosignature signs.
+
+    The cosigned_message struct (c2sp.org/tlog-cosignature), with start fixed
+    to 0 and end to the tree size (a checkpoint is a subtree over [0, size)):
+
+        uint8 label[12] = "subtree/v1\\n\\0"
+        opaque cosigner_name<1..255>
+        uint64 timestamp        (big-endian)
+        opaque log_origin<1..255>
+        uint64 start = 0        (big-endian)
+        uint64 end = tree_size  (big-endian)
+        uint8 hash[32]
+    """
+    _validate_cosigner_name(cosigner_name)
+    _validate_timestamp(timestamp)
+    name_b = cosigner_name.encode("utf-8")
+    origin_b = log_origin.encode("utf-8")
+    if not 1 <= len(name_b) <= 255:
+        raise CosignatureError(
+            "cosigner name length out of range 1..255: " + str(len(name_b))
+        )
+    if not 1 <= len(origin_b) <= 255:
+        raise CosignatureError(
+            "log origin length out of range 1..255: " + str(len(origin_b))
+        )
+    if not isinstance(root_hash, bytes) or len(root_hash) != _SHA256_HASH_LEN:
+        got = len(root_hash) if isinstance(root_hash, bytes) else type(root_hash).__name__
+        raise CosignatureError("root hash must be 32 bytes, got " + str(got))
+    if not isinstance(tree_size, int) or tree_size < 0 or tree_size > _MAX_TIMESTAMP:
+        raise CosignatureError("tree size out of range: " + repr(tree_size))
+    return (
+        _MLDSA_LABEL
+        + bytes([len(name_b)]) + name_b
+        + timestamp.to_bytes(_TS_LEN, "big")
+        + bytes([len(origin_b)]) + origin_b
+        + (0).to_bytes(_TS_LEN, "big")
+        + tree_size.to_bytes(_TS_LEN, "big")
+        + root_hash
+    )
+
+
+def build_mldsa_cosignature_line(
+    checkpoint,
+    cosigner_name: str,
+    private_key,
+    timestamp: int,
+) -> str:
+    """Build one C2SP ML-DSA-44 cosignature note signature line (no trailing
+    LF). checkpoint is a parsed rekor_checkpoint.Checkpoint. Raises
+    CosignatureError if the mldsa backend is unavailable."""
+    mldsa = _load_mldsa()
+    if not isinstance(private_key, mldsa.MLDSA44PrivateKey):
+        raise CosignatureError(
+            "private_key is not an ML-DSA-44 private key: "
+            + type(private_key).__name__
+        )
+    _validate_cosigner_name(cosigner_name)
+    _validate_timestamp(timestamp)
+    public_key = private_key.public_key()
+    key_id = mldsa_cosig_key_id(cosigner_name, public_key)
+    message = mldsa_cosigned_message(
+        cosigner_name,
+        timestamp,
+        checkpoint.origin,
+        checkpoint.tree_size,
+        checkpoint.root_hash,
+    )
+    signature = private_key.sign(message)
+    if len(signature) != _MLDSA_SIG_LEN:
+        raise CosignatureError(
+            "internal: ML-DSA-44 signature is not " + str(_MLDSA_SIG_LEN)
+            + " bytes"
+        )
+    payload = timestamp.to_bytes(_TS_LEN, "big") + signature
+    blob = base64.b64encode(key_id + payload).decode("ascii")
+    return _SIG_LINE_PREFIX + cosigner_name + " " + blob
+
+
+def verify_mldsa_cosignature_entry(
+    checkpoint,
+    cosigner_name: str,
+    public_key,
+    line_key_name: str,
+    line_key_id: bytes,
+    line_payload: bytes,
+) -> bool:
+    """Verify one parsed signature entry as an ML-DSA-44 cosignature from the
+    pinned (cosigner_name, public_key) over the checkpoint. Returns False
+    (never raises on a non-match) so an unknown, Ed25519, or operator line is
+    ignored, not fatal."""
+    if line_key_name != cosigner_name:
+        return False
+    try:
+        expected_id = mldsa_cosig_key_id(cosigner_name, public_key)
+    except CosignatureError:
+        return False
+    if line_key_id != expected_id:
+        return False
+    if len(line_payload) != _MLDSA_PAYLOAD_LEN:
+        return False
+    timestamp = int.from_bytes(line_payload[:_TS_LEN], "big")
+    if timestamp <= 0 or timestamp > _MAX_TIMESTAMP:
+        return False
+    try:
+        message = mldsa_cosigned_message(
+            cosigner_name,
+            timestamp,
+            checkpoint.origin,
+            checkpoint.tree_size,
+            checkpoint.root_hash,
+        )
+    except CosignatureError:
+        return False
+    try:
+        public_key.verify(line_payload[_TS_LEN:], message)
+    except InvalidSignature:
+        return False
+    return True
+
+
+def count_verified_mldsa_cosignatures(
+    envelope: str,
+    cosigner_name: str,
+    public_key,
+) -> int:
+    """Parse a checkpoint envelope and count verifying ML-DSA-44 cosignatures
+    from the pinned (cosigner_name, public_key)."""
+    checkpoint = parse_checkpoint(envelope)
+    count = 0
+    for sig in checkpoint.signatures:
+        if verify_mldsa_cosignature_entry(
+            checkpoint,
+            cosigner_name,
+            public_key,
+            sig.key_name,
+            sig.key_id,
+            sig.signature,
+        ):
+            count += 1
+    return count
