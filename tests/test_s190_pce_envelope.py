@@ -226,3 +226,130 @@ class TestLiveBlobParity:
         assert blob is not None
         assert blob["weakened"] == mine["weakened"]
         assert blob["strengthened"] == mine["strengthened"]
+
+
+# ===== Inc 2: cumulative path invariant ==================================
+from envelope import CumulativeResult, decide_cumulative
+
+
+def _cum_env_doc(drift_budget: int = 1) -> dict:
+    d = _min_env_doc()
+    d["cumulative"] = {
+        "SA": {"mutable": False},
+        "GA": {"total_removable": ["transfer"], "total_addable": None},
+        "GQ": {"quorum_drift_budget": {"approve": drift_budget}},
+    }
+    return d
+
+
+def _canon(ga: list[str], gq: dict[str, int], sa: list[str]) -> str:
+    lines = ["NV:5", "EV:1", _SS]
+    lines += [f"GA:{a}" for a in ga]
+    lines += [f"GQ:{a}:{k}" for a, k in gq.items()]
+    lines += [f"SA:{s}" for s in sa]
+    return "\n".join(lines)
+
+
+class TestCumulativeDecider:
+    def test_requires_cumulative_block(self) -> None:
+        env = parse_envelope(_min_env_doc())  # per_step only
+        with pytest.raises(EnvelopeError, match="no cumulative envelope"):
+            decide_cumulative(env, _CANON_A, _CANON_WEAK)
+
+    def test_single_step_within_budget(self) -> None:
+        # 3->2, budget 1 -> WITHIN
+        env = parse_envelope(_cum_env_doc(drift_budget=1))
+        r = decide_cumulative(env, _CANON_A, _CANON_WEAK)
+        assert isinstance(r, CumulativeResult)
+        assert r.within is True, r.breakouts
+
+    def test_salami_composed_exceeds_budget(self) -> None:
+        # THE salami case: baseline quorum 3, current quorum 0 after many
+        # individually-small steps. Composed drift |3-0|=3 > budget 1 -> OUTSIDE.
+        env = parse_envelope(_cum_env_doc(drift_budget=1))
+        baseline = _canon(["approve", "transfer"], {"approve": 3}, ["before(submit,approve)"])
+        current = _canon(["approve", "transfer"], {"approve": 0}, ["before(submit,approve)"])
+        r = decide_cumulative(env, baseline, current)
+        assert r.within is False
+        assert any("cumulative drift 3 > budget 1" in b for b in r.breakouts)
+
+    def test_oscillation_is_not_launderable(self) -> None:
+        # baseline 3; current back at 3 after any oscillation -> drift 0 -> WITHIN.
+        # Demonstrates non-launderability: measured against the FIXED baseline,
+        # oscillation cannot accumulate.
+        env = parse_envelope(_cum_env_doc(drift_budget=1))
+        baseline = _canon(["approve", "transfer"], {"approve": 3}, ["before(submit,approve)"])
+        current = _canon(["approve", "transfer"], {"approve": 3}, ["before(submit,approve)"])
+        r = decide_cumulative(env, baseline, current)
+        assert r.within is True
+        assert r.composed_weakened == ()
+        assert r.composed_strengthened == ()
+
+    def test_cumulative_ga_removal_within_declared_set(self) -> None:
+        env = parse_envelope(_cum_env_doc())
+        baseline = _canon(["approve", "transfer"], {"approve": 3}, ["before(submit,approve)"])
+        current = _canon(["approve"], {"approve": 3}, ["before(submit,approve)"])  # transfer removed
+        r = decide_cumulative(env, baseline, current)
+        assert r.within is True, r.breakouts  # transfer is in total_removable
+
+    def test_cumulative_ga_removal_outside_declared_set(self) -> None:
+        env = parse_envelope(_cum_env_doc())
+        baseline = _canon(["approve", "transfer"], {"approve": 3}, ["before(submit,approve)"])
+        current = _canon(["transfer"], {"approve": 3}, ["before(submit,approve)"])  # approve removed
+        r = decide_cumulative(env, baseline, current)
+        assert r.within is False
+        assert any("GA removed: approve" in b and "not in cumulative removable" in b for b in r.breakouts)
+
+    def test_cumulative_sa_immutable(self) -> None:
+        env = parse_envelope(_cum_env_doc())
+        baseline = _canon(["approve"], {"approve": 3}, ["before(submit,approve)"])
+        current = _canon(["approve"], {"approve": 3}, ["after(approve,submit)"])
+        r = decide_cumulative(env, baseline, current)
+        assert r.within is False
+        assert any("SA removed: before(submit,approve)" in b for b in r.breakouts)
+        assert any("SA added: after(approve,submit)" in b for b in r.breakouts)
+
+    def test_cumulative_gq_removal_drops_gate(self) -> None:
+        env = parse_envelope(_cum_env_doc())
+        baseline = _canon(["approve"], {"approve": 3}, [])
+        current = _canon(["approve"], {}, [])  # GQ approve removed entirely
+        r = decide_cumulative(env, baseline, current)
+        assert r.within is False
+        assert any("GQ removed: approve" in b and "drops an oversight gate" in b for b in r.breakouts)
+
+    def test_strengthening_drift_also_bounded(self) -> None:
+        # 3->5, budget 1: even a strengthening beyond budget is flagged
+        # (over-restriction can change intended purpose, Art 3(23)).
+        env = parse_envelope(_cum_env_doc(drift_budget=1))
+        baseline = _canon(["approve"], {"approve": 3}, [])
+        current = _canon(["approve"], {"approve": 5}, [])
+        r = decide_cumulative(env, baseline, current)
+        assert r.within is False
+        assert any("cumulative drift 2 > budget 1" in b for b in r.breakouts)
+
+    def test_drift_within_budget_passes(self) -> None:
+        env = parse_envelope(_cum_env_doc(drift_budget=2))
+        baseline = _canon(["approve"], {"approve": 3}, [])
+        current = _canon(["approve"], {"approve": 1}, [])  # drift 2 == budget 2
+        r = decide_cumulative(env, baseline, current)
+        assert r.within is True, r.breakouts
+
+    def test_per_step_passes_but_cumulative_catches(self) -> None:
+        # The synthesis: a step that per-step admits (3->2, within [2,inf],
+        # budget1 ok at one step) but where the COMPOSED baseline->current
+        # (3->1, two such steps) breaks the cumulative budget. Same envelope.
+        env = parse_envelope(_cum_env_doc(drift_budget=1))
+        # per-step on the final hop 2->1: within [2,inf]? 1 < 2 -> per-step also
+        # catches here; choose bounds where per-step passes but cumulative fails:
+        env2_doc = _cum_env_doc(drift_budget=1)
+        env2_doc["per_step"]["GQ"]["quorum_bounds"]["approve"] = {"min": 1, "max": None}
+        env2 = parse_envelope(env2_doc)
+        # hop 2->1 per-step: 1 >= min 1 -> WITHIN per-step
+        per = decide_per_step(env2, _canon(["approve"], {"approve": 2}, []),
+                              _canon(["approve"], {"approve": 1}, []))
+        assert per.within is True
+        # composed 3->1: drift 2 > budget 1 -> OUTSIDE cumulative
+        cum = decide_cumulative(env2, _canon(["approve"], {"approve": 3}, []),
+                                _canon(["approve"], {"approve": 1}, []))
+        assert cum.within is False
+        assert any("cumulative drift 2 > budget 1" in b for b in cum.breakouts)

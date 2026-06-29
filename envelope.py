@@ -384,3 +384,112 @@ def decide_per_step(env: Envelope, prior_canon: str, current_canon: str) -> Memb
         weakened=weak,
         strengthened=strong,
     )
+
+
+# --------------------------------------------------------------------------
+# Cumulative path invariant (Inc 2): the salami-laundering defence.
+#
+# The composed delta is measured against the PRE-COMMITTED baseline_canon
+# (PCE.baseline_canon_sha256), not the previous step. Drift = |current vs
+# baseline|. Because the reference is FIXED, oscillating per-step changes
+# cannot accumulate: no build's endpoint can exceed budget D from baseline
+# without that build's own cumulative check failing. Salami is defeated by
+# construction, not detected heuristically.
+#
+# Endpoint comparison is O(1) in chain length; the S120 prior_digest chain
+# (verified separately by the dossier) proves current descends from the
+# baseline-committing build. PROVES tier: set ops + integer drift bound;
+# fails closed on any composed transition the cumulative envelope does not
+# explicitly admit.
+# --------------------------------------------------------------------------
+@dataclass(frozen=True)
+class CumulativeResult:
+    within: bool
+    breakouts: tuple[str, ...]            # composed transitions outside the cumulative envelope
+    composed_weakened: tuple[str, ...]
+    composed_strengthened: tuple[str, ...]
+
+
+def _gq_quorum_pair(transition: str) -> Optional[tuple[int, int]]:
+    # "GQ <action> quorum X->Y" -> (X, Y)
+    if " quorum " not in transition or "->" not in transition:
+        return None
+    try:
+        tail = transition.split(" quorum ", 1)[1]
+        prev_s, cur_s = tail.split("->", 1)
+        return int(prev_s), int(cur_s)
+    except ValueError:
+        return None
+
+
+def decide_cumulative(
+    env: Envelope, baseline_canon: str, current_canon: str
+) -> CumulativeResult:
+    """Decide whether the composed baseline->current delta is within
+    env.cumulative. Raises if no cumulative envelope was declared."""
+    if env.cumulative is None:
+        raise EnvelopeError(
+            "no cumulative envelope declared; cannot decide cumulative membership "
+            "(the envelope carries per_step only)"
+        )
+    cum = env.cumulative
+    delta = diff_obligations(baseline_canon, current_canon)
+    weak = tuple(delta["weakened"])
+    strong = tuple(delta["strengthened"])
+    breakouts: list[str] = []
+
+    # SA: cumulatively immutable unless declared mutable.
+    for t in weak + strong:
+        if t.startswith("SA removed: ") or t.startswith("SA added: "):
+            if not cum.sa_mutable:
+                breakouts.append(t + " (SA cumulatively immutable)")
+
+    # GA: composed removals must lie in total_removable; additions in
+    # total_addable (None addable => unbounded additions admissible, since
+    # adding a gated action strengthens oversight).
+    for t in weak:
+        if t.startswith("GA removed: "):
+            action = t[len("GA removed: "):]
+            if cum.ga_total_removable is None or action not in cum.ga_total_removable:
+                breakouts.append(t + " (GA removal not in cumulative removable set)")
+    for t in strong:
+        if t.startswith("GA added: "):
+            action = t[len("GA added: "):]
+            if cum.ga_total_addable is not None and action not in cum.ga_total_addable:
+                breakouts.append(t + " (GA addition not in cumulative addable set)")
+
+    # GQ: a gated-quorum action removed cumulatively drops an oversight gate
+    # (weakening); not admissible (no cumulative provision admits it).
+    for t in weak:
+        if t.startswith("GQ removed: "):
+            breakouts.append(t + " (cumulative GQ removal drops an oversight gate)")
+    # GQ added cumulatively strengthens; admissible by default.
+
+    # GQ quorum drift (action present in both): |Y-X| <= budget. Checked in
+    # BOTH directions -- a large strengthening can change intended purpose,
+    # which Art 3(23) also keys on.
+    for t in weak + strong:
+        if t.startswith("GQ ") and " quorum " in t:
+            action = _gq_action_of(t)
+            pair = _gq_quorum_pair(t)
+            if action is None or pair is None:
+                breakouts.append(t + " (uninterpretable cumulative quorum drift)")
+                continue
+            prev_q, cur_q = pair
+            drift = abs(cur_q - prev_q)
+            budget = cum.gq_quorum_drift_budget.get(action)
+            if budget is None:
+                breakouts.append(
+                    t + f" (cumulative drift {drift}; no drift budget declared for {action})"
+                )
+            elif drift > budget:
+                breakouts.append(
+                    t + f" (cumulative drift {drift} > budget {budget})"
+                )
+
+    return CumulativeResult(
+        within=(len(breakouts) == 0),
+        breakouts=tuple(breakouts),
+        composed_weakened=weak,
+        composed_strengthened=strong,
+    )
