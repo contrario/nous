@@ -286,6 +286,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "cli_continuity.py",  # __s177_p1_cli_continuity_wheelgate_v1__
                                 "continuity_checkpoint.py",  # __s178_p1_continuity_checkpoint_wheelgate_v1__
                                 "continuity_cosign.py",  # __s179_p1_continuity_cosign_wheelgate_v1__
+                                "envelope.py",  # __s190_pce_envelope_wheelgate_v1__
                                 "annex_iv_map.py"]  # __s135_annex_iv_map_wheelgate_v1__  # __s105_compiled_trace_wheelgate_v1__ __s105_trace_anchor_wheelgate_v1__ __s105_memory_entry_wheelgate_v1__ __s105_memory_keyring_wheelgate_v1__ __s105_memory_store_wheelgate_v1__ __s105_memory_index_wheelgate_v1__  # __phase2_stage6_wheelgate_v1__
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
