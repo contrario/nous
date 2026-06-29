@@ -1,6 +1,6 @@
 # =====================================================================
 # NOUS Pricing Table -- defaults.toml
-# Schema version 2.0 | Last verified 2026-04-28
+# Schema version 2.0 | Last verified 2026-06-29
 # =====================================================================
 #
 # This file declares the per-token cost of each LLM model that
@@ -34,7 +34,7 @@
 
 _schema_version = "2.0"
 _source_url     = "https://www.digitalapplied.com/blog/llm-api-pricing-index-q2-2026-cost-per-token"
-_last_verified  = "2026-04-28"
+_last_verified  = "2026-06-29"
 _currency       = "USD"
 
 
