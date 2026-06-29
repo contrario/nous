@@ -396,6 +396,41 @@ _ATTRIBUTION_CHECK_EMBED: str = '''def _check_attribution(manifest, ROOT):
 '''
 
 
+_PCE_CHECK_EMBED: str = 'def _pce_parse_canon(canon):\n    _sa = set()\n    _ga = set()\n    _gq = {}\n    for ln in canon.split("\\n"):\n        if ln.startswith("SA:"):\n            _sa.add(ln[3:])\n        elif ln.startswith("GA:"):\n            _ga.add(ln[3:])\n        elif ln.startswith("GQ:"):\n            parts = ln[3:].rsplit(":", 1)\n            if len(parts) == 2:\n                _gq[parts[0]] = parts[1]\n    return _sa, _ga, _gq\n\n\ndef _pce_diff_obligations(prior_canon, current_canon):\n    psa, pga, pgq = _pce_parse_canon(prior_canon)\n    csa, cga, cgq = _pce_parse_canon(current_canon)\n    weak = []\n    strong = []\n    for x in sorted(psa - csa):\n        weak.append("SA removed: " + x)\n    for x in sorted(csa - psa):\n        strong.append("SA added: " + x)\n    for x in sorted(pga - cga):\n        weak.append("GA removed: " + x)\n    for x in sorted(cga - pga):\n        strong.append("GA added: " + x)\n    for a in sorted(set(pgq) - set(cgq)):\n        weak.append("GQ removed: " + a)\n    for a in sorted(set(cgq) - set(pgq)):\n        strong.append("GQ added: " + a + ":" + cgq[a])\n    for a in sorted(set(pgq) & set(cgq)):\n        if pgq[a] != cgq[a]:\n            try:\n                dlt = int(cgq[a]) - int(pgq[a])\n            except ValueError:\n                dlt = 0\n            msg = "GQ " + a + " quorum " + pgq[a] + "->" + cgq[a]\n            if dlt < 0:\n                weak.append(msg)\n            else:\n                strong.append(msg)\n    return {"weakened": weak, "strengthened": strong}\n\n\ndef _pce_gq_action_of(transition):\n    if transition.startswith("GQ removed: "):\n        return transition[len("GQ removed: "):]\n    if transition.startswith("GQ added: "):\n        return transition[len("GQ added: "):].rsplit(":", 1)[0]\n    if transition.startswith("GQ ") and " quorum " in transition:\n        return transition[len("GQ "):transition.index(" quorum ")]\n    return None\n\n\ndef _pce_gq_quorum_pair(transition):\n    if " quorum " not in transition or "->" not in transition:\n        return None\n    try:\n        tail = transition.split(" quorum ", 1)[1]\n        prev_s, cur_s = tail.split("->", 1)\n        return int(prev_s), int(cur_s)\n    except ValueError:\n        return None\n\n\nclass _PCEError(ValueError):\n    pass\n\n\ndef _pce_extract_cumulative(pce_doc):\n    # Validate the PCE document enough to fail closed, and extract the\n    # cumulative rules byte-faithfully to envelope.parse_envelope. Raises\n    # _PCEError on any malformation. Returns a dict of cumulative rules,\n    # or None if the PCE carries no cumulative dimension.\n    if not isinstance(pce_doc, dict):\n        raise _PCEError("pce.json is not a JSON object")\n    if pce_doc.get("pce_schema_version") != 1:\n        raise _PCEError(\n            "unsupported pce_schema_version "\n            + repr(pce_doc.get("pce_schema_version")) + "; expected 1"\n        )\n    basis = pce_doc.get("basis")\n    if not isinstance(basis, str) or (\n        "not a legal substantiality determination" not in basis\n    ):\n        raise _PCEError(\n            "pce.json basis missing or does not disclaim substantiality "\n            "(must contain \'not a legal substantiality determination\'); "\n            "refusing to present membership as a legal determination"\n        )\n    base_sha = pce_doc.get("baseline_canon_sha256")\n    if not isinstance(base_sha, str) or len(base_sha) != 64 or any(\n        c not in "0123456789abcdef" for c in base_sha\n    ):\n        raise _PCEError("pce.json baseline_canon_sha256 is not a 64-hex sha256")\n    ps = pce_doc.get("per_step")\n    if not isinstance(ps, dict):\n        raise _PCEError("pce.json per_step is missing or not an object")\n    ps_sa = ps.get("SA")\n    if not isinstance(ps_sa, dict) or not isinstance(ps_sa.get("mutable"), bool):\n        raise _PCEError("pce.json per_step.SA.mutable must be a bool")\n    per_step_sa_mutable = ps_sa.get("mutable")\n    cum = pce_doc.get("cumulative")\n    if cum is None:\n        return None\n    if not isinstance(cum, dict):\n        raise _PCEError("pce.json cumulative must be an object or absent")\n    c_sa = cum.get("SA", {})\n    c_ga = cum.get("GA", {})\n    c_gq = cum.get("GQ", {})\n    if not isinstance(c_sa, dict) or not isinstance(c_ga, dict) or not isinstance(c_gq, dict):\n        raise _PCEError("pce.json cumulative.SA/GA/GQ must each be objects")\n    sa_mutable = bool(c_sa.get("mutable", per_step_sa_mutable))\n    c_rm = c_ga.get("total_removable")\n    c_ad = c_ga.get("total_addable")\n    if c_rm is not None and (\n        not isinstance(c_rm, list) or any(not isinstance(x, str) for x in c_rm)\n    ):\n        raise _PCEError("cumulative.GA.total_removable must be list of strings or null")\n    if c_ad is not None and (\n        not isinstance(c_ad, list) or any(not isinstance(x, str) for x in c_ad)\n    ):\n        raise _PCEError("cumulative.GA.total_addable must be list of strings or null")\n    budget_raw = c_gq.get("quorum_drift_budget", {})\n    if not isinstance(budget_raw, dict):\n        raise _PCEError("cumulative.GQ.quorum_drift_budget must be an object")\n    budget = {}\n    for a, v in budget_raw.items():\n        if not isinstance(a, str) or not isinstance(v, int) or isinstance(v, bool) or v < 0:\n            raise _PCEError(\n                "cumulative.GQ.quorum_drift_budget values must be non-negative ints"\n            )\n        budget[a] = v\n    return {\n        "sa_mutable": sa_mutable,\n        "ga_total_removable": (frozenset(c_rm) if c_rm is not None else None),\n        "ga_total_addable": (frozenset(c_ad) if c_ad is not None else None),\n        "gq_quorum_drift_budget": budget,\n    }\n\n\ndef _pce_decide(pce_doc, baseline_canon, current_canon):\n    # Pure cumulative membership decision. Returns\n    # (verdict, breakouts, weakened, strengthened) where verdict is\n    # "WITHIN" | "OUTSIDE" | "NO_CUMULATIVE". Faithful port of\n    # envelope.decide_cumulative (parity asserted by the committed test\n    # against the installed envelope module).\n    cum = _pce_extract_cumulative(pce_doc)\n    delta = _pce_diff_obligations(baseline_canon, current_canon)\n    weak = list(delta["weakened"])\n    strong = list(delta["strengthened"])\n    if cum is None:\n        return ("NO_CUMULATIVE", [], weak, strong)\n    breakouts = []\n    for t in weak + strong:\n        if t.startswith("SA removed: ") or t.startswith("SA added: "):\n            if not cum["sa_mutable"]:\n                breakouts.append(t + " (SA cumulatively immutable)")\n    for t in weak:\n        if t.startswith("GA removed: "):\n            action = t[len("GA removed: "):]\n            if cum["ga_total_removable"] is None or action not in cum["ga_total_removable"]:\n                breakouts.append(t + " (GA removal not in cumulative removable set)")\n    for t in strong:\n        if t.startswith("GA added: "):\n            action = t[len("GA added: "):]\n            if cum["ga_total_addable"] is not None and action not in cum["ga_total_addable"]:\n                breakouts.append(t + " (GA addition not in cumulative addable set)")\n    for t in weak:\n        if t.startswith("GQ removed: "):\n            breakouts.append(t + " (cumulative GQ removal drops an oversight gate)")\n    for t in weak + strong:\n        if t.startswith("GQ ") and " quorum " in t:\n            action = _pce_gq_action_of(t)\n            pair = _pce_gq_quorum_pair(t)\n            if action is None or pair is None:\n                breakouts.append(t + " (uninterpretable cumulative quorum drift)")\n                continue\n            prev_q, cur_q = pair\n            drift = abs(cur_q - prev_q)\n            budget = cum["gq_quorum_drift_budget"].get(action)\n            if budget is None:\n                breakouts.append(\n                    t + " (cumulative drift " + str(drift)\n                    + "; no drift budget declared for " + action + ")"\n                )\n            elif drift > budget:\n                breakouts.append(\n                    t + " (cumulative drift " + str(drift) + " > budget "\n                    + str(budget) + ")"\n                )\n    verdict = "WITHIN" if len(breakouts) == 0 else "OUTSIDE"\n    return (verdict, breakouts, weak, strong)\n\n\ndef _check_pce(manifest, ROOT):\n    # __s190_pce_embed_v1__ Predetermined-Change Envelope (Art 43(4) /\n    # Annex IV 2(f)) cumulative-membership evidence. MONITOR, NOT GATE:\n    # returns 0 on WITHIN and on OUTSIDE; non-zero ONLY on integrity\n    # failure (sha mismatch, missing-but-declared sidecar, unparseable\n    # PCE). The verdict never fails the process; only tamper does.\n    import hashlib as _hashlib\n    import json as _json\n    import sys as _sys\n\n    field = manifest.get("pce_sha256")\n    pce_path = ROOT / "pce.json"\n    if field is None:\n        if pce_path.is_file():\n            print(\n                "FAIL: manifest declares no pce_sha256 but a pce.json is "\n                "present (unexpected evidence)",\n                file=_sys.stderr,\n            )\n            return 1\n        return 0\n    if not pce_path.is_file():\n        print(\n            "FAIL: signed manifest declares pce_sha256 but pce.json is "\n            "missing (missing evidence / truncation)",\n            file=_sys.stderr,\n        )\n        return 1\n    pce_bytes = pce_path.read_bytes()\n    if _hashlib.sha256(pce_bytes).hexdigest() != field:\n        print(\n            "FAIL: pce.json sha256 does not match the signed manifest "\n            "pce_sha256 (predetermined-change envelope tampered or "\n            "substituted)",\n            file=_sys.stderr,\n        )\n        return 1\n    try:\n        pce_doc = _json.loads(pce_bytes.decode("utf-8"))\n    except Exception as e:\n        print("FAIL: pce.json parse error: " + str(e), file=_sys.stderr)\n        return 1\n\n    # Current obligations canon: the full SMT-spec canonical preimage,\n    # authenticated by the EXISTING signed smt_spec_sha256 (no new field).\n    smt_field = manifest.get("smt_spec_sha256")\n    spec_canon_path = ROOT / "spec.canon"\n    if not isinstance(smt_field, str) or not smt_field:\n        print(\n            "FAIL: manifest has no smt_spec_sha256; the current obligations "\n            "canon cannot be authenticated",\n            file=_sys.stderr,\n        )\n        return 1\n    if not spec_canon_path.is_file():\n        print(\n            "FAIL: pce evidence present but spec.canon (the current "\n            "obligations canon) is missing (missing evidence / truncation)",\n            file=_sys.stderr,\n        )\n        return 1\n    spec_canon_bytes = spec_canon_path.read_bytes()\n    if _hashlib.sha256(spec_canon_bytes).hexdigest() != smt_field:\n        print(\n            "FAIL: spec.canon sha256 does not match the signed manifest "\n            "smt_spec_sha256 (current obligations canon tampered or "\n            "substituted)",\n            file=_sys.stderr,\n        )\n        return 1\n    current_canon = spec_canon_bytes.decode("utf-8")\n\n    # Baseline obligations canon: sha-gated transitively by the PCE\'s\n    # baseline_canon_sha256 (no manifest field; the PCE is itself sha-gated\n    # by the signed manifest above).\n    base_sha = pce_doc.get("baseline_canon_sha256")\n    if not isinstance(base_sha, str) or len(base_sha) != 64:\n        print(\n            "FAIL: pce.json baseline_canon_sha256 missing or not a 64-hex "\n            "sha256",\n            file=_sys.stderr,\n        )\n        return 1\n    baseline_path = ROOT / "baseline.canon"\n    if not baseline_path.is_file():\n        print(\n            "FAIL: pce.json commits to a baseline obligations canon but "\n            "baseline.canon is missing (missing evidence / truncation)",\n            file=_sys.stderr,\n        )\n        return 1\n    baseline_bytes = baseline_path.read_bytes()\n    if _hashlib.sha256(baseline_bytes).hexdigest() != base_sha:\n        print(\n            "FAIL: baseline.canon sha256 does not match the PCE\'s "\n            "baseline_canon_sha256 (committed baseline canon tampered or "\n            "substituted)",\n            file=_sys.stderr,\n        )\n        return 1\n    baseline_canon = baseline_bytes.decode("utf-8")\n\n    try:\n        verdict, breakouts, weak, strong = _pce_decide(\n            pce_doc, baseline_canon, current_canon\n        )\n    except _PCEError as e:\n        print(\n            "FAIL: predetermined-change envelope malformed: " + str(e),\n            file=_sys.stderr,\n        )\n        return 1\n\n    verdict_obj = {\n        "kind": "pce-cumulative-membership-v1",\n        "verdict": verdict,\n        "breakouts": list(breakouts),\n        "composed_weakened": list(weak),\n        "composed_strengthened": list(strong),\n        "scope": "sa-ga-gq-obligation-subset-of-signed-smt-spec-canon",\n        "temporal_precedence": "declared-but-pending",\n        "basis_disclaimed": True,\n    }\n    print(\n        "OK   predetermined-change envelope authenticated (pce.json + "\n        "baseline.canon + spec.canon sha-gated by the signed manifest)"\n    )\n    print(\n        "     SCOPE: membership decided over the SA/GA/GQ governance-"\n        "obligation subset of the signed SMT-spec canon. The sha-gate "\n        "authenticates the WHOLE spec preimage; the decision reads only "\n        "the obligation subset (it does NOT claim the spec equals the "\n        "obligation set)."\n    )\n    print(\n        "     TEMPORAL: declared-but-pending. This dossier does NOT carry "\n        "the envelope\'s transparency-log / RFC 3161 pre-commitment anchor; "\n        "membership asserts the DECLARED envelope admits this composed "\n        "delta, NOT that the envelope was committed before the change."\n    )\n    if verdict == "NO_CUMULATIVE":\n        print(\n            "NOTE the carried PCE declares per_step only; the cumulative "\n            "(salami) membership determination is not available from this "\n            "dossier. No membership violation is asserted, and none is "\n            "claimed (monitor)."\n        )\n        print(\n            "PCE_VERDICT_JSON: "\n            + _json.dumps(verdict_obj, sort_keys=True, separators=(",", ":"))\n        )\n        return 0\n    if verdict == "WITHIN":\n        print(\n            "OK   PCE verdict: WITHIN. The composed baseline->current "\n            "obligation delta lies inside the cumulative envelope. Under "\n            "Article 43(4) the provider\'s own deduction is: a predetermined "\n            "change, NOT a substantial modification. NOUS surfaces this; "\n            "the notified body adjudicates."\n        )\n    else:\n        print(\n            "INFO PCE verdict: OUTSIDE. The composed delta exits the "\n            "cumulative envelope on the transition(s) below. This is a "\n            "TRUTHFUL detected event, not a process failure (monitor). It "\n            "is potentially a substantial modification; the notified body "\n            "adjudicates. NOUS decides nothing."\n        )\n        for b in breakouts:\n            print("       breakout: " + b)\n    print(\n        "PCE_VERDICT_JSON: "\n        + _json.dumps(verdict_obj, sort_keys=True, separators=(",", ":"))\n    )\n    return 0\n'  # __s190_pce_embed_assign_v1__
+
+
+def _splice_pce_check(verify_src: str) -> str:
+    # __s190_pce_splice_fn_v1__ build-time splice: insert the self-contained
+    # _check_pce function (after the ROOT definition) and a final call into
+    # the SELECTED verifier. Applied only when the dossier carries a PCE, so
+    # verifiers without one stay byte-identical. Composes with the materiality
+    # and attribution splices in any order: distinct insert anchor (ROOT) and
+    # the shared return-0 call anchor that all splices re-emit.
+    anchor = "ROOT = Path(__file__).parent\n"
+    n_root = verify_src.count(anchor)
+    if n_root != 1:
+        raise DossierError(
+            "pce splice: expected exactly one ROOT anchor in the selected "
+            "verifier, found " + str(n_root)
+        )
+    verify_src = verify_src.replace(
+        anchor, anchor + "\n\n" + _PCE_CHECK_EMBED + "\n", 1
+    )
+    call_anchor = "    return 0\n\n\nif __name__ == \"__main__\":"
+    if verify_src.count(call_anchor) != 1:
+        raise DossierError(
+            "pce splice: expected exactly one main-return anchor in the "
+            "selected verifier"
+        )
+    call_block = (
+        "    _rc_pce = _check_pce(manifest, ROOT)\n"
+        "    if _rc_pce != 0:\n"
+        "        return _rc_pce\n"
+        "    return 0\n\n\nif __name__ == \"__main__\":"
+    )
+    return verify_src.replace(call_anchor, call_block, 1)
+
+
 def _splice_attribution_check(verify_src: str) -> str:
     # __s180_splice_fn_v1__ build-time splice: insert the self-contained
     # _check_attribution function (after the ROOT definition) and a final
@@ -590,6 +625,56 @@ def build_dossier(
                 f"{(parsed_manifest.materiality_sha256 or '')[:16]}"
                 f"... (materiality classification tampered or substituted)"
             )
+    pce_bytes = None  # __s190_pce_carry_read_v1__
+    baseline_canon_bytes = None  # __s190_pce_carry_read_v1__
+    spec_canon_bytes = None  # __s190_pce_carry_read_v1__
+    if parsed_manifest.pce_sha256 is not None:  # __s190_pce_carry_read_v1__
+        import hashlib as _pce_hashlib
+        import json as _pce_json
+        if parsed_manifest.source_kind == "gap-witness":  # __s190_gapw_pce_refuse_v1__
+            raise DossierError(
+                "predetermined-change envelope refused on a coverage-gap-"
+                "witness (refutation) dossier: an Article 43(4) change-"
+                "envelope membership over a refutation artifact is incoherent"
+            )
+        pce_src = manifest.parent / "pce.json"
+        if not pce_src.is_file():
+            raise DossierError(
+                "manifest declares a predetermined-change envelope but "
+                "pce.json not found next to manifest: " + str(pce_src)
+            )
+        pce_bytes = pce_src.read_bytes()
+        _pce_file_sha = _pce_hashlib.sha256(pce_bytes).hexdigest()
+        if _pce_file_sha != parsed_manifest.pce_sha256:
+            raise DossierError(
+                "pce.json sha256 mismatch: file=" + _pce_file_sha[:16]
+                + "... manifest=" + (parsed_manifest.pce_sha256 or "")[:16]
+                + "... (predetermined-change envelope tampered or substituted)"
+            )
+        try:
+            _pce_doc = _pce_json.loads(pce_bytes.decode("utf-8"))
+        except Exception as _pce_e:
+            raise DossierError("pce.json parse error: " + str(_pce_e))
+        _pce_base_sha = _pce_doc.get("baseline_canon_sha256")
+        if not isinstance(_pce_base_sha, str) or len(_pce_base_sha) != 64:
+            raise DossierError(
+                "pce.json baseline_canon_sha256 missing or not a 64-hex sha256"
+            )
+        baseline_src = manifest.parent / "baseline.canon"
+        if not baseline_src.is_file():
+            raise DossierError(
+                "pce.json commits to a baseline obligations canon but "
+                "baseline.canon not found next to manifest: " + str(baseline_src)
+            )
+        baseline_canon_bytes = baseline_src.read_bytes()
+        _pce_base_file_sha = _pce_hashlib.sha256(baseline_canon_bytes).hexdigest()
+        if _pce_base_file_sha != _pce_base_sha:
+            raise DossierError(
+                "baseline.canon sha256 mismatch: file=" + _pce_base_file_sha[:16]
+                + "... pce.baseline_canon_sha256=" + _pce_base_sha[:16]
+                + "... (committed baseline canon tampered or substituted)"
+            )
+        spec_canon_bytes = spec.canonical_str().encode("utf-8")
     gap_witness_bytes = None  # __s134_gapw_consume_v1__
     if parsed_manifest.source_kind == "gap-witness":
         _gw_expected = parsed_manifest.gap_witness_sha256
@@ -1094,6 +1179,13 @@ def build_dossier(
     if materiality_bytes is not None:  # __s171_materiality_carry_write_v1__
         (output / "materiality.json").write_bytes(materiality_bytes)
         files.append("materiality.json")
+    if pce_bytes is not None:  # __s190_pce_carry_write_v1__
+        (output / "pce.json").write_bytes(pce_bytes)
+        files.append("pce.json")
+        (output / "baseline.canon").write_bytes(baseline_canon_bytes)
+        files.append("baseline.canon")
+        (output / "spec.canon").write_bytes(spec_canon_bytes)
+        files.append("spec.canon")
     if gap_witness_bytes is not None:  # __s134_gapw_consume_v1__
         (output / "coverage.gapwitness.json").write_bytes(
             gap_witness_bytes
@@ -1176,6 +1268,13 @@ def build_dossier(
     if parsed_manifest.materiality_sha256 is not None:  # __s171_materiality_splice_v1__
         verify_path.write_text(
             _splice_materiality_check(
+                verify_path.read_text(encoding="utf-8")
+            ),
+            encoding="utf-8",
+        )
+    if parsed_manifest.pce_sha256 is not None:  # __s190_pce_splice_v1__
+        verify_path.write_text(
+            _splice_pce_check(
                 verify_path.read_text(encoding="utf-8")
             ),
             encoding="utf-8",
