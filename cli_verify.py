@@ -87,6 +87,17 @@ def cmd_verify(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
+    if (
+        getattr(args, "pce", None) is not None
+        and getattr(args, "gap_witness", False)
+    ):  # __s190_pce_gapw_refuse_v1__
+        print(
+            "REFUSED: --pce is incoherent with --gap-witness (a "
+            "refutation artifact carries no predetermined-change-envelope "
+            "membership). No manifest written.",
+            file=sys.stderr,
+        )
+        return 1
     src_path = Path(args.file)
     if not src_path.is_file():
         print(f"ERROR: file not found: {src_path}", file=sys.stderr)
@@ -338,6 +349,72 @@ def cmd_verify(args: argparse.Namespace) -> int:
             + ": " + _mat_verdict["verdict"]
             + " (sha256 " + _mat_sha[:16] + "...)"
         )
+    pce_against = getattr(args, "pce", None)  # __s190_pce_producer_v1__
+    pce_baseline = getattr(args, "pce_baseline", None)  # __s190_pce_producer_v1__
+    _pce_bytes = None  # __s190_pce_producer_v1__
+    _pce_baseline_bytes = None  # __s190_pce_producer_v1__
+    if pce_against is not None:
+        if pce_baseline is None:
+            print(
+                "REFUSED: --pce requires --pce-baseline (the committed baseline "
+                "obligations canon the envelope binds to). No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        if not Path(pce_against).is_file():
+            print(
+                "REFUSED: --pce file not found: " + str(pce_against)
+                + ". No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        if not Path(pce_baseline).is_file():
+            print(
+                "REFUSED: --pce-baseline file not found: " + str(pce_baseline)
+                + ". No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        import envelope as _envelope_s190
+        _pce_bytes = Path(pce_against).read_bytes()
+        try:
+            _pce_doc_s190 = _json_s116.loads(_pce_bytes.decode("utf-8"))
+        except Exception as _pce_e_s190:
+            print(
+                "REFUSED: --pce file is not valid JSON: " + str(_pce_e_s190)
+                + ". No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        try:
+            _envelope_s190.parse_envelope(_pce_doc_s190)
+        except _envelope_s190.EnvelopeError as _pce_ee_s190:
+            print(
+                "REFUSED: --pce envelope is not well-formed: "
+                + str(_pce_ee_s190) + ". No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        _pce_baseline_bytes = Path(pce_baseline).read_bytes()
+        _pce_baseline_sha = _hashlib_s115.sha256(_pce_baseline_bytes).hexdigest()
+        _pce_committed_base = _pce_doc_s190["baseline_canon_sha256"]
+        if _pce_baseline_sha != _pce_committed_base:
+            print(
+                "REFUSED: --pce-baseline sha256 " + _pce_baseline_sha[:16]
+                + "... does not match the envelope committed "
+                "baseline_canon_sha256 " + _pce_committed_base[:16]
+                + "... No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        _pce_sha_s190 = _hashlib_s115.sha256(_pce_bytes).hexdigest()
+        manifest = _dc_s115.replace(manifest, pce_sha256=_pce_sha_s190)
+        print(
+            "Predetermined-change envelope bound (--pce " + str(pce_against)
+            + "): pce_sha256 " + _pce_sha_s190[:16] + "..."
+            + (" (cumulative)" if _pce_doc_s190.get("cumulative") is not None
+               else " (per-step only)")
+        )
     chain_coverage_mode = getattr(args, "chain_coverage", None)  # __s127_chain_coverage_flag_v1__
     supersedes_path = getattr(args, "supersedes", None)  # __s119_supersedes_producer_v1__
     if chain_coverage_mode == "full" and not supersedes_path:  # __s127_chain_coverage_flag_v1__
@@ -421,6 +498,13 @@ def cmd_verify(args: argparse.Namespace) -> int:
             mat_path = out_path.parent / "materiality.json"
             mat_path.write_bytes(_mat_bytes)
             print(f"Materiality written: {mat_path}")
+        if _pce_bytes is not None:  # __s190_pce_producer_v1__
+            pce_out_path = out_path.parent / "pce.json"
+            pce_out_path.write_bytes(_pce_bytes)
+            baseline_out_path = out_path.parent / "baseline.canon"
+            baseline_out_path.write_bytes(_pce_baseline_bytes)
+            print(f"Predetermined-change envelope written: {pce_out_path}")
+            print(f"Committed baseline canon written: {baseline_out_path}")
         print()
         print(f"Manifest signed: {out_path}")
         print(f"  key:    {key_path}")
