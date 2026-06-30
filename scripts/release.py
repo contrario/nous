@@ -241,6 +241,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "rekor_verify_v2.py",  # __session87_rekor_verify_v2_wheelgate_v1__
                                 "offline_verifier_builder.py",  # __session90_offline_verifier_builder_wheelgate_v1__
                                 "rekor_anchor_v2.py",  # __session92_rekor_anchor_v2_wheelgate_v1__
+                                "pce_anchor.py",  # __s191_pce_anchor_wheelgate_v1__
                                 "tsa_verify.py",  # __session92_tsa_verify_wheelgate_v1__
                                 "tsa_client.py",  # __session92_tsa_client_wheelgate_v1__
                                 "nous_trace.py",  # __session96_trace_wheelgate_v1__

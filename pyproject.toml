@@ -81,6 +81,7 @@ py-modules = [
     "skill_export", "cli_skill_export",  # __session77_release_v5_2_0_pyproject__
     "rekor_anchor",  # __session80_release_v5_3_0_pyproject__  # __nous_aetherproof_release_530_packaging_v1__
     "rekor_anchor_v2",  # __session92_rekor_anchor_v2_pyproject_v1__
+    "pce_anchor",  # __s191_pce_anchor_pymodule_v1__
     "tsa_verify",  # __session92_tsa_verify_pyproject_v1__
     "tsa_client",  # __session92_tsa_client_pyproject_v1__
     "rekor_signing_config",  # __session86_rekor_signing_config_pyproject_v1__

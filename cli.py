@@ -1857,6 +1857,10 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     # __session64_publish_removal_v1__
     # __session64_smt_margin_v1__
 
+    p = sub.add_parser("pce-anchor", help="Pre-commit a predetermined-change envelope (pce.json) in time: Rekor v2 + RFC 3161 over the envelope bytes (EU AI Act Article 43(4) / Annex IV 2(f)). Standalone assessment-time ceremony; evidences pre-commitment-in-time, not envelope adequacy, not ordering, not a legal determination. LIVE network ceremony.")  # __s191_pce_anchor_subparser_v1__
+    p.add_argument("envelope", metavar="PCE_JSON", help="Predetermined-change envelope (pce.json) to anchor")  # __s191_pce_anchor_subparser_v1__
+    p.add_argument("--out", metavar="PATH", default=None, dest="out", help="Receipt output path (default: pce.anchor.json next to the envelope)")  # __s191_pce_anchor_subparser_v1__
+
     p = sub.add_parser("self-compile", help="Self-hosting: compile .nous via compiler.nous")
     p.add_argument("files", nargs="+", help=".nous files to compile")
     p.add_argument("--target", default="python", choices=["python", "js"])
@@ -2058,6 +2062,29 @@ def cli_command_count() -> int:  # __s104_cli_command_count_v1__
     return len(actions[0].choices)
 
 
+def cmd_pce_anchor(args: argparse.Namespace) -> int:  # __s191_pce_anchor_cmd_v1__
+    import sys as _sys
+    from pathlib import Path as _Path
+    from pce_anchor import PceAnchorError, anchor_pce
+    pce_path = _Path(args.envelope)
+    out = _Path(args.out) if getattr(args, "out", None) else None
+    try:
+        receipt_path = anchor_pce(pce_path, out_path=out)
+    except PceAnchorError as exc:
+        print("REFUSED: " + str(exc), file=_sys.stderr)
+        return 1
+    except Exception as exc:
+        print("pce-anchor ceremony failed: " + repr(exc), file=_sys.stderr)
+        return 1
+    print("Predetermined-change envelope anchored (pre-commitment-in-time).")
+    print("  receipt: " + str(receipt_path))
+    print("  evidences: the envelope existed at the RFC 3161 genTime and is")
+    print("             included in the Rekor v2 transparency log.")
+    print("  not evidenced: envelope adequacy, ordering vs any later change,")
+    print("                 or any legal substantiality determination.")
+    return 0
+
+
 def main() -> int:  # __s104_main_uses_build_parser_v1__
     ap = build_parser()
     args = ap.parse_args()
@@ -2073,6 +2100,7 @@ def main() -> int:  # __s104_main_uses_build_parser_v1__
         "verify-sequence": cmd_verify_sequence,  # __phase2_stage6_cli_wiring_v1__
         "verify-coverage": cmd_verify_coverage,  # __s114_coverage_cli_v1__
         "verify-cost": cmd_verify_cost,  # __s170_leg6b_verify_cost_v1__
+        "pce-anchor": cmd_pce_anchor,  # __s191_pce_anchor_dispatch_v1__
         "skill-export": cmd_skill_export,  # __session77_cli_skill_export_wiring_v1__
         # __cost_cap_phase3c_cli_dispatch_v1__
         "emit-smt": cmd_emit_smt,
