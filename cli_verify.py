@@ -98,6 +98,18 @@ def cmd_verify(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
+
+    if (
+        getattr(args, "pce_anchor", None) is not None
+        and getattr(args, "pce", None) is None
+    ):  # __s191_pce_anchor_requires_pce_v1__
+        print(
+            "REFUSED: --pce-anchor requires --pce (the pre-commitment "
+            "receipt binds to a specific envelope; there is none to bind "
+            "without --pce). No manifest written.",
+            file=sys.stderr,
+        )
+        return 1
     src_path = Path(args.file)
     if not src_path.is_file():
         print(f"ERROR: file not found: {src_path}", file=sys.stderr)
@@ -353,6 +365,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
     pce_baseline = getattr(args, "pce_baseline", None)  # __s190_pce_producer_v1__
     _pce_bytes = None  # __s190_pce_producer_v1__
     _pce_baseline_bytes = None  # __s190_pce_producer_v1__
+    _pce_anchor_bytes = None  # __s191_pce_anchor_init_v1__
     if pce_against is not None:
         if pce_baseline is None:
             print(
@@ -415,6 +428,54 @@ def cmd_verify(args: argparse.Namespace) -> int:
             + (" (cumulative)" if _pce_doc_s190.get("cumulative") is not None
                else " (per-step only)")
         )
+        _pce_anchor_arg = getattr(args, "pce_anchor", None)  # __s191_pce_anchor_validate_v1__
+        if _pce_anchor_arg is not None:
+            if not Path(_pce_anchor_arg).is_file():
+                print(
+                    "REFUSED: --pce-anchor file not found: "
+                    + str(_pce_anchor_arg) + ". No manifest written.",
+                    file=sys.stderr,
+                )
+                return 1
+            _pce_anchor_bytes = Path(_pce_anchor_arg).read_bytes()
+            try:
+                _pce_anchor_doc = _json_s116.loads(
+                    _pce_anchor_bytes.decode("utf-8")
+                )
+            except Exception as _pae_s191:
+                print(
+                    "REFUSED: --pce-anchor file is not valid JSON: "
+                    + str(_pae_s191) + ". No manifest written.",
+                    file=sys.stderr,
+                )
+                return 1
+            _anchored_s191 = (
+                _pce_anchor_doc.get("anchored_pce_sha256")
+                if isinstance(_pce_anchor_doc, dict) else None
+            )
+            if _anchored_s191 != _pce_sha_s190:
+                print(
+                    "REFUSED: --pce-anchor anchored_pce_sha256 "
+                    + str(_anchored_s191)[:16] + "... does not match the "
+                    "bound envelope sha256 " + _pce_sha_s190[:16]
+                    + "... (the receipt anchors a different envelope). No "
+                    "manifest written.",
+                    file=sys.stderr,
+                )
+                return 1
+            _pce_anchor_sha_s191 = _hashlib_s115.sha256(
+                _pce_anchor_bytes
+            ).hexdigest()
+            manifest = _dc_s115.replace(
+                manifest, pce_anchor_sha256=_pce_anchor_sha_s191
+            )
+            print(
+                "Pre-commitment receipt bound (--pce-anchor "
+                + str(_pce_anchor_arg) + "): pce_anchor_sha256 "
+                + _pce_anchor_sha_s191[:16] + "... (evidences "
+                "pre-commitment-in-time; ordering is the verifier's "
+                "relational computation)"
+            )
     chain_coverage_mode = getattr(args, "chain_coverage", None)  # __s127_chain_coverage_flag_v1__
     supersedes_path = getattr(args, "supersedes", None)  # __s119_supersedes_producer_v1__
     if chain_coverage_mode == "full" and not supersedes_path:  # __s127_chain_coverage_flag_v1__
@@ -505,6 +566,10 @@ def cmd_verify(args: argparse.Namespace) -> int:
             baseline_out_path.write_bytes(_pce_baseline_bytes)
             print(f"Predetermined-change envelope written: {pce_out_path}")
             print(f"Committed baseline canon written: {baseline_out_path}")
+        if _pce_anchor_bytes is not None:  # __s191_pce_anchor_sidecar_v1__
+            anchor_out_path = out_path.parent / "pce.anchor.json"
+            anchor_out_path.write_bytes(_pce_anchor_bytes)
+            print(f"Pre-commitment receipt written: {anchor_out_path}")
         print()
         print(f"Manifest signed: {out_path}")
         print(f"  key:    {key_path}")
