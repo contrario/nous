@@ -628,6 +628,7 @@ def build_dossier(
     pce_bytes = None  # __s190_pce_carry_read_v1__
     baseline_canon_bytes = None  # __s190_pce_carry_read_v1__
     spec_canon_bytes = None  # __s190_pce_carry_read_v1__
+    _pce_anchor_bytes = None  # __s191_pce_anchor_carry_init_v1__
     if parsed_manifest.pce_sha256 is not None:  # __s190_pce_carry_read_v1__
         import hashlib as _pce_hashlib
         import json as _pce_json
@@ -675,6 +676,32 @@ def build_dossier(
                 + "... (committed baseline canon tampered or substituted)"
             )
         spec_canon_bytes = spec.canonical_str().encode("utf-8")
+    if parsed_manifest.pce_anchor_sha256 is not None:  # __s191_pce_anchor_carry_read_v1__
+        import hashlib as _pa_hashlib_s191
+        if parsed_manifest.pce_sha256 is None:
+            raise DossierError(
+                "manifest declares pce_anchor_sha256 but no pce_sha256; a "
+                "pre-commitment receipt cannot be carried without the "
+                "predetermined-change envelope it anchors"
+            )
+        pce_anchor_src = manifest.parent / "pce.anchor.json"
+        if not pce_anchor_src.is_file():
+            raise DossierError(
+                "manifest declares a pre-commitment receipt but "
+                "pce.anchor.json not found next to manifest: "
+                + str(pce_anchor_src)
+            )
+        _pce_anchor_bytes = pce_anchor_src.read_bytes()
+        _pce_anchor_file_sha = _pa_hashlib_s191.sha256(
+            _pce_anchor_bytes
+        ).hexdigest()
+        if _pce_anchor_file_sha != parsed_manifest.pce_anchor_sha256:
+            raise DossierError(
+                "pce.anchor.json sha256 mismatch: file="
+                + _pce_anchor_file_sha[:16] + "... manifest="
+                + (parsed_manifest.pce_anchor_sha256 or "")[:16]
+                + "... (pre-commitment receipt tampered or substituted)"
+            )
     gap_witness_bytes = None  # __s134_gapw_consume_v1__
     if parsed_manifest.source_kind == "gap-witness":
         _gw_expected = parsed_manifest.gap_witness_sha256
@@ -1186,6 +1213,9 @@ def build_dossier(
         files.append("baseline.canon")
         (output / "spec.canon").write_bytes(spec_canon_bytes)
         files.append("spec.canon")
+    if _pce_anchor_bytes is not None:  # __s191_pce_anchor_carry_write_v1__
+        (output / "pce.anchor.json").write_bytes(_pce_anchor_bytes)
+        files.append("pce.anchor.json")
     if gap_witness_bytes is not None:  # __s134_gapw_consume_v1__
         (output / "coverage.gapwitness.json").write_bytes(
             gap_witness_bytes
