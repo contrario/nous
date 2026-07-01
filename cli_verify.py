@@ -366,6 +366,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
     _pce_bytes = None  # __s190_pce_producer_v1__
     _pce_baseline_bytes = None  # __s190_pce_producer_v1__
     _pce_anchor_bytes = None  # __s191_pce_anchor_init_v1__
+    _envelope_witness_bytes = None  # __s194_envelope_witness_init_v1__
     if pce_against is not None:
         if pce_baseline is None:
             print(
@@ -476,6 +477,38 @@ def cmd_verify(args: argparse.Namespace) -> int:
                 "pre-commitment-in-time; ordering is the verifier's "
                 "relational computation)"
             )
+    _witness_arg_s194 = getattr(args, "witness", None)  # __s194_envelope_witness_validate_v1__
+    if _witness_arg_s194 is not None:
+        if not Path(_witness_arg_s194).is_file():
+            print(
+                "REFUSED: --witness file not found: "
+                + str(_witness_arg_s194) + ". No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        _envelope_witness_bytes = Path(_witness_arg_s194).read_bytes()
+        try:
+            _json_s116.loads(_envelope_witness_bytes.decode("utf-8"))
+        except Exception as _ewe_s194:
+            print(
+                "REFUSED: --witness file is not valid JSON: "
+                + str(_ewe_s194) + ". No manifest written.",
+                file=sys.stderr,
+            )
+            return 1
+        _envelope_witness_sha_s194 = _hashlib_s115.sha256(
+            _envelope_witness_bytes
+        ).hexdigest()
+        manifest = _dc_s115.replace(
+            manifest, envelope_witness_sha256=_envelope_witness_sha_s194
+        )
+        print(
+            "Envelope witness quorum bound (--witness "
+            + str(_witness_arg_s194) + "): envelope_witness_sha256 "
+            + _envelope_witness_sha_s194[:16] + "... (evidences k-of-n "
+            "non-equivocation; independence is a named trust "
+            "assumption, monitor not gate)"
+        )
     chain_coverage_mode = getattr(args, "chain_coverage", None)  # __s127_chain_coverage_flag_v1__
     supersedes_path = getattr(args, "supersedes", None)  # __s119_supersedes_producer_v1__
     if chain_coverage_mode == "full" and not supersedes_path:  # __s127_chain_coverage_flag_v1__
@@ -609,6 +642,10 @@ def cmd_verify(args: argparse.Namespace) -> int:
             anchor_out_path = out_path.parent / "pce.anchor.json"
             anchor_out_path.write_bytes(_pce_anchor_bytes)
             print(f"Pre-commitment receipt written: {anchor_out_path}")
+        if _envelope_witness_bytes is not None:  # __s194_envelope_witness_sidecar_v1__
+            witness_out_path = out_path.parent / "envelope.witness.json"
+            witness_out_path.write_bytes(_envelope_witness_bytes)
+            print(f"Envelope witness sidecar written: {witness_out_path}")
         print()
         print(f"Manifest signed: {out_path}")
         print(f"  key:    {key_path}")

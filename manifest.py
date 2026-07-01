@@ -183,6 +183,7 @@ class Manifest:
     materiality_sha256: Optional[str] = None  # __s171_materiality_sha256_field_v1__
     pce_sha256: Optional[str] = None  # __s190_pce_sha256_field_v1__
     pce_anchor_sha256: Optional[str] = None  # __s191_pce_anchor_sha256_field_v1__
+    envelope_witness_sha256: Optional[str] = None  # __s194_envelope_witness_sha256_field_v1__
     attribution: Optional["Attribution"] = None  # __s180_attribution_field_v1__
 
     def __post_init__(self) -> None:  # __s134_source_kind_coherence_v1__
@@ -281,6 +282,8 @@ class Manifest:
             d["pce_sha256"] = self.pce_sha256
         if self.pce_anchor_sha256 is not None:  # __s191_pce_anchor_sha256_canonical_v1__
             d["pce_anchor_sha256"] = self.pce_anchor_sha256
+        if self.envelope_witness_sha256 is not None:  # __s194_envelope_witness_sha256_canonical_v1__
+            d["envelope_witness_sha256"] = self.envelope_witness_sha256
         if self.attribution is not None:  # __s180_attribution_canonical_v1__
             d["attribution"] = self.attribution.canonical_dict()
         return d  # __session96_revert_m3_canonical_dict_v1__
@@ -528,6 +531,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         materiality_sha256=doc.get("materiality_sha256"),  # __s171_materiality_sha256_parse1_v1__
         pce_sha256=doc.get("pce_sha256"),  # __s190_pce_sha256_parse1_v1__
         pce_anchor_sha256=doc.get("pce_anchor_sha256"),  # __s191_pce_anchor_sha256_parse1_v1__
+        envelope_witness_sha256=doc.get("envelope_witness_sha256"),  # __s194_envelope_witness_sha256_parse1_v1__
         attribution=_attribution_from_doc(doc.get("attribution")),  # __s180_attribution_parse1_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
@@ -585,6 +589,7 @@ def parse_manifest_json_with_anchor(
         materiality_sha256=doc.get("materiality_sha256"),  # __s171_materiality_sha256_parse2_v1__
         pce_sha256=doc.get("pce_sha256"),  # __s190_pce_sha256_parse2_v1__
         pce_anchor_sha256=doc.get("pce_anchor_sha256"),  # __s191_pce_anchor_sha256_parse2_v1__
+        envelope_witness_sha256=doc.get("envelope_witness_sha256"),  # __s194_envelope_witness_sha256_parse2_v1__
         attribution=_attribution_from_doc(doc.get("attribution")),  # __s180_attribution_parse2_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
