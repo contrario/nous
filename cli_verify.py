@@ -566,6 +566,45 @@ def cmd_verify(args: argparse.Namespace) -> int:
             baseline_out_path.write_bytes(_pce_baseline_bytes)
             print(f"Predetermined-change envelope written: {pce_out_path}")
             print(f"Committed baseline canon written: {baseline_out_path}")
+            # __s193_envelope_ledger_append_v1__ DARK substrate (opt-in via
+            # NOUS_ENVELOPE_LOG). Records this bound envelope into the append-only
+            # per-operator envelope log ONLY when that env var is set, so the default
+            # path -- the test suite and any CI --pce run included -- writes nothing
+            # and the store holds only deliberate operator commitments. Failure-
+            # isolated: never raises, never changes rc; stderr only so stdout stays
+            # byte-identical. EVIDENCES append (substrate for the witness increment);
+            # it is NOT non-equivocation and PROVES nothing.
+            import os as _os_s193
+            if _os_s193.environ.get("NOUS_ENVELOPE_LOG"):
+                try:
+                    import envelope_ledger as _el_s193
+                    import hashlib as _hl_s193
+                    _el_anchor_s193 = (
+                        _hl_s193.sha256(_pce_anchor_bytes).hexdigest()
+                        if _pce_anchor_bytes is not None else None
+                    )
+                    _el_res_s193 = _el_s193.append_commitment(
+                        _pce_sha_s190, _el_anchor_s193
+                    )
+                    if _el_res_s193.get("appended"):
+                        print(
+                            "Envelope commitment recorded (append-only log, "
+                            + str(_el_res_s193.get("count")) + " total): "
+                            + str(_el_res_s193.get("commitment", ""))[:16] + "...",
+                            file=sys.stderr,
+                        )
+                    else:
+                        print(
+                            "Envelope commitment already present (dedupe): "
+                            + str(_el_res_s193.get("commitment", ""))[:16] + "...",
+                            file=sys.stderr,
+                        )
+                except Exception as _el_e_s193:
+                    print(
+                        "NOTE: envelope-log append skipped (" + str(_el_e_s193)
+                        + "); dossier unaffected.",
+                        file=sys.stderr,
+                    )
         if _pce_anchor_bytes is not None:  # __s191_pce_anchor_sidecar_v1__
             anchor_out_path = out_path.parent / "pce.anchor.json"
             anchor_out_path.write_bytes(_pce_anchor_bytes)
