@@ -133,6 +133,7 @@ py-modules = [
     "continuity_cosign",  # __s179_p1_continuity_cosign_pyproject_v1__
     "envelope",  # __s190_pce_envelope_pyproject_v1__
     "envelope_ledger",  # __s193_envelope_ledger_pyproject_v1__
+    "envelope_witness",  # __s194_envelope_witness_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
