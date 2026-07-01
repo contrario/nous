@@ -165,6 +165,42 @@ def load_log(store_path: Optional[Path] = None) -> EnvelopeLog:
     return log
 
 
+
+
+def load_fan_pairs(
+    store_path: Optional[Path] = None,
+):  # __s196_incd_load_fan_pairs_v1__
+    """The enumerated fan as (pce_sha256, pce_anchor_sha256) pairs in append
+    order, deduped IDENTICALLY to load_log (dedupe on the commitment), so the
+    fan order equals the leaf order equals the checkpoint order by construction.
+    This is the single authoritative source of the fan; there is no second."""
+    if store_path is None:
+        store_path = default_store_path()
+    pairs: list[tuple[str, Optional[str]]] = []
+    seen: set[bytes] = set()
+    if not store_path.is_file():
+        return pairs
+    for i, line in enumerate(
+        store_path.read_text(encoding="utf-8").splitlines()
+    ):
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+            pce_sha256 = rec["pce_sha256"]
+            pce_anchor_sha256 = rec.get("pce_anchor_sha256")
+            commitment = envelope_commitment(pce_sha256, pce_anchor_sha256)
+        except (ValueError, KeyError, TypeError, EnvelopeLedgerError) as e:
+            raise EnvelopeLedgerError(
+                "malformed envelope-log record at line " + str(i + 1)
+                + ": " + str(e)
+            )
+        if commitment in seen:
+            continue
+        seen.add(commitment)
+        pairs.append((pce_sha256, pce_anchor_sha256))
+    return pairs
+
 def append_commitment(
     pce_sha256: str,
     pce_anchor_sha256: Optional[str],

@@ -1863,6 +1863,16 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     p.add_argument("envelope", metavar="PCE_JSON", help="Predetermined-change envelope (pce.json) to anchor")  # __s191_pce_anchor_subparser_v1__
     p.add_argument("--out", metavar="PATH", default=None, dest="out", help="Receipt output path (default: pce.anchor.json next to the envelope)")  # __s191_pce_anchor_subparser_v1__
 
+    p = sub.add_parser("build-witness", help="Assemble a witnessed envelope-checkpoint sidecar (envelope.witness.json) from COLLECTED 0x04 cosignature lines and operator-pinned expected witnesses (--assemble-only). COMPOSE-ONLY, DARK. The producer holds only the log key; it NEVER holds or generates witness keys and NEVER self-cosigns (operator-minted witnesses void non-equivocation). Each collected line is verified-before-include against exactly one pinned (name, key); an unpinned line is REFUSED with zero writes. The fan is derived SOLELY from the operator store (single source; fan order == leaf order == checkpoint order) and must re-derive the checkpoint head or assembly REFUSES. Operator pinning here is a COLLECTION-TIME integrity check; it does NOT establish independence -- the auditor's witness_keys.json / NOUS_WITNESS_KEYS pin stays authoritative and the verifier's operator-supplied downgrade is unchanged. Split-view is refused at WITNESS time; the offline verifier does not re-check consistency, by shipped design. EVIDENCES k-of-n non-equivocation; monitor not gate; proves nothing.")  # __s196_incd_build_witness_subparser_v1__
+    p.add_argument("--checkpoint-note", metavar="PATH", required=True, dest="checkpoint_note", help="Path to the log-signed envelope checkpoint note (the 'envelope_note' from build_envelope_checkpoint) the witnesses cosigned.")  # __s196_incd_build_witness_subparser_v1__
+    p.add_argument("--pins", metavar="PATH", required=True, dest="pins", help="JSON list of operator-pinned expected witnesses [{name, pubkey_b64}, ...] (32-byte Ed25519 raw pubkeys, base64). Verify-before-include pins; also carried as the verifier's operator-supplied downgrade fallback.")  # __s196_incd_build_witness_subparser_v1__
+    p.add_argument("--cosig-lines", metavar="PATH", required=True, dest="cosig_lines", help="Path to collected cosignature lines, one C2SP 0x04 note signature line per row, gathered out-of-band from INDEPENDENT witnesses.")  # __s196_incd_build_witness_subparser_v1__
+    p.add_argument("--threshold", metavar="K", type=int, required=True, dest="threshold", help="k-of-n quorum threshold (positive int, <= number of pinned witnesses).")  # __s196_incd_build_witness_subparser_v1__
+    p.add_argument("--from-store", action="store_true", dest="from_store", help="Derive the fan from the operator append-only store (the ONLY fan source). Required; explicit-JSON fan is deferred to the live-POST increment.")  # __s196_incd_build_witness_subparser_v1__
+    p.add_argument("--store-path", metavar="PATH", default=None, dest="store_path", help="Override the envelope store path (default: envelope_ledger.default_store_path()).")  # __s196_incd_build_witness_subparser_v1__
+    p.add_argument("--out", metavar="PATH", default=None, dest="witness_out", help="Sidecar output path (default: envelope.witness.json in the current directory).")  # __s196_incd_build_witness_subparser_v1__
+
+
     p = sub.add_parser("self-compile", help="Self-hosting: compile .nous via compiler.nous")
     p.add_argument("files", nargs="+", help=".nous files to compile")
     p.add_argument("--target", default="python", choices=["python", "js"])
@@ -2087,6 +2097,68 @@ def cmd_pce_anchor(args: argparse.Namespace) -> int:  # __s191_pce_anchor_cmd_v1
     return 0
 
 
+def cmd_build_witness(args: "argparse.Namespace") -> int:  # __s196_incd_build_witness_cmd_v1__
+    import json as _json
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    from envelope_witness_producer import (
+        assemble_witness_sidecar,
+        write_witness_sidecar,
+        WitnessProducerError,
+    )
+    from envelope_ledger import default_store_path
+
+    if not getattr(args, "from_store", False):
+        print(
+            "REFUSED: build-witness requires --from-store (the store is the "
+            "only fan source; explicit-JSON fan is deferred). No sidecar written.",
+            file=_sys.stderr,
+        )
+        return 1
+    try:
+        note = _Path(args.checkpoint_note).read_text(encoding="utf-8")
+        pin_objs = _json.loads(_Path(args.pins).read_text(encoding="utf-8"))
+        if isinstance(pin_objs, dict):
+            pin_objs = pin_objs.get("witnesses", pin_objs)
+        cosig_lines = [
+            ln for ln in _Path(args.cosig_lines).read_text(
+                encoding="utf-8"
+            ).splitlines() if ln.strip()
+        ]
+    except OSError as exc:
+        print("REFUSED: build-witness input read error: " + str(exc),
+              file=_sys.stderr)
+        return 1
+    except ValueError as exc:
+        print("REFUSED: build-witness --pins is not valid JSON: " + str(exc),
+              file=_sys.stderr)
+        return 1
+
+    store_path = _Path(args.store_path) if getattr(args, "store_path", None) else None
+    try:
+        sidecar = assemble_witness_sidecar(
+            note, cosig_lines, pin_objs, int(args.threshold),
+            store_path=store_path,
+        )
+    except WitnessProducerError as exc:
+        print("REFUSED: " + str(exc), file=_sys.stderr)
+        return 1
+
+    out_path = _Path(args.witness_out) if getattr(args, "witness_out", None) else _Path("envelope.witness.json")
+    write_witness_sidecar(sidecar, out_path)
+    _sha = __import__("hashlib").sha256(out_path.read_bytes()).hexdigest()
+    print(
+        "Envelope witness sidecar assembled: " + str(out_path)
+        + " (sha256 " + _sha[:16] + "..., threshold " + str(args.threshold)
+        + ", " + str(len(sidecar["witnesses"])) + " pinned; EVIDENCES k-of-n "
+        "non-equivocation, monitor not gate; operator pinning is a collection-"
+        "time check, NOT independence -- the auditor's witness_keys.json pin is "
+        "authoritative)"
+    )
+    return 0
+
+
 def main() -> int:  # __s104_main_uses_build_parser_v1__
     ap = build_parser()
     args = ap.parse_args()
@@ -2103,6 +2175,7 @@ def main() -> int:  # __s104_main_uses_build_parser_v1__
         "verify-coverage": cmd_verify_coverage,  # __s114_coverage_cli_v1__
         "verify-cost": cmd_verify_cost,  # __s170_leg6b_verify_cost_v1__
         "pce-anchor": cmd_pce_anchor,  # __s191_pce_anchor_dispatch_v1__
+        "build-witness": cmd_build_witness,  # __s196_incd_build_witness_dispatch_v1__
         "skill-export": cmd_skill_export,  # __session77_cli_skill_export_wiring_v1__
         # __cost_cap_phase3c_cli_dispatch_v1__
         "emit-smt": cmd_emit_smt,
