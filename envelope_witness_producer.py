@@ -47,11 +47,16 @@ import json
 from pathlib import Path
 from typing import Optional, Sequence
 
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+)
 
 from continuity_cosign import verify_cosignature_entry
 from envelope_ledger import (
     ENVELOPE_LEAF_PREFIX,
+    EnvelopeLog,
+    build_envelope_checkpoint,
     envelope_commitment,
     load_fan_pairs,
 )
@@ -229,3 +234,47 @@ def write_witness_sidecar(sidecar: dict, out_path: Path) -> Path:
     data = json.dumps(sidecar, sort_keys=True, separators=(",", ":")).encode("utf-8")
     out_path.write_bytes(data)
     return out_path
+
+
+def emit_add_checkpoint_body(
+    log: EnvelopeLog, log_key: Ed25519PrivateKey, prev_size: int
+) -> tuple[bytes, dict]:  # __s199_emit_add_checkpoint_v1__
+    """Emit the C2SP tlog-witness add-checkpoint request body for the current
+    envelope checkpoint: the emit half of the already-shipped --assemble-only.
+
+    Body framing (each line U+000A-terminated):
+        old <prev_size>          decimal, no leading zeros; "0" at genesis
+        <b64(hash)>              0..63 RFC 6962 consistency-proof lines;
+                                 MUST be empty iff prev_size == 0 (genesis)
+        <empty line>
+        <checkpoint note>        build_envelope_checkpoint()["envelope_note"]
+
+    Pure: reads no store, writes nothing, contacts no network. No live caller
+    (DARK): the --emit-request CLI wiring and the live-network round trip are
+    deferred to the post-join increment.
+
+    Honest boundary: this EVIDENCES nothing by itself. It emits a request; the
+    witness cosignatures it later collects evidence append-only STRUCTURE
+    (non-equivocation), not content correctness. Monitor, not guard; "proves"
+    stays reserved for Z3/Farkas.
+    """
+    ckpt = build_envelope_checkpoint(log, log_key)
+    env_size = ckpt["env_size"]
+    if prev_size < 0 or prev_size > env_size:
+        raise ValueError(
+            "old size %d out of range for checkpoint size %d"
+            % (prev_size, env_size)
+        )
+    proof = [] if prev_size == 0 else _rkt.naive_consistency_proof(
+        log.leaves(), prev_size
+    )
+    proof_b64 = []
+    for h in proof:
+        if not isinstance(h, (bytes, bytearray)):
+            raise TypeError("proof element is not bytes: " + repr(type(h)))
+        proof_b64.append(base64.b64encode(bytes(h)).decode("ascii"))
+    if len(proof_b64) > 63:
+        raise ValueError("consistency proof exceeds 63 lines")
+    head = "old %d\n" % prev_size + "".join(ln + "\n" for ln in proof_b64) + "\n"
+    body = head.encode("ascii") + ckpt["envelope_note"].encode("utf-8")
+    return body, ckpt
