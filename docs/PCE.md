@@ -363,3 +363,5 @@ The gap, stated honestly:
   - `docs/REKOR_V2_MIGRATION.md` -- the Rekor v2 anchor path.
   - `docs/MATERIALITY_CLASSIFICATION.md` -- the minor / material change verdict
     that routes a material change toward the envelope-binding leg.
+  - `docs/ENVELOPE_LEDGER.md` -- the append-only envelope ledger and its permanent
+    witness origin (non-equivocation of the committed history).
