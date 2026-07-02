@@ -222,7 +222,7 @@ async def health(request: Request):
         "uptime_seconds": uptime,
         "engines": 8,
         "subsystems": 12,
-        "cli_commands": 61,  # __s196_incd_cli_count_61_v1__  # __s191_cli_count_60_v1__  # __s177_p1_cli_count_59_v1__  # __s170_leg6b_verify_cost_v1__  # __s167_p2b_cli_count_57_v1__  # __s157_u3_cli_count_56_v1__  # __s106_cli_count_53_v1__  # __s104_cli_commands_derived_v1__  # __phase2_stage6_cli_commands_46_v1__  # __s147_cli_count_55_v1__
+        "cli_commands": 62,  # __s200_cli_count_62_v1__  # __s196_incd_cli_count_61_v1__  # __s191_cli_count_60_v1__  # __s177_p1_cli_count_59_v1__  # __s170_leg6b_verify_cost_v1__  # __s167_p2b_cli_count_57_v1__  # __s157_u3_cli_count_56_v1__  # __s106_cli_count_53_v1__  # __s104_cli_commands_derived_v1__  # __phase2_stage6_cli_commands_46_v1__  # __s147_cli_count_55_v1__
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 

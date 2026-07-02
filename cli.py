@@ -1872,6 +1872,12 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     p.add_argument("--store-path", metavar="PATH", default=None, dest="store_path", help="Override the envelope store path (default: envelope_ledger.default_store_path()).")  # __s196_incd_build_witness_subparser_v1__
     p.add_argument("--out", metavar="PATH", default=None, dest="witness_out", help="Sidecar output path (default: envelope.witness.json in the current directory).")  # __s196_incd_build_witness_subparser_v1__
 
+    p = sub.add_parser("emit-request", help="Emit the C2SP tlog-witness add-checkpoint request body for the current envelope checkpoint to a file (the emit half of --assemble-only). PURE: reads the operator append-only store, load-or-creates the persistent XDG envelope-log key, builds the log-signed checkpoint, and writes ONLY the request body -- NO network call (the operator POSTs it out-of-band to the witness add-checkpoint endpoint, exactly as build-witness collects cosignature lines out-of-band). Feed the returned 0x04 cosignature line(s) to build-witness --assemble-only. DARK. EMITS a request; evidences nothing by itself; monitor not gate; proves nothing.")  # __s200_emit_request_subparser_v1__
+    p.add_argument("--prev-size", metavar="N", type=int, required=True, dest="prev_size", help="The witness's last-cosigned tree size for this origin (0 at genesis / first submission to a witness that has never seen this log). The emitted body carries an RFC 6962 consistency proof from N to the current size (empty iff N==0).")  # __s200_emit_request_subparser_v1__
+    p.add_argument("--store-path", metavar="PATH", default=None, dest="store_path", help="Override the envelope store path (default: envelope_ledger.default_store_path()).")  # __s200_emit_request_subparser_v1__
+    p.add_argument("--log-key-path", metavar="PATH", default=None, dest="log_key_path", help="Persistent envelope-log Ed25519 key path (default: ~/.local/share/nous/keys/envelope-log.key; load-or-created, PKCS8 PEM, 0600). This is the production log identity that registers with the witness network.")  # __s200_emit_request_subparser_v1__
+    p.add_argument("--out", metavar="PATH", default=None, dest="out", help="Request body output path (default: envelope.add-checkpoint.req in the current directory).")  # __s200_emit_request_subparser_v1__
+
 
     p = sub.add_parser("self-compile", help="Self-hosting: compile .nous via compiler.nous")
     p.add_argument("files", nargs="+", help=".nous files to compile")
@@ -2159,6 +2165,69 @@ def cmd_build_witness(args: "argparse.Namespace") -> int:  # __s196_incd_build_w
     return 0
 
 
+def cmd_emit_request(args: "argparse.Namespace") -> int:  # __s200_emit_request_cmd_v1__
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    from envelope_ledger import load_log, default_store_path
+    from envelope_witness_producer import emit_add_checkpoint_body
+    from manifest import load_or_create_keypair, default_key_path
+
+    try:
+        prev_size = int(args.prev_size)
+    except (TypeError, ValueError):
+        print("REFUSED: --prev-size must be an integer", file=_sys.stderr)
+        return 1
+    if prev_size < 0:
+        print("REFUSED: --prev-size must be >= 0", file=_sys.stderr)
+        return 1
+
+    store_path = (
+        _Path(args.store_path) if getattr(args, "store_path", None)
+        else default_store_path()
+    )
+    log = load_log(store_path)
+    if not log.order:
+        print(
+            "REFUSED: envelope store is empty (" + str(store_path) + "); there "
+            "is no committed envelope to checkpoint. Append commitments first.",
+            file=_sys.stderr,
+        )
+        return 1
+
+    key_path = (
+        _Path(args.log_key_path) if getattr(args, "log_key_path", None)
+        else (default_key_path().parent / "envelope-log.key")
+    )
+    try:
+        log_key, _pub, resolved = load_or_create_keypair(key_path)
+    except (OSError, ValueError) as exc:
+        print("REFUSED: envelope-log key error: " + str(exc), file=_sys.stderr)
+        return 1
+
+    try:
+        body, ckpt = emit_add_checkpoint_body(log, log_key, prev_size)
+    except (ValueError, TypeError) as exc:
+        print("REFUSED: " + str(exc), file=_sys.stderr)
+        return 1
+
+    out_path = (
+        _Path(args.out) if getattr(args, "out", None)
+        else _Path("envelope.add-checkpoint.req")
+    )
+    out_path.write_bytes(body)
+    print(
+        "Envelope add-checkpoint request emitted: " + str(out_path)
+        + " (origin " + ckpt["origin"] + ", tree_size " + str(ckpt["env_size"])
+        + ", old " + str(prev_size) + ", " + str(len(body)) + " bytes; log key "
+        + str(resolved) + "). POST it out-of-band to the witness's add-"
+        "checkpoint endpoint; feed the returned 0x04 cosignature line(s) to "
+        "build-witness --assemble-only. EMITS a request; evidences nothing by "
+        "itself; monitor not gate; proves nothing."
+    )
+    return 0
+
+
 def main() -> int:  # __s104_main_uses_build_parser_v1__
     ap = build_parser()
     args = ap.parse_args()
@@ -2176,6 +2245,7 @@ def main() -> int:  # __s104_main_uses_build_parser_v1__
         "verify-cost": cmd_verify_cost,  # __s170_leg6b_verify_cost_v1__
         "pce-anchor": cmd_pce_anchor,  # __s191_pce_anchor_dispatch_v1__
         "build-witness": cmd_build_witness,  # __s196_incd_build_witness_dispatch_v1__
+        "emit-request": cmd_emit_request,  # __s200_emit_request_dispatch_v1__
         "skill-export": cmd_skill_export,  # __session77_cli_skill_export_wiring_v1__
         # __cost_cap_phase3c_cli_dispatch_v1__
         "emit-smt": cmd_emit_smt,
