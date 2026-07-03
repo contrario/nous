@@ -136,6 +136,7 @@ py-modules = [
     "envelope_witness",  # __s194_envelope_witness_pyproject_v1__
     "envelope_witness_producer",  # __s196_incd_envelope_witness_producer_pyproject_v1__
     "closure_ledger",  # __s205_closure_ledger_pyproject_v1__
+    "closure_attestation",  # __s206_closure_attestation_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
