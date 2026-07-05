@@ -1934,7 +1934,7 @@ law never_after(audit, access)        # once audited, no further access</code></
       <li>Clean-venv install smoke: fresh venv, install wheel, exercise <code>nous templates extract</code> + <code>nous compile</code>; both exit 0.</li>
       <li>PyPI upload: twine check OK, twine upload OK.</li>
     </ol>
-    <p>Each gate is structurally hard. A failure at any point aborts before upload. There is no partial PyPI publish; each release is atomic with the artifact set it produces.</p>
+    <p>Each gate is structurally hard. Within the release pipeline a failure at any point aborts before the publish step, so the pipeline performs no partial publish. Bytes uploaded outside the pipeline are not covered by this property.</p>
 
     <h2>The deeper change</h2>
     <p>v5.0.0 made NOUS cost-verification currency-agnostic. v5.1.0 wrapped that verification into a portable, spec-compliant compliance artifact. v5.2.0 closes the loop so NOUS authors can flow source through to that compliance artifact without leaving their editor. The unifying through line, ever since Session 16, has been the same: take probabilistic execution and produce deterministic evidence that travels with it.</p>
