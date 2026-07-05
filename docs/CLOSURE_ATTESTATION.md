@@ -1,10 +1,13 @@
 # Closure Attestation
 
-A per-(policy, interval) witnessed completeness commitment over the operator's
+A per-(policy, interval) signed completeness commitment over the operator's
 own declared governed-action set. The operator signs a root that commits "under
-policy P, interval T, this is the committed-complete set of governed actions,"
-and -- when the Witness Network join is live -- has that commitment cosigned by
-an independent witness so it cannot later equivocate on what it committed.
+policy P, interval T, this is the committed-complete set of governed actions." A
+closure root becomes witnessed only once it is appended to the envelope log and
+that head is cosigned by an independent witness. That append-and-cosign step is
+not yet exercised for closure, so a closure root is signed but not a witnessed
+leaf (see Witnessing status).
+<!-- __s212_closure_open_flip_v1__ -->
 
 If a governed action that was in scope of policy P is later surfaced through any
 other channel (discovery, a subject complaint, a second log) and is provably
@@ -94,23 +97,35 @@ lives solely in the auditor-only Increment B attestation. A surface-split
 projection guard enforces this separation. The volume-privacy question therefore
 bites only in the auditor-only body, never on the public witnessed surface.
 
-## Witnessing status -- PENDING
+## Witnessing status -- envelope witnessed (staging, k=1); closure not yet witnessed
 
-Independent witnessing is NOT yet effective. It targets the staging tier of the
-public Witness Network and is pending the network join -- the same join the
-envelope ledger and the Predetermined-Change Envelope (PCE) wait on. Closure
-rides the SAME envelope-log origin as PCE (one origin, one join): the closure
-root is committed as a domain-separated tagged leaf (CLOSURE_COMMIT_TAG,
-"nous/closure-root/v1|") on that single log, so its witness cosignature activates
-on the SAME round trip -- no separate origin, no second join.
+The envelope log is witnessed at the STAGING tier. Its genesis checkpoint (the
+PCE genesis leaf) has been cosigned by one independent, best-effort witness
+(k=1), and the shipped offline verifier confirms the cosignature GREEN. A
+verified cosignature EVIDENCES non-equivocation of the committed head under the
+named trust assumption; it PROVES nothing. The witness attests the append-only
+tree HEAD, not leaf CONTENTS. It is best-effort and MAY roll its state back. The
+name-to-key binding is auditor-pinned out-of-band; NOUS runs no CA. Staging is
+the highest honest tier; the production tier is not offered.
 
-Current state of a first attestation: signed by the persistent operator key; the
-independent witness cosignature is pending the round trip. Rekor anchoring of the
-closure root is join-independent and available as a capability, but it is not the
-witnessing this document defers, and it is not claimed here as performed. This
-document does not claim independent witnessing exists. When the round trip lands,
-the shipped verifier consumes the cosignature with no new release -- the
-witnessed claim becomes a documentation update, not a version bump.
+Closure rides the SAME envelope-log origin as PCE (one origin, one join): a
+closure root is committed as a domain-separated tagged leaf (CLOSURE_COMMIT_TAG,
+"nous/closure-root/v1|") on that single log, and the shipped verifier checks
+closure inclusion plus witness quorum over that log. A closure root is witnessed
+only once it is APPENDED to the envelope log and that head is cosigned. That step
+is NOT yet exercised: the genesis closure attestation is signed, its root is not
+an envelope leaf, and no closure root is a witnessed leaf.
+
+The gap is on the produce side, not the verify side. The closure-witness offline
+check is shipped. No shipped command appends a closure leaf to a checkpoint: the
+store fan and the emit-request / build-witness path are PCE-only. Witnessing a
+closure root therefore needs a produce-path increment (a closure-aware emit and
+assemble), which is code plus a release, not a documentation update.
+
+Rekor anchoring of the closure root is join-independent and available as a
+capability. It is not the witnessing discussed here and is not claimed as
+performed.
+<!-- __s212_closure_witness_status_flip_v1__ -->
 
 ## Verification
 

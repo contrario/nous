@@ -112,7 +112,12 @@ non-equivocation property.
 4. On acceptance: run the emit-request -> POST -> real network cosignature ->
    assemble -> shipped offline verifier round trip. A green assembled verifier
    over a REAL network cosignature is what promotes the claim from "targets
-   staging" to witnessed non-equivocation at staging tier.
+   staging" to witnessed non-equivocation at staging tier. DONE for the envelope
+   genesis leaf: the round trip was run against one independent best-effort
+   witness (k=1) and verified GREEN, so the envelope log is witnessed at staging
+   tier. A closure root is NOT yet witnessed -- no shipped command appends a
+   closure leaf to a checkpoint; that is a future produce-path increment.
+<!-- __s212_wp_roundtrip_done_v1__ -->
 
 ## Cross-references
 

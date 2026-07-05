@@ -119,9 +119,12 @@ suffix was adopted; the bare label was rejected (not the reverse). The earlier
 hash-suffixed TEST origin used during mechanism development was a test origin,
 NOT this permanent production origin.
 
-Honest framing for every surface: targets the public Witness Network (staging
-tier); auditor-pins the witness keys; the production tier is not yet offered by
-the network. Never "member of"; never "production".
+Honest framing for every surface: the envelope log is WITNESSED at the STAGING
+tier by one independent, best-effort witness (k=1); auditor-pins the witness
+keys; the production tier is not offered by the network. A cosignature EVIDENCES
+non-equivocation of the head STRUCTURE, not content, and it never proves. Never
+"member of"; never "production".
+<!-- __s212_envelope_witnessed_staging_v1__ -->
 
 ADR candidate -- promote to the ADR ledger at the post-release docs-hardening
 milestone.
