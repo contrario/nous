@@ -4,6 +4,18 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+### Added
+
+- Santander mech-gov DecisionResult evidence adapter (opt-in, DARK behind
+  `NOUS_SANTANDER_ADAPTER`). Consume-only: parses a `DecisionResult.to_dict()`
+  JSONL line by key (never imports the mech-gov package) and emits a signed
+  decision-structural payload plus two digests (upstream, projection) and an
+  optional Rekor v2 anchor of the entropy nonce. The anchor evidences public
+  logging and log-ordering of the nonce, not a trusted time; the Rekor leaf
+  digest equals sha256(nonce) equals the upstream e3_nonce_hash. Hashes-not-raw,
+  interop-not-production, evidences never proves, monitor not guard. See
+  `docs/SANTANDER_ADAPTER.md`.  <!-- __s216_changelog_santander_adapter_v1__ -->
+
 ## [5.67.0]  <!-- __s180_changelog_v5_67_0__ -->
 
 ### Added

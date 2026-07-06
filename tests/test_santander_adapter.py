@@ -215,3 +215,154 @@ def test_emit_writes_verifiable_dossier_when_opted_in(
     blob = (tmp_path / "payload.json").read_text()
     assert "secret_pii" not in blob
     assert _FIXTURE_R2["rationale"] not in blob
+
+
+# __s216_rekor_anchor_tests_v1__
+def _s216_synthetic_anchor(nonce, log_priv):
+    import base64
+    import hashlib
+    import json as _json
+    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import ec
+    from cryptography.hazmat.primitives.asymmetric.ec import ECDSA
+    from rekor_checkpoint import ed25519_key_id
+
+    origin = "log2025-1.rekor.sigstore.dev"
+    nb = nonce.encode("ascii")
+    leaf_key = ec.generate_private_key(ec.SECP256R1())
+    sig_der = leaf_key.sign(nb, ECDSA(hashes.SHA256()))
+    pk_der = leaf_key.public_key().public_bytes(
+        serialization.Encoding.DER,
+        serialization.PublicFormat.SubjectPublicKeyInfo,
+    )
+    leaf = {
+        "kind": "hashedrekord",
+        "apiVersion": "0.0.2",
+        "spec": {"hashedRekordV002": {
+            "data": {
+                "algorithm": "SHA2_256",
+                "digest": base64.b64encode(hashlib.sha256(nb).digest()).decode(),
+            },
+            "signature": {
+                "content": base64.b64encode(sig_der).decode(),
+                "verifier": {
+                    "keyDetails": "PKIX_ECDSA_P256_SHA_256",
+                    "publicKey": {
+                        "rawBytes": base64.b64encode(pk_der).decode(),
+                    },
+                },
+            },
+        }},
+    }
+    body = _json.dumps(leaf).encode("utf-8")
+    root_hash = hashlib.sha256(b"\x00" + body).digest()
+    log_pub = log_priv.public_key()
+    note_text = (
+        origin + "\n" + "1" + "\n" + base64.b64encode(root_hash).decode() + "\n"
+    )
+    sig_blob = ed25519_key_id(origin, log_pub) + log_priv.sign(
+        note_text.encode("utf-8")
+    )
+    checkpoint_envelope = (
+        note_text + "\n" + "\u2014 " + origin + " "
+        + base64.b64encode(sig_blob).decode() + "\n"
+    )
+    block = {
+        "rekor_api_version": 2,
+        "log_id": "synthetic",
+        "log_index": 0,
+        "body_b64": base64.b64encode(body).decode(),
+        "checkpoint_envelope": checkpoint_envelope,
+        "inclusion_proof_hashes": [],
+    }
+    trusted = {
+        origin: base64.b64encode(
+            log_pub.public_bytes(
+                serialization.Encoding.Raw, serialization.PublicFormat.Raw
+            )
+        ).decode()
+    }
+    return block, trusted
+
+
+def test_s216_anchored_dossier_verifies_green() -> None:
+    from rekor_verify_v2 import load_trusted_log_keys
+
+    priv = Ed25519PrivateKey.generate()
+    log_priv = Ed25519PrivateKey.generate()
+    block, allowlist = _s216_synthetic_anchor(
+        _FIXTURE_R2["entropy_nonce"], log_priv
+    )
+    trusted = load_trusted_log_keys(allowlist)
+    line = _line(_FIXTURE_R2)
+    built = sa.build_dossier(_FIXTURE_R2, line, priv, _TS, _VER, rekor_anchor=block)
+    assert built["manifest_doc"].get("transparency_log") == block
+    v = sa.verify_santander_dossier(
+        built["manifest_doc"], built["payload"], trusted_log_keys=trusted
+    )
+    assert v.rekor_ok is True
+    assert v.ok is True
+
+
+def test_s216_verifier_total_never_raises() -> None:
+    import json as _json
+
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+        Ed25519PublicKey,
+    )
+
+    priv = Ed25519PrivateKey.generate()
+    log_priv = Ed25519PrivateKey.generate()
+    block, _allowlist = _s216_synthetic_anchor(
+        _FIXTURE_R2["entropy_nonce"], log_priv
+    )
+    line = _line(_FIXTURE_R2)
+    built = sa.build_dossier(_FIXTURE_R2, line, priv, _TS, _VER, rekor_anchor=block)
+
+    other = Ed25519PrivateKey.generate()
+    v_wrongkey = sa.verify_santander_dossier(
+        built["manifest_doc"],
+        built["payload"],
+        trusted_log_keys={"log2025-1.rekor.sigstore.dev": other.public_key()},
+    )
+    assert v_wrongkey.rekor_ok is False
+    assert v_wrongkey.ok is False
+
+    doc_bad = _json.loads(_json.dumps(built["manifest_doc"]))
+    doc_bad["transparency_log"] = {"rekor_api_version": 2}
+    v_bad = sa.verify_santander_dossier(
+        doc_bad, built["payload"], trusted_log_keys={}
+    )
+    assert v_bad.rekor_ok is False
+
+    doc_kind = _json.loads(_json.dumps(built["manifest_doc"]))
+    doc_kind["source_kind"] = "not/santander"
+    v_kind = sa.verify_santander_dossier(
+        doc_kind, built["payload"], trusted_log_keys={}
+    )
+    assert v_kind.kind_ok is False
+
+
+def test_s216_unanchored_byte_identity() -> None:
+    import json as _json
+
+    priv = Ed25519PrivateKey.generate()
+    log_priv = Ed25519PrivateKey.generate()
+    block, _allowlist = _s216_synthetic_anchor(
+        _FIXTURE_R2["entropy_nonce"], log_priv
+    )
+    line = _line(_FIXTURE_R2)
+    a = sa.build_dossier(_FIXTURE_R2, line, priv, _TS, _VER, rekor_anchor=None)
+    b = sa.build_dossier(_FIXTURE_R2, line, priv, _TS, _VER, rekor_anchor=block)
+    assert "transparency_log" not in a["manifest_doc"]
+    assert b["manifest_doc"]["transparency_log"] == block
+
+    def _body(doc):
+        d = {k: v for k, v in doc.items()
+             if k not in ("signature", "transparency_log")}
+        return _json.dumps(d, sort_keys=True, separators=(",", ":")).encode()
+
+    assert _body(a["manifest_doc"]) == _body(b["manifest_doc"])
+    va = sa.verify_santander_dossier(a["manifest_doc"], a["payload"])
+    assert va.rekor_ok is True
+    assert va.ok is True
