@@ -638,8 +638,8 @@ function setEditorCode(val) {
     // \u2500\u2500 NOUS Hover Tooltips \u2500\u2500
     var _ND = {
       'world': {d:'Top-level container defining agents, laws, and routing',u:'world TradingFloor {|  law max_souls = 4|  soul Watcher { ... }|}',c:'top-level'},
-      'soul': {d:'Autonomous agent with mind, senses, memory, and subsystems',u:'soul Watcher {|  mind: @Tier1 "deepseek-chat"|  senses: [http_get]|  memory { price: float }|  instinct { ... }|}',c:'inside world'},
-      'mind': {d:'LLM model and tier assignment for a soul',u:'mind: @Tier1 "deepseek-chat"',c:'inside soul'},
+      'soul': {d:'Autonomous agent with mind, senses, memory, and subsystems',u:'soul Watcher {|  mind: @Tier1 "deepseek-v4-flash"|  senses: [http_get]|  memory { price: float }|  instinct { ... }|}',c:'inside world'},
+      'mind': {d:'LLM model and tier assignment for a soul',u:'mind: @Tier1 "deepseek-v4-flash"',c:'inside soul'},
       'senses': {d:'External tools and APIs the soul can use',u:'senses: [http_get, http_post, websocket, db_query]',c:'inside soul'},
       'memory': {d:'Typed persistent state fields for the soul',u:'memory {|  price: float|  history: list|  active: bool|}',c:'inside soul'},
       'instinct': {d:'Behavioral rules \u2014 reactions, guards, and actions',u:'instinct {|  on "price_alert" => speak "Alert!"|  guard balance > 100|}',c:'inside soul'},
@@ -692,7 +692,7 @@ function setEditorCode(val) {
       'antibody_lifespan': {d:'How long immune antibodies last',u:'antibody_lifespan 24h',c:'inside immune_system'},
       'Tier0A': {d:'Free tier: Hermes-405B via OpenRouter ($0)',u:'mind: @Tier0A',c:'inside mind'},
       'Tier0B': {d:'Free tier: Nemotron-120B via OpenRouter ($0)',u:'mind: @Tier0B',c:'inside mind'},
-      'Tier1': {d:'Primary paid tier: DeepSeek',u:'mind: @Tier1 "deepseek-chat"',c:'inside mind'},
+      'Tier1': {d:'Primary paid tier: DeepSeek',u:'mind: @Tier1 "deepseek-v4-flash"',c:'inside mind'},
       'Tier2': {d:'Secondary paid tier',u:'mind: @Tier2 "model-name"',c:'inside mind'},
       'Tier3': {d:'Tertiary / fallback paid tier',u:'mind: @Tier3 "model-name"',c:'inside mind'},
       'string': {d:'Text data type',u:'name: string',c:'inside memory'},
@@ -834,7 +834,7 @@ function setEditorCode(val) {
         // ── TOP LEVEL ──
         if (ctx === 'top') {
           snip('world', 'world ${1:Name} {\n    law ${2:budget} = \\$${3:5.00} per cycle\n    heartbeat = ${4:30s}\n}', 'Define a new world');
-          snip('soul', 'soul ${1:Name} {\n    mind: ${2:deepseek-chat} @ ${3:Tier1}\n    senses: [${4:http_get}]\n    memory {\n        ${5:field}: ${6:string} = ${7:""}\n    }\n    instinct {\n        ${0}\n    }\n}', 'Define a new soul');
+          snip('soul', 'soul ${1:Name} {\n    mind: ${2:deepseek-v4-flash} @ ${3:Tier1}\n    senses: [${4:http_get}]\n    memory {\n        ${5:field}: ${6:string} = ${7:""}\n    }\n    instinct {\n        ${0}\n    }\n}', 'Define a new soul');
           snip('message', 'message ${1:Name} {\n    ${2:field}: ${3:string}\n}', 'Define a message type');
           snip('nervous_system', 'nervous_system {\n    ${1:SoulA} -> ${2:SoulB}\n}', 'Define routing topology');
           kw('world', 'Top-level world declaration');
@@ -874,7 +874,7 @@ function setEditorCode(val) {
 
         // ── SOUL BLOCK ──
         if (ctx === 'soul') {
-          snip('mind', 'mind: ${1:deepseek-chat} @ ${2:Tier1}', 'LLM model and tier');
+          snip('mind', 'mind: ${1:deepseek-v4-flash} @ ${2:Tier1}', 'LLM model and tier');
           snip('senses', 'senses: [${1:http_get}]', 'Available tools');
           snip('memory {}', 'memory {\n    ${1:field}: ${2:string} = ${3:""}\n}', 'Memory fields');
           snip('instinct {}', 'instinct {\n    ${0}\n}', 'Core behavior loop');
@@ -882,7 +882,7 @@ function setEditorCode(val) {
           snip('dna {}', 'dna {\n    ${1:param}: ${2:10} ~ [${3:1}, ${4:100}]\n}', 'Evolvable parameters');
           snip('mitosis {}', 'mitosis {\n    trigger: ${1:queue_depth} > ${2:10}\n    max_clones: ${3:3}\n    clone_tier: ${4:Cerebras}\n    retire_trigger: ${5:queue_depth} < ${6:3}\n    retire_cooldown: ${7:120s}\n    min_clones: ${8:1}\n}', 'Auto-scaling');
           snip('immune_system {}', 'immune_system {\n    antibody_lifespan: ${1:30m}\n    share_with_clones: ${2:true}\n}', 'Immune defense');
-          snip('dream_system {}', 'dream_system {\n    enabled: true\n    trigger_idle_sec: ${1:60}\n    dream_mind: ${2:deepseek-chat} @ ${3:Cerebras}\n    max_cache: ${4:50}\n}', 'Idle-time dreaming');
+          snip('dream_system {}', 'dream_system {\n    enabled: true\n    trigger_idle_sec: ${1:60}\n    dream_mind: ${2:deepseek-v4-flash} @ ${3:Cerebras}\n    max_cache: ${4:50}\n}', 'Idle-time dreaming');
           snip('symbiosis {}', 'symbiosis {\n    bond_with: [${1:SoulName}]\n    shared_memory: [${2:field}]\n    sync_interval: ${3:10s}\n}', 'Soul bonding');
           snip('metabolism {}', 'metabolism {\n    max_energy: ${1:100}\n    energy_per_cycle: ${2:10}\n    recovery_rate: ${3:5}\n    fatigue_tier: ${4:Tier1}\n    hibernate_threshold: ${5:15}\n    recovery_idle_sec: ${6:30}\n}', 'Energy management');
           snip('consciousness {}', 'consciousness {\n    goals: [${1:accuracy}]\n    reflect_every: ${2:5}\n    self_model: ${3:true}\n    goal_threshold: ${4:0.7}\n    introspection_depth: ${5:3}\n}', 'Self-reflection');
@@ -964,7 +964,7 @@ function setEditorCode(val) {
         if (ctx === 'dream_system') {
           fld('enabled', 'enabled: ${1:true}', 'Enable dreaming');
           fld('trigger_idle_sec', 'trigger_idle_sec: ${1:60}', 'Idle seconds before dream');
-          fld('dream_mind', 'dream_mind: ${1:deepseek-chat} @ ${2:Cerebras}', 'Dream LLM model and tier');
+          fld('dream_mind', 'dream_mind: ${1:deepseek-v4-flash} @ ${2:Cerebras}', 'Dream LLM model and tier');
           fld('max_cache', 'max_cache: ${1:50}', 'Max cached dream results');
           return { suggestions: suggestions };
         }
