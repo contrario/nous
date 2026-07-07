@@ -13,7 +13,7 @@ message Insight {
 }
 
 soul Explorer {
-    mind: deepseek-chat @ Tier0A
+    mind: deepseek-v4-flash @ Tier0A
     senses: [http_get]
     memory {
         discoveries: int = 0
@@ -37,7 +37,7 @@ soul Explorer {
 }
 
 soul Philosopher {
-    mind: deepseek-chat @ Tier0B
+    mind: deepseek-v4-flash @ Tier0B
     memory {
         reflections: int = 0
         wisdom: float = 0.0
@@ -60,7 +60,7 @@ soul Philosopher {
 }
 
 soul Scribe {
-    mind: deepseek-chat @ Tier0B
+    mind: deepseek-v4-flash @ Tier0B
     memory {
         records: int = 0
     }

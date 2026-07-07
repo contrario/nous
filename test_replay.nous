@@ -22,7 +22,7 @@ sense price_feed {
 }
 
 soul Watcher {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [price_feed]
     memory {
         observations: int = 0

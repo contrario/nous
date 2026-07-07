@@ -588,7 +588,7 @@ soul CustomerSuccess {
 }
 
 soul CustomerSupportSpecialist {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [execute_python, create_pdf, create_excel, create_word, send_email, web_search, memory_recall, memory_store, write_shared_knowledge, read_shared_knowledge]
 
     memory {
@@ -1279,7 +1279,7 @@ soul KycVerifier {
 }
 
 soul LegalAdvisor {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [firecrawl_scrape, doc_to_markdown, jina_read, crawl_page, web_search, memory_recall, memory_store, write_shared_knowledge, read_shared_knowledge]
 
     memory {
@@ -2229,7 +2229,7 @@ soul SalesBusinessDevelopment {
 }
 
 soul SanctionsExpert {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [web_search, memory_recall, memory_store]
 
     memory {
@@ -2460,7 +2460,7 @@ soul StochasticExpert {
 }
 
 soul Superbrain {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
 
     memory {
         query_count: int = 0

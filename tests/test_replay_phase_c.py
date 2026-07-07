@@ -122,7 +122,7 @@ sense extra_sense {
 }
 
 soul Ticker {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [counter_tick, extra_sense]
     memory {
         ticks: int = 0

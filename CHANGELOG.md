@@ -16,6 +16,14 @@
   interop-not-production, evidences never proves, monitor not guard. See
   `docs/SANTANDER_ADAPTER.md`.  <!-- __s216_changelog_santander_adapter_v1__ -->
 
+### Changed
+
+- Migrated runtime LLM call sites, templates, and tests from the retiring
+  DeepSeek `deepseek-chat` alias to `deepseek-v4-flash` with thinking disabled,
+  preserving the prior non-thinking semantics. Added the `deepseek-v4-flash`
+  pricing entry. The `deepseek-chat` and `deepseek-reasoner` aliases retire
+  2026-07-24 15:59 UTC.  <!-- __s217_changelog_deepseek_v4flash_v1__ -->
+
 ## [5.67.0]  <!-- __s180_changelog_v5_67_0__ -->
 
 ### Added

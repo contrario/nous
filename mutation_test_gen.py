@@ -51,7 +51,7 @@ class Soul_DataMutant:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "DataMutant"
         self._runtime = runtime
-        self.model = "deepseek-chat"
+        self.model = "deepseek-v4-flash"
         self.tier = "Tier1"
         self.senses = ['bad_data_source']
         self.cycle_count = 0

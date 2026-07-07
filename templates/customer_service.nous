@@ -27,7 +27,7 @@ message Escalation {
 }
 
 soul Triage {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [http_get, superbrain_search]
 
     memory {
@@ -87,7 +87,7 @@ soul Resolver {
 }
 
 soul Escalator {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
 
     memory {
         escalations: int = 0

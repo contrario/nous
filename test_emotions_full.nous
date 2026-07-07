@@ -18,7 +18,7 @@ sense fake_fail {
 }
 
 soul Watcher {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [fake_ok]
     memory {
         cycles_done: int = 0

@@ -4,7 +4,7 @@ world EmotionsTest {
 }
 
 soul Triage {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [http_get]
     memory {
         msg_count: int = 0

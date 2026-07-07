@@ -52,7 +52,7 @@ message Answer {
 }
 
 soul Analyst {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [http_get]
     memory {
         queries_seen: int = 0

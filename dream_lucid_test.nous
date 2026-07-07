@@ -18,7 +18,7 @@ soul Dreamer {
     dream_system {
         enabled: true
         trigger_idle_sec: 8
-        dream_mind: deepseek-chat @ Tier1
+        dream_mind: deepseek-v4-flash @ Tier1
         max_cache: 10
         speculation_depth: 3
     }

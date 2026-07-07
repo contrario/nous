@@ -78,7 +78,7 @@ class Soul_Watcher:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "Watcher"
         self._runtime = runtime
-        self.model = "deepseek-chat"
+        self.model = "deepseek-v4-flash"
         self.tier = "Tier1"
         self.senses = ['http_get']
         self.cycle_count = 0
@@ -189,7 +189,7 @@ class Soul_Executor:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "Executor"
         self._runtime = runtime
-        self.model = "deepseek-chat"
+        self.model = "deepseek-v4-flash"
         self.tier = "Tier1"
         self.senses = []
         self.cycle_count = 0
@@ -359,7 +359,7 @@ def build_runtime() -> NousRuntime:
         DreamConfig(
             enabled=True,
             trigger_idle_sec=45,
-            dream_mind_model="deepseek-chat",
+            dream_mind_model="deepseek-v4-flash",
             dream_mind_tier="Cerebras",
             max_cache=50,
             speculation_depth=3,

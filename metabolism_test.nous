@@ -12,7 +12,7 @@ message Report {
 }
 
 soul Worker {
-    mind: deepseek-chat @ Tier0A
+    mind: deepseek-v4-flash @ Tier0A
     senses: [http_get]
     memory {
         tasks_done: int = 0
@@ -36,7 +36,7 @@ soul Worker {
 }
 
 soul Supervisor {
-    mind: deepseek-chat @ Tier0B
+    mind: deepseek-v4-flash @ Tier0B
     memory {
         reports: int = 0
     }
@@ -58,7 +58,7 @@ soul Supervisor {
 }
 
 soul Logger {
-    mind: deepseek-chat @ Tier0B
+    mind: deepseek-v4-flash @ Tier0B
     memory {
         logs: int = 0
     }

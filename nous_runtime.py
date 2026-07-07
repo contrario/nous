@@ -171,6 +171,8 @@ class RuntimeTier:
         t0 = time.perf_counter()
         try:
             async with httpx.AsyncClient(timeout=self.timeout) as client:
+                if "api.deepseek.com" in self.base_url:
+                    body["thinking"] = {"type": "disabled"}
                 resp = await client.post(self.base_url, headers=headers, json=body)
                 resp.raise_for_status()
                 data = resp.json()
@@ -251,6 +253,8 @@ class RuntimeTier:
         try:
             stream_timeout = httpx.Timeout(connect=10.0, read=60.0, write=10.0, pool=10.0)
             async with httpx.AsyncClient(timeout=stream_timeout) as client:
+                if "api.deepseek.com" in self.base_url:
+                    body["thinking"] = {"type": "disabled"}
                 async with client.stream("POST", self.base_url, headers=headers, json=body) as resp:
                     resp.raise_for_status()
                     current_event = ""
@@ -374,7 +378,7 @@ RUNTIME_TIERS: list[RuntimeTier] = [
     RuntimeTier(
         name="DeepSeek",
         base_url="https://api.deepseek.com/v1/chat/completions",
-        model="deepseek-chat",
+        model="deepseek-v4-flash",
         api_key_env="DEEPSEEK_API_KEY",
         cost_per_1k_in=0.00014,
         cost_per_1k_out=0.00028,

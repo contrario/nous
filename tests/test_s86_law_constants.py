@@ -31,7 +31,7 @@ def _gen(src: str) -> str:
 
 _WORLDLESS = """\
 soul Solo {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [http_get]
     memory { n: int = 0 }
     instinct {
@@ -50,7 +50,7 @@ world W {
     heartbeat = 15s
 }
 soul Solo {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [http_get]
     memory { n: int = 0 }
     instinct {

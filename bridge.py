@@ -35,7 +35,7 @@ TIER_MAP: dict[str, dict[str, Any]] = {
     },
     "Tier1": {
         "provider": "openrouter",
-        "models": ["deepseek-r1", "deepseek-chat", "xiaomi/mimo-v2-pro"],
+        "models": ["deepseek-r1", "deepseek-v4-flash", "xiaomi/mimo-v2-pro"],
         "cost_range": "$0.001-0.01/query",
         "label": "Standard",
     },

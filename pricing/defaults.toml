@@ -176,6 +176,19 @@ source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
 verified_by   = "manual"
 
 
+[models."deepseek-v4-flash"]  # __s217_deepseek_v4flash_pricing_v1__
+provider       = "deepseek"
+pricing_model  = "per_token"
+input_per_1m  = "0.14"
+output_per_1m = "0.28"
+prompt_caching_supported = false
+batch_discount_pct = 0
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-07-07"
+source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
+verified_by   = "manual"
+
+
 # DeepSeek R1 is a REASONING model -- emits 5K-20K hidden thinking
 # tokens before each visible response. The multiplier conservatively
 # bounds this for SMT verification.

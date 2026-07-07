@@ -841,7 +841,7 @@ class NousCodeGen:
                 if soul.dream_system:
                     ds = soul.dream_system
                     sn = soul.name
-                    dm_model = ds.dream_mind.model if ds.dream_mind else "deepseek-chat"
+                    dm_model = ds.dream_mind.model if ds.dream_mind else "deepseek-v4-flash"
                     dm_tier = ds.dream_mind.tier.value if ds.dream_mind else "Tier1"
                     self._emit(f"dream.register(")
                     self._indent()

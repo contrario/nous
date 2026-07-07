@@ -29,7 +29,7 @@ message Alert {
 }
 
 soul Scanner {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [http_get]
 
     memory {
@@ -94,7 +94,7 @@ soul Analyzer {
 }
 
 soul Alerter {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
 
     memory {
         alerts_sent: int = 0

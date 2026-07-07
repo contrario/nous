@@ -21,7 +21,7 @@ message Report {
 }
 
 soul Scanner {
-    mind: deepseek-chat @ Tier0A
+    mind: deepseek-v4-flash @ Tier0A
     senses: [http_get]
     memory {
         scan_count: int = 0
@@ -51,7 +51,7 @@ soul Scanner {
 }
 
 soul Analyzer {
-    mind: deepseek-chat @ Tier0B
+    mind: deepseek-v4-flash @ Tier0B
     memory {
         count: int = 0
     }
@@ -66,7 +66,7 @@ soul Analyzer {
 }
 
 soul Reporter {
-    mind: deepseek-chat @ Tier0B
+    mind: deepseek-v4-flash @ Tier0B
     memory {
         reports: int = 0
     }

@@ -48,7 +48,7 @@ def _insight_key(scenario: str) -> str:
 class DreamConfig:
     enabled: bool = True
     trigger_idle_sec: int = 30
-    dream_mind_model: str = "deepseek-chat"
+    dream_mind_model: str = "deepseek-v4-flash"
     dream_mind_tier: str = "Tier1"
     max_cache: int = 20
     speculation_depth: int = 3
@@ -355,7 +355,7 @@ class DreamEngine:
 
         if not tier_config:
             providers = [
-                ("DEEPSEEK_API_KEY", "https://api.deepseek.com/v1/chat/completions", "deepseek-chat", "openai"),
+                ("DEEPSEEK_API_KEY", "https://api.deepseek.com/v1/chat/completions", "deepseek-v4-flash", "openai"),
                 ("MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-small-latest", "openai"),
             ]
         else:
@@ -364,7 +364,7 @@ class DreamEngine:
                 providers = [(tier_config["env"], tier_config["url"], config.dream_mind_model, tier_config["type"])]
             else:
                 providers = [
-                    ("DEEPSEEK_API_KEY", "https://api.deepseek.com/v1/chat/completions", "deepseek-chat", "openai"),
+                    ("DEEPSEEK_API_KEY", "https://api.deepseek.com/v1/chat/completions", "deepseek-v4-flash", "openai"),
                     ("MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-small-latest", "openai"),
                 ]
 
@@ -399,6 +399,8 @@ class DreamEngine:
                             "temperature": 0.7,
                             "messages": [{"role": "user", "content": prompt}],
                         }
+                        if "api.deepseek.com" in url:
+                            payload["thinking"] = {"type": "disabled"}
                         resp = await client.post(url, json=payload, headers=headers)
                         data = resp.json()
                         return data["choices"][0]["message"]["content"]

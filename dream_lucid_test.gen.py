@@ -111,7 +111,7 @@ def build_runtime() -> NousRuntime:
         DreamConfig(
             enabled=True,
             trigger_idle_sec=8,
-            dream_mind_model="deepseek-chat",
+            dream_mind_model="deepseek-v4-flash",
             dream_mind_tier="Tier1",
             max_cache=10,
             speculation_depth=3,

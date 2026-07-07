@@ -25,7 +25,7 @@ message PriceReport {
 }
 
 soul MarketSensor {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [stock_price, weather_now]
     memory {
         updates: int = 0

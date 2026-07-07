@@ -164,7 +164,7 @@ class ImmuneEngine:
     async def _default_llm_caller(self, soul_name: str, prompt: str) -> str:
         import os
         providers = [
-            ("DEEPSEEK_API_KEY", "https://api.deepseek.com/v1/chat/completions", "deepseek-chat"),
+            ("DEEPSEEK_API_KEY", "https://api.deepseek.com/v1/chat/completions", "deepseek-v4-flash"),
             ("MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-small-latest"),
             ("ANTHROPIC_API_KEY", "https://api.anthropic.com/v1/messages", "claude-3-haiku-20240307"),
         ]
@@ -181,6 +181,8 @@ class ImmuneEngine:
                     headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
                     payload = {"model": model, "max_tokens": 300, "messages": [{"role": "user", "content": prompt}]}
                 async with httpx.AsyncClient(timeout=15.0) as client:
+                    if "api.deepseek.com" in base_url:
+                        payload["thinking"] = {"type": "disabled"}
                     resp = await client.post(base_url, json=payload, headers=headers)
                     data = resp.json()
                     if "anthropic" in base_url:

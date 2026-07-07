@@ -54,7 +54,7 @@ class Soul_Scanner:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "Scanner"
         self._runtime = runtime
-        self.model = "deepseek-chat"
+        self.model = "deepseek-v4-flash"
         self.tier = "Tier0A"
         self.senses = ['http_get']
         self.cycle_count = 0
@@ -122,7 +122,7 @@ class Soul_Analyzer:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "Analyzer"
         self._runtime = runtime
-        self.model = "deepseek-chat"
+        self.model = "deepseek-v4-flash"
         self.tier = "Tier0A"
         self.senses = ['http_get']
         self.cycle_count = 0
@@ -183,7 +183,7 @@ class Soul_Reporter:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "Reporter"
         self._runtime = runtime
-        self.model = "deepseek-chat"
+        self.model = "deepseek-v4-flash"
         self.tier = "Tier0B"
         self.senses = []
         self.cycle_count = 0

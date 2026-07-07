@@ -45,7 +45,7 @@ world W {{
 }}
 message Alert {{ level: string }}
 soul A {{
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [http_get]
     memory {{ n: int = 0 }}
     instinct {{
@@ -54,7 +54,7 @@ soul A {{
     heal {{ on error => retry(2, error) }}
 }}
 soul B {{
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     memory {{ m: int = 0 }}
     instinct {{
         let p = listen A::Alert

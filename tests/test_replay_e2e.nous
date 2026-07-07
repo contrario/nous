@@ -22,7 +22,7 @@ sense counter_tick {
 }
 
 soul Ticker {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [counter_tick]
     memory {
         ticks: int = 0

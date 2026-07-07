@@ -148,6 +148,8 @@ class OracleTier:
 
         try:
             with httpx.Client(timeout=self.timeout) as client:
+                if "api.deepseek.com" in self.base_url:
+                    body["thinking"] = {"type": "disabled"}
                 resp = client.post(
                     self.base_url,
                     headers=headers,
@@ -211,7 +213,7 @@ TIERS: list[OracleTier] = [
     OracleTier(
         name="DeepSeek",
         base_url="https://api.deepseek.com/v1/chat/completions",
-        model="deepseek-chat",
+        model="deepseek-v4-flash",
         api_key_env="DEEPSEEK_API_KEY",
         cost_per_1k_in=0.00014,
         cost_per_1k_out=0.00028,

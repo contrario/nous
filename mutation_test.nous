@@ -10,7 +10,7 @@ message CleanData {
 }
 
 soul DataMutant {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [bad_data_source]
     memory {
         attempts: int = 0

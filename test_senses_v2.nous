@@ -33,7 +33,7 @@ message PriceReport {
 }
 
 soul MarketSensor {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [stock_price, weather_now, github_release]
     memory {
         last_price: float = 0.0

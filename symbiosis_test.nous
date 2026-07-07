@@ -13,7 +13,7 @@ message Summary {
 }
 
 soul Scout {
-    mind: deepseek-chat @ Tier0A
+    mind: deepseek-v4-flash @ Tier0A
     senses: [http_get]
     memory {
         discovered: int = 0
@@ -36,7 +36,7 @@ soul Scout {
 }
 
 soul Analyst {
-    mind: deepseek-chat @ Tier0A
+    mind: deepseek-v4-flash @ Tier0A
     memory {
         analyzed: int = 0
         shared_score: float = 0.0
@@ -59,7 +59,7 @@ soul Analyst {
 }
 
 soul Reporter {
-    mind: deepseek-chat @ Tier0B
+    mind: deepseek-v4-flash @ Tier0B
     memory {
         reports: int = 0
     }

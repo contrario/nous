@@ -26,7 +26,7 @@ message Review {
 }
 
 soul Researcher {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
     senses: [http_get]
 
     memory {
@@ -86,7 +86,7 @@ soul Writer {
 }
 
 soul Editor {
-    mind: deepseek-chat @ Tier1
+    mind: deepseek-v4-flash @ Tier1
 
     memory {
         reviews_done: int = 0
