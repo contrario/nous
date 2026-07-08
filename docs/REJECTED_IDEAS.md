@@ -56,3 +56,34 @@ One block per rejected idea:
 - Revisit trigger: not yet -- if a genuine single-entry inclusion use case ever
   appears (one leaf, one log, one inclusion claim), tlog-proof@v1 is the right
   format for THAT case, but never for the set-bundle fan.
+
+### R2 -- NL->NOUS drafting via external-API LLM (prompt-grounding + bounded parse-retry) + intent-diff v2 (S219)
+- Idea: let a user describe intent in English and receive NOUS source they review,
+  drafted by an external-API LLM (DeepSeek v4-flash) grounded on the live EBNF + held-out
+  few-shot, gated by a bounded parse-retry loop; plus the intent-diff v2 variant (the LLM
+  proposes a verified-property checklist, the user confirms, a deterministic diff compares
+  it against verifier output).
+- Searches run: in-session R3 measurement, not a web recon. draft_spike.py over DeepSeek
+  v4-flash (temperature 0, thinking disabled), grounded on distilled live v2.0 EBNF + three
+  held-out few-shot bodies (router, scheduler, aml -- zero fixture bodies in the prompt),
+  N=10 locked fixtures (9 = shipped templates, held out of the prompt) + a 4-fixture novel
+  probe. Bounded retry appended the exact parser error. Four marks per fixture: first-pass
+  parse / post-retry parse / verify-ok / intent-match.
+- Result: first-pass parse 10/10 locked after a routing-grounding fix, but verify-ok 4/10
+  and intent-match <= 2/10 (fixtures 01 and 07 are R2-class: they parse, verify clean, and
+  encode the WRONG guarantee -- a per-cycle cap read as a total cap; a Publisher that
+  re-listens the Draft so publish is not strictly gated behind the passing Review). Novel
+  clean floor: 1/4 verify-ok. Parse rate and verify-ok moved in opposite directions across
+  two prompt-grounding versions, so the parse numbers are prompt-fitting, not a stable
+  estimate of drafting quality.
+- Rejection reason: violates the honest boundary (drafts that parse and verify-clean but
+  encode the wrong guarantee are silent R2 overclaims the parse ceiling hides) / weak
+  strategic leverage (the wall is SEMANTIC, not syntactic; parse-level fixes do not clear
+  it). intent-diff v2 falls with the arc: it SURFACES divergence but does not make the
+  draft correct -- the user hand-corrects a wrong draft every time, and the checklist is
+  itself LLM-extracted.
+- Revisit trigger: not yet -- reopens only on a mechanism that closes the SEMANTIC gap:
+  (a) a verify-ERROR-feedback repair loop (feed verify_program ERROR items back into the
+  model, NOT just parser errors -- the one lever this spike did not test), or (b) a
+  NOUS-semantics-tuned self-hosted model. NOT "better prompt". NOT GCD (guaranteed-valid
+  decoding) alone -- GCD closes the syntactic gap, and R3 failed on the semantic axis.
