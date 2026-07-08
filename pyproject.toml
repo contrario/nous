@@ -139,6 +139,8 @@ py-modules = [
     "closure_attestation",  # __s206_closure_attestation_pyproject_v1__
     "closure_witness",  # __s207_closure_witness_pyproject_v1__
     "santander_adapter",  # __s215_santander_adapter_pyproject_v1__
+    "guardrails_adapter",  # __s219_guardrails_adapter_pyproject_v1__
+    "llm_guard_adapter",  # __s219_llm_guard_adapter_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__
