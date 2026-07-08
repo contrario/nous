@@ -51,9 +51,11 @@ from cryptography.exceptions import InvalidSignature
 LLM_GUARD_ADAPTER_SCHEMA_VERSION: int = 1
 LLM_GUARD_SOURCE_KIND: str = "llm-guard/scan/decision"
 LLM_GUARD_PROJECTION_VERSION: str = "llm-guard-scan/1"
-# Producer-side envelope-ledger domain tag. Placeholder until a persistent-key
-# signature ships (axiom 2: permanent once signed). Present for parity with the
+# Producer-side envelope-ledger domain tag. FROZEN at S221 by a local genesis
+# persistent-key signature (axiom 2: permanent once signed); the dedicated key
+# llm-guard-adapter.key binds these exact bytes. Present for parity with the
 # santander commitment derivation; NOT part of the signed manifest.
+# __s221_llm_guard_tag_frozen_v1__
 LLM_GUARD_COMMIT_TAG: bytes = b"nous/llm-guard-scan/v1|"
 _OPT_IN_ENV: str = "NOUS_LLM_GUARD_ADAPTER"
 

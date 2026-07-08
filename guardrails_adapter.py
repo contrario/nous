@@ -50,9 +50,11 @@ from cryptography.exceptions import InvalidSignature
 GUARDRAILS_ADAPTER_SCHEMA_VERSION: int = 1
 GUARDRAILS_SOURCE_KIND: str = "guardrails-ai/validation/decision"
 GUARDRAILS_PROJECTION_VERSION: str = "guardrails-validation/1"
-# Producer-side envelope-ledger domain tag. Placeholder until a persistent-key
-# signature ships (axiom 2: permanent once signed). Present for parity with the
+# Producer-side envelope-ledger domain tag. FROZEN at S221 by a local genesis
+# persistent-key signature (axiom 2: permanent once signed); the dedicated key
+# guardrails-adapter.key binds these exact bytes. Present for parity with the
 # santander commitment derivation; NOT part of the signed manifest.
+# __s221_guardrails_tag_frozen_v1__
 GUARDRAILS_COMMIT_TAG: bytes = b"nous/guardrails-validation/v1|"
 _OPT_IN_ENV: str = "NOUS_GUARDRAILS_ADAPTER"
 
