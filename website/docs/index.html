@@ -155,7 +155,7 @@ pre code{background:none;padding:0;font-size:inherit;color:inherit}
   <div class="sb-section">
     <div class="sb-title">Verification</div>
     <a href="#verification" class="sb-link">Formal Verification</a>
-    <a href="#proof-codes" class="sb-link">Proof Codes</a>
+    <a href="#proof-codes" class="sb-link">Verification Codes</a>
   </div>
   <div class="sb-section">
     <div class="sb-title">Governance &amp; Replay</div>
@@ -467,7 +467,7 @@ $ python cli.py run hello.nous</code></pre>
 <tr><td>3. Imports</td><td>Import Resolution</td><td>Cycle detection</td></tr>
 <tr><td>4. Laws</td><td>Law Validation (14 rules)</td><td>W001–P002</td></tr>
 <tr><td>5. Types</td><td>Type Checking (9 rules)</td><td>Full inference</td></tr>
-<tr><td>6. Verify</td><td>Formal Verification (7 cat.)</td><td>16 proof codes</td></tr>
+<tr><td>6. Verify</td><td>Formal Verification (7 cat.)</td><td>16 verification codes</td></tr>
 <tr><td>7. CodeGen</td><td>Python / JS / HTML</td><td>Multi-target</td></tr>
 <tr><td>8. Check</td><td>py_compile / structural</td><td>Output verified</td></tr>
 </tbody>
@@ -599,7 +599,7 @@ $ python cli.py run hello.nous</code></pre>
 <!-- VERIFICATION -->
 <div class="doc-section" id="verification">
 <h2>Formal Verification</h2>
-<p>NOUS provides mathematical guarantees before execution. 7 proof categories, 16 verification codes:</p>
+<p>NOUS runs seven static-verification categories (16 codes) before execution &mdash; structural checks, not proofs &mdash; and separately emits Z3/Farkas proofs for cost, coverage, and sequence:</p>
 <pre><code>═══ NOUS Formal Verification — GateAlpha ═══
 
 ── Resource Bound ──
@@ -632,9 +632,9 @@ VERIFIED: 10 proven, 0 warnings, 0 errors</code></pre>
 
 <!-- PROOF CODES -->
 <div class="doc-section" id="proof-codes">
-<h2>Proof Codes</h2>
+<h2>Verification Codes</h2>
 <table class="doc-table">
-<thead><tr><th>Code</th><th>Category</th><th>What It Proves</th></tr></thead>
+<thead><tr><th>Code</th><th>Category</th><th>What It Checks</th></tr></thead>
 <tbody>
 <tr><td><code>VR001</code></td><td>Resource Bound</td><td>Each soul's estimated max cost ≤ ceiling</td></tr>
 <tr><td><code>VR002</code></td><td>Resource Bound</td><td>Total cascade cost ≤ ceiling</td></tr>
@@ -654,21 +654,21 @@ VERIFIED: 10 proven, 0 warnings, 0 errors</code></pre>
 <tr><td><code>VT004</code></td><td>Topology</td><td>Cross-node routes identified</td></tr>
 </tbody>
 </table>
-<h3>Mitosis Proofs (VMI)</h3>
+<h3>Mitosis Checks (VMI)</h3>
 <pre><code>VMI001  Mitosis cost bounded (parent + max clones &le; ceiling)
 VMI002  Verification gate enabled/disabled
 VMI003  Clone tier cost savings
 VMI004  Listener clones share channel
 VMI005  Total mitosis capacity</code></pre>
 
-<h3>Immune Proofs (VIM)</h3>
+<h3>Immune Checks (VIM)</h3>
 <pre><code>VIM001  Adaptive recovery enabled
 VIM002  Clone antibody broadcast
 VIM003  Antibody lifespan bounds
 VIM004  Layered defense (heal + immune)
 VIM005  Immune coverage</code></pre>
 
-<h3>Dream Proofs (VDR)</h3>
+<h3>Dream Checks (VDR)</h3>
 <pre><code>VDR001  Dream mind tier cost
 VDR002  Dream cost within budget
 VDR003  Productive idle time
@@ -719,7 +719,7 @@ VDR004  Dream coverage</code></pre>
 <tr><td><code>prices</code></td><td>Inspect and manage the LLM pricing table used by --smt.</td></tr>
 <tr><td><code>dossier</code></td><td>Emit EU AI Act Annex IV compliance bundle</td></tr>
 <tr><td><code>dossier-spec</code></td><td>Emit EU AI Act Annex IV compliance bundle from a SKILL.md skill directory</td></tr>
-<tr><td><code>conformance</code></td><td>Runtime conformance: prove a signed execution trace stayed inside the envelope the static cost proof assumed</td></tr>
+<tr><td><code>conformance</code></td><td>Runtime conformance: evidence a signed execution trace stayed inside the envelope the static cost proof assumed</td></tr>
 <tr><td><code>vsa</code></td><td>Emit/verify a SLSA Verification Summary Attestation (VSA)</td></tr>
 <tr><td><code>build-attest-verify</code></td><td>Offline dual-root convergence verify of a release bundle (operator Ed25519 + Rekor v2 transparency log)</td></tr>
 <tr><td><code>ndec</code></td><td>Build or verify a portable .ndec decision attestation</td></tr>
@@ -751,7 +751,7 @@ VDR004  Dream coverage</code></pre>
 <p>The NOUS IDE is a self-contained HTML file with 4 tabs:</p>
 <ul>
 <li><strong>Editor</strong> — syntax-aware code editor with live validation and compile buttons</li>
-<li><strong>Verify</strong> — real-time formal verification with proof results</li>
+<li><strong>Verify</strong> — real-time formal verification with proof and check results</li>
 <li><strong>Graph</strong> — visual nervous system diagram with HEARTBEAT/LISTENER nodes</li>
 <li><strong>Create</strong> — natural language input with quick templates</li>
 </ul>
@@ -892,7 +892,7 @@ Total saveable: $141.31/month</code></pre>
 <!-- MITOSIS -->
 <div class="doc-section" id="mitosis">
 <h2>Soul Mitosis</h2>
-<p>Self-replicating agents with formal verification gate. When a soul detects overload, it spawns a clone of itself. The clone is formally verified before deployment, and the nervous system rewires automatically. No other framework has this.</p>
+<p>Self-replicating agents with formal verification gate. When a soul detects overload, it spawns a clone of itself. The clone is formally verified before deployment, and the nervous system rewires automatically.</p>
 
 <h3>Syntax</h3>
 <pre><code><span class="kw">soul</span> Scanner {
@@ -935,7 +935,7 @@ MT004  ERROR   soul with mitosis must have a mind
 MT005  WARN    heal block recommended for mitosis souls
 MT006  ERROR   clone_tier must be a valid tier</code></pre>
 
-<h3>Verification Proofs</h3>
+<h3>Verification Checks</h3>
 <pre><code>VMI001  Worst-case cost (parent + clones) &le; ceiling
 VMI002  Verification gate enabled/disabled status
 VMI003  Clone tier cost vs parent tier
@@ -944,7 +944,7 @@ VMI005  Total mitosis capacity across system</code></pre>
 
 <h3>CLI</h3>
 <pre><code>$ nous mitosis file.nous    # Analyze mitosis configuration
-$ nous verify file.nous     # Includes VMI001-VMI005 proofs</code></pre>
+$ nous verify file.nous     # Includes VMI001-VMI005 checks</code></pre>
 
 <h3>Files</h3>
 <p><code>mitosis_engine.py</code> at <code>/opt/aetherlang_agents/nous/</code></p>
@@ -1006,7 +1006,7 @@ Parse errors                (json, decode, invalid)</code></pre>
 IM002  WARN    share_with_clones without mitosis
 IM003  ERROR   antibody_lifespan too short (&lt; 10s)</code></pre>
 
-<h3>Verification Proofs</h3>
+<h3>Verification Checks</h3>
 <pre><code>VIM001  Adaptive recovery enabled/disabled
 VIM002  Clone broadcast: antibodies reach N clones
 VIM003  Antibody lifespan within safe bounds (&lt; 24h)
@@ -1015,7 +1015,7 @@ VIM005  Immune coverage: N/M souls protected</code></pre>
 
 <h3>CLI</h3>
 <pre><code>$ nous immune file.nous     # Analyze immune system config
-$ nous verify file.nous     # Includes VIM001-VIM005 proofs</code></pre>
+$ nous verify file.nous     # Includes VIM001-VIM005 checks</code></pre>
 
 <h3>Files</h3>
 <p><code>immune_engine.py</code> at <code>/opt/aetherlang_agents/nous/</code></p>
@@ -1082,7 +1082,7 @@ DR003  WARN    max_cache &gt; 100 (memory impact)
 DR004  WARN    speculation_depth outside 1-10
 DR005  WARN    dream_mind same tier as primary (use cheaper)</code></pre>
 
-<h3>Verification Proofs</h3>
+<h3>Verification Checks</h3>
 <pre><code>VDR001  Dream mind tier cost vs primary tier
 VDR002  Dream cost within budget (&lt; 10% of ceiling)
 VDR003  Productive idle: listener waits or heartbeat dreams
@@ -1090,7 +1090,7 @@ VDR004  Dream coverage: N/M souls can dream</code></pre>
 
 <h3>CLI</h3>
 <pre><code>$ nous dream file.nous      # Analyze dream system config
-$ nous verify file.nous     # Includes VDR001-VDR004 proofs</code></pre>
+$ nous verify file.nous     # Includes VDR001-VDR004 checks</code></pre>
 
 <h3>Files</h3>
 <p><code>dream_engine.py</code> at <code>/opt/aetherlang_agents/nous/</code></p>
@@ -1132,9 +1132,9 @@ $ nous verify file.nous     # Includes VDR001-VDR004 proofs</code></pre>
 <tr><td>RT004</td><td>WARN</td><td>min_clones &gt;= max_clones makes retirement impossible</td></tr>
 </table>
 
-<h3>Verification Proofs</h3>
+<h3>Verification Checks</h3>
 <table class="doc-table">
-<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><th>Code</th><th>What It Checks</th></tr>
 <tr><td>VRT001</td><td>Retirement trigger is reachable from current state</td></tr>
 <tr><td>VRT002</td><td>min_clones floor is respected under all conditions</td></tr>
 <tr><td>VRT003</td><td>Cooldown prevents retirement oscillation</td></tr>
@@ -1193,9 +1193,9 @@ Retirement analysis for program.nous:
 <tr><td>TL004</td><td>WARN</td><td>buffer_size &lt; 10 causes frequent flushes</td></tr>
 </table>
 
-<h3>Verification Proofs</h3>
+<h3>Verification Checks</h3>
 <table class="doc-table">
-<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><th>Code</th><th>What It Checks</th></tr>
 <tr><td>VTL001</td><td>Telemetry overhead &lt; 1% of cycle cost</td></tr>
 <tr><td>VTL002</td><td>Buffer flush frequency within acceptable bounds</td></tr>
 <tr><td>VTL003</td><td>Endpoint reachability (for http/langfuse/otlp)</td></tr>
@@ -1276,9 +1276,9 @@ Telemetry configuration:
 <tr><td>SY007</td><td>WARN</td><td>bond cluster &gt; 5 souls (coordination overhead)</td></tr>
 </table>
 
-<h3>Verification Proofs</h3>
+<h3>Verification Checks</h3>
 <table class="doc-table">
-<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><th>Code</th><th>What It Checks</th></tr>
 <tr><td>VSY001</td><td>All shared_memory fields exist in bonded souls</td></tr>
 <tr><td>VSY002</td><td>No circular bond dependencies</td></tr>
 <tr><td>VSY003</td><td>Sync interval provides adequate consistency</td></tr>
@@ -1339,9 +1339,9 @@ Bond clusters:
 <tr><td>MB007</td><td>WARN</td><td>fatigue_tier same cost as primary (no savings)</td></tr>
 </table>
 
-<h3>Verification Proofs</h3>
+<h3>Verification Checks</h3>
 <table class="doc-table">
-<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><th>Code</th><th>What It Checks</th></tr>
 <tr><td>VMB001</td><td>Energy depletion rate is sustainable (cycles before hibernation)</td></tr>
 <tr><td>VMB002</td><td>Recovery time is bounded (hibernation exit is reachable)</td></tr>
 <tr><td>VMB003</td><td>Fatigue tier provides cost savings vs primary tier</td></tr>
@@ -1403,9 +1403,9 @@ Metabolism analysis:
 <tr><td>CS006</td><td>WARN</td><td>self_model without mind block (needs LLM)</td></tr>
 </table>
 
-<h3>Verification Proofs</h3>
+<h3>Verification Checks</h3>
 <table class="doc-table">
-<tr><th>Code</th><th>What It Proves</th></tr>
+<tr><th>Code</th><th>What It Checks</th></tr>
 <tr><td>VCS001</td><td>All goals are measurable (connected to observable state)</td></tr>
 <tr><td>VCS002</td><td>Reflection overhead &lt; 10% of cycle budget</td></tr>
 <tr><td>VCS003</td><td>Introspection depth memory cost is bounded</td></tr>
@@ -1816,8 +1816,8 @@ for m in result.fired:
 
 <!-- TESTS -->
 <div class="doc-section" id="tests">
-<h2>Test Suites — 596 Tests</h2>
-<p>Full suite: 596 tests passing (PYTEST_FLOOR 596). The table below lists representative suites; the floor is enforced per release and is monotone non-decreasing.</p>
+<h2>Test Suites — 2495 Tests</h2>
+<p>Full suite: 2495 tests passing (PYTEST_FLOOR 2494). The table below lists representative suites; the floor is enforced per release and is monotone non-decreasing.</p>
 <table class="doc-table">
 <thead><tr><th>Suite</th><th>Tests</th><th>Coverage</th></tr></thead>
 <tbody>
@@ -1826,7 +1826,7 @@ for m in result.fired:
 <tr><td><code>test_distributed_runtime.py</code></td><td>45/45 ✓</td><td>Topology, TCP transport, envelopes</td></tr>
 <tr><td><code>test_wasm.py</code></td><td>45/45 ✓</td><td>JS codegen, HTML builder, wake strategies</td></tr>
 <tr><td><code>test_natural_lang.py</code></td><td>45/45 ✓</td><td>Template generation, validation</td></tr>
-<tr><td><code>test_verifier.py</code></td><td>18/18 ✓</td><td>All 7 proof categories</td></tr>
+<tr><td><code>test_verifier.py</code></td><td>18/18 ✓</td><td>All 7 verification categories</td></tr>
 <tr><td><code>test_runtime_v2.py</code></td><td>9/9 ✓</td><td>Topology, cost tracker, sense cache</td></tr>
 <tr><td><code>test_workspace.py</code></td><td>8/8 ✓</td><td>Multi-file workspace, nous.toml</td></tr>
 <tr><td><code>test_cross_world.py</code></td><td>5/5 ✓</td><td>Cross-world type checking</td></tr>
@@ -1865,8 +1865,8 @@ const sections = [
   {id:'runtime',title:'Event-Driven Runtime',keywords:'runtime asyncio event driven soul runner channel cost tracker sense cache'},
   {id:'distributed',title:'Distributed Runtime',keywords:'distributed tcp remote channel multi machine node'},
   {id:'topology',title:'Topology',keywords:'topology node distributed deployment multi machine'},
-  {id:'verification',title:'Formal Verification',keywords:'verification formal proofs mathematical guarantees resource deadlock protocol liveness'},
-  {id:'proof-codes',title:'Proof Codes',keywords:'proof codes VR001 VD001 VP001 VL001 VE001 VM001 VT001'},
+  {id:'verification',title:'Formal Verification',keywords:'verification formal proofs resource deadlock protocol liveness'},
+  {id:'proof-codes',title:'Verification Codes',keywords:'verification codes VR001 VD001 VP001 VL001 VE001 VM001 VT001'},
   {id:'cli',title:'CLI Commands',keywords:'cli commands compile run validate typecheck verify test watch debug shell profile docker verify-cost verify-coverage verify-sequence dossier dossier-spec vsa conformance emit-smt skill-export ndec memory build-attest-verify cost prices governance templates replay annex iv farkas'},
   {id:'ide',title:'IDE',keywords:'ide editor verify graph create playground'},
   {id:'lsp',title:'LSP Server',keywords:'lsp language server protocol code actions auto fix vscode'},
