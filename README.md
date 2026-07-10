@@ -25,7 +25,7 @@ NOUS is a programming language for agentic AI systems where every program is:
 - **Publicly verifiable** -- since v5.4.0, any signed dossier can be verified by anyone via three independent paths: `POST /api/v1/verify-dossier` (browser convenience, no API key, rate-limited), `verify_offline.py` (canonical, single `cryptography` dependency), or `nous dossier verify` (full toolchain with SMT cost-cap re-check). See `docs/VERIFY_DOSSIER.md`.
 - **Governable** -- first-class `policy { on ... signal ... action ... }` declarations, statically lintable (13 rule codes) and live-simulatable.
 - **Deterministically replayable** -- every agent run produces a SHA-256-chained JSONL event log. `nous replay verify` validates chain integrity offline.
-- **Self-evolving** -- programs can observe their own execution, evaluate fitness, mutate DNA parameters, and self-heal within constitutional safety bounds.
+- **Self-evolving (opt-in)** -- `nous evolve` mutates a program's declared DNA genes within their declared ranges on a shadow copy of the AST, re-validates each candidate against the constitutional law checker, and keeps a mutation only if a measured fitness score improves -- otherwise it rolls back atomically. Optimization within declared bounds; it records each mutation and proves nothing. <!-- __s224_selfevolve_v2__ -->
 - **Governed and evidenced** -- beyond cost proofs, NOUS emits a lineage of signed, offline-verifiable evidence artifacts: runtime-conformance certificates, materiality classification, gated-action authorization, an append-only continuity and envelope ledger with witness cosignatures, per-interval closure attestations, a SLSA Verification Summary Attestation with published conformance vectors, and consume-only adapters for third-party governance frameworks. Each EVIDENCES within a declared boundary (see Documentation); none is a runtime guard. <!-- __s224_readme_governed_bullet_v1__ -->
 
 NOUS transpiles to Python 3.11+ asyncio. The toolchain is a single PyPI package -- no Java, no Docker, no LangChain / LlamaIndex / CrewAI dependencies.
@@ -36,7 +36,7 @@ NOUS is a **monitor, not a guard**: policies and evidence surfaces record and at
 
 ## Why this matters
 
-Every other agentic framework lets you set a "max budget" at runtime and abort when it is exceeded -- by which point the spend has already happened. NOUS lets you **prove before you ship** that every reachable execution stays under the cap. The proof is mechanical (Z3), the cost model is auditable (signed pricing TOML with SHA-256), and the artefact (signed manifest) is verifiable by anyone holding your public key -- making it directly useful for EU AI Act Annex IV / Article 11(1) technical documentation.
+Runtime budget caps abort only after the spend has already happened. NOUS instead **proves before execution**, across every reachable path, that total cost cannot exceed the declared cap -- a Z3/Farkas result, not a runtime check. The cost model is auditable (signed pricing TOML with SHA-256), and the artefact (signed manifest) is verifiable by anyone holding your public key -- making it directly useful for EU AI Act Annex IV / Article 11(1) technical documentation. <!-- __s224_whymatters_v2__ -->
 
 With v5.3.0 Rekor anchoring and v5.4.0 public verification surface, the trust model is closed end-to-end: third-party auditors no longer need the NOUS CLI to validate a dossier. A regulator, journalist, or compliance officer can drag a manifest into `nous-lang.org/verify` and see three independent PASS/FAIL pills in their browser, or run `verify_offline.py` on an air-gapped machine. The cryptographic chain extends from your build pipeline to a public transparency log to anyone holding a copy of the dossier.
 
@@ -317,39 +317,9 @@ Security issues should be reported via GitHub Security Advisories, not public is
 | Verification surfaces | 3 (browser endpoint, offline Python, full CLI) |
 | Latest changes | See [CHANGELOG.md](CHANGELOG.md) for per-release detail |
 
-## Commercial Services
+## Status
 
-NOUS itself is free and open source under the MIT License. Beyond the library, I offer commercial engagements for organizations that need more than self-service installation.
-
-### EU AI Act Annex IV readiness audits
-
-Pre-deployment review of your AI systems against Annex IV technical documentation requirements. Output: gap analysis, compliance roadmap, and (if engaged for implementation) NOUS-integrated dossier pipeline.
-
-### Custom dossier templates
-
-Annex IV technical documentation is domain-specific. If you operate in fintech, healthcare, insurance, recruitment, or another high-risk AI category, I build NOUS skill templates tailored to your specific sector's regulatory expectations.
-
-### Compliance attestation
-
-For organizations that need a named third party to sign off on their Annex IV dossier production process. I review your NOUS pipeline, verify cryptographic integrity, and provide a signed attestation suitable for regulatory submission.
-
-### Integration consulting
-
-End-to-end implementation: NOUS deployment, integration with your AI pipeline, observability setup, and team handover. Architecture through production reliability.
-
-### Priority support and SLAs
-
-Self-service NOUS is community-supported (GitHub issues). Priority support contracts offer guaranteed response times, direct contact, and security patch back-porting.
-
-### How to engage
-
-I work with 2-3 organizations at a time on contract basis. Discovery calls are 20-30 minutes and have no obligation.
-
-- Email: hliasstaurou@gmail.com
-- Project email: support@nous-lang.org
-- LinkedIn: https://www.linkedin.com/in/hlias-staurou-a632a197
-
-Trademark licensing inquiries are handled through the same channels; see `TRADEMARK.md` for details.
+NOUS is free and open source under the MIT License. It is built and maintained by one person, a researcher, not a company -- no team, no funding, no reference deployments. It is research and infrastructure, offered as-is. If you want to discuss the work, I am on LinkedIn (https://www.linkedin.com/in/hlias-staurou-a632a197). Security issues via GitHub Security Advisories.
 
 ## License
 
