@@ -911,7 +911,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
         <span class="post-tag" style="background:rgba(56,217,122,0.1);border:1px solid rgba(56,217,122,0.2);color:var(--green)">Deep Dive</span>
       </div>
       <div class="post-title">Formally Verified AI Agents: Why and How</div>
-      <div class="post-excerpt">NOUS proves your agents won't deadlock, won't exceed budgets, and won't have protocol mismatches — before they run. Here's how the 7 proof categories work.</div>
+      <div class="post-excerpt">NOUS checks your agents for deadlock and protocol mismatches and proves the cost cap — before they run. Here's how the 7 verification categories work.</div>
       <span class="post-read">Read post →</span>
     </a>
 
@@ -2575,7 +2575,7 @@ cat cost_cap_with_souls.manifest.json</code></pre>
     <h1 class="post-full-title">NOUS v4.13.1 &mdash; Formal SMT Cost-Bound Verification</h1>
     <div class="post-full-meta">28 April 2026 &middot; Session 62 + 63 &middot; 7 min read</div>
 
-    <p>Every other agentic framework lets you set a <em>max budget</em> at <em>runtime</em> and abort when it’s exceeded &mdash; by which point the spend has already happened. NOUS v4.13.1 lets you <strong>prove before you ship</strong> that every reachable execution path stays under the cap. The proof is mechanical (Z3), the cost model is auditable (signed pricing TOML with SHA-256), and the artefact is verifiable by anyone holding your public key.</p>
+    <p>Most agentic frameworks let you set a <em>max budget</em> at <em>runtime</em> and abort when it’s exceeded &mdash; by which point the spend has already happened. NOUS v4.13.1 lets you <strong>prove before you ship</strong> that every reachable execution path stays under the cap. The proof is mechanical (Z3), the cost model is auditable (signed pricing TOML with SHA-256), and the artefact is verifiable by anyone holding your public key.</p>
 
     <h2>The shape of the feature</h2>
     <pre><code>world TradingFloor {
@@ -3159,7 +3159,7 @@ PyPI: nous-lang 4.8.3</code></pre>
         </div>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center">
           <div style="font-size:28px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif">50+</div>
-          <div style="font-size:11px;color:var(--dim);margin-top:4px">Proofs</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:4px">Checks</div>
         </div>
       </div>
 
@@ -3167,7 +3167,7 @@ PyPI: nous-lang 4.8.3</code></pre>
       <pre><code>pip install nous-lang
 nous version  # &rarr; 4.0.0</code></pre>
       <p style="color:var(--dim);margin-top:20px"><a href="https://pypi.org/project/nous-lang/" style="color:var(--gold)">PyPI</a> &middot; <a href="https://github.com/contrario/nous" style="color:var(--gold)">GitHub</a> &middot; <a href="/docs" style="color:var(--gold)">Documentation</a></p>
-      <p style="color:var(--dim)"><em>28 new validation rules. 19 new verification proofs. 8 new files. Zero regressions.</em></p>
+      <p style="color:var(--dim)"><em>28 new validation rules. 19 new verification checks. 8 new files. Zero regressions.</em></p>
     </div>
   </div>
 
@@ -3181,11 +3181,11 @@ nous version  # &rarr; 4.0.0</code></pre>
       <span class="post-tag" style="background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.2);color:#e05252">World First</span>
     </div>
     <div class="post-body">
-      <p>NOUS agents are not functions. They are living organisms. Today, v3.4.0 makes that literal with three biological systems that no other framework has ever attempted.</p>
+      <p>NOUS agents are not functions. They are living organisms. Today, v3.4.0 makes that literal with three biological systems.</p>
 
       <div class="stat-grid">
         <div class="stat-box"><div class="stat-val">38</div><div class="stat-lbl">CLI Commands</div></div>
-        <div class="stat-box"><div class="stat-val">31+</div><div class="stat-lbl">Formal Proofs</div></div>
+        <div class="stat-box"><div class="stat-val">31+</div><div class="stat-lbl">Verification Checks</div></div>
         <div class="stat-box"><div class="stat-val">9</div><div class="stat-lbl">Soul Subsystems</div></div>
         <div class="stat-box"><div class="stat-val">3</div><div class="stat-lbl">Biological Systems</div></div>
       </div>
@@ -3228,7 +3228,7 @@ nous version  # &rarr; 4.0.0</code></pre>
 immune {}     &rarr; LLM-generated patches, broadcast to clones
 dream {}      &rarr; Pre-computed insights for instant response
 mitosis {}    &rarr; Self-replication under load</code></pre>
-      <p>Every system is formally verified. Every system was tested in production with live LLM calls. Every system is a world first.</p>
+      <p>Every system is formally verified and was tested against live LLM calls.</p>
 
       <h2>What's Next</h2>
       <p>Clone retirement (auto-kill when load drops), telemetry sense (built-in observability), hot reload (swap souls without restart), and soul symbiosis (shared memory evolution). The living language keeps evolving.</p>
@@ -3251,12 +3251,12 @@ mitosis {}    &rarr; Self-replication under load</code></pre>
         <div class="stat-box"><div class="stat-val">30</div><div class="stat-lbl">Priorities</div></div>
         <div class="stat-box"><div class="stat-val">259</div><div class="stat-lbl">Tests</div></div>
         <div class="stat-box"><div class="stat-val">32</div><div class="stat-lbl">CLI Commands</div></div>
-        <div class="stat-box"><div class="stat-val">7</div><div class="stat-lbl">Proof Categories</div></div>
+        <div class="stat-box"><div class="stat-val">7</div><div class="stat-lbl">Verification Categories</div></div>
       </div>
 
       <h2>What is NOUS</h2>
       <p>NOUS (Νοῦς — Greek for "mind/intellect") is a programming language purpose-built for agentic AI systems. You define autonomous agents as <strong>Souls</strong> with memory, instincts, senses, and healing ability. The compiler generates production-ready Python, JavaScript, or browser HTML.</p>
-      <p>This is not a framework bolted onto Python. NOUS has its own grammar (15.3 KB EBNF), its own LALR parser (~1.8ms), its own type system (18 inference rules), its own formal verifier (7 proof categories), and its own runtime (asyncio event-driven). It is a language.</p>
+      <p>This is not a framework bolted onto Python. NOUS has its own grammar (15.3 KB EBNF), its own LALR parser (~1.8ms), its own type system (18 inference rules), its own formal verifier (7 verification categories), and its own runtime (asyncio event-driven). It is a language.</p>
 
       <h2>The Breakthrough Session</h2>
       <p>Session 16 was where everything came together. In a single context window, we built:</p>
@@ -3264,7 +3264,7 @@ mitosis {}    &rarr; Self-replication under load</code></pre>
         <li><strong>Distributed Runtime</strong> — TCP-based channel transport for multi-machine deployments</li>
         <li><strong>WASM/Browser Target</strong> — compile .nous to self-contained HTML with a dashboard</li>
         <li><strong>Self-Hosting Bootstrap</strong> — compiler.nous compiles itself (289 lines, py_compile pass)</li>
-        <li><strong>Formal Verification</strong> — 16 proof codes across 7 categories</li>
+        <li><strong>Formal Verification</strong> — 16 verification codes across 7 categories</li>
         <li><strong>Natural Language Interface</strong> — describe agents in English, get valid .nous code</li>
         <li><strong>LSP Server</strong> — 12 auto-fix code actions for VS Code</li>
       </ul>
@@ -3387,7 +3387,7 @@ mitosis {}    &rarr; Self-replication under load</code></pre>
       <span class="post-tag" style="background:rgba(56,217,122,0.1);border:1px solid rgba(56,217,122,0.2);color:var(--green)">Deep Dive</span>
     </div>
     <div class="post-body">
-      <p>Most agent frameworks test with unit tests. NOUS goes further: it <strong>proves</strong> properties about your agent system before it runs. Not probabilistically — mathematically.</p>
+      <p>Most agent frameworks test with unit tests. NOUS goes further: it <strong>verifies</strong> properties about your agent system before it runs. Not probabilistically — mathematically.</p>
 
       <h2>The Problem</h2>
       <p>Multi-agent systems fail in ways that are hard to test for:</p>
@@ -3397,7 +3397,7 @@ mitosis {}    &rarr; Self-replication under load</code></pre>
         <li>Agent speaks a message type that no one listens to → <strong>dead letter</strong></li>
         <li>Agent listens for a message that no one speaks → <strong>starvation</strong></li>
       </ul>
-      <p>You can write tests to catch some of these. But NOUS can prove they don't exist.</p>
+      <p>You can write tests to catch some of these. But NOUS statically verifies they cannot occur.</p>
 
       <h2>The Seven Categories</h2>
 
@@ -3449,7 +3449,7 @@ mitosis {}    &rarr; Self-replication under load</code></pre>
 
       <h2>The Principle</h2>
       <p>Testing tells you what happened. Verification tells you what can't happen. For autonomous AI agents managing real resources, that distinction matters.</p>
-      <p>Full proof code reference: <a href="/docs#proof-codes">documentation</a>.</p>
+      <p>Full verification code reference: <a href="/docs#proof-codes">documentation</a>.</p>
 
       <div class="post-share">
         <span class="post-share-label">Share:</span>
