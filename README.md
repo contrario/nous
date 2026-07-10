@@ -2,14 +2,14 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/nous-lang.svg)](https://pypi.org/project/nous-lang/) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/contrario/nous/blob/main/LICENSE)
 
-The first agentic programming language with end-to-end formal cost-bound verification, in any currency the pricing table declares, with cryptographically signed dossiers anchored to a public transparency log and verifiable by anyone offline.
+An agentic programming language with end-to-end formal cost-bound verification, in any currency the pricing table declares, with cryptographically signed dossiers anchored to a public transparency log and verifiable by anyone offline. <!-- __s224_readme_deprimacy_v1__ -->
 
 ```
   _   _  ___  _   _ ____
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v5.11.0
+ |_| \_|\___/ \___/|____/   v5.73.1
 ```
 
 Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Website: nous-lang.org
@@ -21,19 +21,24 @@ NOUS is a programming language for agentic AI systems where every program is:
 - **Verifiable** -- declare a `cost_cap` in USD or EUR and Z3 proves at compile time that no execution path can ever exceed it.
 - **Auditable** -- every verified program emits an Ed25519-signed manifest with full provenance (source SHA-256, AST SHA-256, pricing SHA-256, SMT obligations SHA-256, solver name+version, verdict, timestamp).
 - **Annex IV-ready** -- `nous dossier` emits an EU AI Act Annex IV-aligned compliance bundle directly from the AST plus the signed manifest plus the pricing table.
-- **Rekor-anchored** -- since v5.3.0, optional `--anchor rekor` anchors emitted manifests into the public Sigstore Rekor transparency log via Path-beta dual signing (per-submission ECDSA-P-256 leaf, long-lived Ed25519 manifest signature preserved). Since v5.10.0 a Rekor v2 path (`--anchor rekor_v2`) targets the tile-backed Sigstore log with an RFC 3161 trusted timestamp over the leaf signature, all re-verifiable offline. External, third-party-auditable durability with zero NOUS-side trust assumption. See `docs/REKOR_ANCHOR.md` and `docs/REKOR_V2_MIGRATION.md`.
+- **Rekor-anchored** -- since v5.3.0, optional `--anchor rekor` anchors emitted manifests into the public Sigstore Rekor transparency log via Path-beta dual signing (per-submission ECDSA-P-256 leaf, long-lived Ed25519 manifest signature preserved). Since v5.10.0 a Rekor v2 path (`--anchor rekor_v2`) targets the tile-backed Sigstore log with an RFC 3161 trusted timestamp over the leaf signature, all re-verifiable offline. External, third-party-auditable durability, with no NOUS-side trust assumption on the offline verification path. See `docs/REKOR_ANCHOR.md` and `docs/REKOR_V2_MIGRATION.md`.
 - **Publicly verifiable** -- since v5.4.0, any signed dossier can be verified by anyone via three independent paths: `POST /api/v1/verify-dossier` (browser convenience, no API key, rate-limited), `verify_offline.py` (canonical, single `cryptography` dependency), or `nous dossier verify` (full toolchain with SMT cost-cap re-check). See `docs/VERIFY_DOSSIER.md`.
 - **Governable** -- first-class `policy { on ... signal ... action ... }` declarations, statically lintable (13 rule codes) and live-simulatable.
 - **Deterministically replayable** -- every agent run produces a SHA-256-chained JSONL event log. `nous replay verify` validates chain integrity offline.
 - **Self-evolving** -- programs can observe their own execution, evaluate fitness, mutate DNA parameters, and self-heal within constitutional safety bounds.
+- **Governed and evidenced** -- beyond cost proofs, NOUS emits a lineage of signed, offline-verifiable evidence artifacts: runtime-conformance certificates, materiality classification, gated-action authorization, an append-only continuity and envelope ledger with witness cosignatures, per-interval closure attestations, a SLSA Verification Summary Attestation with published conformance vectors, and consume-only adapters for third-party governance frameworks. Each EVIDENCES within a declared boundary (see Documentation); none is a runtime guard. <!-- __s224_readme_governed_bullet_v1__ -->
 
 NOUS transpiles to Python 3.11+ asyncio. The toolchain is a single PyPI package -- no Java, no Docker, no LangChain / LlamaIndex / CrewAI dependencies.
+
+## The honest boundary
+
+NOUS is a **monitor, not a guard**: policies and evidence surfaces record and attest, they do not enforce at runtime. The word **proves** is reserved strictly for the Z3/Farkas legs -- the cost-cap bound, policy-coverage, and sequence-ordering. Everything else -- Ed25519/ML-DSA signatures, Rekor v2 inclusion, RFC 3161 timestamps, continuity/envelope/witness cosignatures, closure attestations, and every interop adapter -- **evidences**, it does not prove. Name-to-key binding is operator-asserted; NOUS runs no CA and certifies no identity. Independent witnessing is **staging**, genesis-only. The interop adapters (Santander mech-gov, Guardrails AI, LLM Guard) are consume-only over **synthetic/benchmark** inputs, not production usage. Each artifact's exact claim class and boundary is stated in the Documentation section. <!-- __s224_readme_honest_boundary_v1__ -->
 
 ## Why this matters
 
 Every other agentic framework lets you set a "max budget" at runtime and abort when it is exceeded -- by which point the spend has already happened. NOUS lets you **prove before you ship** that every reachable execution stays under the cap. The proof is mechanical (Z3), the cost model is auditable (signed pricing TOML with SHA-256), and the artefact (signed manifest) is verifiable by anyone holding your public key -- making it directly useful for EU AI Act Annex IV / Article 11(1) technical documentation.
 
-With v5.3.0 Rekor anchoring and v5.4.0 public verification surface, the trust model is closed end-to-end: third-party auditors no longer need the NOUS CLI to validate a dossier. A regulator, journalist, or compliance officer can drag a manifest into `nous-lang.org/verify` and see three independent PASS/FAIL pills in their browser, or run `verify_offline.py` on an air-gapped machine. The cryptographic chain extends from your build pipeline to a public transparency log to anyone holding a copy of the dossier, forever.
+With v5.3.0 Rekor anchoring and v5.4.0 public verification surface, the trust model is closed end-to-end: third-party auditors no longer need the NOUS CLI to validate a dossier. A regulator, journalist, or compliance officer can drag a manifest into `nous-lang.org/verify` and see three independent PASS/FAIL pills in their browser, or run `verify_offline.py` on an air-gapped machine. The cryptographic chain extends from your build pipeline to a public transparency log to anyone holding a copy of the dossier.
 
 ## Install
 
@@ -128,7 +133,7 @@ nous lsp                        # start LSP server (stdio)
 nous version
 ```
 
-The full `nous --help` lists 58 top-level subcommands; the above covers the most-used surface.  <!-- __s170_docs_verify_cost_v1__ -->
+The full `nous --help` lists 62 top-level subcommands; the above covers the most-used surface.  <!-- __s170_docs_verify_cost_v1__ --><!-- __s224_cli62_v1__ -->
 
 ## Language at a glance
 
@@ -156,8 +161,8 @@ policy on llm.response signal contains_phrase("absolutely") action log_only weig
 
 | Layer | Implementation |
 |---|---|
-| Grammar | Lark LALR (`nous.lark`), 115 rules, bilingual EN+GR |
-| AST | Pydantic V2 strict models, 61 node types |
+| Grammar | Lark LALR (`nous.lark`), bilingual EN+GR |
+| AST | Pydantic V2 strict models |
 | Validator | Constitutional law checker on AST |
 | Pricing | Layered TOML (CLI > project > user > package), SHA-256 audit, schema v2.0, currency-agnostic |
 | SMT emit | Deterministic SMT-LIB 2.6, exact rationals (no floats) |
@@ -234,7 +239,7 @@ Key article alignments:
 - **Article 13 (Transparency)** -- public verification endpoint and standalone `nous-lang.org/verify` page give downstream users a no-install path to independently audit any dossier.
 - **Article 14 (Human Oversight)** -- `intervene`, `inject_message`, `block` policy actions plus governance simulator.
 - **Article 15 (Accuracy / Robustness / Cybersecurity)** -- Z3 SMT proofs on every `cost_cap` declaration, currency-aware (USD + EUR), with Ed25519-signed manifests and optional Sigstore Rekor anchoring for tamper-evident durability.
-- **Article 17 (Quality Management)** -- 10-phase release pipeline, 738-test pytest floor, 51-source byte-identical regression harness.
+- **Article 17 (Quality Management)** -- 10-phase release pipeline, 2494-test pytest floor, byte-identical regression harness.
 
 ## Annex IV dossiers from existing SKILL.md skills (v5.1.0+)
 
@@ -296,17 +301,17 @@ NOUS is developed under a non-standard model: single maintainer, chat-driven, id
 
 Security issues should be reported via GitHub Security Advisories, not public issues.
 
-## Stats (v5.11.0)
+## Stats (v5.73.1)
 
 | Metric | Value |
 |---|---|
-| Tests | 738 passing (PYTEST_FLOOR enforced) |
-| Regression | 51 corpus sources, 0 baseline drift |
+| Tests | 2495 passing, floor 2494 (PYTEST_FLOOR enforced) |
+| Regression | byte-identical harness, 0 baseline drift |
 | Shipped templates | 9 (`templates/*.nous`) |
-| Grammar rules | 115 (Lark LALR, bilingual EN+GR) |
-| AST node types | 61 (Pydantic V2 strict) |
+| Grammar | Lark LALR, bilingual EN+GR |
+| AST nodes | Pydantic V2 strict models |
 | Lint rule codes | 13 (L000 - L012, L100) |
-| CLI subcommands | 58 (`nous --help`) |  <!-- __s170_docs_verify_cost_v1__ -->
+| CLI subcommands | 62 (`nous --help`) |  <!-- __s170_docs_verify_cost_v1__ --><!-- __s224_cli62_stats_v1__ -->
 | Pricing schema | v2.0 (currency-agnostic, per-table `_currency`) |
 | Manifest schema | v1.0 (Ed25519-signed, offline-verifiable, optional Rekor transparency_log) |
 | Verification surfaces | 3 (browser endpoint, offline Python, full CLI) |
@@ -354,6 +359,6 @@ The MIT License covers the source code. Trademark rights over "NOUS", "Noosphere
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.11.0](https://github.com/contrario/nous/releases/tag/v5.11.0).
+See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.73.1](https://github.com/contrario/nous/releases/tag/v5.73.1).
 <!-- __session89_readme_freshen_v1__ -->
 <!-- __s94_readme_v5_11_0_sync_v1__ -->
