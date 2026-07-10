@@ -1,0 +1,59 @@
+# NOUS VSA conformance-vector source -- v1
+#
+# This file is the FROZEN INPUT of a published VSA conformance vector. It is
+# owned by the vector bundle and by nothing else: no test, fixture, or module
+# references it. If it moves or changes, the vector's expected bytes change,
+# so it is versioned in its filename and never edited in place.
+#
+# Purpose: drive BOTH proof legs of the shipped offline VSA verifier
+# (verify_vsa_offline.py) through the REAL producers in one `nous verify`:
+#
+#   1. cost-cap Farkas leg  -- cost_cap + tokens + max_ticks make the declared
+#      per-call token/tick cost system collapse to a numeric contradiction
+#      under the cap. Emitted by cmd_verify (cost_farkas), bound as
+#      manifest.cost_farkas_sha256, re-provable offline by rational arithmetic.
+#
+#   2. coverage Farkas leg  -- the single block-action policy's signal
+#      exact-covers the --coverage-threshold claim (amount > 10000 covered by
+#      a blocking signal amount > 10000). Exact cover proves no gap; the
+#      coverage system collapses to a contradiction. Emitted by cmd_verify
+#      (coverage_farkas), bound as manifest.coverage_farkas_sha256, re-provable
+#      offline by rational arithmetic.
+#
+# Both legs are PRODUCER-MINTED, never synthetic dicts. The policy uses
+# action: block (not log_only) so its signal enters the Farkas blocking set.
+# The threshold claim and the blocking signal are byte-identical (exact cover),
+# the minimal geometry that both proves coverage and seats the Farkas cert.
+#
+# Mint (deterministic harness pins keys + timestamps):
+#   nous verify vsa_conformance_vector_v1.nous --smt \
+#       --coverage-threshold "amount > 10000" \
+#       --key-path <pinned> --manifest-out <out>/manifest.json
+#
+# ASCII-only, minimal, no imports, no dependency outside this file.
+
+world VectorWorld {
+    cost_cap: 0.10 USD
+    max_ticks: 4
+    events { Tick }
+    policy Cover {
+        kind: "threshold"
+        signal: amount > 10000
+        action: block
+    }
+}
+
+message Tick {
+    amount: int
+}
+
+soul Probe {
+    mind: claude-sonnet-4-6 @ Tier1
+    tokens: input = 100 output = 50
+    instinct {
+        speak Tick(amount: 20000)
+    }
+    heal {
+        on error => retry(2, error)
+    }
+}

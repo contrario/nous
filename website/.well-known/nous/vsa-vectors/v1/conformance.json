@@ -1,0 +1,31 @@
+{
+  "assumption_discharge_ok": true,
+  "authorization_ok": true,
+  "binding_ok": true,
+  "bound_transfer_ok": true,
+  "certificate_schema_version": 4,
+  "codegen_binding_ok": true,
+  "codegen_sha256": "a00008e56f4f40e25eb139924957128594dae5c205923ea41b50a530e0e81edb",
+  "conformant": true,
+  "cost_binding": null,
+  "cost_cap": "0.1",
+  "cost_currency": "USD",
+  "errors": [],
+  "issued_utc": "2000-01-01T00:00:00Z",
+  "nous_version": "vector",
+  "pricing_sha256": "9bd0ae65b648790f5e6d6e950314fff92913614bb344c309fe36c122ab3289a4",
+  "provider_token_integrity": null,
+  "realized_total": "0.00105",
+  "sequence_ok": true,
+  "signature": {
+    "algorithm": "ed25519",
+    "public_key_b64": "JUO5L/EJVRFHatyDadtt3JM2ZaEZeN2hQE7hBmypVZ0=",
+    "signature_b64": "6deZ51xrjZUWUb6lX3uaiTWtX9t5y3Z8uagL8BE4m9V+XYpKpNg8wOwQ/03FMpo29q1orO8axCIMfW9Dl9toBA=="
+  },
+  "smt_spec_sha256": "37ef241f1df122bb327b545907d94abc31f6dc85cb798d8abdbf75a9cb2b311a",
+  "source_sha256": "9d89172aeb6b2d0eb17adeddaa2228b4d8dad2d7547192852c669a6047c1bd14",
+  "surface_ok": true,
+  "trace_sha256": "f112ba9e2d89c5f720f6385332cf8f310ba39f1e9576d8211706482e4660aea0",
+  "trace_signature_ok": true,
+  "world_name": "VectorWorld"
+}

@@ -1,0 +1,26 @@
+{
+  "codegen_sha256": "a00008e56f4f40e25eb139924957128594dae5c205923ea41b50a530e0e81edb",
+  "cost_cap_usd": "0.1",
+  "cost_farkas_sha256": "ae5dc446cd5e24f766da60b69788e7c6c19b45a89d3701fc084bd0f61f59e583",
+  "coverage_farkas_sha256": "6f75675f870a1569cb5791d1d6434261aa08240d725dde5bd90820361c09f7f7",
+  "coverage_smt2_sha256": "5166061b707ad3df9aab87468cd5a78df71e86703cabd7458c370fa18179c121",
+  "elapsed_ms": 0,
+  "max_ticks": 4,
+  "nous_version": "vector",
+  "policy_coverage_sha256": "9717b6d60659436b735215437b316d6e1c38ee1ae338c04cb82f96796c66b39b",
+  "pricing_sha256": "9bd0ae65b648790f5e6d6e950314fff92913614bb344c309fe36c122ab3289a4",
+  "schema_version": "1.0",
+  "signature": {
+    "algorithm": "ed25519",
+    "public_key_b64": "A6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=",
+    "signature_b64": "PgN/iVK/CnKjZYzxV63DPXaD7hJskcwjzf8xFY5yEm026MWwMJXWRDWLlg9Bvvv7ZqimjCwvVdjuR8g9jMs4Dw=="
+  },
+  "smt_emit_version": "1.0",
+  "smt_spec_sha256": "37ef241f1df122bb327b545907d94abc31f6dc85cb798d8abdbf75a9cb2b311a",
+  "solver_name": "z3",
+  "solver_version": "z3 4.16.0",
+  "source_sha256": "9d89172aeb6b2d0eb17adeddaa2228b4d8dad2d7547192852c669a6047c1bd14",
+  "timestamp_utc": "2000-01-01T00:00:00Z",
+  "verdict": "proven",
+  "world_name": "VectorWorld"
+}

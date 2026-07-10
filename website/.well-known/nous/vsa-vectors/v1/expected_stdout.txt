@@ -1,0 +1,23 @@
+OK   VSA DSSE Ed25519 signature verified against pinned key
+OK   manifest / certificate / trace Ed25519 signatures verified
+OK   inputAttestations bind the shipped manifest/trace/cert bytes
+OK   subject.digest matches the program the artifacts name
+OK   certificate is bound to this manifest and this trace
+OK   verdict re-derived from 8 obligations; VSA verificationResult matches (not trusted blindly)
+OK   cost-cap Farkas certificate PROVEN offline by rational arithmetic, no solver, under declared per-call token/tick (contradiction: 479/5000 < 0)
+OK   coverage Farkas certificate PROVEN offline by rational arithmetic, no solver (contradiction: 0 < 0)
+
+VERDICT: PASS (NOUS VSA, offline, pinned verifier)
+  world:            VectorWorld
+  verificationResult: PASSED
+  verifiedLevels:   ['ORG_NOUS_CONFORMANT_V1']
+  nous_version:     vector
+  issued_utc:       2000-01-01T00:00:00Z
+  schema_version:   4
+
+SCOPE (what this verdict cryptographically asserts):
+  EVIDENCES (Ed25519 authenticity + sha-equality identity): the VSA is signed by the pinned NOUS verifier; manifest/trace/certificate are these exact signed bytes; the verdict was re-derived from the eight obligations, not trusted from the recorded string.
+  EVIDENCES (registry resolution): when the VSA public key is resolved from the bundled verifier-registry.json, that registry is Ed25519-verified against the pinned NOUS registry key and the pin is matched by verifier_id; this EVIDENCES logged-allowlist membership of the VSA identity. The registry Rekor v2 anchor travels in the bundle but is NOT re-derived here (toolchain-tier: cryptography and stdlib cannot reconstruct the inclusion proof). An inline pin that disagrees with the authenticated registry pin is rejected.
+  PROVES (rational arithmetic, no solver, no NOUS install): the coverage Farkas certificate collapses the linear system to a numeric contradiction (policy-coverage gap refuted offline).
+  PROVES-cost (rational arithmetic, no solver, no NOUS install): under the declared per-call token/tick estimates, no admissible execution exceeds the cost cap (cost-cap Farkas refutation). Runtime adherence to those estimates stays EVIDENCES via the signed trace.
+  OUT OF SCOPE: execution attestation; program re-derivation from source (the online path); real-world model faithfulness. NOUS is a monitor, not a guard.
