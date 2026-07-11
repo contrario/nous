@@ -477,7 +477,7 @@ img{max-width:100%;display:block}
   <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
     <div class="section-tag" style="border-color:rgba(224,82,82,0.19);color:#e05252;background:rgba(224,82,82,0.05)">Runtime Resilience</div>
     <h2 class="section-title">Soul Resilience</h2>
-    <p class="section-sub">Self-healing under load: adaptive recovery, speculative pre-computation, and auto-scaling — each new configuration re-verified against the same property set before it is admitted.</p>
+    <p class="section-sub">Declared, opt-in resilience: author-defined error recovery, idle-time speculative pre-computation, and threshold-triggered cloning. Each spawned clone is re-verified by the static checker and admitted only if it passes; the runtime records this, it does not prove it.</p>
   </div>
 
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px;margin:0 auto" class="fade-in">
@@ -678,7 +678,7 @@ img{max-width:100%;display:block}
 <script>
 const FEATURES = [
   {icon:"◈",title:"World",desc:"The environment. Defines cost ceilings, heartbeat intervals, and laws constraining all souls.",color:"var(--gold)"},
-  {icon:"◉",title:"Soul",desc:"An autonomous agent with mind (LLM), senses (tools), memory, instinct, and self-healing.",color:"var(--blue)"},
+  {icon:"◉",title:"Soul",desc:"An autonomous agent with mind (LLM), senses (tools), memory, instinct, and declared error-recovery.",color:"var(--blue)"},
   {icon:"◇",title:"Message",desc:"Typed data contracts. Souls communicate through typed channels via speak and listen.",color:"var(--green)"},
   {icon:"◎",title:"Nervous System",desc:"The routing topology. Determines message flow and wake strategies automatically.",color:"var(--purple)"},
   {icon:"◬",title:"DNA",desc:"Evolvable parameters with declared mutation ranges, mutated within bounds and validator- and fitness-gated.",color:"var(--cyan)"},
