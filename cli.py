@@ -1047,10 +1047,10 @@ def cmd_dream(args: argparse.Namespace) -> int:
             icon = {"PROVEN": "\u2713", "WARNING": "\u26a0", "INFO": "\u2139", "ERROR": "\u2717"}.get(item.severity, "?")
             print(f"  {icon} [{item.code}] {item.message}")
         print()
-    proven = len([i for i in dream_items if i.severity == "PROVEN"])
+    verified = len([i for i in dream_items if i.severity == "PROVEN"])
     errors = len([i for i in dream_items if i.severity == "ERROR"])
     print(f"  \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550")
-    print(f"  {len(dream_souls)} soul(s) with dream system | {proven} proven, {errors} errors")
+    print(f"  {len(dream_souls)} soul(s) with dream system | {verified} verified, {errors} errors")
     return 1 if errors else 0
 
 
@@ -1098,12 +1098,12 @@ def cmd_immune(args: argparse.Namespace) -> int:
             print(f"  {icon} [{item.code}] {item.message}")
         print()
 
-    proven = len([i for i in immune_items if i.severity == "PROVEN"])
+    verified = len([i for i in immune_items if i.severity == "PROVEN"])
     errors = len([i for i in immune_items if i.severity == "ERROR"])
     warnings = len([i for i in immune_items if i.severity == "WARNING"])
     print(f"  ══════════════════════════════════════")
     print(f"  {len(immune_souls)} soul(s) with immune system")
-    print(f"  Verification: {proven} proven, {warnings} warnings, {errors} errors")
+    print(f"  Verification: {verified} verified, {warnings} warnings, {errors} errors")
     return 1 if errors else 0
 
 
@@ -1403,13 +1403,13 @@ def cmd_mitosis(args: argparse.Namespace) -> int:
             print(f"  {icon} [{item.code}] {item.message}")
         print()
 
-    proven = len([i for i in mitosis_items if i.severity == "PROVEN"])
+    verified = len([i for i in mitosis_items if i.severity == "PROVEN"])
     errors = len([i for i in mitosis_items if i.severity == "ERROR"])
     warnings = len([i for i in mitosis_items if i.severity == "WARNING"])
     total_clones = sum(s.mitosis.max_clones for s in mitosis_souls)
     print(f"  ══════════════════════════════════════")
     print(f"  {len(mitosis_souls)} soul(s) with mitosis | {total_clones} max clones")
-    print(f"  Verification: {proven} proven, {warnings} warnings, {errors} errors")
+    print(f"  Verification: {verified} verified, {warnings} warnings, {errors} errors")
     return 1 if errors else 0
 
 

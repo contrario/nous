@@ -325,7 +325,7 @@ class MitosisEngine:
             result = verifier.verify()
 
             if result.ok:
-                return True, f"VERIFIED: {len(result.proven)} proven, 0 errors"
+                return True, f"VERIFIED: {len(result.proven)} static checks passed, 0 errors"
             else:
                 error_msgs = "; ".join(str(e) for e in result.errors[:3])
                 return False, f"FAILED: {len(result.errors)} errors — {error_msgs}"
