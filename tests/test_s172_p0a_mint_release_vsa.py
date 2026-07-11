@@ -34,7 +34,7 @@ _RELEASE = _REPO / "scripts" / "release.py"
 _RELEASE_VSA_DIR = _REPO / "website" / ".well-known" / "nous" / "release-vsa"
 
 _RELEASE_VSA_FLOOR = (5, 60, 1)
-_RELEASE_VSA_WAIVERS = frozenset({"5.65.0", "5.72.1", "5.73.0", "5.73.1"})  # __s223_waiver_5730_vsa_backfill_pending__  # __s221_waiver_5721_vsa_backfill_pending__  # __s174_waiver_5650_twine_no_federation__  # __s173_p0d_anchor_5610_dewaiver__  # __s184_dewaiver_5670__  # __s217_waiver_5720_vsa_backfill_pending__  # __s225_waiver_5731_vsa_backfill_pending__  # __s226_anchor_5720_dewaiver__
+_RELEASE_VSA_WAIVERS = frozenset({"5.65.0", "5.73.0", "5.73.1"})  # __s223_waiver_5730_vsa_backfill_pending__  # __s221_waiver_5721_vsa_backfill_pending__  # __s174_waiver_5650_twine_no_federation__  # __s173_p0d_anchor_5610_dewaiver__  # __s184_dewaiver_5670__  # __s217_waiver_5720_vsa_backfill_pending__  # __s225_waiver_5731_vsa_backfill_pending__  # __s226_anchor_5720_dewaiver__  # __s226_anchor_5721_dewaiver__
 
 
 def _pyproject_py_modules() -> set[str]:
