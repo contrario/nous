@@ -1,0 +1,97 @@
+{
+  "artifacts": [
+    {
+      "kind": "release_vsa_dsse",
+      "name": "nous_lang-5.72.0.build-vsa.intoto.json",
+      "sha256": "e1efdea24da31a7b2835ecf5e37efdbb968a2a930c7a34d5b03ed34afe6f2b74",
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.72.0/nous_lang-5.72.0.build-vsa.intoto.json"
+    },
+    {
+      "kind": "offline_verifier",
+      "name": "verify_build_vsa_offline.py",
+      "sha256": "8bdb7a5e7777a3d31b027fc5231e87ffc70e2b7c48bcdeb26d37aecb0f21cb94",
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.72.0/verify_build_vsa_offline.py",
+      "verifierKeyPinned": "E3FNG9zFMRjhg/iVkOu9K3gH5mmG6Uwvdy8EvwHsYVo="
+    },
+    {
+      "kind": "release_verifier_key",
+      "name": "release-verifier-key.json",
+      "sha256": "e9cd1a34cc8c64329d99c96155b4b81afeca307c1dc024b84a078aa35b21a604",
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.72.0/release-verifier-key.json"
+    },
+    {
+      "kind": "wheel",
+      "name": "nous_lang-5.72.0-py3-none-any.whl",
+      "sha256": "564700d74882a2fa2de62107427c73307b314db24726bab53bd39ba94a3b4852",
+      "source": "pypi",
+      "url": "https://pypi.org/project/nous-lang/5.72.0/"
+    },
+    {
+      "kind": "sdist",
+      "name": "nous_lang-5.72.0.tar.gz",
+      "sha256": "b2fa784cb041d6323889ae0678f996cbca01e602b7442d0263bbc8155d4e945e",
+      "source": "pypi",
+      "url": "https://pypi.org/project/nous-lang/5.72.0/"
+    },
+    {
+      "kind": "federation_build_leg",
+      "payloadSha256": "e5624218e6305f3d51be5c0713478bfab0dc8fc80a3341f80b52ad24ff9bd6d4",
+      "predicateType": "https://slsa.dev/provenance/v1",
+      "uri": "https://api.github.com/repos/contrario/nous/attestations/sha256:564700d74882a2fa2de62107427c73307b314db24726bab53bd39ba94a3b4852"
+    },
+    {
+      "kind": "federation_publish_leg",
+      "name": "nous_lang-5.72.0-py3-none-any.whl",
+      "payloadSha256": "e425ab6ce83ea9a10af7d7ae48a45c8e39f4a913679a666d032ade5a9dda22f2",
+      "predicateType": "https://docs.pypi.org/attestations/publish/v1",
+      "uri": "https://pypi.org/integrity/nous-lang/5.72.0/nous_lang-5.72.0-py3-none-any.whl/provenance"
+    },
+    {
+      "kind": "federation_publish_leg",
+      "name": "nous_lang-5.72.0.tar.gz",
+      "payloadSha256": "973f90929bacc439179e79c7d4a5398bf9be360175dd633ee64b3fd4692414d2",
+      "predicateType": "https://docs.pypi.org/attestations/publish/v1",
+      "uri": "https://pypi.org/integrity/nous-lang/5.72.0/nous_lang-5.72.0.tar.gz/provenance"
+    },
+    {
+      "anchoredDigestSha256": "9b825e2d1c539e85690d84d8259da7a250ab6d812054ceab4e38db5d6c139101",
+      "boundary": "EVIDENCES public, append-only, RFC3161-timestamped inclusion of the VSA payload digest in the Rekor v2 transparency log. The bundle is self-contained: it carries the RFC6962 inclusion proof, the C2SP signed-note checkpoint, and the RFC3161 timestamp token, and is verifiable fully offline with cryptography + Python stdlib only. It PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard.",
+      "entryKind": "hashedrekord/0.0.2",
+      "kind": "rekor_v2_transparency_log",
+      "leafHash": "f23d251176a17c490052aecf742e8b52de5f3a6260cab71e8eea3fe545cd6f96",
+      "logIndex": 16498476,
+      "name": "nous_lang-5.72.0.rekor-v2-bundle.json",
+      "rekorShard": "https://log2025-1.rekor.sigstore.dev",
+      "rfc3161GenTime": "2026-07-11T11:58:45Z",
+      "sha256": "f50ccc122d2568e2f0a5ea2f352ad0a957aaf27ada5a72ab674c085e331b52e3",
+      "treeSize": 16498514,
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.72.0/nous_lang-5.72.0.rekor-v2-bundle.json"
+    }
+  ],
+  "backfill": {
+    "backfilledAt": "2026-07-11T11:53:38Z",
+    "note": "This release VSA was MINTED at backfilledAt, later than the original release of the named version. Its Rekor anchor is a separate Phase-2 step performed at or after backfilledAt; the RFC3161 timestamp recorded with the Rekor bundle (rfc3161GenTime in index.json) records that anchor instant. The Rekor inclusion proof and that RFC3161 timestamp EVIDENCE that this VSA payload existed no later than the anchor timestamp; they do NOT evidence anchoring at release time and set no lower bound on when the payload came to exist. The release-time evidence is the named federation attestations (SLSA build provenance + PEP 740 publish leg), dated at the original release; this VSA summarizes them. It PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard.",
+    "originalReleaseTag": "v5.72.0"
+  },
+  "boundary": "This release VSA EVIDENCES that the NOUS release operator verified, with standard Sigstore tooling, that these exact published wheel and sdist bytes carry a SLSA build provenance (keyless GitHub Actions, Fulcio/Rekor) and a PEP 740 PyPI publish attestation, both naming these bytes, at SLSA Build Level 2. It is an operator-key root ALONGSIDE the federation roots; it is not a second build. The offline verifier checks the operator signature and re-derives the subject digests, but does NOT re-derive the named federation attestations (toolchain tier: fetch + Sigstore). It PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard.",
+  "buildIdentity": {
+    "buildType": "https://actions.github.io/buildtypes/workflow/v1",
+    "builderId": "https://github.com/contrario/nous/.github/workflows/release.yml@refs/tags/v5.72.0",
+    "path": ".github/workflows/release.yml",
+    "ref": "refs/tags/v5.72.0",
+    "repository": "https://github.com/contrario/nous",
+    "sourceCommit": "0caccdf388093d6cb2f070abe818e012ac241b94"
+  },
+  "emittedAt": "2026-07-11T11:58:45Z",
+  "policyDigest": "a128c9736ba28b191463f0a031063653d04f486019f7191e56126bccc6095bde",
+  "policyId": "https://nous-lang.org/policy/release-federation-l2/v1",
+  "schema": "nous.release_vsa.index.v1",
+  "verifiedLevels": [
+    "SLSA_BUILD_LEVEL_2"
+  ],
+  "verifierId": "https://nous-lang.org/verifiers/release-operator/v1",
+  "verifierKeyid": "66969a4ebc65b0c5f00aa6d93c55e8a3a30d461ffe073caa93d8ea4d5d7898fd",
+  "verifierPublicKeyRaw": "E3FNG9zFMRjhg/iVkOu9K3gH5mmG6Uwvdy8EvwHsYVo=",
+  "version": "5.72.0",
+  "vsaPayloadSha256": "9b825e2d1c539e85690d84d8259da7a250ab6d812054ceab4e38db5d6c139101"
+}
