@@ -21,7 +21,7 @@ Phases:
     4. Version consistency: tests/test_version_consistency.py == 6/6.
     5. Build: rm -rf build/ dist/ *.egg-info/ then python -m build.
     6. Wheel content gate: _version.py + nous.lark + grammar_data.py +
-       6 templates + METADATA Version=X.Y.Z.
+       all templates + METADATA Version=X.Y.Z.
     7. Clean-venv install: pip install <local-wheel> in fresh venv.
     8. UX smoke: nous templates extract + nous compile == exit 0.
     9. Upload: twine via /tmp/upload_venv.
@@ -302,7 +302,7 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
     if missing:
         raise ReleaseError(f"wheel missing files: {missing}")
     n_templates: int = sum(1 for n in names if n.endswith(".nous"))
-    EXPECTED_TEMPLATES: int = 9  # __session67_template_count_v1__
+    EXPECTED_TEMPLATES: int = 12  # __session67_template_count_v1__
     if n_templates != EXPECTED_TEMPLATES:
         raise ReleaseError(f"expected {EXPECTED_TEMPLATES} templates in wheel, got {n_templates}")
     meta_path: str = next(n for n in names if n.endswith("METADATA"))

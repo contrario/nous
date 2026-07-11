@@ -1,0 +1,87 @@
+# coverage_farkas_demo -- policy-coverage proof (Farkas certificate).
+#
+# The blocking net (policies whose action is `block` or `abort_cycle`)
+# is declared here. The coverage THRESHOLD is supplied at verify time:
+#
+#   nous verify-coverage --threshold "dispute_amount > 10000" \
+#       coverage_farkas_demo.nous
+#
+# PROVEN  = every input crossing the threshold is caught by a blocking
+#           policy; a Farkas certificate is emitted (re-checkable offline
+#           with stdlib rational arithmetic, no solver).
+# REFUTED = a gap exists; a concrete counterexample point is printed.
+#
+# Only `block` / `abort_cycle` count toward the net. `intervene` and
+# `log_only` are recorded but do NOT close a coverage gap -- shown below.
+
+world DisputeReview {
+    heartbeat = 10s
+
+    policy BlockLargeDispute {
+        kind: "llm.request"
+        signal: dispute_amount > 5000
+        weight: 9.0
+        action: block
+    }
+
+    policy FlagMediumDispute {
+        kind: "llm.request"
+        signal: dispute_amount > 1000
+        weight: 5.0
+        action: intervene
+    }
+
+    policy LogEveryRequest {
+        kind: "llm.request"
+        signal: true
+        weight: 1.0
+        action: log_only
+    }
+}
+
+message DisputeCase {
+    case_id: string
+    dispute_amount: float
+}
+
+message Ruling {
+    case_id: string
+    decision: string
+    confidence: float
+}
+
+soul Adjudicator {
+    mind: deepseek-v4-flash @ Tier1
+    senses: [http_get]
+    memory {
+        cases_seen: int = 0
+    }
+    instinct {
+        let c = listen Intake::DisputeCase
+        guard c != null else sleep 5s
+        speak Ruling(case_id: "case", decision: "review", confidence: 0.88)
+        remember cases_seen = cases_seen + 1
+    }
+    heal {
+        on timeout => retry(3, timeout)
+        on api_error => retry(2, api_error)
+    }
+}
+
+soul Intake {
+    mind: claude-haiku-4-5 @ Tier0A
+    senses: [http_get]
+    memory {
+        intake_count: int = 0
+    }
+    instinct {
+        speak DisputeCase(case_id: "case", dispute_amount: 12000.0)
+        let r = listen Adjudicator::Ruling
+        guard r != null else sleep 5s
+        remember intake_count = intake_count + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+        on api_error => retry(2, api_error)
+    }
+}

@@ -1,0 +1,91 @@
+# sequence_law_demo -- ordering laws proven consistent by Z3.
+#
+#   nous verify-sequence sequence_law_demo.nous
+#
+# CONSISTENT   = the declared `before` / `leads_to` laws admit a valid
+#                total order (Z3 proof). INCONSISTENT = they contradict
+#                (a cycle). `at_most(N, label)` bounds occurrences and is
+#                enforced against a signed run, not by the ordering proof.
+#
+# The sequence spec is emitted alongside the cost spec, so the world
+# declares a `cost_cap`; the event alphabet is declared in `events { }`,
+# and every label a law references is `speak`ed by a soul.
+
+world OrderPipeline {
+    cost_cap: 0.50 USD
+    max_ticks: 5
+    heartbeat = 10s
+
+    events { OrderReceived, OrderValidated, OrderShipped }
+
+    law before(OrderReceived, OrderValidated)
+    law before(OrderValidated, OrderShipped)
+    law leads_to(OrderReceived, OrderShipped)
+    law at_most(1, OrderShipped)
+}
+
+message OrderReceived {
+    order_id: string
+}
+
+message OrderValidated {
+    order_id: string
+    ok: bool
+}
+
+message OrderShipped {
+    order_id: string
+    tracking: string
+}
+
+soul Intake {
+    mind: claude-haiku-4-5 @ Tier0A
+    tokens: input=200 output=100
+    senses: [http_get]
+    memory {
+        received: int = 0
+    }
+    instinct {
+        speak OrderReceived(order_id: "ord-1")
+        remember received = received + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+    }
+}
+
+soul Validator {
+    mind: deepseek-v4-flash @ Tier1
+    tokens: input=300 output=150
+    senses: [http_get]
+    memory {
+        validated: int = 0
+    }
+    instinct {
+        let o = listen Intake::OrderReceived
+        guard o != null else sleep 5s
+        speak OrderValidated(order_id: "ord-1", ok: true)
+        remember validated = validated + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+    }
+}
+
+soul Shipper {
+    mind: claude-haiku-4-5 @ Tier3
+    tokens: input=200 output=100
+    senses: [http_get]
+    memory {
+        shipped: int = 0
+    }
+    instinct {
+        let v = listen Validator::OrderValidated
+        guard v != null else sleep 5s
+        speak OrderShipped(order_id: "ord-1", tracking: "trk-1")
+        remember shipped = shipped + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+    }
+}

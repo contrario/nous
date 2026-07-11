@@ -1,0 +1,74 @@
+# quorum_gated_demo -- human-oversight gate with a K-of-N approver quorum.
+#
+#   nous verify quorum_gated_demo.nous
+#
+# `law gated(<action>, K)` declares that every occurrence of <action> in
+# a signed run must carry K DISTINCT valid approver signatures (multisig,
+# not a threshold signature -- each approver's identity is preserved for
+# the audit trail). Conformance obligation #5 counts distinct approving
+# Ed25519 keys and requires at least K.
+#
+# This is the technical form of the EU AI Act Article 14 human-oversight
+# requirement: a tamper-evident, identity-bound record at the moment a
+# gated decision is approved. It EVIDENCES that K distinct keys signed;
+# it does NOT prove K distinct natural persons, their authority, or that
+# a refusal was honored at runtime. `law gated(<action>)` with no K is
+# the single-approver form.
+
+world PaymentApproval {
+    cost_cap: 0.20 USD
+    max_ticks: 3
+    heartbeat = 10s
+
+    events { release_funds }
+
+    law gated(release_funds, 2)
+}
+
+message PaymentRequest {
+    payment_id: string
+    amount: float
+}
+
+message PaymentDecision {
+    payment_id: string
+    decision: string
+}
+
+soul Approver {
+    mind: claude-haiku-4-5 @ Tier0A
+    tokens: input=200 output=80
+    senses: [http_get]
+    memory {
+        reviewed: int = 0
+    }
+    instinct {
+        let p = listen Requester::PaymentRequest
+        guard p != null else sleep 5s
+        speak PaymentDecision(payment_id: "pay-1", decision: "release_funds")
+        remember reviewed = reviewed + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+        on api_error => retry(2, api_error)
+    }
+}
+
+soul Requester {
+    mind: deepseek-v4-flash @ Tier1
+    tokens: input=150 output=60
+    senses: [http_get]
+    memory {
+        requests: int = 0
+    }
+    instinct {
+        speak PaymentRequest(payment_id: "pay-1", amount: 25000.0)
+        let d = listen Approver::PaymentDecision
+        guard d != null else sleep 5s
+        remember requests = requests + 1
+    }
+    heal {
+        on timeout => retry(2, timeout)
+        on api_error => retry(2, api_error)
+    }
+}
