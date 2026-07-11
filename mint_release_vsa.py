@@ -66,6 +66,21 @@ OFFLINE_SCOPE = (
     "(toolchain tier)"
 )
 
+BACKFILL_NOTE = (
+    "This release VSA was MINTED at backfilledAt, later than the original "
+    "release of the named version. Its Rekor anchor is a separate Phase-2 "
+    "step performed at or after backfilledAt; the RFC3161 timestamp "
+    "recorded with the Rekor bundle (rfc3161GenTime in index.json) records "
+    "that anchor instant. The Rekor inclusion proof and that RFC3161 "
+    "timestamp EVIDENCE that this VSA payload existed no later than the "
+    "anchor timestamp; they do NOT evidence anchoring at release time and "
+    "set no lower bound on when the payload came to exist. The release-time "
+    "evidence is the named federation attestations (SLSA build provenance + "
+    "PEP 740 publish leg), dated at the original release; this VSA "
+    "summarizes them. It PROVES nothing (no Z3/Farkas leg). NOUS is a "
+    "monitor, not a guard."
+)
+
 
 class MintError(ValueError):
     """Raised on any precondition or verification failure in the MINT phase.
@@ -326,7 +341,7 @@ def _write_with_sidecar(path: Path, data: bytes) -> None:
     _atomic_write(sidecar, digest_line.encode("ascii"))
 
 
-def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path) -> int:
+def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path, backfill: bool = False) -> int:
     seed = _load_operator_seed(key_path)
     pin = _operator_pubkey_b64(seed)
     if pin != COMMITTED_RELEASE_PIN_B64:
@@ -420,6 +435,13 @@ def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path) -> int:
     import datetime as _dt
 
     time_verified = _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    if backfill:  # __s226_backfill_ext_v1__
+        ext["backfill"] = {
+            "backfilledAt": time_verified,
+            "originalReleaseTag": "v" + version,
+            "note": BACKFILL_NOTE,
+        }
 
     statement = build_vsa.assemble_build_vsa_statement(
         subjects=[
@@ -809,7 +831,7 @@ def build_release_index(
         "url": base + bundle_filename,
     })
 
-    return {
+    index: dict[str, Any] = {
         "artifacts": artifacts,
         "boundary": str(ext["boundary"]),
         "buildIdentity": {
@@ -833,6 +855,10 @@ def build_release_index(
         "version": version,
         "vsaPayloadSha256": vsa_payload_sha256_hex,
     }
+    bf = ext.get("backfill")  # __s226_backfill_index_mirror_v1__
+    if isinstance(bf, dict):
+        index["backfill"] = bf
+    return index
 
 
 # __s172_p0b2_anchor_orchestrator_v1__
@@ -1010,6 +1036,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Scratch dir for artifact downloads (default: a temp dir under --out)",
     )
+    m.add_argument(
+        "--backfill",
+        action="store_true",
+        help="Mark this VSA as a backfill minted later than release; "
+        "injects a signed backfill disclosure. Omit for release-time mints.",
+    )
     a = sub.add_parser(
         "anchor",
         help="Anchor a minted bundle to Rekor v2 (IRREVERSIBLE) + write index",
@@ -1039,6 +1071,7 @@ def main(argv: list[str] | None = None) -> int:
                 out_dir,
                 key_path=Path(args.key_path),
                 work_dir=work_dir,
+                backfill=args.backfill,
             )
         except MintError as exc:
             print("MINT REFUSED: " + str(exc), file=sys.stderr)
