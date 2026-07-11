@@ -5,17 +5,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOUS (Νοῦς) — EU AI Act Annex IV Compliance Infrastructure</title>
-<meta name="description" content="NOUS is a monitor, not a guard. It provides formal, offline-verifiable proofs that your AI systems stay inside the rules you declare — without trusting the vendor, or even NOUS itself. EU AI Act Annex IV compliance infrastructure.">
+<meta name="description" content="NOUS proves the rules you declare hold across every path your agents could take, and produces signed, offline-verifiable evidence that a run conformed. A monitor for compliance, not a runtime guard. EU AI Act Annex IV compliance infrastructure.">
 <meta name="keywords" content="NOUS, EU AI Act, Annex IV, compliance infrastructure, agentic AI, formal verification, cryptographic provenance, Sigstore Rekor, Ed25519">
 <meta name="author" content="Hlias Staurou">
 <meta property="og:title" content="NOUS (Νοῦς) — EU AI Act Annex IV Compliance Infrastructure">
-<meta property="og:description" content="NOUS is a monitor, not a guard. It provides formal, offline-verifiable proofs that your AI systems stay inside the rules you declare — without trusting the vendor, or even NOUS itself. EU AI Act Annex IV compliance infrastructure.">
+<meta property="og:description" content="NOUS proves the rules you declare hold across every path your agents could take, and produces signed, offline-verifiable evidence that a run conformed. A monitor for compliance, not a runtime guard. EU AI Act Annex IV compliance infrastructure.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://nous-lang.org">
 <meta property="og:image" content="https://nous-lang.org/og-image-v2.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="NOUS — EU AI Act Annex IV Compliance Infrastructure">
-<meta name="twitter:description" content="A monitor, not a guard. Formal, offline-verifiable proofs that your AI systems stay inside the rules you declare — without trusting the vendor, or even NOUS. EU AI Act Annex IV.">
+<meta name="twitter:description" content="Proofs that the rules you declare hold across every path, plus signed offline-verifiable evidence a run conformed. A monitor for compliance, not a runtime guard. EU AI Act Annex IV.">
 <link rel="canonical" href="https://nous-lang.org">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -279,7 +279,7 @@ img{max-width:100%;display:block}
   <div class="nav-inner">
     <div style="display:flex;align-items:baseline">
       <button class="nav-logo" onclick="showHome()">ΝΟΥΣ</button>
-      <span class="nav-ver" data-nous-version>v5.73.0</span>
+      <span class="nav-ver" data-nous-version>v5.73.1</span>
     </div>
     <div class="nav-links" id="navLinks">
       <!-- __session86_nav_more_v1__ -->
@@ -324,7 +324,7 @@ img{max-width:100%;display:block}
         <!-- __session86_badge_removed_v1__ hero badge removed -->
         <h1>NOUS <span>Νοῦς</span></h1>
         <p class="hero-headline"><!-- __s171vsa_hero_repos_v1__ __s171vsa_noteven_break_v1__ -->Proofs that need no one.<br>Not even NOUS.</p>
-        <p class="hero-sub"><!-- __hero_governance_v1__ -->A monitor, not a guard. NOUS proves the rules you declare hold across every path your AI agents could take — and anyone can check the proof offline, without trusting the vendor.<br>Not even NOUS. EU AI Act Annex IV.</p>
+        <p class="hero-sub"><!-- __hero_governance_v1__ -->A monitor for compliance, not a runtime guard. NOUS proves the rules you declare hold across every path your AI agents could take — and anyone can check the proof offline, without trusting the vendor.<br>Not even NOUS. EU AI Act Annex IV.</p>
         <p class="hero-desc">AI governance that doesn't rely on trust — only on evidence.</p>
         <div class="hero-buttons">
           <a href="/verify.html" class="btn-gold"><!-- __s171vsa_hero_fixes_v1__ -->Explore the evidence</a>
@@ -347,7 +347,7 @@ img{max-width:100%;display:block}
             </div>
           </div>
           <pre><code id="heroCode"></code></pre>
-          <p class="code-caption"><!-- __s171vsa_demo_declared_law_caption_v1__ -->In a policy, <code>action: block</code> / <code>intervene</code> is the law the agent declares -- what the system says must happen. NOUS proves the declared law is consistent and covered; it does not perform the block.</p>
+          <p class="code-caption"><!-- __s171vsa_demo_declared_law_caption_v1__ -->In a policy, <code>action: block</code> / <code>intervene</code> is the law the agent declares -- what the system says must happen. NOUS proves the declared law is consistent and covered; the compliance layer records and verifies, it does not itself perform the block.</p>
         </div>
       </div>
     </div>
@@ -422,7 +422,7 @@ img{max-width:100%;display:block}
 <div class="container">
   <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
     <div class="section-tag" style="border-color:rgba(56,217,122,0.19);color:var(--green);background:rgba(56,217,122,0.05)">Live Proof</div>
-    <h2 class="section-title">Proof of Safety</h2>
+    <h2 class="section-title">Proof of the Cost Envelope</h2>
     <p class="section-sub">Real verification output from a production NOUS program. Each run is proven to stay inside its declared cost-cap across every execution path before it runs — a mathematical guarantee for the cost bound, not a test sample.</p><!-- __s224_overclaim_proofsafety_v2__ -->
   </div>
   <div style="max-width:780px;margin:0 auto" class="fade-in">
@@ -490,7 +490,7 @@ img{max-width:100%;display:block}
     <div class="doc-card">
       <div class="doc-card-label">3</div>
       <div class="doc-card-title">Runtime conformance is evidenced</div>
-      <div class="doc-card-body">When the agent runs, NOUS does not guard or block. It records a signed trace that evidences whether the run stayed inside the proven envelope. Evidence, not intervention.</div>
+      <div class="doc-card-body">When the agent runs, the compliance layer does not guard or block. It records a signed trace that evidences whether the run stayed inside the proven envelope. Evidence, not intervention.</div>
     </div>
     <div class="doc-card">
       <div class="doc-card-label">4</div>
@@ -1008,7 +1008,7 @@ if(term)obs.observe(term);
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy"><span>© 2025–2026 Hlias Staurou</span><span>·</span><span>NOUS <span data-nous-version>v5.73.0</span></span></div>
+    <div class="footer-copy"><span>© 2025–2026 Hlias Staurou</span><span>·</span><span>NOUS <span data-nous-version>v5.73.1</span></span></div>
     <div class="footer-right">
       <span class="footer-oss">OPEN SOURCE</span>
       <span style="color:var(--dim);font-size:12px">·</span>
@@ -1029,7 +1029,7 @@ const FEATURES = [
   {icon:"◉",title:"Soul",desc:"An autonomous agent with mind (LLM), senses (tools), memory, instinct, and self-healing.",color:"var(--blue)"},
   {icon:"◇",title:"Message",desc:"Typed data contracts. Souls communicate through typed channels via speak and listen.",color:"var(--green)"},
   {icon:"◎",title:"Nervous System",desc:"The routing topology. Determines message flow and wake strategies automatically.",color:"var(--purple)"},
-  {icon:"◬",title:"DNA",desc:"Evolvable parameters with mutation ranges. Evolution engine optimizes over time.",color:"var(--cyan)"},
+  {icon:"◬",title:"DNA",desc:"Evolvable parameters with declared mutation ranges, mutated within bounds and validator- and fitness-gated.",color:"var(--cyan)"},
   {icon:"◊",title:"Heal",desc:"Error recovery: retry with exponential backoff, hibernate, fallback, or alert.",color:"var(--red)"},
 ];
 
