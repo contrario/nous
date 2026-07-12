@@ -4,7 +4,7 @@
 > Scope: optional `--anchor rekor` flag on `nous dossier-spec` and `nous skill-export`, and `anchor=rekor` field on the corresponding `POST /v1/dossier-spec` and `POST /v1/skill/export` HTTP endpoints.
 > Reading order: this document, then `EU_AI_ACT_COMPLIANCE.md` for Article 14 context, then `SKILL_EXPORT.md` for the customer-facing flow.
 
-NOUS v5.0.0 introduced Ed25519-signed dossiers: every verified program emits a manifest whose cryptographic signature is verifiable offline by anyone holding the signer's public key. That gives **inner-circle auditability** -- a signature chain that proves authorship and tamper-evidence between a counterparty and the signer.
+NOUS v5.0.0 introduced Ed25519-signed dossiers: every verified program emits a manifest whose cryptographic signature is verifiable offline by anyone holding the signer's public key. That gives **inner-circle auditability** -- a signature chain that evidences that the holder of the signer's key signed those exact bytes, and makes any later tampering detectable, between a counterparty and the signer. The name-to-key binding is operator-asserted: NOUS runs no CA and certifies no identity.
 
 It does NOT give **third-party-auditable durability**. If the signer's machine is later compromised and the private key is exfiltrated, a malicious party can mint backdated signed manifests indistinguishable from the originals. The signer can also unilaterally revoke or rotate keys without external notice. Article 14 of the EU AI Act calls for governance traces that survive operator-side compromise; an isolated Ed25519 signature does not meet that bar.
 
@@ -37,11 +37,11 @@ Without the `--anchor rekor` flag, dossiers remain byte-identical to v5.2.0 outp
 
 The NOUS dossier signing pipeline uses two cryptographic primitives:
 
-1. **Ed25519** -- the long-lived manifest signature. Proves authorship of the manifest's canonical body bytes. The same primitive used since v4.17.0; key material at `~/.local/share/nous/keys/signing.key` by default, overridable via `--key PATH`.
+1. **Ed25519** -- the long-lived manifest signature. Evidences that the holder of the signing key signed the manifest's canonical body bytes; the name-to-key binding is operator-asserted. The same primitive used since v4.17.0; key material at `~/.local/share/nous/keys/signing.key` by default, overridable via `--key PATH`.
 
 2. **ECDSA-P-256** -- a **per-submission ephemeral keypair** generated at the moment of Rekor submission. Used only to satisfy Rekor's wire-format constraints. Discarded immediately after the submission completes; never persisted to disk.
 
-Both primitives sign the **same canonical manifest body bytes** -- the JSON serialisation of the manifest with the `signature` and `transparency_log` blocks stripped, using the same `sort_keys=True, separators=(",", ":")` canonicalisation that NOUS has used since v4.17.0. This is the bridge: verifying the Ed25519 signature (step 1 of the embedded verifier) proves authorship; verifying the ECDSA signature on the Rekor leaf (step 6) proves the integrity of the Rekor wire payload pointing to those same bytes; verifying the Rekor SignedEntryTimestamp (step 5) proves the leaf was integrated at the claimed time. Three independent crypto checks, all over the same canonical bytes, anchored to the public Sigstore Rekor instance.
+Both primitives sign the **same canonical manifest body bytes** -- the JSON serialisation of the manifest with the `signature` and `transparency_log` blocks stripped, using the same `sort_keys=True, separators=(",", ":")` canonicalisation that NOUS has used since v4.17.0. This is the bridge: verifying the Ed25519 signature (step 1 of the embedded verifier) evidences that the holder of the signing key signed those bytes; verifying the ECDSA signature on the Rekor leaf (step 6) evidences that the Rekor wire payload points to those same canonical bytes; verifying the Rekor SignedEntryTimestamp (step 5) evidences Rekor's attestation that the leaf was integrated at the claimed time. Three independent crypto checks, all over the same canonical bytes, anchored to the public Sigstore Rekor instance.
 
 ### Why dual signing, not direct Ed25519 submission?
 
@@ -110,7 +110,7 @@ The `body_b64` decodes to the actual Rekor leaf, which has the post-Path-beta sh
 
 Three signatures, two trust anchors, one set of canonical bytes:
 
-| Signature | Algorithm | Trust anchor | Proves |
+| Signature | Algorithm | Trust anchor | Evidences |
 |-----------|-----------|--------------|--------|
 | `manifest.signature.signature_b64` | Ed25519 | Customer's published Ed25519 pubkey | Manifest authorship |
 | `transparency_log.body_b64 -> spec.signature.content` | ECDSA-P-256 | The publicKey carried alongside in the leaf | The wire payload anchors the same canonical bytes the manifest signs |
@@ -124,11 +124,11 @@ The dossier ships `verify_offline.py` next to the manifest. It is a single-file,
 
 The verifier performs six checks in order:
 
-1. **Ed25519 signature over canonical manifest body bytes.** The `signature` and `transparency_log` blocks are stripped before recomputing the canonical form. Proves manifest authorship.
-2. **`source.nous` SHA-256 matches `manifest.source_sha256`.** Proves the source archived alongside the manifest is the one that was verified.
+1. **Ed25519 signature over canonical manifest body bytes.** The `signature` and `transparency_log` blocks are stripped before recomputing the canonical form. Evidences that the holder of the embedded public key signed those bytes; the name-to-key binding is operator-asserted.
+2. **`source.nous` SHA-256 matches `manifest.source_sha256`.** Identifies the source archived alongside the manifest as the one that was verified. A hash match is IDENTITY, not proof.
 3. **`transparency_log.provider == "sigstore-rekor"`.** Pins the trust ecosystem.
 4. **`rekor_public_key_pem` is in the pinned `KNOWN_REKOR_PUBLIC_KEYS` allowlist.** This allowlist ships with the verifier and grows as Sigstore rotates keys; older keys remain so historical dossiers continue to verify.
-5. **ECDSA-P-256 verify of `signed_entry_timestamp_b64`** over the canonical SET payload `{body, integratedTime, logID, logIndex}` using the Rekor public key. Proves Rekor's attestation.
+5. **ECDSA-P-256 verify of `signed_entry_timestamp_b64`** over the canonical SET payload `{body, integratedTime, logID, logIndex}` using the Rekor public key. Evidences Rekor's attestation.
 6. **Rekor leaf body is `hashedrekord` and:**
    - `spec.data.hash.algorithm == "sha256"`,
    - `spec.data.hash.value == sha256(canonical manifest body bytes)`,
