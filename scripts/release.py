@@ -503,7 +503,16 @@ def main() -> int:
         print("  1) gates:  python3 scripts/release.py --check")
         print("  2) tag:    git tag vX.Y.Z && git push origin vX.Y.Z")
         print("  3) approve the 'pypi' environment in GitHub Actions")
-        print("  4) anchor: python3 mint_release_vsa.py mint X.Y.Z")
+        print("  4) mint:   python3 mint_release_vsa.py mint X.Y.Z --out /tmp/vsaX")
+        print("     (reversible; hashes the PUBLISHED PyPI artifacts, not a rebuild)")
+        print("  5) anchor: python3 mint_release_vsa.py anchor X.Y.Z --dir /tmp/vsaX \\")
+        print("               --pins-dir /root/.local/share/nous/pins   [IRREVERSIBLE]")
+        print("  6) publish: copy the bundle to BOTH")
+        print("               /var/www/nous-lang.org/.well-known/nous/release-vsa/X.Y.Z/")
+        print("               website/.well-known/nous/release-vsa/X.Y.Z/   then commit")
+        print("  Steps 4-6 belong to THIS release, not to a later backfill. Minting")
+        print("  inside the release ceremony is what keeps --backfill unnecessary and")
+        print("  keeps _RELEASE_VSA_WAIVERS empty of vsa_backfill_pending entries.")
         return 2
 
     try:

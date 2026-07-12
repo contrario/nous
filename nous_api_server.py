@@ -828,10 +828,15 @@ def _v2_human_readable(
                 "(no public anchor)."
             )
             expl = (
-                "The dossier carries no transparency_log block. "
-                "Author identity is proven by the Ed25519 signature, "
-                "but there is no public log entry confirming when "
-                "this dossier was issued."
+                "The dossier carries no transparency_log block. The Ed25519 "
+                "signature EVIDENCES that the holder of the embedded public "
+                "key signed these canonical manifest bytes. The name-to-key "
+                "binding is operator-asserted: NOUS runs no CA and certifies "
+                "no identity, so establishing who holds that key is an "
+                "out-of-band step for the auditor. It PROVES nothing; "
+                "'proves' is reserved for Z3 cost bounds and Farkas "
+                "certificates. There is also no public log entry recording "
+                "when this dossier was issued."
             )
             next_steps = [
                 "To obtain anchored evidence, re-issue the dossier "
