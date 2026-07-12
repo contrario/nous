@@ -1,0 +1,190 @@
+# NOUS claim-boundary convention.
+#
+# This file IS the declared convention. The linter checks conformance to it and
+# nothing else. It does not determine whether any claim is true.
+#
+# Source of the boundary (not invented here):
+#   README.md line 35  -- "The word proves is reserved strictly for the Z3/Farkas
+#                          legs -- the cost-cap bound, policy-coverage, and
+#                          sequence-ordering."
+#   nous_api_server.py -- "'proves' is reserved for Z3 cost bounds and Farkas
+#                          certificates."
+#   NOUS Engineering Constitution, Article IV.
+
+version = 1
+
+# The three genuine Z3/Farkas legs: cost-cap, policy-coverage, sequence-ordering.
+# SETTLED S230. Any numeric claim of a different number of proofs is a violation.
+declared_proof_legs = 3
+
+[reserved]
+# Words that assert a capability class. A reserved word is NEVER a violation on
+# its own -- only reserved word PLUS a failed predicate is.
+words = [
+    "prove", "proves", "proven", "proof", "proofs",
+    "guarantee", "guarantees", "guaranteed",
+    "ensure", "ensures", "ensured",
+    "prevent", "prevents", "prevented",
+]
+
+# Words that make a claim NOUS is entitled to make. A forbidden object governed
+# by one of these is fine.
+allowed_claim_words = [
+    "verify", "verifies", "verified", "verifying",
+    "check", "checks", "checked",
+    "record", "records", "recorded",
+    "evidence", "evidences", "evidenced",
+    "attest", "attests", "attested",
+    "certify", "certifies", "certified",
+    "report", "reports", "reported",
+    "estimate", "estimates", "estimated",
+    "monitor", "monitors", "monitored",
+    "detect", "detects", "detected",
+    "emit", "emits", "emitted",
+    "analyse", "analyses", "analyzes",
+    "validate", "validates", "validated",
+]
+
+[reserved.alternatives]
+proves = ["evidences", "verifies", "checks", "records"]
+prove = ["evidence", "verify", "check", "record"]
+proven = ["verified", "checked", "recorded", "evidenced"]
+proof = ["evidence", "check", "record"]
+proofs = ["checks", "evidence records"]
+guarantee = ["evidence", "check"]
+guarantees = ["evidences", "checks"]
+guaranteed = ["evidenced", "checked"]
+ensures = ["records", "checks"]
+prevents = ["records", "flags"]
+
+[exempt]
+# E1 -- negation. TOKEN-scoped, deliberately NOT sentence-scoped.
+# Rationale (a real near-miss, kept here as the reason): the pre-f2c2409 defect
+# sentence read "Author identity is proven by the Ed25519 signature, but there is
+# no public log entry confirming when this dossier was issued." A SENTENCE-scoped
+# negation exemption would have seen "no ... entry" and exempted the one string
+# that mattered. A tight token window does not.
+negators = [
+    "no", "not", "never", "nothing", "none", "cannot", "without",
+    "neither", "nor", "nothing", "non",
+]
+negation_window = 3
+
+# E2 -- terms of art. A reserved word inside one of these is not a claim word.
+terms_of_art = [
+    "inclusion proof", "consistency proof", "merkle proof",
+    "proof obligation", "proof obligations", "proof carrying",
+    "coverage proof", "cost proof", "smt proof", "envelope proof",
+    "proof leg", "proof legs", "farkas proof", "farkas proofs",
+    "z3 proof", "z3 proofs", "proof of the cost envelope",
+]
+
+# E3 -- identifiers are never scanned. Structural, not configurable: the Python
+#       walker visits only Constant[str], JoinedStr, docstrings and comments. A
+#       variable named `cn_proofs` or an attribute `.proven` is an ast.Attribute,
+#       never an ast.Constant, and is therefore invisible to every predicate.
+#       This is the reason the tool is AST-based and not a regex over raw text.
+#
+# E5 -- a string literal whose ENTIRE value is one reserved token is SCHEMA, not
+#       prose: `PROVEN = "PROVEN"`, `{"verdict": "proven"}`. Handled in code, not
+#       by an allowlist, so the enum and the JSON key need no entries.
+#
+# E6 -- use vs mention. A reserved word wrapped in nested quotes is a mention:
+#       "'proves' is reserved for Z3 cost bounds and Farkas certificates".
+#       Without E6 the linter flags the sentence that declares its own rule.
+
+[object]
+# The four properties NOUS checks STATICALLY (verifier.py VD/VL/VE/VM) and does
+# NOT prove, plus the identity claim NOUS explicitly disclaims (no CA, name-to-key
+# is operator-asserted).
+forbidden_objects = [
+    "deadlock", "deadlock freedom", "liveness", "reachability",
+    "memory safety", "memory-safety",
+    "identity", "author identity", "authorship",
+    "protocol conformance", "topology",
+]
+
+# Passive voice: "<object> is proven". The motivating defect (f2c2409^) is passive,
+# so a backward-only binding would have missed it entirely.
+copulas = ["is", "are", "was", "were", "be", "been", "being"]
+reserved_participles = ["proven", "proved", "guaranteed", "ensured", "prevented"]
+passive_window = 3
+
+# A forbidden-object token that is part of a larger, non-claim compound.
+# "codegen byte-identity held at 0 diffs" tokenises to ... byte, identity ...
+# and matched the forbidden object 'identity'. A real false positive from the
+# first live scan.
+exempt_object_phrases = [
+    "byte identity", "type identity", "bit identity", "hash identity",
+]
+
+[stat]
+# STAT-CARD rule (HTML only). A block whose entire text is a bare numeral,
+# immediately followed by a block naming a proof noun, asserts a proof count.
+# It must equal declared_proof_legs.
+#
+#   <div>31+</div><div>Formal Proofs</div>       -> 31 != 3 -> VIOLATION
+#   <div>3</div><div>Z3/Farkas Proofs</div>      -> 3  == 3 -> OK  (live today)
+#   <div>62</div><div>CLI Commands</div>         -> no proof noun -> ignored
+#   <div>1</div><div>Envelope proof</div>        -> SINGULAR -> ignored (a card
+#                                                   ORDINAL, not a count; this was
+#                                                   a real false positive on the
+#                                                   current homepage, index.html:596)
+#
+# PLURAL ONLY. The singular "proof" appears as a numbered card title ("1. Envelope
+# proof"), where the numeral is an ordinal, not a cardinality. A stat card that
+# states a count always pluralises: "3 Z3/Farkas Proofs", "31+ Formal Proofs".
+#
+# This REPLACES the v1 prose `count` predicate, which was killed after its
+# first real scan: 24 hits, 0 true positives, a 100% false-positive rate. The
+# error was conceptual, not a missing exemption -- "N proofs" in English is a
+# cardinality of proof INSTANCES ("one static proof to many runtime
+# certificates", "two proofs shipped last week"), not an assertion about how
+# many Z3/Farkas legs NOUS has. The stat card is the only shape that actually
+# makes that assertion. A predicate with no true positives is not a predicate.
+proof_nouns = ["proofs"]
+
+[axis]
+# THE S228 DEFECT, made mechanical.
+#
+# verifier.py carries a DUAL AXIS on every VerificationItem:
+#   severity -- legacy affirmative flag. prove() AND verify() AND estimate() AND
+#               report() ALL set severity="PROVEN". Counting it counts STATIC
+#               CHECKS.
+#   tier     -- the honest axis. Only the Z3/Farkas SMT leg is tier PROVEN.
+#
+# VerificationResult.proven filters the SEVERITY axis -- so the property NAME is
+# itself the trap. Any f-string that renders a reserved word from a value bound to
+# `severity` or `.proven` is rendering a count of static checks as a proof count.
+#
+#   f"VERIFIED: {len(result.proven)} proven"   -> forbidden -> VIOLATION
+#   f"{tproven} proven, {tverified} verified"  -> required  -> OK (verifier.py:146)
+required_fields = ["tier", "tproven"]
+forbidden_fields = ["severity", "proven"]
+
+[surfaces]
+include = ["*.py", "*.md", "*.html"]
+exclude_dirs = [
+    ".git", "tests", "build", "dist", ".venv", "venv", "node_modules",
+    "website/.well-known", "examples", "htmlcov", "__pycache__",
+]
+# Signed, sha-pinned, byte-frozen evidence artifacts are excluded on purpose: a
+# linter that demands an edit to a signed artifact breaks the signature. That is
+# the honest boundary applied to the linter itself.
+exclude_globs = ["*_generated.py", "*.egg-info/*", "verify_*_offline.py"]
+
+# An overclaim on an external surface is worse than one in a log string. An
+# auditor reads the API response body; nobody greps your logs.
+high_severity_modules = ["nous_api_server.py", "nous_api.py"]
+
+# [[allow]] entries: file:line + word + a WRITTEN reason + the sha256 of the
+# justifying line. If that line changes, the sha stops matching and the entry ROTS
+# LOUDLY (reported as STALE, exit non-zero) instead of silently protecting text it
+# was never reviewed against.
+#
+# [[allow]]
+# path = "docs/EXAMPLE.md"
+# line = 42
+# word = "proves"
+# reason = "Z3/Farkas cost-cap leg; the object is the cost bound, not a static check."
+# region_sha256 = "..."
