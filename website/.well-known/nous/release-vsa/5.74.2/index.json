@@ -1,0 +1,92 @@
+{
+  "artifacts": [
+    {
+      "kind": "release_vsa_dsse",
+      "name": "nous_lang-5.74.2.build-vsa.intoto.json",
+      "sha256": "d84d1ff22dbf8d08b1f821cc12fc5ca028c596442a0408f1261c877040154626",
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.74.2/nous_lang-5.74.2.build-vsa.intoto.json"
+    },
+    {
+      "kind": "offline_verifier",
+      "name": "verify_build_vsa_offline.py",
+      "sha256": "8bdb7a5e7777a3d31b027fc5231e87ffc70e2b7c48bcdeb26d37aecb0f21cb94",
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.74.2/verify_build_vsa_offline.py",
+      "verifierKeyPinned": "E3FNG9zFMRjhg/iVkOu9K3gH5mmG6Uwvdy8EvwHsYVo="
+    },
+    {
+      "kind": "release_verifier_key",
+      "name": "release-verifier-key.json",
+      "sha256": "e9cd1a34cc8c64329d99c96155b4b81afeca307c1dc024b84a078aa35b21a604",
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.74.2/release-verifier-key.json"
+    },
+    {
+      "kind": "wheel",
+      "name": "nous_lang-5.74.2-py3-none-any.whl",
+      "sha256": "d5db69c0903df4ea7c08c12db0fa1b95be97a063a916ae10c89696003de8ce77",
+      "source": "pypi",
+      "url": "https://pypi.org/project/nous-lang/5.74.2/"
+    },
+    {
+      "kind": "sdist",
+      "name": "nous_lang-5.74.2.tar.gz",
+      "sha256": "9f035f5b700b62a086037ebd5739b115f73bf1737afeee8392e4574f89798c4b",
+      "source": "pypi",
+      "url": "https://pypi.org/project/nous-lang/5.74.2/"
+    },
+    {
+      "kind": "federation_build_leg",
+      "payloadSha256": "88e97569b8ef1a47c3a3eca4098ea916e36043e31ed3e71c489b9c63964b0edc",
+      "predicateType": "https://slsa.dev/provenance/v1",
+      "uri": "https://api.github.com/repos/contrario/nous/attestations/sha256:d5db69c0903df4ea7c08c12db0fa1b95be97a063a916ae10c89696003de8ce77"
+    },
+    {
+      "kind": "federation_publish_leg",
+      "name": "nous_lang-5.74.2-py3-none-any.whl",
+      "payloadSha256": "00d1d5130c44e78995eb3e2ba8408a85b71692936a7ea1d15841afff988e7344",
+      "predicateType": "https://docs.pypi.org/attestations/publish/v1",
+      "uri": "https://pypi.org/integrity/nous-lang/5.74.2/nous_lang-5.74.2-py3-none-any.whl/provenance"
+    },
+    {
+      "kind": "federation_publish_leg",
+      "name": "nous_lang-5.74.2.tar.gz",
+      "payloadSha256": "823f64eab88f277e56b6c2a095499609183b4e61c626fcef803b5ba9ef2cd1d6",
+      "predicateType": "https://docs.pypi.org/attestations/publish/v1",
+      "uri": "https://pypi.org/integrity/nous-lang/5.74.2/nous_lang-5.74.2.tar.gz/provenance"
+    },
+    {
+      "anchoredDigestSha256": "094e30f963957108b42bb00d616dc8b7c6b43a20903e85a6f39371b3873efffd",
+      "boundary": "EVIDENCES public, append-only, RFC3161-timestamped inclusion of the VSA payload digest in the Rekor v2 transparency log. The bundle is self-contained: it carries the RFC6962 inclusion proof, the C2SP signed-note checkpoint, and the RFC3161 timestamp token, and is verifiable fully offline with cryptography + Python stdlib only. It PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard.",
+      "entryKind": "hashedrekord/0.0.2",
+      "kind": "rekor_v2_transparency_log",
+      "leafHash": "d2e54d0d8576dbe7d29038c4b8edaa750e03a8d04c2caf23eea62e78a5a3f538",
+      "logIndex": 17491501,
+      "name": "nous_lang-5.74.2.rekor-v2-bundle.json",
+      "rekorShard": "https://log2025-1.rekor.sigstore.dev",
+      "rfc3161GenTime": "2026-07-12T01:08:35Z",
+      "sha256": "f9d5516d1afb09c28e3d2a658e3b3a471719c0a51cc1c5cbfdfc405428fbd3ca",
+      "treeSize": 17491502,
+      "url": "https://nous-lang.org/.well-known/nous/release-vsa/5.74.2/nous_lang-5.74.2.rekor-v2-bundle.json"
+    }
+  ],
+  "boundary": "This release VSA EVIDENCES that the NOUS release operator verified, with standard Sigstore tooling, that these exact published wheel and sdist bytes carry a SLSA build provenance (keyless GitHub Actions, Fulcio/Rekor) and a PEP 740 PyPI publish attestation, both naming these bytes, at SLSA Build Level 2. It is an operator-key root ALONGSIDE the federation roots; it is not a second build. The offline verifier checks the operator signature and re-derives the subject digests, but does NOT re-derive the named federation attestations (toolchain tier: fetch + Sigstore). It PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard.",
+  "buildIdentity": {
+    "buildType": "https://actions.github.io/buildtypes/workflow/v1",
+    "builderId": "https://github.com/contrario/nous/.github/workflows/release.yml@refs/tags/v5.74.2",
+    "path": ".github/workflows/release.yml",
+    "ref": "refs/tags/v5.74.2",
+    "repository": "https://github.com/contrario/nous",
+    "sourceCommit": "eb213f4d0e6cfb5e0782c0393c8d20f9229cbe52"
+  },
+  "emittedAt": "2026-07-12T01:08:35Z",
+  "policyDigest": "a128c9736ba28b191463f0a031063653d04f486019f7191e56126bccc6095bde",
+  "policyId": "https://nous-lang.org/policy/release-federation-l2/v1",
+  "schema": "nous.release_vsa.index.v1",
+  "verifiedLevels": [
+    "SLSA_BUILD_LEVEL_2"
+  ],
+  "verifierId": "https://nous-lang.org/verifiers/release-operator/v1",
+  "verifierKeyid": "66969a4ebc65b0c5f00aa6d93c55e8a3a30d461ffe073caa93d8ea4d5d7898fd",
+  "verifierPublicKeyRaw": "E3FNG9zFMRjhg/iVkOu9K3gH5mmG6Uwvdy8EvwHsYVo=",
+  "version": "5.74.2",
+  "vsaPayloadSha256": "094e30f963957108b42bb00d616dc8b7c6b43a20903e85a6f39371b3873efffd"
+}
