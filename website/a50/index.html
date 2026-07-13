@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article 50(2): a conformance teardown of C2PA marking</title>
+<meta name="description" content="Measured 12 July 2026. C2PA marking on real output from OpenAI, Google and Adobe. Ten local transformations, three vendors, thirty runs. Plus four SDK findings and two null results from a byte-level review of c2pa-rs. The script runs on your machine. Nothing is uploaded.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://nous-lang.org/a50/">
+<meta property="og:title" content="Article 50(2): a conformance teardown of C2PA marking">
+<meta property="og:description" content="Ten local transformations. Three vendors. Thirty runs. Thirty strips. A visually-lossless re-save destroys the C2PA metadata layer. Measured 12 July 2026.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://nous-lang.org/a50/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #05070e;
+  --bg2: #0a0f1a;
+  --bg3: #0d1220;
+  --card: #0c1019;
+  --border: #1a2235;
+  --border-h: #2a3a55;
+  --text: #b8c4d4;
+  --dim: #5a6a7e;
+  --bright: #e2e8f0;
+  --gold: #c9a554;
+  --gold-g: rgba(201,165,84,0.08);
+  --blue: #4d9eff;
+  --green: #38d97a;
+  --red: #f04848;
+  --purple: #a78bfa;
+  --cyan: #45d1c8;
+  --orange: #f59e0b;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;line-height:1.65;overflow-x:hidden}
+::selection{background:rgba(201,165,84,0.2);color:var(--bright)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,165,84,0.28);transition:border-color 0.2s,color 0.2s}
+a:hover{color:var(--bright);border-bottom-color:var(--bright)}
+code{font-family:'JetBrains Mono',monospace;font-size:0.88em;color:var(--cyan);background:rgba(69,209,200,0.06);padding:1px 5px;border-radius:3px;word-break:break-word}
+
+.wrap{max-width:860px;margin:0 auto;padding:0 24px}
+.rule{height:1px;background:var(--border);margin:0}
+
+/* Masthead */
+.mast{padding:96px 0 56px;border-bottom:1px solid var(--border)}
+.eyebrow{display:inline-block;padding:5px 15px;margin-bottom:26px;border:1px solid rgba(201,165,84,0.19);border-radius:20px;font-size:10.5px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;background:var(--gold-g);font-family:'JetBrains Mono',monospace}
+h1{font-family:'Playfair Display',Georgia,serif;font-weight:300;font-size:47px;line-height:1.14;color:var(--bright);margin-bottom:22px;letter-spacing:-0.4px}
+.dek{font-size:19px;color:var(--text);line-height:1.62;max-width:680px;font-weight:300}
+.dek strong{color:var(--bright);font-weight:500}
+.meta{margin-top:34px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);line-height:2}
+.meta b{color:var(--text);font-weight:500}
+
+/* Sections */
+section{padding:64px 0;border-bottom:1px solid var(--border)}
+.snum{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:2px;margin-bottom:12px;text-transform:uppercase}
+h2{font-family:'Playfair Display',Georgia,serif;font-weight:300;font-size:33px;color:var(--bright);margin-bottom:22px;line-height:1.22}
+h3{font-family:'DM Sans',sans-serif;font-weight:600;font-size:16px;color:var(--bright);margin:36px 0 12px;letter-spacing:0.2px}
+h3:first-of-type{margin-top:0}
+p{margin-bottom:17px;font-size:16.5px}
+p:last-child{margin-bottom:0}
+.lede{font-size:18px;color:var(--bright);font-weight:300;margin-bottom:26px}
+ul{margin:0 0 17px 0;padding-left:20px}
+li{margin-bottom:9px;font-size:16.5px}
+strong{color:var(--bright);font-weight:600}
+em{color:var(--text);font-style:italic}
+
+/* Callouts */
+.lock{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--orange);padding:22px 24px;margin:30px 0;border-radius:0 5px 5px 0}
+.lock .lt{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:11px}
+.lock p{font-size:15.5px;margin-bottom:11px}
+.lock p:last-child{margin-bottom:0}
+.pf{display:grid;grid-template-columns:96px 1fr;gap:8px 14px;margin-top:15px;font-size:15px}
+.pf .k{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;padding-top:4px}
+.pf .ok{color:var(--green)}
+.pf .no{color:var(--red)}
+
+.note{background:var(--card);border:1px solid var(--border);padding:20px 22px;margin:26px 0;border-radius:5px;font-size:15.5px}
+.note .nt{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+
+.conc{border-left:3px solid var(--blue);background:rgba(77,158,255,0.04);padding:17px 20px;margin:20px 0;font-size:15.5px;border-radius:0 4px 4px 0}
+.conc .ct{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--blue);margin-bottom:9px}
+
+/* Big stat */
+.hero-stat{text-align:center;padding:46px 24px;background:linear-gradient(180deg,rgba(240,72,72,0.05),transparent);border:1px solid var(--border);border-radius:6px;margin:34px 0}
+.hero-stat .n{font-family:'Playfair Display',serif;font-size:76px;font-weight:300;color:var(--red);line-height:1;letter-spacing:-2px}
+.hero-stat .l{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2.4px;text-transform:uppercase;color:var(--dim);margin-top:16px}
+.hero-stat .s{font-size:15px;color:var(--text);margin-top:16px;max-width:520px;margin-left:auto;margin-right:auto}
+
+/* Tables */
+.tw{overflow-x:auto;margin:26px 0;border:1px solid var(--border);border-radius:5px}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:600px}
+th{background:var(--bg3);text-align:left;padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold);font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(201,165,84,0.02)}
+td.m,th.m{font-family:'JetBrains Mono',monospace;font-size:12.5px}
+.tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.8px;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.t-ver{background:rgba(56,217,122,0.1);color:var(--green);border:1px solid rgba(56,217,122,0.22)}
+.t-warn{background:rgba(245,158,11,0.1);color:var(--orange);border:1px solid rgba(245,158,11,0.22)}
+.t-bad{background:rgba(240,72,72,0.1);color:var(--red);border:1px solid rgba(240,72,72,0.22)}
+.t-neu{background:rgba(90,106,126,0.12);color:var(--dim);border:1px solid var(--border)}
+.t-rep{background:rgba(167,139,250,0.1);color:var(--purple);border:1px solid rgba(167,139,250,0.22)}
+.tfoot{font-size:13.5px;color:var(--dim);margin-top:-12px;margin-bottom:26px;line-height:1.6}
+
+/* Code */
+pre{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:18px 20px;overflow-x:auto;margin:22px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;color:var(--text)}
+pre code{background:none;padding:0;color:inherit;font-size:inherit}
+pre .c{color:var(--dim)}
+pre .g{color:var(--gold)}
+
+/* Source cite */
+.src{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:12px 15px;margin:16px 0 0;line-height:1.75;word-break:break-word}
+.src b{color:var(--gold);font-weight:500;letter-spacing:0.8px}
+
+/* Finding */
+.finding{margin-bottom:56px}
+.finding:last-child{margin-bottom:0}
+.fid{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.6px;color:var(--gold);border:1px solid rgba(201,165,84,0.25);padding:3px 9px;border-radius:3px;margin-bottom:13px;background:var(--gold-g)}
+.fh{font-family:'DM Sans',sans-serif;font-weight:600;font-size:20px;color:var(--bright);margin-bottom:14px;line-height:1.35}
+.flag{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--cyan);letter-spacing:0.4px;margin-bottom:16px;word-break:break-all}
+
+/* Null */
+.null{border:1px solid var(--border);border-radius:5px;padding:24px;margin-bottom:20px;background:var(--card)}
+.null .nid{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--purple);letter-spacing:1.6px;margin-bottom:11px}
+.null h3{margin-top:0;margin-bottom:11px}
+.null p:last-child{margin-bottom:0}
+
+/* Close */
+.close{padding:78px 0 96px;text-align:center}
+.close .line{font-family:'Playfair Display',serif;font-weight:300;font-size:23px;line-height:1.6;color:var(--bright);max-width:660px;margin:0 auto 30px}
+.close .contact{font-size:16px;color:var(--text)}
+.foot{padding:30px 0 56px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--dim);text-align:center;line-height:2}
+
+@media (max-width:720px){
+  h1{font-size:33px}
+  h2{font-size:26px}
+  .dek{font-size:17px}
+  .mast{padding:60px 0 42px}
+  section{padding:48px 0}
+  .hero-stat .n{font-size:56px}
+  .close .line{font-size:19px}
+  .pf{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">Article 50(2) &middot; conformance teardown</div>
+  <h1>What the C2PA marking actually shows &mdash; and what happens to it when you re-save the file</h1>
+  <p class="dek">Three real files, taken as emitted by OpenAI, Google and Adobe. Ten local transformations, none of them a platform upload. <strong>Thirty runs, thirty strips.</strong> A visually-lossless JPEG re-save at quality 95 destroys the C2PA metadata layer on all three. Alongside the measurement, a byte-level read of the reference SDK turned up four findings and two null results. Everything below is re-runnable on your own files, on your own machine.</p>
+  <div class="meta">
+    <b>Measured</b> &nbsp;12 July 2026<br>
+    <b>Stack</b> &nbsp;&nbsp;&nbsp;&nbsp;c2pa-python 0.36.0 &middot; c2pa-rs 0.89.0 &middot; Pillow<br>
+    <b>Tool</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a50_teardown 0.3.0 &middot; corpus 1.1.0<br>
+    <b>Trust</b> &nbsp;&nbsp;&nbsp;&nbsp;C2PA official list + TSA list, loaded explicitly
+  </div>
+</header>
+
+<!-- ============================================================ -->
+<section id="scope">
+  <div class="snum">00 &middot; scope</div>
+  <h2>Read this before you quote a number from this page</h2>
+
+  <div class="lock">
+    <div class="lt">Scope lock</div>
+    <p>This measures the <strong>C2PA metadata layer only</strong>. It cannot see SynthID, AudioSeal, or any imperceptible watermark. An invisible layer may survive every transformation below and this test would never know it was there.</p>
+    <div class="pf">
+      <div class="k ok">PERMITTED</div><div>&ldquo;the C2PA metadata layer does not survive a re-save&rdquo;</div>
+      <div class="k no">FORBIDDEN</div><div>the same sentence with <em>&ldquo;the marking&rdquo;</em> in place of <em>&ldquo;the C2PA metadata layer&rdquo;</em> &mdash; we did not measure the other layer, so we may not speak for it</div>
+    </div>
+    <p style="margin-top:15px">The EU Code of Practice asks for a multi-layer approach: metadata <em>plus</em> watermarking. We audit one layer. Saying otherwise would be the same overclaim this page exists to examine.</p>
+  </div>
+
+  <p>Three further limits, stated up front rather than buried:</p>
+  <ul>
+    <li><strong>This says nothing about whether a file is AI-generated.</strong> No C2PA manifest can answer that question, and neither can this tool. C2PA records <em>who signed what</em>. It is a provenance format, not a detector.</li>
+    <li><strong>No vendor here is doing anything wrong.</strong> All three sign correctly. The marking is well-formed in every case. It is stripped because the layer it lives in is stripped.</li>
+    <li><strong>This is not a survey.</strong> Three files, one per vendor, one date. Vendors change their pipelines without announcing it. The date on this page is load-bearing.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="data">
+  <div class="snum">01 &middot; the measured data</div>
+  <h2>Three vendors, as emitted</h2>
+
+  <p>Each file was downloaded directly from its generator. None was re-saved, none passed through a chat client, none through a CDN. That matters: the transformations below are the experiment, so the input has to be clean.</p>
+
+  <div class="tw">
+  <table>
+    <thead>
+      <tr>
+        <th>file</th><th>generator</th><th class="m">claim</th><th>out of the box</th><th>configured</th><th>revocation via</th><th>survival</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="m">openai.png</td>
+        <td>OpenAI Media Service</td>
+        <td class="m">v2</td>
+        <td><span class="tag t-warn">Valid</span></td>
+        <td><span class="tag t-ver">Trusted</span></td>
+        <td>cert-status assertion</td>
+        <td><span class="tag t-bad">10/10 stripped</span></td>
+      </tr>
+      <tr>
+        <td class="m">gemini.png</td>
+        <td>Google C2PA Core Gen</td>
+        <td class="m">v2 &middot; 2 manifests</td>
+        <td><span class="tag t-warn">Valid</span></td>
+        <td><span class="tag t-ver">Trusted</span></td>
+        <td>COSE staple <em>(by elimination)</em></td>
+        <td><span class="tag t-bad">10/10 stripped</span></td>
+      </tr>
+      <tr>
+        <td class="m">firefly.png</td>
+        <td>Adobe Firefly C2PA</td>
+        <td class="m">v1</td>
+        <td><span class="tag t-warn">Valid</span></td>
+        <td><span class="tag t-warn">Valid</span> &nbsp;<em>(see F2)</em></td>
+        <td>not checked <em>(see F6)</em></td>
+        <td><span class="tag t-bad">10/10 stripped</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="tfoot"><strong>By elimination, not direct observation.</strong> <code>check_ocsp_status</code> has exactly two sources: a COSE staple, or a cert-status assertion. Gemini carries no such assertion, yet emits <code>notRevoked</code> with <code>ocsp_fetch=false</code>. It must be the staple. That is an inference, and it is labelled as one.</p>
+
+  <h3>The ten transformations</h3>
+  <p>All local. Each is a pure function of the input. No platform is contacted, so there is no terms-of-service exposure and nothing to attribute to a platform's own stripping policy.</p>
+  <pre><code>jpeg_q95      jpeg_q80      jpeg_q70
+resize_1080   resize_720
+crop_10pct    crop_25pct
+convert_png   convert_webp  rerender_rgb</code></pre>
+
+  <div class="hero-stat">
+    <div class="n">30 / 30</div>
+    <div class="l">transformations &middot; C2PA manifest destroyed</div>
+    <div class="s">Three vendors. Three signers. Two claim versions. Three different revocation mechanisms. Identical result.</div>
+  </div>
+
+  <p><strong>Not one of these is a platform upload.</strong> Every one is routine inside a CDN, a CMS, or a publishing pipeline &mdash; the ordinary machinery a file passes through between a generator and a reader. A JPEG re-save at quality 95, which is visually lossless, is enough on its own.</p>
+  <p>Adobe founded C2PA, and their output behaves exactly like everyone else's here. That is the reason to read this as a property of the layer rather than as one vendor implementing it badly. The specification is candid about it: removal is not something the format protects against.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="ladder">
+  <div class="snum">02 &middot; vocabulary</div>
+  <h2>The ladder, and why there is no single green tick</h2>
+
+  <p>Most tools collapse a C2PA manifest into one word. That word does the work of hiding several distinct questions, which have several distinct answers. The tool used here refuses to aggregate. It reports each leg separately, in the words below &mdash; and the page and the tool use the same words, deliberately.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>leg</th><th class="m">status</th><th>what it establishes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>hash binding</td>
+        <td class="m"><span class="tag t-ver">VERIFIED</span></td>
+        <td>A decidable check: the bytes are unchanged since signing. Nothing more.</td>
+      </tr>
+      <tr>
+        <td>signature</td>
+        <td class="m"><span class="tag t-ver">VERIFIED</span></td>
+        <td>The holder of this certificate signed these bytes. Not <em>who they are</em>. Not that the content is true.</td>
+      </tr>
+      <tr>
+        <td>trust chain</td>
+        <td class="m"><span class="tag t-ver">VERIFIED</span> / <span class="tag t-warn">UNTRUSTED</span></td>
+        <td>Whether the chain reaches a root on a trust list. A <em>policy</em> fact &mdash; and it depends on <em>which list</em>. See F2.</td>
+      </tr>
+      <tr>
+        <td>revocation</td>
+        <td class="m"><span class="tag t-ver">NOT_REVOKED</span> / <span class="tag t-bad">REVOKED</span> / <span class="tag t-warn">INACCESSIBLE</span> / <span class="tag t-warn">SKIPPED</span> / <span class="tag t-warn">NOT_CHECKED_SILENTLY</span></td>
+        <td>Whether the certificate is still good today. Five outcomes, and the SDK never emits one of them. See F4.</td>
+      </tr>
+      <tr>
+        <td>timestamp</td>
+        <td class="m"><span class="tag t-ver">ANCHORED</span> / <span class="tag t-warn">SELF_ASSERTED</span></td>
+        <td>Whether a timestamp authority signed the time, or the signer simply asserted a date. For claim v1, see F5.</td>
+      </tr>
+      <tr>
+        <td>assertions</td>
+        <td class="m"><span class="tag t-rep">REPORTED</span></td>
+        <td>What the signer <em>wrote</em>. Zero evidentiary weight about the physical world. A C2PA camera has signed AI output before &mdash; the Nikon Z6 III.</td>
+      </tr>
+      <tr>
+        <td>AI-generated?</td>
+        <td class="m"><span class="tag t-neu">NOT_ANSWERED</span></td>
+        <td>Out of scope. No manifest can answer it, and neither can we.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <div class="nt">On the word VERIFIED</div>
+    <p>A signature check is decidable over a finite, already-committed set of bytes: it holds by construction. That is a different class from a statement quantified over every path a system could take, established before it runs. Both are worth having. Calling them by the same word is how a reader ends up believing the weaker one is the stronger one, and this page does not have a second word to spare.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="findings">
+  <div class="snum">03 &middot; findings</div>
+  <h2>Four findings from the SDK, each with a citation you can check</h2>
+
+  <p>These came out of reading <code>c2pa-rs</code> line by line, not out of watching its output. That distinction is the whole method, and it is the reason two of my earlier claims did not survive (see N3).</p>
+
+  <!-- F2 -->
+  <div class="finding">
+    <div class="fid">F2</div>
+    <div class="fh">There is no single answer to &ldquo;is this trusted?&rdquo;</div>
+    <p>Same Adobe file. Same SDK. Same day. Two official trust lists:</p>
+    <pre><code><span class="c">OFFICIAL C2PA trust list</span>  &rarr;  Valid    failure=[signingCredential.untrusted]
+<span class="c">INTERIM trust list (ITL)</span>  &rarr;  Trusted  failure=[]</code></pre>
+    <p>Both lists are official. They disagree. And by the CAI project's own documentation &mdash; the path is inside <code>c2pa-rs</code> itself &mdash; the Adobe Content Authenticity <em>Inspect</em> tool reads the official list, while the C2PA <em>Verify</em> tool reads the interim one. Two Adobe verification tools return different trust verdicts for Adobe's own file.</p>
+    <p><strong>Adobe is not doing anything wrong.</strong> Firefly chains to Adobe Root CA G2, an ITL-era credential, and content signed under an ITL certificate stays valid against the legacy trust model by design. The problem is not the signer. It is the verifier. Ask &ldquo;is this trusted?&rdquo; and the honest answer is a question back: <strong>which list are you holding?</strong></p>
+    <p>Article 50(2) asks for marking that is <em>effective, interoperable, robust and reliable</em>, with interoperable detection targeted for early 2027. If two official lists split on the same file, interoperable is not yet a property of this ecosystem.</p>
+    <div class="src"><b>source</b> &nbsp;c2pa-rs &nbsp;<code>cli/docs/usage.md:287-288</code></div>
+  </div>
+
+  <!-- F3 -->
+  <div class="finding">
+    <div class="fid">F3</div>
+    <div class="fh">c2pa-rs bundles no trust list, so out of the box nothing can ever be trusted</div>
+    <div class="flag">NO_TRUST_LIST_BUNDLED_SO_NOTHING_CAN_EVER_BE_TRUSTED<br>SPEC_STATE_VALID_TOLERATES_UNTRUSTED_CREDENTIAL</div>
+    <p>The <code>include_bytes!</code> calls in <code>certificate_trust_policy.rs</code> sit behind <code>#[cfg(test)]</code>. They are compiled into the test binary and not into the library. Out of the box, <strong>no file reaches Trusted</strong> &mdash; measured on all three vendors, including genuinely signed ones.</p>
+    <p>So a developer running the SDK as shipped, against a real OpenAI image, sees <code>Valid</code>. And <code>Valid</code> is also what a self-signed forgery produces, carrying the same <code>signingCredential.untrusted</code> failure code.</p>
+
+    <div class="conc">
+      <div class="ct">The objection, and the answer</div>
+      <p style="margin-bottom:11px"><em>&ldquo;User error. You did not configure trust. Same as skipping certificate validation in TLS.&rdquo;</em></p>
+      <p style="margin-bottom:0">It would land if the state were called <code>SignatureOK</code>, or <code>Unverified</code>. It is called <strong>Valid</strong>, and in every other API valid means good. The developer who checks <code>state == "Valid"</code> is making the natural check <em>and is conformant with the specification</em>: <code>validation_state()</code> deliberately admits failures when the only failure is <code>signingCredential.untrusted</code>, with a source comment pointing at the spec's own <code>#_valid_manifest</code> anchor. The SDK does exactly what the spec says. <strong>The word is doing the work of hiding the gap.</strong></p>
+    </div>
+
+    <p>Two disanalogies with TLS, both checkable, and both cutting the other way. TLS <strong>fails closed</strong>: there is no state that means &ldquo;the crypto is fine, the signer went unchecked.&rdquo; And every mainstream TLS stack <strong>ships a root store</strong>. <code>c2pa-rs</code> ships none.</p>
+    <p>This is also why the Krawetz forgery walked past every tool except the Content Credentials site: that site loads a list. By default, nothing else does.</p>
+    <div class="src">
+      <b>source</b> &nbsp;c2pa-rs &nbsp;<code>crypto/cose/certificate_trust_policy.rs</code> (include_bytes! under #[cfg(test)])<br>
+      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> &nbsp;c2pa-rs &nbsp;<code>sdk/src/validation_results.rs::validation_state()</code><br>
+      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> &nbsp;C2PA spec 2.2 &nbsp;<code>#_valid_manifest</code> / <code>#_trusted_manifest</code><br>
+      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> &nbsp;measured in both configurations against the same file
+    </div>
+  </div>
+
+  <!-- F4 -->
+  <div class="finding">
+    <div class="fid">F4</div>
+    <div class="fh">A revocation code that is defined, documented, tested &mdash; and never emitted</div>
+    <div class="flag">OCSP_SKIPPED_CODE_DEFINED_BUT_NEVER_EMITTED</div>
+
+    <div class="conc">
+      <div class="ct">Concession first, and it is load-bearing</div>
+      <p style="margin-bottom:0"><code>ocsp_fetch: false</code> is the <strong>correct default</strong>. The CAI security policy lists network calls driven by C2PA manifest input as a known problematic characteristic, with work in progress under a tracking issue. Not making outbound requests on attacker-controlled input is good engineering. <strong>The default is right.</strong> The finding is its consequence.</p>
+    </div>
+
+    <p>Four revocation states are defined. Three are emitted.</p>
+    <div class="tw">
+    <table>
+      <thead><tr><th class="m">code</th><th>status</th><th class="m">site</th></tr></thead>
+      <tbody>
+        <tr><td class="m">ocsp.revoked</td><td><span class="tag t-ver">emitted</span></td><td class="m">ocsp.rs:133, :266</td></tr>
+        <tr><td class="m">ocsp.notRevoked</td><td><span class="tag t-ver">emitted</span></td><td class="m">ocsp.rs:151, :284</td></tr>
+        <tr><td class="m">ocsp.inaccessible</td><td><span class="tag t-ver">emitted</span></td><td class="m">ocsp.rs:435</td></tr>
+        <tr><td class="m">ocsp.skipped</td><td><span class="tag t-bad">never</span></td><td class="m">&mdash;</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>The fourth is defined at <code>validation_results.rs:642</code>. It carries a doc comment &mdash; the validator chose not to perform an online OCSP check. It is classified <em>Informational</em> by <code>log_kind()</code>. It is placed into output by a serialization unit test. And it is emitted from no validation path anywhere. It is not even imported into <code>ocsp.rs</code>.</p>
+    <p>On the default path the code returns <code>Ok(OcspResponse::default())</code> and logs nothing. That struct's <code>revoked_at</code> is <code>None</code> &mdash; <strong>structurally identical to a successful check that found no revocation</strong>. Absence of evidence, returned in the shape of evidence of absence. The caller cannot tell &ldquo;checked, certificate live&rdquo; from &ldquo;never checked&rdquo;: not in the state, not in <code>validation_results()</code>, not in the returned struct.</p>
+    <p>The SDK anticipated this code in its own output. The emission site is simply missing. That reads as an oversight rather than a decision, and the fix is one line in the <code>DoNotFetch</code> arm.</p>
+
+    <h3>Where it bites, measured</h3>
+    <p>OpenAI checks revocation through a cert-status assertion; Google through a COSE staple, by elimination. Both come back <code>notRevoked</code>. But <strong>both mechanisms are a snapshot taken at signing time.</strong> Revocation that happens <em>after</em> signing stays invisible either way &mdash; which is consistent with the spec's stated intent that a manifest validate indefinitely, and is worth knowing before anyone leans on the word.</p>
+    <div class="src">
+      <b>source</b> &nbsp;<code>validation_results.rs:642</code> (definition + doc comment), <code>:1097</code> (its only other occurrence)<br>
+      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> &nbsp;<code>crypto/cose/ocsp.rs:32-33</code> (import list omits it), <code>:210, :213</code> (silent terminal arms)<br>
+      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> &nbsp;<code>crypto/ocsp/mod.rs:49-58</code> (Default: revoked_at = None)<br>
+      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> &nbsp;<code>settings/mod.rs</code> (ocsp_fetch default false) &middot; <code>SECURITY.md:27</code> &middot; tracking issue #1765
+    </div>
+  </div>
+
+  <!-- F5 -->
+  <div class="finding">
+    <div class="fid">F5</div>
+    <div class="fh">A timestamp is affirmed as trusted with the trust check skipped &mdash; on current, production Adobe output</div>
+    <div class="flag">TIMESTAMP_TRUSTED_ASSERTED_WITHOUT_CHECK &nbsp;&middot;&nbsp; claim v1 only</div>
+
+    <div class="conc">
+      <div class="ct">Concession first</div>
+      <p style="margin-bottom:0">The skip is defensible. <code>store.rs:1952</code> passes <code>verify_trust = rc.version() != 1</code>, commented &mdash; in the source's own typo &mdash; &ldquo;no trust checks for leagacy timestamps.&rdquo; Backward compatibility for v1 claims. Declining to trust-check a legacy timestamp is a reasonable choice. <strong>The skip is not the bug.</strong></p>
+    </div>
+
+    <p>The bug is that <code>timeStamp.trusted</code> lands in the <strong>success bucket anyway</strong>. A brace-depth trace of <code>time_stamp/verify.rs</code> shows the guard <code>if verify_trust {</code> opening at line 535 and closing at 583 &mdash; while <code>TIMESTAMP_TRUSTED</code> is emitted at line 590, at depth zero. Outside the guard.</p>
+    <p>Empirically it fires with full trust lists loaded, with zero anchors, and with trust verification switched off entirely. Unconditional. For a claim-v1 manifest the SDK therefore affirms that a timestamp certificate is trusted <strong>having performed no trust check</strong>.</p>
+    <p>This is not silence, as in F4. It is a <strong>positive assertion in the success bucket</strong>, which makes it the stronger of the two. And in both findings the shape is the same: <em>the signal for &ldquo;we did not check&rdquo; is the thing that is missing.</em></p>
+
+    <h3>Where it bites, measured &mdash; and the qualifier that must never be dropped</h3>
+    <p>OpenAI and Google emit claim v2. The check runs. It does not trigger. <strong>Adobe Firefly emits claim v1</strong> &mdash; so on current, production Adobe output, <code>timeStamp.trusted</code> sits in the success bucket with the trust check skipped. This finding is scoped to claim version 1 and it is stated no other way.</p>
+    <div class="src">
+      <b>source</b> &nbsp;<code>store.rs:1952</code> (verify_trust = rc.version() != 1)<br>
+      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> &nbsp;<code>crypto/time_stamp/verify.rs:535</code> (guard opens), <code>:583</code> (guard closes), <code>:585-591</code> (emitted outside it)<br>
+      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> &nbsp;c2pa-rs <code>README.md:61</code> (v2 claims by default; v1 deprecated for new output)
+    </div>
+  </div>
+
+  <!-- F6 -->
+  <div class="finding">
+    <div class="fid">F6</div>
+    <div class="fh">Adobe OCSP silence &mdash; observed, not explained</div>
+    <p>With OCSP fetching explicitly <strong>enabled</strong>, <code>c2pa-rs</code> emits no revocation code at all for Adobe Firefly output. Not <code>notRevoked</code>. Not <code>inaccessible</code>. Nothing.</p>
+    <p>And yet, all four of these hold at once:</p>
+    <ul>
+      <li>the Adobe leaf certificate <strong>does</strong> carry an OCSP responder URL &mdash; <code>ocsp.one.digicert.com</code>, extracted with <code>c2patool --certs</code>;</li>
+      <li>that responder, queried directly with <code>openssl ocsp</code>, answers <code>good</code>;</li>
+      <li>the fetch path in the SDK <strong>works</strong> &mdash; the same build emits <code>inaccessible</code> for a test certificate whose responder is unreachable;</li>
+      <li>fetching was switched on.</li>
+    </ul>
+    <p>Live responder. Working fetch path. A certificate with a URL. Fetch enabled. And silence.</p>
+    <p><strong>I did not find the cause in the source, and I am not going to name one.</strong> This is an open observation, and it stays an observation until someone reads the path that explains it. If that someone is you, the issue tracker is at the bottom of this page.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="nulls">
+  <div class="snum">04 &middot; null results</div>
+  <h2>The things that did not hold</h2>
+  <p class="lede">A teardown that reports only its hits is not evidence. It is advocacy. These are the reason to believe the findings that survived.</p>
+
+  <div class="null">
+    <div class="nid">N1</div>
+    <h3>The ingredient case does not bite</h3>
+    <p>I expected F5 to reach through ingredients. A claim-v1 ingredient sitting inside a v2 manifest is exactly what an edit-history workflow produces, and it looked like the dangerous case: a file that reads as modern while carrying a legacy claim.</p>
+    <p>I constructed that file &mdash; a v2 active manifest carrying the <code>c2pa-rs</code> v1 fixture as a <code>parentOf</code> ingredient &mdash; and tested it. <strong>It does not bite.</strong> The reader emits only <code>ingredient.manifest.validated</code>, meaning the hash matched, and that is unchanged with or without trust anchors loaded. It checks that the ingredient was not <em>altered</em>. It does not re-verify the ingredient's signature, timestamp, or trust chain at read time.</p>
+    <p>Negative result, stated plainly, and stated here rather than quietly dropped.</p>
+  </div>
+
+  <div class="null">
+    <div class="nid">N2</div>
+    <h3>My prediction was wrong, and it was written down before the run</h3>
+    <p>I wrote an expectation lock before the vendor run, so that it could not be rationalised afterwards. It said the SDK findings would hold regardless of vendor.</p>
+    <p><strong>It was wrong.</strong> F4 and F5 both failed to appear on OpenAI and Google, and surfaced only on Adobe &mdash; which I had not anticipated at all. The vendor axis turned out to matter more than the SDK axis, and I would not have discovered that if the prediction had not been on paper first.</p>
+  </div>
+
+  <div class="null">
+    <div class="nid">N3</div>
+    <h3>Method: the source killed several of my own claims</h3>
+    <p>Byte-level review of <code>c2pa-rs</code> falsified more than one thing I had already written down &mdash; including <strong>two false values that my own tool printed into a results table</strong>, because it searched for a status-code string that does not exist in the SDK. It reported <code>UNRESOLVABLE</code> and no staple on files where the SDK had in fact checked revocation and found it clean.</p>
+    <p>Every one of those failures came from the same place: an inference drawn from output, instead of a read of the source. The exact strings are now pinned in the tool with the line numbers they came from. That is the correction, and it is the reason to trust the numbers above rather than a reason to discount them.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="notshown">
+  <div class="snum">05 &middot; boundaries</div>
+  <h2>What this does not show</h2>
+
+  <h3>Not that AI content is undetectable</h3>
+  <p>This page says nothing whatever about whether a given file is AI-generated. No C2PA manifest can answer that, and this tool does not try. C2PA records who signed what.</p>
+
+  <h3>Not that any vendor is failing its obligations</h3>
+  <p>All three sign correctly. Adobe's ITL-era certificate is valid under the legacy trust model by design. OpenAI and Google both check revocation. The marking is well-formed in every case. It is stripped because the metadata layer is stripped.</p>
+
+  <h3>Not that the other layer fails</h3>
+  <p><strong>The watermark layer was not measured.</strong> SynthID, AudioSeal, or any imperceptible mark may survive every transformation on this page, and this test would never know. The Code of Practice asks for metadata <em>and</em> watermarking. We audited one of the two.</p>
+
+  <h3>Not a survey</h3>
+  <p>Three files. One per vendor. One date: 12 July 2026.</p>
+
+  <div class="note">
+    <div class="nt">Regulatory status &mdash; the dates, not the durations</div>
+    <p>Article 50 transparency obligations apply from <strong>2 August 2026</strong>.</p>
+    <p>Article 50(2), the machine-readable marking obligation, applies from <strong>2 December 2026</strong> for systems already on the market &mdash; conditional on the Digital Omnibus being published in the Official Journal. <strong>Checked 13 July 2026: it has not been.</strong> The Council adopted it on 29 June 2026 and entry into force is publication plus three days. Until that publication, the original calendar formally stands.</p>
+    <p><strong>This is the one date on this page that can change before you finish reading it.</strong> To land ahead of 2 August, the Omnibus has to reach the Official Journal by <strong>30 July 2026</strong> &mdash; eighteen days after this page was written. Check the OJ yourself before you rely on any date here. If it published, this paragraph is stale and the calendar it describes is not the one you are under.</p>
+    <p style="margin-bottom:0">Note the phrasing throughout. Published legal commentary describes the same Article 50(2) grace period as <em>three months</em> in one firm's note and <em>four months</em> in another's, while both land on 2 December 2026. When the commentary cannot agree on the duration, the duration is being reconstructed rather than read. <strong>Take the date.</strong></p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="reproduce">
+  <div class="snum">06 &middot; reproduce it</div>
+  <h2>Run it against your own output</h2>
+
+  <p class="lede">This is the section that makes the page evidence rather than an opinion. Everything above is a claim about bytes. Here are the bytes.</p>
+
+  <pre><code><span class="c"># 1. the tool</span>
+curl -O https://nous-lang.org/a50/a50_teardown.py
+sha256sum a50_teardown.py
+<span class="c">#   expect: 5ad5570344ad48b462e353409a3a770a443812016ec5c72062282e1ebc64ece4</span>
+
+<span class="c"># 2. the dependencies</span>
+pip install c2pa-python pillow
+
+<span class="c"># 3. the trust lists (the SDK bundles none -- see F3)</span>
+git clone --depth 1 https://github.com/c2pa-org/conformance-public.git conf
+cp conf/trust-list/C2PA-TRUST-LIST.pem     .
+cp conf/trust-list/C2PA-TSA-TRUST-LIST.pem .
+
+<span class="c"># 4. run it. both lists load from the working directory.</span>
+python3 a50_teardown.py your_image.png
+
+<span class="c"># reproduce the SHIPPED SDK instead -- no trust list, no OCSP fetch:</span>
+python3 a50_teardown.py your_image.png --no-trust-list --no-ocsp
+
+<span class="c"># machine-readable output</span>
+python3 a50_teardown.py your_image.png --json out.json --md out.md</code></pre>
+
+  <p>The defaults in this tool are the <em>opposite</em> of the SDK's: trust lists on, OCSP on. That is deliberate. <code>--no-trust-list</code> and <code>--no-ocsp</code> reproduce what a developer sees running <code>c2pa-rs</code> as shipped, which is the demonstration behind F3 and F4. Run it both ways on the same file and the gap is the finding.</p>
+
+  <p><strong>If no trust list is present, the tool says so and warns that every result is untrusted by configuration rather than by evidence.</strong> A run in that state is not a run whose numbers may be published, and the tool tells you as much in its own output.</p>
+
+  <div class="note">
+    <div class="nt">On the hash above</div>
+    <p style="margin-bottom:0">Checking a hash published on this site against a file downloaded from this site tells you very little &mdash; anyone holding this host could serve both. That hash is worth something when you obtain the script from somewhere else, or when you want to state <em>which</em> bytes produced a result you are quoting. It is a pin, not an assurance, and it is published as a pin.</p>
+  </div>
+
+  <p>The run is deterministic: same input, same corpus version, same output. What is published here is the script, its hash, the exact library versions, the corpus version, and which trust list was loaded. That set is what makes a third party able to disagree with me on the evidence rather than on my say-so.</p>
+
+  <p><strong>Nothing is uploaded. There is no backend, no endpoint, no form.</strong> The script runs on your machine, on your files, and the tool that tells you not to trust unverifiable claims does not ask you to trust it with your images.</p>
+</section>
+
+</div>
+
+<!-- ============================================================ -->
+<div class="wrap">
+  <div class="close">
+    <p class="line">The script is open and it runs on your own machine. If you want this run against your own output, with the result signed and independently reproducible by a third party &mdash; ask.</p>
+    <p class="contact"><a href="https://github.com/contrario/nous/issues">github.com/contrario/nous/issues</a> &nbsp;&middot;&nbsp; <a href="mailto:support@nous-lang.org">support@nous-lang.org</a></p>
+  </div>
+  <div class="rule"></div>
+  <div class="foot">
+    Measured 12 July 2026 &nbsp;&middot;&nbsp; c2pa-python 0.36.0 / c2pa-rs 0.89.0 &nbsp;&middot;&nbsp; corpus 1.1.0<br>
+    <a href="/a50/a50_teardown.py">a50_teardown.py</a> &nbsp;&middot;&nbsp; sha256 5ad55703&hellip;
+  </div>
+</div>
+
+</body>
+</html>
