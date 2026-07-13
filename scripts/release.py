@@ -8,25 +8,42 @@ a Session-57-class incident structurally impossible.
 
 Usage:
     python3 scripts/release.py --check         # dry-run, no upload
-    python3 scripts/release.py --build         # build + verify wheel, no upload
     python3 scripts/release.py --build         # gates + build (CI uploads via Trusted Publisher)
     # publish: git tag vX.Y.Z && git push; CI release.yml does the upload
 
-Phases:
-    0. Pre-flight: working tree clean, on master, tag for current version
-       does not already exist.
-    1. Grammar sync: scripts/sync_grammar.py + tests/test_grammar_sync.py.
-    2. Test floor: pytest must pass at the floor count.
-    3. Regression: regression_harness.py verify == 0 diffs.
-    4. Version consistency: tests/test_version_consistency.py == 6/6.
-    5. Build: rm -rf build/ dist/ *.egg-info/ then python -m build.
-    6. Wheel content gate: _version.py + nous.lark + grammar_data.py +
-       all templates + METADATA Version=X.Y.Z.
-    7. Clean-venv install: pip install <local-wheel> in fresh venv.
-    8. UX smoke: nous templates extract + nous compile == exit 0.
-    9. Upload: twine via /tmp/upload_venv.
+Phases (as main() actually runs them; __s235_p6_release_docstring_v1__):
+    0.  Pre-flight: working tree clean, on main, tag for current version
+        does not already exist.
+    1.  Grammar sync: scripts/sync_grammar.py + tests/test_grammar_sync.py.
+    2.  Test floor: pytest must pass at PYTEST_FLOOR.
+    3.  Regression: regression_harness.py verify == 0 diffs.
+    4.  Version consistency: tests/test_version_consistency.py == 6/6.
+    5.  Pyflakes: 0 undefined names over PYFLAKES_TARGETS.
+    5b. Claim boundary: scripts/claim_lint.py == 0 violations.   GATE
+    5c. Verifier registry coverage: the version is in the registry.   GATE
+    5d. Sidecar integrity: scripts/sidecar_lint.py == 0 violations.   GATE
+    6.  Build: rm -rf build/ dist/ *.egg-info/ then python -m build.
+    7.  Wheel content gate: _version.py + nous.lark + grammar_data.py +
+        all templates + METADATA Version=X.Y.Z.
+    8.  Clean-venv install: pip install <local-wheel> in fresh venv.
+    9.  UX smoke: nous templates extract + nous compile == exit 0.
+    9b. SLSA provenance (build leg), unless --no-provenance.
 
-Any failure aborts BEFORE upload. No partial PyPI publish.
+Any failure aborts BEFORE build. No partial PyPI publish.
+
+Publishing is CI-only: .github/workflows/release.yml, PyPI Trusted Publishing
+over OIDC, pausing at the 'pypi' environment approval gate. twine is RETIRED
+and --upload refuses; run it to print the canonical release ceremony.
+
+POST-PUBLISH, and deliberately NOT a phase:
+
+    python3 scripts/cold_audit.py X.Y.Z
+
+Runs the published auditor procedure (docs/VERIFYING_A_RELEASE.md) from a fresh
+empty directory against public URLs only. It CANNOT be a phase: at release time
+the release VSA is not minted and the wheel is not on PyPI, so a release-time
+cold audit could only pass by constructing its own input -- which is the exact
+defect it exists to catch. A phase that can never run is a lie.
 
 # __cc_release_script_v1__
 # __session70_phase5b_step10_release_prep_v1__
