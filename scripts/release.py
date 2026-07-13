@@ -709,6 +709,10 @@ def main() -> int:
         print("  Steps 4-6 belong to THIS release, not to a later backfill. Minting")
         print("  inside the release ceremony is what keeps --backfill unnecessary and")
         print("  keeps _RELEASE_VSA_WAIVERS empty of vsa_backfill_pending entries.")
+        print("  7) cold audit: python3 scripts/cold_audit.py X.Y.Z   [POST-PUBLISH]")
+        print("     fresh temp dir, public URLs only -- the procedure a stranger runs.")
+        print("     NOT a release phase: at release time the bundle is unminted and")
+        print("     the wheel is not on PyPI. See docs/VERIFYING_A_RELEASE.md")  # __s235_p4_ceremony_cold_audit_v1__
         return 2
 
     try:
