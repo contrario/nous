@@ -50,7 +50,7 @@ REPO_ROOT: Path = Path(__file__).resolve().parent.parent  # __s162_p1_portable_r
 DIST_DIR: Path = REPO_ROOT / "dist"
 TWINE_VENV: Path = Path("/tmp/upload_venv")
 TEST_VENV: Path = Path("/tmp/release_test_venv")
-PYTEST_FLOOR: int = 2507  # __s228_floor_2507_ci_portable__  # __s221_floor_2487_ci_portable__  # __s216_floor_2444_ci_portable__  # __s211_floor_2422_ci_portable__  # __s202_floor_2363_ci_portable__  # __s192_pce_floor_2327_ci_portable__  # __s183_continuity_floor_2211_ci_portable__  # __s181_attribution_reach_floor_2200_ci_portable__  # __s180_p5_checkpoint_verify_cli_floor_2190_ci_portable__  # __s179_p5_cosign_floor_2181_ci_portable__  # __s178_p3_checkpoint_leg_floor_2176_ci_portable__  # __s177_p2_continuity_cli_floor_2169__  # __s176_p2_continuity_floor_2154__  # __s175_p1b_floor_2126_ci_portable__  # __s175_g2_floor_2127__  # __s172_p2_floor_2125__  # __s172_p0b1_floor_2118__  # __s172_p0a_floor_2114__  # __s171_leg6c_floor_2109__  # __s171_leg4e_floor_2105__  # __s171_leg3_floor_2099__  # __s170_leg8_floor_2084__  # __s167_p3_floor_2052__  # __s166_floor_2045_ci_portable__  # __s166_floor_2046__  # __s163_floor_2019__  # __s163_floor_2020__  # __s159_u_floor_2003__  # __s158_u_floor_1981__  # __s157_u6_floor_1972__  # __s156_u6_floor_1930__  # __s155_u6_floor_1908__  # __s154_u4b_floor_1884__  # __s153_u2_6_floor_1862__  # __s152_u5_floor_1832__  # __s151_u5_floor_1817__  # __s151_u1_floor_1809__  # __s150_release_v5_49_0_floor__  # __s149_release_v5_48_0_floor__  # __s148_release_v5_47_0_floor__  # __s147_release_v5_46_0_floor__  # __s146_release_v5_45_0_floor__  # __s145_attestation_receipt_floor_v1__  # __s144_witnessed_run_trust_floor_v1__  # __s143_gated_kind_converse_floor_v1__  # __s142_release_v5_42_0_floor__  # __s141_release_v5_41_0_floor__  # __s140_release_v5_40_0_floor__  # __s138_release_v5_39_0_floor__  # __s135_release_v5_38_0_floor__  # __s134_release_v5_37_0_floor__  # __s132_release_v5_36_0_floor__  # __s127_release_v5_35_0_floor__  # __s126_release_v5_34_0_floor__  # __s125_release_v5_33_0_floor__  # __s124_release_v5_32_0_floor__  # __s123_boundary_pin_floor_v1__  # __s122_release_v5_31_0__  # __s121_release_v5_30_0__  # __s120_release_v5_29_0__  # __s118_release_v5_28_0_floor__  # __s116_release_v5_27_0_floor__  # __s114_coverage_floor_v1__  # __s112_release_v5_26_0_floor__  # __s107_phase1_consult_floor_v1__  # __s106_memory_cli_floor_v1__  # __nous_n2b_floor_v1__  # __nous_run_shas_floor_v1__  # __nous_trace_recorder_floor_v1__  # __phase2_stage8_at_most_floor_v1__  # __phase2_stage7b_leads_to_floor_v1__  # __phase2_stage7a_never_after_floor_v1__  # __phase2_decouple_floor_v1__  # __phase2_stage1_skeleton_floor_v1__  # __session98_release_floor_stage1_anchored_v1__  # __session98_release_floor_stage2_v1__  # __session98_release_floor_stage1_v1__  # __session98_release_floor_v1__  # __session97_release_floor_v1__  # __session96_release_floor_v1__  # __session95_release_v5_12_0_floor_v1__  # __session93_release_v5_11_0_floor_v1__  # __session86_release_v5_8_1_floor_v1__  # __session86_release_v5_8_0_floor_v1__  # __session86_release_v5_7_1_floor_v1__  # __session85_release_v5_7_0_floor_v1__  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__  # __session80_release_v5_3_0_release_script__  # __nous_aetherproof_release_530_packaging_v1__  # __session81_release_v5_4_0_release_script__  # __session82_release_v5_5_0_release_script__  # __session88_release_v5_9_0_floor_v1__  # __phase2_stage2_events_floor_v1__  # __phase2_stage3_seq_floor_v1__  # __phase2_stage4_seq_floor_v1__  # __phase2_stage5_seq_floor_v1__  # __phase2_stage5b_floor_v1__  # __phase2_stage6_floor_v1__
+PYTEST_FLOOR: int = 2519  # __s233_floor_2519_ci_portable__  # __s228_floor_2507_ci_portable__  # __s221_floor_2487_ci_portable__  # __s216_floor_2444_ci_portable__  # __s211_floor_2422_ci_portable__  # __s202_floor_2363_ci_portable__  # __s192_pce_floor_2327_ci_portable__  # __s183_continuity_floor_2211_ci_portable__  # __s181_attribution_reach_floor_2200_ci_portable__  # __s180_p5_checkpoint_verify_cli_floor_2190_ci_portable__  # __s179_p5_cosign_floor_2181_ci_portable__  # __s178_p3_checkpoint_leg_floor_2176_ci_portable__  # __s177_p2_continuity_cli_floor_2169__  # __s176_p2_continuity_floor_2154__  # __s175_p1b_floor_2126_ci_portable__  # __s175_g2_floor_2127__  # __s172_p2_floor_2125__  # __s172_p0b1_floor_2118__  # __s172_p0a_floor_2114__  # __s171_leg6c_floor_2109__  # __s171_leg4e_floor_2105__  # __s171_leg3_floor_2099__  # __s170_leg8_floor_2084__  # __s167_p3_floor_2052__  # __s166_floor_2045_ci_portable__  # __s166_floor_2046__  # __s163_floor_2019__  # __s163_floor_2020__  # __s159_u_floor_2003__  # __s158_u_floor_1981__  # __s157_u6_floor_1972__  # __s156_u6_floor_1930__  # __s155_u6_floor_1908__  # __s154_u4b_floor_1884__  # __s153_u2_6_floor_1862__  # __s152_u5_floor_1832__  # __s151_u5_floor_1817__  # __s151_u1_floor_1809__  # __s150_release_v5_49_0_floor__  # __s149_release_v5_48_0_floor__  # __s148_release_v5_47_0_floor__  # __s147_release_v5_46_0_floor__  # __s146_release_v5_45_0_floor__  # __s145_attestation_receipt_floor_v1__  # __s144_witnessed_run_trust_floor_v1__  # __s143_gated_kind_converse_floor_v1__  # __s142_release_v5_42_0_floor__  # __s141_release_v5_41_0_floor__  # __s140_release_v5_40_0_floor__  # __s138_release_v5_39_0_floor__  # __s135_release_v5_38_0_floor__  # __s134_release_v5_37_0_floor__  # __s132_release_v5_36_0_floor__  # __s127_release_v5_35_0_floor__  # __s126_release_v5_34_0_floor__  # __s125_release_v5_33_0_floor__  # __s124_release_v5_32_0_floor__  # __s123_boundary_pin_floor_v1__  # __s122_release_v5_31_0__  # __s121_release_v5_30_0__  # __s120_release_v5_29_0__  # __s118_release_v5_28_0_floor__  # __s116_release_v5_27_0_floor__  # __s114_coverage_floor_v1__  # __s112_release_v5_26_0_floor__  # __s107_phase1_consult_floor_v1__  # __s106_memory_cli_floor_v1__  # __nous_n2b_floor_v1__  # __nous_run_shas_floor_v1__  # __nous_trace_recorder_floor_v1__  # __phase2_stage8_at_most_floor_v1__  # __phase2_stage7b_leads_to_floor_v1__  # __phase2_stage7a_never_after_floor_v1__  # __phase2_decouple_floor_v1__  # __phase2_stage1_skeleton_floor_v1__  # __session98_release_floor_stage1_anchored_v1__  # __session98_release_floor_stage2_v1__  # __session98_release_floor_stage1_v1__  # __session98_release_floor_v1__  # __session97_release_floor_v1__  # __session96_release_floor_v1__  # __session95_release_v5_12_0_floor_v1__  # __session93_release_v5_11_0_floor_v1__  # __session86_release_v5_8_1_floor_v1__  # __session86_release_v5_8_0_floor_v1__  # __session86_release_v5_7_1_floor_v1__  # __session85_release_v5_7_0_floor_v1__  # __session77_release_v5_2_0_release_script__  # __diff_side_provenance_v1__  # __cost_cap_floor_bump_v1__ + __cost_cap_phase3a_floor_v1__ + __cost_cap_phase3b_floor_v1__ + __cost_cap_phase3c_floor_v1__ + __cost_cap_phase4_floor_v1__  # __session69_smt_currency_consistency_floor_v1__  # __phase5b_floor_v1__  # __session80_release_v5_3_0_release_script__  # __nous_aetherproof_release_530_packaging_v1__  # __session81_release_v5_4_0_release_script__  # __session82_release_v5_5_0_release_script__  # __session88_release_v5_9_0_floor_v1__  # __phase2_stage2_events_floor_v1__  # __phase2_stage3_seq_floor_v1__  # __phase2_stage4_seq_floor_v1__  # __phase2_stage5_seq_floor_v1__  # __phase2_stage5b_floor_v1__  # __phase2_stage6_floor_v1__
 TEMPLATE_FOR_SMOKE: str = "sycophancy_guard"
 _ALLOW_EXISTING_TAG: bool = False  # __NERVE_DISPATCH_RELEASE_ALLOW_EXISTING_TAG_v1__
 PYFLAKES_TARGETS: tuple[str, ...] = (
@@ -244,6 +244,52 @@ def phase_claim_lint() -> None:  # __s232_p2_claim_lint_phase_v1__
         "  OK: 0 violations (EVIDENCES convention conformance; the tree is "
         "NOT thereby proven free of overclaims)"
     )
+
+
+def phase_sidecar_integrity() -> None:  # __s233_p3_sidecar_phase_v1__
+    """Gate every published .sha256 sidecar against the file beside it.
+
+    NECESSARY, NOT SUFFICIENT. A green result EVIDENCES that an auditor
+    running sha256sum -c on any published sidecar gets a truthful answer. It
+    PROVES nothing about whether the shipped bytes are correct: a consistent
+    sidecar over tampered content is still consistent. Content is bound to an
+    identity by the Ed25519 signature and the transparency-log anchor, never
+    by a sidecar.
+
+    This gate exists because the published verifier-registry.json.sha256
+    carried the digest of the registry from eighteen releases earlier, in
+    bare-hex form. The format defect made sha256sum -c refuse the file before
+    it could report the digest mismatch. Nothing wrote that sidecar and
+    nothing checked it, so the release that re-minted the registry shipped an
+    artifact accusing itself of tampering. A mechanism nothing forces rots.
+
+    Repo mirror only, so it is CI-portable. Deploy skew against the served
+    tree is out of scope and stays with the mirror-snapshot discipline.
+    """
+    print("\n[5d/10] SIDECAR INTEGRITY")
+    result = subprocess.run(
+        [
+            "python3", "scripts/sidecar_lint.py",
+            "--root", "website",
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        for line in (result.stdout + result.stderr).splitlines():
+            print(f"  {line}")
+        raise ReleaseError(
+            "a published .sha256 sidecar does not describe the file beside "
+            "it; an auditor verifying this release would be told it is "
+            "tampered"
+        )
+    for line in result.stdout.splitlines():
+        if line.startswith("scanned:"):
+            print(f"  OK: {line}, 0 violations (EVIDENCES sidecar/file "
+                  "agreement; the bytes are NOT thereby proven correct)")
+            break
 
 
 REGISTRY_GATE_SINCE: tuple[int, int, int] = (5, 75, 0)  # __s232_p2_registry_since_v1__
@@ -674,6 +720,7 @@ def main() -> int:
         phase_pyflakes()
         phase_claim_lint()  # __s232_p2_claim_lint_call_v1__
         phase_registry_coverage(version)  # __s232_p2_registry_call_v1__
+        phase_sidecar_integrity()  # __s233_p3_sidecar_call_v1__
 
         if args.check:
             print(f"\n[CHECK] all gates green for v{version}; build/upload skipped")
