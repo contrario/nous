@@ -210,6 +210,156 @@ def phase_pyflakes() -> None:
     print(f"  OK: {len(PYFLAKES_TARGETS)} files clean")
 
 
+def phase_claim_lint() -> None:  # __s232_p2_claim_lint_phase_v1__
+    """Gate the declared claim-boundary convention.
+
+    NECESSARY, NOT SUFFICIENT. A green result EVIDENCES conformance to the
+    convention declared in claims.toml. It PROVES nothing about the tree: the
+    tool cannot see a claim-class error carrying no forbidden object (blind
+    spot 2), a claim inside a JS data literal (3), or a false fix marker (6).
+    All three are documented at full strength in docs/CLAIM_LINT.md, and all
+    three have produced real violations that only hand adjudication caught. A
+    gate that manufactures confidence is worse than no gate.
+    """
+    print("\n[5b/10] CLAIM BOUNDARY")
+    result = subprocess.run(
+        [
+            "python3", "scripts/claim_lint.py",
+            "--config", "claims.toml",
+            "--root", ".",
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        for line in (result.stdout + result.stderr).splitlines():
+            print(f"  {line}")
+        raise ReleaseError(
+            "claim-boundary violations present; the honest boundary is not "
+            "negotiable for a release"
+        )
+    print(
+        "  OK: 0 violations (EVIDENCES convention conformance; the tree is "
+        "NOT thereby proven free of overclaims)"
+    )
+
+
+REGISTRY_GATE_SINCE: tuple[int, int, int] = (5, 75, 0)  # __s232_p2_registry_since_v1__
+
+REGISTRY_PATH: Path = (
+    REPO_ROOT / "website" / ".well-known" / "nous" / "verifier-registry.json"
+)
+
+
+def phase_registry_coverage(version: str) -> None:  # __s232_p2_registry_phase_v1__
+    """REFUSE a release the published verifier-digest registry does not cover.
+
+    The registry closes the trusting-trust gap ACROSS versions: an auditor
+    holding a dossier emitted by version X confirms the shipped verifier
+    against a signed, publicly-logged allowlist instead of against the
+    verifier itself. That branch is unreachable for any version the registry
+    does not name -- and it was unreachable for eighteen releases, because the
+    mint was an operator step that nothing forced.
+
+    This phase forces it. It does NOT mint: that needs a persistent key and a
+    Rekor write, and an irreversible action is never chained inside a
+    pipeline. It does NOT re-verify the registry signature or anchor: that is
+    the offline verifier's job, and duplicating it here would add a second
+    trust root. It answers exactly one question, offline, with no network and
+    no key -- does the published registry carry THIS version's verifier
+    digests?
+
+    EVIDENCES coverage. Proves nothing.
+    """
+    print("\n[5c/10] VERIFIER REGISTRY COVERAGE")
+
+    parts = version.split(".")
+    try:
+        as_tuple = (int(parts[0]), int(parts[1]), int(parts[2]))
+    except (IndexError, ValueError) as exc:
+        raise ReleaseError(f"unparseable version {version!r}: {exc}") from exc
+
+    if as_tuple < REGISTRY_GATE_SINCE:
+        print(
+            f"  WAIVED: {version} predates this gate "
+            f"({'.'.join(str(n) for n in REGISTRY_GATE_SINCE)}); history is "
+            "not retro-minted"
+        )
+        return
+
+    if not REGISTRY_PATH.is_file():
+        raise ReleaseError(
+            f"published registry not found at {REGISTRY_PATH}; mint it with "
+            "scripts/publish_verifier_registry.py before releasing"
+        )
+
+    sys.path.insert(0, str(REPO_ROOT))
+    try:
+        import ndec  # type: ignore[import-not-found]
+
+        live: dict[str, str] = dict(ndec.canonical_verifier_digests())
+    except ImportError as exc:
+        raise ReleaseError(f"ndec not importable: {exc}") from exc
+    finally:
+        sys.path.pop(0)
+
+    if not live:
+        raise ReleaseError(
+            "ndec.canonical_verifier_digests() returned no templates"
+        )
+
+    try:
+        doc = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise ReleaseError(f"registry unreadable: {exc}") from exc
+
+    entries = doc.get("entries")
+    if not isinstance(entries, list):
+        raise ReleaseError("registry carries no entries list")
+
+    covered: dict[str, str] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        if entry.get("nous_version") != version:
+            continue
+        name = entry.get("template_name")
+        sha = entry.get("template_sha256")
+        if isinstance(name, str) and isinstance(sha, str):
+            covered[name] = sha
+
+    missing: list[str] = []
+    wrong: list[str] = []
+    for name, sha in sorted(live.items()):
+        if name not in covered:
+            missing.append(name)
+        elif covered[name] != sha:
+            wrong.append(
+                f"{name}: registry {covered[name][:12]}... != live {sha[:12]}..."
+            )
+
+    if missing or wrong:
+        for name in missing:
+            print(f"  MISSING  {name} (no entry for nous_version={version})")
+        for line in wrong:
+            print(f"  MISMATCH {line}")
+        raise ReleaseError(
+            f"the published verifier registry does not cover {version}: "
+            f"{len(missing)} missing, {len(wrong)} mismatched, of {len(live)} "
+            "templates. The cross-version trusting-trust branch would be "
+            "unreachable for every dossier this release emits. Mint the "
+            "registry (build --key <registry key> --vsa-key <vsa key> --merge "
+            "<published registry> --output <new>), anchor it as its own "
+            "irreversible step, deploy it to /var/www and the website/ "
+            "mirror, then re-run this gate. See "
+            "scripts/publish_verifier_registry.py"
+        )
+
+    print(f"  OK: all {len(live)} verifier digests covered for {version}")
+
+
 def phase_build() -> tuple[Path, Path]:
     print("\n[6/10] BUILD")
     for d in (REPO_ROOT / "build", DIST_DIR):
@@ -522,6 +672,8 @@ def main() -> int:
         phase_regression()
         phase_version_consistency()
         phase_pyflakes()
+        phase_claim_lint()  # __s232_p2_claim_lint_call_v1__
+        phase_registry_coverage(version)  # __s232_p2_registry_call_v1__
 
         if args.check:
             print(f"\n[CHECK] all gates green for v{version}; build/upload skipped")

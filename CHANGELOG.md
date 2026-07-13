@@ -24,6 +24,46 @@
   pricing entry. The `deepseek-chat` and `deepseek-reasoner` aliases retire
   2026-07-24 15:59 UTC.  <!-- __s217_changelog_deepseek_v4flash_v1__ -->
 
+## [5.75.0]  <!-- __s232_changelog_v5_75_0__ -->
+
+### Added
+
+- Two durable release gates in `scripts/release.py`, closing the class this
+  release is named for: a mechanism that is not wired into the release path
+  rots, and it rots silently.
+  - `phase_registry_coverage` REFUSES a release whose offline-verifier
+    template digests are not covered, for the releasing version, by the
+    published verifier-digest registry
+    (`website/.well-known/nous/verifier-registry.json`). Offline, no network,
+    no key, CI-portable: it recomputes `ndec.canonical_verifier_digests()` and
+    compares. The registry MINT stays an operator ceremony (persistent key +
+    Rekor anchor) and is never automated inside the pipeline -- one
+    irreversible action per gate. The pipeline carries the gate; the operator
+    makes it green. Versions below the gate's introduction are waived rather
+    than retro-minted.
+  - `phase_claim_lint` REFUSES a release carrying any claim-boundary violation
+    (`scripts/claim_lint.py --config claims.toml --root .`). The gate is
+    NECESSARY, NOT SUFFICIENT: it EVIDENCES conformance to the declared
+    convention and PROVES nothing about the tree. Blind spots 2, 3 and 6 are
+    live and documented in `docs/CLAIM_LINT.md`; hand adjudication, not the
+    tool, caught the README and table-header sites fixed in this release.
+
+### Fixed
+
+- Honest boundary, prose surfaces. Thirteen sites across `docs/REKOR_ANCHOR.md`,
+  `website/blog/index.html`, and `README.md` used a reserved proof word for what
+  an Ed25519/ECDSA signature check or a sha256 comparison actually delivers. A
+  signature EVIDENCES that the holder of a key signed the bytes; the name-to-key
+  binding is operator-asserted (NOUS runs no CA and certifies no identity); a
+  hash match is IDENTITY, not proof. The Z3 and
+  Farkas legs, every "does not prove" disclaimer, and the Rekor "inclusion
+  proof" noun were left untouched: a true claim stated weaker than it is, is
+  the same defect reversed.
+- The verifier-digest registry, stale since 5.56.0, is re-minted for this
+  release and anchored, restoring the cross-version trusting-trust branch that
+  had been unreachable for every dossier emitted in eighteen releases.
+
+
 ## [5.67.0]  <!-- __s180_changelog_v5_67_0__ -->
 
 ### Added
