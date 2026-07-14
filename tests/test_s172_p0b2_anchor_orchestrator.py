@@ -52,8 +52,9 @@ class _ReplayAnchor:
 def _mint_dir(tmp_path: Path) -> Path:
     d = tmp_path / "mintdir"
     d.mkdir()
-    for name in (
+    for name in (  # __s236_p2_fixture_alias_v1__
         "nous_lang-5.60.1.build-vsa.intoto.json",
+        "build-vsa.intoto.json",
         "verify_build_vsa_offline.py",
         "release-verifier-key.json",
     ):

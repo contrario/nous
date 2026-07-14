@@ -334,6 +334,9 @@ def _atomic_write(path: Path, data: bytes) -> None:
         raise
 
 
+VERIFIER_VSA_FILENAME = "build-vsa.intoto.json"  # __s236_p1_alias_const_v1__
+
+
 def _write_with_sidecar(path: Path, data: bytes) -> None:
     _atomic_write(path, data)
     sidecar = path.with_name(path.name + ".sha256")
@@ -480,6 +483,7 @@ def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path, backfil
     vsa_name = "nous_lang-" + version + ".build-vsa.intoto.json"
     envelope_bytes = json.dumps(envelope, sort_keys=True, indent=2).encode("utf-8")
     _write_with_sidecar(out_dir / vsa_name, envelope_bytes)
+    _write_with_sidecar(out_dir / VERIFIER_VSA_FILENAME, envelope_bytes)  # __s236_p1_alias_emit_v1__
 
     verifier_key_doc = {
         "alg": "ed25519",
@@ -503,6 +507,7 @@ def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path, backfil
     print("MINT complete (Phase 1, reversible) for nous-lang " + version)
     print("  out dir:            " + str(out_dir))
     print("  vsa:                " + vsa_name)
+    print("  vsa (verifier name):" + VERIFIER_VSA_FILENAME)  # __s236_p1_alias_print_v1__
     print("  verifier:           " + emitted.name)
     print("  verifier key:       release-verifier-key.json")
     print("  operator pin:       " + pin)
@@ -521,17 +526,20 @@ def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path, backfil
     return 0
 
 
-def _root1_self_verify(out_dir: Path, vsa_name: str) -> int:
+def _root1_self_verify(out_dir: Path, vsa_name: str) -> int:  # __s236_p1_root1_no_construct_v1__
     import subprocess
 
-    with tempfile.TemporaryDirectory() as td:
-        tdir = Path(td)
-        (tdir / "build-vsa.intoto.json").write_bytes((out_dir / vsa_name).read_bytes())
-        result = subprocess.run(
-            [sys.executable, str(out_dir / "verify_build_vsa_offline.py"), str(tdir)],
-            capture_output=True,
-            text=True,
+    alias = out_dir / VERIFIER_VSA_FILENAME
+    if not alias.is_file():
+        raise MintError(
+            "the offline verifier reads " + VERIFIER_VSA_FILENAME
+            + " and the mint did not write it: " + str(alias)
         )
+    result = subprocess.run(
+        [sys.executable, str(out_dir / "verify_build_vsa_offline.py")],
+        capture_output=True,
+        text=True,
+    )
     sys.stdout.write(result.stdout)
     # __s172_p0a_root1_stderr_suppress_v1__
     # rc 2 = no named subject present locally to re-derive (expected: this dir
@@ -907,6 +915,18 @@ def anchor(
     vsa_path = out_dir / vsa_name
     if not vsa_path.is_file():
         raise MintError("minted VSA not found (run mint first): " + str(vsa_path))
+    alias_path = out_dir / VERIFIER_VSA_FILENAME  # __s236_p1_anchor_alias_gate_v1__
+    if not alias_path.is_file():
+        raise MintError(
+            "bundle does not ship " + VERIFIER_VSA_FILENAME + ", the only "
+            "filename its offline verifier reads; a stranger running the "
+            "published procedure would get rc 2. Re-run mint. Refusing to anchor."
+        )
+    if alias_path.read_bytes() != vsa_path.read_bytes():
+        raise MintError(
+            VERIFIER_VSA_FILENAME + " and " + vsa_name + " differ; the bundle "
+            "would verify bytes other than the ones it names. Refusing to anchor."
+        )
     if not (out_dir / verifier_name).is_file():
         raise MintError("offline verifier not found in dir: " + verifier_name)
     if not (out_dir / verifier_key_name).is_file():
