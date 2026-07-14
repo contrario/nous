@@ -26,40 +26,45 @@ website/
 - **5 tabs**: Editor, Verify (proofs), Graph (Cytoscape DAG), Diff (semantic), Chat
 
 ## Deployment
+<!-- __s242_readme_deploy_v1__ -->
 
-The repo is the **source of truth**. The live directory `/var/www/nous-lang.org/` is deployed from here.
+The repo is the **source of truth**. The live directory `/var/www/nous-lang.org/` is deployed from `website/` by `scripts/deploy_website.sh`.
 
 ```bash
-# preview changes without applying
-./deploy_website.sh --dry-run
+# preview changes (dry-run is the default; makes no changes)
+scripts/deploy_website.sh
 
-# deploy (creates timestamped backup first)
-./deploy_website.sh
-
-# deploy without backup (not recommended)
-./deploy_website.sh --no-backup
+# apply the deploy
+scripts/deploy_website.sh --apply
 ```
 
 The script:
-1. Creates backup at `/var/www/backups/nous-lang.org/<timestamp>/`
-2. `rsync -av --delete --exclude='*.bak*'` from `website/` → `/var/www/nous-lang.org/`
-3. SHA256-verifies every deployed file
-4. Exits non-zero on any checksum mismatch
+1. Refuses unless run from the repo root, on branch `main`, with `website/` committed (a dirty `website/` is rejected)
+2. `rsync -rc --exclude='*.bak*' --chmod=D0755,F0644` from `website/` -> `/var/www/nous-lang.org/`
+3. Is **additive** (no `--delete`): served-only files not tracked in `website/` (the generated offline verifier, `blog/drafts/*`) are never removed
+4. Prints an rsync `-i` change list; without `--apply` it stops at the dry-run
+
+Verify served byte-identity after `--apply`, e.g. `sha256sum /var/www/nous-lang.org/index.html website/index.html`.
 
 ## Rollback
 
+There is no separate backup directory; git is the rollback substrate. Revert the web change in git, then re-deploy the committed state:
+
 ```bash
-rsync -av --delete /var/www/backups/nous-lang.org/<timestamp>/ /var/www/nous-lang.org/
+git revert <web-commit>        # or: git checkout <good-commit> -- website/ && git commit
+scripts/deploy_website.sh --apply
 ```
+
+Because the deployer is additive, re-deploying an earlier state overwrites changed files but does not remove a file newly added to the served tree; remove any such file by hand.
 
 ## Editing Workflow
 
-1. Edit file in `website/` on the repo
-2. `./deploy_website.sh --dry-run` to preview
-3. `./deploy_website.sh` to apply
-4. `git add website/ && git commit -m "web: ..."` && `git push`
+1. Edit the file in `website/` in the repo
+2. `git add website/ && git commit -m "web: ..."` (the deployer refuses a dirty tree)
+3. `scripts/deploy_website.sh` to preview, then `scripts/deploy_website.sh --apply`
+4. `git push`
 
-**Do not edit `/var/www/nous-lang.org/*` directly.** Changes there will be overwritten on next deploy and lost on next disk failure.
+**Do not edit `/var/www/nous-lang.org/*` directly.** Changes there are not tracked and drift from the source of truth.
 
 ## Server B
 
