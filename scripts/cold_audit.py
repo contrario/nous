@@ -20,6 +20,15 @@ Python-urllib user-agent while serving curl, requests, httpx and wget normally.
 The first draft of this script used urllib and failed 4/4 against a surface that
 was entirely healthy.
 
+FIRST, A NEGATIVE CONTROL, AND IT IS FATAL. Before any class is audited, this
+script asks the site for a version that CANNOT exist and requires a 404. A 200
+there means an SPA fallback is answering under /.well-known/, and every artifact
+fetched below would be a web page wearing the name of a signed file. Anything that
+is neither 404 nor 200 -- a timeout, a 5xx, a WAF block, a DNS failure -- is
+INCONCLUSIVE, and inconclusive is never a pass: a control that goes green when the
+network is down is not a control. If the surface does not answer 404, NO class is
+audited, because nothing fetched from that surface would mean anything.
+
 NOT A RELEASE PHASE, and it must never become one. At release time the release
 VSA is not minted and the wheel is not on PyPI, so a release-time check could
 only pass by constructing its own input -- which is the exact defect this tool
@@ -34,6 +43,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -43,6 +53,8 @@ from pathlib import Path
 
 WELL_KNOWN = "https://nous-lang.org/.well-known"
 NOUS_BASE = WELL_KNOWN + "/nous"
+
+IMPOSSIBLE_VERSION = "9.99.9"
 
 RELEASE_VSA_FILES: tuple[str, ...] = (
     "index.json",
@@ -116,6 +128,60 @@ def _fetch(url: str, dest: Path) -> None:
             "an SPA fallback served index.html. curl -f cannot catch this: "
             "there is no 4xx to fail on."
         )
+
+
+def _http_status(url: str) -> int:
+    proc = subprocess.run(
+        ["curl", "-s", "-o", os.devnull, "-w", "%{http_code}", url],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    if proc.returncode != 0:
+        raise ColdAuditError(
+            "curl exited " + str(proc.returncode) + " for " + url + ": "
+            + proc.stderr.strip()
+            + " -- a curl that could not complete is INCONCLUSIVE, not a pass"
+        )
+    code: str = proc.stdout.strip()
+    if not code.isdigit():
+        raise ColdAuditError(
+            "curl did not report an HTTP status for " + url + ": " + repr(code)
+        )
+    return int(code)
+
+
+def preflight_negative_control() -> str:
+    """The surface must refuse an artifact that cannot exist.
+
+    S235: nous-lang.org answered 200-with-the-homepage for every unresolved path
+    under /.well-known/, and `curl -f` could not see it -- -f fails on a 4xx and
+    there was no 4xx. The nginx carve-out fixed the server, but it lives in a
+    config no code path writes, so this tool must never assume it is still there.
+    The tracked copy under infra/nginx/ is a recovery record; THIS is the check.
+    """
+    url: str = NOUS_BASE + "/release-vsa/" + IMPOSSIBLE_VERSION + "/index.json"
+    code: int = _http_status(url)
+    if code == 200:
+        raise ColdAuditError(
+            "NEGATIVE CONTROL FAILED: the surface answered 200 for version "
+            + IMPOSSIBLE_VERSION + ", which cannot exist. An SPA fallback is "
+            "serving the homepage where a signed artifact belongs; `curl -f` has "
+            "no 4xx to fail on; and every artifact fetched below would be a web "
+            "page wearing the name of a signed file. The nginx /.well-known/ "
+            "=404 carve-out is absent or has been reverted. url=" + url
+        )
+    if code != 404:
+        raise ColdAuditError(
+            "NEGATIVE CONTROL INCONCLUSIVE: expected HTTP 404 for " + url
+            + ", got " + str(code) + ". A 5xx, a WAF block or a proxy error is "
+            "not a 404, and a control that goes green when the network is down "
+            "is not a control."
+        )
+    return (
+        "HTTP 404 for " + IMPOSSIBLE_VERSION
+        + " -- the surface refuses what it does not have"
+    )
 
 
 def _fetch_all(base: str, names: tuple[str, ...], into: Path) -> None:
@@ -328,6 +394,20 @@ def main() -> int:
     selected: tuple[str, ...] = (
         (args.only,) if args.only else CLASSES
     )
+
+    print("PREFLIGHT   the surface must refuse an artifact that cannot exist")
+    try:
+        pre: str = preflight_negative_control()  # __s237_p2_preflight_call_v1__
+    except ColdAuditError as exc:
+        print("FAIL  preflight  " + str(exc))
+        print()
+        print(
+            "RESULT: 0 classes audited. The surface did not answer correctly, so "
+            "nothing fetched from it would mean anything."
+        )
+        return 1
+    print("PASS  preflight  " + pre)
+    print()
 
     root: Path = Path(tempfile.mkdtemp(prefix="nous-cold-audit-"))
     print("COLD AUDIT  version=" + args.version + "  root=" + str(root))

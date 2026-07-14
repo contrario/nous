@@ -24,6 +24,32 @@ public site, before the document was written. A procedure that has only ever
 been run by the producer, on the producer's machine, with the producer's
 knowledge, is not a procedure a stranger can follow.
 
+## 0. First, check that the surface refuses what it does not have
+
+<!-- __s237_p2_surface_negative_control_v1__ -->
+
+Before fetching anything, ask the site for an artifact that cannot exist. A
+published evidence surface must answer `404`.
+
+    curl -s -o /dev/null -w "%{http_code}\n" \
+        https://nous-lang.org/.well-known/nous/release-vsa/9.99.9/index.json
+
+Expect `404`.
+
+A `200` here is the finding, and it is worse than a missing file. It means the
+site is answering every unresolved path under `/.well-known/` with its homepage,
+and `curl -f` cannot see it: `-f` fails on a 4xx, and there is no 4xx. Every byte
+you fetch in Sections 1 to 4 would then be a web page wearing the name of a signed
+artifact. If you get a `200`, stop. Nothing below is meaningful against that
+surface.
+
+Anything that is neither `404` nor `200` -- a timeout, a `5xx`, a WAF block, a DNS
+failure -- is INCONCLUSIVE, and inconclusive is not a pass. A control that goes
+green when the network is down is not a control.
+
+`scripts/cold_audit.py` (Section 5) runs this check first and audits no class
+until the surface answers `404`.
+
 ## 1. Release VSA (one bundle per release)
 
 The release operator's signed endorsement that a published PyPI wheel and sdist
