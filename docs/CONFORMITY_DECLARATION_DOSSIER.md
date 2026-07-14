@@ -413,6 +413,9 @@ Any one true -> stop or downgrade:
   **K4.** The Omnibus final text, once in the OJ, removes the Art 47(1) machine-readability
     requirement OR the Annex V point 8 named natural person. -> The premise collapses. STOP, and
     retire this dossier to REJECTED_IDEAS.md with the recon intact.
+    THE READ PROCEDURE IS IN SECTION 11 (T2), AND THE OBVIOUS GREP IS UNSOUND: the Omnibus is an
+    AMENDING act, so absence of the phrase means UNCHANGED, not REMOVED. K4 fires on an AMENDING
+    INSTRUCTION against Article 47 or Annex V, NEVER on silence. See Section 11 before running it.
 
   **K5.** A professional FTO finds a blocking patent (Section 3). -> STOP.
 
@@ -495,14 +498,41 @@ and the honest one. It is BANKED, NOT BUILT.
     text, verified against the L-series entry, not a secondary source.
 
   > **T2 AND K4 ARE THE SAME READ, AND IT IS FREE.** The OJ flip session is already scheduled and
-  > already opens the published text. Add one pass over that same document:
-  >   - does Art 47(1) still say "written machine readable"?
-  >   - does Annex V point 8 still require "the name and function of the person who signed"?
+  > already opens the published text. Add one pass over that same document.
   >
-  > Both present -> T2 CLOSED. Either absent -> K4 FIRES, the premise collapses, and this dossier
-  > is retired to REJECTED_IDEAS.md with the recon intact. Zero marginal cost: one read of a
-  > document that session opens anyway. DO NOT schedule a separate session for it. It rides the
-  > flip.
+  > **THE OBVIOUS TEST IS UNSOUND. IT FAILS TOWARD A FALSE KILL. DO NOT RUN IT.**
+  > The obvious test reads: does Art 47(1) still say "written machine readable"? does Annex V
+  > point 8 still require "the name and function of the person who signed"? Either absent -> K4
+  > fires. That test is wrong for two independent reasons, and BOTH POINT THE SAME WAY -- toward
+  > retiring a correct dossier on a measurement error rather than on the law.
+  >
+  >   (a) THE OMNIBUS IS AN AMENDING REGULATION. Its published text carries only the AMENDMENTS.
+  >       It does NOT restate Article 47(1) or Annex V point 8 unless it CHANGES them. The phrase
+  >       is therefore ABSENT FROM THE OJ TEXT PRECISELY WHEN ART 47(1) IS UNTOUCHED -- which is
+  >       the case in which T2 should CLOSE. ABSENCE IN AN AMENDING ACT MEANS UNCHANGED. The
+  >       obvious test reads it as REMOVED. The routing is inverted.
+  >
+  >   (b) FG-S239-A. A line-oriented grep cannot see a phrase that WRAPS. "written machine
+  >       readable" is multi-word; in OJ HTML it is split by markup and line breaks. It can
+  >       grep-MISS even in the branch where it is PRESENT.
+  >
+  > **THE SOUND TEST.** Do not ask what Article 47(1) SAYS. Ask whether the Omnibus TOUCHES it.
+  > Single tokens only -- a word cannot be split by a line wrap:
+  >
+  >       Article 47 | Annex V | point 8 | machine | readable | signed | declaration
+  >
+  > ROUTING:
+  >   - NO amending instruction against Article 47 or Annex V -> they SURVIVE INTACT -> T2 CLOSED.
+  >     SILENCE IS SURVIVAL, NOT DEATH.
+  >   - AN amending instruction against Article 47 or Annex V appears -> READ IT IN FULL and
+  >     adjudicate against the actual instruction. ONLY THEN can K4 fire.
+  >
+  > Section 13's recon recorded "no reported amendment to Art 47 or Annex V" from SECONDARY
+  > sources. The published L-series entry is PRIMARY. If the primary contradicts the secondary,
+  > the primary wins and K4 is live.
+  >
+  > Zero marginal cost: one read of a document that session opens anyway. DO NOT schedule a
+  > separate session for it. It rides the flip.
 
   **T3.** No SCITT profile, delegated act, or harmonised standard has occupied the format
     (K1a, K2, K3 all still false).
