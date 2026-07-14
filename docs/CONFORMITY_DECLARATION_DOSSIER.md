@@ -3,7 +3,7 @@
 STATUS: RESEARCH ONLY. No code, no patch, no release. Committed as a banked-frontier
 record. NOTHING IN THIS DOSSIER IS IMPLEMENTED, and its presence in docs/ is not a claim
 that any described object exists.
-Session: S233. Recon anchored to repo commit bed268a (tree clean, HEAD == origin).
+Session: S238. Recon anchored to repo commit bed268a (tree clean, HEAD == origin).
 Board state re-reconciled at 6343689 immediately before commit; Section 9 reflects 6343689.
 Gate per NOUS Engineering Constitution Article VI. Sections in order, none skipped.
 Section 6 (Reasons This Should Never Exist) was written BEFORE Section 7, per Article V.
