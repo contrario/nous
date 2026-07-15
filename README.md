@@ -9,7 +9,7 @@ An agentic programming language with end-to-end formal cost-bound verification, 
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v5.73.1
+ |_| \_|\___/ \___/|____/   v5.76.0
 ```
 
 Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Website: nous-lang.org
@@ -239,7 +239,7 @@ Key article alignments:
 - **Article 13 (Transparency)** -- public verification endpoint and standalone `nous-lang.org/verify` page give downstream users a no-install path to independently audit any dossier.
 - **Article 14 (Human Oversight)** -- `intervene`, `inject_message`, `block` policy actions plus governance simulator.
 - **Article 15 (Accuracy / Robustness / Cybersecurity)** -- Z3 SMT proofs on every `cost_cap` declaration, currency-aware (USD + EUR), with Ed25519-signed manifests and optional Sigstore Rekor anchoring for tamper-evident durability.
-- **Article 17 (Quality Management)** -- 10-phase release pipeline, 2494-test pytest floor, byte-identical regression harness.
+- **Article 17 (Quality Management)** -- 10-phase release pipeline, 2580-test pytest floor, byte-identical regression harness.
 
 ## Annex IV dossiers from existing SKILL.md skills (v5.1.0+)
 
@@ -302,16 +302,16 @@ NOUS is developed under a non-standard model: single maintainer, chat-driven, id
 
 Security issues should be reported via GitHub Security Advisories, not public issues.
 
-## Stats (v5.73.1)
+## Stats (v5.76.0)
 
 | Metric | Value |
 |---|---|
-| Tests | 2495 passing, floor 2494 (PYTEST_FLOOR enforced) |
+| Tests | 2581 passing, floor 2580 (PYTEST_FLOOR enforced) |
 | Regression | byte-identical harness, 0 baseline drift |
-| Shipped templates | 9 (`templates/*.nous`) |
+| Shipped templates | 12 (`nous templates list`) |
 | Grammar | Lark LALR, bilingual EN+GR |
 | AST nodes | Pydantic V2 strict models |
-| Lint rule codes | 13 (L000 - L012, L100) |
+| Lint rule codes | 13 (L000-L004, L006-L012, L100) |
 | CLI subcommands | 62 (`nous --help`) |  <!-- __s170_docs_verify_cost_v1__ --><!-- __s224_cli62_stats_v1__ -->
 | Pricing schema | v2.0 (currency-agnostic, per-table `_currency`) |
 | Manifest schema | v1.0 (Ed25519-signed, offline-verifiable, optional Rekor transparency_log) |
@@ -330,6 +330,6 @@ The MIT License covers the source code. Trademark rights over "NOUS", "Noosphere
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.73.1](https://github.com/contrario/nous/releases/tag/v5.73.1).
+See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.76.0](https://github.com/contrario/nous/releases/tag/v5.76.0).
 <!-- __session89_readme_freshen_v1__ -->
 <!-- __s94_readme_v5_11_0_sync_v1__ -->
