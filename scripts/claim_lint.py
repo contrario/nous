@@ -454,12 +454,101 @@ def col_of(text: str, offset: int, base_col: int) -> int:
     return offset - nl - 1
 
 
+_LIST_ITEM_RE = re.compile(r"^\s*(?:\d+[.)]|[-*+]|<li\b)", re.IGNORECASE)
+
+
+def predicate_list_binding(
+    path: str, unit: TextUnit, cfg: Config, high: bool
+) -> list[Violation]:  # __s245_listbind_v1__
+    """Cross-sentence list binding (S245).
+
+    SENT_SPLIT_RE breaks on every newline, so a colon-header that introduces a
+    numbered/bulleted list puts the reserved claim word and the forbidden
+    objects in its list items in DIFFERENT sentences; predicate_object, which
+    is sentence-scoped, never binds them. This unit-level predicate binds a
+    reserved claim word in a header line (ending ':') to forbidden objects in
+    the immediately following list items, stopping at the first blank or
+    non-item line so it cannot run into unrelated prose. Scoped to string and
+    markdown units; HTML <li> items are separate units, a different mechanism
+    with no current site. The allowed-verb escape is implicit: a header with
+    no reserved word never fires.
+    """
+    if unit.schema_literal or not unit.verbatim:
+        return []
+    if unit.kind not in ("string", "markdown"):
+        return []
+    text = unit.text
+    lines: list[tuple[str, int]] = []
+    off = 0
+    for raw in text.splitlines(keepends=True):
+        lines.append((raw, off))
+        off += len(raw)
+    out: list[Violation] = []
+    n = len(lines)
+    for i, (raw, loff) in enumerate(lines):
+        header = raw.rstrip("\r\n")
+        if not header.rstrip().endswith(":"):
+            continue
+        htoks = tokenize_text(header)
+        if not htoks:
+            continue
+        toa = find_phrase_spans(htoks, cfg.terms_of_art)
+        claims = claim_word_indices(htoks, header, cfg, toa)
+        reserved = [k for k, v in claims.items()
+                    if v == "reserved" and not negated(htoks, k, cfg)]
+        if not reserved:
+            continue
+        objs: list[str] = []
+        j = i + 1
+        while j < n:
+            item = lines[j][0].rstrip("\r\n")
+            if item.strip() == "":
+                break
+            if not _LIST_ITEM_RE.match(item):
+                break
+            itoks = tokenize_text(item)
+            ospans = find_phrase_spans(itoks, cfg.forbidden_objects)
+            espans = find_phrase_spans(itoks, cfg.exempt_object_phrases)
+            for lo, hi, phrase in ospans:
+                if any(elo <= lo <= ehi or elo <= hi <= ehi
+                       for elo, ehi, _p in espans):
+                    continue
+                if negated(itoks, lo, cfg):
+                    continue
+                obj = " ".join(phrase)
+                if obj not in objs:
+                    objs.append(obj)
+            j += 1
+        if not objs:
+            continue
+        hidx = min(reserved)
+        word, s, _e = htoks[hidx]
+        abs_off = loff + s
+        out.append(Violation(
+            path=path,
+            line=line_of(text, abs_off, unit.line, unit.line_map),
+            col=col_of(text, abs_off, unit.col),
+            word=word,
+            predicate="list-object",
+            reason="reserved claim word '%s' heads a list whose items claim "
+                   "forbidden object(s) %s; those are STATIC CHECKS "
+                   "(verifier.py VD/VL/VE/VM), not Z3/Farkas legs"
+                   % (word, ", ".join("'%s'" % o for o in objs)),
+            symbol=unit.symbol,
+            sentence=" ".join(header.split())[:160],
+            high=high,
+            alternatives=cfg.alternatives.get(word, ()),
+        ))
+    return out
+
+
 def scan_unit(
     path: str, unit: TextUnit, cfg: Config, high: bool
 ) -> list[Violation]:
     if unit.schema_literal:
         return []
     out: list[Violation] = []
+    out.extend(predicate_list_binding(path, unit, cfg, high))  # __s245_listbind_wire_v1__
     for sent, sent_off in sentences(unit.text):
         toks = tokenize_text(sent)
         if not toks:

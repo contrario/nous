@@ -1,14 +1,28 @@
 """
 NOUS Formal Verifier — Απόδειξη (Apodeixi)
 =============================================
-Static analysis engine providing mathematical guarantees:
-1. Resource Bounding — max cost per cycle vs world ceiling
-2. Dependency Soundness — deadlock detection in nervous_system
-3. Protocol Consistency — speak/listen message type alignment
-4. Liveness — every listener has at least one producer
-5. Reachability — every soul participates in the pipeline
-6. Memory Safety — remember targets exist and types match
-7. Topology Soundness — distributed node soul coverage
+Static analysis engine. It runs seven structural checks over the AST, none of
+them a proof; each is reported at its evidentiary tier.
+The seven checks, by tier:
+1. Resource Bounding (ESTIMATED) - estimates cost per cycle vs the world
+   ceiling; rests on hardcoded token estimates (EST_TOKENS_PER_SENSE,
+   EST_TOKENS_OUTPUT), so it over-approximates nothing and is tiered
+   ESTIMATED, never PROVEN.
+2. Dependency Soundness (VERIFIED) - checks for deadlock cycles in nervous_system.
+3. Protocol Consistency (VERIFIED) - checks speak/listen message type alignment.
+4. Liveness (VERIFIED) - checks that every listener has a producer.
+5. Reachability (VERIFIED) - checks that every soul participates in the pipeline.
+6. Memory Safety (VERIFIED) - checks that remember targets exist and types match.
+7. Topology Soundness (REPORTED) - reports distributed node soul coverage.
+
+A structural check is not a proof. These checks have no declared abstract
+domain and no soundness argument tying them to the concrete semantics, so a
+report of no cycle in the dependency graph evidences the absence of a
+structural cycle, not that no execution can deadlock. Only the PROVEN tier
+carries a theorem, and it does not live in this module: the Z3/Farkas legs
+(cost-cap, policy-coverage, sequence-ordering) sit in smt_emit, coverage_farkas,
+and policy_coverage. That leg is a Motzkin/Farkas refutation over the decidable
+QF_LRA fragment, independently checkable by rational arithmetic.
 """
 from __future__ import annotations
 
