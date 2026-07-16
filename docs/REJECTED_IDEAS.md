@@ -87,3 +87,34 @@ One block per rejected idea:
   model, NOT just parser errors -- the one lever this spike did not test), or (b) a
   NOUS-semantics-tuned self-hosted model. NOT "better prompt". NOT GCD (guaranteed-valid
   decoding) alone -- GCD closes the syntactic gap, and R3 failed on the semantic axis.
+
+### R3 -- durable-mark durability benchmark / removal-attack harness (S246)
+
+- Idea: build a NOUS-side image-watermark durability harness -- embed marks, run
+  removal/transformation attacks (re-encode, crop, compression, adversarial),
+  score survival -- as the durability leg of a two-axis provenance-mark teardown.
+- Searches run: WAVES repo + project page + arXiv 2401.08573 (ICML 2024) verified
+  current -- 26+ attacks, Performance-vs-Quality 2D plots, HF datasets,
+  leaderboard, still the reference; a May 2026 removal paper (arXiv 2605.16796)
+  cites it as the benchmark. IMATAG API docs (issuer-gated detection, stored key,
+  403 without contract). Image-domain impossibility/coupling anchors:
+  arXiv 2311.04378 (strong watermarking impossible incl. private-detection
+  setting), 2502.04901 (difficulty of robust + publicly-detectable), 2509.10577
+  (sharp coding-limit threshold). NOTE: arXiv 2603.14968, cited in the kickoff as
+  the secret-key impossibility anchor, is a TEXT/LLM framework paper (TTP-Detect),
+  not an image-domain impossibility theorem; its coupling claim is real but the
+  domain and genre are wrong for this lane.
+- Rejection reason: duplicates shipped work (WAVES owns the durability leg,
+  open-source, standardized, maintained) / poor strategic leverage (a rebuilt
+  harness contributes nothing WAVES has not published and inherits its maintenance
+  burden) / patent-dense field (IMATAG and others assert watermarking patents;
+  building embed/detect wades in, a citation map does not). The durability axis is
+  empirically measurable but is not a NOUS moat and sits outside the
+  manifest-evidence substrate.
+- Revisit trigger: never rebuild. If a durability measurement is ever required,
+  use or extend WAVES; do not re-implement. SCOPE NOTE: this rejection covers the
+  HARNESS only. The narrow a50-style two-axis MAP (durability CITED from WAVES,
+  independent-verifiability CLASSIFIED as a structural trust-model property, no
+  measurement claim, no "proves") is BUILD-ELIGIBLE-DEFERRED, not rejected -- it
+  lives in its design doc + the S246 handoff banked-frontier section, banked
+  behind the OJ flip and the 2 Dec 2026 Article 50(2) marking date.
