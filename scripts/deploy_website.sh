@@ -65,6 +65,13 @@ if [ "${APPLY}" -eq 0 ]; then
     exit 0
 fi
 
+# __s248_deploy_claim_lint_gate_v1__ claim-boundary gate before serving
+echo "=== CLAIM BOUNDARY GATE (claim_lint --root .) ==="
+if ! python3 scripts/claim_lint.py --config claims.toml --root .; then
+    echo "REFUSED: claim-boundary violation(s) present; refusing to serve" >&2
+    exit 2
+fi
+
 echo "=== APPLYING deploy ${SRC} -> ${DST} ==="
 rsync "${RSYNC_OPTS[@]}" -i "${SRC}" "${DST}"
 echo "=== deploy complete ==="
