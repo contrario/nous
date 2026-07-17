@@ -184,7 +184,7 @@ pre .g{color:var(--gold)}
 
   <p>Three further limits, stated up front rather than buried:</p>
   <ul>
-    <li><strong>This says nothing about whether a file is AI-generated.</strong> No C2PA manifest can answer that question, and neither can this tool. C2PA records <em>who signed what</em>. It is a provenance format, not a detector.</li>
+    <li><strong>This says nothing about whether a file is AI-generated.</strong> A C2PA manifest <em>can</em> carry the signer's declaration that content is AI-generated (a <code>c2pa.created</code> action with <code>digitalSourceType: trainedAlgorithmicMedia</code>), but that is a signed claim by the signer, not independent proof; the spec does not mandate it, so a valid manifest may omit it and its absence proves nothing. A manifest records <em>who asserted what</em>, not whether the assertion is true. This tool reads the signed record; it is not a detector.</li>
     <li><strong>No vendor here is doing anything wrong.</strong> All three sign correctly. The marking is well-formed in every case. It is stripped because the layer it lives in is stripped.</li>
     <li><strong>This is not a survey.</strong> Three files, one per vendor, one date. Vendors change their pipelines without announcing it. The date on this page is load-bearing.</li>
   </ul>
@@ -468,10 +468,10 @@ convert_png   convert_webp  rerender_rgb</code></pre>
   <h2>What this does not show</h2>
 
   <h3>Not that AI content is undetectable</h3>
-  <p>This page says nothing whatever about whether a given file is AI-generated. No C2PA manifest can answer that, and this tool does not try. C2PA records who signed what.</p>
+  <p>This page says nothing whatever about whether a given file is AI-generated. A C2PA manifest can carry the signer's AI-generation declaration (<code>c2pa.created</code> with <code>digitalSourceType: trainedAlgorithmicMedia</code>), but that declaration is a signed claim by the signer, not independent proof: it is only as reliable as trusting that signer, it is optional under the spec, and its absence means nothing. A manifest records who asserted which label, not whether the label is true &mdash; the same way a watermark is only valid in the context of whoever applied it. This tool reads the signed record; it does not adjudicate the claim.</p>
 
   <h3>Not that any vendor is failing its obligations</h3>
-  <p>All three sign correctly. Adobe's ITL-era certificate is valid under the legacy trust model by design. OpenAI and Google both check revocation. The marking is well-formed in every case. It is stripped because the metadata layer is stripped.</p>
+  <p>All three sign correctly. Adobe's ITL-era certificate is valid under the legacy trust model by design. OpenAI and Google both check revocation. The marking is well-formed in every case. It is stripped because the metadata layer is stripped. Note on scope: the SDK-level findings below are behaviours of the <code>c2pa-rs</code> 0.89.0 / <code>c2pa-python</code> 0.36.0 implementation that was measured, not statements about the C2PA specification itself, which produces no reference implementation.</p>
 
   <h3>Not that the other layer fails</h3>
   <p><strong>The watermark layer was not measured.</strong> SynthID, AudioSeal, or any imperceptible mark may survive every transformation on this page, and this test would never know. The Code of Practice asks for metadata <em>and</em> watermarking. We audited one of the two.</p>
