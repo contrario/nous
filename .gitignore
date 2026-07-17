@@ -62,3 +62,4 @@ build/
 runtime_*.json
 trace_*.json
 noesis_metrics.json
+website/a50/iscc/iscc_degradation_result.json
