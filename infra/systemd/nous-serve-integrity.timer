@@ -1,0 +1,11 @@
+[Unit]
+Description=NOUS served-vs-mirror drift check every 30 min
+Documentation=file:///opt/aetherlang_agents/nous/scripts/served_mirror_check.py
+
+[Timer]
+OnCalendar=*:0/30
+Persistent=yes
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

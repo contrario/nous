@@ -1,0 +1,27 @@
+[Unit]
+Description=NOUS served-vs-mirror drift check (/var/www vs tracked website/)
+Documentation=file:///opt/aetherlang_agents/nous/scripts/served_mirror_check.py
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/aetherlang_agents/nous/scripts/served_mirror_check.py
+# Read-only integrity probe: reads root-owned /var/www and the tracked repo
+# website/ tree, writes nothing. Runs as root only to guarantee complete read
+# coverage of the root-owned served tree; every write/network/privilege capability
+# is dropped below. rc 0 clean; rc 1 drift; rc 2 failed measurement -> failed unit.
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+DevicePolicy=closed
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX
+RestrictNamespaces=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
