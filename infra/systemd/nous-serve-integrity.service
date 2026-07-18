@@ -2,6 +2,7 @@
 Description=NOUS served-vs-mirror drift check (/var/www vs tracked website/)
 Documentation=file:///opt/aetherlang_agents/nous/scripts/served_mirror_check.py
 After=network.target
+OnFailure=hermes-telemetry-alert@%n.service
 
 [Service]
 Type=oneshot
