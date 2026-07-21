@@ -12,9 +12,14 @@ Honest boundary:
     anchor key simulating a TSA. It evidences nothing about real time to an
     external auditor. Real backends (Rekor Path-beta / RFC 3161 via
     rekor_anchor.py + rekor_v2_offline.py) are the next integration step.
-  - The Signer below is IN-PROCESS. The spec's threat model calls for a
-    separate Signer process (UDS + SO_PEERCRED); this class keeps the same
-    monotonicity contract so the swap is interface-compatible.
+  - The default Signer is IN-PROCESS. Pass ``signer_socket`` to delegate
+    runtime signing (both per-event TAG_EVENT and checkpoint-root TAG_CKPT) to
+    a standalone signer (signer_main.py) over UDS + SO_PEERCRED, so the runtime
+    private key never enters this process. Behavior is byte-identical either
+    way (the standalone signer runs the same InProcessSigner + _Key code); the
+    swap is an observable drop-in. SO_PEERCRED is a runtime custody control,
+    NOT an evidence property: a verifier sees only a valid Ed25519 signature
+    and cannot prove a UDS boundary was used.
   - The deployment key is stored on this host (keys_dir). The spec's
     two-tier model wants it OFFLINE. Until that step, deployment-signed
     manifests evidence key custody on the operator host only.
@@ -165,6 +170,26 @@ class InProcessSigner:
         return eh, self.key.sign(TAG_EVENT, eh)
 
 
+class _RuntimeKeyProxy:
+    """Stands in for the runtime _Key when signing is delegated to a standalone
+    UDS signer. Holds NO private key: only kid + pub (learned via HELLO) and a
+    handle to the signer client. .sign() delegates ONLY TAG_CKPT (the checkpoint
+    root path at TraceBridge.checkpoint); event signing goes through
+    self.signer.sign_event, never here."""
+
+    def __init__(self, key_id_hex, pub_raw, signer_client):
+        self.kid = key_id_hex
+        self.pub = pub_raw
+        self._signer = signer_client
+
+    def sign(self, tag, obj_hash):
+        if tag == TAG_CKPT:
+            return self._signer.sign_checkpoint(obj_hash)
+        raise TraceBridgeError(
+            "runtime key proxy: only TAG_CKPT is delegated to the UDS signer; "
+            "tag " + repr(tag) + " must be signed via sign_event")
+
+
 class _EvalError(Exception):
     pass
 
@@ -262,7 +287,8 @@ class TraceBridge:
     def __init__(self, pack_dir, actor, obligations, keys_dir,
                  dossier_ref=None, tolerance_s=600,
                  producer="nous-trace-bridge/0.1.0",
-                 runtime_key_validity_s=86400):
+                 runtime_key_validity_s=86400,
+                 signer_socket=None):
         if not isinstance(tolerance_s, int) or tolerance_s > 3600:
             raise TraceBridgeError("tolerance_s must be int <= 3600")
         self.pack = pack_dir
@@ -275,7 +301,16 @@ class TraceBridge:
 
         self.dep = _Key.load_or_create(os.path.join(keys_dir, "deployment.pem"))
         self.anch = _Key.load_or_create(os.path.join(keys_dir, "anchor_sim.pem"))
-        self.rt = _Key.generate()
+        if signer_socket is None:
+            self.rt = _Key.generate()
+            self._signer_client = None
+        else:
+            from uds_signer_client import UdsSignerClient
+            self._signer_client = UdsSignerClient(signer_socket)
+            self.rt = _RuntimeKeyProxy(
+                self._signer_client.key_id,
+                bytes.fromhex(self._signer_client.public_key_hex),
+                self._signer_client)
 
         self._salts = set()
         self._events = []
@@ -341,7 +376,10 @@ class TraceBridge:
                                          "anchor_pub": self.anch.pub.hex()},
                        "hashes": hashes}, f)
 
-        self.signer = InProcessSigner(self.rt)
+        if self._signer_client is None:
+            self.signer = InProcessSigner(self.rt)
+        else:
+            self.signer = self._signer_client
         self._trace_f = open(os.path.join(self.pack, "trace.ndjson"), 'a')
 
         self._emit("run_start", {
