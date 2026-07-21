@@ -39,6 +39,9 @@ def run_compiled_with_trace(
     private_key: "Optional[Ed25519PrivateKey]" = None,
     consult_memory: bool = False,
     apply_remedy: bool = False,  # __s111_u6_ct_sig_v1__
+    evidence_pack: "Optional[str]" = None,  # __nous_trace_bridge_seam_v1__
+    evidence_keys_dir: "Optional[str]" = None,
+    evidence_obligations: "Optional[list]" = None,
 ) -> "TraceEnvelope":
     """Compile source, run the compiled runtime bounded, return a signed trace.
 
@@ -78,6 +81,19 @@ def run_compiled_with_trace(
         pricing_sha,
         gated_actions=_gated,
     )
+    _bridge = None  # __nous_trace_bridge_seam_v1__
+    if evidence_pack is not None:
+        from trace_bridge import TraceBridge
+        _keys_dir = evidence_keys_dir or os.path.join(
+            os.path.dirname(os.path.abspath(evidence_pack)), "trace_keys"
+        )
+        _bridge = TraceBridge(
+            evidence_pack,
+            "nous.compiled/" + program.world.name,
+            evidence_obligations or [],
+            _keys_dir,
+            dossier_ref="nous://run/" + src_sha,
+        )
     if consult_memory:  # __s107_u4_compiled_consult_v1__
         from pathlib import Path as _Path
         import os as _os_env  # __s112_u7_membase_compiled_v2__
@@ -145,10 +161,25 @@ def run_compiled_with_trace(
                     try:
                         await runner._instinct()
                         recorder.record_llm_call(runner.name, 0, 0, 0)
+                        if _bridge is not None:  # __nous_trace_bridge_seam_v1__
+                            _bridge.llm_call(
+                                "instinct:" + runner.name,
+                                "compiled-hermetic",
+                                src_sha,
+                            )
                     finally:
                         _ACTIVE_SOUL.reset(_token)
 
-        asyncio.run(_drive())
+        try:
+            asyncio.run(_drive())
+        except BaseException as _exc:  # __nous_trace_bridge_seam_v1__
+            if _bridge is not None:
+                try:
+                    _bridge.error(type(_exc).__name__, str(_exc)[:500])
+                    _bridge.finalize(outcome="error")
+                except Exception:
+                    pass
+            raise
     finally:
         os.unlink(tmp)
 
@@ -157,7 +188,23 @@ def run_compiled_with_trace(
             Ed25519PrivateKey,
         )
         private_key = Ed25519PrivateKey.generate()
-    return recorder.finalize(private_key=private_key)
+    _envelope = recorder.finalize(private_key=private_key)
+    if _bridge is not None:  # __nous_trace_bridge_seam_v1__
+        import hashlib as _hl
+        from trace_bridge import jcs as _jcs
+        try:
+            _env_bytes = _envelope.model_dump_json().encode("utf-8")
+        except AttributeError:
+            _env_bytes = _envelope.json().encode("utf-8")
+        _bridge.tool_call(
+            "nous_trace.finalize",
+            "compiled_trace",
+            output_bytes=_jcs(
+                {"envelope_sha256": _hl.sha256(_env_bytes).hexdigest()}
+            ).encode("utf-8"),
+        )
+        _bridge.finalize(outcome="completed")
+    return _envelope
 
 
 def anchor_compiled_run(
