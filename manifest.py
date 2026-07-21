@@ -539,6 +539,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         pce_anchor_sha256=doc.get("pce_anchor_sha256"),  # __s191_pce_anchor_sha256_parse1_v1__
         envelope_witness_sha256=doc.get("envelope_witness_sha256"),  # __s194_envelope_witness_sha256_parse1_v1__
         closure_witness_sha256=doc.get("closure_witness_sha256"),  # __s208_closure_witness_sha256_parse1_v1__
+        trace_bundle_sha256=doc.get("trace_bundle_sha256"),  # __trace_bundle_sha256_parse1_v1__
         attribution=_attribution_from_doc(doc.get("attribution")),  # __s180_attribution_parse1_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
@@ -598,6 +599,7 @@ def parse_manifest_json_with_anchor(
         pce_anchor_sha256=doc.get("pce_anchor_sha256"),  # __s191_pce_anchor_sha256_parse2_v1__
         envelope_witness_sha256=doc.get("envelope_witness_sha256"),  # __s194_envelope_witness_sha256_parse2_v1__
         closure_witness_sha256=doc.get("closure_witness_sha256"),  # __s208_closure_witness_sha256_parse2_v1__
+        trace_bundle_sha256=doc.get("trace_bundle_sha256"),  # __trace_bundle_sha256_parse2_v1__
         attribution=_attribution_from_doc(doc.get("attribution")),  # __s180_attribution_parse2_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
