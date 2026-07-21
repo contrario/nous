@@ -186,6 +186,7 @@ class Manifest:
     envelope_witness_sha256: Optional[str] = None  # __s194_envelope_witness_sha256_field_v1__
     closure_witness_sha256: Optional[str] = None  # __s208_closure_witness_sha256_field_v1__
     trace_bundle_sha256: Optional[str] = None  # __trace_bundle_sha256_field_v1__
+    trace_bundle_anchor_sha256: Optional[str] = None  # __trace_bundle_anchor_sha256_field_v1__
     attribution: Optional["Attribution"] = None  # __s180_attribution_field_v1__
 
     def __post_init__(self) -> None:  # __s134_source_kind_coherence_v1__
@@ -290,6 +291,8 @@ class Manifest:
             d["closure_witness_sha256"] = self.closure_witness_sha256
         if self.trace_bundle_sha256 is not None:  # __trace_bundle_sha256_canonical_v1__
             d["trace_bundle_sha256"] = self.trace_bundle_sha256
+        if self.trace_bundle_anchor_sha256 is not None:  # __trace_bundle_anchor_sha256_canonical_v1__
+            d["trace_bundle_anchor_sha256"] = self.trace_bundle_anchor_sha256
         if self.attribution is not None:  # __s180_attribution_canonical_v1__
             d["attribution"] = self.attribution.canonical_dict()
         return d  # __session96_revert_m3_canonical_dict_v1__
@@ -540,6 +543,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         envelope_witness_sha256=doc.get("envelope_witness_sha256"),  # __s194_envelope_witness_sha256_parse1_v1__
         closure_witness_sha256=doc.get("closure_witness_sha256"),  # __s208_closure_witness_sha256_parse1_v1__
         trace_bundle_sha256=doc.get("trace_bundle_sha256"),  # __trace_bundle_sha256_parse1_v1__
+        trace_bundle_anchor_sha256=doc.get("trace_bundle_anchor_sha256"),  # __trace_bundle_anchor_sha256_parse1_v1__
         attribution=_attribution_from_doc(doc.get("attribution")),  # __s180_attribution_parse1_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
@@ -600,6 +604,7 @@ def parse_manifest_json_with_anchor(
         envelope_witness_sha256=doc.get("envelope_witness_sha256"),  # __s194_envelope_witness_sha256_parse2_v1__
         closure_witness_sha256=doc.get("closure_witness_sha256"),  # __s208_closure_witness_sha256_parse2_v1__
         trace_bundle_sha256=doc.get("trace_bundle_sha256"),  # __trace_bundle_sha256_parse2_v1__
+        trace_bundle_anchor_sha256=doc.get("trace_bundle_anchor_sha256"),  # __trace_bundle_anchor_sha256_parse2_v1__
         attribution=_attribution_from_doc(doc.get("attribution")),  # __s180_attribution_parse2_v1__
         prior_digest=doc.get("prior_digest"),  # __s119_prior_digest_field_v1__
         chain_coverage_mode=doc.get("chain_coverage_mode"),  # __s127_chain_coverage_mode_field_v1__
