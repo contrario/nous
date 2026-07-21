@@ -185,6 +185,7 @@ class Manifest:
     pce_anchor_sha256: Optional[str] = None  # __s191_pce_anchor_sha256_field_v1__
     envelope_witness_sha256: Optional[str] = None  # __s194_envelope_witness_sha256_field_v1__
     closure_witness_sha256: Optional[str] = None  # __s208_closure_witness_sha256_field_v1__
+    trace_bundle_sha256: Optional[str] = None  # __trace_bundle_sha256_field_v1__
     attribution: Optional["Attribution"] = None  # __s180_attribution_field_v1__
 
     def __post_init__(self) -> None:  # __s134_source_kind_coherence_v1__
@@ -287,6 +288,8 @@ class Manifest:
             d["envelope_witness_sha256"] = self.envelope_witness_sha256
         if self.closure_witness_sha256 is not None:  # __s208_closure_witness_sha256_canonical_v1__
             d["closure_witness_sha256"] = self.closure_witness_sha256
+        if self.trace_bundle_sha256 is not None:  # __trace_bundle_sha256_canonical_v1__
+            d["trace_bundle_sha256"] = self.trace_bundle_sha256
         if self.attribution is not None:  # __s180_attribution_canonical_v1__
             d["attribution"] = self.attribution.canonical_dict()
         return d  # __session96_revert_m3_canonical_dict_v1__
