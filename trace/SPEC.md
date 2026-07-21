@@ -43,6 +43,85 @@ Existing tools stop at log integrity. NOUS-TRACE additionally specifies (a) a ma
 4. Legal sufficiency under any regulation. The format is designed to support Article 12-style record-keeping; sufficiency is a deployment and legal determination.
 5. That the recorded Assignment Record faithfully reflects external reality. The Verifier proves *consistency of record and verdict*, not sensor truth. A Producer that records false values is adversary A4 (residual).
 
+## 3.1 Bundle-level Temporal Claims (normative)
+
+The claims in §3 concern the internal integrity of a Trace and the
+independent recomputation of its verdicts. This section adds a *taxonomy*
+over the temporal guarantees that a completed trace bundle can carry. It
+introduces one new normative claim (C2) and names two guarantees already
+provided by §9–§10 (C1, C3); it renumbers and re-specifies nothing in §3.
+
+The taxonomy distinguishes three layers, and a claim's status depends on
+which anchoring backend (§10.1) realizes it:
+
+- **Protocol semantics** — the property as specified.
+- **Profile realization** — a production anchoring profile (`rekor`,
+  `rfc3161`, or `both`) that satisfies the property.
+- **Conformance backend** — `rfc3161-sim` (§10.1, E5), which realizes only
+  the structural aspects required for deterministic conformance testing.
+
+**C1 — Intra-bundle checkpoint ordering.** The signed checkpoint chain
+(§9) establishes a monotone order over the bundle's Events and checkpoints
+that is internally verifiable without any external time source. C1 is
+realized by every backend, including `rfc3161-sim`. C1 makes no claim about
+wall-clock time; it orders Events *relative to one another within the
+bundle*.
+
+**C2 — Bundle temporal existence.** A VALID trace bundle evidences that the
+bundle, identified by the canonical hash of its manifest, existed in its
+exact form no later than an independently attested point in time
+`T_attest`, without trusting the Producer. The temporal trust boundary is
+the bundle identified by the canonical hash of its manifest; individual
+checkpoints remain outside this claim.
+
+*Not claimed by C2:* (a) trusted wall-clock time for individual checkpoints
+— that is the concern of C3, not C2; (b) that the bundle existed *before*
+any second, independent event — relative ordering between two attested
+times requires a second anchor and is out of scope for C2; (c) that
+`T_attest` is accurate beyond the trust placed in the attesting authority
+named by the realizing profile. C2 is an *upper bound* on the bundle's
+creation time (anti-backdating), not an assertion of equality with
+`T_attest`.
+
+**C3 — Per-checkpoint trusted time.** Each checkpoint anchor carries an
+independent timestamp that bounds the claimed wall-clock times of the
+Events in its range within a declared tolerance (§10.3). This is claim §3.4
+("Time bounding") applied per checkpoint. C3 is a valid security property
+of the specification whenever it is realized by a production anchoring
+profile (`rekor` / `rfc3161`). The `rfc3161-sim` conformance backend
+intentionally realizes only the structural aspects required for
+deterministic testing, and therefore provides C1 but **not** the full C3
+property. C3 is not absent from the specification; it is absent only from
+the simulated backend. A bundle whose only anchor is `rfc3161-sim`
+therefore does not carry C3, and the reference verifier already
+communicates this limitation through its anchor basis (which names the
+anchor as intra-bundle ordering, not trusted wall-clock time). A
+first-class normative C3 result is deferred until the verifier exposes
+one; introducing it earlier would place a MUST in the specification that
+the reference implementation does not yet satisfy.
+
+### 3.1.1 C2 reference profile (0.2.x)
+
+In this version the attestation realizing C2 is an RFC 3161 timestamp token
+from a pinned-root TSA over the exact bytes of the bundle's manifest;
+`T_attest` is the token genTime; verification is performed offline against
+the pinned TSA root, with no network access and no trust in the Producer.
+The receipt binds the canonical manifest hash to `T_attest`, and the
+Verifier reports the bundle as carrying C2 only when the token verifies
+against a pinned root and its imprint binds the bundle manifest bytes.
+
+The C2 verification behavior specified here is normative; reference
+implementation support is tracked separately until implemented. A reader
+who runs the current reference verifier and observes no C2 result is
+seeing the specification lead the implementation, not a defect in the
+specification.
+
+Future profiles MAY realize C2 through other mechanisms — for example a
+transparency-log inclusion proof under a signed tree head — provided they
+attest the bundle's canonical manifest hash and yield a verifiable
+`T_attest` upper bound. **Future profiles MUST preserve the security
+property of C2; only the realization mechanism may vary.**
+
 ## 4. Cryptographic Primitives
 
 - Hash: SHA-256.
