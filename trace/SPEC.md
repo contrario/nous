@@ -110,6 +110,11 @@ The receipt binds the canonical manifest hash to `T_attest`, and the
 Verifier reports the bundle as carrying C2 only when the token verifies
 against a pinned root and its imprint binds the bundle manifest bytes.
 
+In this profile, the bundle identity required by §3.1.2 is established
+by verifying the bundle's canonical manifest hash (`trace_bundle_sha256`
+in the signed dossier manifest); future profiles MAY establish the same
+identity by another mechanism while preserving the requirement.
+
 The C2 verification behavior specified here is normative; reference
 implementation support is tracked separately until implemented. A reader
 who runs the current reference verifier and observes no C2 result is
@@ -121,6 +126,56 @@ transparency-log inclusion proof under a signed tree head — provided they
 attest the bundle's canonical manifest hash and yield a verifiable
 `T_attest` upper bound. **Future profiles MUST preserve the security
 property of C2; only the realization mechanism may vary.**
+
+## 3.1.2 C2 Verification Requirements (normative)
+
+These requirements are stated as observable properties of a conforming
+Verifier, not as an evaluation algorithm. Two Verifiers that produce the
+same result for every input are equally conformant, regardless of internal
+structure.
+
+A Verifier MUST:
+
+- establish and successfully verify the identity of the anchored bundle —
+  a C2 claim is defined over an identified object, never over anonymous
+  bytes;
+- verify the integrity of the anchor receipt against the signed manifest;
+- validate the RFC 3161 token against a pinned TSA root;
+- verify that the token's message imprint binds the identified bundle
+  manifest;
+- emit a C2 claim only after all of the above have succeeded.
+
+A Verifier MUST NOT emit a C2 claim unless the bundle identity has first
+been established and successfully verified. C2 attestation presupposes
+identity: temporal existence is claimed for a known object, not for the
+bytes an unverified receipt happens to name.
+
+A Verifier MUST distinguish the following failure classes so that a failure
+is attributable to its cause: identity, receipt format, cryptographic
+validation, and imprint binding. The concrete reason-code identifiers are
+an implementation matter, provided each maps one-to-one onto a normative
+failure class.
+
+`T_attest` is trusted data extracted from a token that has already
+satisfied every requirement above. It is a reported output, not a
+verification step, and MUST NOT influence any requirement.
+
+The anchor receipt carries only the evidence required to verify these
+properties: a schema version, the identifying hash of the anchored bundle,
+and the RFC 3161 token. Explanatory text (such as a human-readable basis)
+and provenance (such as a TSA URL) are Verifier output or documentation,
+not evidence; a Verifier MUST NOT rely on them from the receipt, and the
+trust root for the token remains the pinned TSA certificate.
+
+**Reference evaluation order (informative).** The reference implementation
+evaluates these requirements in a fixed order — identity, then receipt
+integrity, then cryptographic validation, then semantic extraction of
+`T_attest`, then claim emission. This identity-before-cryptography order
+keeps failure attribution clean and avoids ASN.1 work on a mis-identified
+bundle. It is a reference strategy, not a conformance requirement: an
+implementation MAY reorder, cache, or parallelize provided it satisfies the
+normative requirements above and yields the same observable result for
+every input.
 
 ## 4. Cryptographic Primitives
 
