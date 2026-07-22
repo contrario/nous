@@ -1034,6 +1034,12 @@ def _tb_verify_pack(pack):
         if a is None:
             report["flags"].append("unanchored checkpoint seq=%d" % c["seq"])
             continue
+        # __p5b_tb_t_reset_v1__ T is loop-carried; bind it per
+        # iteration so a future arm that returns without assigning
+        # cannot inherit the previous checkpoint genTime and run the
+        # SPEC 10.3 bound on the wrong time. Every arm assigns
+        # unconditionally today, so this is behaviour-preserving.
+        T = None
         atype = a.get("type")
         # __p5a_delivered_v1__ Declared-vs-delivered. The signed run_start
         # value is authoritative. A checkpoint whose anchor type differs
@@ -1157,8 +1163,110 @@ def _tb_verify_pack(pack):
                     "pins via NOUS_REKOR_LOG_KEYS or rekor_log_keys.json"
                     % c["seq"])
             report["anchors"].append(entry)
+        elif atype == "both":
+            # __p5b_tb_composite_v1__ SPEC 10.1 composite delivery. One
+            # anchor key on the checkpoint body, so two legs would be a
+            # wire change; the composite is the non-invasive shape. Its
+            # sub-blocks are the single-backend blocks verbatim, type key
+            # included, so each leg verifies through the same code a
+            # standalone block would reach, and a sub-block type that does
+            # not equal its key is malformed.
+            import base64 as _b64c
+            for leg_key in ("rekor", "rfc3161"):
+                leg = a.get(leg_key)
+                if not isinstance(leg, dict):
+                    raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                                  detail="composite anchor lacks a %s leg"
+                                         % leg_key)
+                if leg.get("type") != leg_key:
+                    raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                                  detail="composite %s leg declares type %s"
+                                         % (leg_key, repr(leg.get("type"))))
+            # The composite carries ONE time source; a rekor leg holding
+            # its own token would put two genTimes in one anchor with no
+            # disagreement rule, so which one bounds 10.3 is undeterminable.
+            if a["rekor"].get("rfc3161_token_b64") is not None:
+                raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                              detail="composite rekor leg carries its own "
+                                     "RFC 3161 token; the composite carries "
+                                     "one time source and no disagreement "
+                                     "rule")
+            log_keys, log_prov = _rk_resolve_log_keys(
+                _os.environ.get("NOUS_REKOR_LOG_KEYS"),
+                _os.path.join(pack, "rekor_log_keys.json"),
+                (man.get("trust_anchors") or {}).get("rekor_log_keys"))
+            report.setdefault("rekor_log_key_provenance", log_prov)
+            roots, tsa_prov = _tbrv_resolve_tsa_roots(pack, man)
+            report.setdefault("tsa_root_provenance", tsa_prov)
+            if not roots:
+                raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                              detail="no pinned TSA roots available")
+            saved = globals()["_TBRV_KNOWN_TSA_ROOT_CERTS"]
+            try:
+                globals()["_TBRV_KNOWN_TSA_ROOT_CERTS"] = roots
+                detail = _rk_verify_anchor(a["rekor"], root, log_keys)
+                if detail["state"] is None:
+                    raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                                  detail="; ".join(detail["errors"]))
+                tok_b64 = a["rfc3161"].get("token_b64")
+                if not isinstance(tok_b64, str) or not tok_b64:
+                    raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                                  detail="composite rfc3161 leg carries no "
+                                         "token_b64")
+                try:
+                    token_der = _b64c.b64decode(tok_b64, validate=True)
+                except Exception as e:
+                    raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                                  detail="token_b64 decode: " + str(e))
+                ok_c, T, errs_c = _tbrv_verify_rfc3161(token_der, root)
+            except (_RkMalformed, _RkInclusionError) as e:
+                raise _TbVErr("ANCHOR_INVALID", seq=c["seq"], detail=str(e))
+            except _TbrvMalformed as e:
+                raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                              detail="malformed token: " + str(e))
+            finally:
+                globals()["_TBRV_KNOWN_TSA_ROOT_CERTS"] = saved
+            if not ok_c:
+                raise _TbVErr("ANCHOR_INVALID", seq=c["seq"],
+                              detail="; ".join(errs_c))
+            entry = {"seq": c["seq"], "type": atype,
+                     "state": "INCLUDED-TIMED",
+                     "log_index": detail["log_index"],
+                     "log_origin": detail["origin"],
+                     "tree_size": detail["tree_size"],
+                     "gen_time": T.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                     "rekor_log_key_provenance": log_prov,
+                     "tsa_root_provenance": tsa_prov}
+            if log_prov == "operator-supplied":
+                report["flags"].append(
+                    "checkpoint seq=%d: the transparency-log key is "
+                    "OPERATOR-SUPPLIED (carried in the pack); supply auditor "
+                    "pins via NOUS_REKOR_LOG_KEYS or rekor_log_keys.json"
+                    % c["seq"])
+            if tsa_prov == "operator-supplied":
+                report["flags"].append(
+                    "checkpoint seq=%d: the RFC 3161 token verifies, but the "
+                    "TSA trust root is OPERATOR-SUPPLIED (carried in the "
+                    "pack); supply auditor pins via NOUS_TSA_ROOTS or "
+                    "tsa_roots.pem" % c["seq"])
+            report["anchors"].append(entry)
         else:
             raise _TbVErr("ANCHOR_TYPE", seq=c["seq"], detail=str(atype))
+        # __p5b_tb_timed_unincluded_v1__ A run declaring the composite
+        # policy that delivered only the rfc3161 leg carries trusted
+        # time but no transparency-log membership. Named by what is
+        # PRESENT; the shortfall already forced rc 10 and flagged
+        # itself. No cause is asserted for the absence.
+        if (declared_anchoring == "both" and atype == "rfc3161"
+                and report["anchors"]
+                and report["anchors"][-1]["seq"] == c["seq"]):
+            report["anchors"][-1]["state"] = "TIMED-UNINCLUDED"
+            report["flags"].append(
+                "checkpoint seq=%d is TIMED-UNINCLUDED: trusted "
+                "time is evidenced, but NO transparency-log "
+                "membership is present in the anchor. The Verifier "
+                "reports the absence and asserts no cause for it."
+                % c["seq"])
         if T is None:
             continue
         anchored.append({"seq": c["seq"], "T": T, "kid": kid})
