@@ -15,14 +15,26 @@ Honest boundary:
   - The default Signer is IN-PROCESS. Pass ``signer_socket`` to delegate
     runtime signing (both per-event TAG_EVENT and checkpoint-root TAG_CKPT) to
     a standalone signer (signer_main.py) over UDS + SO_PEERCRED, so the runtime
-    private key never enters this process. Behavior is byte-identical either
-    way (the standalone signer runs the same InProcessSigner + _Key code); the
-    swap is an observable drop-in. SO_PEERCRED is a runtime custody control,
-    NOT an evidence property: a verifier sees only a valid Ed25519 signature
-    and cannot prove a UDS boundary was used.
-  - The deployment key is stored on this host (keys_dir). The spec's
-    two-tier model wants it OFFLINE. Until that step, deployment-signed
-    manifests evidence key custody on the operator host only.
+    private key never enters this process. Signatures are byte-identical either
+    way (same _Key, same domain-tagged JCS hashes; Ed25519 is deterministic),
+    and the client cannot distinguish the two except by latency -- an
+    observable drop-in. The standalone signer does NOT reuse InProcessSigner's
+    in-memory gate: it enforces the same monotonic contract (and the same error
+    messages) through a durable write-ahead counter store, so the gate survives
+    restarts and refuses a second signature for any (trace_id, seq)
+    (SPEC 7.4). SO_PEERCRED is a runtime custody control, NOT an evidence
+    property: a verifier sees only a valid Ed25519 signature and cannot prove a
+    UDS boundary was used.
+  - The Deployment Key is on this host (keys_dir) ONLY in the default mode.
+    Pass ``policy_pack`` to load an identity manifest (keys.json) and a policy
+    manifest (obligations.json) pre-signed by an OFFLINE Deployment Key
+    (signerctl.py export-identity -> deploy_sign.py on an air-gapped host):
+    deployment.pem is then never loaded and dep.sign is never called, so the
+    Deployment private key is absent from the runtime host, per the spec's
+    two-tier model (SPEC 4.2). Startup then REFUSES unless the live signer's
+    identity (key_id + algorithm + public_key) equals the deployment-approved
+    runtime identity in the signed keys.json -- the active signer must be the
+    approved signer before any evidence is produced.
 """
 from __future__ import annotations
 
