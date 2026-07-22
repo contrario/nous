@@ -233,3 +233,12 @@ output_per_1m = "0"
 verified_date = "2026-06-29"
 verified_by   = "manual"
 notes         = "Self-hosted, no per-token cost. Compute cost (electricity, hardware) not tracked."
+
+[models."gpt-4o-mini"]
+provider       = "openai"
+pricing_model  = "per_token"
+input_per_1m  = "0.15"
+output_per_1m = "0.60"
+input_cached_per_1m = "0.075"
+source_url    = "https://openai.com/api/pricing"
+notes         = "Inference (standard API) rates, verified live 19 Jul 2026. NOT fine-tuning rates."

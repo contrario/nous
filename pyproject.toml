@@ -157,3 +157,11 @@ templates = ["*.nous"]
 "." = ["nous.lark"]
 # __cost_cap_phase3b_datafiles_v1__
 "pricing" = ["pricing/defaults.toml"]
+
+
+# __c2_conformance_markers_v1__
+[tool.pytest.ini_options]
+markers = [
+    "offline: hermetic conformance vector; no network, uses committed reference evidence",
+    "live: requires a live production TSA; deselected unless --run-live is passed",
+]

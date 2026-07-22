@@ -1,0 +1,55 @@
+# NOUS-TRACE runtime signer -- systemd unit (SPEC §7).
+#
+# Runs the standalone signer as a dedicated NON-ROOT user so that
+# SO_PEERCRED (§7.3) is meaningful: peers are distinguished by uid, and the
+# allowlist can refuse any uid other than the Producer's. Under a shared root
+# uid the peer-cred control is weak by construction (see signer_main docstring).
+#
+# Install:
+#   sudo useradd --system --no-create-home --shell /usr/sbin/nologin nous-signer
+#   sudo install -d -o nous-signer -g nous-signer -m 0700 /var/lib/nous-signer
+#   sudo install -d -o nous-signer -g nous-signer -m 0700 /run/nous-signer   # or use tmpfiles below
+#   sudo cp nous-signer.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now nous-signer
+#
+# The Producer connects to /run/nous-signer/signer.sock and must run as the uid
+# passed to --allow-uid (set it below to the Producer's numeric uid).
+
+[Unit]
+Description=NOUS-TRACE runtime signer (UDS, SPEC 7)
+Documentation=file:///opt/aetherlang_agents/nous/trace/SPEC.md
+After=local-fs.target
+
+[Service]
+Type=simple
+User=nous-signer
+Group=nous-signer
+
+# Durable state (§7.4) MUST persist across restarts. Keep it on a real disk,
+# not tmpfs. State loss terminates in-flight Traces and MUST NOT reset counters.
+ExecStart=/usr/bin/python3 /opt/aetherlang_agents/nous/signer_main.py \
+  --socket /run/nous-signer/signer.sock \
+  --key-path /var/lib/nous-signer/runtime.pem \
+  --state-path /var/lib/nous-signer/counter.ndjson \
+  --audit-path /var/lib/nous-signer/audit.ndjson \
+  --allow-uid REPLACE_WITH_PRODUCER_UID
+
+WorkingDirectory=/opt/aetherlang_agents/nous
+Restart=on-failure
+RestartSec=1
+
+# Hardening: the signer needs only its state dir and the runtime socket dir.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ReadWritePaths=/var/lib/nous-signer /run/nous-signer
+# No network: the signer is local-only UDS (§7.2).
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+# Runtime key + state are 0600 owned by nous-signer; UMask keeps new files tight.
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

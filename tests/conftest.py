@@ -21,3 +21,23 @@ from __future__ import annotations
 collect_ignore: list[str] = [
     "test_replay_phase_d.py",
 ]
+
+
+# __c2_live_gate_v1__ live tests (real TSA) run only with --run-live.
+import pytest as _pytest
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--run-live", action="store_true", default=False,
+        help="run tests marked @pytest.mark.live (real network / TSA calls)",
+    )
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--run-live"):
+        return
+    skip_live = _pytest.mark.skip(reason="live test; pass --run-live to run")
+    for item in items:
+        if "live" in item.keywords:
+            item.add_marker(skip_live)
