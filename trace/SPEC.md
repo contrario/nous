@@ -2,7 +2,7 @@
 
 **Version:** 0.2.2-draft
 **Status:** Implementation-validated. Supersedes 0.2.1-draft.
-**Wire version:** `spec_version` in signed objects remains `"0.2.0"`. The document revision and the wire format version are deliberately distinct: no revision since 0.2.0 has changed a field, tag, hash input or encoding, so packs remain byte-compatible across 0.2.x document revisions.
+**Wire version:** `spec_version` in signed objects remains `"0.2.0"`. The document revision and the wire format version are deliberately distinct: no revision since 0.2.0 has changed a field, tag, hash input or encoding, so packs are intended to remain byte-compatible across 0.2.x document revisions. *Evidence: a committed golden pack (`tests/reference_evidence/trace_bundle`) must keep verifying unmodified under the current Verifier, which pins this from revision 0.2.1 onward. The 0.2.0 → 0.2.1 interval rests on review only — no 0.2.0-era pack was retained — and is therefore asserted, not demonstrated.*
 
 **Changes from 0.2.1:** §10.1 — "Verifiers MUST support both production proof types offline" is downgraded to SHOULD, because the reference Verifier implements `rfc3161` only; `rekor`, and therefore `both`, are unimplemented. A normative MUST the reference implementation does not satisfy is an overclaim in the strongest available language. The gap is converted into two requirements the implementation does meet: a Verifier MUST fail closed on an anchor type it cannot verify, and MUST report trust-root provenance, with Pack-carried roots treated as operator-supplied and downgrading the report. **This downgrade is temporary: the MUST is restored when `rekor` lands.** No claim in §3 and no part of the threat model changed.
 
