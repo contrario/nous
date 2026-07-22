@@ -16,10 +16,24 @@ Provenance is deliberately transparent: this script is committed so the
 reference evidence can be regenerated (e.g. after the pinned Sigstore TSA root
 rotates). The offline conformance suite consumes these without network.
 
-Longevity: the token chains to the pinned Sigstore TSA root, which expires
-2035-04-06. When it does, the offline crypto vectors will begin to FAIL by
-design -- the signal to rotate the pinned root and re-capture, not a defect.
+Longevity / rotation procedure: the token chains to the pinned Sigstore TSA
+root, which expires 2035-04-06. When it expires -- or if it rotates earlier --
+the offline crypto vectors begin to FAIL by design. That is the signal to
+rotate the pinned root and RUN THIS SCRIPT WITH NO ARGUMENTS, which mints a
+fresh token over the EXISTING bundle manifest.
+
+Do NOT rebuild the bundle for a rotation. The bundle is sim-anchored (Ed25519
+only) and has no dependency on any TSA root, and it doubles as the golden pack
+for the wire-compatibility test (tests/test_wire_compat.py), which requires it
+to stay byte-identical. The token commits to sha256(manifest.json), so a new
+token over an unchanged bundle is all a rotation needs.
+
+--rebuild-bundle exists for the separate case of deliberately moving that
+baseline (e.g. a bundle-format change). It will fail test_golden_pack_is_
+unmodified until the new baseline is recorded -- by design, so the move cannot
+happen silently.
 """
+import argparse
 import base64
 import datetime as dt
 import hashlib
@@ -37,13 +51,31 @@ from tsa_client import anchor_timestamp, TSA_DEFAULT_URL
 OUT = REPO / "tests" / "reference_evidence"
 OUT.mkdir(parents=True, exist_ok=True)
 
-# a real, complete, C1-valid trace bundle
-work = Path(tempfile.mkdtemp())
-with trace_bridge.TraceBridge(str(work / "trace_bundle"), "actor", [],
-                              str(work / "keys")) as tb:
-    tb.tool_call("t", "ad", input_bytes=b"{}")
-    tb.checkpoint()
-src_bundle = work / "trace_bundle"
+_ap = argparse.ArgumentParser(description="capture C2 reference evidence")
+_ap.add_argument("--rebuild-bundle", action="store_true",
+                 help="rebuild the trace bundle from scratch. This MOVES the "
+                      "golden-pack baseline used by the wire-compatibility "
+                      "test and must be a recorded decision, not routine. The "
+                      "default refreshes only the TSA token, which is what a "
+                      "pinned-root rotation actually requires.")
+_args = _ap.parse_args()
+
+ref_bundle = OUT / "trace_bundle"
+if _args.rebuild_bundle or not (ref_bundle / "manifest.json").is_file():
+    # a real, complete, C1-valid trace bundle
+    work = Path(tempfile.mkdtemp())
+    with trace_bridge.TraceBridge(str(work / "trace_bundle"), "actor", [],
+                                  str(work / "keys")) as tb:
+        tb.tool_call("t", "ad", input_bytes=b"{}")
+        tb.checkpoint()
+    src_bundle = work / "trace_bundle"
+    _rebuilt = True
+else:
+    # DEFAULT: keep the committed bundle byte-for-byte; only the token is
+    # refreshed. The bundle is sim-anchored (Ed25519 only) and has no
+    # dependency on any TSA root, so a rotation does not invalidate it.
+    src_bundle = ref_bundle
+    _rebuilt = False
 bm = (src_bundle / "manifest.json").read_bytes()
 anchored = hashlib.sha256(bm).hexdigest()
 
@@ -59,11 +91,12 @@ pa = importlib.util.module_from_spec(spec); spec.loader.exec_module(pa)
 ok, t_attest, errs = pa._pa_verify_rfc3161(token, bm)
 assert ok, ("captured token does not verify against the pinned root", errs)
 
-# persist the WHOLE bundle tree (C1 verifies every file)
-ref_bundle = OUT / "trace_bundle"
-if ref_bundle.exists():
-    shutil.rmtree(ref_bundle)
-shutil.copytree(src_bundle, ref_bundle)
+# persist the bundle tree only when it was rebuilt; otherwise leave the
+# committed golden pack untouched (test_golden_pack_is_unmodified guards it)
+if _rebuilt:
+    if ref_bundle.exists():
+        shutil.rmtree(ref_bundle)
+    shutil.copytree(src_bundle, ref_bundle)
 
 (OUT / "trace_bundle_c2_token.der").write_bytes(token)
 meta = {
@@ -84,6 +117,8 @@ meta = {
 files = sorted(p.relative_to(ref_bundle).as_posix()
                for p in ref_bundle.rglob("*") if p.is_file())
 print("captured reference evidence under", OUT)
+print("  bundle:", "REBUILT (golden-pack baseline moved)" if _rebuilt
+      else "unchanged (token refreshed only)")
 print("  bundle files:", files)
 print("  anchored_bundle_sha256:", anchored[:16], "...")
 print("  T_attest:", t_attest.isoformat())

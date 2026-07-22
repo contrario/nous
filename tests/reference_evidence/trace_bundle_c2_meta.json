@@ -1,8 +1,8 @@
 {
   "anchored_bundle_sha256": "baaf67c4dd9de47829873d2b6b45b653ca812a25289cbaf62c9219eb0d98eacf",
-  "captured_at": "2026-07-21T12:10:35.644598+00:00",
+  "captured_at": "2026-07-22T02:53:30.036166+00:00",
   "note": "Real Sigstore production RFC 3161 token over the exact bytes of trace_bundle/manifest.json. The complete trace_bundle/ tree is committed alongside so the offline C2 conformance suite copies a C1-valid bundle. Regenerate with capture_c2_reference_evidence.py after a pinned-root rotation.",
   "pinned_root_not_after": "2035-04-06T06:59:43+00:00",
-  "t_attest_utc": "2026-07-21T12:10:35+00:00",
+  "t_attest_utc": "2026-07-22T02:53:29+00:00",
   "tsa_url": "https://timestamp.sigstore.dev/api/v1/timestamp"
 }
