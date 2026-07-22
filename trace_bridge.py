@@ -8,10 +8,18 @@ TraceEnvelope in nous_trace.py.
 Honest boundary:
   - Events are EVIDENCE (Ed25519 signatures over domain-tagged JCS hashes).
     Nothing here PROVES; the only PROVES legs remain Z3 and Farkas.
-  - Anchor backend is "rfc3161-sim" (spec E5, test-only): a local Ed25519
-    anchor key simulating a TSA. It evidences nothing about real time to an
-    external auditor. Real backends (Rekor Path-beta / RFC 3161 via
-    rekor_anchor.py + rekor_v2_offline.py) are the next integration step.
+  - The DEFAULT anchor backend is "rfc3161-sim" (spec E5, TEST ONLY): a local
+    Ed25519 key simulating a TSA. It evidences monotone ordering WITHIN the
+    bundle and nothing about real time to an external auditor; Verifiers flag
+    it unless the pack is marked test_vector (SPEC 10.1). Pass
+    ``anchoring="rfc3161"`` for the production backend: an RFC 3161 token over
+    the checkpoint Merkle root, whose genTime the Verifier recovers FROM the
+    token -- the Producer never declares the time, which is the point. The
+    Verifier resolves TSA roots auditor-pinned first (NOUS_TSA_ROOTS or
+    tsa_roots.pem) and downgrades its report when they are operator-supplied.
+    On TSA failure the checkpoint is emitted unanchored and the gap reported
+    (SPEC 10.2) rather than failing the run. The `rekor` backend is not
+    implemented.
   - The default Signer is IN-PROCESS. Pass ``signer_socket`` to delegate
     runtime signing (both per-event TAG_EVENT and checkpoint-root TAG_CKPT) to
     a standalone signer (signer_main.py) over UDS + SO_PEERCRED, so the runtime
@@ -301,9 +309,20 @@ class TraceBridge:
                  producer="nous-trace-bridge/0.1.0",
                  runtime_key_validity_s=86400,
                  signer_socket=None,
-                 policy_pack=None):
+                 policy_pack=None,
+                 anchoring="rfc3161-sim",
+                 tsa_url=None,
+                 tsa_timeout_s=30):
         if not isinstance(tolerance_s, int) or tolerance_s > 3600:
             raise TraceBridgeError("tolerance_s must be int <= 3600")
+        if anchoring not in ("rfc3161-sim", "rfc3161"):
+            raise TraceBridgeError(
+                "unsupported anchoring backend: " + repr(anchoring)
+                + " (expected 'rfc3161-sim' or 'rfc3161')")
+        self._anchoring = anchoring
+        self._tsa_url = tsa_url
+        self._tsa_timeout_s = tsa_timeout_s
+        self.anchor_failures = []
         self.pack = pack_dir
         self.actor = actor
         self.tolerance_s = tolerance_s
@@ -321,8 +340,8 @@ class TraceBridge:
             if signer_socket is None:
                 raise TraceBridgeError(
                     "policy_pack requires signer_socket: the "
-                    "deployment-approved runtime identity is proven against "
-                    "the live signer, which must own a persistent key")
+                    "deployment-approved runtime identity is verified "
+                    "against the live signer, which must own a persistent key")
         self.anch = _Key.load_or_create(os.path.join(keys_dir, "anchor_sim.pem"))
         if signer_socket is None:
             self.rt = _Key.generate()
@@ -359,7 +378,7 @@ class TraceBridge:
             "keys_manifest_hash": self._keys_hash.hex(),
             "dossier_ref": dossier_ref,
             "producer": producer,
-            "anchoring": "rfc3161-sim",
+            "anchoring": self._anchoring,
             "tolerance_s": tolerance_s})
 
     def _build_and_sign_manifests(self, obligations,
@@ -414,7 +433,8 @@ class TraceBridge:
             with open(os.path.join(self.pack, fn), 'rb') as f:
                 hashes[fn] = _sha(f.read()).hex()
         with open(os.path.join(self.pack, "manifest.json"), 'w') as f:
-            json.dump({"spec_version": SPEC, "anchoring": "rfc3161-sim",
+            json.dump({"spec_version": SPEC,
+                       "anchoring": self._anchoring,
                        "tolerance_s": self.tolerance_s,
                        "trust_anchors": {"deployment_pub": self.dep.pub.hex(),
                                          "anchor_pub": self.anch.pub.hex()},
@@ -482,7 +502,8 @@ class TraceBridge:
             with open(os.path.join(self.pack, fn), "rb") as f:
                 hashes[fn] = _sha(f.read()).hex()
         with open(os.path.join(self.pack, "manifest.json"), "w") as f:
-            json.dump({"spec_version": SPEC, "anchoring": "rfc3161-sim",
+            json.dump({"spec_version": SPEC,
+                       "anchoring": self._anchoring,
                        "tolerance_s": self.tolerance_s,
                        "trust_anchors": {
                            "deployment_pub": self._deployment_pub_hex,
@@ -595,18 +616,48 @@ class TraceBridge:
     def error(self, kind, message):
         return self._emit("error", {"kind": kind, "message": message})
 
+    def _make_anchor(self, root):
+        """Build the checkpoint anchor for the declared backend.
+
+        rfc3161-sim (E5, TEST ONLY): a pinned local key signs
+        SHA-256(root || gen_time). Evidences monotone ordering inside the
+        bundle; nothing about real time to an external auditor.
+
+        rfc3161 (production): an RFC 3161 token over the Merkle root itself.
+        The time is the TSA's genTime, recovered by the Verifier FROM the
+        token -- the Producer never declares it, which is the whole point.
+
+        SPEC 10.2: on TSA failure return None (unanchored checkpoint); the
+        run continues and the gap is reported, rather than losing the run.
+        """
+        if self._anchoring == "rfc3161-sim":
+            gt = _now_ts()
+            return {"type": "rfc3161-sim", "gen_time": gt,
+                    "token": self.anch.sign(TAG_ANCH,
+                                            _sha(root + gt.encode()))}
+        import base64 as _b64
+        try:
+            from tsa_client import anchor_timestamp, TSA_DEFAULT_URL
+            tok = anchor_timestamp(
+                timestamped_data=root,
+                base_url=self._tsa_url or TSA_DEFAULT_URL,
+                timeout_seconds=self._tsa_timeout_s)
+        except Exception as exc:  # network/TSA failure is not a run failure
+            self.anchor_failures.append(
+                {"from_seq": self._last_ckpt_seq, "error": repr(exc)})
+            return None
+        return {"type": "rfc3161",
+                "token_b64": _b64.b64encode(tok).decode()}
+
     def checkpoint(self):
         fr = self._last_ckpt_seq
         to = len(self._events) - 1
         leaves = self._ehashes[fr:to + 1]
         root = self._merkle(leaves)
-        gt = _now_ts()
-        tok = self.anch.sign(TAG_ANCH, _sha(root + gt.encode()))
         body = {"range": {"from_seq": fr, "to_seq": to},
                 "merkle_root": root.hex(),
                 "root_sig": self.rt.sign(TAG_CKPT, root),
-                "anchor": {"type": "rfc3161-sim", "gen_time": gt,
-                           "token": tok}}
+                "anchor": self._make_anchor(root)}
         ev = self._emit("checkpoint", body)
         self._last_ckpt_seq = ev["seq"]
         return ev

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, os, json, hashlib, base64
+import sys, os, json, hashlib, base64, re
 from datetime import datetime, timezone
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 from cryptography.exceptions import InvalidSignature
@@ -11,6 +11,309 @@ TAG_OBL = b"NOUS-TRACE/v0.2/obligation-manifest"
 TAG_KEYS = b"NOUS-TRACE/v0.2/keys-manifest"
 TAG_ANCH = b"NOUS-TRACE/v0.2/anchor-sim"
 MAX_INT = 2**53 - 1
+
+
+# --- SPEC 10.1 production anchor backend: RFC 3161 -------------------------
+# Extracted verbatim from the shipped _pa_ implementation (dossier.py) and
+# renamed to _rv_; identical, already-proven code, kept inline so this
+# reference verifier remains standalone.
+
+_RV_OID_SIGNED_DATA = "1.2.840.113549.1.7.2"
+_RV_OID_CT_TSTINFO = "1.2.840.113549.1.9.16.1.4"
+_RV_OID_ATTR_CONTENT_TYPE = "1.2.840.113549.1.9.3"
+_RV_OID_ATTR_MESSAGE_DIGEST = "1.2.840.113549.1.9.4"
+
+_RV_KNOWN_TSA_ROOT_CERTS = [
+    "-----BEGIN CERTIFICATE-----\n"
+    "MIIB9zCCAXygAwIBAgIUV7f0GLDOoEzIh8LXSW80OJiUp14wCgYIKoZIzj0EAwMw\n"
+    "OTEVMBMGA1UEChMMc2lnc3RvcmUuZGV2MSAwHgYDVQQDExdzaWdzdG9yZS10c2Et\n"
+    "c2VsZnNpZ25lZDAeFw0yNTA0MDgwNjU5NDNaFw0zNTA0MDYwNjU5NDNaMDkxFTAT\n"
+    "BgNVBAoTDHNpZ3N0b3JlLmRldjEgMB4GA1UEAxMXc2lnc3RvcmUtdHNhLXNlbGZz\n"
+    "aWduZWQwdjAQBgcqhkjOPQIBBgUrgQQAIgNiAAQUQNtfRT/ou3YATa6wB/kKTe70\n"
+    "cfJwyRIBovMnt8RcJph/COE82uyS6FmppLLL1VBPGcPfpQPYJNXzWwi8icwhKQ6W\n"
+    "/Qe2h3oebBb2FHpwNJDqo+TMaC/tdfkv/ElJB72jRTBDMA4GA1UdDwEB/wQEAwIB\n"
+    "BjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdDgQWBBSY7AHvf7tR/9SVHm+KiJhT\n"
+    "B4nOvzAKBggqhkjOPQQDAwNpADBmAjEAwGEGrfGZR1cen1R8/DTVMI943LssZmJR\n"
+    "tDp/i7SfGHmGRP6gRbuj9vOK3b67Z0QQAjEAuT2H673LQEaHTcyQSZrkp4mX7Wwk\n"
+    "mF+sVbkYY5mXN+RMH13KUEHHOqASaemYWK/E\n"
+    "-----END CERTIFICATE-----\n",
+]
+
+
+class _RvMalformed(ValueError):
+    pass
+
+
+def _rv_der_len(buf, off):
+    b = buf[off]
+    if b < 0x80:
+        return b, off + 1
+    n = b & 0x7F
+    if n == 0 or n > 4:
+        raise _RvMalformed("unsupported DER length form")
+    return int.from_bytes(buf[off + 1:off + 1 + n], "big"), off + 1 + n
+
+
+def _rv_tlv(buf, off):
+    length, hdr_end = _rv_der_len(buf, off + 1)
+    end = hdr_end + length
+    if end > len(buf):
+        raise _RvMalformed("DER length exceeds buffer")
+    return buf[off], off, hdr_end, end
+
+
+def _rv_children(buf, start, end):
+    out = []
+    off = start
+    while off < end:
+        tag, tlv_start, c_off, c_end = _rv_tlv(buf, off)
+        out.append((tag, tlv_start, c_off, c_end))
+        off = c_end
+    return out
+
+
+def _rv_oid_str(buf, c_off, c_end):
+    data = buf[c_off:c_end]
+    if not data:
+        raise _RvMalformed("empty OID")
+    first = data[0]
+    parts = [str(first // 40), str(first % 40)]
+    val = 0
+    for byte in data[1:]:
+        val = (val << 7) | (byte & 0x7F)
+        if not byte & 0x80:
+            parts.append(str(val))
+            val = 0
+    return ".".join(parts)
+
+
+def _rv_parse_token(token_der):
+    try:
+        _, _, ci_c, ci_end = _rv_tlv(token_der, 0)
+        ci_kids = _rv_children(token_der, ci_c, ci_end)
+        if _rv_oid_str(token_der, ci_kids[0][2], ci_kids[0][3]) != \
+                _RV_OID_SIGNED_DATA:
+            raise _RvMalformed("token is not a CMS SignedData")
+        sd = _rv_children(token_der, ci_kids[1][2], ci_kids[1][3])[0]
+        sd_kids = _rv_children(token_der, sd[2], sd[3])
+        enc = next(k for k in sd_kids if k[0] == 0x30)
+        enc_kids = _rv_children(token_der, enc[2], enc[3])
+        if _rv_oid_str(token_der, enc_kids[0][2], enc_kids[0][3]) != \
+                _RV_OID_CT_TSTINFO:
+            raise _RvMalformed("eContentType is not id-ct-TSTInfo")
+        oct0 = _rv_children(token_der, enc_kids[1][2], enc_kids[1][3])[0]
+        tstinfo = token_der[oct0[2]:oct0[3]]
+        certs = []
+        for k in sd_kids:
+            if k[0] == 0xA0:
+                for c in _rv_children(token_der, k[2], k[3]):
+                    certs.append(token_der[c[1]:c[3]])
+                break
+        signer_set = [k for k in sd_kids if k[0] == 0x31 and k[1] > enc[3]][0]
+        si = _rv_children(token_der, signer_set[2], signer_set[3])[0]
+        si_kids = _rv_children(token_der, si[2], si[3])
+        i = 2
+        digest_alg = _rv_children(token_der, si_kids[i][2], si_kids[i][3])
+        digest_oid = _rv_oid_str(token_der, digest_alg[0][2], digest_alg[0][3])
+        i += 1
+        signed_attrs_der = None
+        signed_attrs_span = None
+        if si_kids[i][0] == 0xA0:
+            sa = si_kids[i]
+            signed_attrs_der = b"\x31" + token_der[sa[1] + 1:sa[3]]
+            signed_attrs_span = (sa[2], sa[3])
+            i += 1
+        sig_alg = _rv_children(token_der, si_kids[i][2], si_kids[i][3])
+        sig_alg_oid = _rv_oid_str(token_der, sig_alg[0][2], sig_alg[0][3])
+        i += 1
+        signature = token_der[si_kids[i][2]:si_kids[i][3]]
+        attrs = {}
+        if signed_attrs_span is not None:
+            for a in _rv_children(token_der, *signed_attrs_span):
+                ak = _rv_children(token_der, a[2], a[3])
+                a_oid = _rv_oid_str(token_der, ak[0][2], ak[0][3])
+                vset = _rv_children(token_der, ak[1][2], ak[1][3])[0]
+                attrs[a_oid] = (vset[2], vset[3])
+    except _RvMalformed:
+        raise
+    except (IndexError, StopIteration, ValueError) as exc:
+        raise _RvMalformed("malformed TimeStampToken: " + repr(exc)) from exc
+    if signed_attrs_der is None:
+        raise _RvMalformed("TimeStampToken has no signed attributes")
+    return {
+        "tstinfo": tstinfo, "certs": certs, "digest_oid": digest_oid,
+        "signed_attrs_der": signed_attrs_der, "sig_alg_oid": sig_alg_oid,
+        "signature": signature, "attrs": attrs, "buf": token_der,
+    }
+
+
+def _rv_parse_tstinfo(tstinfo):
+    import datetime as _dt
+    try:
+        _, _, c, e = _rv_tlv(tstinfo, 0)
+        kids = _rv_children(tstinfo, c, e)
+        mi = next(k for k in kids if k[0] == 0x30)
+        mi_kids = _rv_children(tstinfo, mi[2], mi[3])
+        alg_kids = _rv_children(tstinfo, mi_kids[0][2], mi_kids[0][3])
+        imprint_alg_oid = _rv_oid_str(tstinfo, alg_kids[0][2], alg_kids[0][3])
+        hashed = tstinfo[mi_kids[1][2]:mi_kids[1][3]]
+        gt = next(k for k in kids if k[0] == 0x18)
+        gen = tstinfo[gt[2]:gt[3]].decode("ascii")
+    except (IndexError, StopIteration, ValueError, UnicodeDecodeError) as exc:
+        raise _RvMalformed("malformed TSTInfo: " + repr(exc)) from exc
+    dt = _dt.datetime.strptime(gen.rstrip("Z"), "%Y%m%d%H%M%S").replace(
+        tzinfo=_dt.timezone.utc
+    )
+    return hashed, imprint_alg_oid, dt
+
+
+def _rv_verify_rfc3161(token_der, timestamped_data):
+    # Faithful port of tsa_verify.verify_rfc3161_timestamp, returning
+    # (ok, gen_time, errors). Pinned-root chain, signer sig over the
+    # re-encoded SignedAttributes, content-type, message-digest, and the
+    # imprint binding to timestamped_data. cryptography + stdlib only.
+    import hashlib as _hl
+    from cryptography import x509
+    from cryptography.hazmat.primitives import hashes as _h
+    from cryptography.hazmat.primitives.asymmetric import ec as _ec
+    from cryptography.hazmat.primitives.asymmetric import padding as _pad
+    from cryptography.hazmat.primitives.asymmetric.ec import ECDSA as _ECDSA
+    from cryptography.x509.oid import ExtendedKeyUsageOID as _EKU
+
+    ecdsa_oids = {
+        "1.2.840.10045.4.3.2": _h.SHA256,
+        "1.2.840.10045.4.3.3": _h.SHA384,
+        "1.2.840.10045.4.3.4": _h.SHA512,
+    }
+    rsa_oids = {
+        "1.2.840.113549.1.1.11": _h.SHA256,
+        "1.2.840.113549.1.1.12": _h.SHA384,
+        "1.2.840.113549.1.1.13": _h.SHA512,
+    }
+    digest_oids = {
+        "2.16.840.1.101.3.4.2.1": "sha256",
+        "2.16.840.1.101.3.4.2.2": "sha384",
+        "2.16.840.1.101.3.4.2.3": "sha512",
+    }
+    parsed = _rv_parse_token(token_der)
+    errors = []
+
+    signer = None
+    for cert_der in parsed["certs"]:
+        cert = x509.load_der_x509_certificate(cert_der)
+        try:
+            eku = cert.extensions.get_extension_for_class(x509.ExtendedKeyUsage)
+        except x509.ExtensionNotFound:
+            continue
+        if _EKU.TIME_STAMPING in eku.value:
+            signer = cert
+            break
+
+    signer_chain_ok = False
+    if signer is None:
+        errors.append("no signer certificate with timeStamping EKU")
+    else:
+        for root_pem in _RV_KNOWN_TSA_ROOT_CERTS:
+            try:
+                root = x509.load_pem_x509_certificate(root_pem.encode("ascii"))
+                if root.subject != root.issuer:
+                    continue
+                signer.verify_directly_issued_by(root)
+                signer_chain_ok = True
+                break
+            except Exception:
+                continue
+        if not signer_chain_ok:
+            errors.append("signer does not chain to a pinned self-signed root")
+
+    signer_sig_ok = False
+    if signer is not None:
+        hash_cls = ecdsa_oids.get(parsed["sig_alg_oid"]) or rsa_oids.get(
+            parsed["sig_alg_oid"]
+        )
+        if hash_cls is None:
+            errors.append("unsupported signature algorithm "
+                          + parsed["sig_alg_oid"])
+        else:
+            try:
+                pub = signer.public_key()
+                if isinstance(pub, _ec.EllipticCurvePublicKey):
+                    pub.verify(parsed["signature"], parsed["signed_attrs_der"],
+                               _ECDSA(hash_cls()))
+                else:
+                    pub.verify(parsed["signature"], parsed["signed_attrs_der"],
+                               _pad.PKCS1v15(), hash_cls())
+                signer_sig_ok = True
+            except Exception as exc:
+                errors.append("signer signature verification failed: "
+                              + repr(exc))
+
+    content_type_ok = False
+    ct_span = parsed["attrs"].get(_RV_OID_ATTR_CONTENT_TYPE)
+    if ct_span is None:
+        errors.append("missing content-type signed attribute")
+    else:
+        content_type_ok = (
+            _rv_oid_str(parsed["buf"], ct_span[0], ct_span[1])
+            == _RV_OID_CT_TSTINFO
+        )
+        if not content_type_ok:
+            errors.append("content-type signed attribute is not id-ct-TSTInfo")
+
+    message_digest_ok = False
+    md_span = parsed["attrs"].get(_RV_OID_ATTR_MESSAGE_DIGEST)
+    digest_name = digest_oids.get(parsed["digest_oid"])
+    if md_span is None:
+        errors.append("missing message-digest signed attribute")
+    elif digest_name is None:
+        errors.append("unsupported digest algorithm " + parsed["digest_oid"])
+    else:
+        md = parsed["buf"][md_span[0]:md_span[1]]
+        message_digest_ok = (
+            _hl.new(digest_name, parsed["tstinfo"]).digest() == md
+        )
+        if not message_digest_ok:
+            errors.append("message-digest attribute does not match eContent")
+
+    hashed, imprint_alg_oid, gen_time = _rv_parse_tstinfo(parsed["tstinfo"])
+    imprint_binds_ok = False
+    imprint_name = digest_oids.get(imprint_alg_oid)
+    if imprint_name is None:
+        errors.append("unsupported imprint algorithm " + imprint_alg_oid)
+    else:
+        imprint_binds_ok = (
+            _hl.new(imprint_name, timestamped_data).digest() == hashed
+        )
+        if not imprint_binds_ok:
+            errors.append("messageImprint does not bind the supplied data")
+
+    ok = (signer_chain_ok and signer_sig_ok and content_type_ok
+          and message_digest_ok and imprint_binds_ok)
+    return ok, gen_time, errors
+
+
+def _rv_resolve_tsa_roots(pack, man):
+    """Return (roots, provenance). Auditor pins win; pack-carried roots are
+    accepted but downgrade the report (the operator asserts its own trust
+    root). No roots -> ([], "none")."""
+    import os as _os
+    path = _os.environ.get("NOUS_TSA_ROOTS")
+    if not path:
+        cand = _os.path.join(pack, "tsa_roots.pem")
+        path = cand if _os.path.isfile(cand) else None
+    if path and _os.path.isfile(path):
+        with open(path, "r", encoding="ascii") as f:
+            blob = f.read()
+        roots = [m.group(0) for m in re.finditer(
+            r"-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----\n?",
+            blob, re.S)]
+        if roots:
+            return roots, "auditor-pinned"
+    carried = (man.get("trust_anchors") or {}).get("tsa_roots")
+    if isinstance(carried, list) and carried:
+        return list(carried), "operator-supplied"
+    return [], "none"
+
 
 
 class VErr(Exception):
@@ -332,14 +635,66 @@ def verify_pack(pack):
         if a is None:
             report["flags"].append(f"unanchored checkpoint seq={c['seq']}")
             continue
-        if a["type"] != "rfc3161-sim":
-            raise VErr("ANCHOR_TYPE", seq=c["seq"])
-        tok_hash = sha256(root + a["gen_time"].encode())
-        if not verify_sig(anch_pub, TAG_ANCH, tok_hash, a["token"]):
-            raise VErr("ANCHOR_INVALID", seq=c["seq"])
-        T = parse_ts(a["gen_time"])
+        atype = a.get("type")
+        if atype == "rfc3161-sim":
+            # E5 test backend: a pinned local key signs SHA-256(root || gen_time).
+            # Production packs MUST NOT declare it (SPEC 10.1); flag it here.
+            tok_hash = sha256(root + a["gen_time"].encode())
+            if not verify_sig(anch_pub, TAG_ANCH, tok_hash, a["token"]):
+                raise VErr("ANCHOR_INVALID", seq=c["seq"])
+            T = parse_ts(a["gen_time"])
+            if not man.get("test_vector", False):
+                report["flags"].append(
+                    "checkpoint seq=%d uses the rfc3161-sim TEST backend but "
+                    "the pack is not marked test_vector; it evidences no "
+                    "trusted time to an external auditor (SPEC 10.1)"
+                    % c["seq"])
+            report["anchors"].append({"seq": c["seq"], "type": atype,
+                                      "gen_time": a["gen_time"]})
+        elif atype == "rfc3161":
+            # Production backend: an RFC 3161 token over the Merkle root. The
+            # time is the TSA's genTime, recovered from the token -- never a
+            # Producer-declared field.
+            roots, provenance = _rv_resolve_tsa_roots(pack, man)
+            report.setdefault("tsa_root_provenance", provenance)
+            if not roots:
+                raise VErr("ANCHOR_INVALID", seq=c["seq"],
+                           detail="no pinned TSA roots available "
+                                  "(NOUS_TSA_ROOTS, tsa_roots.pem, or "
+                                  "manifest.trust_anchors.tsa_roots)")
+            tok_b64 = a.get("token_b64")
+            if not isinstance(tok_b64, str) or not tok_b64:
+                raise VErr("ANCHOR_INVALID", seq=c["seq"],
+                           detail="rfc3161 anchor carries no token_b64")
+            try:
+                token_der = base64.b64decode(tok_b64, validate=True)
+            except Exception as e:
+                raise VErr("ANCHOR_INVALID", seq=c["seq"],
+                           detail="token_b64 decode: " + str(e))
+            saved = globals()["_RV_KNOWN_TSA_ROOT_CERTS"]
+            try:
+                globals()["_RV_KNOWN_TSA_ROOT_CERTS"] = roots
+                ok, T, errs = _rv_verify_rfc3161(token_der, root)
+            except _RvMalformed as e:
+                raise VErr("ANCHOR_INVALID", seq=c["seq"],
+                           detail="malformed token: " + str(e))
+            finally:
+                globals()["_RV_KNOWN_TSA_ROOT_CERTS"] = saved
+            if not ok:
+                raise VErr("ANCHOR_INVALID", seq=c["seq"],
+                           detail="; ".join(errs))
+            if provenance == "operator-supplied":
+                report["flags"].append(
+                    "checkpoint seq=%d: the RFC 3161 token verifies, but the "
+                    "TSA trust root is OPERATOR-SUPPLIED (carried in the pack). "
+                    "Supply auditor pins via NOUS_TSA_ROOTS or tsa_roots.pem to "
+                    "establish an independent trust root." % c["seq"])
+            report["anchors"].append({"seq": c["seq"], "type": atype,
+                                      "gen_time": T.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                                      "tsa_root_provenance": provenance})
+        else:
+            raise VErr("ANCHOR_TYPE", seq=c["seq"], detail=str(atype))
         anchored.append({"seq": c["seq"], "T": T, "kid": kid})
-        report["anchors"].append({"seq": c["seq"], "gen_time": a["gen_time"]})
 
     covered = -1
     prev_T = None
