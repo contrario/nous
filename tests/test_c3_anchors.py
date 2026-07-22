@@ -60,9 +60,10 @@ def test_default_sim_unchanged_and_flagged(tmp_path):
 
 @pytest.mark.offline
 def test_unsupported_backend_refused(tmp_path):
+    # __nous_trace_rekor_backend_test_v1__
     with pytest.raises(TraceBridgeError) as e:
         TraceBridge(str(tmp_path / "p"), "actor", [], str(tmp_path / "k"),
-                    anchoring="rekor")
+                    anchoring="opentimestamps")
     assert "unsupported anchoring backend" in str(e.value)
 
 

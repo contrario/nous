@@ -18,8 +18,14 @@ Honest boundary:
     Verifier resolves TSA roots auditor-pinned first (NOUS_TSA_ROOTS or
     tsa_roots.pem) and downgrades its report when they are operator-supplied.
     On TSA failure the checkpoint is emitted unanchored and the gap reported
-    (SPEC 10.2) rather than failing the run. The `rekor` backend is not
-    implemented.
+    (SPEC 10.2) rather than failing the run. Pass ``anchoring="rekor"`` for
+    the transparency-log backend: a hashedrekord 0.0.2 leaf over the checkpoint
+    Merkle root is submitted to a Rekor v2 log, and trusted time is an OPTIONAL
+    RFC 3161 token over the leaf signature (Rekor v2 carries no per-entry
+    integrated time and has no SET). Inclusion WITH a token and inclusion
+    WITHOUT one are structurally distinct states carrying different assurance;
+    they must not collapse into one verdict. The `both` backend is not
+    implemented. __nous_trace_rekor_backend_doc_v1__
   - The default Signer is IN-PROCESS. Pass ``signer_socket`` to delegate
     runtime signing (both per-event TAG_EVENT and checkpoint-root TAG_CKPT) to
     a standalone signer (signer_main.py) over UDS + SO_PEERCRED, so the runtime
@@ -312,16 +318,21 @@ class TraceBridge:
                  policy_pack=None,
                  anchoring="rfc3161-sim",
                  tsa_url=None,
-                 tsa_timeout_s=30):
+                 tsa_timeout_s=30,
+                 rekor_url=None,
+                 rekor_timeout_s=30):
+        # __nous_trace_rekor_backend_ctor_v1__
         if not isinstance(tolerance_s, int) or tolerance_s > 3600:
             raise TraceBridgeError("tolerance_s must be int <= 3600")
-        if anchoring not in ("rfc3161-sim", "rfc3161"):
+        if anchoring not in ("rfc3161-sim", "rfc3161", "rekor"):
             raise TraceBridgeError(
                 "unsupported anchoring backend: " + repr(anchoring)
-                + " (expected 'rfc3161-sim' or 'rfc3161')")
+                + " (expected 'rfc3161-sim', 'rfc3161' or 'rekor')")
         self._anchoring = anchoring
         self._tsa_url = tsa_url
         self._tsa_timeout_s = tsa_timeout_s
+        self._rekor_url = rekor_url
+        self._rekor_timeout_s = rekor_timeout_s
         self.anchor_failures = []
         self.pack = pack_dir
         self.actor = actor
@@ -627,14 +638,61 @@ class TraceBridge:
         The time is the TSA's genTime, recovered by the Verifier FROM the
         token -- the Producer never declares it, which is the whole point.
 
+        rekor (production): a hashedrekord 0.0.2 leaf over the Merkle root is
+        submitted to a Rekor v2 transparency log; the inclusion proof and the
+        signed checkpoint travel in the block. Rekor v2 carries no per-entry
+        integrated time and no SET, so trusted time comes from an OPTIONAL RFC
+        3161 token over the LEAF SIGNATURE. A block with the token evidences
+        inclusion AND time; a block without it evidences inclusion ONLY. The
+        two states are structurally distinct and must not collapse into one
+        verdict.
+
         SPEC 10.2: on TSA failure return None (unanchored checkpoint); the
         run continues and the gap is reported, rather than losing the run.
+        For rekor, a failed SUBMISSION returns None; a failed TSA leg returns
+        the untimed block. anchor_failures is PRODUCER-ASSERTED: it records
+        what this Producer observed, is never written into the pack, and is
+        not evidence of an outage to a Verifier -- a Verifier can only report
+        that no trusted time is present in the anchor.
+        __nous_trace_rekor_backend_docstring_v1__
         """
         if self._anchoring == "rfc3161-sim":
             gt = _now_ts()
             return {"type": "rfc3161-sim", "gen_time": gt,
                     "token": self.anch.sign(TAG_ANCH,
                                             _sha(root + gt.encode()))}
+        if self._anchoring == "rekor":
+            # __nous_trace_rekor_backend_anchor_v1__
+            import base64 as _b64r
+            try:
+                from rekor_anchor_v2 import (REKOR_V2_DEFAULT_BASE_URL,
+                                             anchor_manifest_to_rekor_v2)
+                v2 = anchor_manifest_to_rekor_v2(
+                    root,
+                    base_url=self._rekor_url or REKOR_V2_DEFAULT_BASE_URL,
+                    timeout_seconds=self._rekor_timeout_s)
+            except Exception as exc:
+                self.anchor_failures.append(
+                    {"from_seq": self._last_ckpt_seq, "stage": "rekor",
+                     "error": repr(exc)})
+                return None
+            block = {"type": "rekor"}
+            block.update(v2.to_manifest_block())
+            try:
+                from rekor_entry import parse_rekor_leaf
+                from tsa_client import anchor_timestamp, TSA_DEFAULT_URL
+                leaf = parse_rekor_leaf(
+                    json.loads(_b64r.b64decode(v2.body_b64, validate=True)))
+                tok = anchor_timestamp(
+                    timestamped_data=leaf.leaf_signature_der,
+                    base_url=self._tsa_url or TSA_DEFAULT_URL,
+                    timeout_seconds=self._tsa_timeout_s)
+                block["rfc3161_token_b64"] = _b64r.b64encode(tok).decode()
+            except Exception as exc:
+                self.anchor_failures.append(
+                    {"from_seq": self._last_ckpt_seq,
+                     "stage": "rekor-timestamp", "error": repr(exc)})
+            return block
         import base64 as _b64
         try:
             from tsa_client import anchor_timestamp, TSA_DEFAULT_URL
