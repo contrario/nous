@@ -368,7 +368,7 @@ Anchoring policy is declared in `run_start` and the Pack manifest: `rekor`, `rfc
 - **`both`**: RECOMMENDED for high-stakes deployments.
 - **`rfc3161-sim`** (E5): test backend for conformance vectors ONLY. A pinned anchor key signs `SHA-256(root ‖ gen_time)` under the tag `NOUS-TRACE/v0.2/anchor-sim`. Structurally equivalent to a TSA token with the ASN.1 layer removed. Production Packs MUST NOT declare `rfc3161-sim`; Verifiers MUST flag it whenever the Pack is not marked as a test vector.
 
-Verifiers MUST support both production proof types offline (pinned Rekor log key / pinned TSA certificate chains in the Pack).
+Verifiers SHOULD support both production proof types offline (pinned Rekor log key / pinned TSA certificate chains in the Pack). *As of v0.2.1 the reference Verifier implements `rfc3161` only; `rekor`, and therefore `both`, are not yet available.* A Verifier MUST reject an anchor type it cannot verify (fail closed) rather than skip it, and MUST report the TSA/log trust-root provenance it used: auditor-pinned roots are authoritative, and roots carried inside the Pack are operator-supplied and MUST downgrade the report.
 
 ### 10.2 Anchoring failure
 
