@@ -1,8 +1,10 @@
 # NOUS-TRACE Specification
 
-**Version:** 0.2.2-draft
-**Status:** Implementation-validated. Supersedes 0.2.1-draft.
+**Version:** 0.2.3-draft
+**Status:** Implementation-validated. Supersedes 0.2.2-draft.
 **Wire version:** `spec_version` in signed objects remains `"0.2.0"`. The document revision and the wire format version are deliberately distinct: no revision since 0.2.0 has changed a field, tag, hash input or encoding, so packs are intended to remain byte-compatible across 0.2.x document revisions. *Evidence: a committed golden pack (`tests/reference_evidence/trace_bundle`) must keep verifying unmodified under the current Verifier, which pins this from revision 0.2.1 onward. The 0.2.0 → 0.2.1 interval rests on review only — no 0.2.0-era pack was retained — and is therefore asserted, not demonstrated.*
+
+**Changes from 0.2.2:** §10.1 — the SHOULD introduced in 0.2.2 is restored to MUST. The reference Verifier and the Verifier embedded in emitted dossiers now both implement `rekor` offline (C2SP checkpoint signature, RFC 6962 inclusion proof, hashedrekord 0.0.2 leaf tie), so the requirement is met rather than aspirational. The `rekor` description is corrected: Rekor v2 returns no signed entry timestamp and no integrated time, so the earlier wording (entry UUID, signed entry timestamp) described the retired v1 API. A `rekor` anchor now has two normatively distinct outcomes, INCLUDED-TIMED and INCLUDED-UNTIMED, which a Verifier MUST report as distinct states; an untimed range is excluded from the §10.3 time bound. A Verifier MUST NOT attribute a cause to absent trusted time. Untimed `rekor` is declared non-conformant for a high-stakes deployment record. §10.3 — `T_anchor` for `rekor` is the genTime of the RFC 3161 token over the leaf signature. The composite `both` declaration remains unimplemented and a Pack declaring it is refused as an unverifiable anchor type. No claim in §3 and no part of the threat model changed.
 
 **Changes from 0.2.1:** §10.1 — "Verifiers MUST support both production proof types offline" is downgraded to SHOULD, because the reference Verifier implements `rfc3161` only; `rekor`, and therefore `both`, are unimplemented. A normative MUST the reference implementation does not satisfy is an overclaim in the strongest available language. The gap is converted into two requirements the implementation does meet: a Verifier MUST fail closed on an anchor type it cannot verify, and MUST report trust-root provenance, with Pack-carried roots treated as operator-supplied and downgrading the report. **This downgrade is temporary: the MUST is restored when `rekor` lands.** No claim in §3 and no part of the threat model changed.
 
@@ -367,12 +369,21 @@ A `checkpoint` Event MUST be emitted when any of: 64 Events since last checkpoin
 
 Anchoring policy is declared in `run_start` and the Pack manifest: `rekor`, `rfc3161`, or `both`.
 
-- **`rekor`**: public transparency log. Proof = log index, entry UUID, inclusion proof, signed entry timestamp. Property: public auditability. Cost: publicly observable activity metadata (rate, volume). 
+- **`rekor`**: public transparency log (Rekor v2, tile-backed). Proof = log index, the canonicalized leaf, an RFC 6962 inclusion proof, and the log-signed C2SP checkpoint that proof resolves against. Rekor v2 returns no signed entry timestamp and no integrated time, so the log evidences MEMBERSHIP only; trusted time, when present, is a separate RFC 3161 token over the leaf signature. Property: public auditability. Cost: publicly observable activity metadata (rate, volume).
 - **`rfc3161`**: timestamp token from one or more declared TSAs over the signed root. Property: private, cheap, standard. Cost: trust in the TSA(s); no public transparency.
 - **`both`**: RECOMMENDED for high-stakes deployments.
 - **`rfc3161-sim`** (E5): test backend for conformance vectors ONLY. A pinned anchor key signs `SHA-256(root ‖ gen_time)` under the tag `NOUS-TRACE/v0.2/anchor-sim`. Structurally equivalent to a TSA token with the ASN.1 layer removed. Production Packs MUST NOT declare `rfc3161-sim`; Verifiers MUST flag it whenever the Pack is not marked as a test vector.
 
-Verifiers SHOULD support both production proof types offline (pinned Rekor log key / pinned TSA certificate chains in the Pack). *As of v0.2.2 the reference Verifier implements `rfc3161` only; `rekor`, and therefore `both`, are not yet available.* A Verifier MUST reject an anchor type it cannot verify (fail closed) rather than skip it, and MUST report the TSA/log trust-root provenance it used: auditor-pinned roots are authoritative, and roots carried inside the Pack are operator-supplied and MUST downgrade the report.
+A `rekor` anchor therefore has two outcomes carrying different assurance, and a Verifier MUST report them as distinct states rather than as one state with a note:
+
+- **INCLUDED-TIMED**: inclusion verified AND an RFC 3161 token over the leaf signature verified. The checkpoint establishes a `T_anchor` and participates in §10.3.
+- **INCLUDED-UNTIMED**: inclusion verified, no trusted time present. The range establishes no `T_anchor`, MUST be excluded from the §10.3 time bound, and MUST be reported as a gap.
+
+An RFC 3161 token that is present but does not verify is NEITHER state: the anchor is invalid and the Verifier MUST fail closed. A Verifier MUST NOT attribute a cause to absent trusted time. It cannot distinguish a TSA outage from a Producer that omitted the TSA, and any Producer-side record of such a failure is unsigned, is not carried in the Pack, and can be omitted by a hostile Producer; the untimed path is therefore an inducible downgrade. The Verifier reports absence, never explanation.
+
+`rekor` without a trusted-time token is NOT conformant for a high-stakes deployment record. Such deployments MUST carry a trusted-time token, directly or via `both` once that backend is available.
+
+Verifiers MUST support both production proof types offline (pinned Rekor log key / pinned TSA certificate chains in the Pack). *As of v0.2.3 the reference Verifier and the Verifier embedded in emitted dossiers implement `rekor` and `rfc3161`; the composite `both` declaration is not yet available, and a Pack declaring it is refused as an unverifiable anchor type.* A Verifier MUST reject an anchor type it cannot verify (fail closed) rather than skip it, and MUST report the TSA/log trust-root provenance it used: auditor-pinned roots are authoritative, and roots carried inside the Pack are operator-supplied and MUST downgrade the report.
 
 ### 10.2 Anchoring failure
 
@@ -380,7 +391,7 @@ Network failure → checkpoint emitted with `anchor: null`, retro-anchored by a 
 
 ### 10.3 Time bounding (resolves B3)
 
-Each anchor proof carries an independent timestamp `T_anchor` (Rekor integrated time / TSA genTime). Let `tol` be the tolerance declared in `run_start` (default 600 s, MUST be ≤ 3600 s). The Verifier MUST check, for every Event in an anchored range:
+Each anchor proof that establishes time carries an independent timestamp `T_anchor` (TSA genTime; for `rekor`, the genTime of the RFC 3161 token over the leaf signature, since Rekor v2 provides no integrated time). An INCLUDED-UNTIMED `rekor` anchor establishes no `T_anchor`: its range is not time-bounded and is reported as a gap under §10.2 rather than checked here. Let `tol` be the tolerance declared in `run_start` (default 600 s, MUST be ≤ 3600 s). The Verifier MUST check, for every Event in an anchored range:
 
 ```
 T_prev_anchor − tol ≤ ts_wall ≤ T_anchor + tol
