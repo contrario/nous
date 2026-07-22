@@ -995,6 +995,22 @@ def verify_pack(pack):
     if rs["tolerance_s"] != tol:
         raise VErr("RUN_START_TOLERANCE", seq=0)
 
+    # __p5a_declared_v1__ SPEC 10.1 declares the anchoring policy in BOTH
+    # run_start and the pack manifest. run_start is signed by the runtime
+    # key, hash-chained, and covered by the first checkpoint Merkle root;
+    # manifest.json carries no signature and is not listed in
+    # manifest["hashes"], so it is ADVISORY ONLY and never authoritative.
+    # Two declarations of the same intent that disagree leave the intent
+    # undeterminable: the pack is malformed and the Verifier fails closed,
+    # exactly as tolerance_s does above. An absent field on either side is
+    # not a disagreement (packs predating the check keep verifying).
+    declared_anchoring = rs.get("anchoring")
+    if (declared_anchoring is not None
+            and man.get("anchoring") is not None
+            and man.get("anchoring") != declared_anchoring):
+        raise VErr("RUN_START_ANCHORING", seq=0)
+    anchoring_shortfall = False
+
     ckpts = [e for e in events if e["event_type"] == "checkpoint"]
     expected_from = 0
     anchored = []
@@ -1015,6 +1031,24 @@ def verify_pack(pack):
             report["flags"].append(f"unanchored checkpoint seq={c['seq']}")
             continue
         atype = a.get("type")
+        # __p5a_delivered_v1__ Declared-vs-delivered. The signed run_start
+        # value is authoritative. A checkpoint whose anchor type differs
+        # from the declared policy carries GENUINE, VERIFYING evidence that
+        # is nonetheless less than what this Producer committed to under its
+        # own key. That is neither an integrity failure (rc 20) nor a clean
+        # record (rc 0): it is an adverse-but-truthful shortfall. The
+        # Verifier reports the divergence and asserts no cause for it --
+        # it cannot distinguish a degraded backend from a Producer that
+        # never attempted the declared one.
+        if declared_anchoring is not None and atype != declared_anchoring:
+            anchoring_shortfall = True
+            report["flags"].append(
+                "checkpoint seq=%d carries a %s anchor but the signed "
+                "run_start declares the anchoring policy %s; the anchor "
+                "verifies, but this run delivered less than it committed "
+                "to. The Verifier reports the divergence and asserts no "
+                "cause for it." % (c["seq"], repr(atype),
+                                   repr(declared_anchoring)))
         if atype == "rfc3161-sim":
             # E5 test backend: a pinned local key signs SHA-256(root || gen_time).
             # Production packs MUST NOT declare it (SPEC 10.1); flag it here.
@@ -1207,14 +1241,25 @@ def verify_pack(pack):
 
     report["recomputed"] = {"total": n_proved + n_declared, "proved": n_proved, "declared": n_declared}
 
-    complete = (events[-1]["event_type"] == "checkpoint"
-                and len(events) >= 2 and events[-2]["event_type"] == "run_end"
-                and anchored and anchored[-1]["seq"] == events[-1]["seq"])
+    # __p5a_verdict_v1__ two independent reasons a record is not clean:
+    # a structural gap (no run_end + final anchored checkpoint) and a
+    # declared-vs-delivered shortfall. They are kept apart so the
+    # reported reason is never the wrong one.
+    structural = (events[-1]["event_type"] == "checkpoint"
+                  and len(events) >= 2
+                  and events[-2]["event_type"] == "run_end"
+                  and anchored
+                  and anchored[-1]["seq"] == events[-1]["seq"])
+    complete = structural and not anchoring_shortfall
     if complete:
         report["verdict"] = "VALID"
         return 0, report
     report["verdict"] = "INTEGRITY-OK/INCOMPLETE"
-    report["flags"].append("no run_end + final anchored checkpoint; adverse finding in audit context")
+    # __p5a_flagguard_v1__ this flag names a STRUCTURAL gap. A shortfall
+    # has already flagged itself per checkpoint above; appending this
+    # unconditionally would state a cause that did not occur.
+    if not structural:
+        report["flags"].append("no run_end + final anchored checkpoint; adverse finding in audit context")
     return 10, report
 
 

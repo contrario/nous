@@ -999,6 +999,22 @@ def _tb_verify_pack(pack):
     if rs["tolerance_s"] != tol:
         raise _TbVErr("RUN_START_TOLERANCE", seq=0)
 
+    # __p5a_declared_v1__ SPEC 10.1 declares the anchoring policy in BOTH
+    # run_start and the pack manifest. run_start is signed by the runtime
+    # key, hash-chained, and covered by the first checkpoint Merkle root;
+    # manifest.json carries no signature and is not listed in
+    # manifest["hashes"], so it is ADVISORY ONLY and never authoritative.
+    # Two declarations of the same intent that disagree leave the intent
+    # undeterminable: the pack is malformed and the Verifier fails closed,
+    # exactly as tolerance_s does above. An absent field on either side is
+    # not a disagreement (packs predating the check keep verifying).
+    declared_anchoring = rs.get("anchoring")
+    if (declared_anchoring is not None
+            and man.get("anchoring") is not None
+            and man.get("anchoring") != declared_anchoring):
+        raise _TbVErr("RUN_START_ANCHORING", seq=0)
+    anchoring_shortfall = False
+
     ckpts = [e for e in events if e["event_type"] == "checkpoint"]
     expected_from = 0
     anchored = []
@@ -1019,6 +1035,24 @@ def _tb_verify_pack(pack):
             report["flags"].append("unanchored checkpoint seq=%d" % c["seq"])
             continue
         atype = a.get("type")
+        # __p5a_delivered_v1__ Declared-vs-delivered. The signed run_start
+        # value is authoritative. A checkpoint whose anchor type differs
+        # from the declared policy carries GENUINE, VERIFYING evidence that
+        # is nonetheless less than what this Producer committed to under its
+        # own key. That is neither an integrity failure (rc 20) nor a clean
+        # record (rc 0): it is an adverse-but-truthful shortfall. The
+        # Verifier reports the divergence and asserts no cause for it --
+        # it cannot distinguish a degraded backend from a Producer that
+        # never attempted the declared one.
+        if declared_anchoring is not None and atype != declared_anchoring:
+            anchoring_shortfall = True
+            report["flags"].append(
+                "checkpoint seq=%d carries a %s anchor but the signed "
+                "run_start declares the anchoring policy %s; the anchor "
+                "verifies, but this run delivered less than it committed "
+                "to. The Verifier reports the divergence and asserts no "
+                "cause for it." % (c["seq"], repr(atype),
+                                   repr(declared_anchoring)))
         if atype == "rfc3161-sim":
             tok_hash = _tb_sha256(root + a["gen_time"].encode())
             if not _tb_verify_sig(anch_pub, _TB_TAG_ANCH, tok_hash, a["token"]):
@@ -1211,9 +1245,16 @@ def _tb_verify_pack(pack):
     report["recomputed"] = {"total": n_proved + n_declared,
                             "proved": n_proved, "declared": n_declared}
 
-    complete = (events[-1]["event_type"] == "checkpoint"
-                and len(events) >= 2 and events[-2]["event_type"] == "run_end"
-                and anchored and anchored[-1]["seq"] == events[-1]["seq"])
+    # __p5a_verdict_v1__ two independent reasons a record is not clean:
+    # a structural gap (no run_end + final anchored checkpoint) and a
+    # declared-vs-delivered shortfall. They are kept apart so the
+    # reported reason is never the wrong one.
+    structural = (events[-1]["event_type"] == "checkpoint"
+                  and len(events) >= 2
+                  and events[-2]["event_type"] == "run_end"
+                  and anchored
+                  and anchored[-1]["seq"] == events[-1]["seq"])
+    complete = structural and not anchoring_shortfall
     report["verdict"] = "VALID" if complete else "INTEGRITY-OK/INCOMPLETE"
     return (0 if complete else 10), report
 
@@ -1302,12 +1343,17 @@ def _check_trace_bundle(manifest, ROOT):
               "under the named anchor-sim assumption; it proves nothing and "
               "adjudicates nothing.")
     else:
+        # __p5a_message_v1__ rc 10 now has two possible causes; naming
+        # only one of them asserts a cause that may not have occurred.
         print("INFO NOUS-TRACE verdict: INTEGRITY-OK/INCOMPLETE. The event "
-              "chain is signature-valid and internally consistent, but does "
-              "not terminate in run_end + a final anchored checkpoint (the "
-              "run crashed or was truncated). This is a TRUTHFUL detected "
-              "state, not a process failure (monitor). An auditor should "
-              "treat the run as INCOMPLETE evidence.")
+              "chain is signature-valid and internally consistent, but the "
+              "record falls short of a clean run: either it does not "
+              "terminate in run_end + a final anchored checkpoint, or a "
+              "checkpoint delivered an anchor type other than the declared "
+              "anchoring policy. The flags below state which. This is a "
+              "TRUTHFUL detected state, not a process failure (monitor); "
+              "no cause is asserted. An auditor should treat the run as "
+              "INCOMPLETE evidence.")
         for fl in report.get("flags", []):
             print("     flag: " + fl)
 
