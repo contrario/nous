@@ -61,5 +61,8 @@ build/
 *.lark.bak.*
 runtime_*.json
 trace_*.json
+# reference evidence is committed on purpose; the
+# pattern above would otherwise swallow its meta file
+!tests/reference_evidence/trace_bundle_c2_meta.json
 noesis_metrics.json
 website/a50/iscc/iscc_degradation_result.json

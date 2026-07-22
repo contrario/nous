@@ -106,10 +106,11 @@ meta = {
     "captured_at": dt.datetime.now(dt.timezone.utc).isoformat(),
     "pinned_root_not_after": "2035-04-06T06:59:43+00:00",
     "note": ("Real Sigstore production RFC 3161 token over the exact bytes of "
-             "trace_bundle/manifest.json. The complete trace_bundle/ tree is "
-             "committed alongside so the offline C2 conformance suite copies a "
-             "C1-valid bundle. Regenerate with capture_c2_reference_evidence.py "
-             "after a pinned-root rotation."),
+             "trace_bundle/manifest.json. That bundle is also the golden pack "
+             "for wire-compatibility and MUST stay byte-identical. On a pinned-root "
+             "rotation run capture_c2_reference_evidence.py with NO arguments: it "
+             "mints a fresh token over the unchanged bundle. Do NOT rebuild "
+             "the bundle."),
 }
 (OUT / "trace_bundle_c2_meta.json").write_text(
     json.dumps(meta, indent=2, sort_keys=True) + "\n", encoding="utf-8")
