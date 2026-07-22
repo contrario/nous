@@ -324,10 +324,12 @@ class TraceBridge:
         # __nous_trace_rekor_backend_ctor_v1__
         if not isinstance(tolerance_s, int) or tolerance_s > 3600:
             raise TraceBridgeError("tolerance_s must be int <= 3600")
-        if anchoring not in ("rfc3161-sim", "rfc3161", "rekor"):
+        if anchoring not in ("rfc3161-sim", "rfc3161", "rekor", "both"):
             raise TraceBridgeError(
                 "unsupported anchoring backend: " + repr(anchoring)
-                + " (expected 'rfc3161-sim', 'rfc3161' or 'rekor')")
+                + " (expected 'rfc3161-sim', 'rfc3161', 'rekor'"
+                + " or 'both')")
+        # __nous_trace_both_backend_ctor_v1__
         self._anchoring = anchoring
         self._tsa_url = tsa_url
         self._tsa_timeout_s = tsa_timeout_s
@@ -693,6 +695,47 @@ class TraceBridge:
                     {"from_seq": self._last_ckpt_seq,
                      "stage": "rekor-timestamp", "error": repr(exc)})
             return block
+        if self._anchoring == "both":
+            # __nous_trace_both_anchor_v1__
+            import base64 as _b64b
+            rekor_block = None
+            try:
+                from rekor_anchor_v2 import (REKOR_V2_DEFAULT_BASE_URL,
+                                             anchor_manifest_to_rekor_v2)
+                v2b = anchor_manifest_to_rekor_v2(
+                    root,
+                    base_url=self._rekor_url or REKOR_V2_DEFAULT_BASE_URL,
+                    timeout_seconds=self._rekor_timeout_s)
+                rekor_block = {"type": "rekor"}
+                rekor_block.update(v2b.to_manifest_block())
+            except Exception as exc:
+                self.anchor_failures.append(
+                    {"from_seq": self._last_ckpt_seq,
+                     "stage": "both-rekor", "error": repr(exc)})
+                rekor_block = None
+            rfc_block = None
+            try:
+                from tsa_client import anchor_timestamp, TSA_DEFAULT_URL
+                tok_b = anchor_timestamp(
+                    timestamped_data=root,
+                    base_url=self._tsa_url or TSA_DEFAULT_URL,
+                    timeout_seconds=self._tsa_timeout_s)
+                rfc_block = {"type": "rfc3161",
+                             "token_b64": _b64b.b64encode(tok_b).decode()}
+            except Exception as exc:
+                self.anchor_failures.append(
+                    {"from_seq": self._last_ckpt_seq,
+                     "stage": "both-rfc3161", "error": repr(exc)})
+                rfc_block = None
+            if rekor_block is not None and rfc_block is not None:
+                return {"type": "both",
+                        "rekor": rekor_block,
+                        "rfc3161": rfc_block}
+            if rekor_block is not None:
+                return rekor_block
+            if rfc_block is not None:
+                return rfc_block
+            return None
         import base64 as _b64
         try:
             from tsa_client import anchor_timestamp, TSA_DEFAULT_URL
