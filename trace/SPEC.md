@@ -1,8 +1,12 @@
 # NOUS-TRACE Specification
 
-**Version:** 0.2.1-draft
-**Status:** Implementation-validated. Supersedes 0.2.0-draft.
-**Changes from 0.2.0:** folds the six errata surfaced by the reference implementation (13/13 conformance vectors passing): E1 checkpoint coverage rule, E2 normative NOUS-EXPR JSON encoding, E3 Payload Store entry format, E4 wrong-tag reporting, E5 anchor backend registry incl. test backend, E6 reason-code registry and fail-closed ordering. No architectural changes; 0.2.0 claims and threat model unchanged.
+**Version:** 0.2.2-draft
+**Status:** Implementation-validated. Supersedes 0.2.1-draft.
+**Wire version:** `spec_version` in signed objects remains `"0.2.0"`. The document revision and the wire format version are deliberately distinct: no revision since 0.2.0 has changed a field, tag, hash input or encoding, so packs remain byte-compatible across 0.2.x document revisions.
+
+**Changes from 0.2.1:** §10.1 — "Verifiers MUST support both production proof types offline" is downgraded to SHOULD, because the reference Verifier implements `rfc3161` only; `rekor`, and therefore `both`, are unimplemented. A normative MUST the reference implementation does not satisfy is an overclaim in the strongest available language. The gap is converted into two requirements the implementation does meet: a Verifier MUST fail closed on an anchor type it cannot verify, and MUST report trust-root provenance, with Pack-carried roots treated as operator-supplied and downgrading the report. **This downgrade is temporary: the MUST is restored when `rekor` lands.** No claim in §3 and no part of the threat model changed.
+
+**Changes from 0.2.0 (in 0.2.1):** folds the six errata surfaced by the reference implementation (13/13 conformance vectors passing): E1 checkpoint coverage rule, E2 normative NOUS-EXPR JSON encoding, E3 Payload Store entry format, E4 wrong-tag reporting, E5 anchor backend registry incl. test backend, E6 reason-code registry and fail-closed ordering. No architectural changes; 0.2.0 claims and threat model unchanged.
 
 The key words MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are per RFC 2119.
 
@@ -368,7 +372,7 @@ Anchoring policy is declared in `run_start` and the Pack manifest: `rekor`, `rfc
 - **`both`**: RECOMMENDED for high-stakes deployments.
 - **`rfc3161-sim`** (E5): test backend for conformance vectors ONLY. A pinned anchor key signs `SHA-256(root ‖ gen_time)` under the tag `NOUS-TRACE/v0.2/anchor-sim`. Structurally equivalent to a TSA token with the ASN.1 layer removed. Production Packs MUST NOT declare `rfc3161-sim`; Verifiers MUST flag it whenever the Pack is not marked as a test vector.
 
-Verifiers SHOULD support both production proof types offline (pinned Rekor log key / pinned TSA certificate chains in the Pack). *As of v0.2.1 the reference Verifier implements `rfc3161` only; `rekor`, and therefore `both`, are not yet available.* A Verifier MUST reject an anchor type it cannot verify (fail closed) rather than skip it, and MUST report the TSA/log trust-root provenance it used: auditor-pinned roots are authoritative, and roots carried inside the Pack are operator-supplied and MUST downgrade the report.
+Verifiers SHOULD support both production proof types offline (pinned Rekor log key / pinned TSA certificate chains in the Pack). *As of v0.2.2 the reference Verifier implements `rfc3161` only; `rekor`, and therefore `both`, are not yet available.* A Verifier MUST reject an anchor type it cannot verify (fail closed) rather than skip it, and MUST report the TSA/log trust-root provenance it used: auditor-pinned roots are authoritative, and roots carried inside the Pack are operator-supplied and MUST downgrade the report.
 
 ### 10.2 Anchoring failure
 
@@ -424,7 +428,7 @@ Separate codebase; minimal dependencies (SHA-256, Ed25519, JCS, JSON, and the NO
 
 ### 12.4 Reason-code registry and ordering (E6)
 
-Fail-closed ordering is normative: the reported reason is the FIRST failing check in §12.2 order. Registry (v0.2.1): `SPEC_VERSION, TOLERANCE_INVALID, MANIFEST_FILE_HASH, KEYS_MANIFEST_SIG, KEY_ID_MISMATCH, OBLIGATION_MANIFEST_SIG, OBLIGATION_ID_MISMATCH, PROOF_ARTIFACT_MISSING, PROOF_ARTIFACT_HASH, ASSURANCE_INVALID, FLOAT_IN_SIGNED, INT_RANGE, EMPTY_TRACE, TRACE_ID_MIXED, SEQ_ORDER, HASH_CHAIN_BREAK, KEY_UNKNOWN, SIG_INVALID, STRUCT_NO_RUN_START, RUN_START_KEYS_HASH, RUN_START_OBL_HASH, RUN_START_TOLERANCE, CKPT_RANGE, MERKLE_MISMATCH, CKPT_ROOT_SIG, ANCHOR_TYPE, ANCHOR_INVALID, TIME_BOUND_VIOLATION, KEY_EXPIRED, PAYLOAD_CLASS, PAYLOAD_HASH_MISMATCH, ASSIGNMENT_MISSING, ASSIGNMENT_REF_MISSING, ASSIGNMENT_PARSE, ASSIGNMENT_VARS_MISMATCH, OBLIGATION_UNKNOWN, OBLIGATION_REF_REQUIRED, OBLIGATION_REF_FORBIDDEN, VERDICT_MISMATCH, SALT_REUSE`. Wrong-tag signatures (E4) are indistinguishable from bad signatures by construction and are reported as `SIG_INVALID`.
+Fail-closed ordering is normative: the reported reason is the FIRST failing check in §12.2 order. Registry (v0.2.2, unchanged since v0.2.1): `SPEC_VERSION, TOLERANCE_INVALID, MANIFEST_FILE_HASH, KEYS_MANIFEST_SIG, KEY_ID_MISMATCH, OBLIGATION_MANIFEST_SIG, OBLIGATION_ID_MISMATCH, PROOF_ARTIFACT_MISSING, PROOF_ARTIFACT_HASH, ASSURANCE_INVALID, FLOAT_IN_SIGNED, INT_RANGE, EMPTY_TRACE, TRACE_ID_MIXED, SEQ_ORDER, HASH_CHAIN_BREAK, KEY_UNKNOWN, SIG_INVALID, STRUCT_NO_RUN_START, RUN_START_KEYS_HASH, RUN_START_OBL_HASH, RUN_START_TOLERANCE, CKPT_RANGE, MERKLE_MISMATCH, CKPT_ROOT_SIG, ANCHOR_TYPE, ANCHOR_INVALID, TIME_BOUND_VIOLATION, KEY_EXPIRED, PAYLOAD_CLASS, PAYLOAD_HASH_MISMATCH, ASSIGNMENT_MISSING, ASSIGNMENT_REF_MISSING, ASSIGNMENT_PARSE, ASSIGNMENT_VARS_MISMATCH, OBLIGATION_UNKNOWN, OBLIGATION_REF_REQUIRED, OBLIGATION_REF_FORBIDDEN, VERDICT_MISMATCH, SALT_REUSE`. Wrong-tag signatures (E4) are indistinguishable from bad signatures by construction and are reported as `SIG_INVALID`.
 
 ## 13. Failure, Recovery, Residual Risk
 
