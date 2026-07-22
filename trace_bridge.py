@@ -288,7 +288,8 @@ class TraceBridge:
                  dossier_ref=None, tolerance_s=600,
                  producer="nous-trace-bridge/0.1.0",
                  runtime_key_validity_s=86400,
-                 signer_socket=None):
+                 signer_socket=None,
+                 policy_pack=None):
         if not isinstance(tolerance_s, int) or tolerance_s > 3600:
             raise TraceBridgeError("tolerance_s must be int <= 3600")
         self.pack = pack_dir
@@ -299,7 +300,17 @@ class TraceBridge:
         os.makedirs(self.pack, exist_ok=True)
         os.makedirs(keys_dir, exist_ok=True)
 
-        self.dep = _Key.load_or_create(os.path.join(keys_dir, "deployment.pem"))
+        self._policy_pack = policy_pack
+        if policy_pack is None:
+            self.dep = _Key.load_or_create(
+                os.path.join(keys_dir, "deployment.pem"))
+        else:
+            self.dep = None
+            if signer_socket is None:
+                raise TraceBridgeError(
+                    "policy_pack requires signer_socket: the "
+                    "deployment-approved runtime identity is proven against "
+                    "the live signer, which must own a persistent key")
         self.anch = _Key.load_or_create(os.path.join(keys_dir, "anchor_sim.pem"))
         if signer_socket is None:
             self.rt = _Key.generate()
@@ -320,6 +331,27 @@ class TraceBridge:
         self._obligations_by_label = {}
         self._finalized = False
 
+        if policy_pack is not None:
+            self._load_signed_policy_pack(policy_pack)
+        else:
+            self._build_and_sign_manifests(obligations, runtime_key_validity_s)
+
+        if self._signer_client is None:
+            self.signer = InProcessSigner(self.rt)
+        else:
+            self.signer = self._signer_client
+        self._trace_f = open(os.path.join(self.pack, "trace.ndjson"), 'a')
+
+        self._emit("run_start", {
+            "obligation_manifest_hash": self._obl_hash.hex(),
+            "keys_manifest_hash": self._keys_hash.hex(),
+            "dossier_ref": dossier_ref,
+            "producer": producer,
+            "anchoring": "rfc3161-sim",
+            "tolerance_s": tolerance_s})
+
+    def _build_and_sign_manifests(self, obligations,
+                                  runtime_key_validity_s):
         obl_entries = []
         for o in obligations:
             pred = o["predicate"]
@@ -371,24 +403,79 @@ class TraceBridge:
                 hashes[fn] = _sha(f.read()).hex()
         with open(os.path.join(self.pack, "manifest.json"), 'w') as f:
             json.dump({"spec_version": SPEC, "anchoring": "rfc3161-sim",
-                       "tolerance_s": tolerance_s,
+                       "tolerance_s": self.tolerance_s,
                        "trust_anchors": {"deployment_pub": self.dep.pub.hex(),
                                          "anchor_pub": self.anch.pub.hex()},
                        "hashes": hashes}, f)
 
-        if self._signer_client is None:
-            self.signer = InProcessSigner(self.rt)
-        else:
-            self.signer = self._signer_client
-        self._trace_f = open(os.path.join(self.pack, "trace.ndjson"), 'a')
+    def _load_signed_policy_pack(self, policy_pack):
+        # Load pre-signed keys.json + obligations.json VERBATIM, prove the
+        # active signer matches the deployment-approved runtime identity, set
+        # the same fields the online build would. No run_start here; the shared
+        # __init__ tail emits it once.
+        import shutil as _shutil
+        src_keys = os.path.join(policy_pack, "keys.json")
+        src_obl = os.path.join(policy_pack, "obligations.json")
+        if not (os.path.isfile(src_keys) and os.path.isfile(src_obl)):
+            raise TraceBridgeError(
+                "policy_pack missing keys.json or obligations.json: "
+                + policy_pack)
+        with open(src_keys, "rb") as f:
+            keys_bytes = f.read()
+        with open(src_obl, "rb") as f:
+            obl_bytes = f.read()
+        keys_doc = json.loads(keys_bytes.decode("utf-8"))
+        obl_doc = json.loads(obl_bytes.decode("utf-8"))
+        self._keys_hash = jcs_hash({"keys": keys_doc["keys"]})
+        self._obl_hash = jcs_hash({"obligations": obl_doc["obligations"]})
 
-        self._emit("run_start", {
-            "obligation_manifest_hash": self._obl_hash.hex(),
-            "keys_manifest_hash": self._keys_hash.hex(),
-            "dossier_ref": dossier_ref,
-            "producer": producer,
-            "anchoring": "rfc3161-sim",
-            "tolerance_s": tolerance_s})
+        rt_entries = [k for k in keys_doc["keys"] if k.get("role") == "runtime"]
+        if len(rt_entries) != 1:
+            raise TraceBridgeError(
+                "policy_pack keys.json must carry exactly one runtime entry")
+        approved = rt_entries[0]
+        if (approved.get("key_id") != self.rt.kid
+                or approved.get("public_key") != self.rt.pub.hex()):
+            raise TraceBridgeError(
+                "runtime identity mismatch: the active signer (key_id "
+                + self.rt.kid + ") is not the deployment-approved runtime key "
+                "(key_id " + str(approved.get("key_id")) + ") in the signed "
+                "policy pack; refusing to produce evidence")
+        if approved.get("algorithm", "ed25519") != "ed25519":
+            raise TraceBridgeError(
+                "policy_pack runtime entry declares unsupported algorithm "
+                + repr(approved.get("algorithm")))
+
+        dep_entries = [k for k in keys_doc["keys"]
+                       if k.get("role") == "deployment"]
+        if len(dep_entries) != 1:
+            raise TraceBridgeError(
+                "policy_pack keys.json must carry exactly one deployment entry")
+        self._deployment_pub_hex = dep_entries[0]["public_key"]
+
+        for entry in obl_doc["obligations"]:
+            self._obligations_by_label[entry["label"]] = entry
+
+        with open(os.path.join(self.pack, "keys.json"), "wb") as f:
+            f.write(keys_bytes)
+        with open(os.path.join(self.pack, "obligations.json"), "wb") as f:
+            f.write(obl_bytes)
+        src_proofs = os.path.join(policy_pack, "proofs")
+        if os.path.isdir(src_proofs):
+            _shutil.copytree(src_proofs, os.path.join(self.pack, "proofs"),
+                             dirs_exist_ok=True)
+
+        hashes = {}
+        for fn in ("keys.json", "obligations.json"):
+            with open(os.path.join(self.pack, fn), "rb") as f:
+                hashes[fn] = _sha(f.read()).hex()
+        with open(os.path.join(self.pack, "manifest.json"), "w") as f:
+            json.dump({"spec_version": SPEC, "anchoring": "rfc3161-sim",
+                       "tolerance_s": self.tolerance_s,
+                       "trust_anchors": {
+                           "deployment_pub": self._deployment_pub_hex,
+                           "anchor_pub": self.anch.pub.hex()},
+                       "hashes": hashes}, f)
 
     def __enter__(self):
         return self
