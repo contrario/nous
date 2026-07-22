@@ -29,10 +29,12 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 _SIGNER = _REPO / "signer_main.py"
 
 
-def _spawn_signer(tmp, key_path, allow_uid=None):
+def _spawn_signer(tmp, key_path, allow_uid=None, state_path=None):
     sock = str(tmp / "signer.sock")
+    if state_path is None:
+        state_path = str(tmp / "signer.state")
     cmd = [sys.executable, str(_SIGNER), "--socket", sock,
-           "--key-path", str(key_path)]
+           "--key-path", str(key_path), "--state-path", str(state_path)]
     if allow_uid is not None:
         cmd += ["--allow-uid", str(allow_uid)]
     proc = subprocess.Popen(cmd, stderr=subprocess.PIPE, cwd=str(_REPO))

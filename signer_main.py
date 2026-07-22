@@ -32,7 +32,10 @@ import socket
 import struct
 import sys
 
-from trace_bridge import _Key, InProcessSigner, TraceBridgeError, TAG_CKPT
+import datetime as _dt
+from trace_bridge import (_Key, TraceBridgeError, TAG_CKPT, TAG_EVENT,
+                          jcs_hash)
+from signer_state import DurableCounterStore
 
 SIGNER_VERSION = "nous-uds-signer/0.1.0"
 CAPABILITIES = ["ed25519", "monotonic-seq", "prev-hash-chain", "checkpoint-root"]
@@ -68,9 +71,28 @@ def _peer_creds(conn):
     return struct.unpack("3i", raw)  # (pid, uid, gid)
 
 
-def _handle_conn(conn, key, signer, allow_uid):
+def _audit(audit_path, event, **fields):
+    if audit_path is None:
+        return
+    rec = {"ts": _dt.datetime.now(_dt.timezone.utc).isoformat(),
+           "event": event}
+    rec.update(fields)
+    line = json.dumps(rec, separators=(",", ":")) + "\n"
+    fd = os.open(audit_path,
+                 os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+    try:
+        os.write(fd, line.encode("utf-8"))
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _handle_conn(conn, key, store, allow_uid, audit_path):
     pid, uid, gid = _peer_creds(conn)
     permitted = (allow_uid is None or uid == allow_uid)
+    if not permitted:
+        _audit(audit_path, "peer_rejected", pid=pid, uid=uid, gid=gid)
+    hello_done = False
     while True:
         req = _recv(conn)
         if req is None:
@@ -83,10 +105,23 @@ def _handle_conn(conn, key, signer, allow_uid):
             conn.close()
             return
         if req.get("_hello"):
+            # single-session lifecycle: exactly one HELLO per connection.
+            if hello_done:
+                _audit(audit_path, "second_hello_refused", pid=pid, uid=uid)
+                _send(conn, {"err": "signer: HELLO already completed; one "
+                                    "session per connection"})
+                conn.close()
+                return
+            hello_done = True
             _send(conn, {"signer_version": SIGNER_VERSION, "key_id": key.kid,
                          "public_key": key.pub.hex(),
                          "capabilities": CAPABILITIES})
             continue
+        if not hello_done:
+            # SIGN before HELLO is not a valid session start.
+            _send(conn, {"err": "signer: HELLO required before signing"})
+            conn.close()
+            return
         if "_ckpt" in req:
             # stateless checkpoint-root signature over TAG_CKPT
             try:
@@ -97,22 +132,38 @@ def _handle_conn(conn, key, signer, allow_uid):
             _send(conn, {"ok_ckpt": key.sign(TAG_CKPT, root)})
             continue
         if "ev_core" in req:
-            # stateful event signature via the SHIPPED InProcessSigner: the
-            # monotonic-seq / prev-hash guards and their exact messages are its
-            # own, transported verbatim to the client.
+            # §7.4 durable gate: the store is the SOLE monotonic source of
+            # truth (survives restarts). check() raises the same TraceBridgeError
+            # messages as InProcessSigner for the monotonic/prev cases, plus a
+            # distinct message for a durable second-signature attempt.
+            ev = req["ev_core"]
             try:
-                eh, sig = signer.sign_event(req["ev_core"])
+                tid = ev["trace_id"]
+                seq = ev["seq"]
+                prev = ev["prev_hash"]
+                store.check(tid, seq, prev)
+                eh = jcs_hash(ev)
+                # WRITE-AHEAD: persist+fsync BEFORE returning the signature.
+                store.commit(tid, seq, eh.hex())
+                sig = key.sign(TAG_EVENT, eh)
                 _send(conn, {"ok": [eh.hex(), sig]})
             except TraceBridgeError as e:
+                _audit(audit_path, "sign_refused", pid=pid, uid=uid,
+                       reason=str(e),
+                       trace_id=ev.get("trace_id"), seq=ev.get("seq"))
                 _send(conn, {"err": str(e)})
+            except (KeyError, ValueError) as e:
+                _send(conn, {"err": "signer: malformed ev_core: " + str(e)})
             continue
         _send(conn, {"err": "signer: unknown request"})
 
 
-def serve(socket_path, key_path, allow_uid=None, ready_cb=None):
+def serve(socket_path, key_path, state_path, allow_uid=None,
+          audit_path=None, ready_cb=None):
     # Signer OWNS the key: load-or-create it HERE, never send it anywhere.
     key = _Key.load_or_create(key_path)
-    signer = InProcessSigner(key)
+    # §7.4 durable counter store (write-ahead), rebuilt from its log on start.
+    store = DurableCounterStore(state_path)
 
     if os.path.exists(socket_path):
         os.unlink(socket_path)
@@ -125,11 +176,16 @@ def serve(socket_path, key_path, allow_uid=None, ready_cb=None):
     try:
         while True:
             conn, _ = s.accept()
-            # one connection at a time: the InProcessSigner state is per-signer
-            # and a single Producer owns a run. Concurrency is a Phase B concern.
-            _handle_conn(conn, key, signer, allow_uid)
+            # One connection == one trace session (SPEC §7 session semantics).
+            # The durable store is shared and is the sole cross-session
+            # monotonic authority; session lifecycle (HELLO..CLOSE) is
+            # per-connection. Serial accept here; concurrency is an
+            # implementation detail the store already tolerates (single fd,
+            # fsync-serialized), not a design constraint.
+            _handle_conn(conn, key, store, allow_uid, audit_path)
     finally:
         s.close()
+        store.close()
         if os.path.exists(socket_path):
             os.unlink(socket_path)
 
@@ -142,13 +198,21 @@ def main(argv=None):
                          "absent, 0600)")
     ap.add_argument("--allow-uid", type=int, default=None,
                     help="if set, refuse peers whose SO_PEERCRED uid differs")
+    ap.add_argument("--state-path", required=True,
+                    help="append-only counter log (SPEC 7.4 durable state; "
+                         "MUST persist across restarts)")
+    ap.add_argument("--audit-path", default=None,
+                    help="append-only audit log for rejected attempts "
+                         "(SPEC 7.3)")
     args = ap.parse_args(argv)
 
     def _ready(key):
         print("signer ready: kid=%s socket=%s" % (key.kid, args.socket),
               file=sys.stderr, flush=True)
 
-    serve(args.socket, args.key_path, allow_uid=args.allow_uid, ready_cb=_ready)
+    serve(args.socket, args.key_path, args.state_path,
+          allow_uid=args.allow_uid, audit_path=args.audit_path,
+          ready_cb=_ready)
     return 0
 
 

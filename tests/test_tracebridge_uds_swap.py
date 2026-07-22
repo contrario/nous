@@ -34,9 +34,11 @@ def _verify(pack):
 
 def _spawn_signer(tmp, key_path):
     sock = str(tmp / "signer.sock")
+    state = str(tmp / "signer.state")
     proc = subprocess.Popen(
         [sys.executable, str(_SIGNER), "--socket", sock, "--key-path",
-         str(key_path)], stderr=subprocess.PIPE, cwd=str(_REPO))
+         str(key_path), "--state-path", state], stderr=subprocess.PIPE,
+        cwd=str(_REPO))
     for _ in range(500):
         if os.path.exists(sock):
             break
