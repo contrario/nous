@@ -502,4 +502,4 @@ Each tampered vector MUST yield INVALID with the expected reason code under §12
 
 ---
 
-*Reference implementation status: complete for this version — self-contained Verifier, vector generator acting as reference Producer/Signer, 13/13 conformance vectors. Next: production anchor backends (RFC 3161, Rekor), standalone Signer process, AetherLang Producer adapter.*
+*Reference implementation status: complete for this version — self-contained Verifier, vector generator acting as reference Producer/Signer, 13/13 conformance vectors. Production anchor backends (RFC 3161, Rekor, and the composite both) and the standalone Signer process are implemented. Next: the AetherLang Producer adapter.*

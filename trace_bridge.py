@@ -1,4 +1,4 @@
-"""NOUS-TRACE v0.2.1 Producer bridge.  # __nous_trace_bridge_v1__
+"""NOUS-TRACE Producer bridge.  # __nous_trace_bridge_v1__
 
 Runtime evidence layer for compiled NOUS runs. Emits the per-event signed
 chain defined in trace/SPEC.md and produces an evidence pack verifiable by
@@ -24,8 +24,15 @@ Honest boundary:
     RFC 3161 token over the leaf signature (Rekor v2 carries no per-entry
     integrated time and has no SET). Inclusion WITH a token and inclusion
     WITHOUT one are structurally distinct states carrying different assurance;
-    they must not collapse into one verdict. The `both` backend is not
-    implemented. __nous_trace_rekor_backend_doc_v1__
+    they must not collapse into one verdict. The `both` backend is the
+    composite: one anchor carrying a `rekor` leg for transparency-log
+    membership and an `rfc3161` leg over the same Merkle root as the SOLE
+    time source (the rekor leg carries no token of its own, since two
+    genTimes in one anchor leave the SPEC 10.3 binding time
+    undeterminable). When only one leg is obtained the surviving
+    single-backend block is emitted unchanged, never a partial composite;
+    when neither is, the checkpoint is unanchored and the gap reported.
+    __nous_trace_rekor_backend_doc_v1__
   - The default Signer is IN-PROCESS. Pass ``signer_socket`` to delegate
     runtime signing (both per-event TAG_EVENT and checkpoint-root TAG_CKPT) to
     a standalone signer (signer_main.py) over UDS + SO_PEERCRED, so the runtime
