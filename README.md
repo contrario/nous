@@ -122,7 +122,7 @@ nous replay verify <log>        # validate JSONL chain integrity
 nous replay diff a.jsonl b.jsonl
                                 # lockstep event-level diff
 
-nous templates list             # list bundled templates (9 shipped)
+nous templates list             # list bundled templates (12 shipped)
 nous templates show <name>      # print template source to stdout
 nous templates extract <name>   # copy template into a directory
 
@@ -239,7 +239,7 @@ Key article alignments:
 - **Article 13 (Transparency)** -- public verification endpoint and standalone `nous-lang.org/verify` page give downstream users a no-install path to independently audit any dossier.
 - **Article 14 (Human Oversight)** -- `intervene`, `inject_message`, `block` policy actions plus governance simulator.
 - **Article 15 (Accuracy / Robustness / Cybersecurity)** -- Z3 SMT proofs on every `cost_cap` declaration, currency-aware (USD + EUR), with Ed25519-signed manifests and optional Sigstore Rekor anchoring for tamper-evident durability.
-- **Article 17 (Quality Management)** -- 10-phase release pipeline, 2580-test pytest floor, byte-identical regression harness.
+- **Article 17 (Quality Management)** -- 10-phase release pipeline, 2716-test pytest floor, byte-identical regression harness.
 
 ## Annex IV dossiers from existing SKILL.md skills (v5.1.0+)
 
