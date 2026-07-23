@@ -141,6 +141,8 @@ py-modules = [
     "santander_adapter",  # __s215_santander_adapter_pyproject_v1__
     "guardrails_adapter",  # __s219_guardrails_adapter_pyproject_v1__
     "llm_guard_adapter",  # __s219_llm_guard_adapter_pyproject_v1__
+    "trace_bridge",  # __s256_trace_bridge_pyproject_v1__
+    "uds_signer_client",  # __s256_uds_signer_client_pyproject_v1__
 ]
 
 # __cc_dynamic_block_v1__

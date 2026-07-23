@@ -9,7 +9,7 @@ An agentic programming language with end-to-end formal cost-bound verification, 
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v5.76.0
+ |_| \_|\___/ \___/|____/   v5.77.0
 ```
 
 Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Website: nous-lang.org
@@ -295,6 +295,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 - [Closure Attestation](docs/CLOSURE_ATTESTATION.md) -- a per-(policy, interval) signed completeness commitment over the operator's own declared governed-action set (key-indexed CONIKS/akd sparse Merkle trie, non-membership sound against a malicious operator); a surfaced in-scope action provably absent from the signed root is inconsistent with the operator's own completeness assertion, the cryptographic form of adverse inference; the public witnessed surface commits only {policy_id, interval, root} while action_count stays auditor-only; EVIDENCES a commitment to completeness, never completeness itself, bites only when an omission surfaces through another channel (latent-evidence bound), monitor not guard, PROVES nothing; independent witnessing targets staging and is PENDING the Witness Network join, riding the same envelope-log origin as PCE  <!-- __s211_closure_attestation_readme_xref_v1__ -->
 - [Architecture Decision Records](docs/adr/README.md) -- the append-only ADR ledger: every shipped architecture decision with its rejected alternatives, tradeoffs, an append-only Evidence Ledger of when it held in production, and a "Still true?" footer; the fourth register beside the handoffs, REJECTED_IDEAS.md, and the frontier design docs  <!-- __s204_adr_ledger_readme_xref_v1__ -->
 - [Verifying a Release](docs/VERIFYING_A_RELEASE.md) -- the auditor's procedure: the exact commands a third party runs, from a fresh empty directory with only public URLs, to verify each published artifact class (release VSA, SLSA provenance, VSA conformance vector, verifier-digest registry), plus the post-publish cold audit; every command measured cold against the live site before publication  <!-- __s235_readme_verifying_release_xref_v1__ -->
+- [NOUS-TRACE](trace/SPEC.md) -- the runtime evidence specification: a signed, hash-chained per-event trace with Merkle checkpoints, obligation predicates re-evaluated offline by the Verifier from signed assignment records, and a composite `both` anchor carrying Rekor v2 transparency-log membership plus an RFC 3161 trusted-time leg over the same signed checkpoint root; 13 conformance vectors in `trace/reference/`. The anchor evidences membership and time; it proves nothing, and the run it describes is monitored, not gated.  <!-- __s256_readme_trace_spec_xref_v1__ -->
 
 ## Contributing
 
@@ -302,11 +303,11 @@ NOUS is developed under a non-standard model: single maintainer, chat-driven, id
 
 Security issues should be reported via GitHub Security Advisories, not public issues.
 
-## Stats (v5.76.0)
+## Stats (v5.77.0)
 
 | Metric | Value |
 |---|---|
-| Tests | 2581 passing, floor 2580 (PYTEST_FLOOR enforced) |
+| Tests | 2717 passing, floor 2716 (PYTEST_FLOOR enforced) |
 | Regression | byte-identical harness, 0 baseline drift |
 | Shipped templates | 12 (`nous templates list`) |
 | Grammar | Lark LALR, bilingual EN+GR |
@@ -330,6 +331,6 @@ The MIT License covers the source code. Trademark rights over "NOUS", "Noosphere
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.76.0](https://github.com/contrario/nous/releases/tag/v5.76.0).
+See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.77.0](https://github.com/contrario/nous/releases/tag/v5.77.0).
 <!-- __session89_readme_freshen_v1__ -->
 <!-- __s94_readme_v5_11_0_sync_v1__ -->

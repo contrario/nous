@@ -4,6 +4,39 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+
+## [5.77.0]  <!-- __s256_changelog_v5_77_0__ -->
+
+### Added
+
+- NOUS-TRACE runtime evidence, merged from the `nous-trace` arc
+  (S249-S253). A Producer bridge (`trace_bridge.py`) emits a signed,
+  hash-chained per-event trace with Merkle checkpoints. The composite
+  `both` anchoring backend carries a Rekor v2 transparency-log leg and an
+  RFC 3161 leg over the same signed checkpoint root; under `both` the
+  rekor leg MUST NOT carry its own token, because two genTimes in one
+  anchor leave the SPEC 10.3 binding time undeterminable. The reference
+  Verifier (`trace/reference/verifier.py`) and the copy embedded in every
+  emitted dossier re-evaluate each recorded policy verdict from its signed
+  assignment record, offline, with `cryptography` and the standard library
+  only. 13 conformance vectors pin the behaviour. A `both` anchor
+  EVIDENCES transparency-log membership and trusted time; it proves
+  nothing. NOUS remains a monitor: an adverse verdict is reported and
+  exits 0, and only a tamper finding fails closed. See `trace/SPEC.md`
+  revision 0.2.5-draft.  <!-- __s256_changelog_trace_arc_v1__ -->
+- `trace_bridge` and `uds_signer_client` registered in `pyproject.toml`
+  py-modules and in the `scripts/release.py` wheel-content gate.
+  `compiled_trace` ships in the wheel and imports `trace_bridge` on its
+  opt-in `evidence_pack` path, which imports `uds_signer_client` in turn
+  when a signer socket is supplied. Neither module was packaged, so an
+  installed wheel raised ModuleNotFoundError on a documented parameter.
+  Both sites move in one change: a module registered in only one of them
+  is the exact defect the wheel gate exists to catch.
+  <!-- __s256_changelog_rule9_v1__ -->
+
+
+## [5.75.0]  <!-- __s232_changelog_v5_75_0__ -->
+
 ### Added
 
 - Santander mech-gov DecisionResult evidence adapter (opt-in, DARK behind
@@ -15,18 +48,6 @@
   digest equals sha256(nonce) equals the upstream e3_nonce_hash. Hashes-not-raw,
   interop-not-production, evidences never proves, monitor not guard. See
   `docs/SANTANDER_ADAPTER.md`.  <!-- __s216_changelog_santander_adapter_v1__ -->
-
-### Changed
-
-- Migrated runtime LLM call sites, templates, and tests from the retiring
-  DeepSeek `deepseek-chat` alias to `deepseek-v4-flash` with thinking disabled,
-  preserving the prior non-thinking semantics. Added the `deepseek-v4-flash`
-  pricing entry. The `deepseek-chat` and `deepseek-reasoner` aliases retire
-  2026-07-24 15:59 UTC.  <!-- __s217_changelog_deepseek_v4flash_v1__ -->
-
-## [5.75.0]  <!-- __s232_changelog_v5_75_0__ -->
-
-### Added
 
 - Two durable release gates in `scripts/release.py`, closing the class this
   release is named for: a mechanism that is not wired into the release path
@@ -62,6 +83,17 @@
 - The verifier-digest registry, stale since 5.56.0, is re-minted for this
   release and anchored, restoring the cross-version trusting-trust branch that
   had been unreachable for every dossier emitted in eighteen releases.
+
+
+## [5.72.1]  <!-- __s256_changelog_v5_72_1__ -->
+
+### Changed
+
+- Migrated runtime LLM call sites, templates, and tests from the retiring
+  DeepSeek `deepseek-chat` alias to `deepseek-v4-flash` with thinking disabled,
+  preserving the prior non-thinking semantics. Added the `deepseek-v4-flash`
+  pricing entry. The `deepseek-chat` and `deepseek-reasoner` aliases retire
+  2026-07-24 15:59 UTC.  <!-- __s217_changelog_deepseek_v4flash_v1__ -->
 
 
 ## [5.67.0]  <!-- __s180_changelog_v5_67_0__ -->
