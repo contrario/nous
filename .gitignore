@@ -66,3 +66,16 @@ trace_*.json
 !tests/reference_evidence/trace_bundle_c2_meta.json
 noesis_metrics.json
 website/a50/iscc/iscc_degradation_result.json
+
+# __s258_pilot_generated_v1__
+# greek_tax_advisor pilot (2026-07-19). The .nous SOURCE is tracked.
+# These four are regenerable output of `nous compile` and `verify
+# --smt`, and the decision left open in that session's handoff is
+# closed here: source in, generated out.
+# ROOT-ANCHORED on purpose. website/.well-known/nous/vsa-vectors/v1/
+# cost.farkas.json and its .sha256 are TRACKED; an unanchored pattern
+# would silently block a future `git add` under website/.
+/aml_transaction_governance.py
+/aml_transaction_governance.manifest.json
+/greek_tax_advisor.manifest.json
+/cost.farkas.json

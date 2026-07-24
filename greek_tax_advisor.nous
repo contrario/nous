@@ -1,0 +1,63 @@
+# greek_tax_advisor.nous — Greek Tax Advisor (governance wrapper pilot)
+# Port of greek_tax_advisor.yaml. NOUS owns proof + governance + senses;
+# the working system prompt stays in the 9977 runtime (single source of truth).
+#
+# All numbers are data-backed from 90-day Langfuse traffic (39 generations):
+#   input  p95 = 406 tok  -> declared 500 (margin)
+#   output p95 =  92 tok  -> declared 150 (margin)
+#   observed max cost/call = $0.000121  (model gpt-4o-mini, 38/39 calls)
+#
+# cost_cap = 0.02 is a DISCOVERY value for the first `verify --smt` pass:
+#   deliberately loose (covers a 15-step worst case ~$0.0018 with margin) so
+#   the proof passes; read the proven per-cycle number, then tighten in pass 2.
+
+world GreekTaxAdvisor {
+    law CostCeiling = $0.02 per cycle
+    law ConservativeDisclaimer = true
+    cost_cap: 0.02 USD
+    max_ticks: 1
+    heartbeat = 1h
+}
+
+message TaxQuery {
+    question: string
+    context: string
+}
+
+message TaxAnswer {
+    answer: string
+    disclaimer: string
+    source: SoulRef
+}
+
+soul Advisor {
+    mind: gpt-4o-mini @ Tier0A
+    tokens: input = 500 output = 150
+    senses: [web_search, memory_recall, memory_store,
+             write_shared_knowledge, read_shared_knowledge]
+
+    memory {
+        queries_handled: int = 0
+    }
+
+    instinct {
+        let q = listen Intake::TaxQuery
+        guard q != null else sleep 5s
+        let prior = sense read_shared_knowledge()
+        speak TaxAnswer(
+            answer: "evaluated against Greek tax rules",
+            disclaimer: "Συμβουλευτείτε λογιστή για εξατομικευμένη καθοδήγηση.",
+            source: self
+        )
+        remember queries_handled = queries_handled + 1
+    }
+
+    heal {
+        on timeout => retry(2, exponential)
+        on api_error => retry(2, api_error)
+    }
+}
+
+perception {
+    on api_call("greek_tax_advisor") => wake Advisor
+}
