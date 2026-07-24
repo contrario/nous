@@ -62,6 +62,7 @@ from __future__ import annotations
 import json
 import os
 import secrets
+import time
 import uuid
 from datetime import datetime, timedelta, timezone
 
@@ -75,6 +76,7 @@ TAG_OBL = b"NOUS-TRACE/v0.2/obligation-manifest"
 TAG_KEYS = b"NOUS-TRACE/v0.2/keys-manifest"
 TAG_ANCH = b"NOUS-TRACE/v0.2/anchor-sim"
 MAX_INT = 2 ** 53 - 1
+_CKPT_MAX_ELAPSED_S = 300  # SPEC 9; not declared configurable
 
 
 class TraceBridgeError(RuntimeError):
@@ -327,7 +329,8 @@ class TraceBridge:
                  tsa_url=None,
                  tsa_timeout_s=30,
                  rekor_url=None,
-                 rekor_timeout_s=30):
+                 rekor_timeout_s=30,
+                 checkpoint_every_events=64):
         # __nous_trace_rekor_backend_ctor_v1__
         if not isinstance(tolerance_s, int) or tolerance_s > 3600:
             raise TraceBridgeError("tolerance_s must be int <= 3600")
@@ -336,6 +339,11 @@ class TraceBridge:
                 "unsupported anchoring backend: " + repr(anchoring)
                 + " (expected 'rfc3161-sim', 'rfc3161', 'rekor'"
                 + " or 'both')")
+        if (not isinstance(checkpoint_every_events, int)
+                or not 1 <= checkpoint_every_events <= 256):
+            raise TraceBridgeError(
+                "checkpoint_every_events must be an int in 1..256"
+                " (SPEC 9)")
         # __nous_trace_both_backend_ctor_v1__
         self._anchoring = anchoring
         self._tsa_url = tsa_url
@@ -379,6 +387,10 @@ class TraceBridge:
         self._ehashes = []
         self._prev = "0" * 64
         self._last_ckpt_seq = 0
+        # __s257_f4_cadence_state_v1__ SPEC 9 cadence
+        self._ckpt_every = checkpoint_every_events
+        self._ckpt_deadline = time.monotonic() + _CKPT_MAX_ELAPSED_S
+        self._in_checkpoint = False
         self._obligations_by_label = {}
         self._finalized = False
 
@@ -563,6 +575,7 @@ class TraceBridge:
         self._trace_f.write(json.dumps(core, separators=(',', ':')) + "\n")
         self._trace_f.flush()
         os.fsync(self._trace_f.fileno())
+        self._maybe_checkpoint(etype)  # __s257_f4_cadence_call_v1__
         return core
 
     def store_payload(self, cls, data: bytes, media_type="application/json"):
@@ -757,17 +770,37 @@ class TraceBridge:
         return {"type": "rfc3161",
                 "token_b64": _b64.b64encode(tok).decode()}
 
+    def _maybe_checkpoint(self, etype):
+        """SPEC 9 cadence. Emit a checkpoint when a threshold is met.
+
+        Never fires for the `checkpoint` Event itself (that is the
+        recursion the guard also blocks) nor for `run_end`, which
+        finalize() follows with an explicit checkpoint().
+        """
+        if self._in_checkpoint or etype in ("checkpoint", "run_end"):
+            return
+        uncovered = len(self._events) - self._last_ckpt_seq
+        if (uncovered >= self._ckpt_every
+                or time.monotonic() >= self._ckpt_deadline):
+            self.checkpoint()
+
     def checkpoint(self):
-        fr = self._last_ckpt_seq
-        to = len(self._events) - 1
-        leaves = self._ehashes[fr:to + 1]
-        root = self._merkle(leaves)
-        body = {"range": {"from_seq": fr, "to_seq": to},
-                "merkle_root": root.hex(),
-                "root_sig": self.rt.sign(TAG_CKPT, root),
-                "anchor": self._make_anchor(root)}
-        ev = self._emit("checkpoint", body)
-        self._last_ckpt_seq = ev["seq"]
+        self._in_checkpoint = True  # __s257_f4_cadence_guard_v1__
+        try:
+            fr = self._last_ckpt_seq
+            to = len(self._events) - 1
+            leaves = self._ehashes[fr:to + 1]
+            root = self._merkle(leaves)
+            body = {"range": {"from_seq": fr, "to_seq": to},
+                    "merkle_root": root.hex(),
+                    "root_sig": self.rt.sign(TAG_CKPT, root),
+                    "anchor": self._make_anchor(root)}
+            ev = self._emit("checkpoint", body)
+            self._last_ckpt_seq = ev["seq"]
+        finally:
+            self._in_checkpoint = False
+            self._ckpt_deadline = (time.monotonic()
+                                   + _CKPT_MAX_ELAPSED_S)
         return ev
 
     @staticmethod
