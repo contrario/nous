@@ -4,6 +4,7 @@
 **Spec:** 0.2.0-draft
 **Components:** `verifier.py` (445 lines, self-contained), `vectorgen.py` (411 lines, reference Producer/Signer for vectors), `run_tests.py` (harness)
 **Dependencies:** Python 3.12, `cryptography` (Ed25519). Nothing else.
+**Status:** dated point-in-time report, superseded by `trace/SPEC.md`. The spec revision and line counts above are as of the date above and are NOT updated here; SPEC.md is current. <!-- __s257_results_truth_pass_v1__ -->
 
 ## Conformance matrix — 13/13
 
@@ -27,9 +28,9 @@ Golden report demonstrates: independent predicate recomputation (1 proved + 1 de
 
 Notable properties exercised:
 
-- t04 proves the anchor separation: an attacker with the Runtime Key rebuilds a fully self-consistent chain (valid sigs, valid Merkle roots, valid root_sig) and still fails, because the anchor token cannot be regenerated.
-- t06 proves recomputation: the trace is cryptographically perfect end-to-end; only the Verifier's own evaluation of the predicate over the recorded assignment exposes the lie.
-- t08 proves domain separation: a signature made under the checkpoint-root tag over the correct event hash does not verify as an event signature.
+- t04 demonstrates the anchor separation: an attacker with the Runtime Key rebuilds a fully self-consistent chain (valid sigs, valid Merkle roots, valid root_sig) and still fails, because the anchor token cannot be regenerated.
+- t06 demonstrates recomputation: the trace is cryptographically perfect end-to-end; only the Verifier's own evaluation of the predicate over the recorded assignment exposes the lie.
+- t08 demonstrates domain separation: a signature made under the checkpoint-root tag over the correct event hash does not verify as an event signature.
 
 ## Spec errata discovered during implementation (fold into v0.2.1)
 
@@ -42,7 +43,7 @@ Notable properties exercised:
 
 ## Next steps (in order)
 
-1. Fold errata into spec v0.2.1.
-2. Real anchor backends: RFC 3161 client (asn1crypto) + Rekor inclusion-proof verification.
-3. Signer as a standalone process (UDS + SO_PEERCRED) — currently an in-process class enforcing the same monotonicity contract.
-4. Producer adapter inside AetherLang; first dogfood target: greek_tax_advisor WhatsApp flow.
+1. **[SHIPPED]** Fold errata into spec v0.2.1.
+2. **[SHIPPED]** Real anchor backends: RFC 3161 client (asn1crypto) + Rekor inclusion-proof verification.
+3. **[SHIPPED]** Signer as a standalone process (UDS + SO_PEERCRED) — currently an in-process class enforcing the same monotonicity contract.
+4. **[OPEN]** Producer adapter inside AetherLang; first dogfood target: greek_tax_advisor WhatsApp flow.
