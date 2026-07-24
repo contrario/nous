@@ -8,8 +8,13 @@ revision + changelog entry") had the same weakness it was written about: no
 mechanism held it true.
 
 This pins the normative surface. Every line of SPEC.md carrying an RFC 2119
-keyword is collected and hashed; the hash and the revision it belongs to are
-recorded in spec_normative_baseline.json. Then:
+keyword is collected and hashed -- except two informative classes, the
+changelog entries and the keyword-declaration line, which carry keywords
+without stating requirements and change on every revision. Including them
+made the hash move every revision, so the check fired every revision and
+updating the baseline became routine; that is how SPEC 9's unimplemented
+cadence stayed invisible while this test was green. The hash and the
+revision it belongs to are recorded in spec_normative_baseline.json. Then:
 
   hash unchanged                      -> pass
   hash changed, revision unchanged    -> FAIL: the rule was broken
@@ -32,7 +37,13 @@ _REPO = Path(__file__).resolve().parent.parent
 _SPEC = _REPO / "trace" / "SPEC.md"
 _BASELINE = Path(__file__).resolve().parent / "spec_normative_baseline.json"
 
-_RFC2119 = re.compile(r"\b(MUST NOT|SHOULD NOT|MUST|SHOULD|MAY)\b")
+_RFC2119 = re.compile(
+    r"\b(MUST NOT|SHOULD NOT|MUST|SHOULD|MAY|RECOMMENDED)\b")
+# __s257_f1_normative_exclusion_v1__: changelog entries carry the keywords they describe and
+# the declaration line lists them; both change every revision, so leaving
+# them in made the hash move every revision and the check fire every
+# revision. A check that always fires is not a check.
+_EXCLUDED = re.compile(r"^(\*\*Changes from |The key words )")
 
 
 def _revision(text: str) -> str:
@@ -42,7 +53,15 @@ def _revision(text: str) -> str:
 
 
 def _normative_lines(text: str) -> list[str]:
-    return [ln.strip() for ln in text.splitlines() if _RFC2119.search(ln)]
+    """Requirement-bearing lines: keyword present, informative classes out.
+
+    A line of rationale that merely MENTIONS a keyword (SPEC.md line 110)
+    is still collected. It is stable across revisions, so it does not
+    poison the signal; recorded as a known residual rather than solved
+    with structural markup this document does not carry.
+    """
+    return [ln.strip() for ln in text.splitlines()
+            if _RFC2119.search(ln) and not _EXCLUDED.match(ln)]
 
 
 def _normative_hash(lines: list[str]) -> str:

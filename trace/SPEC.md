@@ -1,8 +1,10 @@
 # NOUS-TRACE Specification
 
-**Version:** 0.2.5-draft
-**Status:** Implementation-validated. Supersedes 0.2.4-draft.
+**Version:** 0.2.6-draft
+**Status:** Implementation-validated. Supersedes 0.2.5-draft.
 **Wire version:** `spec_version` in signed objects remains `"0.2.0"`. The document revision and the wire format version are deliberately distinct: no revision since 0.2.0 has changed a field, tag, hash input or encoding, so packs are intended to remain byte-compatible across 0.2.x document revisions. Implementing the `both` backend in 0.2.5 does not change this: `both` has been a declared `anchoring` value since 0.2.0 (reserved until now), so no field, tag, hash input or encoding is added to the wire vocabulary; the composite anchor block is a new arrangement of existing anchor sub-blocks, exactly as the two-outcome `rekor` block was when that backend landed. A pre-0.2.5 Verifier meeting a `both` anchor fails closed on an anchor type it cannot verify — the conformant refusal every unverifiable type already requires, not a wire break — and a pack produced before 0.2.5 is unaffected and verifies unchanged. *Evidence: a committed golden pack (`tests/reference_evidence/trace_bundle`) must keep verifying unmodified under the current Verifier, which pins this from revision 0.2.1 onward. The 0.2.0 → 0.2.1 interval rests on review only — no 0.2.0-era pack was retained — and is therefore asserted, not demonstrated.*
+
+**Changes from 0.2.5:** §17 -- RECOMMENDED is added to the declared RFC 2119 keyword list. It was already used normatively (§10.1, `both` for a high-stakes deployment record) while the declaration named only five keywords, so by this document's own terms its force was undeclared. §16 -- a note records that the shipped vector set exercises Verifier conformance only: all thirteen vectors feed a Verifier and check verdict and reason code, and none exercises a Producer or Signer obligation, although §16 declares all three roles conform independently. The note states scope; it defines no new regime and adds no requirement. No normative requirement changed and no wire change: no field, tag, hash input or encoding moved and `spec_version` remains `"0.2.0"`. No claim in §3 and no part of the threat model changed.
 
 **Changes from 0.2.4:** §10.1 — the `both` composite backend is implemented and its reserved status is lifted. The reference Verifier and the Verifier embedded in emitted dossiers now verify a `both` anchor offline: the `rekor` leg establishes transparency-log membership and the `rfc3161` leg establishes trusted time bound directly to the signed Merkle root. `both` therefore regains an RFC 2119 RECOMMENDED for high-stakes deployment records — the recommendation now points at a backend every conforming Verifier can verify, so it is no longer an overclaim. Under `both` the `rekor` leg MUST NOT carry its own RFC 3161 token: the composite carries one trusted-time source, the `rfc3161` leg over the root, and a `rekor` leg bearing a second genTime leaves the §10.3 binding time undeterminable, so a Verifier MUST fail closed. A composite delivering both legs verifies as INCLUDED-TIMED and enters §10.3. A run that DECLARED `both` but delivered only one leg is a shortfall (§10.1.1): a surviving `rekor` leg is INCLUDED-UNTIMED and a surviving `rfc3161` leg is the new state TIMED-UNINCLUDED — trusted time present, transparency-log membership absent — each exit 10, each reported as absence with no cause attributed. The composite anchor block is signed inside the checkpoint body, so a leg cannot be removed or substituted without the runtime key; a Producer-asserted record of a failed leg is unsigned, is not carried in the Pack, and can be omitted by a hostile Producer. No wire change: `both` has been a declared `anchoring` value since 0.2.0 and no field, tag, hash input or encoding moved; `spec_version` remains `"0.2.0"`. No claim in §3 and no part of the threat model changed.
 
@@ -14,7 +16,7 @@
 
 **Changes from 0.2.0 (in 0.2.1):** folds the six errata surfaced by the reference implementation (13/13 conformance vectors passing): E1 checkpoint coverage rule, E2 normative NOUS-EXPR JSON encoding, E3 Payload Store entry format, E4 wrong-tag reporting, E5 anchor backend registry incl. test backend, E6 reason-code registry and fail-closed ordering. No architectural changes; 0.2.0 claims and threat model unchanged.
 
-The key words MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY are per RFC 2119.
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT, MAY, and RECOMMENDED are per RFC 2119.
 
 ---
 
@@ -499,6 +501,8 @@ Roles conform independently: Producer, Signer, Verifier. Fail-closed is mandator
 - plus one truncated-tail vector yielding INTEGRITY-OK/INCOMPLETE, exit 10.
 
 Each tampered vector MUST yield INVALID with the expected reason code under §12.4 ordering. The reference implementation passes 13/13.
+
+*Scope of the shipped vectors (informative):* every vector above is fed to a Verifier and checked for verdict and reason code, so the set exercises Verifier conformance only. No vector exercises a Producer or a Signer obligation directly, and no Producer or Signer conformance regime is defined here. A Producer obligation therefore has no vector that can fail; §9's cadence went unimplemented from 0.2.0 to 0.2.5 for exactly this reason.
 
 ---
 
