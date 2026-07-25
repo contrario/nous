@@ -239,7 +239,7 @@ Key article alignments:
 - **Article 13 (Transparency)** -- public verification endpoint and standalone `nous-lang.org/verify` page give downstream users a no-install path to independently audit any dossier.
 - **Article 14 (Human Oversight)** -- `intervene`, `inject_message`, `block` policy actions plus governance simulator.
 - **Article 15 (Accuracy / Robustness / Cybersecurity)** -- Z3 SMT proofs on every `cost_cap` declaration, currency-aware (USD + EUR), with Ed25519-signed manifests and optional Sigstore Rekor anchoring for tamper-evident durability.
-- **Article 17 (Quality Management)** -- 10-phase release pipeline, 2716-test pytest floor, byte-identical regression harness.
+- **Article 17 (Quality Management)** -- 10-phase release pipeline, 2722-test pytest floor, byte-identical regression harness.
 
 ## Annex IV dossiers from existing SKILL.md skills (v5.1.0+)
 
@@ -307,7 +307,7 @@ Security issues should be reported via GitHub Security Advisories, not public is
 
 | Metric | Value |
 |---|---|
-| Tests | 2717 passing, floor 2716 (PYTEST_FLOOR enforced) |
+| Tests | 2723 passing, floor 2722 (PYTEST_FLOOR enforced) |
 | Regression | byte-identical harness, 0 baseline drift |
 | Shipped templates | 12 (`nous templates list`) |
 | Grammar | Lark LALR, bilingual EN+GR |
