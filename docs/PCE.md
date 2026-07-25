@@ -343,12 +343,14 @@ The gap, stated honestly:
     from the Annex IV text.
   - Article 43 (the conformity-assessment provision itself) applies from 2 August
     2026 per Article 113. This is distinct from the dates on which the high-risk
-    SYSTEM obligations bind. As of this writing (June 2026), per the Digital
-    Omnibus (Council adoption 29 June 2026, pending Official-Journal-consolidated
-    text and therefore not yet confirmed in consolidation), those high-risk
-    obligation dates are deferred to Annex III: 2 December 2027 and Annex I:
-    2 August 2028. Verify against the consolidated OJ text before relying on the
-    deferred dates as settled.
+    SYSTEM obligations bind. The Digital Omnibus on AI was published on 24 July
+    2026 as Regulation (EU) 2026/1744 (OJ L, 2026/1744, 24.7.2026; CELEX
+    32026R1744) and enters into force on 27 July 2026, the third day following
+    publication. Its Article 1(40) replaces the third paragraph of Article 113:
+    the high-risk obligations of Chapter III Sections 1, 2 and 3 (Article 6(5)
+    excepted) then apply FROM 2 December 2027 for Annex III systems and FROM
+    2 August 2028 for Annex I systems. Those dates are fixed in the enacted
+    text; they are not conditional on a Commission availability decision.
   - NOUS fills a de facto tooling vacuum, not a statutory condition: the
     regulation does not reference a tool it waits on. The vacuum is that no team
     can produce the dated-and-signed predetermined-change evidence Annex IV 2(g)
