@@ -55,15 +55,17 @@ A legally effective DoC is therefore an N-language family of documents. Canonica
 translation are incompatible: the canonical bytes CANNOT BE the legal instrument. Any design
 that does not confront this ships an object that cannot be what it claims to be.
 
-**OMNIBUS CHECK, live 2026-07-13: NOT PUBLISHED IN THE OJ.** Council adopted 29 Jun 2026,
-Parliament 16 Jun 2026. No L-series entry. No Regulation (EU) 2026/NNNN. Must publish by
-30 Jul 2026 to enter into force by 2 Aug. No surveyed source reports any amendment to
-Article 47 or Annex V; the reported annex changes are Annex III / Annex I (dates) and Annex
-VIII Section B points 7 and 9 (deleted, registration streamlining).
+**OMNIBUS CHECK, CLOSED: PUBLISHED AS REGULATION (EU) 2026/1744.** OJ L, 2026/1744,
+24.7.2026, CELEX 32026R1744. Signed 8 July 2026, Strasbourg. Council adopted 29 Jun 2026,
+Parliament 16 Jun 2026. Article 4: enters into force on 27 July 2026, the third day following
+publication. PUBLISHED IS NOT IN FORCE, and it is not in force at the time of this edit.
 
-HONEST BOUNDARY ON THAT FINDING: this is SECONDARY-SOURCE RECON, NOT A BYTE READ. The final
-consolidated text is not in the OJ, so a primary read is impossible today. This is an OPEN
-ITEM that closes on OJ publication. It is not a settled fact and must not be written as one.
+THAT FINDING IS NOW PRIMARY, NOT SECONDARY. A byte-read of the published enacting text
+(Article 1 items (1)-(43) and Articles 2, 3, 4, read in full) carries NO amending instruction
+against Article 47 and NONE against Annex V. Both survive intact -- FG-S239-A: in an amending
+act, silence is survival, not removal. Recorded at commit 82a32bf. The earlier secondary-source
+detail about Annex VIII Section B points 7 and 9 was NOT covered by that read and is withdrawn
+rather than promoted to primary.
 
 ---
 
@@ -410,12 +412,15 @@ Any one true -> stop or downgrade:
 
   **K3.** CEN-CENELEC JTC21 publishes a harmonised standard covering DoC structure. -> As K2.
 
-  **K4.** The Omnibus final text, once in the OJ, removes the Art 47(1) machine-readability
-    requirement OR the Annex V point 8 named natural person. -> The premise collapses. STOP, and
-    retire this dossier to REJECTED_IDEAS.md with the recon intact.
-    THE READ PROCEDURE IS IN SECTION 11 (T2), AND THE OBVIOUS GREP IS UNSOUND: the Omnibus is an
-    AMENDING act, so absence of the phrase means UNCHANGED, not REMOVED. K4 fires on an AMENDING
-    INSTRUCTION against Article 47 or Annex V, NEVER on silence. See Section 11 before running it.
+  **K4. TESTED AGAINST THE PUBLISHED PRIMARY. DID NOT FIRE.** The criterion read: the Omnibus
+    final text, once in the OJ, removes the Art 47(1) machine-readability requirement OR the
+    Annex V point 8 named natural person. -> The premise collapses. STOP, and retire this
+    dossier to REJECTED_IDEAS.md with the recon intact.
+    OUTCOME: Regulation (EU) 2026/1744 (OJ L, 2026/1744, 24.7.2026) carries NO amending
+    instruction against Article 47 and NONE against Annex V. Article 1 items (1)-(43) and
+    Articles 2, 3, 4 were read in full. K4 DOES NOT FIRE on this act. A LATER amending act
+    reopens the criterion; this one is settled. Recorded at commit 82a32bf. The read procedure,
+    and the reason the obvious grep was unsound, are preserved in Section 11 (T2).
 
   **K5.** A professional FTO finds a blocking patent (Section 3). -> STOP.
 
@@ -435,7 +440,7 @@ Against the live board at bed268a:
 
 | Item | Status at 6343689 | Ranks above this? |
 |---|---|---|
-| OJ publication (docs/PCE.md flip) | OPEN. External, dated, must land by 30 Jul 2026 | YES, absolutely |
+| OJ publication (docs/PCE.md flip) | CLOSED by 82a32bf. Reg (EU) 2026/1744, OJ L, 24.7.2026 | -- |
 | release-VSA fixed-filename defect | CLOSED by c1a3980 (the bundle now ships the filename its offline verifier reads) | -- |
 | registry sidecar / published-sidecar gate | CLOSED by 207c927 + 4b237a6 | -- |
 | claim_lint.py lock test | OPEN. P1: the tool is a release gate and nothing guards it | YES |
@@ -494,9 +499,20 @@ and the honest one. It is BANKED, NOT BUILT.
   **T1.** A real user or deployment exists that MUST produce an Annex V DoC for a NOUS-governed
     system. Not "would benefit from." MUST PRODUCE.
 
-  **T2.** Art 47(1)'s machine-readability requirement survives the Omnibus in the PUBLISHED OJ
-    text, verified against the L-series entry, not a secondary source.
+  **T2. EXECUTED AGAINST THE PUBLISHED PRIMARY. SATISFIED.** The trigger read: Art 47(1)'s
+    machine-readability requirement survives the Omnibus in the PUBLISHED OJ text, verified
+    against the L-series entry, not a secondary source.
+    OUTCOME: Regulation (EU) 2026/1744, OJ L, 2026/1744, 24.7.2026, CELEX 32026R1744. Article 1
+    items (1)-(43) and Articles 2, 3, 4 read in full. NO amending instruction against Article 47,
+    NONE against Annex V. Both survive intact. T2 IS SATISFIED. Recorded at commit 82a32bf.
+    THAT CLOSES ONE TRIGGER OF THREE, WHICH IS A TEST, NOT A BUILD DECISION. T1 IS UNSATISFIED
+    -- there is still no forcing function (Section 6, R3) -- and the feature REMAINS BANKED.
+    Reading this section as a promotion to build is a misreading; ALL THREE are required.
 
+  > **THE PROCEDURE BELOW IS EXECUTED. IT IS PRESERVED FOR ITS REASONING, NOT FOR RE-RUNNING.**
+  > It records why the obvious grep would have produced a FALSE KILL, and that lesson generalises
+  > to the next amending act. Do not re-run it against 2026/1744.
+  >
   > **T2 AND K4 ARE THE SAME READ, AND IT IS FREE.** The OJ flip session is already scheduled and
   > already opens the published text. Add one pass over that same document.
   >
@@ -592,6 +608,9 @@ OJ text of 13 June 2024.
 **Patents** (non-professional, kill-gate only, NOT a clearance): US 11764974, US 11075766 --
 signed attestation about an object + timestamp + ledger.
 
-**Omnibus status, checked live 2026-07-13: NOT published in the OJ.** Council adopted 29 Jun 2026,
-Parliament 16 Jun 2026. No L-series entry. No reported amendment to Art 47 or Annex V (SECONDARY
-SOURCES ONLY; a primary read is impossible until the OJ entry exists). Must publish by 30 Jul 2026.
+**Omnibus status, CLOSED: published as Regulation (EU) 2026/1744, OJ L, 2026/1744,
+24.7.2026, CELEX 32026R1744.** Signed 8 July 2026, Strasbourg. Article 4: enters into force
+27 July 2026, the third day following publication. Council adopted 29 Jun 2026, Parliament
+16 Jun 2026. The 2026-07-13 secondary-source recon (no reported amendment to Art 47 or Annex V)
+was CONFIRMED by a primary byte-read of the enacting text at commit 82a32bf: no amending
+instruction against Article 47, none against Annex V.
