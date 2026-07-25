@@ -57,15 +57,30 @@ that does not confront this ships an object that cannot be what it claims to be.
 
 **OMNIBUS CHECK, CLOSED: PUBLISHED AS REGULATION (EU) 2026/1744.** OJ L, 2026/1744,
 24.7.2026, CELEX 32026R1744. Signed 8 July 2026, Strasbourg. Council adopted 29 Jun 2026,
-Parliament 16 Jun 2026. Article 4: enters into force on 27 July 2026, the third day following
-publication. PUBLISHED IS NOT IN FORCE, and it is not in force at the time of this edit.
+Parliament 16 Jun 2026. ENTRY INTO FORCE 27 JULY 2026. Article 4 states only "the third day
+following that of its publication"; the date itself is written VERBATIM FOUR TIMES in the
+enacting text -- recital (18); Article 1(37)(a) replacing Article 97(2); Article 1(40)(c), the
+new Article 113 third paragraph point (d); and Article 3(3)(a) amending Regulation (EU)
+2023/1230 Article 47(2). The date is READ, NOT COMPUTED. PUBLISHED IS NOT IN FORCE, and it is
+not in force at the time of this edit.
 
 THAT FINDING IS NOW PRIMARY, NOT SECONDARY. A byte-read of the published enacting text
 (Article 1 items (1)-(43) and Articles 2, 3, 4, read in full) carries NO amending instruction
 against Article 47 and NONE against Annex V. Both survive intact -- FG-S239-A: in an amending
-act, silence is survival, not removal. Recorded at commit 82a32bf. The earlier secondary-source
-detail about Annex VIII Section B points 7 and 9 was NOT covered by that read and is withdrawn
-rather than promoted to primary.
+act, silence is survival, not removal. Recorded at commit 82a32bf.
+
+CORRECTION TO COMMIT 27d7a21. That commit stated the secondary-source detail about Annex VIII
+section B points 7 and 9 was not covered by the read, and withdrew it. WRONG, in the
+UNDERSTATING direction. Article 1(42) reads: in Annex VIII, section B, points 7 and 9 are
+deleted. Recital (22) gives the reason (registration streamlining for Article 6(3) systems).
+Item (42) is inside the (1)-(43) range that was read. The primary CONFIRMS the secondary and
+the detail is restored. The error was treating silence in a commit MESSAGE as absence from the
+READ -- FG-S239-A applied to the wrong artifact.
+
+NOTED, and it does NOT disturb Article 47 or Annex V: Article 50 IS touched by this act.
+Article 1(20) replaces Article 50(7), and recital (41) states that codes of practice have
+limited legal effect and in particular do NOT grant a presumption of conformity. Article 50(2)
+itself is unamended. The annexes this act touches are I, VIII, and the new XIV.
 
 ---
 
@@ -609,8 +624,9 @@ OJ text of 13 June 2024.
 signed attestation about an object + timestamp + ledger.
 
 **Omnibus status, CLOSED: published as Regulation (EU) 2026/1744, OJ L, 2026/1744,
-24.7.2026, CELEX 32026R1744.** Signed 8 July 2026, Strasbourg. Article 4: enters into force
-27 July 2026, the third day following publication. Council adopted 29 Jun 2026, Parliament
-16 Jun 2026. The 2026-07-13 secondary-source recon (no reported amendment to Art 47 or Annex V)
-was CONFIRMED by a primary byte-read of the enacting text at commit 82a32bf: no amending
-instruction against Article 47, none against Annex V.
+24.7.2026, CELEX 32026R1744.** Signed 8 July 2026, Strasbourg. Entry into force 27 July 2026;
+Article 4 states the third day following publication, and the date is written verbatim four
+times in the enacting text (see Section 0). Council adopted 29 Jun 2026, Parliament 16 Jun
+2026. The 2026-07-13 secondary-source recon was CONFIRMED by a primary byte-read of the
+enacting text at commit 82a32bf, on BOTH counts: no amending instruction against Article 47 and
+none against Annex V; and Annex VIII section B points 7 and 9 ARE deleted, by Article 1(42).
