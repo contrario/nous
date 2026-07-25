@@ -5,6 +5,60 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [5.78.0]  <!-- __s259_changelog_v5_78_0__ -->
+
+### Changed
+
+- The Producer now implements the SPEC section 9 checkpoint cadence.
+  Previously a run emitted a single checkpoint at `run_end`; a checkpoint is
+  now emitted whenever the uncovered-event threshold is reached
+  (`checkpoint_every_events`, default 64, accepted range 1..256), whenever
+  the time deadline elapses, and at `run_end`. The shape of an emitted trace
+  therefore changes: a consumer that assumed one checkpoint per run will see
+  many. `checkpoint_every_events` is a new `TraceBridge` constructor
+  parameter, validated at construction. Wire `spec_version` is unchanged at
+  `0.2.0`; `trace/SPEC.md` is revision 0.2.6-draft.
+  <!-- __s259_changelog_cadence_v1__ -->
+- Under the `rfc3161` and `both` anchoring backends the checkpoint rate is
+  the TSA call rate, because the RFC 3161 request is a synchronous blocking
+  POST inline in the emit path. Measured before release from Server A
+  against `timestamp.sigstore.dev`: 100 sequential calls, 100/100 ok, 0 HTTP
+  429, 0 network failures, mean 182 ms, p95 205 ms, max 237 ms. That
+  EVIDENCES that no throttling was observed in 100 calls from one egress on
+  one date; it is not a claim that no rate limit exists, and Sigstore
+  publishes an availability SLO rather than a latency or rate-limit
+  guarantee. On TSA failure SPEC 10.2 still applies: the checkpoint is
+  emitted unanchored, the run continues, and the gap is reported.
+  <!-- __s259_changelog_tsa_v1__ -->
+
+### Fixed
+
+- The SPEC normative hash no longer covers informative lines, so editorial
+  changes to non-normative prose stop invalidating the baseline; RECOMMENDED
+  is declared alongside the other RFC 2119 keywords; and the conformance
+  vector set records its own scope, including the section 16 obligations no
+  vector currently exercises. `trace/RESULTS.md` was corrected where it used
+  a reserved word for a result that is evidenced rather than proven.
+  <!-- __s259_changelog_spec_v1__ -->
+
+### Notes
+
+- The verifier-digest registry was minted for 5.78.0 and anchored to
+  `log2025-1.rekor.sigstore.dev` at log index 39034230 (42 entries, signing
+  key continuous with every prior release). All seven added digests are
+  byte-identical to the 5.77.0 entries: the verifier templates did not
+  change in this release, so the mint extends the allowlist without
+  introducing new content.
+  <!-- __s259_changelog_registry_v1__ -->
+- 5.77.0 carries a release-VSA waiver with backfill pending. The in-flight
+  exemption that covered it lapsed when this version was bumped, revealing
+  that v5.77.0 shipped without a release-vsa directory. This is the same
+  waive-then-backfill step 5.72.0, 5.72.1, 5.73.0 and 5.73.1 completed;
+  removal of the waiver is enforced by a companion test once a directory
+  exists.
+  <!-- __s259_changelog_vsa_waiver_v1__ -->
+
+
 ## [5.77.0]  <!-- __s256_changelog_v5_77_0__ -->
 
 ### Added
