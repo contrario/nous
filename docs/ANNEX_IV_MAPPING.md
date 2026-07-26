@@ -40,10 +40,10 @@ document is the Annex-level peer to that file.
 
 The EU AI Act (Regulation (EU) 2024/1689) was adopted in June 2024 and
 entered into force on 1 August 2024. Application of its provisions is
-staged. The table below reflects the Digital Omnibus on AI provisional
-agreement reached by Council and Parliament on 7 May 2026, formally
-endorsed via Council presidency letter to Parliament on 13 May 2026.
-Formal adoption is expected before 2 August 2026.
+staged. The table below reflects the Digital Omnibus on AI AS ENACTED:
+Regulation (EU) 2026/1744, OJ L, 2026/1744, 24.7.2026, CELEX 32026R1744.
+Parliament adopted it on 16 June 2026 and Council on 29 June 2026; it was
+signed on 8 July 2026 in Strasbourg and published on 24 July 2026.
 
 | Provision | Original date | Revised date (post-Omnibus) |
 |---|---|---|
@@ -57,9 +57,11 @@ Formal adoption is expected before 2 August 2026.
 | New Article 5 (NCII/CSAM/nudifier) | n/a | 2 Dec 2026 |
 
 The revised Annex III date of 2 December 2027 is the operative planning
-baseline for most providers, conditional on formal adoption of the
-Omnibus before 2 August 2026. The substantive content of Annex IV
-itself has not changed; only the application date has moved.
+baseline for most providers. It is NO LONGER CONDITIONAL: the Omnibus is
+enacted, and its Article 1(40) replaces the third paragraph of Article 113,
+so the date sits in the enacted text rather than in a draft. The
+substantive content of Annex IV itself has not changed; only the
+application date has moved.
 
 References:
 - Council press release "Artificial Intelligence: Council and
