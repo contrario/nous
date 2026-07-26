@@ -118,3 +118,51 @@ One block per rejected idea:
   measurement claim, no "proves") is BUILD-ELIGIBLE-DEFERRED, not rejected -- it
   lives in its design doc + the S246 handoff banked-frontier section, banked
   behind the OJ flip and the 2 Dec 2026 Article 50(2) marking date.
+
+### R4 -- fork or wrap an existing EU AI Act compliance tool as a NOUS surface (S262)
+
+- Idea: adopt one of the many open-source EU AI Act tools (Annex IV documentation
+  generators, codebase compliance scanners, AI-governance platforms) as a NOUS
+  front-end or evidence producer, by forking it or wrapping it as a dependency,
+  instead of leaving that layer alone.
+- Searches run: two curated indexes read live 2026-07-25 --
+  github.com/morganrcu/awesome-eu-ai-act and github.com/GenAI-Gurus/awesome-eu-ai-act;
+  individual tools inspected from their own READMEs -- Venturalitica SDK, VerifyWise,
+  EuConform, systima-ai/aiact-docs, ai-act-conformity-pack, ark-forge/mcp-eu-ai-act;
+  adjacent-substrate repos inspected in the same pass -- sigstore/model-transparency
+  (PyPI model-signing; README + pyproject + issue #111), the c2pa-org inventory
+  (public-testfiles CC-BY-SA-4.0, softbinding-algorithm-list CC-BY-4.0 updated
+  2026-02-18, specifications, conformance-public), RFC 9943 (SCITT architecture,
+  published), draft-ietf-scitt-scrapi, and draft-fassbender-scitt-time-anchor-01
+  (external temporal anchoring, April 2026).
+- Rejection reason: commoditized / violates the honest boundary / poor strategic
+  leverage.
+  COMMODITIZED: the Annex IV document-generation layer has dozens of entrants and
+  two curated indexes maintained for it. It is a filled space, and NOUS is not in
+  it.
+  HONEST BOUNDARY: at least one of these tools markets a certification tier using
+  the reserved vocabulary this project restricts to the Z3/Farkas legs, and hands
+  back an opaque identifier resolvable only at the vendor's own verification
+  endpoint. That endpoint is a NEW TRUST ROOT -- the same registry-as-trust-root
+  failure mode confirmed on the OPSF spec-track. A fork imports BOTH the vocabulary
+  and the trust root into a codebase whose entire differentiator is declining them.
+  LEVERAGE: NOUS emits offline-checkable evidence about execution, not documents
+  assembled from questionnaires. The fork would add maintenance in the commodity
+  layer and none in the substrate.
+- Revisit trigger: NEVER for the fork or the wrap. No landscape change reopens it;
+  the objection is structural (vocabulary plus trust root), not competitive.
+  SCOPE NOTE -- this rejection covers ADOPTION ONLY. Three things it does NOT cover:
+  (a) READING these tools as prior art, which the Innovation Gate's Prior Art
+  section requires and which this recon performed;
+  (b) sigstore/model-transparency, which is NOT rejected and instead carries a
+  standing PRIOR-ART OBLIGATION. It is the closest architectural neighbour to the
+  NOUS signing substrate -- DSSE envelope wrapping an in-toto statement, wrapped in
+  a Sigstore bundle, anchored in Rekor -- over model files rather than over
+  published artifacts and execution evidence. Any future Gate touching signing,
+  anchoring, DSSE or in-toto must name it in Prior Art and answer Commodity vs Moat
+  against it by name;
+  (c) c2pa-org/public-testfiles, which is an OPEN and UN-GATED question, filed here
+  only so it is not mistaken for part of this rejection. Vendoring third-party
+  conforming test files would let the a50 degradation measurement run on inputs
+  whose provenance NOUS did not control. It needs its own Gate. First kill
+  criterion: the licence is CC-BY-SA-4.0 (share-alike), not CC-BY.
