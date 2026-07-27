@@ -33,7 +33,8 @@ Does NOT:
 - reach actions the operator never declared in scope of policy P. It binds the
   operator's own declaration; an action never claimed as governed was never
   claimed.
-- prevent anything. NOUS is a monitor, not a guard.
+- prevent anything. The evidence layer is a monitor, not a guard; runtime
+  policy enforcement is separate (ADR-0010).
 
 "proves" is reserved strictly for Z3 cost bounds and Farkas certificates. Closure
 attestation EVIDENCES the commitment and the inconsistency-if-surfaced. The

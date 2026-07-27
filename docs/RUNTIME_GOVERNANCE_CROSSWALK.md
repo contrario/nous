@@ -91,7 +91,7 @@ each already shipped:
    surface), not a reference architecture. Its evidence is third-party
    fetchable and re-derivable today.
 
-## Where NOUS deliberately does NOT operate (monitor, not guard)
+## Where the NOUS evidence layer deliberately does NOT operate
 
 This is the most important honest boundary in the crosswalk, and it is a real
 divergence, not a gap to close.
@@ -100,14 +100,20 @@ Willis's "structural refusal" PREVENTS execution: a warning informs; a
 structural refusal stops the action at the commit boundary. That is a guard
 role -- the governance layer sits in the execution path and blocks the commit.
 
-NOUS is a monitor, not a guard. NOUS does not interpose in the execution path
-to prevent an action. Its refusal semantics are about EVIDENCE, not execution:
-a NOUS validator, verifier, or certificate emitter refuses to produce a
-governed attestation when conditions are ambiguous or unmet (refuse-over-guess,
-fail-closed), and a conformance certificate can record a non-conformant
-verdict. NOUS makes inadmissibility observable, attributable, and offline-
-verifiable; it does not itself stop the commit. Enforcement -- if any -- belongs
-to the operator's surrounding system acting on NOUS evidence.
+NOUS is a monitor for its evidence layer, and the evidence layer does not
+interpose in the execution path. Its refusal semantics are about EVIDENCE, not
+execution: a NOUS validator, verifier, or certificate emitter refuses to
+produce a governed attestation when conditions are ambiguous or unmet
+(refuse-over-guess, fail-closed), and a conformance certificate can record a
+non-conformant verdict. The evidence layer makes inadmissibility observable,
+attributable, and offline-verifiable; it does not itself stop the commit.
+
+The runtime policy engine is a distinct runtime component, and it does
+interpose. With declared rules, in record mode, a `block` or `abort_cycle`
+action raises before the guarded side effect, preventing execution of the
+guarded operation; `log_only`, `intervene` and `inject_message` emit their
+audit event and pass. Outside that path, enforcement belongs to the operator's
+surrounding system acting on NOUS evidence. See ADR-0010.
 
 Stated plainly: NOUS implements the evidence, admissibility-evaluation,
 replayability, and machine-verifiability concepts of runtime governance. It

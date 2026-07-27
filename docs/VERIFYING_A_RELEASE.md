@@ -240,4 +240,6 @@ attestations yourself, with their own tooling:
 Nothing here attests that any run executed, that any governed action was
 appropriate, or that any model behaved as intended.
 
-NOUS is a monitor, not a guard.
+The evidence layer is a monitor, not a guard. Runtime policy enforcement is
+separate: the runtime policy engine gates in record mode when a policy declares
+a blocking action (ADR-0010).

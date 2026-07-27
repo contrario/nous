@@ -388,7 +388,8 @@ verifier MUST NOT read "N witnessed runs" as "these were the only runs."
 DOES NOT assert behavior. A valid counterparty receipt EVIDENCES that the
 counterparty signed off on a certified run; it does not prove the agent could
 not misbehave, exactly as coverage proves no gap in the blocking net, not good
-conduct. NOUS remains a monitor, not a guard.
+conduct. The evidence layer remains a monitor, not a guard; runtime policy
+enforcement is separate (ADR-0010).
 
 ================================================================
 12. Relationship to existing ledgers and vocabulary

@@ -77,11 +77,13 @@ out-of-band, and supplied to the trace producer. Two supported paths:
 ## Explicitly out of scope
 
 Honoring a refusal at runtime (a `denied` decision causing the action not to
-proceed) is enforcement -- a guard. NOUS does not perform or prove it; that is
-the deployed runtime's responsibility (for the trading domain, the hand-wired
-`TradeGuard`). The trace evidences that a decision was recorded against the
-action; it does not evidence the action's downstream effect. Coupling the
-decision to non-execution would require runtime enforcement and is not claimed.
+proceed) is enforcement -- a guard. The gated authorization path does not
+perform or prove it; that is the deployed runtime's responsibility (for the
+trading domain, the hand-wired `TradeGuard`). The trace evidences that a
+decision was recorded against the action; it does not evidence the action's
+downstream effect. Coupling the decision to non-execution would require
+runtime enforcement and is not claimed on this path. Runtime policy
+enforcement by declared blocking policies is a separate mechanism (ADR-0010).
 
 ## Cross-references
 

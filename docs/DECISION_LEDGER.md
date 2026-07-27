@@ -26,8 +26,9 @@ The ledger is **not a verifier.** This is the load-bearing boundary:
 - It does **not** prove the oversight was meaningful. No machine-checkable
   standard for "meaningful" human oversight exists (Green 2021); the ledger
   surfaces the distribution so a human auditor can apply their own test.
-- It does **not** prove a refusal was honored at runtime. Enforcement is a
-  guard, explicitly out of scope (NOUS policies are monitors, not guards).
+- It does **not** prove a refusal was honored at runtime. Enforcing a ledger
+  refusal is out of scope for this ledger; the runtime policy engine gates only
+  on declared blocking policies (ADR-0010).
 - It **never gates a verdict.** It reads and presents; it admits nothing and
   rejects nothing.
 

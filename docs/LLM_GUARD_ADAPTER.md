@@ -12,8 +12,9 @@ producer tag. There is no entropy leg -- a scan result carries no nonce.
 
 - NOUS evidences; it does not prove. The only "proves" legs in NOUS are Z3 cost
   bounds and Farkas certificates; neither is carried here.
-- NOUS is a monitor, not a guard. This adapter records a decision; it enforces
-  nothing and adjudicates nothing.
+- The evidence layer is a monitor, not a guard. This adapter records a
+  decision; it enforces nothing and adjudicates nothing. Runtime policy
+  enforcement is separate (ADR-0010).
 - LLM Guard output is UNSIGNED. The value NOUS adds is exactly the tamper-evident
   provenance the framework does not itself produce: an Ed25519 signature over a
   canonical projection, plus optional public logging.

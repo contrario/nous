@@ -225,7 +225,7 @@ each recorded an approval bound to the gated occurrence in a
 verifiable trace. It does NOT prove K distinct natural persons (one
 person may hold several keys), their competence or authority, that
 the verifications were substantively independent, or that a refusal
-was enforced at runtime (enforcement is a guard, out of scope).
+was enforced at runtime (enforcement is out of scope for gated actions).
 
 ---
 

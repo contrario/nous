@@ -28,8 +28,8 @@ surface, and the Rekor v2 anchor and verify path.
   that the exact nonce is publicly logged and log-ordered. It does not prove the
   decision correct, fair, unbiased, single-shot, or non-gamed. "Proves" is
   reserved for Z3 cost bounds and Farkas certificates.
-- Monitor, not guard. The adapter consumes the record after the fact. It
-  enforces nothing on the mech-gov and blocks no decision.
+- Monitor, not guard, on this path. The adapter consumes the record after the
+  fact. It enforces nothing on the mech-gov and blocks no decision.
 - Hashes, not raw. Free-text and metadata fields are carried as sha256 only. No
   special-category data enters the signed payload. Raw values live in the
   out-of-band auditor pack, sha-gated by the carried commitments.

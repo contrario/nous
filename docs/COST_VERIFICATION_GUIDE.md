@@ -586,7 +586,9 @@ declared per-call estimates the cost cap holds. With `--manifest` it also
 source -- that is the online `nous verify --smt` path. It does not prove
 your agent stayed within the declared estimates at runtime -- the signed
 execution trace evidences that. "Proves" stays reserved for Z3 and Farkas;
-NOUS is a monitor, not a guard.
+the evidence layer is a monitor, not a guard. Runtime policy enforcement is
+separate: the runtime policy engine gates in record mode when a policy declares
+a blocking action (ADR-0010).
 
 **Exit codes.** `0` proven, `1` refuted, `2` precondition/error (file
 missing, not a cost-cap certificate, or `--manifest` binding failure).

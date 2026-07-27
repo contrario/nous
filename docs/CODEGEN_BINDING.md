@@ -72,7 +72,8 @@ none, adds no check: the leg is UNBOUND, not failed (backward-compatible).
   compute the genuine codegen digest from the public source and stamp a
   hand-authored trace that never ran the compiled recorder. Closing that
   residual requires execution attestation (a TEE or runtime witness), which
-  is out of scope. NOUS is a monitor, not a guard.
+  is out of scope. The evidence layer is a monitor, not a guard; runtime policy
+  enforcement is separate (ADR-0010).
 - ONLINE only. Re-derivation needs the toolchain (`parse_nous` +
   `generate_python`), exactly like SMT-spec re-derivation, which the offline
   portable verifier excludes by design. The signed manifest and conformance

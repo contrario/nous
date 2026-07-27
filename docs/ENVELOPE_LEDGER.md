@@ -18,8 +18,8 @@ Companion design docs carry the derivations: `ENVELOPE_BINDING_DESIGN.md`
   content. A cosignature does not read, understand, or endorse any artifact.
 - "proves" is reserved for Z3/Farkas. A cosignature EVIDENCES that the holder of
   a pinned key attested a head. Nothing here is "proven".
-- NOUS is a MONITOR, not a guard. The ledger records; it enforces nothing at
-  runtime.
+- The evidence layer is a MONITOR, not a guard. The ledger records; it enforces
+  nothing at runtime. Runtime policy enforcement is separate (ADR-0010).
 - The witness-key-to-operator binding is auditor-pinned and out-of-band. NOUS
   runs no CA and certifies no identity.
 - Independence arrives ONLY when independent third-party witnesses cosign. An
