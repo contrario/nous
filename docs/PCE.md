@@ -345,7 +345,7 @@ The gap, stated honestly:
     2026 per Article 113. This is distinct from the dates on which the high-risk
     SYSTEM obligations bind. The Digital Omnibus on AI was published on 24 July
     2026 as Regulation (EU) 2026/1744 (OJ L, 2026/1744, 24.7.2026; CELEX
-    32026R1744) and enters into force on 27 July 2026, the third day following
+    32026R1744) and entered into force on 27 July 2026, the third day following
     publication. Its Article 1(40) replaces the third paragraph of Article 113:
     the high-risk obligations of Chapter III Sections 1, 2 and 3 (Article 6(5)
     excepted) then apply FROM 2 December 2027 for Annex III systems and FROM
