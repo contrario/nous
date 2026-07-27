@@ -97,9 +97,10 @@ pre.code{background:var(--bg2);border:1px solid var(--gold-b);border-radius:6px;
       <div class="path-card-n">2 · OFFLINE</div>
       <div class="path-card-t">Reproducible</div>
       <div class="path-card-d">
-        Download <a class="link" href="/verify_offline.py">verify_offline.py</a> and run it
-        in the dossier directory. Single dependency: <code>cryptography</code>.
-        Hybrid mode: works with both Rekor-anchored and unanchored dossiers.
+        Every dossier ships with its own <code>verify_offline.py</code>, selected
+        at emission time to match that dossier's evidence. Unpack the dossier and
+        run it there. Single dependency: <code>cryptography</code>.
+        <!-- __s264_leg_a_v1__ -->
       </div>
     </div>
     <div class="path-card">
@@ -134,21 +135,21 @@ pre.code{background:var(--bg2);border:1px solid var(--gold-b);border-radius:6px;
     <div class="card-h"><span style="font-size:18px;color:var(--gold)">⚙</span><span class="card-t">Run offline</span></div>
     <p style="color:var(--td);font-size:13px;margin-bottom:14px;line-height:1.6">
       For deterministic, third-party-auditable verification, the canonical procedure is to
-      download the verifier and run it in a directory containing the dossier's
+      run the verifier that shipped inside the dossier, alongside that dossier's
       <code style="font-family:var(--mono);color:var(--gold)">manifest.json</code> and
       <code style="font-family:var(--mono);color:var(--gold)">source.nous</code>:
     </p>
-<pre class="code">curl -sLO https://nous-lang.org/verify_offline.py
-cd path/to/dossier/
-python3 /path/to/verify_offline.py</pre>
+<pre class="code">cd path/to/dossier/
+python3 verify_offline.py</pre>
     <p style="color:var(--t3);font-size:11px;margin-top:12px;font-family:var(--mono);letter-spacing:0.04em">
       DEPENDENCIES: cryptography &gt;= 42 · Python &gt;= 3.11 · NO NOUS INSTALL REQUIRED
     </p>
     <p style="color:var(--td);font-size:12px;margin-top:14px;line-height:1.6">
-      The verifier runs in two modes. For Rekor-anchored dossiers (NOUS v5.3.0 and later),
-      run with no flags. For unanchored dossiers (legacy releases or <code style="font-family:var(--mono);color:var(--gold)">anchor=none</code>), add
-      <code style="font-family:var(--mono);color:var(--gold)">--allow-unanchored</code>:
-      <code style="font-family:var(--mono);color:var(--gold)">python3 verify_offline.py --allow-unanchored</code>.
+      The verifier is chosen when the dossier is emitted, to match the evidence that
+      dossier carries. There are no modes to select: a Rekor-anchored dossier ships a
+      verifier that checks the anchor and refuses if the block is absent; a dossier
+      without an anchor ships a verifier that does not expect one. The standalone
+      download that once offered both behind a flag was withdrawn (ADR-0009).
     </p>
   </div>
 </main>

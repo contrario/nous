@@ -35,6 +35,7 @@ might be built).
 | 0006 | Operator-asserted name-to-key, no CA | Accepted | YES (S204) |
 | 0007 | Canonical serialization = plain sorted-keys compact JSON, not JCS | Accepted | YES (S204) |
 | 0008 | Witness trust root = public Witness Network, Rekor complementary | Accepted | YES (S204) |
+| 0009 | Standalone verify_offline.py download withdrawn | Accepted | YES (S264) |
 
 ADR-0001 (the origin identifier) and ADR-0008 (the trust root that motivates it) are
 kept as separate records: the identifier and the choice of who witnesses the log are

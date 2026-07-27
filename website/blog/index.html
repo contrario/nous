@@ -1733,6 +1733,13 @@ law never_after(audit, access)        # once audited, no further access</code></
     <h2>See also</h2>
 
     <p><code>docs/VERIFY_DOSSIER.md</code> contains the full V2 API reference, the verdict-computation logic, the four-state <code>ok</code> field semantics, and the failure-mode table. <code>docs/REKOR_ANCHOR.md</code> covers the anchoring side: how a dossier acquires its <code>transparency_log</code> block and the Path-beta dual signing rationale. Live surfaces: <code>https://nous-lang.org/api/v1/verify-dossier</code>, <code>https://nous-lang.org/verify.html</code>, <code>https://nous-lang.org/ide.html</code>, <code>https://nous-lang.org/verify_offline.py</code>.</p>
+    <p><strong>Updated 27 July 2026.</strong> The standalone download described
+    above has been withdrawn, and the constant
+    <code>dossier.VERIFY_OFFLINE_PY_HYBRID</code> no longer exists. Offline
+    verification is dossier-embedded: each dossier carries the verifier that
+    matches its own evidence, chosen at emission time. See
+    <code>docs/adr/ADR-0009</code>. The post is left as written.
+    <!-- __s264_leg_a_v1__ --></p>
 
   </div>
 
@@ -1787,6 +1794,11 @@ law never_after(audit, access)        # once audited, no further access</code></
     <h2>See also</h2>
 
     <p><code>docs/VERIFY_DOSSIER.md</code> contains the full API reference for the endpoint, the three trust paths, and failure modes. <code>docs/REKOR_ANCHOR.md</code> covers the anchoring side: how a dossier acquires its <code>transparency_log</code> block and the Path-beta dual signing rationale (why ECDSA-P-256 leaf instead of Ed25519; Sigstore issue #851). Live surfaces: <code>https://nous-lang.org/api/v1/verify-dossier</code>, <code>https://nous-lang.org/verify.html</code>, <code>https://nous-lang.org/verify_offline.py</code>.</p>
+    <p><strong>Updated 27 July 2026.</strong> The standalone download described
+    above has been withdrawn. Offline verification is dossier-embedded: each
+    dossier carries the verifier that matches its own evidence. See
+    <code>docs/adr/ADR-0009</code>. The post is left as written.
+    <!-- __s264_leg_a_v1__ --></p>
 
   </div>
 

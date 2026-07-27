@@ -194,3 +194,84 @@ def test_the_live_config_matches_the_tracked_bytes() -> None:
         "before trusting either. live=" + hashlib.sha256(live).hexdigest()[:16]
         + "... tracked=" + hashlib.sha256(tracked).hexdigest()[:16] + "..."
     )
+
+
+_SYNTHETIC_GONE_AS_PREFIX = """
+server {
+    location /verify_offline.py {
+        default_type text/plain;
+        return 410 "gone";
+    }
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+"""
+
+_SYNTHETIC_GONE_BUT_200 = """
+server {
+    location = /verify_offline.py {
+        default_type text/plain;
+        return 200 "still here";
+    }
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+"""
+
+_GONE_BLOCK_RE = re.compile(
+    r"^[ \t]*location[ \t]+=[ \t]+/verify_offline\.py[ \t]*\{(.*?)^[ \t]*\}",
+    re.MULTILINE | re.DOTALL,
+)
+
+
+def _withdrawn_verifier_is_exact_410(text: str) -> bool:
+    """The predicate: an EXACT-match location on the withdrawn path that returns 410.
+
+    Exact match is the load-bearing half. A prefix `location /verify_offline.py`
+    would answer 410 today and be outranked tomorrow by any regex location added
+    above it, restoring the 200-with-homepage silently -- the same trap
+    test_no_regex_location_can_outrank_the_wellknown_prefix guards against. `=`
+    cannot be outranked by anything nginx evaluates.
+    """
+    if ("=", "/verify_offline.py") not in _locations(text):
+        return False
+    match = _GONE_BLOCK_RE.search(text)
+    if match is None:
+        return False
+    return "return 410" in match.group(1)
+
+
+def test_the_withdrawn_verifier_path_answers_410_by_exact_match() -> None:
+    """__s264_verify_offline_gone_v1__
+
+    The standalone verify_offline.py download was withdrawn in S264 (ADR-0009).
+    The file is gone from /var/www. Without this block the SPA fallback answers
+    200 with the homepage for the path, and a reader following either of the two
+    dated blog posts that still link to it downloads HTML named .py.
+    """
+    assert _withdrawn_verifier_is_exact_410(_tracked_text()), (
+        "the tracked nginx config has no exact-match `location = "
+        "/verify_offline.py` returning 410. Without it the SPA fallback answers "
+        "200 with the homepage on a withdrawn download path."
+    )
+
+
+def test_the_withdrawn_verifier_predicate_actually_fires() -> None:
+    """A guard that passes either way proves nothing.
+
+    Three synthetic configs the predicate MUST reject: the path served by a
+    prefix location (outrankable by a later regex), the path served by an exact
+    location that answers 200, and a config with no such block at all.
+    """
+    assert not _withdrawn_verifier_is_exact_410(_SYNTHETIC_GONE_AS_PREFIX), (
+        "the predicate accepted a PREFIX location; a prefix can be outranked by "
+        "a regex location and the 200 would come back silently"
+    )
+    assert not _withdrawn_verifier_is_exact_410(_SYNTHETIC_GONE_BUT_200), (
+        "the predicate accepted a block that returns 200"
+    )
+    assert not _withdrawn_verifier_is_exact_410(_SYNTHETIC_WITHOUT_WELLKNOWN), (
+        "the predicate accepted a config with no such location at all"
+    )
