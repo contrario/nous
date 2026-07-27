@@ -1,6 +1,6 @@
 # ADR-0005: Monitor, not guard
 
-Status: Accepted
+Status: Superseded-by-ADR-0010
 
 ## Context
 
@@ -37,8 +37,20 @@ fail-closed exception is integrity tamper, where continuing would be dishonest.
 
 - Held as an invariant; the rc-0-on-verdict / fail-closed-only-on-tamper contract has
   not been contradicted by a concrete failure case.
+- S265: superseded by ADR-0010. Measured at commit 0c05a107 and from the public
+  repository history: intervention.py raises before the guarded side effect at
+  three call sites in record mode, and was added on 2026-04-17 (f1d958d), 77
+  days before this ADR was written on 2026-07-03 (b8659fd) as one of eight seed
+  records. The decision stated here was accurate for the evidence layer and
+  inaccurate for the runtime policy engine on the day it was written. See
+  ADR-0010.
 
 ## Still true?
 
 YES -- reason: the monitor stance is what keeps NOUS out of the trusted execution path
 and consistent with the offline-evidence model. Last reviewed: S204.
+
+NO (S265) -- reason: accurate for the evidence layer, inaccurate for the runtime
+policy engine, and inaccurate at authorship rather than overtaken by drift.
+Superseded by ADR-0010. The S204 entry above stands as the record of what was
+believed then.
