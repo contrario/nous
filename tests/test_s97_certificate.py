@@ -53,6 +53,9 @@ from nous_trace import TraceEnvelope, TraceEvent, sign_trace
 TODAY = date(2026, 4, 28)
 _SOURCE_TEXT = "world Floor { cost_cap: 0.50 USD max_ticks: 5 }\n"
 
+from datetime import datetime as _s266_dt, timezone as _s266_tz  # __s266_hermetic_pricing_date__
+_S266_FRESH = _s266_dt.now(_s266_tz.utc).date().isoformat()  # __s266_hermetic_pricing_date__
+
 PRICING_TOML = """\
 _schema_version = "2.0"
 _currency = "USD"
@@ -70,7 +73,7 @@ input_per_1m = "0.50"
 output_per_1m = "2.00"
 reasoning_token_multiplier = "1.0"
 verified_date = "2026-04-28"
-"""
+""".replace("2026-04-28", _S266_FRESH)
 
 
 @pytest.fixture

@@ -39,6 +39,9 @@ z3_available = importlib.util.find_spec("z3") is not None
 needs_z3 = pytest.mark.skipif(not z3_available, reason="z3-solver not installed")
 
 
+from datetime import datetime as _s266_dt, timezone as _s266_tz  # __s266_hermetic_pricing_date__
+_S266_FRESH = _s266_dt.now(_s266_tz.utc).date().isoformat()  # __s266_hermetic_pricing_date__
+
 PRICING_TOML = dedent("""\
     _schema_version = "2.0"
     _currency = "USD"
@@ -58,7 +61,7 @@ PRICING_TOML = dedent("""\
     output_per_1m = "5.00"
     reasoning_token_multiplier = "1.0"
     verified_date = "2026-04-28"
-""")
+""").replace("2026-04-28", _S266_FRESH)
 
 
 @pytest.fixture
