@@ -6,8 +6,8 @@
 features and the high-risk AI system requirements of
 Regulation (EU) 2024/1689 (the "AI Act").
 
-**Enforcement deadline for high-risk Annex III systems:**
-2 August 2026.
+**Application date for high-risk Annex III systems:**
+2 December 2027 (Regulation (EU) 2026/1744, Article 1(40)).
 
 **Penalties:** up to EUR 35 000 000 or 7 percent of global
 annual turnover for prohibited practices; up to EUR 15 000 000
