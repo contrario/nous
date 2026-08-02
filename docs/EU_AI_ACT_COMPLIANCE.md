@@ -186,11 +186,12 @@ cryptographic chain offline.
 **Status:** COVERED
 
 **NOUS implementation:**
-- `intervene` action in policy DSL halts execution and
-  surfaces the decision to a human operator.
+- `intervene` action emits an audit event and surfaces the
+  decision to a human operator; execution continues.
 - `inject_message` action injects clarifying text into agent
   context (Layer 2.5, v4.8.1).
-- `block` action aborts the cycle entirely.
+- `block` action halts emission of the event; `abort_cycle`
+  terminates the current soul cycle.
 - `governance_simulator` lets operators preview policy effect
   before deployment.
 
