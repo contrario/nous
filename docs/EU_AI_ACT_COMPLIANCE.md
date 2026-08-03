@@ -59,7 +59,7 @@ What NOUS does, per row:
 > iterative process planned and run throughout the entire
 > lifecycle ..."*
 
-**Status:** COVERED
+**What NOUS does:** GATES. Policies raise in record mode.
 
 **NOUS implementation:**
 - Native `policy` DSL with risk weights (`risk_engine.py`)
@@ -83,7 +83,7 @@ What NOUS does, per row:
 > *"Training, validation and testing data sets shall be
 > subject to data governance and management practices ..."*
 
-**Status:** OUT OF SCOPE
+**What NOUS does:** OUT OF SCOPE. Model-provider obligation.
 
 **Rationale:** NOUS is the *runtime language* for agents, not
 a model training framework. Data governance for the underlying
@@ -104,7 +104,7 @@ data-handling constraints at the agent layer.
 > *"Technical documentation ... shall be drawn up before that
 > system is placed on the market or put into service ..."*
 
-**Status:** COVERED (machine-generated)
+**What NOUS does:** EVIDENCES. Annex IV dossier from the AST.
 
 **NOUS implementation:**
 - AST is itself technical documentation: every law, policy,
@@ -131,7 +131,7 @@ data-handling constraints at the agent layer.
 > automatic recording of events (logs) over the lifetime of
 > the system."*
 
-**Status:** COVERED
+**What NOUS does:** EVIDENCES. Hash-chained replay log.
 
 **NOUS implementation:**
 - Phase D Deterministic Replay (shipped Session 54)
@@ -160,7 +160,7 @@ cryptographic chain offline.
 > such a way as to ensure that their operation is sufficiently
 > transparent ..."*
 
-**Status:** COVERED
+**What NOUS does:** MAPS. Policies as source; dashboards.
 
 **NOUS implementation:**
 - Laws and policies are written in declarative source code,
@@ -183,7 +183,7 @@ cryptographic chain offline.
 > such a way ... that they can be effectively overseen by
 > natural persons ..."*
 
-**Status:** COVERED
+**What NOUS does:** MAPS. Operator hooks; no human gate.
 
 **NOUS implementation:**
 - `intervene` action emits an audit event and surfaces the
