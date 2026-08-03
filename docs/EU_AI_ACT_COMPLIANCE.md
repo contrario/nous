@@ -45,12 +45,12 @@ by construction* in its declared scope.
 
 ## Article-by-Article Matrix
 
-Status legend:
-- **COVERED**: feature exists and is tested in production.
-- **PARTIAL**: foundation exists, additional work required.
-- **PLANNED**: not yet built; on the killer-feature arc.
-- **OUT OF SCOPE**: provider/deployer obligation, not a
-  language concern.
+What NOUS does, per row:
+- **PROVES** Z3/Farkas result. **EVIDENCES** signed artifact.
+- **GATES** runtime policy engine raises before the effect.
+- **MAPS** language construct, no artifact of its own.
+- **NOTHING** no mechanism. **OUT OF SCOPE** not NOUS's to do.
+- **PLANNED** declared, not built.
 
 ### Article 9 -- Risk Management System
 
