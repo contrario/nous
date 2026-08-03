@@ -210,7 +210,8 @@ cryptographic chain offline.
 > perform consistently in those respects throughout their
 > lifecycle."*
 
-**Status:** COVERED (closed in Phase 5b, v5.0.0)
+**What NOUS does:** PROVES the declared cost cap (Z3/Farkas,
+v5.0.0). EVIDENCES everything else in this section.
 
 **Shipped:**
 - Validator (`validator.py`) catches structural and semantic
@@ -286,7 +287,7 @@ construction safety today.
 > *"Providers of high-risk AI systems shall keep the logs ...
 > for a period appropriate to the intended purpose ..."*
 
-**Status:** COVERED
+**What NOUS does:** EVIDENCES. Same chain as Article 12.
 
 **NOUS implementation:**
 - All replay event logs are JSONL append-only with SHA-256
@@ -306,7 +307,8 @@ construction safety today.
 > of the AI system are marked in a machine-readable format and
 > detectable as artificially generated or manipulated."*
 
-**Status:** OUT OF SCOPE for the language; PLANNED hook
+**What NOUS does:** PLANNED. `mark_synthetic` policy action;
+marking is a property of model output, not the language.
 
 **Rationale:** Synthetic-content marking is a property of the
 model output, not the orchestration language. NOUS provides a
