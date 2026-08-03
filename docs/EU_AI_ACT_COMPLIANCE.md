@@ -256,32 +256,6 @@ construction safety today.
 
 ---
 
-### Article 17 -- Quality Management System
-
-> *"Providers of high-risk AI systems shall put a quality
-> management system in place that ensures compliance ..."*
-
-**Status:** COVERED
-
-**NOUS implementation:**
-- `scripts/release.py` 10-phase pipeline (test, regression,
-  version consistency, grammar sync, pyflakes gate, wheel
-  content gate, clean-venv install, UX smoke, PyPI upload).
-- `regression_harness.py` for 57-template byte-identical
-  verification.
-- PYTEST_FLOOR enforced (currently 394).
-- Version-consistency tests across `cli.py`, `nous_api.py`,
-  `_version.py`, and `pyproject.toml`.
-
-**Evidence:**
-- `scripts/release.py`
-- `regression_harness.py verify` (must return RESULT: OK)
-- `tests/test_version_consistency.py` 7/7
-- v5.0.0 release ran the full 10-phase pipeline end-to-end
-  with no manual intervention after `--upload`.
-
----
-
 ### Article 19 -- Automatically Generated Logs
 
 > *"Providers of high-risk AI systems shall keep the logs ...
@@ -329,11 +303,8 @@ policies.
 | 13      | Transparency to Deployers            | COVERED               |
 | 14      | Human Oversight                      | COVERED               |
 | 15      | Accuracy / Robustness / Cybersec     | COVERED (v5.0.0)      |
-| 17      | Quality Management System            | COVERED               |
 | 19      | Automatically Generated Logs         | COVERED               |
 | 50      | Synthetic Content Marking            | PLANNED               |
-
-**8 articles covered, 0 partial, 1 planned, 1 out of scope.**
 
 ---
 
@@ -361,8 +332,17 @@ document are all live as of v5.0.0:
 
 ## What is NOT in this matrix
 
+An article is in the matrix when NOUS gives the deployer a
+language or runtime mechanism for it. Otherwise it is here.
+
 - Article 16 (provider obligations on placing on the market):
   provider/deployer obligation, not a language concern.
+- Article 17 (quality management system): provider obligation.
+  The NOUS release pipeline is the quality system of the NOUS
+  package, not of a deployer's high-risk AI system. NOUS
+  supplies toolchain provenance (SLSA build attestation, PEP
+  740 publish attestation, Rekor v2 anchor, signed manifests)
+  that a provider may cite inside their own quality system.
 - Article 18 (record-keeping retention period): operator
   policy.
 - Article 20 (corrective actions): operator policy.
