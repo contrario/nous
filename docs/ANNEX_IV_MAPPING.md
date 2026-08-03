@@ -30,7 +30,7 @@ or the AI Act text itself. The mapping reflects how NOUS positions its
 artifacts; the regulator decides whether a given dossier satisfies the
 clause.
 
-For the article-level coverage matrix (Articles 9-15, 17, 19, 50), see
+For the article-level matrix (Articles 9-15, 19, 50), see
 [EU_AI_ACT_COMPLIANCE.md](EU_AI_ACT_COMPLIANCE.md). The current
 document is the Annex-level peer to that file.
 
