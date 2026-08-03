@@ -230,7 +230,7 @@ See `docs/VERIFY_DOSSIER.md` for the full API reference, trust model, and failur
 
 ## EU AI Act compliance
 
-NOUS targets EU AI Act conformity for the high-risk AI system requirements of Regulation (EU) 2024/1689. The compliance matrix lives in `docs/EU_AI_ACT_COMPLIANCE.md`. Current coverage: 8 of 10 mapped articles fully covered, 1 planned, 1 out of scope.
+NOUS targets EU AI Act conformity for the high-risk AI system requirements of Regulation (EU) 2024/1689. The compliance matrix lives in `docs/EU_AI_ACT_COMPLIANCE.md`: it states, article by article, what NOUS does -- proves, evidences, gates, maps, or nothing -- and does not assert that any article is satisfied.
 
 Key article alignments:
 
@@ -239,7 +239,6 @@ Key article alignments:
 - **Article 13 (Transparency)** -- public verification endpoint and standalone `nous-lang.org/verify` page give downstream users a no-install path to independently audit any dossier.
 - **Article 14 (Human Oversight)** -- `intervene`, `inject_message`, `block` policy actions plus governance simulator.
 - **Article 15 (Accuracy / Robustness / Cybersecurity)** -- Z3 SMT proofs on every `cost_cap` declaration, currency-aware (USD + EUR), with Ed25519-signed manifests and optional Sigstore Rekor anchoring for tamper-evident durability.
-- **Article 17 (Quality Management)** -- 10-phase release pipeline, 2722-test pytest floor, byte-identical regression harness.
 
 ## Annex IV dossiers from existing SKILL.md skills (v5.1.0+)
 
