@@ -294,16 +294,16 @@ policies.
 
 ## Summary
 
-| Article | Title                                | Status                |
+| Article | Title                                | What NOUS does        |
 |---------|--------------------------------------|-----------------------|
-| 9       | Risk Management System               | COVERED               |
+| 9       | Risk Management System               | GATES                 |
 | 10      | Data and Data Governance             | OUT OF SCOPE          |
-| 11      | Technical Documentation              | COVERED (machine-gen) |
-| 12      | Record-Keeping                       | COVERED               |
-| 13      | Transparency to Deployers            | COVERED               |
-| 14      | Human Oversight                      | COVERED               |
-| 15      | Accuracy / Robustness / Cybersec     | COVERED (v5.0.0)      |
-| 19      | Automatically Generated Logs         | COVERED               |
+| 11      | Technical Documentation              | EVIDENCES             |
+| 12      | Record-Keeping                       | EVIDENCES             |
+| 13      | Transparency to Deployers            | MAPS                  |
+| 14      | Human Oversight                      | MAPS                  |
+| 15      | Accuracy / Robustness / Cybersec     | PROVES (cost cap)     |
+| 19      | Automatically Generated Logs         | EVIDENCES             |
 | 50      | Synthetic Content Marking            | PLANNED               |
 
 ---
