@@ -114,7 +114,7 @@
     {
       "boundary": "NOT-COVERED",
       "concept": "structural refusal as execution prevention (commit-blocking guard)",
-      "note": "DELIBERATE DIVERGENCE. The category's structural refusal PREVENTS execution at the commit boundary (a guard role). NOUS is a monitor: it refuses to PRODUCE a governed attestation on ambiguity and can record a non-conformant verdict, but it does not interpose in the execution path to block the commit. Enforcement, if any, belongs to the operator's surrounding system acting on NOUS evidence.",
+      "note": "DELIBERATE DIVERGENCE. The category's structural refusal PREVENTS execution at the commit boundary (a guard role). The NOUS evidence layer, which is the subject of this profile, is a monitor: it refuses to PRODUCE a governed attestation on ambiguity and can record a non-conformant verdict, but it does not interpose in the execution path to block the commit. The NOUS runtime policy engine is a distinct runtime component that does interpose: with declared rules, in record mode, a block or abort_cycle action raises before the guarded side effect. It is outside the scope of this profile. Outside that path, enforcement belongs to the operator's surrounding system acting on NOUS evidence. See ADR-0010.",
       "nous_evidence": null,
       "relationship": "no-relationship",
       "secure_by_design": []
@@ -122,13 +122,13 @@
     {
       "boundary": "NOT-COVERED",
       "concept": "commit-boundary enforcement / action blocking",
-      "note": "Same monitor-not-guard boundary: NOUS evidences at the commit boundary; it does not gate it.",
+      "note": "Same evidence-layer boundary: NOUS evidence types evidence at the commit boundary; they do not gate it. The NOUS runtime policy engine, which does gate when a declared policy carries a blocking action, is outside the scope of this profile. See ADR-0010.",
       "nous_evidence": null,
       "relationship": "no-relationship",
       "secure_by_design": []
     }
   ],
-  "honest_boundary": "This profile EVIDENCES which runtime-governance concepts NOUS evidence types discharge; it does NOT PROVE those concepts are correctly implemented. A future GCA signature would evidence authorship and integrity of this coverage claim, not conformance. 'proves' is reserved for the Z3/Farkas legs. NOUS is a monitor, not a guard.",
+  "honest_boundary": "This profile EVIDENCES which runtime-governance concepts NOUS evidence types discharge; it does NOT PROVE those concepts are correctly implemented. A future GCA signature would evidence authorship and integrity of this coverage claim, not conformance. 'proves' is reserved for the Z3/Farkas legs. The subject of this profile is the NOUS evidence layer, which is a monitor, not a guard; the NOUS runtime policy engine gates when a declared policy carries a blocking action and is outside this profile's scope (ADR-0010).",
   "reference_category": {
     "name": "runtime governance (execution-layer governance)",
     "source": "Willis JM. Operationalizing Secure-by-Design AI Through Deterministic Runtime Governance. 2026. Zenodo DOI 10.5281/zenodo.20749457. Framework-neutral terminology only."
@@ -152,5 +152,5 @@
   "schema": "nous.governance_coverage_profile.v1",
   "schema_note": "Human-readable reference profile. The signed Governance Coverage Attestation (GCA) will use this content as its canonical body, serialized in the standard NOUS compact sorted-key form before Ed25519 signing. This committed file is reference content, NOT a signed evidence artifact and NOT published to any well-known path.",
   "subject_kind": "nous_release",
-  "version": "1.0"
+  "version": "1.1"
 }
