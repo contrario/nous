@@ -60,6 +60,69 @@ def _public_key_b64(key: Ed25519PrivateKey) -> str:
     return base64.b64encode(raw).decode("ascii")
 
 
+# __s298_ceremony_guards_v1__
+_GLM_HEX = "0123456789abcdef"
+
+
+def _is_glm_hex64(value: object) -> bool:
+    """True for exactly 64 lowercase hex digits."""
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(c in _GLM_HEX for c in value)
+    )
+
+
+def _is_iso_date(value: object) -> bool:
+    """True for exactly YYYY-MM-DD. valid_from is concatenated into
+    generated_at, never parsed, so a timestamp would yield ...ZT00:00:00Z."""
+    if not isinstance(value, str) or len(value) != 10:
+        return False
+    if value[4] != "-" or value[7] != "-":
+        return False
+    return value[:4].isdigit() and value[5:7].isdigit() and value[8:].isdigit()
+
+
+def _check_source_is_sealed(source: dict, source_text: str) -> None:
+    """G1: recompute the predecessor digest instead of trusting the declared
+    value. A stale or tampered source would otherwise put a false
+    supersedes_digest inside a freshly signed artifact, and the verifier that
+    exists does not check supersedes_digest at all."""
+    block = source.get("manifest_digest")
+    declared = block.get("value") if isinstance(block, dict) else None
+    if not _is_glm_hex64(declared):
+        raise CeremonyError(
+            "source manifest_digest.value is not 64 lowercase hex digits; "
+            "an unsealed template cannot be a predecessor"
+        )
+    try:
+        computed = glm_manifest.compute_glm_digest(source_text)
+    except glm_manifest.GlmManifestError as exc:
+        raise CeremonyError(
+            "source manifest is not digest-computable as served ("
+            + str(exc) + "); it cannot be a predecessor"
+        ) from exc
+    if computed != declared:
+        raise CeremonyError(
+            "source manifest_digest.value does not match the source bytes "
+            "(declared " + declared[:16] + "..., computed " + computed[:16]
+            + "...); the supersedes chain would carry a false digest"
+        )
+
+
+def _check_version_advances(source: dict, new_version: object) -> None:
+    """G4: two bodies do not carry one version."""
+    if not isinstance(new_version, str) or not new_version:
+        raise CeremonyError("new_version is missing")
+    owner = source.get("owner")
+    current = owner.get("version") if isinstance(owner, dict) else None
+    if isinstance(current, str) and current == new_version:
+        raise CeremonyError(
+            "new_version " + repr(new_version) + " equals the source "
+            "owner.version; a successor must carry a different version"
+        )
+
+
 def _transform_source(
     source: dict,
     *,
@@ -73,6 +136,12 @@ def _transform_source(
     predecessor_digest = digest_block.get("value")
     if not isinstance(predecessor_digest, str) or not predecessor_digest:
         raise CeremonyError("source manifest_digest.value is missing")
+    if not _is_glm_hex64(predecessor_digest):
+        raise CeremonyError(
+            "source manifest_digest.value is not 64 lowercase hex digits: "
+            + repr(predecessor_digest[:32])
+            + "; a placeholder cannot become a supersedes_digest"
+        )
 
     owner = source.get("owner")
     if not isinstance(owner, dict):
@@ -82,6 +151,11 @@ def _transform_source(
     if not isinstance(sig_block, dict):
         raise CeremonyError("source manifest has no manifest_signature object")
 
+    if not _is_iso_date(valid_from):
+        raise CeremonyError(
+            "valid_from must be YYYY-MM-DD, got " + repr(valid_from)
+            + "; it is concatenated into generated_at, not parsed"
+        )
     owner["version"] = new_version
     source["generated_at"] = valid_from + "T00:00:00Z"
     source["valid_from"] = valid_from
@@ -121,10 +195,13 @@ def cmd_build(args: argparse.Namespace) -> int:
         )
         return 1
     try:
-        key = _load_operator_key(Path(args.key))
-        source = json.loads(source_path.read_text(encoding="utf-8"))
+        source_text = source_path.read_text(encoding="utf-8")
+        source = json.loads(source_text)
         if not isinstance(source, dict):
             raise CeremonyError("source manifest is not a JSON object")
+        _check_source_is_sealed(source, source_text)
+        _check_version_advances(source, args.new_version)
+        key = _load_operator_key(Path(args.key))
         transformed = _transform_source(
             source,
             new_version=args.new_version,
