@@ -138,6 +138,14 @@ Per ADR-0004, nothing here is a Z3/Farkas result and no such word is used.
 - S302, external and secondary to this record: RFC 9943 section 9.2 treats a
   correction as a new signed statement by the same issuer over the same
   subject, never as an edit.
+- S303: one sentence in Alternatives rejected above is inaccurate as
+  written. tests/test_s297_glm_ceremony.py:167-174 does read
+  supersedes_digest, asserting it is 64 lowercase hex digits and that
+  supersedes is a non-empty string. It performs no fetch and no
+  comparison with predecessor bytes, so a well-formed false digest
+  passes and the divergence stays unreported: the conclusion stands and
+  the premise does not. Measured in the same session, after this record
+  was committed at 84ca0b9.
 
 ## Still true?
 
