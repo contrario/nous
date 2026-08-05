@@ -37,6 +37,7 @@ might be built).
 | 0008 | Witness trust root = public Witness Network, Rekor complementary | Accepted | YES (S204) |
 | 0009 | Standalone verify_offline.py download withdrawn | Accepted | YES (S264) |
 | 0010 | Evidence layer monitors; runtime policy engine gates | Accepted | YES (S265) |
+| 0011 | A supersedes link commits to published bytes | Accepted | YES (S303) |
 
 ADR-0001 (the origin identifier) and ADR-0008 (the trust root that motivates it) are
 kept as separate records: the identifier and the choice of who witnesses the log are
