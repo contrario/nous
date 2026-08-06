@@ -492,3 +492,55 @@ first criterion: does prior art kill this arc, or does the shape transfer?
   - Which two of the twelve `docs/*_DESIGN.md` files carry no Status line
     in their first six lines? Measured as ten of twelve at S304; the two
     were not identified.
+
+================================================================
+14. Evidence ledger (append-only)
+================================================================
+
+Entries are appended, never edited. A correction to this document is an
+entry here, not a rewrite above, per ADR-0011 constraint 2 applied to the
+document itself.
+
+  - S304, AFTER THIS DOCUMENT WAS COMMITTED AT 9b3e055. Every inherited
+    citation above was checked against bytes in the same session.
+    ADR-0011's two constraints read as cited, at :59-62 and :64-68.
+    tests/test_s297_glm_ceremony.py:77 asserts the transformed
+    supersedes_digest equals the source digest constant, and :114-115
+    states that the predecessor digest it reads is never one of the
+    fields it writes: both as cited, so the INHERITED label in section 6
+    is discharged. ADR-0007 states plain sorted-keys compact JSON and not
+    JCS at :1, :17 and :19. docs/REJECTED_IDEAS.md:157-163 carries the
+    standing prior-art obligation naming sigstore/model-transparency. No
+    citation in this document was falsified.
+
+  - S304. THE LAST OPEN QUESTION IN SECTION 13 IS CLOSED. The two
+    docs/*_DESIGN.md files carrying no Status line in their first six
+    lines are COUNTERPARTY_WITNESSED_CONTINUITY_DESIGN.md and
+    ENVELOPE_BINDING_DESIGN.md. The second is the load-bearing internal
+    prior art of section 2. With this file the census is thirteen files,
+    eleven with a Status line -- not twelve of twelve as previously
+    recorded.
+
+  - S304. SECTION 2 OVERSTATES ONE TRANSFER, AND THE OVERSTATEMENT IS
+    NAMED HERE RATHER THAN EDITED ABOVE. Section 2 presents the
+    sha-movement requirement of resolve_prior_digest
+    (cli_verify.py:724-730) as part of the structure that carries over to
+    the GLM. ADR-0011:113-117 describes the missing artifact as a
+    comparison of supersedes_digest against fetched predecessor bytes,
+    admitting a null link for the root, and states no movement
+    requirement at all. The S119 rule exists because a no-op re-binding
+    is suspect in a build chain; for a correction to published text the
+    correction is itself the change, and a movement check over fields the
+    ceremony rewrites unconditionally (generated_at, owner.version,
+    canonicalization_method) would pass vacuously. Section 13 already
+    carries "what counts as a material change for a GLM" as open; that
+    framing is correct and section 2's is too confident. The conclusion
+    of section 2 stands -- the shape transfers -- while one named element
+    of it does not.
+
+  - S304. ADR-0011:113-117 ALREADY SPECIFIES THE ARTIFACT THIS GATE RANKS
+    FIRST, including the null-link requirement for the archive root, and
+    already records at :141-148 that test_s297:167-174 checks the shape of
+    supersedes_digest without fetching or comparing. This document and
+    that record do not conflict; this document adds the cost, the prior
+    art, and the rejection argument that the record does not carry.
