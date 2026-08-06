@@ -544,3 +544,54 @@ document itself.
     supersedes_digest without fetching or comparing. This document and
     that record do not conflict; this document adds the cost, the prior
     art, and the rejection argument that the record does not carry.
+
+  - S305. THE OPERATOR'S DECISION ON SECTION 8, RECORDED AS D305-1. The
+    first kill criterion, "prior art already exists", FIRES ON THE RULE
+    AND NOT ON THE ARTIFACT. The rule is settled and no new rule may be
+    claimed here. Nothing installable exists: the Aoki draft is an
+    information model whose graph digest algorithm is left undefined at
+    its section 16; the CPB draft defers record relations to that
+    companion; a C2PA update manifest is a different format; and
+    sigstore/model-transparency carries no successor relation at all.
+    The project's own resolve_prior_digest does not transfer either --
+    it consumes a frozen Manifest and returns sha256 over
+    prior_manifest.canonical_bytes() (cli_verify.py:731-733, INHERITED
+    from the S304 reading), while a GLM is a plain dict digested by
+    canonical_glm_bytes. No one can adopt someone else's. The arc
+    therefore does NOT close as a rejected idea, and alternative 5 of
+    section 6 is NOT taken.
+
+  - S305. THE ARC IS SPLIT BY RISK CLASS AND ONLY ONE HALF IS
+    AUTHORISED. (a) THE CHAIN CHECKER IS APPROVED, NARROWLY: read-only,
+    no signed byte, no served byte, and it must redden none of the three
+    suite locks. It is not a new idea -- it is the implementation of an
+    invariant already decided and already recorded as a consequence at
+    ADR-0011:113-117, and its hand-run form ran as leg L18 of the
+    session supplement on 2026-08-06 (link intact over fetched bytes,
+    positive arm False in the same run). (b) THE CEREMONY CHANGE IS NOT
+    AUTHORISED. A contract change on a signing path is the highest-risk
+    category this gate names at its section 6, and the change reddens
+    two S297 tests by design. It is NOT deferred until (a) lands: it
+    waits until a real correction to published text is owed, and the
+    chain is intact over fetched bytes, so nothing presses. NAMING (b)
+    AS THE NEXT STEP BECAUSE (a) CLOSED WOULD BE THE FG-S304-D ERROR
+    CLASS AND IS REFUSED IN ADVANCE. SEQUENCE: this ledger entry first,
+    the tool afterwards, in separate gates.
+
+  - S305. BOUNDS ON (a), EACH PREVIOUSLY MEASURED, RESTATED HERE AS THE
+    DECISION'S OWN TERMS. The core predicate takes BYTES and the fetch
+    is a thin wrapper around it, or the offline-verification kill
+    criterion of section 8 fires. The TUF rollback predicate needs a
+    PARSED version tuple: owner.version values are strings, and "5.9.0"
+    against "5.49.0" breaks lexicographic order. A null-valued
+    supersedes link is the root of the chain and not an error -- the
+    archived 5.37.0 manifest carries both keys present with null
+    values. The tool must not be named verify_*_offline.py, which
+    claims.toml excludes by glob and which would drop it out of the
+    linter silently. Rule 9 dual-registration does not apply under
+    scripts/. The new claim_lint scanned-file count is predicted before
+    the linter runs, not read off it afterwards. NOT AUTHORISED BY THIS
+    DECISION: any edit to sign_glm_manifest.py, a new GLM version, a
+    signature, a serving step, a Rekor submission, the DN[5]
+    correction, or a change to any test. Section 12 stands unchanged
+    and this entry does not widen it.
