@@ -146,6 +146,18 @@ Per ADR-0004, nothing here is a Z3/Farkas result and no such word is used.
   passes and the divergence stays unreported: the conclusion stands and
   the premise does not. Measured in the same session, after this record
   was committed at 84ca0b9.
+- S305: the S302 entry above is inaccurate as written. The archived 5.37.0
+  manifest carries the keys "supersedes" and "supersedes_digest" PRESENT
+  with null values, at lines 6 and 7 of
+  website/governance/glm-archive/governance-layer-manifest-5.37.0.json;
+  the same file carries no manifest_signature.public_key at all, so
+  drop-when-None is applied unevenly. Measured at S304, re-measured at
+  S305 with a negative arm returning 0. Tradeoffs and consequences above
+  is unaffected: it says the root carries no link, which is true of the
+  VALUE and not of the KEY. The distinction is load-bearing for the chain
+  checker approved under D305-1: a verifier that tests for an ABSENT KEY
+  rejects the root, while one that tests for a NULL VALUE admits it as
+  the root the record requires it to admit.
 
 ## Still true?
 
