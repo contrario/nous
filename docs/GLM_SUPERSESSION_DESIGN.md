@@ -739,3 +739,64 @@ document itself.
     Section 12 stands unchanged and this entry does not widen it.
     Sequence, per the S305 entry: this entry first, the tool afterwards,
     in separate gates.
+
+  - S307. THE ARCHIVE ROOT IS DIGEST-ONLY BY DECLARATION, AND SECTION 5
+    OVERSTATES WHAT THE LINK CAN EVIDENCE. Measured 2026-08-07 against
+    the tracked bytes of both manifests. scripts/sign_glm_manifest.py
+    verify (e8de230f) was run on each with no sidecar; both manifest
+    digests and the tool's own digest were identical before and after,
+    and porcelain was the same two untracked entries throughout.
+    Nothing was written.
+
+    WHAT PRINTED. On the archived 5.37.0 manifest: digest_ok True,
+    signature_present False, signer_pinned False, signature_ok False,
+    owner_version 5.37.0, rc 2, and one error naming the class,
+    "manifest carries no Ed25519 signature (digest-only: content
+    integrity without authorship)". On the published manifest in the
+    same paste as the positive arm: digest_ok True, signature_present
+    True, signer_pinned True, signature_ok True, rc 0. The arm was
+    capable of a different answer and gave one.
+
+    THE ROOT'S SIGNATURE IS ABSENT BY DECLARATION, NOT MISSING BY
+    OMISSION. Its manifest_signature carries note and
+    planned_extensions with type and value both null, and the note
+    states that a signature was not implemented in that version, that
+    the digest verifies content integrity, and that a signature would
+    verify authorship. The same shape as the null-valued supersedes
+    fields: keys present, values null, deliberate. The archived root
+    therefore carries two independent properties, not one.
+
+    SECTION 5 ELEMENT E3 IS FALSE OVER THE PUBLISHED BYTES. It reads
+    "That both carry an Ed25519 signature from the pinned operator
+    key". The successor does. The predecessor does not, and by its own
+    text never did. This is a correction, recorded as an entry and not
+    as an edit above, per ADR-0011 constraint 2.
+
+    THE PRECEDING S307 ENTRY IS CORRECTED ON ONE LINE. It recorded
+    "Whether the archived 5.37.0 signature verifies under the pinned
+    key is UNMEASURED". That presupposes a signature to verify. The
+    question was asked one level too late and the answer is that there
+    is none. The line stands above as written and is corrected here.
+
+    THE FIXTURE RECIPE CONFLATES TWO PROPERTIES. THIS IS A REFINEMENT
+    AND NOT A CORRECTION. The S306 entry names its second case as "the
+    null-valued root". A fixture built on the null link alone is not
+    the published root and a tool exercised only against it would never
+    meet an unsigned predecessor. The two properties are separable in
+    principle -- a signed manifest may carry a null link, and a linked
+    manifest may be unsigned -- so they are two cases and not one. The
+    six-case recipe is therefore under-specified at that case, and the
+    tool gate writes the fixtures from this entry rather than from the
+    S306 count.
+
+    WHAT THIS ENTRY DOES NOT DECIDE. What the checker reports when a
+    predecessor is unsigned. The shipped verifier returns rc 2, but the
+    S306 scripts/ census recorded that rc 2 carries at least six
+    meanings under that directory and that an exit vocabulary is to be
+    chosen and declared, never inherited. The choice belongs to the
+    tool gate; it is named here and not taken.
+
+    AUTHORISES NOTHING NEW. No file created, no test changed, no
+    manifest touched, no DN[5] wording drafted. The ceremony change (b)
+    remains unauthorised on the terms of the S305 entry. Section 12
+    stands unchanged and this entry does not widen it.
