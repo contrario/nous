@@ -664,3 +664,78 @@ document itself.
     unauthorised on the terms of the preceding entry, and measuring what
     the ceremony would do is not an argument for changing it. Section 12
     stands unchanged and this entry does not widen it.
+
+  - S307. THE HONEST BOUNDARY AND THE BOUNDS WERE RECONCILED ONE BY ONE,
+    AND THE MOVEMENT CHECK IS DECIDED OUT. Section 5 was written at S304
+    and the six bounds at S305; no session compared the two. This entry
+    is that comparison. The instrument's reach is declared first: the
+    bounds constrain what the approved tool may do, they are not the
+    grant, and the grant is the S305 entry above together with
+    ADR-0011:113-117. An element falling outside the bounds is therefore
+    not thereby unauthorised.
+
+    THE FIVE EVIDENCED ELEMENTS OF SECTION 5, EACH AGAINST THE SIX
+    BOUNDS.
+      E1, the predecessor bytes hash to the value carried in the
+      successor: PARTIAL. No bound names it. Bound 1 fixes its shape,
+      the predicate taking bytes with the fetch as a wrapper, and bound
+      3 removes the null-valued root from it. E1 is the grant itself.
+      E2, the successor's own digest matches its served bytes: NOT
+      COVERED, and not needed. verify_glm_manifest already performs it
+      and printed digest_ok True on 2026-08-07.
+      E3, both manifests carry an Ed25519 signature from the pinned
+      operator key: PARTIAL. The successor half is shipped and printed
+      signature_ok True with signer_pinned True on 2026-08-07. The
+      predecessor half is performed by nothing in the tree and is
+      required by no bound. Whether the archived 5.37.0 signature
+      verifies under the pinned key is UNMEASURED. Named here, not
+      resolved here.
+      E4, the successor's version does not regress: COVERED. Bound 2
+      names it and names the implementation, a parsed tuple and not a
+      string compare.
+      E5, at least one non-ceremonial field moved: NOT COVERED, and
+      decided out below.
+
+    THE NON-CLAIMS AND THE TWO LIMITS ARE UNTOUCHED. Section 5's four
+    what-is-not-claimed sentences, the single-issuer structural limit,
+    and the measurement limit recording that the S304 fetch resolved to
+    the origin are negative statements. No bound reaches them and none
+    contradicts them.
+
+    THE MOVEMENT CHECK DOES NOT ENTER THE TOOL. The operator's grounds,
+    recorded as given: the S304 entry above already killed it for
+    vacuous passage and that reason does not stop at section 2; none of
+    the six bounds names it; materiality is carried as open in section
+    13, so the check is decidable but insignificant; it rejects a
+    legitimate re-anchor; and it merges a binding with a materiality
+    judgement under a single rc. IF THE INFORMATION IS WANTED IT LEAVES
+    AS A REPORTED CLASS AT rc 0, on the served_mirror_check
+    ORPHAN_SERVED pattern, reported and not condemned. The section 5
+    sentence "That at least one non-ceremonial field moved" is
+    superseded by this entry and is not edited above, per ADR-0011
+    constraint 2 applied to this document.
+
+    FOUR OF FIVE ELEMENTS ARE NOT CLEANLY COVERED, AND THAT IS A FINDING
+    ABOUT THIS GATE AND NOT ABOUT THE TOOL. One mismatched line would be
+    a correction. Two PARTIAL and two NOT COVERED are evidence that the
+    section stating the honest boundary and the section stating the
+    tool's bounds were authored in different sessions and were never
+    bound to each other. The bounds were written as construction limits,
+    not as coverage of section 5, and nothing in either section says so.
+    Any future bound list states which section 5 element each bound
+    serves.
+
+    PLACEMENT, MEASURED 2026-08-07. docs/GLM_SUPERSESSION_DESIGN.md is
+    the only tracked path carrying that name. It is not under website/,
+    it is absent from /var/www/nous-lang.org, and the only served .md is
+    README.md. claims.toml exclude_dirs does not contain docs, so this
+    document is linted. Its readers are the public repository and the
+    linter and not the served surface, so a correction to it is a docs
+    commit and not a deploy.
+
+    THIS ENTRY AUTHORISES NO CODE. No file was created, no test changed,
+    no manifest touched, and no DN[5] wording drafted. The ceremony
+    change (b) remains unauthorised on the terms of the S305 entry.
+    Section 12 stands unchanged and this entry does not widen it.
+    Sequence, per the S305 entry: this entry first, the tool afterwards,
+    in separate gates.
