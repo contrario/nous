@@ -595,3 +595,72 @@ document itself.
     signature, a serving step, a Rekor submission, the DN[5]
     correction, or a change to any test. Section 12 stands unchanged
     and this entry does not widen it.
+
+  - S306. THE CEREMONY'S SUPERSESSION BEHAVIOUR WAS EXECUTED, NOT READ.
+    _transform_source and the two guards were imported from
+    scripts/sign_glm_manifest.py at a76b5d4 and run against the served
+    manifest bytes on 2026-08-06. No key was loaded, seal_glm_manifest was
+    never called, and nothing was written: porcelain and both file digests
+    were identical before and after the run. The records above cite line
+    numbers; this entry cites executions.
+
+    THE GUARD FIRES ON AN EDITED DRAFT. _check_source_is_sealed accepted
+    the served bytes unchanged and refused them after a single-token edit
+    to operational_scope.does_not[5], raising at :106 -- "the supersedes
+    chain would carry a false digest", declared b73a0e2f..., computed
+    83ee4842.... The edit was the marker ZZ_S306_PROBE appended to that
+    entry in memory; no wording was drafted and no served byte was
+    touched. An edited draft must therefore be resealed to pass.
+
+    A RESEALED DRAFT CARRIES ITS OWN DIGEST FORWARD. Given the edited text
+    with manifest_digest.value set to the edited document's own digest,
+    _transform_source wrote supersedes_digest 83ee4842... while supersedes
+    pointed at the live published URL. That is a manifest asserting it
+    replaces bytes whose digest it does not carry.
+
+    ONE STEP OF THAT CHAIN WAS NOT EXECUTED AND IS NOT CLAIMED HERE. That
+    a reseal is what writes manifest_digest.value was CONSTRUCTED BY HAND
+    in this run, because seal_glm_manifest requires the operator key and
+    signing sits outside the read-only bound of D305-1(a). It is supported
+    by the digest of the served bytes matching their declared value and by
+    the canonicalization_method text the ceremony writes at :165-171, and
+    it stays INHERITED, not measured.
+
+    THE GUARD AND THE CARRIER ARE INDEPENDENT. With manifest_digest.value
+    replaced by sixty-four zeros, _transform_source copied that value into
+    supersedes_digest without complaint. _check_source_is_sealed binds a
+    source's declared digest to that source's own bytes; nothing binds a
+    successor's supersedes_digest to the bytes served at its supersedes
+    URL. The second binding is the predicate the checker approved under
+    D305-1(a) implements, recorded now as an execution and no longer as a
+    reading of :136 and :163.
+
+    URL AND DIGEST ARE NEVER COMPARED. Run against the unmodified served
+    manifest with supersedes_url https://zz.invalid/s306-probe,
+    _transform_source produced the correct published digest beside a URL
+    that resolves to nothing. Neither half constrains the other.
+
+    G4 ACCEPTS A REGRESSION, MEASURED. _check_version_advances refused
+    new_version "5.49.0" at :120 and ACCEPTED "1.0.0" against owner.version
+    5.49.0, so the TUF ordering bound recorded in the preceding entry is
+    now bound to an execution. Two independent implementations shipped
+    this predicate wrong: go-tuf did not implement the rollback checks
+    correctly (CVE-2022-29173), and tough ran its check only after
+    persisting the metadata it was checking (CVE-2025-2888). The checker
+    therefore evaluates before it reports, never after a write.
+
+    THE NEGATIVE ARM THE APPROVED TOOL LACKED NOW EXISTS AS A RECIPE. The
+    published chain has one link and it passes, so every input the tool
+    would otherwise have seen was a passing one. Four failing shapes are
+    derivable from the ceremony itself: a correct digest beside an
+    unfetchable URL; a placeholder digest copied through; a successor
+    digest that is its own; and a version that regresses. With the
+    null-valued root and the live link that is six cases. None was written
+    to disk in this session and none is a fixture until it is.
+
+    NO CORRECTION IS OWED AND THIS ENTRY AUTHORISES NOTHING NEW. The
+    published chain remains intact over fetched bytes. DN[5] was not
+    corrected, drafted, or worded. The ceremony change (b) remains
+    unauthorised on the terms of the preceding entry, and measuring what
+    the ceremony would do is not an argument for changing it. Section 12
+    stands unchanged and this entry does not widen it.
