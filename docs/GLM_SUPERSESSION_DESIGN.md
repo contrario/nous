@@ -1504,3 +1504,87 @@ document itself.
     and nothing here makes it more likely. Section 12 stands unchanged
     and this entry does not widen it. Sequence: this entry first, then
     the fixture file, then the tool, in separate gates.
+
+  - S309. THE TABLE CARRIES ONE ROW PER TOKEN, RECORDED AS D309-3. Two
+    corrections, both arithmetic rather than scoping, in one append.
+    This entry takes its own gate and precedes the fixture file for the
+    same reason D309-2 did: the first correction is asserted by the
+    completeness test, and a claim the code asserts must be closed in
+    bytes before the code is written. If the header and the fixture
+    landed together the fixture would be fixing the number and the
+    ledger would be a transcript of the code rather than its authority.
+
+    CORRECTION ONE. THE HEADER CONTRADICTED ITS OWN ENUMERATION. The
+    D309-2 paragraph opening THE TABLE IS SEVEN ROWS enumerates
+    CONSTRUCTED six, READ one and ABSENT BY DECISION one. That is not
+    seven. The header survived from a draft written before UNREACHABLE
+    was moved INSIDE the table, and was not re-counted after the
+    correction that invalidated it.
+      THE FIX IS NOT A NEW NUMBER. Replacing seven with eight would be
+      the same defect at a different value. The table carries ONE ROW
+      PER TOKEN in the set fixed by D307-1 and amended by D308-1, which
+      removed the ninth. The enumeration is its partition: two rows of
+      subject LINK, four constructed rows of subject PREDECESSOR, one
+      READ row and one ABSENT BY DECISION row. Written as a property,
+      the header cannot contradict the enumeration again.
+      THE COMPLETENESS TEST ASSERTS SET EQUALITY, NOT LENGTH. It
+      compares the table's keys against the frozen token tuple. A test
+      reading len(TABLE) equals a literal breaks at the next amendment
+      of the token set and reports a false failure about arithmetic; a
+      test reading set(TABLE) equals the tuple keeps reporting the
+      thing that matters, which is whether a token has no row or a row
+      has no token. No count is written into the file anywhere.
+      The eight names are read from bytes: the D308-3 entry in this
+      ledger lists the constructed six, names UNREACHABLE deferred and
+      VERIFIED covered by reading, and states that D308-1 removed the
+      ninth.
+
+    CORRECTION TWO. THE claim_lint VALUE, WITH ITS LABEL.
+      MEASURED. claims.toml is 190 lines, 8733 bytes, sha f9919834.
+      Its [surfaces] block sets include to *.py, *.md and *.html at
+      :166, and exclude_dirs at :167-170 carries "tests" at :168.
+      WITHDRAWN. D309-1 states that a new tests/*.py takes the scan
+      from 420 to 421. That was an extension of F307-12, which measured
+      scripts/*.py, to a directory the config appears to exclude. It
+      was labelled ARITHMETIC, which is what kept it honest, but it was
+      never derived from anything.
+      PREDICTED, NOT MEASURED. The scan stays at 420 and the new file
+      is not scanned. This rests on the CONFIG. scripts/claim_lint.py,
+      sha b6380185, has not been opened by this seat, so whether the
+      tool honours exclude_dirs is unread.
+      HOW IT CLOSES. The lint run inside the fixture gate settles it
+      and no separate gate is needed. If it reports 421 while "tests"
+      is declared at :168, the finding is not the number: it is that
+      exclude_dirs is not honoured, which is larger than this entry,
+      and work stops there.
+
+    A CENSUS ARTIFACT, CAUGHT IN THIS SEAT'S OWN INSTRUMENT. Searching
+    claims.toml for the string tests returns two lines, :37 and :168.
+    Only :168 is a mention of the directory. Line :37 is the entry
+    "attest", "attests", "attested" in allowed_claim_words, where the
+    match is a SUBSTRING, NOT A MENTION. The phrasing is recorded
+    because the next seat will run the same search and get the same
+    two.
+
+    A PRIOR THAT HITS DOES NOT VALIDATE THE METHOD. The operator
+    recalled, without verification, that claims.toml excluded tests/
+    at about line 168. The read confirmed it exactly. That was a prior,
+    not a source, and it is recorded as one. A later seat reads
+    claims.toml; it does not carry this sentence forward as evidence.
+
+    FG-S309-C, A COUNT SURVIVED THE CHANGE THAT INVALIDATED IT. Unlike
+    FG-S309-B this number was measured when written. It became false
+    when an accepted correction moved a row into the set it counted,
+    and the header was not re-derived. The standing fix: when a
+    correction changes what a set contains, every count over that set
+    is recomputed in the same message, or the count is replaced by the
+    property that generates it. The second is preferred, because a
+    property cannot go stale.
+
+    AUTHORISES NOTHING NEW. No source is edited, no manifest is
+    touched, no dependency is declared and no existing test is
+    changed. The only write still permitted is the single fixture file
+    released by D308-2. The ceremony change (b) remains unauthorised.
+    Section 12 stands unchanged and this entry does not widen it.
+    Sequence: this entry first, then the fixture file, then the tool,
+    in separate gates.
