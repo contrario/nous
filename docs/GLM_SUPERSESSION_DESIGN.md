@@ -800,3 +800,86 @@ document itself.
     manifest touched, no DN[5] wording drafted. The ceremony change (b)
     remains unauthorised on the terms of the S305 entry. Section 12
     stands unchanged and this entry does not widen it.
+
+  - S307. THE VERIFIER MODULE WAS READ END TO END, AND TWO INHERITED
+    LABELS ARE DISCHARGED BY READING RATHER THAN BY EXECUTION.
+    glm_manifest.py (92fb4ea1, 312 lines, 11192 bytes, worktree equal to
+    origin/main) was read in full on 2026-08-07. Nothing was written.
+
+    A RESEAL IS WHAT WRITES manifest_digest.value, AND THIS IS NOW READ
+    FROM THE FUNCTION. seal_glm_manifest sets that field to the digest
+    placeholder at :119, serializes at :138, hashes the placeholder form
+    at :142, and substitutes the computed hex at :143. The S306 entry
+    above left this INHERITED on the ground that seal_glm_manifest
+    requires the operator key. It does not require the key to be read.
+    The label is discharged; the S306 entry stands as written.
+
+    THE UNSIGNED ROOT IS A CODE PATH, NOT A RELIC. With private_key None
+    the same function writes manifest_signature type None and value None
+    at :134-136. That is exactly the shape of the archived 5.37.0
+    manifest measured earlier in this session. The archive root was
+    sealed by this code without a key; it is not the residue of an
+    earlier scheme.
+
+    FOUR SHAPE FACTS THE TOOL MUST OBEY, EACH FROM A NAMED LINE.
+      GlmVerifyDetail.ok is digest_ok and signature_ok at :170-172. For
+      the archived root signature_ok is False while digest_ok is True,
+      so ok is False on an intact predecessor. The tool reads the
+      per-step booleans and never ok.
+      canonical_glm_bytes performs exactly two substitutions, at :83 and
+      :89. supersedes_digest therefore sits inside the hashed bytes,
+      covered by the digest and by the signature over it, and compared
+      with nothing. Previously a reading of section 0; now read from the
+      function.
+      canonical_glm_bytes raises rather than returning a verdict.
+      _require_single at :36-42 raises GlmManifestError when the digest
+      value does not occur exactly once as a quoted string. On fetched
+      predecessor bytes that is a reachable path, so the tool catches
+      GlmManifestError; otherwise a malformed response leaves as a
+      traceback instead of a verdict.
+      The signature covers the digest, not the bytes. It is made over
+      bytes.fromhex(declared) at :148 and verified over the same at
+      :264, so the key binds the digest and the digest binds the
+      canonical bytes, in two steps. Without a hex manifest_digest.value
+      no signature check runs at all, per :254-255.
+
+    ONE DOCSTRING IS STALE. NAMED, NOT CORRECTED. :189-191 states that
+    the default pinned allowlist is empty because no signing ceremony
+    has run. KNOWN_GLM_MANIFEST_PUBLIC_KEYS_B64 at :23-25 carries one
+    key, and it is the key the published manifest carries. The described
+    behaviour holds; its stated premise does not. claim_lint does not
+    reach this because it checks vocabulary, not truth. This is a source
+    file and section 12 forbids code in this gate, so it is recorded and
+    left alone.
+
+    PLACEMENT FACTS FOR THE TOOL, MEASURED 2026-08-07. scripts/ is not a
+    package: tests load a script by file path through
+    importlib.util, stated in tests/test_s159_u2 and tests/test_s297 and
+    implemented as _load_signer in tests/test_s298. The GLM test
+    convention is inline dicts plus tmp_path, not fixture files: of the
+    41 tracked non-.py files under tests/ none is a GLM manifest by
+    name, and the only real manifest any GLM test reads is the archive
+    root. A fixture built on the _source_manifest helper of
+    tests/test_s298 does NOT reproduce the published root: that helper
+    writes signature type "ed25519" with value None, while the root
+    carries type null and value null.
+    glm_manifest.py runs to 80 columns, so the 79-column rule of this
+    document is a document rule and not a source rule.
+
+    THE LOCK SET IS FOUR MARKERS AND A NEW SCRIPT REDDENS NONE OF THEM.
+    __s233_p3_sidecar_lock_test_v1__, __s236_p1_alias_lock_test_v1__,
+    __s236_p3_claim_lint_lock_test_v1__ and
+    __s236_p4_cold_audit_lock_test_v1__, each occurring exactly once, on
+    line 1 of its own test file. No test under tests/ pins a claim_lint
+    scanned-file count, and no test pins a file set under scripts/: none
+    of the five directory enumerations in tests/ reaches scripts/.
+    The S305 bound says three locks without naming them and the tree
+    yields four under this phrasing; the tool is held to reddening none
+    of the four, which satisfies either reading. Bound 6 is a prediction
+    discipline and not a redness guard: claim_lint scans 420 files
+    today and a new scripts/*.py makes it 421.
+
+    AUTHORISES NOTHING NEW. No file created, no test changed, no source
+    edited, no manifest touched. The ceremony change (b) remains
+    unauthorised. Section 12 stands unchanged and this entry does not
+    widen it.
