@@ -1344,3 +1344,163 @@ document itself.
     recorded here makes it more likely. Section 12 stands unchanged
     and this entry does not widen it. Sequence: this entry first, then
     the fixture file, then the tool, in separate gates.
+
+  - S309. THE TOKEN NAMES THE LINK AND EVERY ROW CARRIES ITS SUBJECT,
+    RECORDED AS D309-2. D309-1 fixed the form of a fixture. This entry
+    withdraws one reason inside it, states the scoping that the wrong
+    reason concealed, adds a seventh row, and records where each of its
+    measurements was printed. It takes its own gate and precedes the
+    fixture file, because it determines what the fixtures assert.
+
+    THE CORRECTION. The D309-1 paragraph opening THE LINK-FIELD SHAPE
+    IS LOAD-BEARING states that ROOT and DIGEST_ONLY share all four
+    verifier booleans. Measured: ROOT carries no predecessor, so it has
+    no verifier booleans at all and there is nothing to share. The
+    reason is withdrawn. The conclusion is not: it survives twice over,
+    and the paragraph is left exactly as written, since corrections are
+    appends.
+
+    THE SCOPING. A token names the LINK, and a link has two ends. Which
+    end a row speaks about is a field, written beside the token, not
+    inferred by a reader.
+      SUBJECT LINK, no fetch was performed. ROOT and MALFORMED_LINK.
+      Every verifier field is absent. That is not a collision between
+      two cases; it is the signature of no predecessor having been
+      examined.
+      SUBJECT PREDECESSOR, a fetch was performed. VERIFIED,
+      DIGEST_ONLY, DIGEST_MISMATCH, SIGNATURE_BAD, UNREADABLE and
+      UNREACHABLE.
+
+    THE TABLE IS SEVEN ROWS CARRYING THREE PROVENANCE LABELS. One
+    label across all rows would be false.
+      CONSTRUCTED, six. ROOT, DIGEST_ONLY, DIGEST_MISMATCH,
+      MALFORMED_LINK, SIGNATURE_BAD, UNREADABLE.
+      READ, one. VERIFIED. It is not constructible under the default
+      allowlist, per the S308 entry, and it is read from the published
+      manifest instead.
+      ABSENT BY DECISION, one. UNREACHABLE appears INSIDE the table as
+      a row whose absence is its content. An absence shown is
+      measurable; an absence left outside the table is an omission
+      that resembles a decision.
+
+    DISTINGUISHABILITY IS MEASURED WITHIN A SUBJECT, NEVER ACROSS ONE.
+      LINK: two cases, two distinct values of the link-field shape,
+      NULL and MALFORMED.
+      PREDECESSOR, constructed rows only: four cases, three distinct
+      on the four booleans.
+      PREDECESSOR with the READ row included: five cases, four
+      distinct on the four booleans. The seventh row earns its place
+      by adding a distinction, and it is the only row reaching
+      signer_pinned True.
+      PREDECESSOR on the booleans together with the link comparison:
+      five distinct. The surviving pair on booleans alone is
+      DIGEST_ONLY with DIGEST_MISMATCH.
+
+    THE POSITION SURVIVES ACROSS AND WITHIN. Without the link
+    dimension the six constructed cases fall to four distinct
+    observations, which is the across-subject artifact that produced
+    the withdrawn reason. Within the PREDECESSOR subject the link
+    comparison is load-bearing again, separating DIGEST_ONLY from
+    DIGEST_MISMATCH, which share their booleans exactly. D309-1
+    reached a correct requirement through an incorrect argument, and
+    the requirement is confirmed by a second measurement that does not
+    depend on the first.
+
+    HEX64 IS THE TRANSITION, NOT A TOKEN. The link-field shape takes
+    three values. NULL yields ROOT. MALFORMED yields MALFORMED_LINK.
+    HEX64 yields NO token: it is the condition under which the tool
+    proceeds to a fetch and the subject changes to PREDECESSOR. Every
+    PREDECESSOR row carries HEX64 and no LINK row does. Stated here so
+    that a later reader does not hunt for a third LINK token.
+
+    THE SEVENTH ROW HAS AN EXISTING CONVENTION AND A COST.
+      tests/test_s297:145-158 already reads the published manifest and
+      calls verify_glm_manifest on it. The VERIFIED row follows that
+      shape rather than inventing one.
+      Its four booleans are digest_ok, signature_present,
+      signer_pinned and signature_ok, all True, printed by the RULE 0
+      GLM verify leg of this session. Those four do not depend on the
+      sidecar; that they do not is INHERITED from the S308 entry and
+      is labelled, not leaned on.
+      THE COST. Two files will now redden when the manifest is
+      resealed, where one did before. They are not duplicates: 297
+      locks the published bytes, and this row states that VERIFIED is
+      observable and distinct. Two statements over one artifact, which
+      is acceptable and is recorded rather than discovered later.
+
+    THE FIXTURE SUPPLIES ALL FOUR SIGNATURE KEYS. seal_glm_manifest
+    forces only type and value to null at :134-136 and passes every
+    other key through, so the shape of manifest_signature is a
+    property of the input dict. A fixture that omits note and
+    planned_extensions reproduces a two-key block, and the D308-3
+    phrase about the published root's shape element for element would
+    become false. Executed with all four supplied, the constructed
+    root printed note, planned_extensions, type and value.
+
+    THE TOOL DOES NOT VERIFY THE SUCCESSOR. scripts/sign_glm_manifest
+    verify already does that, six legs and rc 0 at every RULE 0. A
+    second oracle over one artifact is the FG-S244-A shape and the
+    RFC 9829 shape at once: a second ordering mechanism adds
+    complexity and fragility where one already governs. The checker
+    reads the successor's link fields and nothing else from it.
+
+    PRIOR ART, EXTERNAL, SUPPLIED BY THE OPERATOR ON 2026-08-08 AND
+    NOT FETCHED BY THIS SEAT.
+      C2PA 2.4. A validation status entry carries code, url and
+      explanation, where url is the JUMBF URI the status applies to.
+      validationResults are per-manifest, with ingredientDeltas as a
+      sibling for statuses belonging to a referenced ingredient. The
+      code manifest.inaccessible, a referenced ingredient manifest
+      that cannot be found, is our UNREACHABLE: a status about the
+      referenced object, recorded in the referring one.
+      in-toto. subject is a required field, matched by digest, and the
+      predicate is metadata about that subject.
+      Both families reach the same conclusion. The record names its
+      subject explicitly; a bare token does not carry enough.
+
+    RECORDED, NO ACTION. C2PA warns validators that follow ingredient
+    url chains to guard against unbounded recursion. D305-1(a) checks
+    ONE link and not a chain, so the hazard is out of reach by
+    construction rather than by a defence, and no defence is written.
+
+    PROVENANCE OF THE MEASUREMENTS IN THIS ENTRY.
+      glm_manifest.py was read end to end on Server A: 312 lines,
+      11192 bytes, sha 92fb4ea1.
+      That module was then reconstructed inside the seat's container
+      and its sha matched 92fb4ea1 before anything was executed
+      against it. The six constructed rows, the partition and every
+      distinctness count above were executed THERE and NOT on
+      Server A.
+      The VERIFIED booleans came from the RULE 0 GLM verify leg on
+      Server A.
+      Confirmation on Server A needs no gate of its own. The fixtures
+      will run there and will fail there if any count above is wrong.
+
+    ERRORS NAMED IN THIS GATE.
+      FG-S309-A, AN ABSENCE ASSERTED WITHOUT A READ. The seat wrote
+      that nothing fixed which document the tokens describe, while the
+      entry defining the token set sat unread in this same file. This
+      is the inverse of an untested inherited claim: a gap asserted
+      without the instrument that would have found it filled.
+      FG-S309-B, A RULE READ THREE TIMES DID NOT HOLD. A table of sha
+      and byte counts for a payload was written into a message before
+      the payload existed, one message after the seat itself named
+      FG-S308-A, which is the same act. The rule was in the handoff,
+      in the opener, and in the seat's own prose. The finding is not
+      the repetition; it is that a rule can be read, restated and
+      still not bind. The standing fix is mechanical rather than
+      verbal: build, measure, paste the instrument output, and only
+      then write prose. A number that does not yet have a paste behind
+      it does not get written, and intending to measure it afterwards
+      is the failure itself.
+      Three predictions in this gate were relabelled DERIVED and not
+      scored, because re-partitioning a table already in hand cannot
+      surprise. One further prediction was withdrawn as unfalsifiable.
+
+    AUTHORISES NOTHING NEW. No source is edited, no manifest is
+    touched, no dependency is declared and no existing test is
+    changed. The only write still permitted is the single fixture file
+    released by D308-2. The ceremony change (b) remains unauthorised
+    and nothing here makes it more likely. Section 12 stands unchanged
+    and this entry does not widen it. Sequence: this entry first, then
+    the fixture file, then the tool, in separate gates.
