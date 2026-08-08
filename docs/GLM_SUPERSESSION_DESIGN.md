@@ -996,3 +996,127 @@ document itself.
     unauthorised. Section 12 stands unchanged and this entry does not
     widen it. Sequence: this entry first, then the fixtures, then the
     tool, in separate gates.
+
+  - S308. THE OPERATOR'S DECISION ON THE VERSION TOKEN, RECORDED AS
+    D308-1. VERSION_REGRESSED LEAVES THE SET; THE VERSIONS ARE REPORTED
+    AND NOT JUDGED. The checker prints the owner.version pair and the
+    manifest_version pair as observations, carries no verdict token for
+    either, and states at the point of printing that it is reporting and
+    not judging. The set defined at S307 goes from nine tokens to eight.
+    The projection is unchanged: rc 0, rc 2, rc 3, rc 1 unassigned.
+
+    THE GROUND IS AN ABSENT DECLARATION, MEASURED THREE WAYS AND NOT
+    INFERRED ONCE. A verdict asserts that a rule was broken. No rule
+    about owner.version exists to break.
+      IN THE ARTIFACT. Both published bodies were read field by field on
+      2026-08-08. timing_axis declares a position on the bind axis,
+      "pre-bind", and is not an ordering of manifests. glm_compatibility
+      declares a change policy -- "major version increment required",
+      "minor version increment, backward compatible within major
+      version" -- and declares it for the GLM SCHEMA version, which is
+      "1.1" in both bodies. The manifest knows how to declare a version
+      policy and declares one for schema_version only. The two bodies
+      carry identical top-level key sets, both differences empty.
+      IN THE SPECIFICATION. The provisional schema reference declared by
+      both bodies was fetched from Server A at 2026-08-08T01:43:59Z:
+      270374 bytes, sha256 35d36e67. It is now v2.0 at schema 1.3, while
+      both NOUS bodies declare schema_version 1.1. It defines
+      manifest_version as the version of the specific manifest document,
+      distinct from the schema version, and encourages monotonically
+      increasing manifest_version values for archival ordering. That is
+      the designated ordering field, and it is ENCOURAGED, not required.
+      NOUS carries manifest_version "1.0" in BOTH bodies: the designated
+      field has never moved. The specification's field list carries no
+      top-level owner; identity is structured under layer. The live
+      conformant peer manifest at the same origin -- 12082 bytes, sha256
+      72ebb45e, schema_version 1.2, manifest_version "6.0" -- carries 24
+      top-level keys against our 22, sharing 21. It lacks
+      supersedes_note, valid_until and vendor_framework_constructs from
+      our side; owner is the ONLY key we carry that it does not.
+      IN THE CEREMONY. _check_version_advances raises only on string
+      equality, at :119. This document already records at :644 that the
+      tool ACCEPTED "1.0.0" against owner.version "5.49.0". The producer
+      permits regression today.
+
+    WHAT A PARSER WOULD HAVE COST, MEASURED SO THAT NO SEAT RE-DERIVES
+    IT. registry._version_tuple at :149-156 is the only shipped
+    comparator and it CANNOT FAIL: every non-numeric component becomes
+    0. Executed on Server A, "0.0.0-test" and "0.0.0" both give
+    (0, 0, 0); "abc" and "" both give (0,); "v5.49.0" gives (0, 49, 0)
+    and therefore orders BELOW "5.37.0". A comparator that cannot fail
+    cannot separate a regression from a field that is not a version, so
+    it would have emitted a judgement on a false premise. packaging 26.2
+    is present on Server A at /usr/local/lib/python3.12/dist-packages
+    and is NOT declared: pyproject.toml lists six runtime dependencies
+    and importlib.metadata.requires("nous-lang") returns fourteen
+    entries, none of them packaging. It discriminates correctly --
+    Version("5.9.0") < Version("5.49.0") is True while the same
+    comparison on the raw strings is False, and Version("0.0.0-test")
+    raises InvalidVersion -- but it accepts "v5.49.0" as equal to
+    "5.49.0", so not even PEP 440 is uniformly strict, and adopting it
+    is a pyproject edit that D305-1(a) does not authorise.
+
+    EXTERNAL PRACTICE, READ 2026-08-08. Every ordering mechanism read
+    this session uses a dedicated monotonic integer whose only job is
+    ordering. TUF requires the new root version to be exactly N+1 and
+    otherwise discards it, aborts the cycle and reports a rollback
+    attack. gittuf's fix for a policy rollback, reported in 2026, was to
+    add a monotonically increasing number to all policy metadata files.
+    RFC 5280 requires the CRL Number extension in conforming CRLs, a
+    monotonic sequence number whose stated purpose is to determine when
+    one CRL supersedes another. NOUS already carries that pattern
+    internally twice, at CONTINUITY_LEDGER.md:130 and
+    MEMORY_EVIDENCE_DESIGN.md:184. None of them orders by a product
+    release string. SemVer 2.0.0 places build metadata outside
+    precedence entirely, so even a well-formed version string orders
+    only once its dialect is known, and no NOUS surface declares a
+    dialect. THE STRONGEST PRECEDENT IS FOR DELETION RATHER THAN
+    IMPLEMENTATION: RFC 9829 mandates that RPKI relying parties IGNORE
+    the CRL Number extension where another monotonic number already
+    orders the objects, on the ground that processing it adds
+    complexity and fragility. This decision has that shape.
+
+    THE SHAPE OF A NON-VERDICT IS ALREADY STANDARDISED. SARIF 2.1.0
+    separates result.kind -- pass, fail, open, review, informational,
+    notApplicable -- from result.level, and requires that when kind is
+    anything other than "fail" the level is "none": a result that is not
+    a judgement carries no severity. The S307 entry records at :908-910
+    that scripts/claim_lint.py already carries --sarif output. The
+    checker's observations take that shape, printed and unlevelled and
+    outside the token set, rather than becoming a tenth token.
+
+    F308-10, CORRECTED HERE AND NOT BY EDITING THE SECTION ABOVE. The
+    S307 entry defines MALFORMED_LINK at :945-948 as including a
+    supersedes_digest that is "not 64 lowercase hex". That is stricter
+    than the specification and stricter than the ecosystem. The GLM
+    specification states that the digest comparison is character for
+    character and CASE-INSENSITIVE, and the live peer manifest carries
+    its supersedes_digest in UPPERCASE hex. The families genuinely
+    differ: the OCI image specification mandates lowercase by grammar,
+    hex := /[a-f0-9]+/, RFC 4648 calls base16 the standard
+    case-insensitive hex encoding, and BagIt permits either case.
+    CORRECTED RULE: the shape test is 64 hexadecimal characters with no
+    case constraint, and the comparison normalises case before
+    comparing. Nothing in the NOUS chain changes -- our own producer
+    writes lowercase and LINK_OK is True today -- but the token's
+    definition was written as a general rule and would have reddened a
+    conformant peer.
+
+    MISSES SCORED THIS SESSION, LEFT VISIBLE. Three predictions failed
+    and each failure changed a design input. Predicted that no
+    version-comparison helper existed in this tree: several do, and
+    registry._version_tuple is a shipped py-module. Predicted that it
+    raises on "0.0.0-test": it coerces silently, which is precisely what
+    disqualified it. Predicted zero occurrences of "monoton" in tracked
+    files: 38 files carry it, two of them the prior-art sites named
+    above. Separately, one instrument defect recurred three times and
+    was caught only by pairing instruments: dict.get() cannot
+    distinguish an absent key from a null value, and key presence must
+    be tested with "in".
+
+    AUTHORISES NOTHING NEW. No file created, no test changed, no source
+    edited, no manifest touched, no dependency declared. The ceremony
+    change (b) remains unauthorised and is made no more likely by any
+    measurement recorded here. Section 12 stands unchanged and this
+    entry does not widen it. Sequence: this entry first, then the
+    fixtures, then the tool, in separate gates.
