@@ -1120,3 +1120,98 @@ document itself.
     measurement recorded here. Section 12 stands unchanged and this
     entry does not widen it. Sequence: this entry first, then the
     fixtures, then the tool, in separate gates.
+
+  - S308. THE FIXTURE SET IS SIX CONSTRUCTED, ONE DEFERRED AND ONE READ,
+    RECORDED AS D308-3. The S307 entry names eight tokens after D308-1
+    removed the ninth, and reads as though all eight are asserted by
+    constructed fixtures. They are not, and the departure is recorded
+    here rather than discovered in the fixture gate.
+      CONSTRUCTED, SIX. ROOT, DIGEST_ONLY, DIGEST_MISMATCH,
+      MALFORMED_LINK, SIGNATURE_BAD, UNREADABLE. Each is a property of
+      bytes and each is built in memory.
+      DEFERRED, ONE. UNREACHABLE is a property of the transport, not of
+      any manifest: a non-200, a network failure, or a redirect ending
+      elsewhere. It cannot be exhibited by bytes and its fixture waits
+      for the tool's own fetch seam, in the tool's gate.
+      READ, NOT CONSTRUCTED, ONE. VERIFIED. See below.
+
+    THE ROOT SHAPE IS REPRODUCIBLE IN MEMORY, MEASURED 2026-08-08. An
+    inline dict passed to seal_glm_manifest with private_key None
+    returns text whose manifest_signature is exactly {"type": null,
+    "value": null} and whose supersedes and supersedes_digest keys are
+    both PRESENT with null values, confirmed by "in" and not by get().
+    verify_glm_manifest on that text returns digest_ok True,
+    signature_present False, ok False, one error. That is the published
+    archive root's shape, element for element. F307-10 and F307-11 are
+    therefore closed without any file under tests/fixtures/ and without
+    the _source_manifest helper of tests/test_s298, which writes
+    signature type "ed25519" where the root carries null.
+
+    VERIFIED CANNOT BE CONSTRUCTED, AND THE THREE ROUTES ARE CLOSED BY
+    MEASUREMENT RATHER THAN BY OPINION. signature_ok True under the
+    DEFAULT allowlist requires the operator's private key.
+      Monkeypatching KNOWN_GLM_MANIFEST_PUBLIC_KEYS_B64 does not work.
+      The default is bound at definition time at :179, so rebinding the
+      module attribute after import leaves the parameter default
+      pointing at the original tuple. Executed: after rebinding to an
+      ephemeral public key, signer_pinned stayed False and
+      signature_ok stayed False.
+      Passing trusted_keys_b64 explicitly does work -- an ephemeral key
+      gives signer_pinned True, signature_ok True, ok True, zero errors
+      -- but it exercises a call the tool never makes. F307-8 fixed
+      that the checker calls verify_glm_manifest with the DEFAULT
+      allowlist and never with a key found inside the document, so a
+      fixture built on the explicit form asserts a path that does not
+      exist in production.
+      Using the real operator key in a test is forbidden.
+    VERIFIED is therefore covered by READING the published manifest,
+    which returns ok True under the default allowlist today, and whose
+    bytes tests/test_s297 already locks. Construction is not available;
+    the reading is honest and is labelled as a reading.
+    SIGNATURE_BAD is unaffected: an ephemeral key against the default
+    allowlist gives digest_ok True, signature_present True,
+    signer_pinned False, signature_ok False -- constructed, not read.
+
+    FOUR FACTS THE TOOL MUST OBEY, EACH EXECUTED AND EACH BOUND TO A
+    LINE.
+      anchor_present IS A PROPERTY OF THE CALL, NOT OF THE DOCUMENT. It
+      is rekor_anchor is not None at :272. The published manifest
+      verified without a sidecar returns anchor_present False and ZERO
+      errors. The absence of an anchor is not a defect of a
+      predecessor and the tool must not read it as one.
+      A NON-EMPTY errors TUPLE IS NOT A NEGATIVE VERDICT. The intact
+      unsigned root returns digest_ok True together with one error, the
+      digest-only string emitted at :244-246. That combination IS the
+      DIGEST_ONLY token, which projects to rc 0. The discriminator is
+      the pair digest_ok True with signature_present False, never the
+      length of errors.
+      THERE ARE THREE RAISE SITES AND ONE EXCEPTION TYPE. json.loads
+      inside verify_glm_manifest at :196-198, _block_value at :50, and
+      _require_single at :39-42, all raising GlmManifestError, so one
+      except clause suffices. This corrects an emphasis in the S307
+      entry: an HTML page returned 200 by a catch-all lands at
+      :196-198, not at _require_single. Executed: HTML, empty string
+      and a digest-less JSON object all raise GlmManifestError.
+      THE OBSERVATION FIELDS SURVIVE FAILURE. A tampered root returns
+      digest_ok False while owner_version still reads "5.37.0", so the
+      D308-1 requirement to report the version pair is implementable on
+      every branch, including the failing ones.
+
+    MISSES SCORED, LEFT VISIBLE. Predicted that the published manifest
+    would verify with six True legs as it does in RULE 0; measured
+    anchor_present False and anchor_ok False, because RULE 0 passes a
+    sidecar and that call did not. A result was carried across two
+    different call signatures, which is the FG-S307-A class. Separately
+    and worse, a set of byte counts and sha values for this very
+    payload was written into a message before the file existed. No
+    instrument produced them. They were withdrawn in the next message
+    and the real values were measured before any transfer.
+
+    AUTHORISES NOTHING NEW BEYOND THE FIXTURES THE OPERATOR RELEASED.
+    The prohibition on writing under tests/ was lifted by the operator
+    on 2026-08-08, for the D305-1(a) fixtures and for nothing else, and
+    that release is recorded as D308-2. No source is edited, no
+    manifest is touched, no dependency is declared, no existing test is
+    changed. The ceremony change (b) remains unauthorised. Section 12
+    stands unchanged. Sequence: this entry first, then the fixtures,
+    then the tool, in separate gates.
