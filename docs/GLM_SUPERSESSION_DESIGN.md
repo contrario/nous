@@ -1215,3 +1215,132 @@ document itself.
     changed. The ceremony change (b) remains unauthorised. Section 12
     stands unchanged. Sequence: this entry first, then the fixtures,
     then the tool, in separate gates.
+
+  - S309. THE FIXTURE UNIT IS A PAIR AND THE TOKEN IS GIVEN, RECORDED
+    AS D309-1. D308-3 fixes WHAT is constructed. This entry fixes the
+    FORM: what one fixture is, what it asserts, and what allows the
+    file to redden. An earlier proposal, that the fixtures assert only
+    the observable booleans of verify_glm_manifest, was put to the
+    operator and REJECTED on 2026-08-08 on the ground that a fixture
+    which cannot fail is not a control. What follows is the operator's
+    decision and not a restatement of the proposal.
+
+      THE UNIT IS A PAIR, NOT A DOCUMENT. Each case is
+      (successor_text, predecessor_text_or_None). ROOT and
+      MALFORMED_LINK need the successor alone; DIGEST_ONLY,
+      DIGEST_MISMATCH, SIGNATURE_BAD and UNREADABLE need both.
+      Fixtures built as single documents cannot express the link at
+      all, and the link is what the checker checks.
+      THE TOKEN IS GIVEN, NOT DERIVED. Every case carries its own
+      token name as a literal string in a table. No classifier and no
+      branch. This is how the D307-1 requirement that the fixtures
+      assert the token is honoured before the tool that emits tokens
+      exists.
+
+    THREE GROUPS OF ASSERTIONS, EACH WITH A DIFFERENT JOB.
+      PROPERTY. Each case exhibits the observable state its token
+      names: digest_ok, signature_present, signer_pinned,
+      signature_ok, the shape of the two link fields, and raise or no
+      raise.
+      SELF-CONSISTENCY. Where a pair must link,
+      gm.compute_glm_digest(predecessor_text) equals
+      successor["supersedes_digest"]. For DIGEST_MISMATCH the same
+      expression is asserted NOT equal. Without this group a fixture
+      drifts silently into a different token.
+      PAIRWISE DISTINGUISHABILITY. No two cases share one observation
+      tuple. This is the assertion that can redden and it is the
+      reason the gate exists.
+
+    THE LINK-FIELD SHAPE IS LOAD-BEARING, NOT DECORATIVE. ROOT and
+    DIGEST_ONLY share all four booleans: digest_ok True,
+    signature_present False, signer_pinned False, signature_ok False.
+    The archived root is unsigned, measured at S308 and recorded at
+    lines 1138 to 1148 of this ledger. Without the link fields in the
+    observation tuple the distinguishability test cannot separate the
+    two and two cases become one case. ROOT is discriminated by
+    supersedes and supersedes_digest PRESENT with null values;
+    DIGEST_ONLY by a real 64-character hexadecimal value.
+
+    MALFORMED_LINK CARRIES NO PREDECESSOR BY CONSTRUCTION, NOT BY
+    OMISSION. Its successor's link field is malformed, so no
+    predecessor bytes exist that could match it and the
+    self-consistency group has nothing to assert for it. Recorded so
+    that a later seat does not read the absent assertion as an
+    oversight and supply one.
+
+    COMPLETENESS IS TESTED, NOT ASSUMED. A frozen tuple carries the
+    eight token names. One test asserts that the constructed set is
+    exactly six and that the two absent names are exactly UNREACHABLE,
+    deferred to the tool's fetch seam, and VERIFIED, covered by
+    reading the published manifest. A ninth token added anywhere
+    reddens the file.
+
+    THE LIBRARY BUILDS THE BYTES, NOT A TEST-LOCAL COPY.
+    gm.seal_glm_manifest with private_key None is the constructor for
+    the root shape, and with an ephemeral key for SIGNATURE_BAD. Both
+    behaviours are INHERITED from the S308 entry at lines 1138 to 1148
+    and 1171 to 1173 and are discharged by reading glm_manifest.py
+    bytes inside the fixture gate, before the payload is built.
+    The _sealed_source_text helper at tests/test_s298:71-78 does the
+    same job for that file's own cases, but it writes
+    manifest_signature type "ed25519" where the root carries null, so
+    it does not produce the root shape. It is an existing test and it
+    is not touched.
+
+    KEY PRESENCE IS LOCKED WITH "in". tests/test_s298:213-214 asserts
+    doc.get("supersedes") is None and doc.get("supersedes_digest") is
+    None. get() cannot distinguish an absent key from a null value, so
+    deleting both keys from the archived root would leave that test
+    green. The null-valued keys are what root detection rests on and
+    nothing currently locks their presence. The new file closes the
+    gap with assert "supersedes" in doc, which D308-2 permits and
+    which touches no existing test.
+
+    FILE CONVENTIONS, READ FROM THE TWO GLM TEST FILES AS FILES IN
+    THIS SESSION AND NOT INFERRED FROM AN INDEX.
+      One file under tests/. Module-level helpers, no class and no
+      conftest reference.
+      Bare import glm_manifest as gm, as at tests/test_s297:21 and
+      tests/test_s298:28. Neither file inserts sys.path.
+      A marker of the form __s309_<subject>_v1__, alone on the last
+      line of the module docstring, matching the markers at
+      tests/test_s297:9 and tests/test_s298:16. Neither file carries
+      a marker of the lock_test_v1 family.
+      MAXLEN 80, as measured in tests/test_s297; tests/test_s298
+      measures 78. ASCII only, no tabs, no trailing whitespace.
+      claim_lint scans 420 files today. A new tests/*.py makes it
+      421, ARITHMETIC, to be confirmed after the file lands.
+
+    WHAT THE TOOL'S GATE INHERITS FROM THIS FILE. The tool's own tests
+    import the table and assert that classify of a case equals the
+    token the table already carries. The fixture file is not edited in
+    that gate. That is the reason the token is given now rather than
+    derived later.
+
+    TWO FACTS READ FROM THE TEST FILES, RECORDED WITHOUT ACTION.
+      The ceremony still refuses an uppercase predecessor digest,
+      locked at tests/test_s298:111-120, while D308-1 removed the
+      lowercase constraint from the checker's MALFORMED_LINK shape
+      test. These are two different objects. A fixture asserting
+      case-insensitive acceptance is scoped to the checker and makes
+      no claim about the ceremony.
+      tests/test_s297:172 locks the published predecessor digest as
+      lowercase. That is a lock on our own published bytes and is
+      unaffected by the specification's case-insensitive comparison.
+
+    MISSES SCORED, LEFT VISIBLE. Predicted that continuation lines
+    under an entry head are indented four spaces; measured two levels,
+    four and six, the second for enumerated sub-items. That was a
+    single-level prediction taken from an index rather than from
+    bytes. Separately, a census phrased as the lock_test_v1 marker
+    family was carried into a sentence about markers in general; both
+    test files do carry a marker, of a different convention. That is
+    the S308 MISS 1 class, caught before it reached a decision.
+
+    AUTHORISES NOTHING NEW. No source is edited, no manifest is
+    touched, no dependency is declared and no existing test is
+    changed. The only write permitted is the single file released by
+    D308-2. The ceremony change (b) remains unauthorised and nothing
+    recorded here makes it more likely. Section 12 stands unchanged
+    and this entry does not widen it. Sequence: this entry first, then
+    the fixture file, then the tool, in separate gates.
