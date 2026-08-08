@@ -883,3 +883,116 @@ document itself.
     edited, no manifest touched. The ceremony change (b) remains
     unauthorised. Section 12 stands unchanged and this entry does not
     widen it.
+
+  - S307. THE OPERATOR'S DECISION ON THE CHECKER'S RESULT VOCABULARY,
+    RECORDED AS D307-1. THE CONTRACT IS THE VERDICT TOKEN; THE EXIT CODE
+    IS A PROJECTION OF IT. The tool prints a named verdict and projects
+    that name onto an exit code. Fixtures assert the name. One separate
+    test asserts the projection. A later change to the projection then
+    touches one test and no fixture.
+
+    THE GROUND IS A MEASURED COLLISION, NOT A PREFERENCE. Two shipped
+    tools in this tree use rc 1 and rc 2 for opposite things.
+    scripts/served_mirror_check.py returns 1 for a negative verdict
+    (drift, :123) and 2 for FAILED MEASUREMENT (:76, :79, :99, :105).
+    scripts/sign_glm_manifest.py returns 1 when it cannot read its
+    inputs (:330, :340) and 2 for a negative verdict (:351, "0 if
+    detail.ok else 2"), which is what it printed against the archived
+    root earlier in this session. No single rc table agrees with both.
+    Choosing a table was therefore the wrong thing to be deciding.
+
+    THE PRECEDENT FOR NAMES-OVER-CODES IS ALREADY IN THE TREE.
+    served_mirror_check declares DIFFER, MISSING_SERVED and
+    ORPHAN_SERVED as classes in its own docstring at :14-17 and prints
+    RESULT plus per-file class names at :107-125; the rc is one branch
+    over those names. scripts/claim_lint.py carries the same split with
+    --sarif and --json output and a single projection line repeated at
+    :970, :983 and :1011.
+
+    EXTERNAL PRACTICE, READ 2026-08-07. HashiCorp's terraform plan
+    documents -detailed-exitcode as a flag that CHANGES the exit codes
+    and their meanings when provided (0 empty diff, 1 error, 2 non-empty
+    diff), so the granular vocabulary is an opt-in projection and not
+    the command's contract. clig.dev holds that machine-readable output
+    belongs on stdout, that messages belong on stderr, and that non-zero
+    codes should be mapped to the most important failure modes. The
+    Pigweed CLI style guide, which defers to clig.dev, holds that when
+    multiple non-zero codes are used they must be documented and treated
+    as a stable API, and that codes 126 and above are to be avoided
+    because shells return them.
+
+    THE TOKEN SET, DERIVED HERE AND NOT COUNTED BY EYE. The rule is one
+    token per distinct condition a fixture can exhibit. Applying it to
+    the conditions measured this session yields nine, in three classes.
+    A count of six was floated before the derivation and is wrong; it is
+    left visible here rather than quietly replaced.
+      CHECKED, NOTHING WRONG.
+        VERIFIED         the fetched predecessor hashes to the declared
+                         supersedes_digest.
+        ROOT             supersedes and supersedes_digest are both
+                         present and null; the archived 5.37.0 manifest
+                         is exactly this shape.
+        DIGEST_ONLY      the digest matches and the predecessor carries
+                         no signature, which the shipped verifier
+                         already names "digest-only: content integrity
+                         without authorship".
+      CHECKED, WRONG.
+        DIGEST_MISMATCH  fetched predecessor bytes do not hash to the
+                         declared value.
+        VERSION_REGRESSED  the successor's owner.version does not
+                         advance over the predecessor's, compared as a
+                         parsed tuple and never as a string.
+        MALFORMED_LINK   the link is not a link: one of the two fields
+                         null and not the other, or a supersedes_digest
+                         that is not 64 lowercase hex, such as the
+                         publish-time placeholder.
+        SIGNATURE_BAD    the predecessor carries a signature that does
+                         not verify under the pinned allowlist. This is
+                         the honest completion of section 5's E3, whose
+                         "both" was corrected earlier in this ledger:
+                         unsigned is reported, badly signed is not.
+      COULD NOT CHECK.
+        UNREACHABLE      the predecessor could not be obtained: network
+                         failure, non-200, or a redirect ending
+                         elsewhere.
+        UNREADABLE       bytes were obtained but are not a
+                         digest-computable manifest. glm_manifest.py
+                         raises GlmManifestError here rather than
+                         returning a verdict (:36-42), so the tool
+                         catches it; an HTML page returned 200 by an SPA
+                         catch-all lands in this token and never in a
+                         traceback.
+    This set is derived from the conditions measured in this session and
+    is not claimed complete. A condition found later takes a new token;
+    it does not get folded into an existing one.
+
+    THE PROJECTION. rc 0 for the first class, rc 2 for the second, rc 3
+    for the third. 2 is chosen because the sibling tool on this same
+    artifact uses 2 for a negative verdict at :351. 3 is chosen because
+    no tracked script uses 3 as a verdict, so "could not check" gets a
+    code it does not share with a judgement, which is what section 11
+    requires when it says a fetch failure is reported as UNKNOWN and
+    never as PASS. rc 1 is left unassigned. The tool declares this table
+    in its own docstring, per the Pigweed rule that non-zero codes are a
+    stable API.
+
+    THE OBJECTION, STATED AND NOT DISMISSED. A reader who inspects only
+    $? loses the token. That is the shape of the standing F1 finding,
+    where scripts/release.py gates on a pass count and never reads
+    failed. It is mitigated but not removed by the projection: no
+    verdict outside the first class reaches 0, so $? stays sound as a
+    coarse signal. The token remains the truth and the code the summary,
+    and the tool says so where it prints.
+
+    NOT IN THIS DECISION. A --json mode: the named token on stdout is
+    enough for a first read-only tool, and structured output is a later
+    question. The rc vocabulary of any other tool in the tree is
+    untouched; served_mirror_check keeps 2 for FAILED MEASUREMENT and
+    this checker uses 3, and that residual difference is recorded rather
+    than resolved.
+
+    AUTHORISES NOTHING NEW. No file created, no test changed, no source
+    edited, no manifest touched. The ceremony change (b) remains
+    unauthorised. Section 12 stands unchanged and this entry does not
+    widen it. Sequence: this entry first, then the fixtures, then the
+    tool, in separate gates.
