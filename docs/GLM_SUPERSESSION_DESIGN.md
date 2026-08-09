@@ -2039,3 +2039,144 @@ document itself.
     remains unauthorised. Section 12 stands unchanged and this entry
     does not widen it. Sequence: this entry first, then the tool,
     then the tool's tests, in separate gates.
+
+  - S310. WHERE THE TOKEN NAMES LIVE, AND THREE CONSTRAINTS ON THE
+    TOOL'S SURFACE, RECORDED AS D310-5. Four decisions, none of them
+    adding a token. Written before the tool because each one would
+    otherwise be settled inside the code, where a later seat reads it
+    as an implementation detail rather than as a choice.
+
+    D310-5(a). THE VERDICT LINE ALWAYS CARRIES A NAME, AND WHERE NO
+    TOKEN APPLIES THE NAME IS UNCLASSIFIED.
+      THE PROPOSAL THIS REPLACES, AND WHY IT WAS WRONG. The seat
+      proposed printing VERDICT with no value on the path D310-3
+      defines, on the ground that no token in the set covers it. An
+      empty field forces every reader, every grep and every CI leg to
+      answer whether the value is absent or empty. That is the
+      dict.get() defect, recorded in this ledger at :1112-1115 and
+      again at :1290-1297, rebuilt in the output stream instead of in
+      a dictionary lookup. A tool whose subject is the difference
+      between absent and null must not emit a field that confuses
+      them.
+      UNCLASSIFIED IS NOT A TOKEN AND DOES NOT ENTER TOKENS. It is
+      not a verdict, it describes no state of the link, and it takes
+      no row in the fixture table. It is the ABSENCE of a verdict
+      given a name, so that the absence is a value rather than a
+      blank.
+      D307-1:965-967 IS NOT VIOLATED. That rule forbids folding a new
+      condition into an existing token. Nothing is folded here: the
+      condition is stated as uncovered, at the point of printing, and
+      the eight tokens are untouched.
+      THE SHAPE IS ALREADY STANDARDISED AND ALREADY CITED. SARIF
+      2.1.0 separates result.kind from result.level and carries
+      notApplicable as a declared kind rather than as a missing
+      field: a result that is not a judgement still has a name.
+      D308-1:1079-1086 already invokes that separation for the
+      unlevelled observations. This is the same shape applied to the
+      verdict line.
+      THE REST OF THE CONTRACT IS UNCHANGED. rc 3 still means COULD
+      NOT CHECK under D307-1:954-964 and the projection at :969-977
+      is untouched. SELF_SEAL_BROKEN remains proposed and
+      unauthorised: it is the name the condition would take if the
+      operator extended the set, and UNCLASSIFIED is what the tool
+      prints while it has not been extended.
+
+    D310-5(b). THE EIGHT NAMES LIVE IN BOTH THE TOOL AND THE FIXTURE,
+    AND A TEST ASSERTS THEY MATCH.
+      TWO OBVIOUS ROUTES WERE REJECTED, EACH FOR A MEASURED REASON.
+        THE TOOL DEFINES ITS OWN LIST AND NOTHING CHECKS IT. That
+        creates a second authority for the token set. The fixture is
+        the sole definer of TOKENS at :49-58 of
+        tests/test_s309_supersession_cases.py and the sole file
+        referencing that module, both censused with the pathspec
+        declared before counting. A second list would end that, and
+        D309-3:1530-1536 turned the completeness test into a set
+        equality precisely so that a token with no row, or a row with
+        no token, keeps being reported.
+        THE TOOL IMPORTS THE NAMES FROM THE FIXTURE. That makes
+        production code depend on tests/, which inverts the
+        dependency and does not survive packaging: scripts/ is not
+        shipped and tests/ is not shipped, so an installed consumer
+        would hold neither.
+      THE THIRD ROUTE, WHICH CREATES NEITHER. The tool carries the
+      eight names. The fixture carries them too, as it already does.
+      The tool's own tests import both and assert set equality. No
+      second authority is created because the fixture remains
+      authoritative: if the two disagree the TOOL is wrong, per the
+      operator's standing instruction, and the assertion reddens on
+      the tool's side. No inverted dependency is created because
+      nothing under scripts/ imports anything under tests/.
+      ONE MECHANISM IS UNMEASURED AND IS NOT DECIDED HERE. Whether a
+      test module in this repository can import a sibling test module
+      has not been measured by this seat: no census was run for an
+      __init__.py under tests/, for a conftest, or for the import
+      mode in effect. That measurement belongs to the tool's test
+      gate. If the import is not available the equality assertion
+      cannot be written as described, and the decision returns to the
+      operator rather than being resolved in code.
+
+    D310-5(c). --successor TAKES A PATH AND REFUSES A URL BEFORE ANY
+    FETCH. The successor is operator input and is read from disk;
+    D310-4 fixed that the tool performs exactly one fetch and that it
+    is always the predecessor.
+      WHY A REFUSAL AND NOT A FAILURE. Without an explicit check the
+      first person who passes a URL receives a file-not-found error
+      naming a path that looks like a URL. That reports the symptom
+      and hides the interface. The tool checks first and says which
+      argument takes which kind of value.
+      IT COMPOSES THE EXISTING URL SEAM. sign_glm_manifest:286-297
+      lazily imports urlsplit, extracts the netloc, tests membership
+      against a pinned set, writes to stderr and returns fail-closed.
+      The same shape applies here: if urlsplit reports a scheme, the
+      value is a URL, the tool refuses and no read and no fetch
+      happens.
+
+    D310-5(d). MAXLEN IS 80, NOT A BAND. The seat wrote "the 82-90
+    band", which is a range and not a decision; a range in a design
+    becomes drift in the next file.
+      MEASURED. glm_manifest.py is 80 and
+      tests/test_s309_supersession_cases.py is 80: the two files this
+      tool is closest to in subject. Under scripts/ the hand-written
+      maxima are cold_audit 82, publish_verifier_registry 85,
+      sign_glm_manifest 86, capture_phala_receipt 88, claim_lint 90
+      and served_mirror_check 96, with release and one patch file far
+      above as generated payloads.
+      SO 80 IS STRICTER THAN EVERY FILE UNDER scripts/ AND EQUAL TO
+      THE TWO IT COMPOSES FROM. That is the reason, and it is stated
+      so that a later seat widening it has to overrule a measurement
+      rather than a habit. ASCII only, no tabs, no trailing
+      whitespace, and mode 100644, which IS uniform: every file
+      censused under scripts/*.py is 100644 and none is executable.
+      THE SHEBANG IS NOT UNIFORM AND IS THEREFORE A CHOICE, NOT A
+      CONVENTION. capture_phala_receipt, publish_verifier_registry
+      and sign_glm_manifest carry none; cold_audit, claim_lint,
+      release and one patch file carry one. The tool carries none,
+      following the three that are nearest it in subject, and every
+      invocation in this session went through python3 with an
+      explicit path rather than through an executable bit.
+
+    ERRORS NAMED IN THIS GATE. The seat proposed an empty VERDICT
+    field, which is the dict.get() failure this ledger has recorded
+    twice, moved from a lookup into the printed output. It also
+    offered a MAXLEN range where a value was owed. Both were caught
+    by the operator. The first is the more serious: the tool's whole
+    subject is the difference between a missing thing and a null
+    thing, and the seat proposed to emit that ambiguity on the line
+    an auditor reads first.
+
+    PROVENANCE. The two MAXLEN 80 values and every scripts/ maximum
+    were printed by read-only gates on Server A in this session, as
+    were the two censuses behind the sole-definer statement. Nothing
+    in this entry was executed in the seat's container. The claim
+    about pytest importing a sibling test module is explicitly NOT
+    made; it is named as unmeasured above.
+
+    AUTHORISES NOTHING NEW. No file is created, no test is changed,
+    no source is edited, no manifest is touched and no dependency is
+    declared. UNCLASSIFIED is a printed value and not a token; TOKENS
+    remains eight. SELF_SEAL_BROKEN remains proposed and
+    unauthorised. The fixture file remains frozen and the four-reason
+    amendment requested earlier in this session remains unauthorised.
+    The ceremony change (b) remains unauthorised. Section 12 stands
+    unchanged and this entry does not widen it. Sequence: this entry
+    first, then the tool, then the tool's tests, in separate gates.
