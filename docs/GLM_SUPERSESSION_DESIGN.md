@@ -1588,3 +1588,264 @@ document itself.
     Section 12 stands unchanged and this entry does not widen it.
     Sequence: this entry first, then the fixture file, then the tool,
     in separate gates.
+
+  - S310. WHAT THE DIGEST ESTABLISHES, WHERE THE CANONICAL FORM IS
+    BLIND, AND WHY digest_ok IS A PRECONDITION AND NOT AN OBSERVATION,
+    RECORDED AS D310-1, D310-2 AND D310-3. Three decisions in one
+    entry. None of them adds a token. One of them asks the operator
+    for a separate authorisation, with four named reasons, in a gate
+    of its own after the tool.
+
+    D310-1. THE DIGEST ESTABLISHES IDENTITY, SO DIGEST_MISMATCH IS NOT
+    A PRECEDENCE RULE. When a fetched predecessor both fails the link
+    and carries a signature that does not verify, the verdict is
+    DIGEST_MISMATCH. No token is added and no ordering is declared.
+
+      THE REASON IS IDENTITY, NOT PREFERENCE, AND THE DIFFERENCE IS
+      LOAD-BEARING. ADR-0011 commits a supersedes link to published
+      bytes; its commit subject at 84ca0b9 states it as "a supersedes
+      link commits to published bytes". If the fetched bytes do not
+      hash to the declared supersedes_digest, the predecessor was not
+      obtained. Some other document was. Every later statement of the
+      form "the predecessor's signature does not verify" is then a
+      statement about an unidentified document, and SIGNATURE_BAD
+      there is an overclaim of exactly the class this project exists
+      to police.
+      A rule written as a preference invites the next seat to reorder
+      it on a different preference. A rule written as identity cannot
+      be reordered, because reordering it would require the tool to
+      speak about a document it has not identified. That is why this
+      paragraph gives the reason and not the order.
+
+      D307-1:965-967 DOES NOT APPLY. That rule reserves a new token
+      for a new condition. Two known conditions occurring together are
+      not a new condition; they are two known ones. Nothing is folded,
+      because nothing new arrived.
+
+      THE SIGNATURE STATE IS NOT DISCARDED, ONLY NOT JUDGED. It is
+      printed as an observation in the unlevelled shape D308-1 fixes
+      at :1079-1086, outside the token set and carrying no verdict.
+      Both conditions project to rc 2 under D307-1:969-977, so the
+      exit code is unaffected either way and this decision costs
+      nothing at the shell.
+
+    D310-2. THE CANONICAL FORM IS BLIND IN EXACTLY TWO PLACES, AND ONE
+    OF THEM HAS NO TOKEN. The blindness is the fact; the missing token
+    is its consequence. Recorded in that order so that a later seat
+    does not find a third exit and start over.
+
+      THE MECHANISM, READ AS BYTES. glm_manifest.py was read end to
+      end on Server A in this session: 312 lines, 11192 bytes, sha
+      92fb4ea1, MAXLEN 80. canonical_glm_bytes at :54-91 performs
+      exactly two substitutions on the served text: the value under
+      manifest_digest at :83 and the value under manifest_signature
+      at :89. compute_glm_digest at :94-96 hashes that form. The
+      substitution list is two entries long and both entries live
+      inside one function, so the exits are enumerable rather than
+      open-ended. A field added to that function later adds an exit,
+      and this sentence says where to look.
+
+      EXECUTED IN MEMORY ON SERVER A, NOT REASONED. The published
+      manifest was read, its declared digest and its owner.version
+      each occurring exactly once in the text, so both substitutions
+      below were surgical.
+        Baseline: the canonical digest equals the declared value,
+        b73a0e2f, consistent with PUB_SEAL_OK at RULE 0.
+        Mutating manifest_digest.value to 64 zeros: the canonical
+        digest is UNCHANGED, digest_ok False, signature_present True,
+        signer_pinned True, signature_ok False. A successor declaring
+        b73a0e2f still matches the mutated bytes.
+        CONTROL: mutating owner.version, a field the canonical form
+        does not remove, CHANGES the canonical digest. The control
+        fires, so the unchanged result above is not vacuous.
+
+      THE TWO EXITS, AND NEITHER IS AS COVERED AS IT LOOKS.
+        The signature value. Named by an existing token: a
+        predecessor whose signature does not verify under the pinned
+        allowlist is SIGNATURE_BAD by D307-1:949-953, whatever the
+        reason. The fixture's SIGNATURE_BAD row is built with an
+        EPHEMERAL key, so it exercises only the unpinned-signer
+        variant. Measured: the only row in EXPECTED reaching
+        signer_pinned True is VERIFIED, and no row carries
+        signer_pinned True together with signature_ok False. The
+        token covers this exit; the fixture exercises one half of it.
+        The digest value. Not covered at all. digest_ok goes False
+        while the link still matches, so the bond is intact and the
+        object is defective. No token in the set names that.
+
+      THE UNCOVERED EXIT IS NOT MERELY MISSING, AND THE CORRECTION TO
+      A SHARPER CLAIM IS RECORDED RATHER THAN THE SHARPER CLAIM. It
+      was put that the case falls into the existing SIGNATURE_BAD row
+      under a wrong token. Measured against the full observation
+      tuple, it does not: it differs from SIGNATURE_BAD at index 0,
+      digest_ok, and index 2, signer_pinned, and it matches no row in
+      EXPECTED exactly. It collides only under projection onto the
+      signature legs alone, where present True with ok False maps to
+      SIGNATURE_BAD and nothing else. The finding survives by a
+      shorter route and lands harder: no row in EXPECTED carries
+      digest_ok False at all, so the single authority for
+      case-to-token is not wrong about this input, it is SILENT on
+      it, and silence is what lets a classifier consulting the
+      signature legs first emit SIGNATURE_BAD unchallenged.
+
+      SELF_SEAL_BROKEN IS RECORDED AS THE NAME IT WOULD HAVE, AND IS
+      NOT AUTHORISED. It reads with subject PREDECESSOR as the
+      predecessor's own seal being broken while the bond holds, which
+      is the fact rather than the mutation that exhibits it. Class
+      CHECKED, WRONG; it would project to rc 2. The tool does not
+      emit it. A tool cannot be the place a new classification first
+      appears, because the fixture is the single authority for
+      case-to-token and that authority is amended in its own gate,
+      never inferred from code that shipped ahead of it.
+
+      GAP 3, THE HALF-NULL SUCCESSOR, IS RECORDED HERE BEHIND THE SAME
+      BLOCKER. D307-1:945-948 puts a successor with one link field
+      null and the other not inside MALFORMED_LINK. The fixture's
+      MALFORMED_LINK row carries a real URL with a malformed digest,
+      and the observation tuple carries only the PRESENCE of
+      supersedes, never its value, so no row exercises the half-null
+      shape. The rule exists and the tool implements it; no test
+      reaches it. It is not closed by writing a case into the tool's
+      own tests, because that would create a second authority for
+      case-to-token mapping and the fixture exists to be the only one.
+
+    D310-3. digest_ok IS A PRECONDITION OF THE SIGNATURE LEGS, NOT AN
+    OBSERVATION BESIDE THEM. This is the decision that lets the tool
+    ship with eight tokens and no lie.
+
+      THE TERM THAT WAS MISSING. manifest_digest.value is both the
+      sealed field and the target of the signature: verify_glm_manifest
+      checks the Ed25519 signature over bytes.fromhex(declared) at
+      :262-265, where declared is that same field, read at :212-213 and
+      compared at :219-220. When the field's own seal is broken, the
+      signature target is not trusted, and therefore no signature check
+      was performed at all, whatever the boolean returns. digest_ok is
+      a precondition of interpreting the signature legs. It is not one
+      more observation printed next to them.
+
+      WHAT THE TOOL DOES.
+        It does NOT claim it failed to identify the predecessor. It
+        identified it: the link matched, compute_glm_digest returned
+        the declared value, and that is the exact opposite of
+        DIGEST_MISMATCH. A code path saying "not identified" where
+        the measurement says identified would be a lie in the source,
+        and the next seat reading it would find one.
+        It does NOT claim a bad signature. None was checked.
+        It prints the observation explicitly: link matched, self-seal
+        broken, signature legs uninterpretable.
+        It exits rc 3.
+
+      rc 3 IS THE LITERAL READING, NOT AN EXTENSION. D307-1:954-964
+      names the third class COULD NOT CHECK. Here the signature could
+      not be checked. There is no negative verdict to report; there is
+      a check that never ran. Reading rc 3 as covering this needs no
+      widening of the definition, and D307-1:965-967 is not violated
+      because no new condition is folded into an existing token: an
+      unsatisfied precondition is what COULD NOT CHECK describes.
+
+      THE DIFFERENCE FROM UNREADABLE, STATED BEFORE ANYONE MERGES
+      THEM. UNREADABLE is bytes that are not a digest-computable
+      manifest. These bytes are digest-computable; the execution above
+      computed their digest. Two different reasons to be unable to
+      check, one class, one exit code, two different printed messages.
+      A later seat that collapses them loses the distinction between
+      "I could not read this" and "I read it and its own seal is
+      broken".
+
+      THE COST, WRITTEN AS A COST AND NOT AS A DESIGN WIN. rc 3 says
+      the tool could not check. It does not say the predecessor's seal
+      is broken. The shape is fail-closed and it is lossy: the printed
+      observation carries the fact, the exit code does not, and a
+      reader inspecting only $? learns less here than the tool knows.
+      That is the same shape as the standing F1 finding and it is
+      accepted here rather than hidden.
+
+      THE DEBT, NUMBERED. No row in EXPECTED carries digest_ok False,
+      measured. So no test locks the path this decision defines, and
+      the tool will ship with a route the single authority does not
+      touch. That is owed, not resolved.
+
+      ONE AUTHORISATION IS REQUESTED, WITH FOUR REASONS, IN A GATE OF
+      ITS OWN AFTER THE TOOL. The fixture file is frozen: D308-2
+      released a single write under tests/ at :1210-1213 and that
+      release is spent. Amending it needs a new operator decision.
+      The four reasons travel together because they are one edit.
+        A ninth token, SELF_SEAL_BROKEN, with its row.
+        A half-null successor row for MALFORMED_LINK, Gap 3.
+        A row carrying digest_ok False, so the precondition path
+        defined here is locked by the authority rather than by the
+        tool's own tests.
+        A row where a PINNED signer's signature does not verify, so
+        the second variant of SIGNATURE_BAD is exercised and the
+        token stops resting on one half of its own definition.
+
+      WHY THE FIXTURE CANNOT BE AMENDED QUIETLY. TOKENS is defined at
+      :49-58 of tests/test_s309_supersession_cases.py, TABLE at :61-70
+      and EXPECTED at :75-89, and the completeness test at :226-231
+      compares set(TABLE) against set(TOKENS) and set(EXPECTED) union
+      UNREACHABLE against set(TOKENS). Both operands of both
+      assertions are module-level names in that same file: the test is
+      closed over the fixture and compares the file against itself. A
+      ninth token added inside the file needs three edits. A ninth
+      token added outside it is invisible to that test. Censused with
+      the pathspec declared before counting: the fixture is the only
+      file under tests/*.py defining TOKENS and the only file in the
+      tree referencing the module, its own marker at :18 being the
+      single hit.
+
+    F310-2, RECORDED WITHOUT ACTION. D308-3:1188-1194 names three
+    reachable raise sites -- json.loads inside verify_glm_manifest at
+    :196-198, _block_value at :50 and _require_single at :39-42 -- and
+    concludes that one except clause suffices. The module carries nine
+    raise statements, all GlmManifestError. The tool calls
+    compute_glm_digest directly on fetched bytes, unwrapped, and that
+    call reaches :39, :50, :68, :72 and :76: two of the three named,
+    plus three that are not named, because verify_glm_manifest catches
+    its own internal compute at :226 while the tool's call is not
+    caught. The third named site is reached only through the tool's
+    separate verify call, which also reaches :200. The conclusion
+    survives by shared exception type, not by the enumeration that was
+    given. A future raise of a different type inside that path breaks
+    it silently, and the enumeration would not warn.
+
+    PROVENANCE OF THE MEASUREMENTS IN THIS ENTRY. The module read, the
+    two censuses, the occurrence counts, the four booleans, the link
+    consequence and the control were printed by read-only gates on
+    Server A in this session. The fixture line numbers and its sha,
+    339 lines and 12245 bytes, were printed by a read-only gate on
+    Server A. The tuple comparisons behind the correction in D310-2 --
+    the differing indices and the emptiness of the digest_ok False row
+    set -- were executed in the seat's container over the table as read
+    on Server A, and NOT on Server A. They will be re-executed there
+    when the tool's tests run, and will fail there if wrong.
+
+    ERRORS NAMED IN THIS GATE. Six instrument defects in one family,
+    all the seat's own: a regex anchored without multiline, a count
+    over a block boundary never delimited, a relational prediction fed
+    to an equality comparator, a line number derived by proximity from
+    a file not opened, a census over a pathspec that swept documents
+    while the prediction spoke of code, and a census for external
+    references that did not exclude its own subject. FG-S310-H is the
+    one that changes a rule: a census for external references excludes
+    the subject IN THE PATHSPEC, not in the reader's head, and the
+    prediction is phrased over the set the instrument actually scans.
+    Separately, a paste was verified in the seat's container and then
+    retyped into the message rather than emitted from the verified
+    file, so the syntax check attached to an artifact that was never
+    run; every paste after it was round-tripped against its file
+    before being sent. And a draft of this entry asserted that the
+    signature exit was covered by the fixture without checking which
+    variant that row builds, in an entry whose subject is the
+    fixture's silence. It was caught by reading the decoded payload
+    in the transfer gate, before the append gate, which is the reason
+    the decoded text is printed there and not after the write.
+
+    AUTHORISES NOTHING NEW. No file is created, no test is changed, no
+    source is edited, no manifest is touched and no dependency is
+    declared. The ninth token is proposed and not authorised, and the
+    tool does not emit it. The ceremony change (b) remains
+    unauthorised and nothing recorded here makes it more likely.
+    Section 12 stands unchanged and this entry does not widen it.
+    Sequence: this entry first, then the tool, then the tool's tests,
+    then the fixture amendment if the operator authorises it, in
+    separate gates.
