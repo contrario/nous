@@ -1849,3 +1849,193 @@ document itself.
     Sequence: this entry first, then the tool, then the tool's tests,
     then the fixture amendment if the operator authorises it, in
     separate gates.
+
+  - S310. THE FETCH SEAM DIVERGES FROM THE ONE IN THE TREE AT FIVE
+    POINTS, RECORDED AS D310-4. The tool fetches with httpx. Four
+    scripts were read end to end before this was written, and every
+    divergence below carries the measurement that produced it. This
+    entry precedes the tool because a design that departs from an
+    existing seam is a decision, not a comment inside the code that
+    departs.
+
+    THE SEAM THAT EXISTS, READ AS BYTES. scripts/cold_audit.py, sha
+    ddfb20c7, 460 lines, 16049 bytes, MAXLEN 82. It fetches by
+    shelling out: _fetch at :109-130 and _http_status at :133-151,
+    both subprocess.run over curl. The census, pathspec scripts/*.py
+    declared before counting: curl one member, wget one member, both
+    cold_audit; a top-level httpx import one member,
+    capture_phala_receipt. Under that pathspec, and across the probes
+    curl, wget, subprocess, a top-level httpx import, urllib and
+    requests, two fetch implementations exist and no third. Nothing
+    outside scripts/*.py was censused and this sentence claims
+    nothing about it.
+
+    THE CLIENT. httpx, and the reason is the reason cold_audit gives
+    for curl, read back the other way.
+      THE STATED REASON DOES NOT TRANSFER. cold_audit:15-21 shells to
+      curl BECAUSE THE PUBLISHED DOCUMENT SAYS curl: a fetch by a
+      different client is a different input, and a check whose input
+      differs from the consumer's is not a check of what the consumer
+      holds. That argument binds a checker to a documented consumer
+      procedure. This tool's input is a URL taken from a successor's
+      supersedes field. No published procedure tells anyone to fetch
+      a GLM manifest, and so there is no consumer input to match.
+      Copying the shape without the reason would be imitation, not
+      composition.
+      curl IS UNDECLARED AND THE TREE ALREADY PAYS FOR IT.
+      cold_audit:379-385 probes for curl on PATH and exits 2 when it
+      is absent. httpx is a declared runtime dependency at
+      pyproject.toml:30, inside the dependencies array at :27-34 and
+      above the optional-dependencies table at :36, so pip install
+      nous-lang supplies it and a plain checkout does not have to
+      hope.
+      THE STDLIB ALTERNATIVE IS ALREADY EXCLUDED ON OUR OWN SURFACE.
+      cold_audit:19 records that nous-lang.org, behind Cloudflare,
+      403s the Python-urllib user-agent while serving curl, requests,
+      httpx and wget normally, and that a first draft using urllib
+      failed 4/4 against a healthy surface. The choice was never
+      three-way. It was curl or httpx, and one of the two is
+      declared.
+
+    DIVERGENCE 1, THE CAP. The tool refuses a body over 1 MiB and
+    emits UNREACHABLE. It never truncates.
+      MEASURED EMPTY, ZERO OF TWO. Neither fetcher caps. There is no
+      --max-filesize at cold_audit:111 and no size bound in
+      capture_phala_receipt:83. This is the first seam of its kind in
+      this tree, stated as a measured zero rather than as an absence
+      recalled.
+      WHY REFUSAL AND NOT TRUNCATION. Truncated bytes are still
+      bytes. They would reach compute_glm_digest, hash to something
+      other than the declared supersedes_digest, and return
+      DIGEST_MISMATCH: a verdict about content for a fault in
+      transport. The tool would assert that the predecessor changed
+      when it merely failed to arrive whole. That is the worst error
+      available to it and the cap exists to make it unreachable.
+      WHY THE CAP IS NOT DELEGATED. curl --max-filesize was NOT
+      measured by this seat, and whether it refuses rather than
+      truncates when Content-Length is absent is unknown here.
+      Delegating the contract to unmeasured behaviour in another
+      program is not a control. With httpx.stream the count is the
+      tool's own: bytes are summed as they arrive and the excess
+      raises rather than returns, so the refusal is expressible in
+      code this repository owns.
+      THE NUMBER AND ITS REASON. RULE 0 measured the two served
+      manifests at 10673 and 10250 bytes. 1 MiB is roughly a
+      hundredfold headroom over the observed maximum and is still
+      trivial to hold in memory. It bounds a hostile or broken
+      response without coming near a real one.
+
+    DIVERGENCE 2, REDIRECTS. follow_redirects is False and a 3xx is
+    UNREACHABLE.
+      THE EXISTING SEAM FOLLOWS THEM. cold_audit:111 passes
+      curl -fsSL; the L is follow. This tool does the opposite and
+      the reason is the link, not a preference. A supersedes value is
+      a URL by construction: the ceremony writes it from
+      --supersedes-url at sign_glm_manifest:368-370 into the
+      successor at :162. It names where the bytes are. A 3xx ending
+      elsewhere delivers a different document, not the same document
+      at another address. ADR-0011 is cited here only as its commit
+      subject at 84ca0b9 states it, that a supersedes link commits to
+      published bytes; the file has not been opened by this seat and
+      nothing finer is claimed from it.
+      D307-1:955-957 ALREADY SAYS SO. A redirect ending elsewhere is
+      inside UNREACHABLE by definition. This divergence implements a
+      mapping that was already fixed; it does not widen it. With
+      follow_redirects False the 3xx is visible as a status and can
+      be mapped. Dropping the L from a curl invocation yields a
+      behaviour this seat has not measured, which is a second reason
+      the client choice and the redirect choice are one decision.
+
+    DIVERGENCE 3, THE TIMEOUT, WHICH IS A CONVERGENCE IN INTENT AND A
+    DIVERGENCE IN MECHANISM. A timeout is the other half of
+    UNREACHABLE: without one the tool hangs where it owes a token.
+      TWO VALUES ARE MEASURED AND THEY MEASURE DIFFERENT THINGS.
+      cold_audit:114 and :138 pass timeout=120 to subprocess.run,
+      which bounds the wall clock of an entire child process
+      including curl startup. capture_phala_receipt:83 passes
+      timeout=60.0 to httpx.Client, which bounds connect, read,
+      write and pool. The 120 is not the comparable number and does
+      not transfer as a number.
+      THE TOOL TAKES THE httpx PRECEDENT. 60.0 in the scalar form,
+      because capture_phala_receipt:83 is the only httpx timeout in
+      this tree and the scalar is the form it uses. Expiry maps to
+      UNREACHABLE, in the same class as a connection failure, since
+      in both the predecessor was not obtained.
+
+    DIVERGENCE 4, THE EXIT CODE. rc 3 shares its meaning with
+    neither shipped tool, and that is why it was chosen.
+      MEASURED ON BOTH FILES D307-1 NAMES. served_mirror_check.py,
+      sha ac330dfa, 130 lines: rc 1 for drift at :123, rc 2 for
+      FAILED MEASUREMENT at :76, :79, :99 and :105, rc 0 clean at
+      :126. cold_audit.py: rc 1 for at least one failed class at
+      :408 and :456, rc 2 for usage or environment error at :385 and
+      :392, per its own docstring at :37-39. So rc 2 means failed
+      measurement in one and usage error in the other. The inherited
+      reading of D307-1:896-901 is discharged against bytes.
+      rc 3 INHERITS NEITHER MEANING, which is the whole point:
+      COULD NOT CHECK gets a code it does not share with a
+      judgement. D307-1:989-992 already records that the residual
+      difference between these tools is recorded rather than
+      resolved, and this entry does not resolve it either.
+
+    DIVERGENCE 5, THE INPUT SHAPE, STATED SO THAT UNREACHABLE IS
+    NEVER AMBIGUOUS.
+      The successor is operator input. The predecessor is what the
+      tool retrieves from that successor's supersedes field. The
+      tool performs exactly one fetch and it is always the
+      predecessor.
+      Therefore UNREACHABLE always names the predecessor. Its
+      subject is PREDECESSOR under D309-2:1366-1372, and a tool that
+      fetched both ends would make the token ambiguous about which
+      end failed. D309-2:1440-1445 already forbids the tool from
+      verifying the successor, on the ground that a second oracle
+      over one artifact adds fragility where one already governs;
+      one fetch is the same rule applied to transport.
+
+    WHAT DOES NOT DIVERGE, RECORDED SO IT IS NOT RE-DECIDED.
+      TRANSPORT FAILURE IS AN EXCEPTION, NEVER A VERDICT.
+      cold_audit:116-120 raises on a non-zero curl exit and
+      :140-145 calls an incomplete curl INCONCLUSIVE in as many
+      words. That is UNREACHABLE, and the tool composes it.
+      A 200 IS NOT EVIDENCE A FILE EXISTS. cold_audit:123-130 reads
+      the first 512 bytes and rejects an HTML page served by an SPA
+      fallback. This tool needs no sentinel: the same input reaches
+      glm_manifest.py:196-198 and raises GlmManifestError, which is
+      UNREADABLE by D307-1:958-964. Same hazard, same class, one
+      fewer mechanism.
+      THE EXIT SHAPE. Four scripts read end to end now agree:
+      main() returns int and the module ends in
+      raise SystemExit(main()), at cold_audit:460,
+      served_mirror_check:130, sign_glm_manifest:392 and
+      capture_phala_receipt:167.
+
+    A CONTROL THAT GOES GREEN WHEN THE NETWORK IS DOWN IS NOT A
+    CONTROL. cold_audit:154-184 refuses to audit anything unless the
+    surface first answers 404 for a version that cannot exist, and
+    treats anything that is neither 404 nor 200 as INCONCLUSIVE. The
+    tool inherits the principle rather than the preflight: every
+    failure to obtain the predecessor lands in COULD NOT CHECK and
+    none of them lands in rc 0. Nothing in the fetch path may reach
+    a passing token by failing.
+
+    ERRORS NAMED IN THIS GATE. The seat wrote that the fetch layer
+    had no in-tree precedent while holding the measurement that
+    filled the gap: cold_audit:19-21 had been quoted in this same
+    session, from a file carrying curl, wget and subprocess, unread.
+    That is the FG-S309-A class with the evidence already in hand
+    rather than merely unfetched. Separately, the seat enumerated
+    four design points and omitted the timeout, which is the only
+    mechanism the existing seam actually implements and half of what
+    UNREACHABLE means. Both were caught by the operator, not by the
+    seat, which is where they are recorded.
+
+    AUTHORISES NOTHING NEW. No file is created, no test is changed,
+    no source is edited, no manifest is touched and no dependency is
+    declared: httpx is already declared at pyproject.toml:30 and this
+    entry adds nothing to that line. The ninth token remains proposed
+    and unauthorised and the tool does not emit it. The fixture file
+    remains frozen and the four-reason amendment requested in the
+    previous entry remains unauthorised. The ceremony change (b)
+    remains unauthorised. Section 12 stands unchanged and this entry
+    does not widen it. Sequence: this entry first, then the tool,
+    then the tool's tests, in separate gates.
