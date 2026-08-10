@@ -2333,3 +2333,124 @@ document itself.
     Sequence: this entry first, then ONE code gate carrying the
     tool's tests and the repair together, because the convention
     separates documents from code and not tests from tests.
+
+  - S311. THE FIXTURE AMENDMENT IS THREE DECISIONS AND ONE OF THEM IS
+    A CLOSED BOUNDARY, RECORDED AS D311-3. This entry REPLACES the
+    five-reason list carried in the S310 handoff and restated in the
+    S311 opener. That list read as one request; the fixture read end
+    to end shows it is three, and its strongest member is not a
+    request at all. The list is superseded here so that a later seat
+    reading the opener finds the replacement named.
+
+    D311-3(a). THE FOURTH AND FIFTH REASONS ARE ONE, AND IT IS A
+    BOUNDARY AND NOT A GAP. The fourth asked for a row where a PINNED
+    signer's signature fails to verify. The fifth said the fixture
+    holds no predecessor signed by the pinned key. They are not two
+    items: the second is the mechanism of the first.
+      IMPOSSIBLE, AND PROVED FROM HERMETICITY RATHER THAN FROM
+      ABSENCE. The only private key in the file is
+      Ed25519PrivateKey.generate() at :136, which is ephemeral by
+      construction. The docstring states no private key at :14. The
+      file names the consequence itself at :330-331: VERIFIED is not
+      constructible under the default allowlist, so it is read.
+      TAMPERING WITH THE READ MANIFEST DOES NOT REACH IT EITHER.
+      Altering the published bytes breaks digest_ok first, and
+      digest_ok is a PRECONDITION of the signature legs under D310-3,
+      so the branch returns UNCLASSIFIED and never SIGNATURE_BAD. The
+      route is closed at both ends.
+      THE VALUE IS NOT THAT ONE REASON LEAVES THE LIST. It is that
+      this names a limit the fixture inherits from its own founding
+      property. The fixture is hermetic; therefore it can never
+      construct anything that requires the operator key. That is a
+      CLOSED SET of what it can cover, not a defect awaiting repair,
+      and the coverage debt stops waiting for something that is not
+      coming.
+
+    D311-3(b). THE SECOND, THIRD AND SIXTH REASONS NEED A
+    RESTRUCTURING AND NOT AN AMENDMENT, AND IT IS NOT AUTHORISED
+    HERE. Each asks for a case whose token ALREADY HAS A ROW.
+      THE UNIT OF THE FIXTURE IS THE TOKEN. TABLE at :61-70 is
+      token -> (subject, provenance), one row per token, and
+      test_the_table_carries_one_row_per_token at :230 asserts
+      set(TABLE) == set(TOKENS). D309-3 chose that shape.
+      SO THESE ARE NOT NEW ROWS. A half-null link in either direction
+      is a second MALFORMED_LINK; an uppercase digest is a second
+      DIGEST_ONLY. Expressing them means moving the unit from the
+      token to the case, which revokes D309-3.
+      THE CONDITION IF IT IS EVER DONE. Under a case-keyed table the
+      completeness check becomes at-least-one-case-per-token. A token
+      with zero cases still cannot exist, but a token with WRONG
+      cases passes exactly as before, so a set equality would decay
+      into a coverage check. The equality must be KEPT AS ITS OWN
+      ASSERTION alongside the coverage one: two checks, not one
+      weakened. tests/test_s311_supersession_tool.py imports TOKENS
+      for the tool-side equality and survives either shape, but the
+      structure underneath it would have changed.
+      THIS IS A CONDITION ON A FUTURE INNOVATION GATE AND NOT A
+      PROHIBITION.
+
+    D311-3(c). THE NINTH TOKEN IS UNCHANGED BY THIS ENTRY. The first
+    reason asked for SELF_SEAL_BROKEN with its row. That is not a
+    fixture amendment; it is an amendment of the token set, left
+    PROPOSED and UNAUTHORISED by D310-2, and nothing since has
+    changed it. SELF_SEAL appears zero times in the fixture, censused
+    over that file.
+      IT NOW COSTS MORE THAN IT DID. Before f3e34e1 the eight names
+      lived in two files. That commit added a test asserting the two
+      agree, so a ninth token is one atomic change across the tool,
+      the fixture and the equality test, and the S311 opener forbids
+      editing the fixture inside the tool's gate. It requires a new
+      arc, not an addition.
+      UNCLASSIFIED CARRIES THE CONDITION MEANWHILE. It is fail-closed
+      at rc 3, it loses the distinction between a broken seal and the
+      other uncovered conditions, and that loss is written here as a
+      cost rather than left as a silence.
+
+    D311-3(d). THE DEBT, COUNTED FROM THE FIXTURE BYTES AND NOT FROM
+    A PRIOR. Five absences were measured directly in this session by
+    reading the file end to end:
+      1. a half-null link with the URL present and the digest null.
+      2. a half-null link with the URL null and the digest HEX64.
+         Neither exists: the only malformed row is successor(
+         "not-a-digest") at :154, which carries both ends.
+      3. digest_ok False. Column 0 of EXPECTED at :75-89 holds None,
+         None, True, True, True, _RAISED and True. There is no False,
+         so the D310-3 precondition path is locked by nothing.
+      4. an uppercase digest. Every declared digest is the output of
+         compute_glm_digest, which the fixture never re-cases.
+      5. a successor carrying neither link key. _doc at :105-106 sets
+         both on every document the fixture builds.
+    TWO OF THE FIVE NEED MORE THAN D311-3(b) GIVES. Items 3 and 5
+    both classify as UNCLASSIFIED, at :117-118 and :141-142 of the
+    tool. UNCLASSIFIED is a printed value and NOT a token under
+    D310-5(a), and TABLE is keyed by token, so no case-keyed table
+    reaches them either. They need a table that can carry a row for a
+    named non-verdict, which is a third shape and is not proposed
+    here.
+    THE TOTAL IS NOT RESTATED. The enumeration of uncovered tool
+    behaviours stands where S310 left it, at eight measured by the
+    seat and seven by the operator. This session did not re-execute
+    it and does not adjudicate it.
+
+    ERRORS NAMED IN THIS GATE. FG-S311-J: the seat carried the
+    five-reason list through four sessions and presented it as a
+    single pending amendment without having read the file it was
+    about. Three of the five were assertions of absence, which is the
+    project's recurring failure, and the strongest member was not a
+    request but a proof. The reading took one gate and should have
+    preceded the list.
+
+    PROVENANCE. Every line number here was printed by a read of
+    tests/test_s309_supersession_cases.py end to end on Server A in
+    this session, at sha 34b3557c, 339 lines, MAXLEN 80. The tool
+    line numbers are from the read of scripts/check_glm_supersession
+    .py in the same session at sha 03c2af4a, before it was patched.
+    The SELF_SEAL count is a census over the fixture alone with the
+    pathspec stated.
+
+    AUTHORISES NOTHING. No file is changed. The fixture remains
+    frozen and unamended. No token is added and TOKENS remains eight.
+    SELF_SEAL_BROKEN remains proposed and unauthorised. The ceremony
+    change (b) remains unauthorised. D309-3 stands. The restructuring
+    in (b) and the ninth token in (c) each require their own decision
+    and their own gate, and neither is taken here.
