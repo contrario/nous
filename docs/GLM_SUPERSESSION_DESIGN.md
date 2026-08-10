@@ -2180,3 +2180,156 @@ document itself.
     The ceremony change (b) remains unauthorised. Section 12 stands
     unchanged and this entry does not widen it. Sequence: this entry
     first, then the tool, then the tool's tests, in separate gates.
+
+  - S311. THE IMPORT MECHANISM D310-5(b) LEFT OPEN IS MEASURED, AND
+    THE RECORDED FIX FOR FG-S310-L IS DEFECTIVE IN BOTH OF ITS
+    HALVES, RECORDED AS D311-1 AND D311-2. The correction is owed as
+    an entry of its own and not as ceremony. The code that follows
+    will diverge from the recipe recorded at the close of S310; if
+    the divergence and the correction arrive in one commit then the
+    code is the source of the correction and this ledger is its
+    annex. The previous entry ends by ordering an entry before the
+    code it governs, at :2181-2182, and this one keeps that order.
+
+    D311-1. THE MECHANISM LEFT OPEN AT :2109-2116 IS MEASURED, AND IT
+    HAS TWO SIDES RATHER THAN ONE. D310-5(b) named one unmeasured
+    mechanism. The equality it specifies has two operands and they
+    are not reached the same way, so the open question was answered
+    twice.
+      THE SIBLING SIDE IS AVAILABLE AND IS ALREADY IN USE. Ten
+      tracked files under tests/ carry fifteen import lines of the
+      form "from test_NAME import ...", with the pathspec tests/*.py
+      declared before counting, and the suite is green at 2825
+      passed. The property is executed in the tree, not inferred.
+      THE MECHANISM IS NOT THE CONFTEST. tests/conftest.py is the
+      only conftest in the tree and it was read end to end, 43 lines:
+      it carries a collect_ignore list and a --run-live option and it
+      does not touch sys.path. There is no tests/__init__.py and
+      pyproject declares no import mode. What remains is pytest's own
+      path insertion, and that is stated here as a conclusion by
+      elimination and not as a measurement.
+      THE TOOL SIDE IS NOT AN IMPORT AT ALL. scripts/ is not a
+      package: no scripts/__init__.py exists, packages is
+      ["templates"] at pyproject:53, and the py-modules list at
+      pyproject:55-146 names top-level modules only. Two test
+      docstrings already say so in the tree's own words, at
+      tests/test_s159_u2_release_provenance.py:3 and at
+      tests/test_s297_glm_ceremony.py:4.
+      THE FILE-PATH IDIOM IS ALREADY IN THE TREE FOUR TIMES. It
+      resolves the repository root from __file__, builds a spec with
+      importlib.util.spec_from_file_location under a module name
+      local to the test, and executes it. The matched lines are
+      test_s159_u2_release_provenance:20,24,27,28,
+      test_s236_claim_lint:30,37,38,40,
+      test_s297_glm_ceremony:23,30,32,33 and
+      test_s298_glm_ceremony_guards:30,41,43,44;
+      spec_from_file_location appears on 26 lines of tests/*.py. Only
+      the third was also read as contiguous text. The tool's tests
+      compose that seam and add no route.
+      LOADING scripts/check_glm_supersession.py RUNS NOTHING. Its
+      entry point is guarded at :294 and its module body from :45 to
+      :291 is imports, constants, two exception classes and five
+      functions, so exec_module binds names and has no other effect.
+      THE TWO OPERANDS AGREE TODAY, WHICH IS NOT A REASON TO OMIT THE
+      ASSERTION. TOKENS at :56-65 of the tool and TOKENS at :49-58 of
+      the fixture carry the same eight names. The fixture already
+      closes its own set against its table at :230-231. What no file
+      holds is the equality ACROSS the two, which is the assertion
+      D310-5(b) specifies and the reason it specified it.
+
+    D311-2(a). THE PADDING HALF OF THE RECORDED FIX REPRODUCES THE
+    DEFECT IT REPLACES. FG-S310-L was recorded at the close of S310,
+    in the session handoff and not in this repository, as: padding
+    derived from the label set, so that no constant can go stale. The
+    label set was then extracted from the tool by walking its syntax
+    tree rather than by reading it off the page: thirteen _print call
+    sites, thirteen distinct labels, every one a literal, longest 18.
+    The two labels that render with no separator, pred.signer_pinned
+    and pred.owner.version, ARE the two longest. A width derived as
+    the maximum of the set is therefore 18, which is the shipped
+    constant at :193 character for character. The recorded fix and
+    the defect it replaces are the same line.
+      MEASURED OVER ALL FOUR CANDIDATE RENDERERS. Against the
+      thirteen labels, counting those whose rendered line does not
+      split into two whitespace-separated fields: the shipped
+      ljust(18) fails 2; ljust(20) fails 0 today and fails at the
+      first label of 20 characters, which is why it was rejected;
+      padding derived from the set fails the SAME 2; derived padding
+      followed by an explicit separator fails 0.
+      WHERE THIS WAS EXECUTED. The tool was reconstructed byte for
+      byte in the seat's container and its sha256 matched Server A at
+      03c2af4a before anything ran against it. The extraction and the
+      four renderer runs happened there. Nothing was written to
+      Server A.
+
+    D311-2(b). THE CONTROL HALF CANNOT FIRE ON THE CASE IT WAS
+    WRITTEN FOR, AND IT IS THE WORSE OF THE TWO DEFECTS. The recorded
+    control reads: a test asserting every emitted line splits into
+    two or more whitespace-separated fields. Driven over the output
+    of one execution it never reaches the failing labels. Both are
+    pred.* and both are emitted only inside the branch at :276-281,
+    which runs only when a predecessor was obtained, which requires a
+    fetch. A hermetic run emits neither. The control would pass green
+    while the defect stood. A control that cannot fire on the case
+    that motivated it is not a control, and this is the standing rule
+    that a negative control must be structurally capable of firing,
+    met on the positive side.
+
+    D311-2(c). THE FIX, STATED SO THAT IT CANNOT BE READ AS ONE
+    THING. Padding is alignment. The separator is the invariant. They
+    are not the same concern, and the recorded fix named only the
+    first, which is how a derived width could be written down as a
+    repair while being identical to the defect. The renderer pads to
+    a width derived from the label set AND emits a separator that
+    does not depend on that width. The control is driven over the
+    label set, not over the output of one execution, so that every
+    label is rendered and asserted whether or not any run emits it.
+
+    D311-2(d). THE NAMED LABEL SET IS SURFACE, AND THE DISTANCE IS
+    THE FINDING. The control in (c) cannot enumerate what to assert
+    unless the labels exist as an object. Today they are thirteen
+    literals at thirteen call sites, and the enumeration in (a) was a
+    syntax-tree walk, which is available to a reader and not to a
+    test. So the repair adds a named constant to a shipped file,
+    derives the width from it, adds a separator, and adds a test
+    driven over it. FG-S310-L began as one character and ends as four
+    things, one of which widens the tool's surface. The distance
+    between the two is the finding, and it is the reason a fix
+    without a control is not a fix.
+
+    ERRORS NAMED IN THIS GATE. FG-S311-A: the seat observed that the
+    end-to-end route cannot reach the two failing labels, wrote that
+    observation and the recorded control in the same message, and
+    drew no line between them; the observation defeats the control
+    and the seat did not say so. The operator connected them. It is
+    the family of FG-S310-I, a measurement held while the claim it
+    defeats stands unaltered. FG-S311-B: the seat proposed to carry
+    the correction of the recipe and the code diverging from it in
+    one gate, on the authority of this session's opener; the operator
+    cut it, on the ground that the code would then be the source of
+    the correction.
+
+    PROVENANCE. The census figures, the file-path idiom lines, the
+    conftest read, the guard at :294, the two TOKENS blocks and the
+    absence of any reference to this tool elsewhere in the tree were
+    printed by read-only gates on Server A in this session. The
+    thirteen labels, the four renderer runs and the failure counts
+    were produced in the seat's container against a reconstruction of
+    the tool whose sha256 matched Server A before use.
+    tests/test_s297_glm_ceremony.py was read only to :70 of 174 and
+    no claim here rests on the remainder. The sibling-import
+    mechanism is a conclusion by elimination and is labelled as such
+    above.
+
+    AUTHORISES NO NEW SCOPE. No token is added and TOKENS remains
+    eight. UNCLASSIFIED remains a printed value and not a token.
+    SELF_SEAL_BROKEN remains proposed and unauthorised. The fixture
+    file remains frozen and the amendment requested in the previous
+    entries remains unauthorised. The ceremony change (b) remains
+    unauthorised. Nothing here amends an earlier section; it corrects
+    a fix that was recorded outside this document. The edit to the
+    shipped tool described in (c) and (d) is the repair of FG-S310-L
+    and nothing else: no verdict, no exit code and no field changes.
+    Sequence: this entry first, then ONE code gate carrying the
+    tool's tests and the repair together, because the convention
+    separates documents from code and not tests from tests.
