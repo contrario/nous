@@ -83,6 +83,24 @@ TIMEOUT_SECONDS = 60.0
 
 _HEX64_CHARS = "0123456789abcdefABCDEF"
 
+LABELS = (  # __s311_label_set_v1__
+    "successor",
+    "supersedes",
+    "supersedes_digest",
+    "link_shape",
+    "fetch",
+    "manifest_version",
+    "owner.version",
+    "pred.digest_ok",
+    "pred.sig_present",
+    "pred.signer_pinned",
+    "pred.signature_ok",
+    "pred.owner.version",
+    "VERDICT",
+)
+
+_LABEL_WIDTH = max(len(name) for name in LABELS)
+
 
 class FetchRefused(Exception):
     """The predecessor was not obtained. Always UNREACHABLE."""
@@ -189,8 +207,18 @@ def fetch_predecessor(url: str) -> bytes:
     return b"".join(chunks)
 
 
+def _render(label: str, value: object) -> str:
+    """One output line. The padding is ALIGNMENT and is derived from
+    LABELS so no constant can go stale; the single space is the
+    INVARIANT and does not depend on the width. They are different
+    concerns, and a width alone leaves the longest label with no
+    separator, which is the defect FG-S310-L named (D311-2).
+    """
+    return label.ljust(_LABEL_WIDTH) + " " + str(value)
+
+
 def _print(label: str, value: object) -> None:
-    print(label.ljust(18) + str(value))
+    print(_render(label, value))
 
 
 def main(argv: list[str] | None = None) -> int:
