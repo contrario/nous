@@ -2676,3 +2676,249 @@ document itself.
     MANIFEST: different surface, different ceremony, different key. (b)
     remains UNAUTHORISED. SELF_SEAL_BROKEN remains PROPOSED and
     UNAUTHORISED. D309-3 stands. The fixture is unamended.
+
+  - S314. THE GUARD'S SET IS CONFIG-DECLARED, ITS EXAMINATION IS NOT,
+    AND ITS GREEN IS THE SAME GREEN OVER 421 FILES AND OVER NONE
+
+    Read-only session. ZERO WRITES to the tree, to origin or to any
+    served surface before this entry. RULE 0 reproduced every row of the
+    S314 opener except one, which is named below. scripts/claim_lint.py
+    was OPENED IN FOUR SPANS at sha b6380185: 114-137, 183-197,
+    785-809 and 925-975. The span total and the unread remainder were
+    printed by an instrument over the file in the gate that carried
+    this entry. THE TOOL IS NOT READ END TO END AND THIS ENTRY DOES
+    NOT SPEAK AS IF IT WERE.
+
+    D314-1  THE EMPTY ROOT RETURNS GREEN, AND TWO GUARDS IN THIS TREE
+            HOLD OPPOSITE CONVENTIONS FOR THE SAME FACT.
+
+            MEASURED: an empty directory was created under
+            /tmp/nous_s314/, --root pointed at it, and the tool exited
+            rc 0. The unfiltered output is 310 bytes and eight lines. It
+            names itself nous-claim-lint 1.2.0, reports "anchor:  <none
+            given>", the root, "scanned: 0 files", the declared proof
+            legs, "0 violation(s), 0 allowlisted, 0 stale allowlist
+            entr(ies)", and then its own boundary in its own words: the
+            result EVIDENCES conformance to the declared convention and
+            PROVES nothing about the correctness of the scanned system.
+
+            THAT IS THE SAME GREEN THE TOOL EMITS OVER 421 FILES. The
+            report does not distinguish a clean measurement from no
+            measurement. INHERITED, NOT MEASURED HERE: that this report
+            is what scripts/release.py phase 5b and
+            scripts/deploy_website.sh:71 consume. WHICH PART OF IT THEY
+            READ IS NOT MEASURED AT ALL; see NOT MEASURED below, on
+            which this paragraph rests.
+
+            FG-S314-C. THE SAME TREE HOLDS THE OPPOSITE CONVENTION.
+            scripts/served_mirror_check.py treats a zero comparison as a
+            FAILED MEASUREMENT at :76, :79, :99 and :105, exits rc 2,
+            and says so in its docstring at :25-27: a zero comparison is
+            not a silent success. Two guards, one tree, one fact, two
+            conventions, and nothing anywhere states which one a reader
+            of a green line should assume.
+
+            THIS IS A FINDING ABOUT THE WORK, NOT A SEAT ERROR, and it
+            takes the place D313-2 gives to a description wider than its
+            scope: A GUARD THAT RETURNS GREEN FOR A ZERO MEASUREMENT
+            NEVER SAYS THAT IT MEASURED NOTHING.
+
+            THIRD MEMBER OF A CLASS WITH TWO MEASURED MEMBERS ALREADY.
+            The bare-root pytest census in S312, the filesystem-derived
+            scanned set in S313, and this. Three sessions, three
+            instruments, one class: a guard whose green does not inform.
+            Each was measured only because a probe was aimed outside the
+            set the guard was assumed to cover, and this one cost a
+            single leg.
+
+    D314-2  THE WALK APPLIES NO EXCLUSION THAT claims.toml DOES NOT
+            DECLARE. THAT IS THE FIRST HALF OF THE NAMED QUESTION.
+
+            MEASURED at 785-809. iter_files is a plain os.walk, one
+            occurrence in the file. subprocess 0, git plumbing 0: the
+            walk calls nothing outside the standard library and no
+            helper in another module. Its three filters are
+            cfg.exclude_dirs at 795, cfg.include_globs at 803 and
+            cfg.exclude_globs at 805, and all three are loaded at
+            190-192 from surf["exclude_dirs"], surf["include"] and
+            surf["exclude_globs"]. NO PATH LITERAL APPEARS IN THE WALK.
+
+            SCOPED: this is a statement about 785-809 and about the
+            fields at 131-133. It is not a statement about the lines
+            still unread, whose count the covering gate prints.
+
+    D314-3  THE EXAMINATION DOES. THREE SKIPS LIVE IN CODE, AND THE
+            COUNTER SITS BEFORE TWO OF THEM.
+
+            MEASURED at 925-975, inside main. scanned is initialised at
+            929 and the loop runs over sorted(iter_files(root, cfg)) at
+            930. Then:
+
+              935-936  except OSError: continue   BEFORE the counter
+              937      scanned += 1
+              941-942  except SyntaxError: continue  AFTER the counter
+              947-948  else: continue                AFTER the counter
+
+            THEREFORE "scanned:" IS NOT THE NUMBER OF FILES EXAMINED. It
+            is the number of files the counter reached. A file that is
+            read but not parsed is counted and contributes no findings.
+
+            MEASURED OVER THE LIVE ROOT with the tool's own iter_files,
+            reproducing 933-948 line for line: YIELDED 421,
+            COUNTED_AS_SCANNED 421, EXAMINED 421, OSERR 0, SYNTAXERR 0,
+            NOSUFFIX 0. The reproduction's 421 equals the tool's own
+            scanned line, which is what makes the three counters
+            countable over the same set the guard uses.
+
+            TODAY THE THREE NUMBERS COINCIDE. THE COINCIDENCE IS NOT
+            GUARANTEED BY THE STRUCTURE. This is a defect with a
+            structure and no scenario, which is the standing F1 already
+            has, and it is recorded in that form and no stronger. NO
+            CLAIM IS MADE ABOUT WHETHER ANY SKIP IS REACHABLE. A
+            synthetic file that reaches one would measure Python
+            branching, not this repository, and a later seat would read
+            it as a property of the tree. That is FG-S312-G's shape and
+            the claim is not needed: THE STRUCTURE IS THE FINDING.
+
+    D314-4  THE SURFACE SET IS DECLARED TWICE, IN TWO LANGUAGES, IN TWO
+            FILES, AND NOTHING BINDS THEM.
+
+            FG-S314-E. claims.toml:166 declares the surfaces as globs.
+            claim_lint.py 938, 943 and 945 dispatch on suffix equality
+            against ".py", ".html" and ".md". One set, two declarations,
+            no test and no assertion connecting them. Zero instances
+            today: NOSUFFIX 0. Same shape as the S311 token set, which
+            was one set in two files and was bound; this one is not.
+
+            FG-S314-F. THE DECLARED NAME, THE UNDECLARED REACH. Line 794
+            prunes a directory when its relative path equals an entry,
+            or begins with that entry and a slash, OR ITS BARE NAME
+            EQUALS THE ENTRY. The third disjunct matches at every depth.
+            The config declares names; the code decides how deep they
+            reach; claims.toml says nothing about depth. This is not an
+            undeclared exclusion. It is an undeclared reach of a
+            declared one, and it is recorded so that no later reading of
+            claims.toml:168 assumes a top-level scope.
+
+    D314-5  WHAT THIS DID TO D313-1 AND D313-3: NARROWED, NOT FALSIFIED.
+
+            Both entries carry a scoping sentence: an exclusion
+            implemented inside the unread lines of the tool would be
+            invisible to that reading. BOTH SENTENCES WERE TRUE WHEN
+            WRITTEN AND REMAIN TRUE. Nothing in S314 contradicts them.
+
+            What changed is their reach. The unread region they scoped
+            against was the whole tool; it is now four spans smaller,
+            and the exclusions they anticipated were found, in the
+            examination rather than in the set.
+
+            AN ENTRY THAT NARROWS A PRIOR ENTRY IS NOT A CORRECTION TO
+            IT, AND SAYING WHICH OF THE TWO IT IS DOING IS THE WHOLE
+            DIFFERENCE BETWEEN A LEDGER THAT ACCUMULATES AND ONE THAT
+            OVERWRITES. Recorded here as a rule and not only as a fact
+            about these two entries.
+
+            THE NAMED QUESTION IS ANSWERED IN TWO HALVES THAT POINT
+            OPPOSITE WAYS: the set, no; the examination, yes. A
+            one-sentence answer would have been wrong whichever way it
+            went.
+
+    ERRORS NAMED IN S314: FOUR.
+
+            FG-S314-A  A LEG WHOSE COMMAND CAN PRINT NOTHING SWALLOWS
+                       THE NEXT LABEL. A grep piped to cut prints no
+                       newline when the grep finds nothing, so the label
+                       that follows lands on the same line as the value
+                       of the label before it. Caught on a fixture,
+                       which printed S313_HEAD_LINE and D313_ANCHORED as
+                       one line. It did not fire live: the grep matched
+                       at 2458. The payload was emitted unchanged and
+                       the hazard is latent. INHERITED: FG-S313-F is
+                       recorded in a prior session and was not re-read
+                       here. What is measured here is the mechanism,
+                       and it differs: empty output, not a pager.
+
+            FG-S314-B  A COUNT WRITTEN INTO THE DOCUMENT IT COUNTS
+                       CHANGES THE COUNT. The S314 opener predicted the
+                       unanchored D311 literal at the value S313
+                       measured. Live is one higher. The one added
+                       occurrence is inside the S313 entry itself, in
+                       the sentence that records the shape, sitting at
+                       column 23; the anchored shape did not move. FOR A
+                       SELF-REFERENTIAL COUNTER, PREFER AN ANCHORED
+                       SHAPE THE PROSE CANNOT MATCH BY ACCIDENT, AND
+                       WHERE NO SUCH SHAPE EXISTS, RE-MEASURE EVERY
+                       SESSION AND NEVER CARRY THE NUMBER FORWARD.
+
+            FG-S314-D  A LITERAL CENSUS WHOSE QUOTE STYLE CONTRADICTED
+                       THE FILE'S OWN. The census ran over single-quoted
+                       literals and returned zero. The file writes them
+                       double-quoted, and two legs earlier in the SAME
+                       PASTE it had printed surf["exclude_dirs"]. The
+                       zero was blindness. Re-run with the other style
+                       it is three, at 938, 943 and 945. In the same
+                       paste, fnmatch 0 was likewise not the absence of
+                       glob matching: 805 uses Path.match.
+
+            FG-S314-G  AN IMPORT IDIOM CARRIED FROM A LEG THAT LOADS A
+                       DIFFERENT MODULE. The probe loaded the tool by
+                       spec_from_file_location without registering the
+                       module in sys.modules; the tool carries a future
+                       annotations import and a dataclass, and the load
+                       raised. NOTHING ABOUT THE THREE SKIPS WAS
+                       MEASURED BY THAT GATE. An idiom that worked on
+                       one module is not a measurement about another.
+                       AND THE FIXTURE COULD NOT HAVE CAUGHT IT: the
+                       seat's fixture runs a stub interpreter because
+                       the tree does not exist there, so a payload that
+                       imports repository code is checked for transport
+                       only and is unverified at runtime until it runs
+                       live. That is a structural limit of the fixture
+                       and it is stated, not repaired. IT GENERALISES:
+                       ANY PAYLOAD THAT IMPORTS REPOSITORY CODE IS ITS
+                       OWN CLASS, AND FIXTURE-PROVEN MEANS
+                       TRANSPORT-PROVEN, NEVER RUNTIME-PROVEN.
+
+    RECORDED, NOT RESOLVED.
+
+            THE TOOL NAMES ITSELF AND ITS ANCHOR. nous-claim-lint 1.2.0
+            and an anchor field that reported "<none given>" under the
+            probe. Neither had appeared in any prior entry.
+
+            THE UNFILTERED OUTPUT SHAPE. Eight lines. Every prior
+            session read this tool through a grep for the scanned and
+            violation lines, which is why five of the eight had never
+            been seen, including the two boundary lines the tool prints
+            about itself.
+
+            THE THIRD "mandates" LINE remains UNIDENTIFIED and its sense
+            UNMEASURED, carried unchanged from S313.
+
+    NOT MEASURED IN S314.
+
+            The predicate machinery. D313-1 declines to offer a count of
+            the tool's predicates and this entry declines it too.
+
+            WHERE THE SCANNED VALUE TRAVELS. 977 writes
+            "files_scanned" into a json body and 988 prints the scanned
+            line. WHETHER release.py PHASE 5b AND deploy_website.sh:71
+            READ THE PRINTED LINE, THE EXIT CODE, OR THE JSON IS NOT
+            MEASURED. D314-1's sentence about consumption rests on this
+            gap and is labelled there.
+
+            Everything in scripts/claim_lint.py outside 114-137,
+            183-197, 785-809 and 925-975, including the remainder of
+            main, the allowlist path, and the json and sarif paths. The
+            span total and the remainder are stated in the covering
+            gate by an instrument over the file, not by arithmetic in
+            this entry.
+
+            Whether any of the three skips can be reached from the live
+            set. Not attempted, and not needed by anything above.
+
+    A3-2 DOES NOT ARM THE CEREMONY CHANGE (b), AND NEITHER DOES
+    ANYTHING IN THIS ENTRY. The condition on (b) is a correction owed to
+    the text of the SIGNED GLM MANIFEST: different surface, different
+    ceremony, different key. (b) remains UNAUTHORISED. SELF_SEAL_BROKEN
+    remains PROPOSED and UNAUTHORISED. D309-3 stands. The fixture is
+    unamended.
