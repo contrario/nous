@@ -2454,3 +2454,225 @@ document itself.
     change (b) remains unauthorised. D309-3 stands. The restructuring
     in (b) and the ninth token in (c) each require their own decision
     and their own gate, and neither is taken here.
+
+  - S313. THE ONLY AUTOMATED CLAIM GUARD IS SINGLE-AXIS, AND THE SET IT
+    SCANS IS THE WORKING DIRECTORY AND NOT THE REPOSITORY
+
+    Read-only session. ZERO WRITES to the tree, to origin or to any
+    served surface before this entry. RULE 0 reproduced every row of the
+    S313 opener with no drift. scripts/claim_lint.py was NOT opened. The
+    reading was claims.toml sha f9919834 end to end, the tool's --help,
+    and the tool's own output under five roots.
+
+    D313-1  HOW claim_lint DECIDES A VIOLATION, AND WHY A3-2 IS
+            INVISIBLE TO IT.
+
+            A violation is a RESERVED WORD PLUS A FAILED PREDICATE.
+            claims.toml:21-22 states it in the config's own voice: a
+            reserved word is NEVER a violation on its own. The reserved
+            set at claims.toml:23-28 is one axis, the capability axis:
+            prove, guarantee, ensure, prevent and their inflections.
+
+            The predicate and exemption machinery, named by the config
+            labels that carry it: E1 negation, token-scoped, window 3
+            (:67-71); E2 terms of art (:74-80); E3 AST scope, Constant
+            [str], JoinedStr, docstrings and comments only (:82-86); E5
+            a whole-literal reserved token is schema (:88-90); E6 use
+            versus mention (:92-94); [object] forbidden objects bound by
+            copula or passive participle (:96-111); [stat] the stat-card
+            numeral against declared_proof_legs = 3, plural only
+            (:121-145); [axis] required tier and tproven against
+            forbidden severity and proven (:147-163).
+
+            NO COUNT OF PREDICATES IS OFFERED. The labels above are what
+            the config names. The tool's internal predicate registry was
+            not read, so a cardinality would be a number with no
+            instrument behind it.
+
+            NOT ONE OF THEM MODELS MODALITY. A3-2 attributes binding
+            force to a voluntary instrument. It carries no reserved
+            word, so no predicate can fail, so rc 0 is CORRECT BEHAVIOUR
+            against the declared convention.
+
+            ADDING "mandates" TO [reserved] WOULD NOT FIX IT. The
+            machinery is word-plus-predicate. A reserved word with no
+            predicate that can fail is a word that never fires, and
+            there is no modality predicate for it to fail. This is the
+            conclusion of D313-1, not an aside to it.
+
+            MEMBERSHIP, MEASURED: website/a50/a50_teardown.py IS inside
+            the 421. A one-file synthetic root holding a copy of it, sha
+            5ad55703, reported scanned: 1 files and 0 violations, and
+            the --no-allowlist run over the same root was identical.
+            [surfaces] include is *.py, *.md, *.html (:166); exclude_
+            dirs (:167-170) names neither website nor website/a50;
+            exclude_globs (:174) are *_generated.py, *.egg-info/* and
+            verify_*_offline.py, and the file matches none of them.
+            SCOPED: the exclusions checked are the ones DECLARED IN THE
+            CONFIG. An exclusion implemented inside the 1016 unread
+            lines of the tool would be invisible to this reading.
+
+    D313-2  THE GUARD IS SINGLE-AXIS, AND THE PROJECT'S DESCRIPTION OF
+            IT IS WIDER THAN ITS DECLARED SCOPE.
+
+            claim_lint declares its axis in its own --help: it checks
+            conformance to the declared claim-word convention, it does
+            not determine whether any claim is true, and it EVIDENCES
+            rather than PROVES. The axis is prove, guarantee, ensure and
+            prevent, plus a predicate. It is the honest-boundary axis,
+            and against that axis the instrument is sound.
+
+            The read set carries it as "the only automated overclaim
+            guard". That description is one axis wide and the word
+            overclaim is not. An overclaim on any other axis --
+            modality, legal force, attribution, recency -- is outside
+            the declared scope and always was. THAT IS NOT A MISS BY THE
+            INSTRUMENT. It is the instrument's stated boundary, read as
+            if it were the project's boundary.
+
+            THE GAP IS THE DESCRIPTION, NOT THE VOCABULARY. FG-S312-J
+            named an overclaim live in the tree while the guard reported
+            rc 0 over 421 files. Both facts hold and they do not
+            conflict. Recorded so that no later entry treats rc 0 from
+            claim_lint as coverage of an axis it never claimed.
+
+    D313-3  THE SCANNED SET IS FILESYSTEM-DERIVED, NOT GIT-DERIVED.
+
+            MEASURED: the probe root was /tmp/nous_s313/probe_py, a
+            directory git has never seen, and claim_lint reported
+            scanned: 1 files over it. The walk is a filesystem walk. No
+            git plumbing gates it.
+
+            THEREFORE THE 421 IS A PROPERTY OF THE WORKING DIRECTORY AND
+            NOT OF THE REPOSITORY. scripts/release.py phase 5b and
+            scripts/deploy_website.sh:71 both gate on a number that
+            moves with anything that lands on disk.
+
+            MEASURED, NOT DERIVED: the untracked
+            s266_g1_hermetic_pricing.py at the worktree root, sha
+            e8df937f, 150 lines, TRACKED 0 and carried in porcelain as
+            "??", was copied into a one-file synthetic root. claim_lint
+            reported scanned: 1 files and 0 violations over it. The file
+            is in scope by extension and by content, answered by the
+            tool itself.
+            SCOPED, TO THE SAME BAR AS D313-1: the exclusions checked
+            are the ones DECLARED IN THE CONFIG. The three exclude_globs
+            do not match the name, checked with a reimplementation of
+            fnmatch over the three declared patterns, which is
+            corroboration at reimplementation strength; the tool's own
+            answer is the scanned: line. A one-file synthetic root
+            cannot reproduce a path exclusion that the tool might apply
+            when it walks the repository root.
+
+            THE CONSEQUENCE, STATED WITHOUT A PROPOSAL: an untracked
+            file can redden the release gate, and an untracked overclaim
+            is counted by a guard that it can never reach origin
+            through.
+
+            SAME FAMILY AS THE S312 BARE-ROOT FINDING. Two guards, one
+            defect class: a guard whose declared subject is the project
+            while its measured subject is the working directory. pytest
+            in S312, claim_lint in S313. Two sessions, two instruments,
+            one class, and both measured only because a probe was run
+            outside the set the guard was assumed to cover.
+
+            ALSO MEASURED: tests/ is excluded at claims.toml:168, so the
+            421 carries no test file. The allowlist has zero live
+            entries; :180-190 are the documented mechanism, all
+            commented out, and every run reported 0 allowlisted and 0
+            stale.
+
+    ERRORS NAMED IN S313: FOUR.
+
+            FG-S313-A  A number produced by another instrument carried
+                       into a prediction without being re-measured.
+                       D311_NAMES was predicted at 9, the value the
+                       operator's L3 leg printed under the shape
+                       ^    D311- ; the seat's own leg used the
+                       unanchored literal and printed 12. Both are
+                       correct over their own shapes. A NUMBER IS BOUND
+                       TO THE SHAPE THAT PRODUCED IT: re-measure it, or
+                       report it with its source attached.
+
+            FG-S313-C  A membership probe aimed at an artifact that
+                       carries no membership data. The --json body is
+                       tool, version, anchor, files_scanned, violations,
+                       allowlist_used and allowlist_stale: a count and a
+                       findings list, never a file list. MEMBER_HITS 0
+                       was therefore not absence. Two adjacent hint legs
+                       over website/ and a50/ also printed 0, and they
+                       are what made the zero readable as blindness
+                       rather than as an answer.
+
+            FG-S313-D  A labelled prior used as a basis anyway. The
+                       inherited characterisation "claim_lint covers
+                       website/a50/*.html, 394 files" was marked
+                       INHERITED, NOT MEASURED, and was then used for
+                       the load-bearing prediction, which missed in both
+                       dimensions: the set is three extensions and not
+                       one, and website/ supplies 19 of the 421 and not
+                       the bulk. LABELLING A PRIOR DOES NOT MAKE IT A
+                       MEASUREMENT, AND THE LABEL BOUGHT ME NOTHING
+                       EXCEPT A RECORD OF WHERE THE ERROR CAME FROM.
+
+            FG-S313-E  THE OPERATOR'S. A cardinality taken from the
+                       seat's own list of config labels and handed back
+                       as an instruction: "seven predicates named". No
+                       instrument printed a seven. It is FG-S313-A's
+                       shape made by the other party, and it is recorded
+                       for the reason FG-S312-H is recorded: the seat is
+                       not the only source of error in a session. The
+                       instruction was declined in the message where it
+                       arrived, and the entry offers no count.
+                       THE SAME NUMBER WAS THEN REPRODUCED A SECOND
+                       TIME, BY THE OPERATOR, INSIDE THE VERIFICATION
+                       OF THIS VERY FINDING: a census shaped E[1-9]
+                       with a trailing space cannot see E5, which
+                       sits at the end of its line, and it printed 7.
+                       Re-measured with a shape that sees it, the set
+                       is EIGHT. The second mechanism is FG-S312-A.
+                       Both numbers count CONFIG LABELS; the entry
+                       still offers no count of the tool's predicates,
+                       which is a different set and remains unread.
+
+    RECORDED, NOT RESOLVED.
+
+            A THIRD "mandates" LINE. The read set names website/a50/
+            a50_teardown.py:95 and :630. A fixed-string count over the
+            probe copy printed 3. The third line is UNIDENTIFIED and its
+            sense UNMEASURED. It is NOT folded into A3-2: it may be the
+            same class or it may not, and placing it inside A3-2 would
+            characterise bytes that were never opened.
+
+            420 AGAINST 421. This document at :879 and :1311 states that
+            claim_lint scans 420 files. Live is 421. Those entries were
+            correct when written and this is not drift. Any later
+            sentence quoting 420 as current is FG-S313-A.
+
+            docs/CONFORMITY_DECLARATION_DOSSIER.md:461 records the
+            claim_lint lock test as OPEN, "the tool is a release gate
+            and nothing guards it", while tests/test_s236_claim_lint.py
+            exists and pins the release-gate markers. These appear to
+            disagree. Neither file was read in this session beyond the
+            grep lines that named them. LEFT OPEN.
+
+    NOT MEASURED IN S313.
+
+            Whether the deploy-path and the release-path invocations
+            pass the same arguments. deploy_website.sh:71 is complete on
+            its own line, --config claims.toml --root . ; release.py:261
+            is the head of an argument list whose tail this session's
+            shape never printed.
+
+            Any exclusion implemented in scripts/claim_lint.py rather
+            than declared in claims.toml. The tool remains unopened at
+            sha b6380185, 1016 lines.
+
+            The sense of the third "mandates" line.
+
+    A3-2 DOES NOT ARM THE CEREMONY CHANGE (b). A3-2 is a correction owed
+    to website/ and docs/, carried by the ordinary deploy path. The
+    condition on (b) is a correction owed to the text of the SIGNED GLM
+    MANIFEST: different surface, different ceremony, different key. (b)
+    remains UNAUTHORISED. SELF_SEAL_BROKEN remains PROPOSED and
+    UNAUTHORISED. D309-3 stands. The fixture is unamended.
