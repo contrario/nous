@@ -2922,3 +2922,253 @@ document itself.
     ceremony, different key. (b) remains UNAUTHORISED. SELF_SEAL_BROKEN
     remains PROPOSED and UNAUTHORISED. D309-3 stands. The fixture is
     unamended.
+
+  - S315 the class gets a fourth member, a route, and a test instead
+    of a comment
+
+    S315 opened on a plateau, named it, and stopped. The operator then
+    brought F1. Stage 1 was read-only, stage 2 was an Innovation Gate
+    document, and no code was written in either. This entry is stage 3
+    and precedes the code, per D309-3. Nothing here is authorised to
+    execute; it records what was measured and what was decided.
+
+    THE INSTRUMENTS. scripts/release.py at sha 085216fa, 800 lines,
+    40039 bytes, worktree equal to origin/main, porcelain 0. Two
+    read-only gates. A1 printed the def index, the whole-file abort
+    surface and a term census. A2 printed seven contiguous spans
+    verbatim: 1-40, 105-125, 182-206, 224-246, 247-282, 283-335 and
+    701-800, plus a whole-file try/except census. 126-181 and 336-700
+    WERE NOT READ AND NOTHING BELOW RESTS ON THEM.
+
+    D315-1  THE OBJECT IS THE CLASS, NOT F1. A guard that runs a tool,
+            discards the tool's exit state, and derives its verdict
+            from the tool's output reports only that the output did
+            not look wrong. It does not report that the tool ran.
+            Four measured members: F1 at phase_pytest 182-206;
+            phase_pyflakes 224-246, found by the A1 census and new;
+            D313-3, the working-directory scan set; FG-S314-C, green
+            over zero files. The build proposed is scoped to the two
+            members inside scripts/release.py. The other two are the
+            same class in a different tool and are not remediated by
+            this arc.
+
+    D315-2  THE EXACT REACH OF F1, READ AND NOT INFERRED. 190 passes
+            check=False, so the exit state is discarded by an explicit
+            argument. 192 takes the last three lines of stdout; 196
+            joins them; 197 decides on the PRESENCE of a substring;
+            202 decides on a NUMBER parsed out of it. Three decisions,
+            none on the state of the process. 197 catches a summary
+            reporting no passes. 202 catches a suite below the floor.
+            The uncovered case is exactly one: passed above the floor
+            with failed greater than zero.
+
+    D315-3  THE FOURTH MEMBER IS WEAKER THAN F1. phase_pyflakes calls
+            subprocess.run DIRECTLY at 231, not the shared run() at
+            105, so nothing done to run() can reach it. check=False at
+            235; no returncode anywhere in the span; the verdict comes
+            from "undefined name" appearing in stdout plus stderr at
+            237-239. An empty result is produced by a clean tree AND
+            by a tool that never ran, and 244 prints OK for both. F1
+            at least tests for a word the tool emits when it worked.
+
+    D315-4  THE MODEL IS ALREADY IN THIS FILE, TWICE. 259-268 then 270
+            then 273, and 304-312 then 314 then 317. Three properties,
+            each load-bearing: the exit state is tested BEFORE any
+            output is parsed; the whole of stdout and stderr is
+            printed unfiltered on failure; the raise carries a
+            sentence naming the stake. The change is transcription,
+            not design, per the compose-from-existing article.
+
+    D315-5  THE FLOOR IS ADDED TO, NOT REPLACED. Three predicates
+            answer three questions and none subsumes another. The exit
+            code answers whether the tool failed. The presence test
+            answers whether any passes were reported at all, and also
+            guards the unanchored three-line window at 192. The floor
+            answers whether the suite shrank -- deselection, or tests
+            that stopped being collected, with exit code 0. NO EXIT
+            CODE ENCODES SHRINKAGE. A later seat reading this entry
+            and reaching for a simplification is to read this decision
+            first: removing 202 in favour of the exit code trades one
+            blind spot for another.
+
+    D315-6  THREE ALTERNATIVES REJECTED, AND THE FIRST IS A
+            MEASUREMENT AND NOT AN ARGUMENT.
+            (a) check=True as the default of run(): phase_pyflakes
+                does not call run(), so this reaches at most half the
+                object. It also changes every call site globally to
+                repair two local defects, and 139 and 151 pass
+                check=False deliberately because there the exit state
+                is data.
+            (b) parsing the failed token: it makes the verdict depend
+                on a third-party summary format and on the window at
+                192, it cannot see a crash that prints no summary, and
+                it reconstructs from prose a fact the process already
+                declared.
+            (c) moving PYTEST_FLOOR: no value of it encodes that the
+                suite went red. Out of scope by construction and
+                unauthorised in this arc.
+
+    D315-7  THE CONSEQUENCE IS READ, NOT ASSUMED. try at 754, one
+            except ReleaseError at 793, return 2 at 795. The
+            whole-file census printed T_EXCEPT_RELEASEERROR 1: there
+            is a single catch site and it is the outermost, so no
+            phase swallows a ReleaseError and any raise in a gate
+            phase aborts before phase_build at 770.
+
+    D315-8  P3 IS A TEST, NOT A COMMENT. A rule written into the file
+            it governs and also into the ledger is one thing declared
+            in two places with nothing binding them, which is a new
+            instance of FG-S314-E. The tree already carries the
+            remedy, measured in S311: the test is the bond. The test
+            parses scripts/release.py with ast over the file's text.
+            IT IMPORTS NOTHING, so FG-S314-G does not apply to it; the
+            sys.modules recipe belongs to V1, V2 and V3, which do
+            import.
+
+    D315-9  THE INVARIANT AS WRITTEN WAS FALSE FOR TWO EXISTING CALL
+            SITES. 139 runs git status --porcelain and 151 runs git
+            tag -l, both with check=False, and in both the exit state
+            is data rather than failure. A test demanding a returncode
+            check at every site would have produced two locked rows,
+            which is the O4 shape. The rule is therefore: check=False
+            requires either a returncode decision in the same function
+            or a declared exemption marker at the call site, in the
+            idiom this file already uses at 247 and 283. THE MARKER
+            CARRIES A REASON AND NOT ONLY A NAME. A marker without a
+            reason is a number with no instrument behind it, in the
+            form of a comment.
+
+    D315-10 THE MARKER DOES NOT ROT, AND THAT IS A DECLARED COST. The
+            model that does rot is the claim_lint allowlist, measured
+            in S313: an entry there carries path, line, word, a
+            written reason AND region_sha256, and it goes noisy when
+            the line under it changes. That mechanism was NOT adopted
+            for two call sites, because it is heavier than the object.
+            The consequence is stated here so that it is not
+            rediscovered as a finding: if 139 or 151 changes into
+            something where the exit state IS failure, the marker
+            stays and the test stays green. If the marked sites
+            multiply, this question reopens.
+
+    D315-11 ROUTE (A). P3 LANDS LAST, AFTER P1 AND P2. The rejected
+            route (B) would have landed the test with P1 and given
+            phase_pyflakes an exemption marker until P2 closed. It is
+            rejected because the marker at 139 says "the exit state is
+            data here" while a marker on phase_pyflakes would say "not
+            repaired yet". TWO MEANINGS INSIDE ONE MECHANISM DESTROY
+            ITS INFORMATION: a reader seeing a marker could no longer
+            tell a legitimate exemption from a debt. That is the class
+            named by FG-S314-C, a signal whose presence does not
+            inform, appearing inside the instrument built for it. The
+            cost of (B) is not one exemption that lingers; it is the
+            value of the mechanism itself.
+
+    D315-12 WHAT THE AST TEST CANNOT SEE, DECLARED IN ITS OWN
+            DOCSTRING AND NOT ONLY HERE.
+            SET: top-level FunctionDef nodes named phase_*. A
+            subprocess call ANYWHERE ELSE IS INVISIBLE TO IT --
+            main() at 701, the helpers at 594-605, and the unread
+            336-700. If a later change puts a subprocess call in
+            main(), the test stays green and its green does not
+            inform, which is this Gate's own class inside this Gate's
+            own tool.
+            SHAPE: it verifies POSITION IN THE SOURCE -- an
+            assignment, then an If testing .returncode on that name,
+            then a Raise in the body. It does NOT verify that the
+            verdict depends on that check at runtime. It is blind to
+            os.system, Popen, check_output, and to any call reached
+            through a helper it does not name.
+            Its own negative arm is in-memory: the test mutates a
+            parsed copy of a compliant phase, removes the check, and
+            requires itself to go red. The file is not touched.
+
+    D315-13 VERIFICATION MAPPED TO PROPOSITIONS, AS A PRECONDITION OF
+            EACH GATE AND NOT AS A LIST.
+            V1, V2, V3 -> P1. V1 is the uncovered case of D315-2: a
+            stub with a non-zero exit state and a summary reading
+            passes above the floor; today's code accepts it. V2 is the
+            control. V3 is the anti-regression for D315-5.
+            V5 -> PRECONDITION OF P2, read-only, first. The exit-code
+            semantics of pyflakes are inherited and unmeasured; the
+            tool exits non-zero when it REPORTS, not only when it
+            fails, so a transcription of 270 would silently widen the
+            phase's declared scope from undefined names to every
+            diagnostic. NO P2 WORDING IS FIXED BEFORE V5.
+            V4 -> P2, blocked with it.
+            V7 -> P3, the in-memory negative arm of D315-12.
+            V6 applies to all: the tests live under tests/, which is
+            the set 188 runs.
+
+    D315-14 THE COUNT MOVES AND THE FLOOR DOES NOT. New tests raise
+            the live figure from the 2832 passed and 12 skipped
+            measured in RULE 0. PYTEST_FLOOR stays at 2722 throughout
+            this arc. O5 is the step after it and MUST START FROM A
+            MEASURED NUMBER TAKEN AFTER THE TESTS LAND, never from a
+            prediction made here.
+
+    FINDINGS RECORDED IN S315.
+
+            FG-S315-A  the printf 'LABEL ' ; command form survives in
+                       RULE 0 paste 1 at six legs. Latent: systemctl
+                       and curl both print on every path, so it did
+                       not fire live. The repaired form is
+                       printf 'X %s\n' "$(...)".
+            FG-S315-B  seat error. A merged-label detector shaped as
+                       substring containment reported five false
+                       positives, HEAD inside S314_HEAD_LINE among
+                       them. Corrected to require a space before the
+                       label, five to zero, before any prose rested
+                       on it.
+            FG-S315-C  "claim_lint prints eight lines" counts
+                       non-empty lines; the instrument printed
+                       LINT_OUT_LINES 10, which includes two blanks.
+                       Both true under one shape each, and the rule
+                       as written carries neither.
+            FG-S315-D  a leg labelled PHASE_TABLE_LINES counted a
+                       docstring prose line at 6. The label named a
+                       structure and the shape counted a substring.
+                       Only the unfiltered print showed it.
+            FG-S315-E  three cardinalities for one pipeline, in one
+                       file: the printed phase labels say /10, the
+                       docstring list at 15-30 has 14 entries, and
+                       there are 13 top-level phase_ defs. RECORDED,
+                       NOT RESOLVED, and not touched by this arc.
+            FG-S315-F  seat error. The A1 line set was inherited from
+                       the operator's message instead of derived from
+                       the def index, so 188 and 197-202 were printed
+                       and 192-196 was not. A line set chosen by
+                       inheritance is a window with no declared edge,
+                       and the span that builds the value under test
+                       fell inside it.
+            FG-S315-G  phase_pyflakes is the fourth measured member of
+                       the class. See D315-3.
+            FG-S315-H  192 annotates a list as str: last_lines: str is
+                       assigned the result of splitlines()[-3:]. No
+                       runtime effect.
+            FG-S315-I  the summary at 192 is an unanchored three-line
+                       window over the tool's stdout. If the count
+                       line falls outside it, 197 raises. The
+                       direction is safe; the shape is not anchored.
+            FG-S315-J  322-326: the sidecar phase prints its OK only
+                       if a line of the tool's output begins with
+                       "scanned:". If that output changes, the phase
+                       passes and prints nothing at all.
+
+    OWED FROM S314 AND ENTERED HERE, the three named after that entry
+    was sealed and carried only in saved copies until now.
+
+            FG-S314-K  instrument 1 of the S315 supplement declared a
+                       SET and no SHAPE, and its single term was the
+                       one least likely to name the contaminator.
+            FG-S314-L  instrument 3 of the same file truncated with
+                       head -20 and did not say so, so a clean print
+                       would have meant nothing.
+            FG-S314-M  a leg printed two numbers under one label.
+                       FG-S314-H mirrored.
+
+    WHAT THIS ENTRY DOES NOT DO. It authorises no code. It does not
+    move PYTEST_FLOOR. It does not touch DN[5]. It does not arm the
+    ceremony change (b), and nothing in it constructs a route to it.
+    126-181 and 336-700 of scripts/release.py remain unread, and the
+    bare except Exception at 640 is named as unread rather than
+    characterised.
