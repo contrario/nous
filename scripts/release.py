@@ -189,6 +189,14 @@ def phase_pytest(skip: bool = False) -> None:
         cwd=REPO_ROOT,
         check=False,
     )
+    if result.returncode != 0:  # __s316_p1_pytest_exit_state_v1__
+        for line in (result.stdout + result.stderr).splitlines():
+            print(f"  {line}")
+        raise ReleaseError(
+            f"pytest exited {result.returncode}; the exit state is "
+            "not zero, so the pass count in the summary cannot be "
+            "read as a green suite"
+        )
     last_lines: str = result.stdout.strip().splitlines()[-3:] if result.stdout else []
     print("  pytest tail:")
     for line in last_lines:
