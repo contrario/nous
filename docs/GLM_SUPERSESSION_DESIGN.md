@@ -3172,3 +3172,189 @@ document itself.
     126-181 and 336-700 of scripts/release.py remain unread, and the
     bare except Exception at 640 is named as unread rather than
     characterised.
+
+  - S316 the first member of the class closes, and the entry point that
+    would ship it refuses to run in this working directory
+
+    S315 wrote the Gate and routed it. S316 is stage 4: the code, then
+    the tests, each in its own gate. Two commits landed and each was
+    verified by reading its blob back from origin/main with git
+    cat-file: 02bb40c the eight-line change, 53b138c the six tests.
+    PYTEST_FLOOR did not move. DN[5] was not touched. The ceremony
+    change (b) was not armed. Nothing was taken from the board.
+
+    THE INSTRUMENTS. scripts/release.py at sha 085216fa before the
+    write and 6bda69f9 after, 800 lines then 808. The Gate was read
+    out of this document rather than re-derived: 2926-3174, 249 lines,
+    sha 7dd2346a, equal to the tail the session opened against. Read
+    verbatim: 100-130, 178-212, 258-288, 300-325, the whole of
+    phase_pyflakes, the whole of main() to the end of file, 1-104 and
+    126-181. THE LAST TWO HAD NEVER BEEN READ BY ANY SEAT. 336-700
+    REMAIN UNREAD AND NOTHING BELOW RESTS ON THEM.
+
+    D316-1  WHAT CLOSED IS ONE MEMBER, NOT THE CLASS. D315-1 declared
+            four measured members of it. phase_pytest is repaired. The
+            other three stand: phase_pyflakes, which is weaker than F1
+            and is P2; the working-directory scan set; and the guard
+            whose green is the same over 421 files and over none. AN
+            ENTRY READ AS "F1 IS FIXED" WOULD BE A SIGNAL WHOSE
+            PRESENCE DOES NOT INFORM, which is the class this arc is
+            about, committed by the record of its own repair.
+
+    D316-2  THE CHANGE IS EIGHT LINES AND THE ORDER IS THE POINT. The
+            exit state is tested at 192, before last_lines is built at
+            200. The presence test moved to 205 and the floor test to
+            210, unchanged in content: the diff is 8 insertions and 0
+            deletions. Three predicates answering three questions, in
+            the order D315-5 requires. Every line at or after 192
+            shifted by eight, so the line numbers in the S315 entry
+            describe the file before this change and are correct about
+            it. They are not edited. This is the correction.
+
+    D316-3  THE MESSAGE NAMES NO CAUSE. It prints the exit code and
+            says the pass count in the summary cannot be read as a
+            green suite. pytest does distinguish its non-zero codes,
+            but this seat measured none of them, so the message
+            asserts only what the phase detected. The whole of stdout
+            and stderr is printed unfiltered beside it, which is
+            property (b) of the model at 270-276.
+
+    D316-4  result.stderr IS str ON THIS PATH, AND THAT WAS NEVER
+            DECLARED AS A PRECONDITION. run() at 105 passes
+            capture_output=True at 114 and text=True at 115 and no
+            stdout= or stderr= keyword, so the concatenation at 193
+            cannot raise TypeError. Measured with a control: the same
+            call without capture_output yields NoneType, so the
+            instrument was shown able to say None before it said str.
+            The transcription had rested on this and had not said so.
+
+    D316-5  THE ENTRY POINT REFUSES IN THIS WORKING DIRECTORY, AND IT
+            IS THE FIRST MEASURED OBSTACLE BETWEEN THE TREE AND A
+            RELEASE. phase_preflight runs git status --porcelain at
+            139 and at 140-143 builds a dirty list from every line
+            except those ending .bak and those containing
+            noesis_lattice. UNTRACKED LINES COUNT. Two untracked paths
+            have stood in porcelain for many sessions, so 144 raises
+            and main returns 2 before phase 1 runs. Measured live: the
+            run aborted inside one second at [0/9] PRE-FLIGHT with
+            exit code 2. The file's own canonical procedure at 743
+            names the dry run as step 1 of a release. THE RELEASE THAT
+            CARRIES THE DN[5] CORRECTION PASSES THROUGH IT. Not opened
+            here and not a task: recorded so that the seat which
+            reaches for a release finds it already measured rather
+            than discovering it at the gate.
+
+    D316-6  THE LOADER DOES NOT REGISTER IN sys.modules. Both idioms
+            live in tests/: five files register before exec_module, a
+            dozen do not. scripts/release.py declares no dataclass,
+            measured whole-file, so the deferred-annotation mechanism
+            that forced registration in S314 has no purchase here. A
+            global name would be exactly the cross-test residue class
+            of the order-dependence failure that is still open and
+            whose contaminator is still unidentified. Composed from
+            tests/test_s311_supersession_tool.py:33-38.
+
+    D316-7  THE FLOOR IS READ FROM THE MODULE, NEVER WRITTEN AS A
+            LITERAL. The tests build their inputs from PYTEST_FLOOR,
+            so the ratchet can move without touching them. O5 is
+            unmoved and unstarted, and it starts from a number
+            measured after the tests land, which is 2838 against a
+            floor of 2722.
+
+    D316-8  THE NEGATIVE CONTROL ASSERTS CONTENT, NOT SIZE. Its first
+            form pinned the block at eight lines; a mutation removing
+            two of them then printed two failures for one defect. Two
+            meanings inside one mechanism, D315-11, so the assertion
+            became what the removed text contains. Measured matrix on
+            copies: the block removed fails three tests, the
+            unfiltered print removed fails one, the floor test removed
+            fails one, the presence test removed fails one.
+
+    D316-9  V3b LOCKS A PATH AND DOES NOT EVIDENCE ITS REACHABILITY.
+            An exit code of zero with a summary lacking the word
+            decides at 205, and the test holds it there so the
+            predicate cannot later be read as redundant now that an
+            exit-state test sits in front of it. Whether any real
+            pytest invocation produces that input is unmeasured, and
+            that limit is in the test's own docstring, not only here.
+
+    D316-10 THE SCORE HAS TWO CAUSES AND THE CAUSES ARE THE RECORD.
+            Five misses came from one space injected into a base64
+            payload at one of forty fold boundaries, caught by the
+            length guard on the first leg with zero writes. One came
+            from predicting the exit code of a phase whose source the
+            same message had declared unread: a prediction resting on
+            a shape the seat had itself said it could not see. That is
+            the class of the S315 line-set error, and it is the
+            instructive line of the score.
+
+    FINDINGS RECORDED IN S316.
+
+            FG-S316-A  seat error. A merged-label detector counted
+                       uppercase tokens per line and fired on header
+                       lines, two and nine false positives. Replaced
+                       by a detector requiring the token off column
+                       zero, which returned zero on four runs.
+            FG-S316-B  phase_pyflakes raises when the target file is
+                       absent, before the subprocess call. The V5 case
+                       for an absent path is therefore unreachable at
+                       that call site, and the undetectable bucket is
+                       two causes and not three. The rule that the
+                       message may not name a cause is unchanged.
+            FG-S316-C  seat error. The patch tool ordered its
+                       preconditions with the sha first, so mutating
+                       the target to break the anchor always tripped
+                       the sha guard and the anchor guard never ran.
+                       Reached by mutating the tool instead: a wrong
+                       anchor literal printed 0 and a duplicated
+                       anchor printed 2, both refusing with no writes.
+            FG-S316-D  the model concatenates stdout and stderr with
+                       no separator, at 271 and 315 before the change
+                       and now at 193. A stdout without a trailing
+                       newline joins to stderr on one line.
+                       Transcribed as found and named, rather than
+                       repaired inside a transcription.
+            FG-S316-E  the pyflakes phase prints the length of
+                       PYFLAKES_TARGETS, the declared tuple, and not
+                       the number of files the tool analysed.
+            FG-S316-F  seat error. One space entered a 3976-character
+                       base64 payload at one of forty fold boundaries
+                       during transcription into the message. The
+                       length guard caught it on the first leg, the
+                       decode refused, and the write gate printed
+                       REFUSED with the tree byte-identical. The check
+                       set runs against the payload file and cannot
+                       follow it into the message; the in-gate length
+                       and sha legs are the only guard on that
+                       channel.
+            FG-S316-G  scripts/release.py carries non-ASCII on three
+                       lines, all inside raise messages in
+                       phase_preflight. No prior session measured it
+                       and no fixture had exercised the patch against
+                       a file containing any. Closed with an arm
+                       proving the bytes round-trip.
+            FG-S316-H  seat gap. The transcription assumed both
+                       streams are str on the shared run() path. The
+                       bytes were printed by this seat two gates
+                       before the write and the assumption was never
+                       declared as a precondition. The operator named
+                       it; no gate held it.
+            FG-S316-I  seat error. An exit code of 0 was predicted for
+                       the dry run out of phase_preflight, whose span
+                       the same message declared unread. See D316-10.
+            FG-S316-J  the canonical release procedure at 743 names
+                       the dry run as step 1 and it cannot reach phase
+                       1 in this working directory. See D316-5.
+            FG-S316-K  the preflight WARN prints the first ten dirty
+                       lines and does not say it is truncated. Latent
+                       at three lines.
+            FG-S316-L  seat error. A leg labelled FLOOR took field two
+                       of a grep -n line and would have printed the
+                       identifier rather than the value. Caught on a
+                       fixture before emission.
+
+    WHAT THIS ENTRY DOES NOT DO. It does not move PYTEST_FLOOR, which
+    stands at 2722 against a live 2838. It does not touch DN[5]. It
+    does not arm the ceremony change (b), and nothing in it constructs
+    a route to it. It does not open D316-5. It does not start P2 or
+    P3. 336-700 of scripts/release.py remain unread.
