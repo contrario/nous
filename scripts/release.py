@@ -242,6 +242,16 @@ def phase_pyflakes() -> None:
             text=True,
             check=False,
         )
+        if result.returncode != 0 and not result.stdout.strip():  # __s317_p2_pyflakes_exit_state_v1__
+            for line in (result.stdout + result.stderr).splitlines():
+                print(f"  {line}")
+            raise ReleaseError(
+                f"pyflakes did not analyse {target}: exit "
+                f"{result.returncode} with nothing on stdout. What "
+                "was detected is that the file was not analysed; the "
+                "exit state does not distinguish the causes, so none "
+                "is named"
+            )
         for line in (result.stdout + result.stderr).splitlines():
             if "undefined name" in line:
                 bad.append(line)
