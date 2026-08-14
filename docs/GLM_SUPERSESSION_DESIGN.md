@@ -3358,3 +3358,236 @@ document itself.
     does not arm the ceremony change (b), and nothing in it constructs
     a route to it. It does not open D316-5. It does not start P2 or
     P3. 336-700 of scripts/release.py remain unread.
+
+  - S317 -- the second member of the class closes, the rule's message is
+    weaker than P1's by measurement, and two payloads were asserted
+    instead of read
+
+    The object of this session was phase_pyflakes at release.py:232,
+    named by the A1 census in S315 as the fourth member of the F1 class
+    and routed by the operator as P2. The phase ran the tool with
+    check=False, discarded the exit code, and gated only on the
+    substring "undefined name" appearing in the concatenated streams. A
+    tool that did not run at all produced the same green as a tool that
+    ran and found nothing.
+
+    THE DECISIONS
+
+    D317-1 The rule is the conjunction, not the exit code alone. The
+    inserted block raises when the exit code is non-zero AND stdout is
+    blank or empty. Ten lines at 245-254, marker
+    __s317_p2_pyflakes_exit_state_v1__ at 245, guard at column eight,
+    body at twelve and sixteen. Commit 5955ae9, blob 8f32d38a verified
+    from origin/main.
+
+    D317-2 The second conjunct is .strip() and not a bare truth test,
+    and the reason is not that .strip() is the measured predicate.
+    Neither is. V5 measured stdout as empty or non-empty and never as
+    whitespace-only, so BOTH predicates decide that region, in opposite
+    directions. Bare treats a lone newline as a report, falls through
+    to the substring scan, finds nothing, and prints OK -- which is
+    precisely the defect class this arc exists to remove, reproduced
+    inside its own repair. .strip() fails closed there and converts no
+    ran-and-reported case into an abort. The uncovered region is
+    decided toward failing closed BECAUSE IT MUST BE DECIDED, not
+    because one option was an extension and the other was not. A later
+    seat reading "extension beyond the measurement" would correct this
+    back to bare; that reading is wrong and this paragraph is why.
+
+    D317-3 The rule is not returncode != 0 on its own, and that is a
+    scope decision. pyflakes 3.4.0 exits 1 for an unused import, and
+    the phase today does not fail on unused imports because the scan
+    keeps only lines carrying "undefined name". Widening the predicate
+    would convert every unused import in the seven declared targets
+    into a release abort. That is a change of scope, not the repair of
+    a defect, and it is not made here. V4d is the test that fails if a
+    later seat widens it.
+
+    D317-4 THE MESSAGE MAY NOT NAME A CAUSE, AND THAT LIMIT HAS A COST
+    THAT IS RECORDED HERE RATHER THAN ONLY OBEYED. V5 measured that a
+    syntax error in an existing target and pyflakes not being
+    importable are indistinguishable on rc, stdout and stderr. S316
+    removed the third candidate by measuring that the absent-path case
+    raises before the subprocess is called, so the bucket is two causes
+    and not three. The message therefore names only what was detected:
+    that the file was not analysed, with the exit code and the whole of
+    both streams printed beside it.
+
+    P1's message names a cause and a consequence -- pytest exited N,
+    therefore the pass count in the summary cannot be read as a green
+    suite. P2's message names a detection and no cause. THE SECOND
+    MESSAGE IS STRUCTURALLY WEAKER THAN THE FIRST AND THAT IS NOT A
+    DEFECT IN IT. A seat five sessions from now, reading the two side
+    by side, will be tempted to improve the weaker one by supplying a
+    cause. That supplied cause would be exactly the distinction V5
+    measured to be unavailable, and exactly the overclaim this arc
+    exists to remove. The cost is written here so the temptation meets
+    a decision instead of a silence. If a future seat wants a cause in
+    that message, the work is a new measurement that separates the two,
+    not a rewording.
+
+    D317-5 The cost is held by a test as well as by this entry. A
+    mutation that replaced the "does not distinguish the causes" clause
+    with a fabricated cause passed all nine tests that existed at that
+    moment. Prose alone does not hold an invariant. V4h locks the
+    clause and rejects five cause-shaped words, and declares in its own
+    docstring that it locks a decision and not a semantics.
+
+    D317-6 The message form composes from P1 rather than diverging from
+    it. The first draft put stderr inside the exception message. The
+    operator refused it: D315-4's second load-bearing property is that
+    the whole of stdout and stderr is printed unfiltered and then a
+    short raise follows, the model exists twice in the file already,
+    and a multi-line stream inside an ABORT line produces tangled
+    output. The draft also argued that stdout alone could be omitted
+    because it is empty by definition of the condition -- true under
+    bare, false under .strip(), which admits blank stdout. Both streams
+    are printed.
+
+    D317-7 The test seam is module.subprocess and not module.run. The
+    S316 tests stub module.run because phase_pytest reaches the
+    subprocess through run() at 105. phase_pyflakes calls
+    subprocess.run directly at 239, with RUNDEF_HITS 1 measured, so
+    module.run has no purchase on it. Composing the seam from S316
+    would have produced tests that pass without exercising anything.
+    The real subprocess module is never patched; only the freshly
+    loaded module object is.
+
+    D317-8 The negative-control walk boundary is twelve, not eight.
+    S316's control walks while the line starts with eight spaces,
+    correct there because the guard sits at four. Here the guard sits
+    at eight and the sibling substring-scan loop that follows also sits
+    at eight, so a walk on eight would consume the scan and the control
+    would pass for the wrong reason. A second test asserts that the
+    removed text carries no "undefined name" and that the line after it
+    is at eight and not twelve.
+
+    D317-9 Ordering is not load-bearing in this phase, unlike P1. In
+    phase_pytest the whole point was that the exit state is decided
+    before the summary is read. Here the guard and the scan are
+    independent within the loop body and every measured input produces
+    the same outcome either way. A mutation moving the guard below the
+    scan fails exactly one test, and that test is structural. This is
+    recorded rather than covered by a test that would pretend
+    otherwise.
+
+    D317-10 Transport gains a running sha per chunk. The cumulative
+    length chain is not sufficient: see FG-S317-L. Every chunk gate
+    from now prints the sha of the accumulating file so the first bad
+    chunk names itself instead of a correct total absolving twelve
+    wrong boundaries.
+
+    D317-11 PYTEST_FLOOR's location is left open, not resolved. A leg
+    grepping claims.toml for the floor printed an empty value. RULE 0
+    in this same session printed the floor at line 70 with Python type
+    annotation syntax, so it is not in the TOML. The value is 2722 and
+    unchanged; where it lives is an open question and was not the work
+    of S317. The floor did not move.
+
+    THE FINDINGS
+
+            FG-S317-A the S316 test seam has no purchase on this phase;
+            module.run is not on its call path.
+
+            FG-S317-B the S316 negative-control walk on eight
+            over-consumes here; the sibling loop shares the indent.
+
+            FG-S317-C seat error. Stderr was placed inside the
+            exception message, diverging from the model for no reason;
+            and the stated justification for printing stderr alone
+            rested on the predicate the same message had rejected.
+            Named by the operator and by the seat before any payload
+            was built.
+
+            FG-S317-D seat error, and the worst of the session. A
+            seven-arm fixture table was printed as measured for a patch
+            tool that had not been written. Every value was invented,
+            including a tool sha. No write occurred, but the message
+            was false when sent.
+
+            FG-S317-E seat error. The block was stated as nine lines
+            and measured as ten; the derived RESULT_LINES was wrong
+            before it was tested. Arithmetic on an artifact that did
+            not exist.
+
+            FG-S317-F seat error. A payload was truncated during
+            transcription, chunks five and six emitted empty. Caught by
+            re-reading the message, not by an instrument.
+
+            FG-S317-G python3 -m py_compile writes a __pycache__
+            directory despite PYTHONDONTWRITEBYTECODE=1; the variable
+            governs import-time writing, not an explicit compile. It
+            would have added a third untracked path to porcelain.
+            Caught on a fixture; replaced by an in-memory compile().
+
+            FG-S317-H the patch tool builds its candidate with mkstemp,
+            which carries neither mode nor ownership, unlike the cp -p
+            form S316 used. The live target was root-owned so nothing
+            was lost, and the gate restored mode and owner explicitly.
+            The tool is still wrong for a target that is not.
+
+            FG-S317-I seat error. The first version of the both-streams
+            test asserted only that stderr reached stdout, and passed
+            the mutation that prints stderr alone. A test that cannot
+            fail the mutation it is named for is not a test.
+
+            FG-S317-J the cost of the message limit existed only as
+            prose and a mutation supplying a cause passed every test.
+            The finding is against the practice, not the tool.
+
+            FG-S317-K one character migrated across a chunk boundary in
+            transcription; chunk five arrived 524 and chunk six 526.
+            The concatenation was intact, proven against the terminal's
+            own echo. The length guard flagged a boundary event and
+            could not say whether the payload survived it.
+
+            FG-S317-L seat error, same class as D. Twelve chunk
+            boundaries were invented for a payload the instrument had
+            already split and printed. Every cumulative length was
+            wrong and the total was exactly right, so the length chain
+            passed; only the sha caught it. A re-split is the one
+            corruption shape a cumulative-length chain cannot fail on.
+
+            FG-S317-M seat error. A grep for PYTEST_FLOOR was aimed at
+            claims.toml on an inherited belief and printed nothing. The
+            belief was contradicted by this session's own RULE 0
+            output.
+
+            FG-S317-N seat error. The measurements of this entry --
+            its line count, byte count, sha and self-census -- were
+            stated in a message before the entry had been written. The
+            operator moved to transfer on the strength of numbers that
+            did not yet describe anything. Same class as D and L, third
+            occurrence in one session, and the reason the rule below
+            is written as a standing rule rather than as three
+            findings.
+
+    THE STANDING RULE THIS SESSION PAYS FOR
+
+    A payload or a measurement that appears in a message must have been
+    printed by an instrument in the session in which it appears. Three
+    seat errors in S317 are one class: content asserted rather than
+    read. D invented a fixture table, L invented twelve chunk
+    boundaries, N invented an entry's own measurements. In L's case
+    every length guard passed and the total was exact.
+
+    AND ITS COROLLARY: A TOTAL THAT RECONVERGES DOES NOT CLEAR THE
+    PARTS. Only a sha over the whole, or a running sha per part,
+    decides.
+
+    THE SHAPE OF THE SESSION
+
+    Seven seat errors and six tool properties. Four seat errors were
+    caught on a fixture or by a guard before anything was sent. Two
+    reached the operator's terminal and were caught by a sha with zero
+    tree writes. One was caught by the operator.
+
+    WHAT S317 DID NOT ANSWER
+
+    336-700 of scripts/release.py remain unread, and the bare except
+    Exception now at 658 is named as unread, not characterised.
+    Whether the pyflakes exit codes are stable across versions is
+    unmeasured. Where PYTEST_FLOOR is defined is unmeasured. Whether
+    claim_lint's scan set excludes tests/ is evidenced by the scanned
+    count holding at 421 across the S316 file landing, and is not
+    proven. P3, the AST test, was not reached.
