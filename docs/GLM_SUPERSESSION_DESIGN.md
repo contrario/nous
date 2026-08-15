@@ -4219,3 +4219,296 @@ document itself.
     written. 336-700 of scripts/release.py remains unread and the
     bare except in that region is named as unread rather than
     characterised.
+
+  - S320 the P3 test lands and locks every phase that passes check=False,
+    the entry that authorised it is corrected on its own census, and four
+    findings that post-date the D319 seal are recorded
+
+    THIS ENTRY IS WRITTEN IN S321 ABOUT S320. Every number below was printed
+    by an instrument in S321 at HEAD 1b2fd6a unless D320-8 marks it as
+    testimony. D319-10 assigns this entry to this seat, D318-9 set that
+    precedent, and D319 is itself an instance of it.
+
+    THE INSTRUMENTS. RULE 0 in two pastes, 114 assertions declared before
+    either ran. Then three read-only gates, no writes. G1 read the D319
+    entry at 3870-4221 whole, the P3 test whole, and the indent families of
+    that entry. G2 measured the tracked PYTEST_FLOOR set at five commits,
+    both S320 commits, and P3 alone. G3 measured the subject through a third
+    shape, the append target and its directory, and the seam.
+    docs/GLM_SUPERSESSION_DESIGN.md at sha b6ee382c, 4221 lines, 242319
+    bytes, MAXLEN 79, worktree equal to origin/main. scripts/release.py at
+    sha d292bc82, 832 lines, UNTOUCHED IN S320 AND IN S321. 336-700 of that
+    file remains unread and nothing below rests on that region.
+
+    D320-1  WHAT S320 SHIPPED, MEASURED AT 1b2fd6a AND NOT INHERITED. Two
+            commits, both on origin/main. d36e11e appended the D319 entry to
+            docs/GLM_SUPERSESSION_DESIGN.md: one file, 353 insertions, 0
+            deletions. 1b2fd6a added
+            tests/test_s320_phase_exit_state_ast.py: one file, 211
+            insertions, 0 deletions. The entry occupies 3870-4221, 352
+            lines, sha ee08eb33. THE THREE HUNDRED AND FIFTY-THIRD INSERTION
+            IS THE BLANK SEPARATOR at 3869, one byte, which the operator
+            ruled in S320 belongs to the append and not to the entry; 352
+            plus one is that 353 and the addition is this seat's. HEAD is 66
+            commits ahead of v5.78.0 and no tag was cut.
+
+    D320-2  WHAT P3 LOCKS, READ FROM ITS OWN BYTES RATHER THAN FROM THE
+            HANDOFF. tests/test_s320_phase_exit_state_ast.py, sha ecd46f4d,
+            211 lines, 18 definitions of which 10 are named test_, one of
+            those parametrized over five carriers, 14 items collected and 14
+            passed run alone in S321. Nine plus five is that 14 and the
+            addition is this seat's. The file does not import
+            scripts/release.py; it parses the source with ast, so the seam
+            question FG-S317-A names does not arise here at all. SET:
+            top-level FunctionDef nodes whose name begins with phase_.
+            SHAPE: inside one such node, a call carrying a keyword argument
+            named check whose value is the constant False, and an attribute
+            access whose attr is returncode. The rule itself is
+            test_no_phase_passes_check_false_without_deciding and it asserts
+            the offender list is empty. The carrier set is frozen at five
+            names, so a sixth phase growing a check=False site fails
+            test_the_carriers_are_the_five_measured_in_s320, which is a
+            review trigger and not a correctness claim. The three negative
+            controls each assert the DELTA their mutation added, so their
+            failing sets are disjoint, and
+            test_the_shape_can_see_a_planted_offender plants a phase in
+            memory to show the rule can fire.
+
+    D320-3  WHAT P3 DOES NOT LOCK, WHICH IT SAYS IN ITS OWN BLIND-TO BLOCK
+            RATHER THAN LEAVING IT TO THIS ENTRY. Whether the returncode
+            read belongs to the call that passed check=False. That finding
+            is recorded as FG-S320-D in D319-5, and test_n3 asserts the
+            consequence rather than hiding it: eliding both returncode reads
+            in phase_preflight makes it an offender, eliding one does not.
+            The file is also blind to nested definitions, which ast.walk
+            reaches as part of their enclosing top-level node; to
+            module-level code between two definitions; to run at 105, which
+            is not a phase and is excluded by name in
+            test_run_is_not_in_the_set; to any invocation that does not
+            spell check=False, including one passing the value through a
+            variable; and to everything that happens at runtime. NARROWING
+            THE RULE TO PER CALL SITE IS NOT AUTHORISED HERE AND NOTHING
+            ABOVE BUILDS A ROUTE TO IT.
+
+    D320-4  THE F1 CLASS AS IT STANDS, RE-MEASURED IN S321. Seven
+            check=False sites in scripts/release.py at 116, 139, 158, 204,
+            257, 300 and 344, sitting in six enclosing definitions of which
+            five are phases: phase_preflight twice, phase_pytest,
+            phase_pyflakes, phase_claim_lint and phase_sidecar_integrity.
+            run at 116 is the sixth and is not a phase. Thirteen definitions
+            named phase_ at column zero and 17 column-zero definitions in
+            all, unchanged from D319-6. Six measured members of the class:
+            four closed and now locked, being phase_pytest at S316,
+            phase_pyflakes at S317 and both preflight sites at S319; two
+            open, D313-3 and FG-S314-C, both in scripts/claim_lint.py and
+            both outside this arc.
+
+    D320-5  THE CORRECTION TO D319-7, WHICH IS AN APPEND AND NOT AN EDIT.
+            D319-7 states at 3985 that the distribution at 20922b6 runs over
+            sixteen files, five named and eleven at three or fewer. Measured
+            in S321 at that exact commit, through a shape that reproduces
+            all five named files, all five of their counts and the total 81:
+            FIFTEEN FILES, TEN OF THEM IN THE TAIL. The five named carry 66
+            and the tail carries 15 on either reading; both additions are
+            this seat's. The tracked file set is 15 at e5e5430, 16e5ae9,
+            6470109, 20922b6 and 1b2fd6a alike, and a set union over the
+            last two, tagged by side, returns no asymmetric path. Nothing
+            entered the set and nothing left it. The ten in the tail are
+            named here so the sentence can be checked against something:
+            tests/test_s172_p2_hero_stat.py 3,
+            docs/RUNTIME_TRACE_EMISSION_DESIGN.md 3,
+            docs/VERIFIER_CORE_INTEGRITY_DESIGN.md 2, and seven carrying one
+            each, website/docs/index.html, tests/test_s237_nginx_config.py,
+            scripts/rule0.sh, README.md, docs/SMT_VERIFICATION_DESIGN.md,
+            docs/MEMORY_PHASE1_DESIGN.md and docs/EU_AI_ACT_COMPLIANCE.md.
+            D319-7 names none of its eleven and so could not be checked
+            against itself. THE SENTENCE AT 3985 STAYS ON THE PAGE AS
+            WRITTEN, which is the rule D319-7 and D319-8 applied to D318-6
+            and D318-10. FG-S321-F.
+
+    D320-6  THE SUBJECT SHAPES RECONCILE AND BOTH PRIOR FINDINGS ARE TRUE.
+            Measured on both S320 subjects in S321: the subject through awk
+            length 152 and 122, the subject through wc -c 153 and 123, the
+            whole body through wc -c 154 and 124. The body carries two
+            newline bytes, confirmed by wc -l returning 2 on it. FG-S319-F
+            compared the body with the subject BOTH through wc -c and got
+            one. FG-S320-H compared the body through wc -c with the subject
+            through awk length and got two. The delta is a property of the
+            pair of shapes and not of the subject, which is R2 stated in
+            measurements instead of prose. The family over the last twenty
+            subjects runs 85 to 153, re-measured in S321 with both S320
+            subjects now inside the window.
+
+    D320-7  THE CENSUS THAT COUNTS ITSELF, MEASURED AGAIN. Tracked
+            PYTEST_FLOOR occurrences: 78 at e5e5430, 81 at 16e5ae9, 81 at
+            6470109, 81 at 20922b6 and 86 at 1b2fd6a. D319-7 predicted 86
+            for after its own landing and 86 is what landed. This document
+            holds 17 of the 86. THIS ENTRY CARRIES 3 OCCURRENCES OF THE
+            TOKEN, so the tracked count reads 89 once it lands and this
+            document holds 20. Those figures are arithmetic over 86 and
+            17, declared here and settled at the gate that follows the
+            append, not by this sentence. THE VALUE IS 2722, IT IS DECLARED
+            AT LINE 70 OF scripts/release.py, AND IT DOES NOT MOVE IN THIS
+            ARC. The live suite over tests/ is 2871 passed and 12 skipped, a
+            gap of 149.
+
+    D320-8  WHAT S320 REPORTED THAT THIS SEAT CANNOT RE-MEASURE, AND WHY IT
+            IS IN THE LEDGER ANYWAY. The handoff files are not tracked in
+            the repository; they exist only as the operator's saved copies,
+            so findings not written here are written nowhere the repository
+            can reach. What follows is transcribed from a file named
+            NOUS_SESSION_320_HANDOFF.md at
+            77d33aaa96713dbd3812bf7c75fc8383c0cabffbfeff062ed4adb5b81224a549
+            15720 bytes and 339 lines. TWO PATHS WERE MEASURED IN S321 AND
+            THEY AGREE, with each other and with the figure the operator
+            declared at the session opening, which is the check FG-S320-F
+            argues for. It is TESTIMONY AND NOT MEASUREMENT. Nothing in
+            D320-1 through D320-7 depends on it. Twenty-six gates, 433
+            assertions predicted, 427 hit, six missed, 68 declined and all
+            sixty-eight measured. The D319 entry moved in 41 chunks and the
+            P3 file in 14, each chunk with a running sha, and the T3b paste
+            ran twice with the second run printing REFUSED PRECONDITION
+            against a real payload rather than a fixture.
+
+    D320-9  THE COLLECTION ROOT, AND WHAT MEASURING IT LOCATED. Bare pytest
+            collects 3021 items and pytest tests/ collects 2883. The suite
+            figure this arc reports is the tests/ one, which
+            scripts/rule0.sh fixes by construction at its line 48, and 2871
+            passed plus 12 skipped is that 2883. pyproject.toml declares no
+            testpaths and 23 collectable files sit outside tests/. S320
+            measured this while settling FG-S320-J and recorded that the
+            four order-dependent failures in tests/test_inject_message.py
+            pass under tests/ and fail under a bare root run, which locates
+            the contaminator S312 could not identify inside the 138
+            root-level items collected first. NOTHING WAS DONE ABOUT IT,
+            this entry does not scope it in, and 138 is arithmetic over 3021
+            and 2883.
+
+    D320-10 THE STANDING RULES S320 ADDED, RECORDED SO THEY LIVE SOMEWHERE
+            THE REPOSITORY CAN REACH. R16, a count is bound to the commit
+            that produced it, from FG-S320-A. R17, the collection root is
+            part of the set, from FG-S320-J. R18, read the instrument before
+            predicting what it probes, from FG-S320-J and FG-S320-K. R19, a
+            negative control asserts its delta and not the absolute set,
+            from FG-S320-I. R20, sweep by anchor family and not by the
+            counters you know, from FG-S320-E. R21, a name is not an
+            identifier, from FG-S320-F and FG-S320-G. Three of the six were
+            paid for twice in S321, under FG-S321-A, B and D.
+
+    D320-11 THE ORDER AND THE STOPPING RULE. This entry, then the seal. The
+            arc's plan completed in S320 and the F1 class is closed for
+            scripts/release.py, repaired at four sites and locked by a test
+            that reads the whole file. What follows the seal is an operator
+            decision and not a seat choice; if the operator brings nothing,
+            the plateau is named and the session stops rather than
+            manufacturing an arc from the board. The entry that records what
+            S321 did belongs to the next seat, which is the precedent D318-9
+            set and D319-10 applied.
+
+    D320-12 THE STATE THIS ENTRY WAS WRITTEN AT. HEAD 1b2fd6a equal to
+            origin/main, 66 commits ahead of v5.78.0, pip 5.78.0 and both
+            servers reporting 5.78.0 through the health path
+            scripts/rule0.sh probes at its line 39. Suite over tests/ 2871
+            passed, 12 skipped. claim_lint rc 0 over 421 files, 0
+            violations, 3 declared proof legs. served_mirror_check rc 0,
+            CLEAN, 331 tracked, 5 orphans. Porcelain 2, both untracked and
+            both known. Tracked scripts/*.py 17, tests/*.py 303, website/*
+            331. The append seam re-measured rather than carried: 29 entry
+            heads, 29 blank-preceded, 0 text-preceded, first head at 504,
+            trailing blanks 0, last line 19 bytes, last byte a newline. The
+            target is root:root 644 and the docs directory is
+            aetherlang:aetherlang 755.
+
+    FINDINGS RECORDED IN S320 AND NOT CARRIED BY D319, WHICH SEALED BEFORE
+    THEY OCCURRED. Transcribed under D320-8 and re-derived only where this
+    entry says so.
+
+            FG-S320-H  seat error. A body byte count was predicted at 153
+                       and measured 154. FG-S319-F had measured the body
+                       against the subject both through wc -c; the seat
+                       applied that delta of one to a subject measured
+                       through awk length, which does not count the trailing
+                       newline. Re-measured and reconciled in S321 under
+                       D320-6.
+            FG-S320-I  seat error, found by the fixture before transfer.
+                       P3's three negative controls asserted an absolute
+                       offender list, so a single planted regression made
+                       six tests fail. An arm that exists to confirm cannot
+                       be collateral. Repaired to assert the delta, and the
+                       three failing sets are now disjoint. FG-S319-I class.
+                       R19 was written from it.
+            FG-S320-J  seat error. The suite total was predicted over a run
+                       made from the repository root, which collects 3021
+                       items against 2883 under tests/. RULE 0 had printed
+                       TESTPATHS 0 and 23 collectable files outside tests/,
+                       and the seat scored both and then assumed the
+                       collection root anyway. R17 and R18 were written from
+                       it.
+            FG-S320-K  seat error. The seal gate probed a health path the
+                       seat invented, /health, where scripts/rule0.sh probes
+                       /v1/health at its line 39. The version leg returned
+                       NotFound and was left unmeasured. Same position as
+                       FG-S319-K reached by a different route, and it shares
+                       one cause with FG-S320-J: an instrument was run
+                       without being read.
+
+    FINDINGS RECORDED IN S321, WHICH ARE THIS SEAT'S OWN.
+
+            FG-S321-A  seat error. Five distinct enclosing definitions were
+                       predicted for the check=False census and six were
+                       measured. Five is bound to the shape top-level phase_
+                       definitions carrying check=False; the census shape is
+                       the enclosing definition of every site and includes
+                       run, which D319-6 and P3 both exclude by name. A
+                       number moved across shapes. R2.
+            FG-S321-B  seat error, same cause. The floor declaration leg was
+                       predicted at 224, which is the first of the indented
+                       uses D319-8 names. The leg is anchored at column zero
+                       and printed 70, the declaration. 224 to 226 were not
+                       re-measured in S321 and are not carried by this
+                       entry.
+            FG-S321-C  operator error, brought by the operator. A payload of
+                       the D319 entry was verified at 11ee22f6, 19673 bytes,
+                       327 lines, and cited for an object that landed at 352
+                       lines. The measurement was correct for the object in
+                       hand; the identity was the unmeasured part. Same
+                       class as FG-S320-G, second occurrence, and it was
+                       named before the seat used the number.
+            FG-S321-D  seat error, same cause as A and B. The maximum line
+                       length of the D319 span was predicted at 79, which is
+                       the maximum over the whole document. A maximum over a
+                       superset is an upper bound on a subset and not its
+                       value. The span measures 76.
+            FG-S321-E  seat error. A gate was declared as fifteen assertions
+                       in twelve predictions and three declinations. Counted
+                       atomically against the legs the paste emitted it is
+                       nineteen and three, with five further legs carrying
+                       neither a prediction nor a declination. The split was
+                       arithmetic performed while writing and was not
+                       checked against the paste. It recurred once in the
+                       following gate, on one leg.
+            FG-S321-F  not a seat error of this session. The file counts in
+                       D319-7 are wrong and the correction is D320-5.
+            FG-S321-G  seat error, caught by the anchor-family sweep of this
+                       payload before any write, which is the check R20
+                       exists for and which FG-S320-E is the precedent of.
+                       Prose wrapping put a prior finding code at the start
+                       of one twelve-space line inside D320-3 and another at
+                       the start of one inside D320-10, which is the exact
+                       indent an FG head carries. Two foreign counters would
+                       have moved silently and the verification gate would
+                       have shown two unexplained misses after the write.
+                       Both were reworded, the sweep was run again, and it
+                       returns zero foreign anchors.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code. It does not move
+    PYTEST_FLOOR. It does not touch DN[5]. It does not arm the ceremony
+    change and nothing in it constructs a route to one. It does not repair
+    the two open members of the class in scripts/claim_lint.py, a file of
+    1016 lines, and it does not scope them in. It does not amend the frozen
+    fixture. It does not narrow the rule of D318-4 to per call site. It does
+    not clear the two untracked paths out of porcelain. It edits nothing:
+    the correction in D320-5 is an append and the sentence it corrects stays
+    on the page as written, true when it was written and wrong in its count.
+    336-700 of scripts/release.py remains unread and the bare except in that
+    region is named as unread rather than characterised.
