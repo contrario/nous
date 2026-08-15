@@ -3591,3 +3591,278 @@ document itself.
     claim_lint's scan set excludes tests/ is evidenced by the scanned
     count holding at 421 across the S316 file landing, and is not
     proven. P3, the AST test, was not reached.
+
+  - S318 the exemption clause of D315-9 has no members, the rule
+    narrows, and the class gains two members inside the phase that
+    guards every other phase
+
+    S318 opened on three sealed files verified byte for byte, and on a
+    paragraph the operator dictated into the opener before RULE 0 ran.
+    This entry is written BEFORE the code it authorises, per D309-3.
+    It authorises three things and executes none of them.
+
+    THE INSTRUMENTS. RULE 0 in two pastes, then five read-only gates.
+    G1a printed the S315 entry at 2926-3174 whole. G1b printed
+    tests/test_s317_pyflakes_exit_state.py whole, the check=False and
+    returncode line sets, and the def index. G2 printed
+    phase_preflight 126-175 verbatim with a span census, the marker
+    set, and the line-length facts. G3 built four synthetic git
+    repositories under /tmp/nous_s318/gitsem and measured eight cases
+    against them, touching no tracked path. G4 printed run() 105-125,
+    the two model spans 285-300 and 328-340, and the D314-5 entry
+    whole. scripts/release.py at sha 8f32d38a, 818 lines, 40966
+    bytes, worktree equal to origin/main, porcelain 2 and both
+    untracked. 336-700 REMAIN UNREAD EXCEPT 336-340, WHICH G4
+    PRINTED, AND NOTHING BELOW RESTS ON THE REST OF THAT REGION.
+
+    D318-1  THE EXEMPTION CLAUSE OF D315-9 HAS ZERO MEMBERS. Eight
+            synthetic cases, git 2.43.0, each printing rc, the byte
+            count of stdout, stdout itself and the first line of
+            stderr. git status --porcelain: clean rc 0 zero bytes;
+            dirty rc 0 nine bytes; outside a repository rc 128 zero
+            bytes; over a repository whose HEAD was overwritten rc
+            128 zero bytes. git tag -l: tag present rc 0 seven bytes;
+            tag absent rc 0 zero bytes; outside a repository rc 128
+            zero bytes; corrupted rc 128 zero bytes. A FAILED git AND
+            A CLEAN TREE ARE THE SAME BYTES ON STDOUT, and a failed
+            git and an absent tag are the same bytes on stdout. At
+            both sites the exit state is the only thing that
+            separates them, and at both sites it is discarded.
+
+    D318-2  WHAT THE TWO SITES DO WITH THAT EMPTY VALUE, READ AND NOT
+            INFERRED. 139-148: an empty stdout yields an empty dirty
+            list, no raise, and the phase continues. 151-172: 152
+            compares stdout.strip() against the tag name, an empty
+            value fails that comparison, control reaches the else at
+            170, 171 prints that the tag is not yet present, and 172
+            returns the version. BOTH ARE FALSE NEGATIVES IN A GATE.
+            Over 126-172 the returncode census printed 0: nothing
+            between the two call sites and the return reads the exit
+            state. The status result is used once, at 141, for its
+            stdout. The tag result is used twice, at its own call
+            site and at 152, and nowhere else in the file.
+
+    D318-3  WHAT THIS DOES TO D315-9, AND IT IS TWO HALVES POINTING
+            OPPOSITE WAYS. The criterion is written into D314-5 at
+            2803: an entry that narrows a prior entry is not a
+            correction to it, and the test is whether the prior
+            sentence was true when written.
+            THE PROPOSITION ABOUT THE WORLD -- that at 139 and 151
+            the exit state is data rather than failure -- WAS NOT
+            TRUE WHEN IT WAS WRITTEN. It is falsified by measurement,
+            not narrowed by reach.
+            THE SHAPE OF THE RULE -- an either/or whose second branch
+            is an exemption marker -- NARROWS, because the branch
+            loses the only two candidates ever named for it.
+            D314-5 records that a one-sentence answer would have been
+            wrong whichever way it went. This is that case again, in
+            a different tool, and the entry says both halves rather
+            than the more comfortable one.
+
+    D318-4  THE NARROWED RULE, AND IT IS THE WHOLE RULE.
+            check=False requires a returncode decision in the same
+            function. There is no exemption clause and no marker
+            mechanism.
+            The mechanism is not built because it would have zero
+            uses, and a mechanism with no members is surface that a
+            later seat fills because it is there. The reason it was
+            proposed at all, one meaning per mechanism, is satisfied
+            more completely by there being no second meaning to
+            carry.
+            run() at 105 already satisfies the narrowed rule and is
+            not touched: check=False at 116 is the wrapper's own
+            call, and 119 reads the exit state inside the same
+            function.
+
+    D318-5  THE CLASS HAS SIX MEASURED MEMBERS AND THE ENTRY THAT
+            NAMED IT KNEW OF FOUR.
+            Corrected: phase_pytest, by S316 P1 at 192. phase_
+            pyflakes, by S317 P2 at 245.
+            Open, in scripts/claim_lint.py, out of scope for this arc
+            and not repaired by it: the working-directory scan set of
+            D313-3, and the green over zero files of FG-S314-C.
+            Open, measured in S318 and authorised here: release.py
+            139 and release.py 151. BOTH ARE INSIDE phase_preflight,
+            WHICH IS THE GATE EVERY OTHER PHASE IS DOWNSTREAM OF.
+            The distinction is the point of recording it this way.
+            The entry that named the class named four; this session
+            measured two more; the total is a measurement of the
+            class and not a correction of that entry's reach.
+
+    D318-6  THE TWO REPAIRS ARE TRANSCRIPTION FROM 288-294 AND
+            332-339, AND NEITHER CARRIES A CONJUNCTION. The shape is
+            a bare test of the exit state, then both streams printed
+            line by line, then a raise naming the stake.
+            P2 needed a conjunction because pyflakes exits non-zero
+            when it REPORTS. Neither git command does: the dirty tree
+            exits 0 with nine bytes on stdout and the present tag
+            exits 0 with seven. The exit state alone separates
+            failure from finding at both sites, so the P2 predicate
+            would be borrowed weight rather than transcription.
+            THE INSERTED CONTENT IS ASCII. The file carries three
+            non-ASCII characters and the verbatim read printed them
+            at 148, 156 and 166, which is to say on both sides of
+            both repair sites. They are inherited, they are not
+            touched, and nothing is transcribed from them.
+
+    D318-7  THE MESSAGE NAMES A DETECTION AND NOT A CAUSE. All four
+            failing arms printed one identical first line of stderr,
+            and two distinct causes produced it: a directory that was
+            never a repository, and a repository whose HEAD was
+            overwritten with seven bytes of garbage. A message naming
+            either cause would be wrong half the time it fired. The
+            discipline is the one S317 arrived at, reached here by
+            its own measurement rather than by inheritance, and the
+            tests lock it the way the S317 file locks it.
+
+    D318-8  P3 IS WRITTEN AGAINST THE NARROWED RULE AND ITS
+            BLINDNESS IS UNCHANGED. The declaration at 3066 stands
+            whole: the set is top-level function definitions named
+            phase_, a subprocess call anywhere else is invisible, the
+            shape verifies position in the source and not runtime
+            dependence, and the negative arm is in memory. WHAT
+            CHANGES IS THAT THE TEST NEEDS NO EXEMPTION PATH: it
+            reads no markers, weighs no reasons, and never has to
+            tell a legitimate exemption from a debt.
+            There are thirteen phase definitions. Five of them carry
+            a check=False call site, and after the two repairs all
+            five decide on it.
+
+    D318-9  THE ORDER, AND THE STOPPING RULE DECIDED BEFORE THE WORK
+            RATHER THAN DURING IT. This entry, then the two guards,
+            then their tests, then the AST test, then the entry that
+            records what those did. Each in its own gate, one
+            irreversible action per gate. SEAL AFTER THE TESTS. The
+            AST test lands only if what precedes it runs clean and
+            there is margin, and the recording entry belongs to the
+            next seat either way. The precedent is exact: one entry
+            decided and the next session's entry recorded.
+
+    D318-10 WHERE PYTEST_FLOOR IS DEFINED, WHICH ANSWERS D317-11. It
+            is defined at line 70 of scripts/release.py with Python
+            type-annotation syntax and a comment chain that makes
+            that line 3925 characters long. Over the three paths the
+            leg named, there are five occurrences and every one is in
+            scripts/release.py: the docstring at 18, the definition
+            at 70, and the three uses at 210, 211 and 212. claims.
+            toml and pyproject.toml carry none. Across the tracked
+            tree the count is 78, so 73 occurrences are somewhere
+            this leg did not look and remain unmeasured. THE VALUE IS
+            2722 AND IT DOES NOT MOVE IN THIS ARC.
+
+    D318-11 THE OPERATOR'S PARAGRAPH IN THE OPENER IS TRUE AND
+            UNDERSTATES, AND IT IS NOT EDITED. The file measured
+            10de89e8 over 11109 bytes and 252 lines before the
+            insertion and b412edee over 12051 bytes and 270 lines
+            after it. EIGHTEEN LINES WERE ADDED AND SEVENTEEN OF THEM
+            ARE THE PARAGRAPH: the seventeen at 224-240, hashing to
+            f9d5d89b, and one blank separator at 241. MAXLEN stayed
+            at 71 and no line exceeds 79. The paragraph says the
+            class was named with four members and that two
+            remain open. Both statements are true of the entry it
+            points at. As a picture of the class they understate from
+            this entry onward. The remedy is this entry, appended,
+            and not a second write to that file.
+
+    D318-12 WHAT DOES NOT MOVE AND IS NOT APPROACHED. PYTEST_FLOOR
+            stays at 2722 while the live count is 2848; the gap of
+            126 is measured and O5 remains downstream of everything
+            authorised here. DN[5] is untouched. The ceremony change
+            remains unauthorised. SELF_SEAL_BROKEN remains PROPOSED
+            and the fixture stays frozen. The two untracked paths in
+            porcelain are not cleared, and the dry run therefore
+            still cannot reach phase 1 in this working directory.
+            Nothing above constructs a route to any of these.
+
+    FINDINGS RECORDED IN S318.
+
+            FG-S318-A  the seat's own instruments were unavailable at
+                       the start of the session. A bare echo failed
+                       as a control. No byte verification of the
+                       three sealed files was possible until they
+                       returned, and the seat said so rather than
+                       proceeding on the declared checksums.
+            FG-S318-B  a traceback out of python3 -c makes the
+                       Ubuntu apport hook fail on its own, stat-ing
+                       a path built from the -c argument. Every
+                       genuine exception in a paste prints twice.
+                       Refusals must exit rather than raise.
+            FG-S318-C  seat error. A locator gate declared its hit
+                       count the positive control and that count was
+                       zero, alongside a zero negative arm. Two zero
+                       arms demonstrate nothing about whether the
+                       shape can see at all.
+            FG-S318-D  an inherited belief placed the floor's
+                       definition in claims.toml. Measured, it is in
+                       scripts/release.py. The S317 leg that printed
+                       nothing was a correct grep aimed at the wrong
+                       file.
+            FG-S318-E  a fixed-string locator for the route was
+                       case-sensitive and printed zero while the
+                       thing it sought was present in capitals. It
+                       had been declared blind to that beforehand and
+                       cost nothing, and it is still a zero that does
+                       not inform.
+            FG-S318-F  seat error. A prediction was declared for a
+                       leg the seat had not put in the paste. The
+                       value was printed by RULE 0 in the same
+                       session, so the number stands; the prediction
+                       does not.
+            FG-S318-G  seat error, caught by the operator. The seat
+                       wrote that the two preflight sites are covered
+                       by the wrapper's check at 119, having itself
+                       printed that the check is conditional on the
+                       parameter those sites set to False.
+            FG-S318-H  seat error, caught by the operator. The seat
+                       proposed narrowing the AST test's set to
+                       direct subprocess calls, which would have
+                       dropped the site the previous session had just
+                       repaired. A test adjusted until it passes is
+                       the class the arc exists to remove.
+            FG-S318-I  seat error. A prediction of at least five
+                       against a measured 87. Not a wrong value: a
+                       threshold that could not fail, which is the
+                       same class as a test that cannot fail the
+                       mutation it names.
+            FG-S318-J  the exemption clause of D315-9 rested on an
+                       uncharacterised exit state at two call sites.
+                       Neither the semantics of the commands nor the
+                       consequence of an empty stdout had been
+                       measured when the clause was written. Both
+                       sites are members of the class the same entry
+                       defined, and both sit in the phase that guards
+                       the pipeline.
+            FG-S318-K  seat error, caught by the operator. The seat
+                       asserted that the exit state at 151 is data
+                       and then printed, in the same paragraph, the
+                       reasoning that refutes it, and called the
+                       branch at 170 safe without measuring it.
+            FG-S318-L  a leg labelled for subprocess call sites
+                       counted five and four are calls. The fifth is
+                       a return annotation on the wrapper. The label
+                       named a structure and the shape counted a
+                       substring, which is a recorded class.
+            FG-S318-M  operator error. The change to D315-9 was
+                       characterised as a narrowing, which covers the
+                       shape of the rule and not the proposition
+                       about the world that the same entry carried.
+                       The criterion that separates them was already
+                       in the ledger at 2803.
+
+    THE SHAPE OF THE SESSION. Ten seat findings, one operator finding,
+    two tool properties. Three of the seat errors were caught by the
+    operator against measurements the seat had already printed and not
+    read, which is the failure mode this arc keeps meeting: not an
+    absent instrument, but an instrument whose output was not read
+    back before prose was written on top of it. None of the three
+    reached a write. No code was written in this session before this
+    entry.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code. It does not move
+    PYTEST_FLOOR. It does not touch DN[5]. It does not arm the
+    ceremony change, and nothing in it constructs a route to it. It
+    does not repair the two members of the class that live in
+    scripts/claim_lint.py, and it does not scope them into this arc.
+    It does not edit the opener. The greater part of 336-700 of
+    scripts/release.py remains unread, and the bare except in that
+    region is named as unread rather than characterised.
