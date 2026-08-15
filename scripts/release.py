@@ -137,6 +137,13 @@ def phase_preflight() -> str:
     print(f"  current _version.__version__ = {version}")
 
     status = run(["git", "status", "--porcelain"], cwd=REPO_ROOT, check=False)
+    if status.returncode != 0:  # __s319_a1_preflight_status_exit_state_v1__
+        for line in (status.stdout + status.stderr).splitlines():
+            print(f"  {line}")
+        raise ReleaseError(
+            "the working-tree check did not complete; a clean tree and a "
+            "failed git are the same bytes on stdout"
+        )
     dirty = [
         line for line in status.stdout.splitlines()
         if line and not line.endswith(".bak") and "noesis_lattice" not in line
@@ -149,6 +156,13 @@ def phase_preflight() -> str:
 
     tag_name: str = f"v{version}"
     tag_check = run(["git", "tag", "-l", tag_name], cwd=REPO_ROOT, check=False)
+    if tag_check.returncode != 0:  # __s319_a2_preflight_tag_exit_state_v1__
+        for line in (tag_check.stdout + tag_check.stderr).splitlines():
+            print(f"  {line}")
+        raise ReleaseError(
+            "the tag lookup did not complete; an absent tag and a failed "
+            "git are the same bytes on stdout"
+        )
     if tag_check.stdout.strip() == tag_name:
         # __NERVE_DISPATCH_RELEASE_ALLOW_EXISTING_TAG_v1__
         if not _ALLOW_EXISTING_TAG:
