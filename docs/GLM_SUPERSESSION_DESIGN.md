@@ -4512,3 +4512,227 @@ document itself.
     on the page as written, true when it was written and wrong in its count.
     336-700 of scripts/release.py remains unread and the bare except in that
     region is named as unread rather than characterised.
+
+  - S321 the D320 entry lands, the census that counted its own effect is
+    settled against both revs, and the understatement in FG-S321-E is
+    corrected by append
+
+    THIS ENTRY IS WRITTEN IN S322 ABOUT S321. Every number below was printed
+    by an instrument in S322 at HEAD e5100ba unless D321-5 marks it as
+    testimony. D320-11 assigns this entry to this seat and D318-9 set that
+    precedent; D319 and D320 are the two instances before this one.
+
+    THE INSTRUMENTS. RULE 0 in two pastes, 93 assertions predicted and 20
+    declined, all twenty measured. Then three read-only gates and no write
+    before the append. The first read the D320 entry at 4223-4514 whole, the
+    rule at 2803-2822 that governs a correction, and the seam. The second
+    measured the commit e5100ba, the document at its parent 1b2fd6a, and the
+    tracked floor census at both revs. The third measured the append target,
+    its directory and the conditions of the write.
+    docs/GLM_SUPERSESSION_DESIGN.md at sha a18d28c9, 4514 lines, 261526
+    bytes, MAXLEN 79, NONASCII 0, TRAILWS 0, TABS 0, worktree equal to
+    origin/main. scripts/release.py at sha d292bc82, 832 lines, UNTOUCHED IN
+    S320, S321 AND S322. 336-700 of that file remains unread and nothing
+    below rests on that region.
+
+    D321-1  WHAT S321 SHIPPED, MEASURED AT e5100ba AND NOT INHERITED. One
+            commit on origin/main, one file, 293 insertions, 0 deletions,
+            measured through diff-tree numstat. Its parent is 1b2fd6a and
+            exactly one commit separates them. The D320 entry occupies
+            4223-4514, 292 lines, 19206 bytes, sha d6c7b52b, read from the
+            worktree and again from the origin/main blob and equal. THE TWO
+            HUNDRED AND NINETY-THIRD INSERTION IS THE BLANK SEPARATOR at
+            4222, which measures one byte through wc -c; 292 plus one is
+            that 293 and the addition is this seat's. The document went from
+            4221 lines and 242319 bytes at the parent to 4514 and 261526 at
+            HEAD, and 261526 minus 242319 is 19207, which is the span's
+            19206 plus the separator; both subtractions are this seat's.
+            HEAD is 67 commits ahead of v5.78.0 and no tag was cut.
+
+    D321-2  THE SUBJECT THROUGH THE THREE SHAPES D320-6 SETTLED. Measured on
+            the subject of e5100ba: 148 by awk length, 149 by wc -c, and 150
+            by wc -c over the whole body, on which wc -l returns 2. The
+            delta of one and the delta of two are the two that D320-6
+            reconciled, reproduced here on a subject D320-6 never saw. The
+            family over the last twenty subjects runs 85 to 153, re-measured
+            at HEAD with this subject inside the window.
+
+    D321-3  THE CENSUS THAT COUNTED ITS OWN EFFECT IS SETTLED. D320-7
+            declared at 4346-4350 that the entry it was writing carried
+            three occurrences of the floor token, so the tracked count would
+            read 89 and the document 20 once it landed, and it named the
+            gate after the append as the place that would settle those
+            figures rather than settling them by its own sentence. Measured
+            in S322 at both revs: 86 tracked at 1b2fd6a and 89 at e5100ba,
+            17 in the document and 20, and the file set fifteen at both. THE
+            DECLARED FIGURE HELD AND IT IS NOW MEASURED RATHER THAN
+            ARITHMETIC. THE VALUE IS 2722, IT IS DECLARED AT LINE 70 OF
+            scripts/release.py, AND IT DOES NOT MOVE IN THIS ARC. THIS ENTRY
+            NAMES THAT TOKEN NOWHERE, so it carries zero occurrences of it
+            and the two counts do not move: 89 tracked and 20 in the
+            document after this lands, which is the same measurement rather
+            than a new arithmetic. The cost is stated rather than hidden: a
+            reader grepping for the token will not find this entry, and the
+            settlement above is what such a reader would be looking for.
+
+    D321-4  THE CORRECTION TO FG-S321-E, WHICH IS AN APPEND AND NOT AN EDIT.
+            That finding sits at 4482-4489, occurs once in the whole
+            document by a literal count, and is at the same line when the
+            document is read from the origin/main blob instead of the
+            worktree. Its closing sentence says the pattern recurred once in
+            the following gate, on one leg. IT RECURRED FOUR TIMES. The four
+            are transcribed under D321-5 and are testimony rather than
+            measurement: a gate declared at fifteen that emitted
+            twenty-seven legs, a decode gate declared at twenty-three that
+            emitted twenty-two, a candidate-build gate declared at
+            thirty-four that emitted forty-five, and one further leg in a
+            third gate covered by neither its prediction list nor its
+            declination list. THE SENTENCE AT 4488 STAYS ON THE PAGE AS
+            WRITTEN. It was true of the gate it named and it understated the
+            class the finding describes. This is D314-5 at 2803 applied to a
+            finding the ledger wrote about its own seat: the entry that
+            corrects a prior sentence says which of the two it is doing, and
+            the prior sentence is not edited.
+
+    D321-5  WHAT S322 CANNOT RE-MEASURE, AND WHY IT IS IN THE LEDGER ANYWAY.
+            The handoff files are not tracked in the repository; they exist
+            only as the operator's saved copies, so a finding not written
+            here is written nowhere the repository can reach. What follows
+            is transcribed from a file named NOUS_SESSION_321_HANDOFF.md at
+            ad53b4725ff98ee45ef30e98c3e1916a454dbbe801927a33fb2cb9dd311b5a95
+            of 13671 bytes and 286 lines, verified against the digest the
+            operator declared before any of it was read. IT IS TESTIMONY AND
+            NOT MEASUREMENT, and nothing in D321-1 through D321-4 depends on
+            it. Sixteen gates, 387 assertions predicted, 384 hit, three
+            missed, 46 declined and all forty-six measured. The three misses
+            are FG-S321-A and FG-S321-B in RULE 0 and FG-S321-D in the first
+            read gate, and every gate from the second onward scored clean.
+            The D320 payload moved in 37 chunks across four pastes with a
+            running byte count and a running sha for each. The first
+            transfer paste ran twice and the second run printed REFUSED
+            PRECONDITION TARGET EXISTS against a real target rather than
+            against a fixture.
+
+    D321-6  THE SEVEN FINDINGS OF S321 ARE ALREADY ON THE PAGE, WHICH IS
+            WHY THIS ENTRY DOES NOT RESTATE THEM. They occupy 4457-4502
+            and the anchored sweep over the whole document returns seven
+            for that family. Three of them share one cause, those three
+            being FG-S321-A, FG-S321-B and FG-S321-D, and the cause is a
+            number carried from the shape that produced it onto a
+            different shape, which is R2. NOTHING OF S321 IS OWED FORWARD
+            EXCEPT THE CORRECTION IN D321-4.
+
+    D321-7  THE STANDING RULE S321 ADDED, RECORDED SO IT LIVES SOMEWHERE THE
+            REPOSITORY CAN REACH. R22, count the legs from the built paste
+            and not from the intent. An assertion count declared before the
+            paste exists is a self-referential counter: the paste grows and
+            the number does not, so the legs are counted with an instrument
+            after the paste is built. D320-10 did the same for R16 through
+            R21, and this completes the recorded set at twenty-two.
+
+    D321-8  THE CLASS AND ITS CENSUS RE-MEASURED AT e5100ba, WHERE ONE SET
+            GIVES THREE NUMBERS. Seven check=False sites in
+            scripts/release.py at 116, 139, 158, 204, 257, 300 and 344,
+            sitting in six enclosing definitions of which five are phases:
+            phase_preflight twice, phase_pytest, phase_pyflakes,
+            phase_claim_lint and phase_sidecar_integrity. run at 116 is the
+            sixth and is not a phase. Thirteen definitions named phase_ at
+            column zero and 17 column-zero definitions in all, unchanged
+            from D320-4. SEVEN SITES, SIX DEFINITIONS, FIVE PHASES ARE THREE
+            TRUE NUMBERS OVER ONE SET, differing only in the shape that
+            produced them, which is the cause behind FG-S321-A, FG-S321-B
+            and FG-S321-D printed live at the opening gate of S322. The
+            class stands at six measured members: four closed and locked by
+            a test that reads the whole file, two open in
+            scripts/claim_lint.py, a file of 1016 lines, and both outside
+            this arc.
+
+    D321-9  THE PAYLOAD BUILDER GAINS A PRECONDITION INSTEAD OF A
+            RULE. FG-S321-G recorded prose wrapping that put a prior
+            finding code at the start of a twelve-space line, the
+            exact indent an anchor head carries, twice in one payload,
+            and the repair was to reword. The class fired twice again
+            while this payload was built: a four-space line began with
+            a decision code belonging to another family, and a
+            twelve-space line began with a finding code of S321;
+            rewording the second moved the break and the same line
+            start re-formed at its new position. THE REPAIR IS
+            MECHANICAL AND NOT EDITORIAL. The builder wraps a block,
+            sweeps the lines it produced by anchor family, narrows the
+            width and wraps again until no line start can form an
+            anchor it did not intend, and REFUSES to emit the block at
+            all if no width satisfies that. This is the shape R4
+            requires of a write gate, a precondition that refuses and
+            produces nothing, moved one step earlier in the chain:
+            from the gate that writes the bytes to the instrument that
+            composes them. THE BUILDER IS NOT TRACKED IN THIS
+            REPOSITORY and this item is the whole of its record, which
+            is the cost D321-5 names applied to a tool rather than to
+            a finding.
+
+    D321-10 THE ORDER, AND WHAT THIS ENTRY DOES NOT ASSIGN. This entry, then
+            the seal. The arc's plan completed in S320, D320 recorded it,
+            and this entry records the session that wrote D320. THE CHAIN IS
+            NOT EXTENDED HERE. D318-9, D319-10 and D320-11 each assigned the
+            next entry to the next seat; this entry assigns none, because an
+            entry whose only subject is the entry before it is a plateau
+            wearing the shape of an arc. The findings of S322 are recorded
+            below rather than deferred to a successor that would exist only
+            to carry them. What follows the seal is an operator decision and
+            not a seat choice. THE COST OF STOPPING THE CHAIN IS DECLARED
+            HERE RATHER THAN LEFT TO BE FOUND: the findings of every gate
+            after this payload was built, meaning the transfer, the append,
+            the commit and the push, cannot enter this entry, so they land
+            only in the handoff, which is not tracked and is therefore
+            written nowhere the repository can reach, which is exactly what
+            D321-5 says that phrase means. They are owed to the next entry
+            if the operator brings work, and if he brings none they are the
+            declared cost of this decision rather than an oversight for a
+            later seat to find.
+
+    D321-11 THE STATE THIS ENTRY WAS WRITTEN AT. HEAD e5100ba equal to
+            origin/main, 67 commits ahead of v5.78.0, no tag cut, pip 5.78.0
+            and both servers reporting 5.78.0 through the health path
+            scripts/rule0.sh probes at its line 39. Suite over tests/ 2871
+            passed and 12 skipped, 2883 collected under tests/ and 3021 from
+            a bare root, pyproject.toml declaring no testpaths and 23
+            collectable files outside tests/. claim_lint rc 0 over 421
+            files, 0 violations, 0 allowlisted, 3 declared proof legs.
+            served_mirror_check rc 0, CLEAN, 331 tracked, 5 orphans.
+            Porcelain 2, both untracked and both known. Tracked scripts/*.py
+            17, tests/*.py 303, website/* 331. certbot.timer and
+            nous-serve-integrity.timer both active, no failed units, both
+            served surfaces 200. The append seam measured rather than
+            carried: 30 entry heads, 30 of them blank-preceded, 0
+            text-preceded, trailing blanks 0, last line 57 bytes, last byte
+            a newline. The target is root:root 644 and the docs directory is
+            aetherlang:aetherlang 755, both read from stat in this session
+            rather than carried from a prior.
+
+    FINDINGS RECORDED IN S322, WHICH ARE THIS SEAT'S OWN. The score below is
+    bounded at the gate that built this payload and is partial by
+    construction: over five gates, 144 assertions predicted, 144 hit, none
+    missed, 30 declined and all thirty measured, with six further legs
+    measured at the byte gate that carried neither a prediction nor a
+    declination. The totals are arithmetic over the per-gate counts, and the
+    gates after this one are not in them.
+
+            FG-S322-A  operator, and it cost nothing. The second RULE 0
+                       paste ran twice and both runs stand in the
+                       transcript. Every leg printed the same value across
+                       the two runs except three elapsed-time fields, so an
+                       accidental repetition served as a reproducibility
+                       control and it passed. The paste is read-only and
+                       nothing moved.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code. It does not move the
+    floor. It does not touch DN[5]. It does not arm the ceremony change and
+    nothing in it constructs a route to one. It does not repair the two open
+    members of the class in scripts/claim_lint.py and it does not scope them
+    in. It does not amend the frozen fixture. It does not narrow to per call
+    site the rule that D318-4 states and D319-5 and D320-3 repeat. It does
+    not clear the two untracked paths out of porcelain. It edits nothing:
+    the correction in D321-4 is an append and the sentence it corrects stays
+    on the page as written, true of the gate it named and short of the class
+    it belongs to. 336-700 of scripts/release.py remains unread and the bare
+    except in that region is named as unread rather than characterised.
