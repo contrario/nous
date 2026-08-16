@@ -4736,3 +4736,252 @@ document itself.
     on the page as written, true of the gate it named and short of the class
     it belongs to. 336-700 of scripts/release.py remains unread and the bare
     except in that region is named as unread rather than characterised.
+
+  - S322 the P19 object is read whole, the M88 proposal collapses on
+    measurement at two levels, and the rule that binds the README to the
+    version oracle is decided before it is written
+
+    THIS ENTRY IS WRITTEN IN S322 ABOUT S322, which is the first entry in
+    this chain whose subject is its own session. Every number below was
+    printed by an instrument in S322 at HEAD 63bfa9a. The work was
+    brought by the operator after the seal of that session, which is the
+    condition D321-10 named when it declined to assign a successor.
+
+    THE INSTRUMENTS. Four read-only gates and no write. A scoring gate over
+    the S263 remediation list, 39 fixed-string probes with a positive
+    control that printed 89 and a negative control that printed 0. A reading
+    gate over the six probes whose count did not decide them. Then two gates
+    on the object itself: the phase, the README version family and the
+    oracle; then the test file whole and the run helper whole.
+    scripts/release.py at sha d292bc82, 832 lines, UNTOUCHED.
+    tests/test_version_consistency.py at sha d7b79aef, 138 lines.
+
+    D322-1  WHERE P19 CAME FROM, AND IT IS A MEASUREMENT AND NOT A FORECAST.
+            The scoring gate declared its SET as tracked paths at 63bfa9a
+            under a named pathspec, and its SHAPE as fixed-string literal
+            match, blind to rewording that keeps a defect and to any finding
+            stated as an absence. The probe for the string README inside
+            scripts/release.py returned zero. README.md carries 5.77.0 while
+            _version.py carries 5.78.0. The previous release already forgot
+            the README; nothing in the pipeline saw it then and nothing
+            would see it at the next tag.
+
+    D322-2  THE M88 PROPOSAL COLLAPSES ON MEASUREMENT, AND THIS ENTRY
+            NARROWS IT RATHER THAN FALSIFYING IT. M88 proposed a
+            version-consistency check modelled on an existing phase. Two
+            levels, both measured. FIRST: that phase is a runner. It
+            occupies 237 to 243, nine lines counted with the blanks, takes
+            no arguments, and is called bare at 791 -- the only phase in
+            main that never receives the version, where registry coverage,
+            the wheel gate, the install smoke and the provenance leg all do.
+            SECOND: the set it runs lives entirely inside the test file,
+            which mentions glob zero times, rglob zero times and parametrize
+            zero times, and reaches exactly one path, a hardcoded Path at
+            its line 35. THERE IS NO LIST OF FILENAMES TO EXTEND IN EITHER
+            FILE. M88 was not wrong when it was written. It was a proposal
+            resting on an unmeasured assumption about a phase nobody had
+            opened, and it cited a line that had already moved: :215 then,
+            237 now. D314-5 applied to an inherited proposal rather than to
+            an inherited sentence.
+
+    D322-3  THE PHASE IS A GATE WITH DELEGATED CONTENT, AND THE NEW RULE
+            INHERITS THAT GATE FOR NOTHING. The run helper at 105 declares
+            its check parameter defaulting to true; it calls subprocess with
+            checking off at 116 and then decides for itself at 119, printing
+            both streams and raising before the caller can continue. Line
+            239 passes no check argument, so it takes that default. Phase 4
+            therefore stops the release when the test file goes red. THIS IS
+            THE SHAPE THE F1 CLASS CLOSED ELSEWHERE, deciding on the exit
+            state instead of discarding it, arrived at here by reading
+            rather than by repair. Anything added to that test file is gated
+            at release the moment it lands, and no line of
+            scripts/release.py is required for it.
+
+    D322-4  THE SEVEN SOURCES THE FILE ALREADY BINDS, AND WHAT IS ABSENT
+            FROM THEM. The file is 138 lines with 8 column-zero definitions
+            of which 7 are named test_, and it collects 7 items and passes 7
+            run alone. Its own docstring enumerates seven sources: the
+            version string, the version tuple, the CLI re-export, the API
+            re-export, the package re-export, the installed metadata, and
+            the pyproject dynamic declaration. Every one of the seven is an
+            attribute comparison or a parse against the version string. NO
+            SURFACE OUTSIDE CODE IS IN THAT SET. The string README appears
+            zero times in the file. The README is therefore a NEW
+            CONSTRUCTION and not an extension of an existing one, and saying
+            which of the two it is was the whole question this reading
+            answered.
+
+    D322-5  THE MODEL THE FILE ALREADY CONTAINS. One test at 107 to 123
+            reads the text of a file, iterates its lines, keeps context in a
+            boolean, applies a rule that is sensitive to that context, and
+            fails through an explicit call whose message names the remedy.
+            IT CARRIES NO LINE NUMBER. It is the only test in the file that
+            is not an equality, and it is the construction the new rule
+            copies. The requirement that a check survive the movement of
+            lines is therefore satisfied by something already in the tree
+            rather than by something invented here.
+
+    D322-6  THE THREE CONSTRAINTS ON THE SHAPE, EACH ONE MEASURED RATHER
+            THAN ARGUED. FIRST, no line numbers: M88 named 12, 306 and 334,
+            and the values sit at 12, 305 and 333 today, so the citation was
+            already dead when it was read. SECOND, no equality over every
+            version-shaped token: the README carries ten such lines and
+            seven distinct values, of which six are historical and correct
+            -- anchoring arrived at one release, public verification at
+            another, the signing dependency became a base dependency at a
+            third. An equality over all of them yields six false positives,
+            and six false positives in a release gate are worse than the
+            defect they would be added to catch. THIRD, the count depends on
+            the shape: three lines carry the stale value and four tokens do,
+            because line 333 carries it twice, once in prose and once inside
+            the release tag URL. THE RULE MUST DECLARE WHICH OF THE TWO IT
+            COUNTS.
+
+    D322-7  WHAT SEPARATES THE TWO CLASSES, MEASURED IN THE BYTES RATHER
+            THAN INFERRED FROM INTENT. The historical statements carry
+            marks: the words since v at 24, 41 and 59; a trailing plus sign
+            at 215 and 243; a JSON sample at 186. The three current-version
+            claims share no syntax with each other -- an ASCII banner at 12,
+            a heading at 305, prose beside a URL at 333 -- but not one of
+            them carries any of those marks. The separation is therefore
+            available without chasing the syntax of each site, and that is a
+            property of these bytes at this commit, not a law.
+
+    D322-8  WHAT THE RULE DOES, WHICH IS NOT THE SAME QUESTION AS HOW IT
+            FINDS ITS SITES, AND IT IS A DECISION. Equality against the
+            version string. THE CONSEQUENCE IS A NEW OBLIGATION IN THE
+            RELEASE PROCESS AND NOT ONLY A NEW TEST: every version bump must
+            edit README.md, or the release stops at phase 4. That is
+            precisely the point of P19 -- a release that forgets the README
+            can no longer be cut -- and it is written here as a decision
+            with its cost stated, rather than discovered by whoever meets it
+            first on a red pipeline.
+
+    D322-9  WHAT MOVES WHEN THE CODE LANDS, DECLARED HERE AND SETTLED AT THE
+            GATE THAT FOLLOWS IT. Collection over the test directory reads
+            2883 today and would read 2884; the suite reads 2871 passed and
+            12 skipped and would read 2872 and 12. Both are arithmetic
+            performed while writing this entry. THE FLOOR IS 2722, IT DOES
+            NOT MOVE IN THIS ARC, AND NOTHING HERE PROPOSES THAT IT SHOULD.
+            This entry carries exactly one occurrence of the PYTEST_FLOOR
+            token, counted by instrument over the built payload and not from
+            the intent, so the tracked count reads 90 and this document
+            holds 21 once it lands; those two figures are arithmetic over
+            the 89 and the 20 that the seal of S322 measured, and they are
+            settled at the gate after the append and not by this sentence.
+
+    D322-10 THE ORDER, AND ONE LEG THIS ENTRY RETIRES. This entry, then the
+            code, which is D309-3 applied to a rule rather than to a tool.
+            One object: the README. The findings below include the four that
+            D321-10 declared would land only in an untracked handoff if no
+            further work came; work came, so they land here and that debt is
+            discharged. AND THE TERMINATOR MOVES: the seal of S322 recorded
+            that the S322 head line must print empty and that the D322
+            family must count zero. Both of those are retired by this entry.
+            The next seat checks the S323 head line and the D323 family
+            instead. AND THE SAME COST FALLS ON THE CODE THIS ENTRY
+            AUTHORISES. Every prior landing of code was recorded by the
+            entry that followed it. This one will not be, because the chain
+            is broken here and this entry does not reassign it, so what that
+            code does lands only in an untracked handoff unless the operator
+            brings further work -- the same declared cost as the findings
+            below, owed to the next entry if there is one.
+
+    FINDINGS. The first four were named in S322 after the D321 payload was
+    frozen and could not enter it; D321-10 declared exactly that and owed
+    them forward. The last four were named after that payload landed: three
+    while reading the object of this entry, and one at the gate that built
+    this one.
+
+            FG-S322-B  seat error, caught before emission. The
+                       transfer-paste generator joined every clause with a
+                       semicolon and a space and so produced an else
+                       followed by a semicolon, which sh, dash and bash all
+                       reject. All four transfer pastes failed the syntax
+                       check. Had that check been skipped, the first
+                       transfer gate would have failed on the operator's
+                       terminal after its directory had already been
+                       created.
+
+            FG-S322-C  operator, no consequence. The fourth transfer paste
+                       ran three times and the second and third runs printed
+                       a precondition refusal against a real target rather
+                       than a fixture, writing nothing. The refusal also
+                       gave a free second reading of the file digest, and it
+                       agreed with the digest the applying run had printed.
+
+            FG-S322-D  operator, no consequence, and it demonstrated
+                       something no fixture had. The commit gate ran twice
+                       and the second run refused. WHICH ARM FIRED IS THE
+                       INFORMATION: after a successful commit the index
+                       still holds the blob, so the guard on the blob
+                       passes, and only the guard that counts the staged set
+                       sees there is nothing left to commit. A chain
+                       carrying the blob guard alone would have attempted an
+                       empty commit on a re-paste. R14 confirmed by
+                       accident.
+
+            FG-S322-E  seat error, R18. The seal gate predicted both servers
+                       reporting their version and then piped the RULE 0
+                       script through a tail that keeps only its last four
+                       sections, dropping both health blocks. The seat had
+                       read that script whole at the opening gate and chose
+                       the truncation anyway. A leg the built paste cannot
+                       emit is not a leg, and two predictions were left
+                       unmeasurable rather than missed. Closed in a separate
+                       paste immediately after.
+
+            FG-S322-F  seat error, R2. The length of the operational scope
+                       exclusion list in the signed governance manifest was
+                       predicted at eight and measured at nine. The S263
+                       list cites its members by one-based ordinal; the seat
+                       read an ordinal as a cardinality. The two indexings
+                       agree once named: that document's sixth exclusion is
+                       index five, and its eighth is index seven. A number
+                       moved across shapes in the session that wrote D321-6
+                       about exactly that.
+
+            FG-S322-G  not a seat error of this session. M88 states three
+                       sites in the README and names three line numbers.
+                       Measured at 63bfa9a: three lines carry the stale
+                       value and four tokens do, because one line carries it
+                       twice, and the three line numbers had each moved.
+                       Both counts are true under their own shape, which is
+                       why D322-6 requires the rule to declare which one it
+                       counts.
+
+            FG-S322-H  not a seat error of this session, and NOT PART OF
+                       THIS OBJECT. The pipeline docstring at line 20 of
+                       scripts/release.py states a count for the
+                       version-consistency test file. Measured: 8
+                       column-zero definitions, 7 named test_, 7 collected,
+                       7 passed. The stated count matches none of the three
+                       shapes; the eighth definition is a helper. Same
+                       family as the obligation counts the S263 list
+                       records. RECORDED AND NOT REPAIRED: one object per
+                       arc.
+
+            FG-S322-I  operator, no consequence, and it measured a property
+                       this chain had been resting on unmeasured. The
+                       instruction message authorising this payload arrived
+                       twice, identically. A CHAT MESSAGE CARRIES NO
+                       PRECONDITION, so the guard applied was the one
+                       available: read the digest of the artifact already
+                       built, refuse to rebuild, and then run the builder
+                       again as a control and compare. The rebuild was
+                       byte-identical. THE BUILDER IS DETERMINISTIC, and
+                       that is now measured rather than assumed -- every
+                       earlier gate in this chain that rebuilt an artifact
+                       and compared a digest rested on that property without
+                       a measurement behind it.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code; the code follows it,
+    which is the whole point of writing it first. It does not touch
+    claims.toml, whose forbidden objects are a separate object with a trap
+    of their own: an addition made before the wording is corrected turns the
+    claim-lint phase red and stops the release. It does not touch the two
+    untracked paths, the floor, DN[5] or the ceremony change, and it
+    constructs no route to any of them. It does not repair the pipeline
+    docstring recorded above. It does not amend the frozen fixture. It edits
+    no sentence already on the page: the narrowing of M88 in D322-2 is an
+    append, and M88 stays as written, true of what it could see.
