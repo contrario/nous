@@ -136,3 +136,126 @@ def test_installed_metadata_matches_source() -> None:
         f"_version.__version__={_version.__version__!r}. "
         "Wheel was built against a different _version.py."
     )
+
+
+README: Path = REPO_ROOT / "README.md"
+
+CURRENT_VERSION_MARKER: str = "__s323_readme_version_current_v1__"
+CURRENT_VERSION_MARK: str = "<!-- " + CURRENT_VERSION_MARKER + " -->"
+MARKED_SITE_COUNT: int = 3
+FENCE: str = "```"
+SEMVER_IN_TEXT_RE: re.Pattern[str] = re.compile(r"v?\d+\.\d+\.\d+")
+
+
+def _marked_regions(lines: list[str]) -> list[tuple[str, list[str]]]:
+    regions: list[tuple[str, list[str]]] = []
+    for index, line in enumerate(lines):
+        if CURRENT_VERSION_MARK not in line:
+            continue
+        if line.strip() != CURRENT_VERSION_MARK:
+            regions.append(("trailing marker on a line of prose", [line]))
+            continue
+        nxt: int = index + 1
+        while nxt < len(lines) and lines[nxt].strip() == "":
+            nxt += 1
+        if nxt >= len(lines):
+            pytest.fail(
+                "A standalone "
+                + CURRENT_VERSION_MARK
+                + " marks nothing: no non-blank line follows it. Either delete the"
+                " marker or move it in front of the block it is meant to govern."
+            )
+        if not lines[nxt].strip().startswith(FENCE):
+            regions.append(("standalone marker before a single line", [lines[nxt]]))
+            continue
+        close: int = nxt + 1
+        while close < len(lines) and lines[close].strip() != FENCE:
+            close += 1
+        if close >= len(lines):
+            pytest.fail(
+                "A standalone "
+                + CURRENT_VERSION_MARK
+                + " marks a fenced block that never closes. Close the fence, or move"
+                " the marker to the line it is meant to govern."
+            )
+        regions.append(("standalone marker before a fenced block", lines[nxt : close + 1]))
+    return regions
+
+
+def test_readme_marked_sites_carry_the_current_version() -> None:
+    """Every semver token inside a marked README region equals _version.__version__.
+
+    FORM. A line whose whole content is the marker comment is STANDALONE and marks
+    the next non-blank thing: if that is a fence opener, the marked region is the
+    fenced block; otherwise it is that one line. A marker appended to prose is
+    TRAILING and marks only its own line. Form, not position: this README already
+    carries a trailing marker on a prose line shortly above a fence opener, and a
+    position-based rule would silently give that marker a second meaning.
+
+    WHY THE IDIOM WAS FREE TO TAKE. The HTML-comment marker idiom occurs many times
+    in this README and, before this test, not one of its tokens was read by any
+    script or test in the tree. The shape that separates an inert marker from a
+    load-bearing one is how many tracked files carry the token: tracked_total 1
+    means the token exists only where it is written and nothing consumes it;
+    tracked_total 2 or more means something reads it. This token is the first to
+    reach 2 -- README.md and this file -- so enforcing it gives the idiom a FIRST
+    meaning rather than a second.
+
+    COUNTS, AND THE LEVEL EACH IS ASSERTED AT.
+      file level    the mark occurs exactly MARKED_SITE_COUNT times and exactly
+                    that many regions resolve. Pinned.
+      region level  every marked region carries AT LEAST ONE version token, so a
+                    marker that loses its block, or a line that loses its version,
+                    goes red instead of passing over an empty set.
+      token level   the total token count is NOT pinned. It is 1 + 1 + 2 today and
+                    that addition is not an invariant.
+
+    BLINDNESS, SINGLE AND KNOWN. A current-version claim written WITHOUT a mark is
+    invisible here. The pinned count catches the removal of a marked site, never
+    the addition of an unmarked one. A live instance sits a few lines under one of
+    the marked sites: the Tests row of the Stats table carries a figure no gate
+    reads.
+
+    NOT TAKEN. Exhaustive classification -- require every semver token in the README
+    to carry either a current mark or a historical mark, so a new unmarked site
+    fails closed. Cost: a mark on every version-bearing line and a classification
+    decision for every future version reference. Beyond this rule; the operator's
+    call if it is ever taken.
+
+    CONSEQUENCE. Every version bump must edit README.md at every marked site, or
+    the release stops at the version-consistency phase.
+    """
+    text: str = README.read_text(encoding="utf-8")
+    lines: list[str] = text.splitlines()
+
+    found: int = text.count(CURRENT_VERSION_MARK)
+    if found != MARKED_SITE_COUNT:
+        pytest.fail(
+            f"README carries the current-version mark {found} time(s), expected "
+            f"{MARKED_SITE_COUNT}. A marked site was removed or added: restore it, "
+            "or update MARKED_SITE_COUNT and the docstring in the same change."
+        )
+
+    regions: list[tuple[str, list[str]]] = _marked_regions(lines)
+    if len(regions) != MARKED_SITE_COUNT:
+        pytest.fail(
+            f"{found} mark(s) resolved to {len(regions)} region(s). Two marks share a "
+            "line, or a mark is malformed. One mark per site."
+        )
+
+    current: str = _version.__version__
+    for label, body in regions:
+        tokens: list[str] = SEMVER_IN_TEXT_RE.findall("\n".join(body))
+        if not tokens:
+            pytest.fail(
+                f"A marked README region ({label}) carries no version token. The mark "
+                "governs an empty set: delete the mark, or restore the version it was "
+                "put there to govern."
+            )
+        for token in tokens:
+            if token.lstrip("v") != current:
+                pytest.fail(
+                    f"A marked README region ({label}) claims version {token!r} but "
+                    f"_version.__version__ is {current!r}. Update README.md at every "
+                    "marked site; the version bump is not complete without it."
+                )
