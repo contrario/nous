@@ -445,7 +445,7 @@ def main() -> int:
         "stranger. It PROVES nothing about whether the shipped bytes are the "
         "bytes any given party intended: content is bound to an identity by "
         "the Ed25519 signature and the transparency-log anchor, never by a "
-        "sidecar or an exit code. NOUS is a monitor, not a guard."
+        "sidecar or an exit code. The evidence layer is a monitor, not a guard."
     )
 
     if args.keep:

@@ -25,7 +25,7 @@ ad-hoc, operator-run reality and MUST NOT be read as a hosted or hardened
 platform. This provenance EVIDENCES build composition via an Ed25519 signature
 over the DSSE payload (and a Rekor anchor when emitted); it does NOT prove
 builder integrity, hermeticity, isolation, or source-to-artifact
-reproducibility. There is no PROVES leg and no guard. NOUS is a monitor.
+reproducibility. There is no PROVES leg and no guard. The evidence layer is a monitor.
 
 Determinism. The Statement is byte-deterministic given identical inputs (the
 canonical form is sorted-keys compact JSON, exactly as the VSA and manifest
@@ -68,7 +68,7 @@ HONEST_SCOPE: str = (
     "integrity, hermeticity, isolation, or source-to-artifact "
     "reproducibility. SLSA Build Level 1: the build platform is an ad-hoc, "
     "operator-run script, neither hosted nor isolated. No PROVES leg, no "
-    "guard. NOUS is a monitor, not a guard."
+    "guard. The evidence layer is a monitor, not a guard."
 )
 
 
@@ -110,7 +110,7 @@ BUILDER_PROFILE_L2_GITHUB: BuilderProfile = BuilderProfile(
         "for offline, zero-Sigstore-trust verification. EVIDENCES build "
         "composition and subject identity via an Ed25519 signature (and a "
         "Rekor anchor when emitted); does NOT prove source-to-artifact "
-        "correctness or hermeticity. NOUS is a monitor, not a guard."
+        "correctness or hermeticity. The evidence layer is a monitor, not a guard."
     ),
 )
 

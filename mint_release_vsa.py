@@ -19,7 +19,7 @@ from __future__ import annotations
 # are confined to this operator-side tool. They never enter the shipped offline
 # verify path (verify_build_vsa_offline.py / nous build-attest-verify stay
 # cryptography + z3 + stdlib only). A release VSA EVIDENCES the operator's
-# endorsement; it PROVES nothing. NOUS is a monitor, not a guard.
+# endorsement; it PROVES nothing. The evidence layer is a monitor, not a guard.
 #
 # Refuse over guess: every precondition miss raises MintError (message starts
 # with the cause) before any file is written.
@@ -57,7 +57,7 @@ RELEASE_BOUNDARY = (
     "federation roots; it is not a second build. The offline verifier checks "
     "the operator signature and re-derives the subject digests, but does NOT "
     "re-derive the named federation attestations (toolchain tier: fetch + "
-    "Sigstore). It PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a "
+    "Sigstore). It PROVES nothing (no Z3/Farkas leg). The evidence layer is a monitor, not a "
     "guard."
 )
 OFFLINE_SCOPE = (
@@ -77,7 +77,7 @@ BACKFILL_NOTE = (
     "set no lower bound on when the payload came to exist. The release-time "
     "evidence is the named federation attestations (SLSA build provenance + "
     "PEP 740 publish leg), dated at the original release; this VSA "
-    "summarizes them. It PROVES nothing (no Z3/Farkas leg). NOUS is a "
+    "summarizes them. It PROVES nothing (no Z3/Farkas leg). The evidence layer is a "
     "monitor, not a guard."
 )
 
@@ -567,7 +567,7 @@ REKOR_LEG_BOUNDARY = (
     "self-contained: it carries the RFC6962 inclusion proof, the C2SP "
     "signed-note checkpoint, and the RFC3161 timestamp token, and is "
     "verifiable fully offline with cryptography + Python stdlib only. It "
-    "PROVES nothing (no Z3/Farkas leg). NOUS is a monitor, not a guard."
+    "PROVES nothing (no Z3/Farkas leg). The evidence layer is a monitor, not a guard."
 )
 
 

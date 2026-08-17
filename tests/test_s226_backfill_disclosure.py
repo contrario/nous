@@ -39,7 +39,7 @@ def test_backfill_note_honest_boundary_phrases() -> None:
     assert "do NOT evidence anchoring at release time" in n
     assert "named federation attestations" in n
     assert "PROVES nothing" in n
-    assert "monitor, not a guard" in n
+    assert "evidence layer is a monitor, not a guard" in n
     # never claims proof, never claims release-time anchoring
     assert "proves that" not in n.lower()
     assert "anchored at release" not in n.lower()

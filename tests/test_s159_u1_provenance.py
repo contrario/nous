@@ -86,7 +86,7 @@ def test_l1_honesty_no_overclaim() -> None:
     assert ext["slsaBuildLevel"] == 1
     assert ext["buildPlatformClass"] == "adhoc-operator-run-script"
     assert "Does NOT prove" in ext["scope"]
-    assert "monitor, not a guard" in ext["scope"]
+    assert "evidence layer is a monitor, not a guard" in ext["scope"]
     assert "SLSA Build Level 1" in ext["scope"]
     assert "verifiedLevels" not in pred
     for level in ("LEVEL_2", "LEVEL_3", "level 2", "level 3"):

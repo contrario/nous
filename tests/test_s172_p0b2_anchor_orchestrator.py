@@ -49,6 +49,34 @@ class _ReplayAnchor:
         self.log_index = tle["log_index"]
 
 
+_REGENERATED_BOUNDARY = "<regenerated boundary prose, see ADR-0010>"
+
+
+def _scrub(idx: dict) -> dict:
+    """Normalise the ONE index field that is regenerated editorial prose.
+
+    artifacts[kind=rekor_v2_transparency_log]["boundary"] is assigned from
+    the constant REKOR_LEG_BOUNDARY in build_release_index.  ADR-0010 ended
+    the unqualified monitor/guard thesis, so that constant must be
+    correctable without this historical replay going red.
+
+    Everything else stays under exact equality: every sha256, url, leafHash,
+    anchoredDigestSha256, logIndex, treeSize, rekorShard, entryKind and
+    rfc3161GenTime -- and the TOP-LEVEL "boundary", which is copied from the
+    signed DSSE and is therefore immutable here, not regenerated.
+
+    Splitting the old single byte-comparison into a scrubbed semantic check
+    plus a canonicality self-check is exact ONLY while this scrub touches
+    exactly one field.  Widening it weakens that implication.
+    """
+    out = json.loads(json.dumps(idx))
+    for art in out.get("artifacts", []):
+        if art.get("kind") == "rekor_v2_transparency_log":
+            if "boundary" in art:
+                art["boundary"] = _REGENERATED_BOUNDARY
+    return out
+
+
 def _mint_dir(tmp_path: Path) -> Path:
     d = tmp_path / "mintdir"
     d.mkdir()
@@ -119,7 +147,7 @@ def test_anchor_replays_5_60_1_bundle_and_index(tmp_path: Path) -> None:
     produced_index.pop("emittedAt")
     expected = dict(idx_published)
     expected.pop("emittedAt")
-    assert produced_index == expected
+    assert _scrub(produced_index) == _scrub(expected)
 
 
 def test_anchor_refuses_reanchor(tmp_path: Path) -> None:

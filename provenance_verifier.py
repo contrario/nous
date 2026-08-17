@@ -9,7 +9,7 @@ from __future__ import annotations
 #
 # The emitted verifier requires only the cryptography library and the standard
 # library (no NOUS install). It EVIDENCES (Ed25519 authenticity + sha-equality
-# identity); it does not PROVE. SLSA Build Level 1. NOUS is a monitor, not a
+# identity); it does not PROVE. SLSA Build Level 1. The evidence layer is a monitor, not a
 # guard.
 
 __all__ = [
@@ -49,7 +49,7 @@ PROVENANCE_VERIFY_OFFLINE_PY: str = r"""#!/usr/bin/env python3
 # digests by sha256 over local files. It does NOT prove builder integrity,
 # hermeticity, isolation, or source-to-artifact reproducibility. The provenance
 # is SLSA Build Level 1 (an ad-hoc operator-run release script, not a hosted or
-# isolated builder). NOUS is a monitor, not a guard.
+# isolated builder). The evidence layer is a monitor, not a guard.
 #
 # Checks, in order, fail-closed:
 #   1. DSSE Ed25519 signature over PAE(payloadType, payload) against the PINNED
@@ -302,7 +302,7 @@ def main():
         "  OUT OF SCOPE (not proven): builder integrity, hermeticity, build "
         "isolation, and source-to-artifact reproducibility. This is SLSA "
         "Build Level " + str(SLSA_BUILD_LEVEL) + " (ad-hoc operator-run "
-        "release script). No PROVES leg (Z3/Farkas) is carried. NOUS is a "
+        "release script). No PROVES leg (Z3/Farkas) is carried. The evidence layer is a "
         "monitor, not a guard."
     )
     return 0

@@ -45,6 +45,34 @@ def _published_vsa() -> dict:
     return _load("nous_lang-5.60.1.build-vsa.intoto.json")
 
 
+_REGENERATED_BOUNDARY = "<regenerated boundary prose, see ADR-0010>"
+
+
+def _scrub(idx: dict) -> dict:
+    """Normalise the ONE index field that is regenerated editorial prose.
+
+    artifacts[kind=rekor_v2_transparency_log]["boundary"] is assigned from
+    the constant REKOR_LEG_BOUNDARY in build_release_index.  ADR-0010 ended
+    the unqualified monitor/guard thesis, so that constant must be
+    correctable without this historical replay going red.
+
+    Everything else stays under exact equality: every sha256, url, leafHash,
+    anchoredDigestSha256, logIndex, treeSize, rekorShard, entryKind and
+    rfc3161GenTime -- and the TOP-LEVEL "boundary", which is copied from the
+    signed DSSE and is therefore immutable here, not regenerated.
+
+    Splitting the old single byte-comparison into a scrubbed semantic check
+    plus a canonicality self-check is exact ONLY while this scrub touches
+    exactly one field.  Widening it weakens that implication.
+    """
+    out = json.loads(json.dumps(idx))
+    for art in out.get("artifacts", []):
+        if art.get("kind") == "rekor_v2_transparency_log":
+            if "boundary" in art:
+                art["boundary"] = _REGENERATED_BOUNDARY
+    return out
+
+
 class _Anchor:
     def __init__(self, tle: dict) -> None:
         ip = tle["inclusion_proof"]
@@ -94,10 +122,10 @@ def test_build_release_index_reproduces_5_60_1() -> None:
         rfc3161_gen_time=rekor["rfc3161GenTime"],
         emitted_at=published_idx["emittedAt"],
     )
-    assert rebuilt == published_idx
-    canon = json.dumps(rebuilt, sort_keys=True, indent=2).encode("utf-8")
+    assert _scrub(rebuilt) == _scrub(published_idx)
     on_disk = (_REF / "index.json").read_bytes()
-    assert canon == on_disk
+    recanon = json.dumps(json.loads(on_disk), sort_keys=True, indent=2)
+    assert recanon.encode("utf-8") == on_disk
 
 
 def test_build_index_binding_self_check_refuses_on_mismatch() -> None:
