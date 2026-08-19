@@ -4985,3 +4985,379 @@ document itself.
     docstring recorded above. It does not amend the frozen fixture. It edits
     no sentence already on the page: the narrowing of M88 in D322-2 is an
     append, and M88 stays as written, true of what it could see.
+
+  - S323 the enforcement-claim surface is measured in both directions, the
+    subject split is mechanical, and the wrap that hid two sites is named
+
+    THIS ENTRY IS WRITTEN IN S324 ABOUT S323, which returns the chain to the
+    convention D322 departed from. D322-10 recorded that the code it authorised
+    would land only in an untracked handoff unless the operator brought further
+    work. Work came, and this entry is that declared condition being met. The
+    debt D322-10 named is discharged here.
+
+    THE PROVENANCE OF EVERY NUMBER BELOW, WHICH IS THE FIRST THING THIS ENTRY
+    OWES. Nothing in the S323 part of this entry was measured in S324. Every
+    figure was printed by an instrument in S323 at HEAD 0fd92a3 and travels in
+    NOUS_SESSION_323_HANDOFF.md, sha 15cf25e8, 12119 bytes, 267 lines, byte-
+    verified at the opening of S324 before it was read. That handoff is
+    untracked and is not in the repository. Where it carries a number without
+    the shape that produced it, this entry says so instead of repeating it as
+    though it could be reproduced. That is R24 applied to this entry by its own
+    author.
+
+    THE INSTRUMENTS OF S323, AS THE SEAL RECORDS THEM. Two commits landed.
+    4d9a806 marked the current-version sites in README.md, bound them to
+    _version, and moved the stale claims to 5.78.0. 0fd92a3 gave their subject
+    to seventeen unqualified monitor claims across six generator sources and
+    decomposed the two 5.60.1 replay locks. At the seal: HEAD 0fd92a3, origin
+    equal, AHEAD_OF_TAG 71, no tag cut, suite 2872 passed and 12 skipped, LINT
+    rc 0 over 421 files with 0 violations, MIRROR rc 0 CLEAN over 331 tracked
+    files with 5 orphans, PORCELAIN 3.
+
+    D323-1  THE OBJECT WAS A SURFACE AND NOT A FILE, AND THAT CHOICE IS WHAT
+            MADE THE CENSUS POSSIBLE. The named question was the full set of
+            surfaces that speak falsely about whether NOUS enforces, in BOTH
+            directions. Every earlier pass had asked whether a particular
+            document was correct. Asking instead which sentences exist,
+            anywhere, and what subject each one carries, is what turned a
+            reviewing task into a measuring one.
+
+    D323-2  THE CENSUS, AND THE ONE NUMBER IN IT THAT CANNOT BE REPRODUCED.
+            Axis A, the refusal of enforcement, fifteen fixed phrases, 245
+            hits. Axis B, the opposite direction, eleven phrases, 87 hits,
+            widened for the verbs at one site to 12. Axis C, the bare token
+            COVERED over the whole tree, 35. THE FIFTEEN PHRASES OF AXIS A ARE
+            WRITTEN IN NO SEALED DOCUMENT. The 245 is therefore a number whose
+            shape did not travel with it, and no later session can rebuild that
+            set. It is recorded here as a fact about S323 and must never be
+            used as a target to reproduce. A census designed in one session and
+            summarised in another carries its phrase list or it carries
+            nothing.
+
+    D323-3  THE SPLIT IS BY SUBJECT AND IT IS MECHANICAL, BUT AS THE SEAL
+            RECORDS IT, IT DOES NOT CLOSE. The seal of S323 divides the axis by
+            the subject each sentence gives: 11 SCOPED, where the sentence says
+            the evidence layer is a monitor; 149 UNQUALIFIED, where it says
+            NOUS is a monitor, which is the defect ADR-0010 created when it
+            split the claim per article; and a remainder of 117, itself 94 not
+            published and 23 published. THOSE THREE FIGURES SUM TO 277 AND NOT
+            TO 245. That addition was performed while writing this entry. The
+            sub-division closes: 94 and 23 make 117. The failure is at the
+            upper level, and WHICH OF THE FOUR FIGURES DOES NOT BELONG CANNOT
+            BE SETTLED BY ANY LATER SESSION, because the fifteen phrases that
+            produced the 245 exist in no sealed document. The three subject
+            classes are recorded here as measurements taken in S323; THEY ARE
+            NOT A PARTITION OF 245 AND MUST NOT BE USED AS ONE. What is not in
+            doubt is the mechanism: no line was classified by reading it for
+            meaning, and the separator was already written in the tree with
+            authority, in ADR-0010, which records that the one-line thesis ends
+            and that every future document must carry the split or reintroduce
+            the defect.
+
+    D323-4  THE WRAP. THE MECHANISM NOBODY HAD FOUND IN NINE SESSIONS OF
+            LOOKING. SUBJ_SPLIT_HITS 25: the sentence wraps, and the wrap is
+            written INTO the template, so subject and predicate land on
+            different lines of the emitted artifact. Twenty-two are the
+            published verifiers. Three are source files, and two of those were
+            invisible to every single-line census ever run:
+            closure_ledger.py:20-21 and docs/CONTINUITY_LEDGER.md:10-11. THE
+            INVENTORY WAS NOT BLIND TO LINES. It was blind to the SUBJECT, and
+            then to the wrap. That is the retrospective explanation of the nine
+            of D292-D1, and it is the reason a docs-oriented census kept coming
+            back clean over an intact false sentence.
+
+    D323-5  AN INHERITED CLAIM IS REFUTED, NOT MERELY LEFT UNCONFIRMED, AND THE
+            DIFFERENCE MATTERS. docs/EU_AI_ACT_COMPLIANCE.md:189-190 reads that
+            the intervene action surfaces the decision to a human operator and
+            execution continues. That AGREES with intervention.py. The counter-
+            direction claim lives at :193, where the block action halts
+            emission of the event, and it carries a verb no phrase set in the
+            census had. The suspicion about :189 that had travelled for several
+            sessions is closed by reading, not deferred.
+
+    D323-6  THE ONLY AUTOMATED CLAIM GUARD DOES NOT WATCH THIS AXIS AT ALL, AND
+            ITS GREEN SAYS NOTHING ABOUT IT. In claims.toml the word monitor
+            sits in allowed_claim_words, while enforce, guard and gate are in
+            neither list; CLAIMLINT_ENFORCE_WORDS is 0. That is why 245 lines
+            drifted for years under LINT rc 0. A single-axis guard returning
+            zero is not coverage of any other axis, and reading the instrument
+            before predicting what it probes is the rule that would have found
+            this earlier.
+
+    D323-7  THE TWO 5.60.1 REPLAY LOCKS FAILED FOR AN EDITORIAL REASON AND NOT
+            A CRYPTOGRAPHIC ONE. They are not a reproducibility lock on the
+            verifier; the verifier is copied from the published directory as an
+            INPUT. One field is regenerated editorial prose: the rekor artifact
+            boundary written by mint_release_vsa.py. The TOP-LEVEL boundary is
+            copied from the SIGNED DSSE, cannot move, and stays under exact
+            equality. E1 decomposed the single comparison into two: a semantic
+            comparison with that one field normalised and everything else
+            exact, and a canonicality self-check that re-serialises the on-disk
+            file and compares it to itself, immune to any constant and firing
+            on serializer drift. Mutation-proved: sha256, leafHash, logIndex
+            and the top-level boundary all still caught; only the rekor
+            boundary is hidden; re-indenting the published file turns the
+            second check red.
+
+    D323-8  E4, RECORDED AND NOT BUILT, AND THE REASON IS A PROPERTY OF
+            IMMUTABLE RECORDS. Add boundaryId and boundaryDigest to that one
+            artifact, matching the policyId and policyDigest already in the
+            same file. INLINED PROSE IN AN IMMUTABLE RECORD CAN NEVER BE
+            CORRECTED; CITED PROSE CAN. Once taken, the scrub in D323-7 becomes
+            unnecessary. This is a decision owed to an Innovation Gate, not a
+            change authorised here.
+
+    D323-9  THE FOUR RULES S323 ADOPTED, EACH ONE PAID FOR BY A MEASUREMENT IN
+            THAT SESSION. T5: an artifact is not transferred, it is reproduced;
+            every message is produced token by token, and for base64 the
+            failure is SILENT with the digest at the end as the only detection,
+            so opaque blobs do not move through the message channel. R23
+            refined by measurement: a bang is risky only outside true single-
+            quote protection AND when the next character is not space, tab,
+            newline or an equals sign; an opening parenthesis IS risky; single
+            quotes nested inside double quotes do NOT protect. R24: a
+            conclusion that travels in a handoff carries its shape or it
+            carries nothing, because the other rules bind WITHIN a session and
+            none binds BETWEEN. R25: a guard on a sentence reads the bytes its
+            reader reads, established by 25 measured straddles.
+
+    D323-10 R26, ADOPTED IN S324 WHILE THIS ENTRY WAS BEING PREPARED, AND IT IS
+            THE FIRST RULE IN THIS CHAIN ABOUT AN INPUT. A THRESHOLD IS PART OF
+            THE SHAPE. A gate that compares against a number declares WHERE THE
+            NUMBER CAME FROM and WHAT SET IT GOVERNS. Over budget without
+            provenance of the budget is the same failure as a number without an
+            instrument, on the input side instead of the output side. The rules
+            before it all bind what a message may assert; this one binds what a
+            gate may assume. It was paid for by FG-S324-E below.
+
+    D323-11 THE PREDICTION RECORD OF S323 AND THE THREE FAMILIES ITS MISSES
+            FALL INTO. 575 declared, 511 hit, 25 missed, 39 unexercised,
+            arithmetic performed over the gate-by-gate scores. The misses
+            cluster: numbers written from intent rather than counted; shapes
+            transplanted across instruments; premises inferred instead of read.
+            Each family now has a rule, and the third family is the one that
+            cost the most.
+
+    D323-12 WHAT S324 PRODUCED, NAMED HERE AS OWED WITH ITS CONDITION OF
+            DISCHARGE, BECAUSE THE ALTERNATIVE IS THE SAME SILENT GAP IN A NEW
+            PLACE. S324 landed no code and wrote no byte before this entry. It
+            produced six things that otherwise live only in an untracked
+            handoff. FIRST, R26, which is recorded above rather than owed.
+            SECOND, the generator: the template that emits the published
+            verifier was already corrected in S323 and the published 5.60.1
+            carries the old subject, so the boundary is TEMPORAL and the set of
+            false published artifacts is closed and does not grow. THIRD, the
+            wrap the correction created is COSMETIC DRIFT AND NOT A DEFECT: the
+            published artifact carried six lines over 79 and a maximum of 92
+            before the change, no configuration in the tree declares a column
+            budget, the release runs pyflakes for undefined names only, and the
+            sole test over the template asserts that it is ASCII. FOURTH, D2
+            did not survive whole: two lines in docs/SMT_VERIFICATION_DESIGN.md
+            remain, bounded and cheap and NOT closed. FIFTH,
+            docs/governance_coverage_profile.json states in writing that the
+            runtime policy engine is a distinct component that DOES interpose,
+            with a block or abort_cycle action raising before the guarded side
+            effect, and intervention.py confirms it in code; that is evidence
+            bearing on a question asked elsewhere and it is recorded, not
+            decided. SIXTH, the nine of D292-D1 is UNDIAGNOSABLE FOR EVER: the
+            AXIS 0 records that produced it do not exist anywhere and were
+            searched for. THE CONDITION OF DISCHARGE IS THE SAME ONE D322-10
+            USED: these land in a D324 entry if the operator brings further
+            work, and in an untracked handoff if not.
+
+    D323-13 THE ORDER, WHAT THIS ENTRY RETIRES, AND WHAT MOVES WHEN IT LANDS.
+            This entry, then whatever object the operator names next. The seal
+            of S323 recorded that the S323 head line must print empty and that
+            the D323 family must count zero; both are retired by this entry,
+            and the next seat checks the S324 head line and the D324 family
+            instead. Arithmetic performed while writing, settled at the gate
+            after the append and not by this sentence: the head count reads 32
+            today and would read 33; the D families read 15 and would read 16;
+            under the twelve-space anchor shape the FG families read 10 and
+            would read 12. THOSE FIGURES ARE STATED UNDER A SHAPE FG-S324-H
+            SHOWS TO BE BLIND, and they are the figures the RULE 0 leg will
+            print, not a census of the document.
+
+    FINDINGS. The first twenty-eight are the S323 seat and operator errors as
+    that session sealed them, each carrying the one-line statement the handoff
+    recorded; the fuller account of each exists ONLY in that untracked handoff,
+    and this entry records the code and the statement rather than inventing
+    detail it did not measure. The last nine were named in S324 while this
+    payload was being prepared and enter it for the reason FG-S322-A entered
+    the D321 section: a finding found before the payload freezes goes into that
+    payload.
+
+            FG-S323-A  operator and seat. A fourth upload file was undeclared.
+
+            FG-S323-B  seat error, R1. The supplement asserted that a paste
+                       contained no bang. It contained seven.
+
+            FG-S323-C  seat error, and the handoff was false in two places on
+                       it. PORCELAIN read 3 and not 2, because README.md.s322v
+                       was written 47 minutes AFTER the push of c4547e4.
+                       Sections 1 and 3 of the prior handoff both stated the
+                       smaller set.
+
+            FG-S323-D  seat error. The VERSION_LIVE leg was not single-valued
+                       and was read as though it were.
+
+            FG-S323-E  measured property, no consequence. Two tokens of the
+                       same idiom live in the worktree; the orphan is untracked
+                       rather than ignored, and is therefore stage-able.
+
+            FG-S323-F  not a seat error of that session. The settlement D322-9
+                       declared was unreachable without a version bump absent
+                       from the authorised order.
+
+            FG-S323-G  inherited prior falsified. The PYTEST_FLOOR and hero-
+                       stat lockstep prior is false.
+
+            FG-S323-H  caught at zero cost, R14. Ordered-chain masking inside
+                       arm fixturing.
+
+            FG-S323-I  RECLASSIFIED during the session. A channel property, not
+                       a discipline lapse. The remedy is T5.
+
+            FG-S323-J  control failure found by adding a control. The three
+                       specified arms could not distinguish a truncated regex;
+                       a fourth arm was added and it went red.
+
+            FG-S323-K  seat error, R1. The payload's non-ASCII count for the
+                       merged file was predicted rather than counted.
+
+            FG-S323-L  seat error, R18. A count was predicted over pytest's
+                       renderer without reading what that renderer emits.
+
+            FG-S323-M  seat error, R22. Sixteen predictions were written from
+                       intent while the list held twenty.
+
+            FG-S323-N  seat error, R21. _version.py was grepped for a token
+                       whose location had never been confirmed.
+
+            FG-S323-O  seat error, and it explains why a whole gate could not
+                       pass. Left-right output uses a TAB. The guard built over
+                       it could not pass, and it went unnoticed because G3 was
+                       the one gate whose HAPPY PATH was never fixtured.
+
+            FG-S323-P  seat error, R2. A three-line list was predicted for a
+                       three-line WINDOW after a commit had already evicted the
+                       tail.
+
+            FG-S323-Q  measured property of a shape. A 200-character window
+                       does not always contain the phrase that caused the
+                       match.
+
+            FG-S323-R  transport defect, and it is silent. A multi-line python3
+                       -c inside a paste joined by semicolon and space: three
+                       shells return rc 0 and the embedded code is destroyed.
+
+            FG-S323-S  seat error, R2. A grep -o stream was filtered by
+                       patterns that cannot appear in it.
+
+            FG-S323-T  seat error, R18. Binaries were filtered by an extension
+                       list rather than by the tool's own text detection.
+
+            FG-S323-U  seat error, R2. A count was printed over one set and an
+                       enumeration produced over another.
+
+            FG-S323-V  seat error, and the ancestor of FG-S324-E. A column
+                       budget was reasoned about for four files and not one of
+                       them was measured.
+
+            FG-S323-W  seat error. Set membership was inferred from a substring
+                       in a neighbouring path.
+
+            FG-S323-X  THE LARGEST ERROR OF THE SESSION. An architectural case
+                       was built across three messages and two rounds of
+                       external research on a premise inferred from a MAXLEN
+                       delta that nobody had opened. The tests never
+                       regenerated the verifier.
+
+            FG-S323-Y  seat error. The stated plan and the emitted paste
+                       disagreed.
+
+            FG-S323-Z  seat error, R21. A symbol was named from its position in
+                       a file instead of by its identifier.
+
+            FG-S323-AA seat error, R22, for the third time in the same session.
+                       Twelve predictions were written from intent.
+
+            FG-S323-AB seat error, R2. Arithmetic on a NET delta was predicted
+                       for a git diff GROSS count.
+
+            FG-S324-A  seat error, R2 and R24 together. The listing of a
+                       temporary directory was predicted from a handoff
+                       sentence about PROVENANCE. The handoff said two operator
+                       files were PLACED there; the instrument was a directory
+                       listing and printed sixteen entries. A statement about
+                       what was put somewhere is not an inventory of what is
+                       there.
+
+            FG-S324-B  seat error, and the instrument was the seat's own. A
+                       directory count was taken by cutting a path at four
+                       segments, on a path depth never read. It printed 3,
+                       which is a count of four-segment prefixes and not of
+                       directories.
+
+            FG-S324-C  seat error, R2. Published verifiers were predicted at 22
+                       and measured at 44, because the fixed-string match also
+                       catches the sha256 sidecar beside each verifier. That 44
+                       is twice 22 is plausible and was NOT measured.
+
+            FG-S324-D  seat error, R11. A prediction was written with no
+                       matchable shape and could not be scored either way.
+
+            FG-S324-E  seat error, and it produced R26. A gate was built whose
+                       whole structure rested on the words over budget meaning
+                       greater than 79, and no instrument had ever established
+                       that 79 is a budget for those files. The gate's own
+                       framing leg refuted it: 104 source lines in the six
+                       generators exceed 79 and no guard in the tree has ever
+                       fired on them. A negative control nobody designed.
+
+            FG-S324-F  seat error, same class as FG-S323-W. The membership of a
+                       set difference was predicted from the subject of a file
+                       rather than from a line that had been read.
+
+            FG-S324-G  seat error. Nine members of the FG-S322 family were
+                       predicted inside the S322 section; eight are there and
+                       the ninth sits at line 4720, inside the S321 section. A
+                       family count is not a statement about where the family
+                       lives.
+
+            FG-S324-H  NOT A SEAT ERROR, AND IT CONCERNS THE SWEEP R20
+                       REQUIRES. The RULE 0 leg that sweeps FG anchors matches
+                       exactly twelve leading spaces. Under a looser leading-
+                       space shape the same file yields twelve families rather
+                       than ten, 109 anchor occurrences and 106 distinct
+                       anchors. At least one member sits at another indent and
+                       some anchors appear more than once. The leg that
+                       enforces sweep by anchor family is itself a counter with
+                       a known shape. RECORDED AND NOT REPAIRED: one object per
+                       arc.
+
+            FG-S324-I  seat error of this session, caught by the operator at
+                       read. The payload above carried the S323 subject split
+                       as the seal wrote it and never performed its arithmetic:
+                       11, 149 and 117 sum to 277 and not to 245. This entry
+                       names that class of error four times and then committed
+                       it in transcription. AN INHERITED FIGURE COPIED FORWARD
+                       IS STILL A FIGURE THIS ENTRY ASSERTS. The check that
+                       found it was addition, performed by the operator at
+                       read. WHETHER ANY EARLIER PAYLOAD GATE IN THIS CHAIN
+                       PERFORMED ITS OWN ARITHMETIC BEFORE EMISSION IS NOT
+                       MEASURED AND IS NOT CLAIMED HERE. The builder now
+                       refuses to emit unless every sum this entry states is
+                       performed.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code and authorises none. It
+    does not touch claims.toml, whose enforcement axis is the leg that would
+    stop the recurrence D323-6 describes and which remains unbuilt. It
+    corrects no false surface: the 94 unpublished lines, the four served files
+    and the 23 published lines are all untouched, and the published ones are
+    correctable by supersession only. It does not edit any byte under
+    website/.well-known. It does not close D2, build E4, move the floor, cut a
+    release, clear the untracked paths or amend the frozen fixture, and it
+    constructs no route to any of them. It edits no sentence already on this
+    page; every correction above is an append. And it does not repair the
+    sweep leg recorded in FG-S324-H.
