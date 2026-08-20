@@ -5361,3 +5361,214 @@ document itself.
     constructs no route to any of them. It edits no sentence already on this
     page; every correction above is an append. And it does not repair the
     sweep leg recorded in FG-S324-H.
+
+  - S324 the enforcement surface is measured phrase by phrase, the
+    subject split closes where the S323 one did not, and the entry
+    lands two sessions after the session it records
+
+    THIS ENTRY IS WRITTEN IN S327 ABOUT S324, and the gap is the first thing it
+    owes. D323-12 named the condition of discharge: these land in a D324 entry
+    if the operator brings further work, and in an untracked handoff if not.
+    Work came, and it came two sessions late. S325 and S326 each ran a full
+    session and each wrote zero bytes, so the chain is intact but the debt
+    aged. Nothing below is claimed to have been measured in S325, S326 or S327.
+
+    THE PROVENANCE OF EVERY NUMBER BELOW. Nothing in this entry was measured in
+    S327 except where a line says so. Every figure was printed by an instrument
+    in S324 and travels in NOUS_SESSION_324_HANDOFF.md, sha 253e204c, 16554
+    bytes, 343 lines, MAXLEN 79, byte-verified at the opening of S327 before it
+    was read. That handoff is untracked and is not in the repository. Where it
+    carries a number without the shape that produced it, this entry says so
+    instead of repeating it as though it could be reproduced. R24 applied to
+    this entry by its own author.
+
+    AND ONE THING THIS ENTRY HAS THAT D323 DID NOT. The state at the S324 seal
+    was re-measured live in S327 at the same commit and reproduced exactly:
+    HEAD cbf3308, origin equal, AHEAD 0, BEHIND 0, AHEAD_OF_TAG 72, PORCELAIN
+    3, suite 2872 passed and 12 skipped, LINT rc 0 over 421 files with 0
+    violations, MIRROR rc 0 CLEAN over 331 tracked files with 5 orphans, and
+    this document at b3e689b9, 5363 lines, 315433 bytes, MAXLEN 79. Those
+    figures are inherited AND re-measured. The census figures below are
+    inherited only.
+
+    D324-1  THE FIFTEEN PHRASES ARE WRITTEN DOWN, WHICH IS THE ONE THING D323-2
+            SAYS S323 COULD NOT DO. The S324 census used a NEW fifteen-phrase
+            set, written into the paste that ran it, and it is NOT a
+            reproduction of the axis A of S323. The phrase list and its
+            per-phrase hits:
+
+            A01 is a monitor                   164
+            A02 remains a monitor                3
+            A03 not a guard                    157
+            A04 does not enforce                 4
+            A05 does not block                   1
+            A06 does not intervene               0
+            A07 does not halt                    0
+            A08 does not gate                    5
+            A09 no enforcement                   0
+            A10 monitor-not-guard                4
+            A11 never blocks                     0
+            A12 does not prevent                 0
+            A13 enforce, block, or intervene     1
+            A14 monitor rather than a guard      0
+            A15 not an enforcement               1
+
+            Nine phrases hit and six return zero, so the set contains its own
+            negative arms. THE PER-PHRASE HITS SUM TO 340 AND THAT SUM IS NOT A
+            COUNT OF LINES: a line saying NOUS is a monitor, not a guard
+            matches A01 and A03 together. The addition was performed while
+            writing this entry and 340 is recorded here only so that no later
+            seat computes it and reads it as a set size. It is bound to no set.
+
+    D324-2  THE SUBJECT SPLIT CLOSES ARITHMETICALLY, WHERE THE S323 SPLIT
+            RECORDED IN D323-3 DOES NOT. MONITOR_ANY 167 divides into SCOPED
+            24, UNQUALIFIED 137 and a REMAINDER of 6, and 24 plus 137 plus 6 is
+            167. Independently A01 164 plus A02 3 is 167, so no line carries
+            both phrases. Both additions were performed while writing this
+            entry. THE TOKENS ARE THE SAME AS D323-3 AND THE SETS ARE NOT: the
+            11, 149 and 117 of D323-3 belong to the S323 phrase set at 0fd92a3
+            and the 24, 137 and 6 belong to the S324 phrase set at cbf3308.
+            Neither triple corrects the other and no arithmetic between them is
+            admissible.
+
+            The six of the remainder are NAMED, not classified, because naming
+            is what the instrument supports and classifying is not:
+
+            closure_ledger.py:21
+            docs/AUTHORIZATION_RUNTIME.md:45
+            docs/COUNTERPARTY_WITNESSED_CONTINUITY_DESIGN.md:391
+            docs/SANTANDER_ADAPTER.md:184
+            docs/governance_coverage_profile.json:117
+            docs/governance_coverage_profile.json:131
+
+    D324-3  THE PATHSPEC SPLIT IS A DIVISION OF 167 AND NOT OF 137, AND THAT
+            DISTINCTION IS THE WHOLE VALUE OF THE ITEM. B1_PUBLISHED 102,
+            B2_SERVED 16, B3_TRACKED 49, and 102 plus 16 plus 49 is 167. The
+            addition was performed while writing this entry. THE SUBJECT SPLIT
+            PER BUCKET WAS NOT MEASURED. No figure in D324-2 may be attributed
+            to any bucket here, and no figure here may be attributed to any
+            subject class there. Two divisions of the same 167 along different
+            axes are not a two-dimensional table until somebody measures the
+            cells.
+
+    D324-4  THE OPPOSITE DIRECTION: FIVE HITS AND NONE OF THEM FALSE. This is
+            the S324 axis B and it is NOT the axis B of D323-2, which had
+            eleven phrases and 87 hits at a different commit. Read as units
+            with one line of after-context: EU_AI_ACT_COMPLIANCE.md:193 says
+            the block action halts emission and agrees with intervention.py:20;
+            :189-190 says execution continues and agrees with
+            intervention.py:19; RUNTIME_GOVERNANCE_CROSSWALK.md:99 describes a
+            category rather than this system; ADR-0005:22 records the
+            alternative that was rejected; governance_coverage_profile.json:117
+            declares correctly; and blog/index.html:1842 is about stop buttons
+            in general. D323-5 closed :193 and :189 by reading; this item
+            closes the other four the same way.
+
+    D324-5  WHERE THE CORRECTED SUBJECT LIVES OUTSIDE THE SIX GENERATORS, AND
+            WHY TWO SHAPES DISAGREE BY TWO. Ten sites carry the new subject
+            outside the six generator sources, all of them in docs and all of
+            them correct. Two shapes for the same idea return 24 and 22, and
+            the two extra members are tests/test_s159_u1_provenance.py:89 and
+            tests/test_s226_backfill_disclosure.py:42. Both are asserts that
+            lock the subject MORE LOOSELY than the generators emit it. A test
+            that accepts a superset of what the producer writes is more durable
+            than one pinned to the exact string, so the difference of two is a
+            property of the assertions and not a defect.
+
+    D324-6  THE PUBLISHED VERIFIERS ARE 44 AND THE SPLIT INSIDE THAT NUMBER WAS
+            NEVER TAKEN. FG-S324-C already records that 22 was predicted and 44
+            measured because the fixed-string match catches the sha256 sidecar
+            beside each verifier. What FG-S324-C does not record, and this item
+            does, is that the split between .py files and .py.sha256 sidecars
+            WAS NOT MEASURED. That 44 is exactly twice 22 is plausible, it is
+            the obvious reading, and no instrument has ever printed it. It is
+            not asserted here.
+
+    D324-7  THE COLUMN NUMBERS, WHOSE CONCLUSION IS ALREADY IN D323-12 AND
+            WHOSE MEASUREMENTS ARE NOT. D323-12 records that no configuration
+            declares a column budget, that the release runs pyflakes for
+            undefined names only, and that the sole test over the template
+            asserts ASCII. The figures behind that: SRC_OVER79 is 104 across
+            the six generator sources, which FG-S324-E also records. The
+            per-file maxima do not appear anywhere: build_vsa.py 14454 and
+            vsa_verifier.py 29515, each one physical line holding a whole
+            template; mint_release_vsa.py 118, provenance.py 86,
+            provenance_verifier.py 90, scripts/cold_audit.py 82. The emitted
+            artifacts: build_vsa 351 lines with MAXLEN 92 and 8 over 79;
+            vsa_verifier 740 lines with MAXLEN 131 and 3 over 79. The published
+            5.60.1 verifier: 350 lines, MAXLEN 92, 6 over 79. The delta at both
+            wrap sites is exactly 14, which is the length of the phrase the
+            evidence layer minus the length of NOUS.
+
+    D324-8  THE WRITE ARC OF S324, SEVEN GATES, EACH SCORED BEFORE THE NEXT.
+            Build produced 353 then f65d4f67 at 374 lines then 82e1828d at 375.
+            Transfer moved a file and censused it before anything ran. The
+            dry-run computed the candidate and wrote zero bytes. Apply wrote
+            the candidate beside the target with O_EXCL at mode 0644 and
+            re-read it from disk. Rename carried four guards, one of them
+            proving the candidate's first 292240 bytes byte-identical to the
+            target at that moment, and used os.replace rather than mv. Stage
+            used one explicit pathspec and compared the worktree blob to the
+            index blob. Commit carried three ordered guards, of which the
+            staged-set guard is the one that catches a re-paste. Push carried
+            five, then read the blob back from origin/main rather than from the
+            worktree. The object is the same in every link: c62323ca as a git
+            blob and b3e689b9 as file bytes.
+
+    D324-9  THE PREDICTION RECORD OF S324. 205 declared, 197 hit, 8 missed, 29
+            declined, over 13 gates, with the arithmetic performed over the
+            gate-by-gate scores; 197 plus 8 is 205 and that addition was
+            performed again while writing this entry. EVERY MISS FELL IN THE
+            FIRST SIX GATES. The seven gates of the write arc scored 91 for 91,
+            which is what fixturing every refuse arm and the happy path buys.
+            The misses cluster in two families and each family has a rule: a
+            set predicted from a sentence about provenance rather than from an
+            instrument over that set, which is A, C, F and G; and a shape or a
+            threshold carried in rather than read, which is B, D and E.
+
+    FINDINGS. Twelve were named in S324 and nine of them are already in bytes
+    inside the D323 entry, at the twelve-space anchor, for the reason that
+    entry gives: a finding found before the payload freezes goes into that
+    payload. Nine plus three is twelve and the addition was performed while
+    writing this entry. The three below are the ones D323-12 left owed. Their
+    absence from the document was measured in S327 before this entry was
+    drafted, not assumed.
+
+            FG-S324-J  seat error, R11 on the input side. A census leg used
+                       grep -c against a file that did not exist. grep -c sends
+                       the error elsewhere and returns 0 on stdout, which is
+                       exactly the value the leg was watching for. A LEG WHOSE
+                       FAILURE VALUE EQUALS ITS SUCCESS VALUE IS NOT A LEG. The
+                       neighbouring legs printed empty and were visible;
+                       STARTS_BLANK printed a green 0 over an absent file. The
+                       remedy is to guard existence first and print the result
+                       of that guard before anything else reads the path.
+
+            FG-S324-K  seat error. A score restated its predictions from the
+                       tool's current pins without restating that the object
+                       under test had changed since the operator's approval.
+                       The change had been declared three times with shas and
+                       the corrected arithmetic was written before the run, so
+                       the score was not blind. But a score that does not carry
+                       the provenance of its own priors invites the reader to
+                       score against a dead sha, and one did.
+
+            FG-S324-L  operator, and it is named here at the operator's own
+                       instruction. The approved payload sha was held as
+                       current and scored against while the change to it had
+                       been declared three times with shas. A finding was
+                       proposed that the record contradicts, and it was
+                       withdrawn on reading the record back. It belongs to the
+                       same family as the finding recorded at FG-S324-A, from
+                       the operator seat.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code and authorises none. It does
+    not touch claims.toml. It corrects no false surface and moves no byte under
+    website/.well-known or website/blog/index.html. It does not close D2, build
+    E4, move the floor, cut a release, clear the untracked paths or amend the
+    frozen fixture, and it constructs no route to any of them. It edits no
+    sentence already on this page; it is an append. It does not repair the
+    sweep leg recorded in FG-S324-H. It does not record S325 or S326, whose
+    entries remain owed and whose numbers are not in this entry. And it does
+    not re-present as new anything already carried by D323-10, by D323-12, or
+    by the block of findings running from FG-S324-A to FG-S324-I.
