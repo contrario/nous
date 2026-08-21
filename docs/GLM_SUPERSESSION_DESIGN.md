@@ -5572,3 +5572,352 @@ document itself.
     entries remain owed and whose numbers are not in this entry. And it does
     not re-present as new anything already carried by D323-10, by D323-12, or
     by the block of findings running from FG-S324-A to FG-S324-I.
+
+  - S326 the host node opened and closed, the enforcement surface
+    reconciled against three shapes and two sets, and the number that
+    travelled since S292 is shown to have never been correctable
+
+    THIS ENTRY IS WRITTEN IN S327 ABOUT S326, and it lands third in a session
+    that has already landed D324. S325 IS SKIPPED AND REMAINS OWED: its sealed
+    handoff f56ba8e7 is not held by this seat, and the addendum that exists
+    supersedes that seal only where it says so by name, so eighteen of its
+    thirty findings were never in this context. An entry composed from a
+    document nobody read is the defect R24 exists to prevent, and it is not
+    committed here.
+
+    THE PROVENANCE OF EVERY NUMBER BELOW. Nothing in this entry was measured in
+    S327. Every figure was printed by an instrument in S326 and travels in two
+    untracked documents, both byte-verified at the opening of S327 before
+    either was read: the payload the S326 seat froze, d326_candidate.txt, sha
+    3b7f386c, 14790 bytes, 236 lines; and NOUS_SESSION_326_HANDOFF.md, sha
+    bda62f25, 18882 bytes, 420 lines. Items 1 to 8 and the findings block are
+    the payload, carried across unchanged in substance and re-wrapped to the
+    shape of this document. Item 9 is what the handoff carries and the payload
+    did not, and it says so. R24 applied to this entry by its own author.
+
+    THE INSTRUMENTS OF S326. Fifteen gates and zero bytes written to the
+    repository, the second consecutive session with no commit. At the seal:
+    HEAD cbf3308, origin equal, AHEAD_OF_TAG 72, PORCELAIN_LINES 3, this
+    document unchanged at b3e689b9. RULE 0 scored 55 distinct predictions, 54
+    hit, 1 missed, 0 declined; 54 plus 1 is 55 and that addition was performed
+    while writing this entry. Eight of the fifteen gates went to a host node
+    that is not repository work and is recorded in that handoff rather than
+    here.
+
+    D326-1  RULE 0 SCORED. 55 DISTINCT PREDICTIONS, 54 HIT, 1 MISSED.
+            The tree did not move: HEAD cbf3308, ORIGIN cbf3308, AHEAD 0,
+            BEHIND 0, AHEAD_OF_TAG 72, PORCELAIN_LINES 3. The gate
+            document at b3e689b9, 5363 lines, 315433 bytes, MAXLEN 79,
+            NONASCII 0, TRAILWS 0, WORKTREE_EQ_ORIGIN YES.
+            S326, S325 and S324 head lines all printed EMPTY. S323
+            printed 4989 and S322 printed 4740; the positive control
+            fired, so the emptiness is a property of the document and
+            not of the leg. D326, D325 and D324 anchored all 0, D323 13.
+            Suite 2872 passed, 12 skipped. COLLECT_TESTS 2884, BARE
+            3022. LINT rc 0 over 421 files, 0 violations. MIRROR rc 0
+            CLEAN, 331 tracked, 5 orphans.
+            The S325 surface counters reproduced EXACTLY at the same
+            commit: MONITOR_ANY 169, FALSE_SUBJECT 138, NEW_SUBJECT 25,
+            FLOOR_HITS_TRACKED 91. That reproduction confirms the
+            diagnosis recorded as FG-S325-A: the values 167, 137, 24
+            and 90 belonged to c9523b10.
+            Paste two was REBUILT to probe S326 and D326. The rebuild
+            was proved by anchor uniqueness (each 1), a length identity
+            (5548 + 188 = 5736) and a round-trip sha equality, and the
+            leg counter was validated on two sealed values (14 and 71)
+            before it was used on anything new. 35fad26d became
+            60fb4979, 71 legs became 73.
+            A third edit corrected the L0 PROVENANCE line, which
+            declared that the values it compares against were printed
+            in S324. They were printed in S325. A false provenance
+            inside the instrument is the defect R26 names.
+
+    D326-2  THE ONE MISS WAS FAILED_UNITS AND IT WAS REAL.
+            tmp-pycache-clean.service, a host unit, failed at
+            2026-08-20 00:00:01 with status 1/FAILURE after a reboot at
+            2026-08-19 21:14:06. Server A uptime 67198s; Server B
+            2299498s and no reboot.
+            The unit file carries two ExecStart lines and no dash
+            prefix. The first roots at /tmp/__pycache__ and find exits 1
+            when that directory is absent, so Type=oneshot fails and the
+            second ExecStart -- the only one that targets a NOUS-shaped
+            artifact -- never runs. The journal shows five consecutive
+            successes on Aug 15 to Aug 19 and the failure on Aug 20.
+            Measured on the live tree: the unit governs 5 .pyc files
+            and 52 KB, while the population is 1010 .pyc files and
+            15400 KB across 9 directories; /tmp is 130512 KB and the
+            root filesystem is 45 per cent used with 121G available and
+            inodes at 10 per cent. TRACE_FILES 0 and UNIT_WINDOW_TRACE 0.
+            The unit's only measured effect on this day was to redden
+            systemctl --failed.
+            DECIDED. Not repaired, not deleted. The timer is disabled
+            and the failed state reset; both unit files remain on disk
+            unmodified at 79da2e2a and 35809601. Undo is one command:
+            systemctl enable --now tmp-pycache-clean.timer.
+            The rejected repair is recorded because it was measured and
+            works: root at /tmp, mindepth 2, maxdepth 2, a POSIX
+            extended regex anchored on the pycache directory, with the
+            delete arm and both refuse arms fixtured individually.
+
+    D326-3  THE SEAT EXPOSED TWO LIVE SECRETS WITH ITS OWN LEG.
+            A leg ran systemctl show -p Environment to answer whether
+            the production service already sets a bytecode variable. It
+            printed the whole environment of two units, including an
+            inbound API key set and a Telegram bot token. A count would
+            have answered the question. This is the H-NOUS-API-PROC-
+            ENVIRON class turned inward.
+            The census that followed named the surface: five unit files
+            under /etc/systemd/system carried inline secrets, four of
+            them group- or other-readable, all mode 644. Two were stale
+            .bak files from April 2026 that systemd never loads.
+            APPLIED, under a guard fixtured on three arms. The three
+            live files are 600 root:root; the two .bak files were MOVED,
+            not deleted, into /root/s326_quarantine at mode 700 with
+            their digests verified across the move at 5df3dc77 and
+            20bd16fa. INLINE_SECRETS 3, GROUP_OR_OTHER_READABLE 0. Both
+            services stayed active and FAILED_NOW printed 0.
+
+    D326-4  THE P5 OBJECT WAS READ WHOLE BEFORE ANYTHING WAS PROPOSED.
+            claims.toml at f9919834, 190 lines, 8733 bytes.
+            scripts/claim_lint.py at b6380185, 1016 lines, 34783 bytes.
+            Both equal to origin/main. CALLERS 79, of which the two that
+            gate are scripts/deploy_website.sh:71 and
+            scripts/release.py:293.
+            THREE STRUCTURAL FACTS, MEASURED NOT INHERITED. The file set
+            is built by os.walk from --root at line 786, so it is
+            filesystem-derived and not git-derived. SENT_SPLIT_RE breaks
+            on every newline, so predicate_object and predicate_axis
+            cannot see across a line. predicate_list_binding at line
+            460 ALREADY crosses lines at unit level, which means the
+            two-line window R25 asks for is a pattern this tool already
+            carries and not new machinery.
+            The set was taken from the tool's own iter_files rather than
+            rebuilt: SCANNED_COUNT 421, GATE_DOC_IN_SET True,
+            TESTS_IN_SET 0, DOCS_IN_SET 66, WEB_IN_SET 18.
+
+    D326-5  THE ENFORCEMENT SURFACE, RECONCILED. TWO SETS AND THREE
+            SHAPES, ONE AXIS MOVED AT A TIME.
+            Set A is every tracked path at HEAD, 1310 files. Set B is
+            what the linter walks, 421 files. The shapes are lines
+            containing, flat occurrences, and occurrences on a
+            whitespace-collapsed copy.
+            A_LINES_FALSE 138, A_OCC_FALSE 138, A_NORM_FALSE 139.
+            B_LINES_FALSE 34, B_OCC_FALSE 34, B_NORM_FALSE 35.
+            A_LINES_ANY 169, A_OCC_ANY 172, B_LINES_ANY 61,
+            B_OCC_ANY 64.
+            The A-only difference was enumerated by file and summed
+            from that enumeration: 104 lines over 51 files, of which
+            website/.well-known contributes 102 lines over 49 files and
+            tests/ contributes 2 lines over 2 files. 34 + 104 = 138 and
+            the identity printed YES.
+            ONLY_IN_A 921 and ONLY_IN_B 32. The guard and the tracked
+            tree do not see the same set in either direction.
+
+    D326-6  WHAT THE 34 ARE MADE OF, AND WHY P5 IS THREE DECISIONS.
+            Inside the guard's own set: 14 in website/blog/index.html,
+            2 in ADR-0010, 1 in ADR-0005, 1 in CHANGELOG.md, 1 in this
+            gate document, 1 in website/high-assurance.html, 1 in
+            website/docs/index.html, and 13 across .py and docs.
+            Six of the 34 are MENTIONS, not claims. A superseded ADR
+            that carries the old wording is correct. The ADR that makes
+            the correction quotes the wording it retires. The linter
+            already carries the use-versus-mention machinery for the
+            proof axis at is_mention and quoted_spans; the enforcement
+            axis needs the same distinction, not a new one.
+            OPEN, THREE DECISIONS, OPERATOR. First, which set the guard
+            stands on. Second, how mention is separated from claim.
+            Third, what happens at website/blog/index.html, where the
+            guard would redden 14 sites that ADR-0011 forbids editing:
+            an allowlist with region_sha256, a directory exclusion, or
+            accepted red. There is no fourth option.
+            NOTE: website/docs/index.html was not on the P4 board. The
+            board's "4 files" was measured elsewhere with another shape.
+
+    D326-7  WHAT THIS SESSION DID NOT WRITE, AND WHY.
+            D324 and D325 remain owed. This seat read both S325
+            documents at the opening, but their bytes are no longer in
+            its context, and a ledger entry composed from a degraded
+            recollection of a document is the defect R24 exists to
+            prevent. They are written by a seat that has the handoffs
+            open, not by this one.
+            This entry is D326 only. Everything in it was printed by an
+            instrument in this session.
+
+    D326-8  DEAD NUMBERS PRODUCED OR KILLED TODAY. DO NOT CARRY THESE.
+            "the 138 lines P3 must correct" -- 102 of them are signed,
+            sha-pinned .well-known artifacts that ADR-0011 forbids
+            editing and claims.toml already excludes on purpose with a
+            written rationale. The number was never a count of
+            correctable lines.
+            "tests/ carries the gap" -- FALSE. tests/ carries 2.
+            "the ledger contaminates the census" -- TRUE and equal to 1,
+            not to dozens. FG-S325-B was right in kind and wrong in
+            magnitude.
+            "25 measured straddles" -- bound to another shape. On set B
+            the two phrase pairs each surface a DIFFERENT single
+            straddle and neither counter reports both.
+            Every S325 dsh measurement -- dead. The harness moved to
+            /opt/deepseek-harness/current and a new commit.
+
+    D326-9  WHAT THE HANDOFF CARRIES THAT THE PAYLOAD DID NOT, ADDED BY THE
+            SEAT THAT LANDED THIS ENTRY AND MARKED AS SUCH. Five things. FIRST,
+            the session was fifteen gates and RULE 0 declined nothing, which
+            items 1 to 8 do not state. SECOND, the two straddles of FG-S326-X
+            are NAMED in the handoff and not in the payload: closure_ledger.py
+            for the false-subject pair and docs/CONTINUITY_LEDGER.md for the
+            any-monitor pair. A finding that says two exist and does not say
+            which is the cardinality-without-identity defect this very entry
+            names three times. THIRD, predicate_list_binding carries the marker
+            __s245_listbind_v1__ and its own lock test, so P5 follows S245
+            rather than inventing a cross-line pattern. FOURTH, the 102 signed
+            lines span the release VSA artifacts from 5.60.1 to 5.78.0 and are
+            74 per cent of the 138. FIFTH, and it is the one that matters most:
+            THE R20 SWEEP FIRED ON THE FIRST BUILD OF THIS PAYLOAD. The strict
+            counter printed 28 against 26 distinct codes because two inherited
+            references, at FG-S325-A and at FG-S250-A, had landed on the
+            twelve-space anchor indent through prose wrapping. Both were
+            rewrapped, anchor uniqueness was verified before each replacement,
+            and the sweep re-ran clean. Without that sweep this append would
+            have corrupted two family counts in this document.
+
+    D326-10  THE ORDER, WHAT THIS ENTRY RETIRES, AND WHAT IT DOES NOT CLAIM.
+             The S326 seal recorded that the S326 head line must print empty
+             and that the D326 family must count zero; both are retired by this
+             entry. The next seat checks the S325 head line and the D325
+             family, which stay empty and zero until that seal is held. The
+             arithmetic the S326 seal wrote for this append is DEAD: it was
+             bound to a target at b3e689b9 with 5363 lines, and D324 landed
+             first in this session, so every one of its pinned figures was
+             recomputed against the target as it actually stood. The figures
+             the next RULE 0 will print are stated at the gate that applies
+             this entry and not by this sentence. This entry also does not
+             carry the shape it was drafted in: the payload put its findings
+             inside item 8 at the wrong continuation column and with no blank
+             line between them, and the S326 seat says plainly that it never
+             saw the body of an existing entry. The precondition it wrote for
+             its successor was executed: lines 4989 to 5363 were read whole
+             before anything was rewrapped.
+
+    FINDINGS. Twenty-six, fifteen the seat and eleven the world, and fifteen
+    plus eleven is twenty-six; the addition was performed while writing this
+    entry and the classification was read from the first word of each finding
+    rather than assumed. Nine of the fifteen seat findings are one defect, the
+    shape measuring something other than the object, which S325 recorded as
+    fourteen of eighteen and which was named three separate times inside S326
+    and committed again after each naming. The text below is the payload's,
+    re-wrapped to this document and not rewritten.
+
+            FG-S326-A  WORLD. FAILED_UNITS printed 1 where every prior RULE 0
+                       printed 0, and RULE 0 cannot say which unit.
+
+            FG-S326-B  SEAT. The FAILED_UNITS leg prints a cardinality with no
+                       identity; and the prediction enumeration reported one
+                       decline where the line was a caveat on an assertion
+                       already inside the set.
+
+            FG-S326-C  SEAT. systemctl --failed without --plain puts a status
+                       glyph in column one; the extraction took the glyph.
+
+            FG-S326-D  SEAT. A prediction glued two claims together and one of
+                       them, "small", carried no threshold. R26.
+
+            FG-S326-E  WORLD. The unit treats the absence of work as an error:
+                       find exits 1 on a missing root and nothing absorbs it.
+
+            FG-S326-F  WORLD. Under Type=oneshot a failing first ExecStart
+                       silences the second, and the silenced one is the only
+                       leg with a NOUS-shaped target.
+
+            FG-S326-G  WORLD. The unit files carry the project's own
+                       install-marker convention and have zero tracked source
+                       anywhere in /etc, /opt, /root or /usr/local. Same class
+                       as the served orphan of FG-S250-A: no recovery path.
+
+            FG-S326-H  SEAT. Two censuses ran with rg, which is not installed
+                       on this host, and 2>/dev/null swallowed rc 127. Their
+                       empty output was read as absence. The re-run with grep
+                       carried a positive control that fired.
+
+            FG-S326-I  SEAT. A proposed test could not fail: -mtime +2 against
+                       a /tmp cleared 18.7 hours earlier returns empty whether
+                       the predicate is right or broken, and the object was the
+                       exit code, not the output.
+
+            FG-S326-J  SEAT. A declaration named the tracked tree while the
+                       instrument walked the filesystem. Superset, so the
+                       verdict held, but the declaration did not match the
+                       shape.
+
+            FG-S326-K  SEAT. The findings enumeration file went stale while the
+                       prose grew; the instrument counted the file correctly
+                       and the file was not the object.
+
+            FG-S326-L  SEAT. The mechanism that clears /tmp was named from a
+                       tmpfiles rule read as documentation, not measured.
+
+            FG-S326-M  SEAT. A fixture was rooted at a path that does not
+                       exist, printed rc 1, and would have produced a third
+                       fabricated defect had the rc not been read before the
+                       prose.
+
+            FG-S326-N  SEAT. A leg printed two live secrets in full when a
+                       count would have answered the question it was built for.
+
+            FG-S326-O  WORLD. 114 files older than 30 days survive in /tmp with
+                       an 18.7 hour uptime, so the boot-clearing mechanism is
+                       undiagnosed and FG-S326-L cannot be premised on.
+
+            FG-S326-P  SEAT. A write gate printed its preconditions and did not
+                       enforce them; the state had already moved between gates
+                       and the action was a no-op. Second commission of the
+                       defect FG-S325-AD names, and R4 forbids.
+
+            FG-S326-Q  SEAT. A mode census counted four of five without naming
+                       which. Third cardinality-without-identity today.
+
+            FG-S326-R  SEAT. A verification leg counted every .bak file in a
+                       directory because it was built against a fixture that
+                       held only two. Live value 25, fixture value 0.
+
+            FG-S326-S  SEAT. A prediction asserted the linter has no cross-line
+                       predicate. predicate_list_binding is one, and being
+                       wrong here makes P5 smaller, not larger.
+
+            FG-S326-T  WORLD. NUMBER_WORDS at claim_lint.py 71-75 is defined
+                       and used nowhere; a leftover of the killed v1 count
+                       predicate.
+
+            FG-S326-U  WORLD. The board line "claims.toml gains the enforcement
+                       axis" understates the work. Every predicate is Python;
+                       config supplies vocabulary only. The enforcement axis is
+                       subject-shaped, not word-governs-object-shaped, so it is
+                       a new predicate plus a new table.
+
+            FG-S326-V  SEAT. 138 and 34 were compared while both the set and
+                       the shape had changed. Neither could be blamed until one
+                       axis was moved at a time.
+
+            FG-S326-W  WORLD. FG-S325-B holds in kind and measures 1. Anyone
+                       explaining the 138 to 34 gap with the ledger is wrong.
+
+            FG-S326-X  WORLD. Two straddle sites exist on set B and the two
+                       phrase shapes each see a different one. A line-scoped
+                       guard's blindness depends on which phrase it carries.
+
+            FG-S326-Y  WORLD. 102 of the 138 sit in signed .well-known
+                       artifacts. The enforcement-surface number that travelled
+                       was never a count of lines anyone was permitted to
+                       change.
+
+            FG-S326-Z  WORLD. ONLY_IN_B 32 and ONLY_IN_A 921. The guard scans
+                       32 paths git has never seen and misses 921 it has.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code and authorises none. It does
+    not touch claims.toml, and the three P5 decisions it describes stay with
+    the operator. It corrects no false surface and moves no byte under
+    website/.well-known or website/blog/index.html. It does not close D2, build
+    E4, move the floor, cut a release, clear the untracked paths or amend the
+    frozen fixture, and it constructs no route to any of them. It records no
+    host administration: the disabled timer, the unit modes and the quarantined
+    files are in the S326 handoff and not in this document. It edits no
+    sentence already on this page; it is an append. It does not write D325.
