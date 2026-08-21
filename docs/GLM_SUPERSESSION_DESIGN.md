@@ -6235,3 +6235,481 @@ document itself.
     sentence at line 5625. It carries no material from the other tracks
     that ran beside S327. It edits no sentence already on this page; it is
     an append.
+
+  - S325 the harness is measured from its own bytes, the evidence contract
+    gains eight constraints, and the entry lands below the session that
+    precedes it because the ledger only appends
+
+    THIS ENTRY IS WRITTEN IN S328 ABOUT S325, and it is the first entry in
+    this document to land BELOW a higher session number. It was owed from
+    S326 onward and could not be written: the sealed handoff was in no
+    seat's context, and D326-7 refused to compose it from a degraded
+    recollection rather than from bytes. The operator produced both halves
+    in S328 and they were byte-verified before either was read. The debt is
+    discharged here and the cost of discharging it is recorded in item 15.
+
+    THE PROVENANCE OF EVERY NUMBER BELOW. Nothing in this entry was
+    measured in S328. Every figure was printed by an instrument in S325 and
+    travels in two untracked documents, both byte-verified at the gate that
+    received them: the sealed handoff NOUS_SESSION_325_HANDOFF.md, sha
+    f56ba8e7, 26516 bytes, 543 lines, which no prior seat held; and
+    NOUS_SESSION_325_HANDOFF_ADDENDUM.md, sha eb87db37, 17502 bytes, 362
+    lines, which supersedes the seal only where it says so by name. Where
+    the two disagree the addendum wins and the item says which. R24 applied
+    to this entry by its own author.
+
+    THE INSTRUMENTS OF S325. Ten gates, nine of them read-only, and the one
+    write was a copy of two files into a temporary directory with its undo
+    printed before it. Sixteen further gates ran after the seal was written
+    and are recorded only in the addendum. The repository did not move at
+    all: HEAD cbf3308, origin equal, AHEAD 0, BEHIND 0, AHEAD_OF_TAG 72,
+    PORCELAIN 3, and this document then at b3e689b9 with 5363 lines and
+    315433 bytes. NONE OF THAT WAS RE-MEASURED IN S328 AND IT CANNOT BE:
+    three commits have landed since. It is INHERITED and it is marked so.
+
+    D325-1  THE FOUR SURFACE COUNTERS WERE ALREADY WRONG WHEN THE SESSION
+            OPENED. The S325 opener carried MONITOR_ANY 167, FALSE_SUBJECT
+            137, NEW_SUBJECT 24 and FLOOR_HITS_TRACKED 90. Those were
+            measured at c9523b10, before the D323 payload landed, while
+            the opener labelled the state cbf3308. Measured at cbf3308
+            they are 169, 138, 25 and 91, and the subject split closes:
+            25 plus 138 plus 6 is 169. The commit in between had appended
+            375 lines of prose about the very axis those counters count.
+            R16 and R2, and the 167 family is dead in this document
+            already.
+
+    D325-2  WHERE NOUS-TRACE LIVES, MEASURED RATHER THAN INHERITED. SET:
+            tracked paths and tracked content at cbf3308. SHAPE: the path
+            token nous.trace case-insensitive, and the fixed string
+            NOUS-TRACE in content. BLIND TO: a specification whose path
+            and whose text both avoid the token. TRACKED_TOTAL 1310,
+            PATHS_NARROW 3, PATHS_WIDE 184, CONTENT_FILES 22, CONTENT_OCC
+            83. The runtime module is 344 lines, the specification 509,
+            the reference verifier 1399, the vector generator 411, and
+            there are thirteen vector directories, a golden one and t01
+            through t12. It landed at 93fedba on 21 July 2026. The
+            inherited summary of a 509-line spec, a reference
+            implementation and thirteen vectors is now measured and
+            correct on all three counts, and it had been declared
+            INHERITED before the gate ran rather than after it.
+
+    D325-3  WHAT SHIPS AND WHAT DOES NOT. SET: the bytes of pyproject.toml
+            and scripts/release.py. Five trace modules are declared as
+            py-modules and the wheel gate names the same five plus the
+            signer client. Of eight modules tested by name, TWO ship. The
+            specification, the reference verifier and the thirteen vectors
+            are repository-side only, and the NOUS-TRACE Signer role is
+            absent from the package entirely. BLIND TO: whether a manifest
+            file puts the trace tree into a source distribution.
+
+    D325-4  SIGNING, AND A CONNECTION WITH NO PRODUCTION CALLER.
+            NARROW_SIGN_OCC 142 and CONFORMANCE_SIGN_OCC 505 over two path
+            sets under one shape. The trace signer signs the ENVELOPE and
+            the canonical body excludes the signature; whether per-event
+            signing and a hash chain exist in the shipped path was NOT
+            MEASURED. Imports anchored at column one: IMPORT_COL1 70
+            against IMPORT_ANY 142. The recorder-to-trace connection
+            counts three sites and all three are a document, a test and
+            the module itself, so there are ZERO production callers. BLIND
+            TO: indented imports, dynamic dispatch and untracked files.
+
+    D325-5  THE HARNESS AS IT WAS, AND THAT ALL OF IT IS NOW DEAD. At the
+            seal the checkout sat at 1673bcaac4 with 7466 tracked paths,
+            porcelain 1, and no tags at all. It ran from source under node
+            v22.22.2, was not on PATH, and had no package under any
+            candidate name. Home resolution, read in code and not in
+            prose: an explicit configured path, then the environment
+            variable when it is not blank, then the default directory,
+            and a blank value is treated as unset. The project key was
+            re-implemented from source and checked against the directory
+            actually present. THE ADDENDUM SUPERSEDES ALL OF IT BY NAME:
+            the checkout moved and the commit moved. What survives is the
+            measurement OF BYTES, because those carry their own digests.
+
+    D325-6  THE TWO SESSION ARTIFACTS, AND AN EXPANSION RULE THAT A GUARD
+            CAUGHT. Both were read from copies, never in place, and both
+            were unchanged after every probe run, proved by digest before
+            and after. The larger is 1251855 bytes at c45dc0df with 6198
+            complete frames, 7730 records, 0 parse errors and 24 types.
+            The smaller is 115899 bytes at d34e8ce4 with 317 frames and
+            460 records. STORED ROWS ARE NOT EVENTS: 7730 rows expand to
+            28597 events and 460 rows to 2265, which is 3.70 and 4.92
+            events per stored row. The packed expansion rule is the length
+            of the delta list PLUS ONE. The first attempt used the length
+            alone, and the reconciliation identity printed NO with a delta
+            of exactly minus the number of packed rows in BOTH files. With
+            the corrected rule both close exactly: 24280 plus 4317 is
+            28597, and 2009 plus 256 is 2265. That is a finding only
+            because an identity was written that could print NO.
+
+    D325-7  TOOL LINKAGE BY TWO INDEPENDENT METHODS, AND A CALL THAT IS
+            NOT AN ACT. Thirty-five calls and thirty-five results in the
+            larger session, six and six in the smaller, forty-one pairs,
+            with no call lacking a result and no result lacking a call in
+            either. The call identity is one key; the result identity is
+            two different nested paths; and the envelope separately
+            carries the sequence numbers of the source events.
+            METHODS_AGREE 41 and METHODS_DISAGREE 0, and no result
+            precedes its call. In the smaller session one approval was
+            asked and decided, the outcome was REJECTED, the call record
+            was written BEFORE the approval was asked, and the rejected
+            call still carries a result. An importer that reads a call
+            record as an execution records acts that never happened.
+
+    D325-8  THE READ AND WRITE PATHS, AND AN ARTIFACT MUTABLE BY ORDINARY
+            USE. prepare reserves the session that resume uses; load
+            COMMITS RECOVERY; inspect does NOT. The product read path goes
+            through inspect and resume goes through prepare, and the
+            product callers are seven, not the fifty-six a token search
+            first suggested. The addendum measured the consequence live:
+            the smaller artifact grew by 83 bytes and changed digest
+            between two measurements, with no crash, by ordinary resume,
+            and its bytes in the measured state now exist nowhere. The
+            fifty-six was DECLINED rather than split by eye, because the
+            token also matches statement preparation and the scheduler.
+
+    D325-9  REPAIR IS A WRITE, AND IT FABRICATES. The repair path
+            truncates the log and then appends recovered events plus
+            synthetic closers, and the ordinary append-rollback path
+            truncates too, so truncation is a NORMAL path and not only a
+            crash path. The append-only property is logical, not
+            physical. A synthetic turn end carries an interrupted reason,
+            and a synthetic tool result carries an error of
+            TOOL_NOT_STARTED or TOOL_OUTCOME_UNKNOWN together with THE
+            SAME call identity as the orphaned call, so both of those are
+            distinguishable. A synthetic step end carries nothing that
+            distinguishes it. Synthetic closers reuse the last real
+            timestamp for determinism, so a synthetic event's time is not
+            its own time. Stated plainly: after a repair a log can show
+            every call answered while a tool never ran, and counting
+            pairs settles nothing. Only the error code separates a real
+            answer from a manufactured one.
+
+    D325-10  THE PLUGIN CONTRACT, AND THE ONE THING A SEAL PLUGIN STILL
+             NEEDS. Read whole from the hooks bridge: 445 source lines
+             against 975 lines of test. A plugin exports exactly five
+             things, a name, an injection list, a config interface, a
+             config schema and an apply function, and installation is one
+             row in a configuration file, of which 80 are tracked. No
+             out-of-tree scaffold generator exists. TWO SHAPES ARE
+             AVAILABLE AND ONLY ONE IS RIGHT. The waterfall shape awaits
+             the hook inside the tool path with no guard, so a hook that
+             hangs holds the tool call up to the timeout. The detached
+             shape runs at session start, catches failure to a warning,
+             and registers a drain so that disposal waits for it. The
+             second is the shape a NOUS seal plugin needs, and it is not
+             improvised: the harness writes it and comments it as such.
+             Three mechanisms such a plugin would need already exist: the
+             hook append pair writes the plugin OWN events into the
+             durable log, the persistence lookup returns the artifact
+             path without creating or flushing it, and the call identity
+             is available at the pre-execute seam. NOT MEASURED, and it
+             is the one thing an Innovation Gate needs first: the hook
+             protocol package and the event map were never read, so which
+             session events are plain emits rather than waterfalls is
+             still unknown.
+
+    D325-11  THE MIGRATION, AND THE DESIGN RULE THAT CAME OUT OF IT. The
+             installation had NO GIT IDENTITY. Its repository pointer led
+             into a temporary directory and the reboot had erased the
+             parent, and the built-in repair cannot help, because it
+             repairs a link between two sides and one side was gone.
+             Provenance was then REPRODUCED rather than declared. Against
+             the public upstream, 7795 of 7806 hashable tracked paths
+             were identical, all eleven differing blobs were absent from
+             the upstream object database, and the stated commit was
+             absent too. Against the operator own verified bundle all
+             eleven were present and the full comparison was 7806
+             identical with zero on either side. The eleven are one
+             coherent local change granting terminal devices to confined
+             sandboxes. THE RULE: the bug class was that the tree
+             contains a pointer to its own repository, and the fix is not
+             a better pointer but NO POINTER. Pass the repository and the
+             work tree explicitly at inspection time, because an explicit
+             argument fails LOUDLY at the moment it is wrong while a
+             stored pointer fails silently and is found by accident,
+             months later, by whoever needed it.
+
+    D325-12  THE OPERATOR DECISION, AND THREE CORRECTIONS TO THE
+             REASONING THAT CAME WITH IT. U1 is WRAPS, taken by the
+             operator in S325, recorded and not argued. Three sentences
+             that accompanied it were measured and do not hold. FIRST,
+             that the shipped runtime reaches the protocol through two
+             named modules is UNMEASURED, and one leg would close it.
+             SECOND, that placing the two beside each other would create
+             two independent runtime truth paths is BACKWARDS: beside is
+             the current state, measured, because no column-one import
+             connects the two modules in either direction, so WRAPS is a
+             change and not a preservation. THIRD, that only one boundary
+             is shipped is too wide as written; the accurate sentence is
+             in item 3. A fourth correction is about wording: VERIFIED is
+             one of the four shipped verifier tiers and must not appear
+             in an architecture diagram as a generic adjective.
+
+    D325-13  WHAT THE IMPORTER CONTRACT MUST CARRY. Eight constraints,
+             every one of them measured in S325 and none of them design:
+
+             stored rows are not events, by a factor of 3.70 or 4.92
+             a call record is a request and not an act
+             synthetic events exist and one of the three is unmarked
+             synthetic timestamps are copies of the previous timestamp
+             the source artifact is mutable by ordinary resume, so an
+               import record must pin digest AND time, and a later
+               re-import may legitimately see different bytes
+             the version field does not identify the shape; only the
+               writing commit does, and it is not inside the artifact
+             a reader must traverse concatenated frames, because a
+               one-shot decode reads the header frame alone and would
+               report an empty session
+             one float field exists across two real sessions and needs a
+               rule of its own beside a general guard
+
+             The Innovation Gate for this arc was NOT done and is named
+             here as owed. It precedes the architecture record, and the
+             ledger entry precedes any code it authorises.
+
+    D325-14  WHAT S325 DID NOT DO, AND WHAT NO LONGER EXISTS. It touched
+             no item on its own board, wrote nothing to the repository or
+             to any served surface, ran no harness command, spent no
+             credential and opened no network connection from any gate.
+             Three read-only measuring tools were built in a container,
+             fixtured there, transferred as files and digest-guarded
+             before execution on the server, the last of them 20425 bytes
+             with fifteen selftest arms, each refuse arm fixtured
+             individually. THEY EXIST ONLY IN THE OPERATOR SAVED COPIES.
+             The two session copies and the three tools all sat under a
+             temporary directory and are gone. The effect is measured and
+             THE MECHANISM IS NOT: this document already records at two
+             S326 findings that the clearing rule was named from
+             documentation rather than measured, and that files older
+             than thirty days survived the same event.
+
+    D325-15  WHAT THE SEAT THAT LANDED THIS ENTRY ADDS, MARKED AS SUCH.
+             Four things, none of them measured in S325. FIRST, the entry
+             was written from BOTH halves and neither alone would carry
+             it: the seal holds eighteen findings and the addendum
+             twelve, the union is thirty and the overlap is ZERO, and
+             that identity was printed by an instrument before any prose
+             was written. A first census over the addendum returned
+             eighteen distinct codes, the same number as the inherited
+             claim about the seal, by matching every mention rather than
+             every entry; reading the file whole is what separated the
+             twelve entries from the six references. SECOND, THIS ENTRY
+             DESCENDS. The heads of this document were non-decreasing by
+             session, a property measured in S327 and declared there as a
+             property and not an invariant. Landing S325 below S327
+             breaks it permanently and deliberately, because the ledger
+             only appends and an insertion is not an append. Any future
+             detector of monotone order will go red here and will be
+             right to. THIRD, the classification the addendum gives for
+             its eighteen seat findings DOES NOT CLOSE: its buckets carry
+             fourteen entries but only thirteen distinct codes, one code
+             sits in two buckets at once, and with the three further
+             codes it names the account reaches sixteen of eighteen,
+             leaving two unclassified. The total sums because entries
+             were counted and not codes, which is the defect the seal
+             records against itself. FOURTH, four of the thirty codes
+             carry two letters, so their text begins one column further
+             right than the rest and their continuation follows the text;
+             that is the same rule this document already follows at its
+             only two-digit item code.
+
+    FINDINGS. Thirty, and this is the first entry in this document to draw
+    them from two sealed sources rather than from one payload. Eighteen
+    were named in the seal, nine the seat and nine the world. Twelve were
+    named in the addendum, nine the seat, two the world, and one a
+    WITHDRAWAL of an earlier claim. Eighteen plus twelve is thirty, and the
+    totals are eighteen seat and eleven world with one withdrawn; both
+    additions were performed while writing this entry, and the union and
+    the overlap were printed by an instrument rather than reasoned. THE
+    TEXT BELOW IS CONDENSED AND IS NOT VERBATIM. Where D326 carried a
+    payload across byte-identical, this entry had no payload to carry: it
+    had two documents, and each finding below is stated in fewer words than
+    its source with its mechanism preserved and its identity unchanged. The
+    sources are named above by digest and the full wording lives in them.
+
+            FG-S325-A  SEAT. Four surface counters were predicted at
+                       values measured at one commit while the opener
+                       labelled the state at another. The commit in
+                       between had appended prose about the very axis
+                       those counters count.
+
+            FG-S325-B  WORLD. This gate document is INSIDE the set of the
+                       monitor-axis census, so a ledger entry that quotes
+                       a false claim in order to record it is counted as
+                       an instance of it. The number P3 carries is
+                       contaminated, and P5 must decide whether this
+                       document is excluded rather than leaving it to P3.
+
+            FG-S325-C  SEAT. A narrow path token found three files. The
+                       live specification and the reference verifier do
+                       not carry the token in their paths and did not
+                       appear. Three was the extent of the shape, not of
+                       the object.
+
+            FG-S325-D  WORLD. Five properties of the harness session log
+                       travelled in a prior message under the word
+                       measured, with no session, no SET and no SHAPE.
+                       Three are now measured true and two cannot be
+                       measured from what exists.
+
+            FG-S325-E  SEAT. R18. A probe for an executable printed a
+                       shell alias rather than a path. The control still
+                       discriminated, but the prediction was wrong
+                       because the instrument had not been read first.
+
+            FG-S325-F  SEAT. A candidate census matched an ancestor
+                       directory token and therefore matched the whole
+                       harness repository, 440 of them, none of which was
+                       session data. The repair was to apply no filter at
+                       all in the next gate.
+
+            FG-S325-G  WORLD. Repair is a write and it fabricates. It
+                       truncates the log, then appends recovered events
+                       and synthetic closers, and the ordinary rollback
+                       path truncates too.
+
+            FG-S325-H  WORLD. The session format version is pinned at
+                       zero while the record shape changes repeatedly,
+                       and two dedicated bug-fix notes exist for sessions
+                       an earlier build wrote and current validation
+                       rejects. The version field does not identify the
+                       shape.
+
+            FG-S325-I  SEAT. R22. A prediction enumeration was reported
+                       at one set of numbers and counted with an
+                       instrument at another, because the count was
+                       written from intent while the enumeration was
+                       still growing. It was committed a second time
+                       inside the seal itself, after being named.
+
+            FG-S325-J  SEAT. A leg required one key name on more than
+                       half the records and printed NOT_FOUND. The
+                       sequence is present on every non-header row and
+                       the NAME splits across two spellings. A threshold
+                       hid a universal property. R26.
+
+            FG-S325-K  SEAT. A key census read only the first level of
+                       the data tree while the tool linkage lives deeper.
+                       The zero it printed was a property of the shape.
+
+            FG-S325-L  WORLD. Stored rows are not events, by a factor of
+                       3.70 in one session and 4.92 in the other, and the
+                       frame is not a turn either.
+
+            FG-S325-M  WORLD, caught by a guard the seat had built. The
+                       packed expansion rule is the delta length PLUS
+                       ONE. The first rule printed NO on the
+                       reconciliation identity, with a delta of exactly
+                       minus the packed row count, in both files.
+
+            FG-S325-N  SEAT, and the most dangerous of the eighteen. A
+                       probe reported thirty-five calls without results
+                       and a single distinct result identity. Every one
+                       of those numbers was false, because the result
+                       record carries no top-level call identity and the
+                       search returned nothing for all of them. Had it
+                       been written it would have recorded a defect in
+                       the harness that does not exist. Printing an
+                       actual record is the only thing that stopped it.
+
+            FG-S325-O  WORLD, and the most important for the evidence
+                       contract. A call record is the model request, not
+                       an execution. One call was written, then asked for
+                       approval, then rejected, and it still carries a
+                       result.
+
+            FG-S325-P  WORLD. The marker question is answered and the
+                       answer is PARTIAL. Two of the three synthetic
+                       closers are distinguishable by a reason or an
+                       error code; the third carries nothing that marks
+                       it. Synthetic closers also reuse the last real
+                       timestamp.
+
+            FG-S325-Q  WORLD. inspect does not commit recovery; load and
+                       prepare do. The product read path goes through
+                       inspect and resume goes through prepare, so the
+                       artifact is mutable by ordinary use and not only
+                       by a crash.
+
+            FG-S325-R  SEAT. A count of session preparations matched an
+                       overloaded token that also names statement
+                       preparation and an unrelated internal method. The
+                       split was DECLINED rather than produced by eye.
+
+            FG-S325-S  SEAT. Legs of the form git command piped into a
+                       line count returned zero on a BROKEN repository,
+                       and zero is also what they return on genuine
+                       absence. Five legs reported zero and none of them
+                       was a measurement.
+
+            FG-S325-T  WORLD. The installation had no git identity: its
+                       pointer led into a temporary directory that the
+                       reboot had erased.
+
+            FG-S325-U  WORLD. One session artifact grew by 83 bytes and
+                       changed digest between two measurements, with no
+                       crash, by ordinary resume. Its bytes in the
+                       measured state now exist nowhere.
+
+            FG-S325-V  SEAT. A symlink control was built on a directory
+                       that has no symlinks, so both arms printed zero. A
+                       control whose arms agree is not a control. R11.
+
+            FG-S325-W  WITHDRAWN. The seat reported 479 broken links as a
+                       gap in the operator verification. That check
+                       covered the live fallback, 232 links with none
+                       broken, and was correct. The 479 live in two
+                       backup directories the operator had created. Dead
+                       weight, not a defect.
+
+            FG-S325-X  SEAT, and the mechanism behind the withdrawal. The
+                       SET was the whole harness home and the OBJECT was
+                       the live fallback. Measuring wider and reading the
+                       difference as a deficiency of the narrower check
+                       manufactured a defect that did not exist, for the
+                       second time in one session.
+
+            FG-S325-Y  SEAT. A resolution probe queried the workspace
+                       root while the packages live under an application
+                       directory. The negative it printed was a property
+                       of the path chosen.
+
+            FG-S325-Z  SEAT. Two listings were bounded with no count
+                       printed beside them, in a gate whose own
+                       declaration promised counts before every listing.
+                       The truncation stayed invisible until a later
+                       listing showed entries the earlier one never
+                       reached.
+
+            FG-S325-AA  SEAT. An ignore-rule check ran against a clone
+                        that does not contain the directories the rules
+                        name. The patterns end in a separator and match
+                        directories, so a directory that does not exist
+                        cannot match. The zero described the target, not
+                        the rules.
+
+            FG-S325-AB  SEAT. A check was declared to print ABSENT for a
+                        file that no step in the plan removed. A
+                        prediction about a state that nothing produces.
+
+            FG-S325-AC  SEAT. A three-term guard printed one refusal
+                        message naming the wrong term: it blamed a
+                        missing repository when the failing term was an
+                        already-deleted directory.
+
+            FG-S325-AD  SEAT. A precondition was computed, printed, and
+                        never placed in any guard. The write it was meant
+                        to protect ran anyway. A precondition that is
+                        printed but not enforced is decoration.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code and authorises none. It
+    opens no Innovation Gate for the harness arc and constructs no route to
+    one. It does not touch claims.toml or the guard, does not decide P5,
+    and corrects no false surface. It moves no byte under
+    website/.well-known or website/blog/index.html. It does not close D2,
+    build E4, move the floor, cut a release, clear the untracked paths or
+    amend the frozen fixture. It re-measures nothing about the harness, all
+    of which has moved, and it carries no material from the tracks that ran
+    beside S325. It edits no sentence already on this page; it is an
+    append, and it is the append that makes this page descend.
