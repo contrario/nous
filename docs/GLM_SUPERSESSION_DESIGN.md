@@ -5921,3 +5921,317 @@ document itself.
     host administration: the disabled timer, the unit modes and the quarantined
     files are in the S326 handoff and not in this document. It edits no
     sentence already on this page; it is an append. It does not write D325.
+
+  - S327 the two owed entries land, the claim guard is read end to end,
+    and the three P5 questions become three answered shapes
+
+    THIS ENTRY IS WRITTEN IN S328 ABOUT S327, and it records the first
+    session in this document to land two entries in one arc. S327 held the
+    handoff for S324 and the frozen payload for S326 and it wrote both. It
+    wrote nothing about itself, and that is the debt this entry discharges.
+    Nothing below is claimed to have been measured in S328 except where a
+    line says so.
+
+    THE PROVENANCE OF EVERY NUMBER BELOW. Every figure was printed by an
+    instrument in S327 and travels in NOUS_SESSION_327_HANDOFF.md, sha
+    1a94a0f2, 12759 bytes, 280 lines, byte-verified at the opening of S328
+    before it was read. That handoff is untracked and is not in the
+    repository. Its two companion documents were verified in the same gate
+    and are named where they are used: the opener at cef377fe with 10416
+    bytes and the supplement at d328e296 with 13235 bytes. Where a source
+    carries a number without the shape that produced it, this entry says so
+    instead of repeating it as though it could be reproduced. R24 applied
+    to this entry by its own author.
+
+    THE INSTRUMENTS OF S327, AND THE STATE RE-MEASURED IN S328. Twenty-five
+    gates and two commits, ending a plateau of two sessions that wrote no
+    bytes. The state at the S327 seal was re-measured live in S328 at the
+    same commit and reproduced exactly: HEAD c75bf79, origin equal, AHEAD
+    0, BEHIND 0, AHEAD_OF_TAG 74, PORCELAIN_LINES 3, suite 2872 passed and
+    12 skipped, LINT rc 0 over 421 files with 0 violations, MIRROR rc 0
+    CLEAN over 331 tracked files with 5 orphans, and this document at
+    caf2e6a7 with 5923 lines, 350090 bytes, MAXLEN 79, NONASCII 0, TRAILWS
+    0, HEADS_TOTAL 35 and STRICT_FG_OCC 167. Those figures are inherited
+    AND re-measured. Everything else below is inherited only.
+
+    D327-1  RULE 0 SCORED, AND PASTE TWO WAS REBUILT A SECOND TIME. 59
+            declared, 59 hit, 0 missed, 2 declined at the opening, and
+            everything in the inherited state reproduced exactly. The
+            positive control fired: S323 printed 4989 and S322 printed 4740
+            while S324, S325 and S326 printed empty, so the emptiness is a
+            property of the document and not of the leg. Paste one was
+            unchanged at 5036909b, 662 characters, 14 legs. Paste two went
+            from 60fb4979 with 73 legs to 7db4a184 with 75, and the rebuild
+            carried three edits, each anchor verified unique before
+            replacement, a length identity of 5736 plus 188 making 5924,
+            and a round-trip sha equality back to 60fb4979. Two legs were
+            added, S327_HEAD_LINE and D327_ANCHORED. The third edit
+            corrected the L0 PROVENANCE line, which declared S325 where the
+            values it compares against are now printed in S327. A false
+            provenance inside the instrument is the defect R26 names, and
+            this is the second consecutive session to find one and correct
+            it the same way.
+
+    D327-2  D324 LANDED, TWO SESSIONS AFTER THE SESSION IT RECORDS. Nine
+            items, three findings, 211 lines, from a candidate at dff707c6
+            of 13418 bytes applied by a tool at 02cda4e2. cbf3308 became
+            78fdcd5. The entry was small because D323-12 had already
+            carried six of the things S324 produced. What was owed was the
+            phrase-per-hit census with its fifteen phrases written down,
+            which is the one thing D323-2 says S323 could not do; the
+            subject split that closes arithmetically where the S323 one
+            does not; the pathspec split; axis B; the column numbers; the
+            write arc; the prediction record; and the three findings
+            D323-12 left owed.
+
+    D327-3  D326 COULD NOT LAND AS DRAFTED, AND THE PRECONDITION THAT
+            CAUGHT IT WAS WRITTEN BY THE SEAT THAT COULD NOT MEET IT. The
+            S326 seat knew the anchor shapes, had never seen the body of an
+            existing entry, and said so. Reading lines 4989 to 5363 whole
+            found six divergences: the head loses the double dash to match
+            the last eight heads; the findings block leaves item 8 and
+            becomes its own section; the finding continuation moves from
+            column 13 to column 24; a blank line goes between every
+            finding; three preamble paragraphs are added; and a closing
+            section is added. THE CANDIDATE WAS NOT RETYPED. A builder read
+            it, verified its digest, and carried the body across
+            byte-identical, which was verified at 154 lines verbatim and 26
+            finding codes in the same order. Two items were added by the
+            landing seat and marked as such. Ten items, twenty-six
+            findings, 349 lines, from a candidate at c9f9074d of 21239
+            bytes applied by a tool at 1cf1e3d7. 78fdcd5 became c75bf79.
+            Both commits were verified by reading the blob back from
+            origin/main with git cat-file and not from the worktree.
+
+    D327-4  THE ORDER, AND THE MEASURED REGULARITY THAT DECIDED IT. The
+            ledger is non-decreasing by session: 33 for 33 measured before
+            the first append and 35 for 35 after both. THAT REGULARITY IS
+            UNDECLARED ANYWHERE IN THIS DOCUMENT. It is a measured property
+            and not an invariant, and D324 landed first for that reason
+            alone. The gap at S325 is a gap and not a descent.
+
+    D327-5  THE CLAIM GUARD WAS READ END TO END. scripts/claim_lint.py at
+            b6380185, 1016 lines, 34783 bytes, and claims.toml at f9919834,
+            190 lines, 8733 bytes, both equal to origin/main. The reading
+            was digest-pinned span by span over 44-302, 303-544, 545-696,
+            697-821 and 822-1016, and then over 1-43, and that order is
+            itself recorded as a finding below. FOUR PREDICATES, THREE
+            SEATS: the cross-line predicate is wired at unit level before
+            the sentence loop; the object and axis predicates are wired
+            inside it and are therefore sentence-scoped; and the stat
+            predicate is called from main at file level and never reaches
+            scan_unit. The sentence splitter breaks on every newline. THE
+            CONFIG DECLARES ITS OWN SOURCE at lines 1 to 11, naming
+            README.md:35, nous_api_server.py and Article IV of the
+            Constitution, and it declares what it is: the linter checks
+            conformance to the convention and does not determine whether
+            any claim is true. A reserved word is never a violation on its
+            own. The config carries twenty-one fields and not one of them
+            holds a subject.
+
+    D327-6  P5 IS ANSWERED IN SHAPE AND THE DECISIONS REMAIN THE
+            OPERATOR'S. Six slots were measured rather than preferred.
+            POSITION is unit level beside the existing cross-line
+            predicate, because a sentence-scoped predicate is structurally
+            blind to a claim the line break cuts in half and that was
+            reproduced. MENTION is one call per line to the machinery the
+            cross-line predicate already uses. SET means replacing
+            iter_files rather than configuring it, because the prune arm
+            matches a directory name anywhere in the tree and not only at
+            the root. HTML IS STRUCTURALLY UNREACHABLE by line walking: the
+            markdown reader returns one unit for the whole file and the
+            html reader returns many, one per block tag, so there is no
+            whole-file unit to walk and the fourteen blog sites cannot be
+            reached by the existing pattern. TEST names the existing
+            pattern and the lock test that holds it. SHAPE is a new
+            predicate plus a new config table; the nearest existing shape
+            is the passive arm of the object predicate, and the enforcement
+            claim is subject, copula, noun where that arm is object,
+            copula, participle. Also measured: main dispatches by suffix in
+            code and not by config, so a format added to the include list
+            is still discarded. LEDGER BEFORE CODE. This entry authorises
+            nothing.
+
+    D327-7  THE LOOSE SENTENCE AT LINE 5625 IS NOT A LINTER FAILURE, AND IT
+            IS NOT QUOTED HERE. The D326 entry carries at that line a
+            sentence in which a decidable check is said to have proved
+            something. The shipped tool does not fire on it, and that was
+            verified by fixture: the exact bytes were copied out of this
+            document with sed rather than transcribed, and were run against
+            the tool beside a positive control that fired. The module
+            docstring declares this at lines 18 to 42, with the relevant
+            blind spot at lines 22 to 25: a claim-class error carrying no
+            numeral and no forbidden object needs semantics, and the tool
+            names that limit about itself. THE SENTENCE IS CITED BY LINE
+            AND NOT REPRODUCED, because reproducing it would place a second
+            instance of the same wording in the same document, which is the
+            defect the finding below records against a different counter.
+            Whether the wording is loose against Article IV is an operator
+            judgement that no mechanism will take, and if it is corrected
+            the correction is an append.
+
+    D327-8  THE WRITE ARC, THIRTEEN GATES, 331 PREDICTIONS FOR 331. The
+            sequence was the same for each entry and every step was its own
+            gate: a landing census with existence resolved first and every
+            leg printing ABSENT rather than zero; a tool census carrying
+            the digest as an ENFORCING guard rather than a printed one; a
+            dry run; the apply; the stage; the commit; the push; and the
+            blob read back from origin. Every refuse arm was fixtured
+            individually and the happy path was fixtured with them. THE
+            COMMIT GUARD FIRED LIVE on a re-paste, which is what R4 asks a
+            precondition to do and what the S326 write gate did not do.
+
+    D327-9  THE PREDICTION RECORD OF S327. 468 declared, 462 hit, 6 missed,
+            counted with awk over a gate-by-gate file rather than from
+            memory. 462 plus 6 is 468 and that addition was performed while
+            writing this entry. EVERY MISS HAPPENED BEFORE ANY BYTE MOVED,
+            and the thirteen gates of the write arc scored 331 for 331.
+
+    D327-10  THE OPERATOR ARTIFACTS WERE DISPOSED AND THE ABSENCE WAS
+             MEASURED, BECAUSE SILENCE IS NOT EVIDENCE. rm prints nothing
+             on success and nothing on absence. Eight legs printed ABSENT,
+             a second instrument printed 0 beside a positive control of 201
+             entries under /tmp, and the repository had not moved. The
+             digests are kept because they are the identity of what landed:
+
+             d324_candidate.txt  dff707c6  13418 bytes  211 lines
+             d326_v2.txt         c9f9074d  21239 bytes  349 lines
+             append_d324.py      02cda4e2   4753 bytes  156 lines
+             append_d326.py      1cf1e3d7   4755 bytes  156 lines
+
+             The four fixture roots went with them. The bytes exist only in
+             the operator's saved copies and there is no recovery path from
+             the host, which is the class this document records at the
+             served-orphan finding of S250. The two append tools are
+             reproducible from the entries they applied, because each entry
+             pins the target sha, the candidate sha, and the resulting
+             bytes, lines and anchor counts.
+
+    D327-11  WHAT S327 DID NOT DO, AND WHY D325 IS STILL NOT WRITEABLE. It
+             wrote no code, no config and no served byte. D327 itself was
+             owed and is discharged by this entry. D325 REMAINS OWED AND
+             REMAINS UNWRITEABLE: its sealed handoff at f56ba8e7 was never
+             in the S327 seat's context, the addendum that exists supersedes
+             that seal only where it says so by name, and eighteen of its
+             thirty findings live only in that seal. The S325 head line and
+             the D325 family stay empty and zero until that seal is held.
+             An entry composed from a document nobody read is the defect
+             R24 exists to prevent.
+
+    D327-12  WHAT THE SEAT THAT LANDED THIS ENTRY ADDS, MARKED AS SUCH.
+             Three things, none of them measured in S327. FIRST, the
+             precondition this document's own shape imposes was executed
+             again: lines 5365 to 5923 were read whole before this
+             candidate was built, and the read was bound to the target by a
+             span digest printed beside the document digest, and the span
+             as it arrived reproduced that digest and its byte count.
+             SECOND, THE HOUSE SHAPE AS THE SEALED HANDOFF STATES IT IS
+             BOUND TO A SINGLE-DIGIT ITEM CODE. Sixteen lines in this
+             document stand at an indent of thirteen and all sixteen are
+             the continuation of D326-10, because the code is one character
+             longer and the two spaces after it push the text one column
+             right. The rule is that the continuation aligns under the
+             text; the statement that the text sits at column 13 is the
+             single-digit case of that rule. Items 10 and above in this
+             entry follow the measured rule and not the stated one. THIRD,
+             two sources disagree on the wire marker of the cross-line
+             predicate: the entry at D326-9 in this document and the S327
+             handoff give different strings for the same object, and
+             NOTHING IN S328 OPENED THE FILE. The marker is therefore not
+             restated in item 6 above, and the disagreement is recorded
+             rather than resolved.
+
+    FINDINGS. Seventeen were named in S327, ten the seat and seven the
+    world, and ten plus seven is seventeen; the addition was performed
+    while writing this entry and the classification was read from the label
+    on each finding rather than assumed. The count was taken in S327 with
+    grep over the enumeration file rather than by eye. Five of the ten seat
+    findings are one defect, the shape measuring something other than the
+    object, which S326 recorded as nine of fifteen and S325 as fourteen of
+    eighteen. NONE OF THE FIVE REACHED A CONCLUSION. Each was caught by an
+    instrument that could go red: an equality inside a printed list, a sum
+    required to reach a known total, output read back before prose, and a
+    bound written so that it could break.
+
+            FG-S327-A  WORLD. The upload channel injects payload text into
+                       the seat, so a document verified by digest on disk
+                       and a document rendered into context are two
+                       different objects.
+
+            FG-S327-B  WORLD. rule0.sh enumerates commits with dynamic
+                       abbreviation, so the width of a short sha in its
+                       output is a property of the run and not of the
+                       object.
+
+            FG-S327-C  SEAT. A strictly-ascending detector was built for an
+                       object that is only non-decreasing.
+
+            FG-S327-D  SEAT. A leg printed a derived value and discarded
+                       the line it came from, which cost a whole gate to
+                       recover.
+
+            FG-S327-E  SEAT. Two counters declared complementary shared one
+                       unexamined assumption. The sum control caught it.
+
+            FG-S327-F  SEAT. A column leg matched the leading indent rather
+                       than the separator. R10 caught it before any prose
+                       was written on top of it.
+
+            FG-S327-G  SEAT. A D324 anchor count was predicted from S324
+                       occurrences, which is a different set.
+
+            FG-S327-H  SEAT. A family count was written from the shape of
+                       the prior entry rather than from the object.
+
+            FG-S327-I  WORLD. The D324 entry raised the false-subject
+                       counter that it measures, from 1 to 2 inside this
+                       gate document, because the phrase list cannot be
+                       recorded without the phrases.
+
+            FG-S327-J  SEAT. Two inherited line numbers were predicted
+                       against a different shape.
+
+            FG-S327-K  WORLD. The module-constant shape is blind to typed
+                       assignments, so a constant defined with a type
+                       annotation did not appear in the census that was
+                       built to find it.
+
+            FG-S327-L  SEAT. A missing declaration was asserted in a file
+                       that had not been opened. That assertion was the
+                       stated premise of the whole arc and it was false:
+                       the declaration is at claims.toml lines 1 to 11.
+
+            FG-S327-M  WORLD. The token "proved" is absent from the
+                       reserved words while "proven" is present.
+                       DOWNGRADED: it is a narrow mechanism inside the
+                       broader blind spot the tool already declares, and
+                       not an independent finding.
+
+            FG-S327-N  WORLD. The cross-line predicate excludes html, and
+                       html has no whole-file unit to walk in any case, so
+                       the exclusion is not the reason it cannot reach
+                       there.
+
+            FG-S327-O  SEAT. A reproducer was built whose object was itself
+                       forbidden in its first token, so it could not
+                       answer. The answer came from the object enumeration
+                       in the output and not from the exit code.
+
+            FG-S327-P  SEAT. The tool was read from line 44 to line 1016
+                       before lines 1 to 43, and lines 1 to 43 held the
+                       answer to the question the arc was opened for.
+
+            FG-S327-Q  WORLD. Both gating callers pass no anchor while the
+                       tool documents one and calls it recorded rather than
+                       verified.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code and authorises none. It
+    does not touch claims.toml or the guard, and the P5 decisions it
+    records stay with the operator. It corrects no false surface and moves
+    no byte under website/.well-known or website/blog/index.html. It does
+    not close D2, build E4, move the floor, cut a release, clear the
+    untracked paths or amend the frozen fixture, and it constructs no route
+    to any of them. It does not write D325, and it does not reproduce the
+    sentence at line 5625. It carries no material from the other tracks
+    that ran beside S327. It edits no sentence already on this page; it is
+    an append.
