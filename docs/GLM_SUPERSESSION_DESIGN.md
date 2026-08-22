@@ -7336,3 +7336,444 @@ document itself.
     supersedes_digest, which remains inherited and unmeasured. It edits
     no sentence already on this page; it is an append, and it lands
     below the entry that made this page descend.
+
+  - S331 the count in D330 is corrected by append, the entry that
+    carries two finding namespaces says so, and the label convention is
+    declared rather than claimed
+
+    THIS ENTRY IS WRITTEN IN S331 ABOUT S330 AND ABOUT S331. Every
+    figure below was printed by an instrument in this session and the
+    instrument is named. Nothing is inherited except where a line says
+    so. Two of the findings below belong to the previous session and
+    item D331-2 states why.
+
+    THE PROVENANCE, AND ITS TWO SOURCES. The state values come from RULE
+    0, which the operator executed on Server A before this seat opened.
+    The reproduction and fixture values come from a container that is
+    NOT Server A. That split is load-bearing and is recorded in D331-6:
+    no digest produced off-host is evidence about this repository until
+    it is reproduced on the host. This session kept no prediction ledger
+    in the shape S330 used, and none is claimed.
+
+    THE OPENING STATE. HEAD 00027f4 with origin identical, AHEAD 0,
+    BEHIND 0, AHEAD_OF_TAG 79, PORCELAIN_LINES 3. This document was
+    8ff3d7db at 7338 lines and 437482 bytes, blob c46a09af on
+    origin/main, worktree equal to origin, MAXLEN 79, NONASCII 0,
+    TRAILWS 0, HEADS_TOTAL 39, BLANK_BEFORE 39, TEXT_BEFORE 0 and
+    STRICT_FG_OCC 230, and it is untouched by everything below except
+    this append.
+
+    D331-1  THIS ENTRY CORRECTS A COUNT IN D330, AND ENUMERATES BOTH
+            SETS RATHER THAN ASSERTING A TOTAL. D330 states that eight
+            findings were named in S330 and splits them six the seat and
+            two the world. The session produced TEN. The entry was
+            accurate about its own contents and false as a statement
+            about the session, and the two claims were written as one
+            sentence, which is why no guard saw it. The corrected sets,
+            by name: SEAT, seven, FG-S330-A, B, E, F, G, H and I. WORLD,
+            three, FG-S330-C, D and J, where C remains WORLD,
+            DOWNGRADED. NO PRIOR CLASSIFICATION MOVED. The distribution
+            changed by exactly two additions, one SEAT which is I and
+            one WORLD which is J, and every label carried by the eight
+            already in this document is unchanged. A reader comparing
+            six-and-two against seven-and-three can confirm that from
+            the two lists without leaving the page, which a bare 7 plus
+            3 equals 10 would not allow.
+
+    D331-2  THE CODES ARE FG-S330-I AND FG-S330-J, AND THIS ENTRY
+            CARRIES TWO NAMESPACES. The session number in a finding code
+            records when the finding was FOUND, not when it was written
+            down. Both were found in S330, against the state of S330, by
+            instruments of S330. FG-S331 would say they were found in
+            this session, which is false. The verdict rests on that and
+            on no artifact: an earlier draft of this item cited the S330
+            measurement record as already naming both, and it names
+            neither, which is FG-S331-F below. For the CONTENT of the
+            two the source is the sealed handoff a037a710, which names
+            both, two occurrences each, with the body of J at lines 257
+            to 262 and of I at 271. The house precedent was measured in
+            this session rather than recalled: RULE 0 printed FG-S328 at
+            eight strict occurrences in this document and D328 landed in
+            S329, so a later session writing about an earlier one uses
+            the earlier one's namespace. THIS IS THE FIRST ENTRY IN THIS
+            LEDGER TO CARRY FINDING CODES FROM TWO NAMESPACES: FG-S330-I
+            and J are the correction, FG-S331-A through J are this
+            session's own. It is stated here so that nobody has to
+            discover it with a grep.
+
+    D331-3  TWO SEALED ARTIFACTS OF THE SAME SESSION DISAGREE ON THE
+            COUNT, AND THIS IS WHICH IS WHICH. The S330 measurement
+            record, sha d1cc4570, holds eight distinct FG-S330 codes, A
+            through H, contains neither I nor J, and heads its section 8
+            EIGHT, SIX OF THEM SEAT. It is neither stale nor wrong. The
+            two were found after the D330 payload was sealed, which the
+            handoff records at its line 131, and the record does not
+            carry them while the handoff does. The record is therefore
+            complete as of its own seal and incomplete as of the
+            session, and its header says which. It cannot be amended in
+            place: the S331 opener pins d1cc4570 at 24243 bytes and 562
+            lines, and an edit would break the digest that every reader
+            of this arc verifies against. An entry that wrote TEN
+            without saying that a sealed record of the same session says
+            EIGHT would leave a reader unable to tell which of two
+            sealed documents had gone stale. Neither has.
+
+    D331-4  WHAT IS NOT CORRECTED, AND WHY IT WOULD BE WRONG TO CORRECT
+            IT. D330-12 records FG_S330_OCC and FG_S330_LOOSE at zero.
+            That was a census taken BEFORE the codes A through H were
+            assigned, and it was true when it was taken. It is a dated
+            measurement and it receives the same treatment as an ADR
+            that records a tracked-file count from the day it was
+            written: it stays. Rewriting it to agree with today would
+            convert a measurement into a summary and would destroy the
+            only evidence that the namespace was checked before it was
+            used.
+
+    D331-5  RULE 0 OF S331, AND THE FIFTEEN CONTROLS THAT FIRED. Paste
+            one was unchanged at 5036909b, 662 characters, 14 legs.
+            Paste two was rebuilt for this session at 68a610a0, 6676
+            characters, 83 legs. NEITHER FILE ARRIVED; both were
+            recovered from the bytes of their executed transcripts by
+            reconstructing the command line and matching the sha256
+            preimage, and the leg convention was resolved by instrument
+            as top-level separators plus one, returning exactly 14 and
+            83. That is FG-S331-A. The stop condition was clear:
+            S331_HEAD_LINE printed empty and D331_ANCHORED printed zero,
+            and S329 printed empty with D329 zero as expected, beside
+            fifteen positive controls that all fired: heads at 7002,
+            6717, 5925, 5576, 6239, 5365, 4989 and 4740, and anchors at
+            12, 12, 12, 10, 15, 9 and 13. The state reproduced against
+            the opener with zero drift, including WORKTREE_EQ_ORIGIN
+            YES, suite 2872 passed and 12 skipped, collect 2884 and
+            3022, claim_lint rc 0 over 421 files with 0 violations, and
+            the mirror CLEAN at 332 tracked, 332 compared, 0 differ, 0
+            missing and 4 orphans.
+
+    D331-6  THE BUILDER WAS PROVED BEFORE IT WAS REUSED, AND IT WAS
+            PROVED OFF-HOST. The D330 builder, build.py at 6fc455a6 and
+            content.py at 22c7d89d, reproduces the landed payload
+            byte-identical at 12133843, 21208 bytes, 338 lines, maxlen
+            72. The seam closes twice by arithmetic that does not depend
+            on the digest: 416274 plus 21208 is 437482, which is this
+            document's byte count, and 7000 plus 338 is 7338, which is
+            its line count. Its three original refuse arms were fixtured
+            and all three exited non-zero and wrote nothing. THE LIMIT:
+            every one of those runs happened in a container that is not
+            Server A. A digest produced off-host is a prediction about
+            the host and not a measurement of it. The payload this entry
+            belongs to is reproduced on Server A by the operator, and it
+            is the on-host digest that authorises the append.
+
+    D331-7  THE GUARD'S COMPARISON VALUE NOW ENTERS AS AN ARGUMENT, AND
+            THERE ARE TWO NUMBERS WHERE D330 HAD ONE. The D330 guards
+            compared the payload against itself, so the guard on the
+            finding count passed and was correct while the sentence it
+            was meant to protect was false; that is FG-S331-C. The
+            rebuilt form separates the two questions and names them
+            differently. How many findings this ENTRY carries is checked
+            against a declared value. How many findings a SESSION
+            produced is checked as prior plus added. THE TWO NAMESPACES
+            ARE NOT EQUALLY GUARDED AND THE ENTRY SAYS WHICH IS WHICH.
+            For S330 the identity has three independent sources: the
+            prior of 8 was printed by RULE 0 in this session, the added
+            2 is computed from the emitted codes, and the total of 10 is
+            carried in from the sealed handoff, so any one of the three
+            can contradict the others. For S331 the prior is ZERO BY
+            CONSTRUCTION, because this is the first entry of that
+            namespace, and a term that is structurally constant tests
+            nothing about itself; that identity has two sources and
+            reduces to a check that the emitted count equals the
+            declared total. R11 applied to this entry's own guard. It
+            can fail on the count and it cannot fail on the prior;
+            fixtures with a wrong declared count, with one finding
+            omitted, and with a wrong prior all refused and wrote
+            nothing. The convention block and the boundary cases are
+            enforced the same way: a finding emitted before the
+            convention is declared, a MEASURED provenance that names no
+            set, a DECLARED provenance that names one, and a boundary
+            case named but not emitted each refuse.
+
+    D331-8  THE SEAT AND WORLD COUNTER STOPS GREPPING, AND THE PROOF HAS
+            A LIMIT WORTH STATING. The old counters counted lines of the
+            rendered payload containing a fixed substring, not codes
+            carried in a structure, and they were correct in D330 only
+            because the prefix places the label at a fixed offset. A
+            correction entry restates a seat and world split in prose,
+            so the substring reappears in paragraph text and is counted.
+            The label is now a field on the finding and the counters
+            read the structure. THE LIMIT: on a fixture carrying one
+            such paragraph the line counter returned 3 where the field
+            counter returned 2, and the divergence was demonstrated on
+            the SEAT arm only. The WORLD arm printed 2 and 2, because
+            the fixture planted one trap and planted it for one label.
+            The grep is removed for both; the proof covers one.
+
+    D331-9  THE LABEL CONVENTION IS DECLARED, NOT MEASURED, AND THE
+            BUILDER SAYS SO IN ITS OWN OUTPUT. The rule applied
+            throughout this entry: a defect in an INSTRUMENT, something
+            that measures, is SEAT, because the lineage of seats owns
+            its instruments regardless of which seat printed them; a
+            defect in a RECORD, something that states, is WORLD. The
+            distinction is the class of the object and not the identity
+            of the author. It was read from three cases and not
+            measured, namely case FG-S328-C where a guard inside an
+            append tool that could not fire was labelled SEAT; next, the
+            case coded FG-S328-E, where a classification in a document
+            that does not close was labelled WORLD; last, the case
+            coded FG-S330-D, where a section header contradicting its
+            own contents was labelled WORLD. AND IT IS MEASURED AGAINST
+            THE DOCUMENT IT WOULD GOVERN, WHICH IS HARDER THAN ANY
+            ARGUMENT FOR IT: of the 230 lines the strict census holds,
+            88 carry a SEAT or WORLD token two spaces after the code.
+            The convention this entry declares governs fewer than two in
+            five of the lines it would classify, 38.3 percent, and the
+            rest use at least three other shapes, a code with a period,
+            a code with lowercase prose, and a code opening a
+            capitalised sentence. THIS ENTRY MOVES THAT RATIO BY THREE
+            POINTS AND NO MORE. It adds twelve labelled lines, so after
+            it lands the figure is 100 of 242, which is 41.3 percent.
+            That second pair is ARITHMETIC AND NOT MEASUREMENT, declared
+            here rather than counted, because an entry that counts its
+            own effect is FG-S321-E and this document already carries
+            the correction for it. Three points against a document that
+            already holds 230 such lines is the distance between a
+            convention and a habit. AND IT HAS AS MANY BOUNDARY CASES AS
+            BASIS CASES. Three read, three at the edge, which means this
+            is not yet a convention; it is a hypothesis with a name. The
+            DECLARED token in the builder's output is not a hedge, it is
+            the accurate state, and the builder refuses a MEASURED token
+            that names no set. THE LEG THAT SETTLES IT, NOT RUN HERE:
+            STRICT_FG_OCC is 230, and one read-only gate can extract
+            every strict FG line, take the label as its second field,
+            and classify the class of object each one names. If the rule
+            holds at 230 it becomes a convention. If it does not, this
+            entry was right to mark it DECLARED and an entry that had
+            written it as settled would have been wrong. That leg is not
+            a luxury; it is the thing that will make the rule or kill
+            it.
+
+    D331-10  THE THREE BOUNDARY CASES, NAMED, BECAUSE A HYPOTHESIS IS
+             MEASURED BY ITS EDGES. FG-S331-B sits on the seam of object
+             and content: the S331 opener is a RECORD, but the sentence
+             at issue is a claim about what an INSTRUMENT will print. By
+             object it is WORLD, by content SEAT, and the call made was
+             SEAT. FG-S331-F and FG-S331-G are outside the rule
+             altogether: neither is a defect in an instrument nor in a
+             record, because both are assertions made inside an
+             instruction in a conversation, and the rule as read from
+             three cases has nothing to say about that class. All three
+             are registered in the builder's convention block, and the
+             builder refuses to emit if any of them is dropped from the
+             findings, so the edges cannot quietly disappear from a
+             later entry that reuses this machinery.
+
+    D331-11  THE LEDGER'S FINDING CENSUS WAS PUT TO THE DOCUMENT, AND IT
+             IS CLEAN IN THE DIRECTION THIS ENTRY FEARED AND WRONG IN
+             THE OTHER. The strict anchor is twelve spaces followed by a
+             code, and a six-character item code puts its continuation
+             lines at the same column, so a wrapped prose line beginning
+             with a code is indistinguishable from a finding. This
+             payload produced exactly that, and a guard added in this
+             session, which records the index of every anchor line as it
+             is emitted and refuses if any other line matches an anchor
+             shape, caught it on a real object rather than on a fixture.
+             THE BACKWARD QUESTION WAS THEN MEASURED. STRICT_DUP_ROWS is
+             ZERO: no code appears twice at twelve spaces, so nothing in
+             the counted set is a collision and 230 does not over-count.
+             IT UNDER-COUNTS INSTEAD. Eight lines carry a code at line
+             start outside the strict indent, which is 238 minus 230
+             measured in the same paste, and they are three kinds. Three
+             are finding headers of the pre-D313 convention at six and
+             four spaces, and the strict family breakdown begins at
+             FG-S313, so the shape does not reach the earlier entries at
+             all. Two, at lines 1488 and 1576, are wrapped prose lines
+             that begin with a code, which is the collision class
+             itself, present in this document at four and six spaces
+             rather than at twelve. Three, at 3167, 4116 and 4451, are
+             prose references at the finding continuation column of
+             twenty-three. THE NUMBER 230 IS THEREFORE THE COUNT OF
+             LINES AT ONE COLUMN MATCHING ONE SHAPE. It is not corrupted
+             by prose, it is not the number of findings in this
+             document, and the distance between those two statements is
+             the object. TWO NUMBERS THAT MUST NOT BE READ AS ONE.
+             Counted over the bytes of this append alone, the number of
+             code lines outside the strict indent is ZERO, and one such
+             line was found and reflowed during the final measurement
+             before the seal. Counted over the whole document after this
+             append lands, it remains EIGHT, because this entry repairs
+             none of them. The zero is a property of the append and the
+             eight is a property of the tree, and no byte count is given
+             for either, because a sentence that states the size of the
+             file it sits in changes that size when it is edited.
+
+    FINDINGS. THIS ENTRY CARRIES TWELVE, AND NINE IS NOT THE COUNT OF
+    ANY SESSION. The two numbers are stated separately and in different
+    words on purpose, because D330 merged them into one sentence and
+    that merge is the defect this entry corrects. Two of the
+    twelve, FG-S330-I and FG-S330-J, belong to the previous session;
+    with the eight already in this document they bring S330 to ten,
+    seven SEAT and three WORLD. Ten, FG-S331-A through J, belong to this
+    session, nine SEAT and one WORLD. Both totals are checked by the
+    builder against values that enter as arguments from outside the
+    payload, and it refuses if either fails. AND THE CONTENT OF THIS
+    ENTRY FROZE AFTER THE DUPLICATE-CANDIDATE LEG. Anything found after
+    that point belongs to S332 and not to this entry. D330 failed
+    because findings arrived after its seal, and the correction is not
+    to seal later but to state where the seal is, because an entry that
+    keeps absorbing findings has no seal at all and would repeat the
+    same defect with a larger number.
+
+            FG-S330-I  SEAT. A gate ran against a file that had not been
+                       uploaded and seven of its legs printed their
+                       passing value, because a leg shaped as a printf
+                       over a command substitution swallows failure into
+                       an empty or zero result, and empty and zero are
+                       the passing values for most of them. A check that
+                       passes on absence is not a check. The remedy is a
+                       refuse arm keyed on existence, placed above the
+                       measurement block, which says that nothing below
+                       it ran.
+
+            FG-S330-J  WORLD. The top-level file count in /tmp went from
+                       52 to 50 across three deletions and to 49 minutes
+                       later, with MODIFIED_LAST_HOUR at 0 beside a
+                       control at 510. Short-lived files appear and
+                       disappear there without the session writing them;
+                       runc-process and pytest-of-root entries are
+                       present and nothing is attributed. It was caught
+                       only by a BEFORE and AFTER pair, and that pairing
+                       is what makes it citable.
+
+            FG-S331-A  WORLD. The two RULE 0 paste files named in the
+                       session opening never arrived. What arrived was
+                       their executed transcripts, command and output
+                       together, so the uploaded bytes could not be
+                       compared against the pinned digests. The pastes
+                       were recovered by reconstructing the command line
+                       from the transcript and matching sha256
+                       preimages, 5036909b over 662 characters and
+                       68a610a0 over 6676. Arrival is not evidence, and
+                       neither is a filename.
+
+            FG-S331-B  SEAT. The S331 opener lists PDF_TRACKED 1,
+                       WEBSITE_TRACKED 332 and website/docs 2 under the
+                       heading of state the pastes must reproduce, and
+                       neither paste carries a leg that produces any of
+                       the three; all three strings are absent from both
+                       bodies. WEBSITE_TRACKED is corroborated sideways
+                       because the mirror checker prints its own tracked
+                       count of 332. The other two are inherited S330
+                       values that no instrument in this session could
+                       redden. An expectation with no instrument is
+                       weaker than a check that passes on absence,
+                       because it cannot run at all.
+
+            FG-S331-C  SEAT. The D330 builder's guards compare the
+                       payload against itself. The guard on the finding
+                       count passed and was correct, because the entry
+                       does contain eight findings; the false sentence
+                       was a claim about the session, of which the
+                       payload holds no representation. The reflex
+                       remedy, one more arithmetic guard, would have
+                       built an instrument that cannot see this class at
+                       all.
+
+            FG-S331-D  SEAT. A dead leg sat inside the D330 builder
+                       content: a list comprehension assigned to a name
+                       that is never read. It is trivial, and it is
+                       inside an instrument whose entire claim is
+                       arithmetic. It is recorded rather than removed in
+                       silence, because a small finding costs a line and
+                       a suppressed convention costs the convention.
+
+            FG-S331-E  SEAT. The label counters counted lines of the
+                       rendered payload containing a fixed substring
+                       rather than codes held in a structure. They were
+                       right in D330 only because the prefix places the
+                       label at a fixed offset, and a correction entry
+                       restates a split in prose, where the substring
+                       appears again and is counted. On a fixture
+                       carrying one such paragraph the line counter
+                       returned 3 where the field counter returned 2.
+
+            FG-S331-F  SEAT. Content of a sealed file was asserted
+                       without any instrument having printed it in the
+                       session where it was asserted, and the assertion
+                       was made inside an instruction, from where it
+                       became the premise of an item in this entry. The
+                       S330 measurement record was said to name both new
+                       findings; it names neither, and FG_CODES_DISTINCT
+                       is 8. The file caught it, not the check that
+                       should have.
+
+            FG-S331-G  SEAT. The correction of F was itself unmeasured
+                       and pointed the other way. The two findings were
+                       said to exist only in the transcript, and the
+                       sealed handoff a037a710 carries both, two
+                       occurrences each. Correcting an unmeasured claim
+                       with another unmeasured claim is the FG-S330-B
+                       class raised one level: there a blind spot was
+                       declared and was the wrong one, here an absence
+                       was declared and was the wrong absence. It holds
+                       its own letter because the house gives a code to
+                       the repeated instance, as FG-S330-H did; merged
+                       into F, the second instance would disappear.
+
+            FG-S331-H  SEAT. The strict finding anchor and the
+                       continuation column of a six-character item code
+                       are the same twelve spaces, so a wrapped prose
+                       line beginning with a code is counted as a
+                       finding. This payload carried nine findings and
+                       measured ten strict lines before the fix. The
+                       same defect was then looked for in the document
+                       and the direction was wrong: at twelve spaces
+                       there are no duplicates at all, while two
+                       instances of the class sit at four and six
+                       spaces, outside the counted set. Predicting the
+                       direction of an error is not the same as finding
+                       it.
+
+            FG-S331-I  SEAT. A discriminator was built from a convention
+                       assumed to be universal. The leg required a SEAT
+                       or WORLD token two spaces after the code,
+                       returned 88 of 230, and the shortfall was read as
+                       collisions when it was adoption. The prediction
+                       fell in the right direction for a reason it had
+                       not named, which is a miss and not a hit. This
+                       lands the rule proposed and never adopted: before
+                       a census, name what else the shape can match.
+
+            FG-S331-J  SEAT. Three duplicates were predicted for a
+                       strict leg from an arithmetic performed over the
+                       loose set, 238 minus 235, while the strict set
+                       holds 230 and eight lines sit at another indent.
+                       The three could have been wholly inside those
+                       eight, wholly outside, or split, and measurement
+                       returned wholly inside at zero strict duplicates.
+                       Carrying a number from one measurement shape onto
+                       a different shape is the dominant error family of
+                       this seat lineage, and it happened one message
+                       after the finding that names it. Caught by the
+                       operator, not by an instrument.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code that ships and
+    authorises none. It edits no sentence already on this page; it is an
+    append. It does not amend the S330 measurement record, which is
+    sealed at eight and pinned by digest. It does not correct D330-12,
+    which is a dated measurement. It does not run the 230-line
+    classification leg and does not promote the label convention to
+    MEASURED; the rule stands DECLARED and unverified outside the three
+    cases it was read from, at 88 of 230 adoption. It does not repair
+    the two collision lines at 1488 and 1576, does not extend the strict
+    census to the pre-D313 shapes, and does not reclassify the eight
+    lines it counted. It does not correct
+    website/high-assurance.html:207 or any other false surface, does not
+    touch the manifest, claims.toml or the guard, does not decide P3 or
+    P5, does not close D2, does not move the floor and does not cut a
+    release. It does not repair the four remaining orphans, does not
+    resolve the acceptance record that lives only on a third-party page,
+    does not raise manifest_version, does not address the
+    canonicalization difference between the chain links, and does not
+    build the durability guard, which is a capability and needs its own
+    gate. It does not verify supersedes_digest, which remains inherited
+    and unmeasured.
