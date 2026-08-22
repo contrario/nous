@@ -6998,3 +6998,341 @@ document itself.
     track. It carries no material from those tracks. It edits no
     sentence already on this page; it is an append, and it lands below
     the entry that made this page descend.
+
+  - S330 the pinned rationale is opened and gains a tracked mirror, the
+    formation does_not is settled against its accepted source, and the
+    entry that records it corrects its own number
+
+    THIS ENTRY IS WRITTEN IN S330 ABOUT S330. Every figure below was
+    printed by an instrument in this session and the gate that printed
+    it is named. Nothing is inherited except where a line says so, and
+    section 12 of this entry lists what was carried without measurement.
+
+    THE PROVENANCE. Ten prediction gates, 297 declared, 251 hit, 7
+    missed, 39 declined, and the identity held on every row and on the
+    total when re-added by instrument. Six gates scored zero misses. The
+    five gates that moved bytes scored 80.6, 94.7, 93.3, 93.8 and 92.0
+    percent. Every value also travels in an operator artifact,
+    NOUS_S330_MEASUREMENT_RECORD.md, sha d1cc4570, 24243 bytes, 562
+    lines, maxlen 67, which is not in this repository. R24 applied by
+    this entry to itself.
+
+    THE OPENING STATE, AND THE CLOSING STATE. Opened at HEAD 54eda86
+    with origin equal, AHEAD 0, AHEAD_OF_TAG 77 and PORCELAIN_LINES 3.
+    Closed at 00aa938 with AHEAD_OF_TAG 78 and porcelain unchanged. This
+    document was c5bb454f at 7000 lines and 416274 bytes throughout,
+    worktree equal to origin, and it is untouched by everything below
+    except this append.
+
+    D330-1  RULE 0 IN S330, AND THE SEVEN CONTROLS FIRED. Paste one was
+            unchanged at 5036909b, 662 characters, 14 legs. Paste two
+            was the S329 rebuild at c702741a, 6300 characters, 79 legs,
+            both extracted from the supplement bytes and proved by
+            digest, length identity, leg count and containment rather
+            than retyped. Sixty-eight assertions were enumerated by
+            instrument and all sixty-eight held. S329_HEAD_LINE printed
+            empty and D329_ANCHORED zero beside seven positive controls
+            that all fired: 6717, 5925, 5576, 6239, 5365, 4989 and 4740.
+            The paste was pasted twice and executed twice and every
+            asserted value was identical in both runs, which was not
+            designed and is a reproducibility control.
+
+    D330-2  THE OBJECT WAS LOCATED BY SIZE, NOT BY NAME. A search of
+            four roots for a file of exactly 29625 bytes returned ONE
+            hit in 450587 files, under the served docs directory and
+            named GLM_formation_layer_type_rationale.pdf. It was in no
+            tracked path and in no path under the repository. Two
+            measurements in the same gate shaped everything after it.
+            PIN_29625 was zero, so the byte count is pinned nowhere in
+            the tracked set and the phrase pinned by the manifest could
+            not mean a size pin; the comparison value did not yet exist
+            in any document this seat held, which is the FG-S329-B
+            class. LOG_GATE4B was zero across 748 commit subjects beside
+            LOG_GATE4A_CONTROL at one, a2b2bf7 from S296, so the arms
+            disagreed and the leg worked: Gate 4b is not a repo-attested
+            label and nothing was built on it until its definition was
+            read.
+
+    D330-3  THE PIN WAS ENFORCED INSIDE THE GATE, NOT BY EYE. Both
+            manifests were read whole. public_anchors carries six
+            entries and exactly one bears a sha256, identical in the
+            live manifest and in the 5.37.0 archive, fad8c5a8 in the
+            short form this document uses, written in full in the
+            manifest itself and in the commit message of 00aa938. A gate
+            leg computed the digest of the served bytes and compared it
+            against the full value supplied as a hand-carried argument.
+            PIN_EQ printed YES and its negative control NO, and the same
+            comparator printed both values in a fixture. The nine
+            does_not entries were extracted from the bytes of both files
+            and their canonical digests were equal at 5106b15f, with
+            DN5_EQ_ACROSS YES and DN5_VS_DN6 as a negative control at
+            NO. That confirms M3 of the parallel record b9dcd89e from a
+            different instrument, at a different HEAD, after two appends
+            had landed.
+
+    D330-4  THE RATIONALE WAS OPENED. It had never been read by any
+            seat. Eleven pages, A4, PDF 1.4, unencrypted, produced by
+            ReportLab, CreationDate Thu Jun 11 07:13:11 2026 UTC, titled
+            Proposed layer_type Extension: formation. The extraction was
+            deterministic across two runs at 97d08d15 and differed from
+            the no-layout mode, so the control was not degenerate. Four
+            passages decide the question. Section 6.0 states that the
+            does_not entries are TYPE-LEVEL, what any conforming
+            formation manifest must declare, and that vendor-specific
+            capability declarations belong in operational_scope.does; it
+            names them the taxonomy-protective floor. Section 6.2 lists
+            the nine entries verbatim. Section 4.3 states that a
+            formation proof cannot execute, authorize, halt or intervene
+            and has no runtime surface at all. Section 9.0 states that
+            all capability statements in that section are
+            vendor-specific and belong to the implementation, not to the
+            type. Sections 8.1 and 9.4 cite does_not entries BY INDEX,
+            which is where the DN[n] notation originates.
+
+    D330-5  THE EXTERNAL SURFACE WAS FETCHED, AND IT MOVED THE GROUND.
+            The GLM specification page is at v2.0, schema 1.3. Its
+            Standard Status section records that the formation
+            layer_type and the source-anchored timing qualifier were
+            ACCEPTED ON 2026-06-12 following formal rationale review,
+            proposing implementation NOUS, reviewing maintainer EVIDE
+            Governance Lab, constituting schema_version 1.1, and it pins
+            the rationale digest as fad8c5a8, the same value. The
+            formation row is in the published controlled vocabulary
+            table with wording identical to Section 5 of the PDF. The
+            live EVIDE manifest was fetched at schema 1.2,
+            manifest_version 6.0, layer_type closure: does five,
+            does_not nine, and EDN[3] Enforce or control execution
+            standing BARE in a layer whose execution_capability is
+            false. Its composable_with_types now includes formation and
+            its composable_with_manifests names this manifest, so
+            composability is mutually declared at manifest-URL level,
+            alongside a third party at clarixo.fun. Its
+            manifest_signature.type is null. M4 of b9dcd89e is confirmed
+            on live bytes with one refinement: its rule as written does
+            not hold for index 8 in either manifest, where a clause
+            appears that names no other layer. The conclusion survives;
+            the rule is slightly stronger than the bytes support.
+
+    D330-6  THE STANDARD'S VALIDATOR PASSES FIFTEEN AND VERIFIES
+            NOTHING. The tool has no fetch mode; it rejected a URL as
+            invalid JSON twice. It validated PASTED bytes of the tracked
+            manifest, so a green there is a statement about a textarea
+            and not about the served surface, which is the FG-S244-A
+            distinction. The verdict was Manifest is valid, 15 passed, 0
+            failed, 0 warnings, with an informational note that
+            manifest_kind is not declared and defaults to layer. The
+            shape of the fifteen is one parse, eight presence checks,
+            three controlled-vocabulary checks and three type or format
+            checks. None of the fifteen verifies anything: the digest is
+            not recomputed, the tool states the field is present and
+            refers the reader elsewhere; supersedes_digest is matched
+            against nothing; no public_anchors URL is resolved; the
+            sha256 inside public_anchors is not checked against its
+            bytes; the Ed25519 signature is not mentioned. This is the
+            P4 plus P5 plus P6 shape recorded in the Trust Controls
+            investigation, appearing in a third-party tool. The genuine
+            positive is that layer_type formation PASSED the
+            controlled-vocabulary check: the standard's own tool
+            implements the extension this implementation proposed.
+
+    D330-7  GATE 4(b) IS WITHDRAWN AS SCOPED, AND THE THIRD OPTION IS
+            CLOSED. Section 3 of b9dcd89e offered its position as seat
+            judgement and not as evidence, and named the rationale PDF
+            as the cheapest item that could overturn it. The PDF does
+            not overturn it. It replaces an inferred convention with an
+            authored one: the nine entries are type-level normative text
+            in a document the maintainer accepted and pins by digest. It
+            also CLOSES the third option that section 3 held open.
+            Making the subject explicit inside DN[5] would convert a
+            type-level string into a vendor declaration, and Section 6.0
+            places vendor declarations in operational_scope.does, so
+            that remedy would take the manifest out of conformance with
+            the type it declares. The limit is recorded and is not
+            small: the PDF is this implementation's own submission,
+            EVIDE is independent with a weak mechanism, and the
+            maintainer's page bridges them but is online, undigested and
+            unsigned. Two legs, neither one both. That is a reason not
+            to call the conclusion proven, not a reason to avoid it. The
+            decision remains the operator's.
+
+    D330-8  THE CATHARSIS, AND WHY NO EXISTING COUNTER REACHES IT. The
+            manifest DN[5] is correct and closes;
+            website/high-assurance.html:207 is wrong, its subject is
+            NOUS and under ADR-0010 the runtime policy engine gates.
+            Thirty sessions treated these as one problem because they
+            contain the same words. They are two different sets and
+            NEITHER OBJECT IS INSIDE THE MEASURED ONE. DN[5] contains no
+            word monitor, and line 207 is on the enforcement axis. This
+            was measured: MONITOR_ANY 172, FALSE_SUBJECT 139,
+            NEW_SUBJECT 25, with both subsets confirmed against their
+            own counters and OVERLAP zero in both directions beside a
+            control that fired, so the residual is exactly 8 lines whose
+            subject nobody has read. Any arithmetic over 139 that claims
+            to describe either object is measuring something else. P3
+            and P5 cannot be built on these three counters.
+
+    D330-9  THE MIRROR LANDED, AND FOUR READERS AGREED. Commit 00aa938
+            added website/docs/GLM_formation_layer_type_rationale.pdf at
+            mode 100644, blob d24153c0f6cc6f9d1c5bdc29002a0b7422316bf7,
+            and was pushed as a fast-forward from 54eda86 with no force.
+            The bytes were digested by four independent readers, all
+            returning fad8c5a8: the worktree copy, the index through git
+            cat-file, the commit through git cat-file, and origin/main
+            after a fresh fetch, with git ls-remote confirming the ref
+            from the server rather than the local ref. Preconditions
+            were measured before the write and all were clear: the
+            target was not ignored while the ignore control fired at
+            .gitignore:6, there is no .gitattributes and core.autocrlf,
+            core.safecrlf and core.hooksPath are all unset so no
+            conversion applies, fourteen hook files exist and none is
+            executable, and PIN_331 returned 41 hits with ZERO of them
+            under tests, so no test pins the mirror counts. The served
+            surface was measured after the write: digest and mtime both
+            unchanged beside a negative control at NO. After: website
+            tracked 331 to 332, website/docs 1 to 2, PDF_TRACKED 0 to 1,
+            mirror 332 compared 332 differ 0 missing 0 with
+            orphan_served falling 5 to 4 and RESULT CLEAN, suite 2872
+            passed and 12 skipped, AHEAD_OF_TAG 77 to 78. No deploy is
+            owed: deploy_website.sh is additive with no --delete and
+            refuses on a dirty website, and the next rsync finds the
+            file already identical at the served path.
+
+    D330-10  THE CLAIM LINTER DID NOT MOVE, AND THE REASON WAS READ NOT
+             ASSUMED. LINT scanned 421 files before and after with rc 0
+             and 0 violations. The reason is in the bytes:
+             scripts/claim_lint.py at b6380185 dispatches on suffix at
+             lines 938, 943 and 945 for .py, .html and .md with no else
+             branch, and claims.toml at f9919834 sets include to those
+             three globs. A .pdf never enters the set. Neither does a
+             .json, and website/.well-known is additionally in
+             exclude_dirs. THE MANIFEST does_not HAS NO COUNTER AND
+             CANNOT ACQUIRE ONE FROM THIS LINTER AS CONFIGURED. The same
+             gate reproduced the claims.toml measurement recorded in
+             D309-3 at 190 lines, 8733 bytes and sha f9919834, unchanged
+             across thirty sessions.
+
+    D330-11  THE FOUR REMAINING ORPHANS ARE NOT LOOSE FILES. Every one
+             is a download target linked from tracked, deployed HTML:
+             website/pitch.html at 68, 69, 74 and 76 for
+             NOUS_FinQuest_2026.pdf and at 70 and 76 for the pptx;
+             website/lending.html at 281 and 283 for loan_dossier.zip
+             and at 346 and 348 for loan_dossier_tampered.zip. None is
+             reproducible byte-identical. lending.html:283 instructs the
+             reader to unzip the dossier and run verify_offline.py, so
+             if that file is lost the page instructs the reader to do
+             something impossible, and loan_dossier_tampered.zip is the
+             artifact that demonstrates the guard failing closed. The
+             class is not the pinned PDF. The class is every byte the
+             served surface promises with no guard governing its
+             lifecycle. This entry measures them and repairs none of
+             them.
+
+    D330-12  THIS ENTRY CORRECTS ITS OWN NUMBER. It was called D329 in
+             every message of this session, carried from the opener and
+             repeated without being checked. The head lines of this
+             document pair with the anchors by session number, which was
+             measured in GD1: head S328 at 6717 with D328_ANCHORED 12,
+             while S329 and S330 printed empty heads with D329 and D330
+             both at zero anchors. D329 is the entry that would record
+             session 329, which produced none. The entry for this
+             session is D330. R21 applied to the entry by its own
+             author. The FG-S330 namespace was censused before any code
+             was assigned: FG_S330_OCC and FG_S330_LOOSE were both zero,
+             beside a control where FG-S328 returned 8 strict and 8
+             loose, so strict and loose agree and no second writer holds
+             this namespace.
+
+    FINDINGS. Eight were named in S330, six the seat and two the world,
+    and six plus two is eight; the addition was performed while writing
+    this entry and both numbers were produced by counting the codes
+    emitted below rather than read from prose. One of the two world
+    findings was DOWNGRADED during the session by a measurement taken
+    after it was raised. Six of the eight are one defect: a shape that
+    matched something other than the object, or an instrument whose
+    behaviour was assumed rather than measured. That is the same family
+    this document has recorded in every entry since D325.
+
+            FG-S330-A  SEAT. Four PDF readers were predicted MISSING on
+                       the host. Two were present at /usr/bin. One
+                       cause: a prior about a single different tool was
+                       generalised into a claim about the host. One data
+                       point about another tool is not a measurement.
+                       The miss was useful; no installation was needed.
+
+            FG-S330-B  SEAT. The literal string DN[5] was predicted to
+                       appear in both manifests. It appears in neither,
+                       because DN[5] is an index notation and not a
+                       token in the bytes; its origin is the rationale
+                       PDF, which cites entries by index. Worse, a blind
+                       spot WAS declared for that leg and it was the
+                       wrong one, JSON escaping of brackets. A
+                       declaration is not an enforcement.
+
+            FG-S330-C  WORLD, DOWNGRADED. The anchor label reads
+                       Accepted while the document bytes read submitted
+                       for formal review. Raised as a defect, then
+                       resolved by the maintainer's page recording
+                       acceptance on 2026-06-12 against the same digest.
+                       The label is true about the world. The residual
+                       is that an offline reader holding the manifest
+                       and the PDF cannot reach that fact, which breaks
+                       the S263 and S264 decision that offline
+                       verification is dossier-embedded. That is
+                       recorded as owed, not as a defect of the label.
+
+            FG-S330-D  WORLD. The parallel record b9dcd89e heads its
+                       section 5 FIVE, ALL ONE CLASS, contains six
+                       bullets by instrument, and closes SIX OF SIX. The
+                       header was not updated when the sixth was added,
+                       inside the section that documents that very
+                       class.
+
+            FG-S330-E  SEAT. WEBSITE_DOCS_TRACKED was predicted zero and
+                       is one; website/docs/index.html already existed.
+                       The target directory was assumed absent rather
+                       than measured. The miss confirmed the mirror path
+                       by instrument instead of by inference.
+
+            FG-S330-F  SEAT. Three specific reds were predicted from the
+                       GLM validator and none fired. One cause: this
+                       seat could not retrieve the validator page and
+                       predicted its behaviour as though it had measured
+                       it. Same family as A. The error was productive,
+                       because chasing it exposed that the tool does not
+                       recompute the digest at all.
+
+            FG-S330-G  SEAT. The staged PDF was predicted to render as a
+                       binary diff. Git rendered 289 insertions. The
+                       fixture had been built from a synthetic file of
+                       NUL bytes, which guarantees binary detection, so
+                       it proved the leg ran rather than predicting the
+                       object. Failure Class 1. Integrity was unaffected
+                       and was verified by digest. It exposes a latent
+                       risk: git does not classify this file as binary,
+                       so a future .gitattributes with text=auto, or
+                       core.autocrlf, WOULD apply EOL conversion to it.
+                       Both are unset today.
+
+            FG-S330-H  SEAT. An anchored grep for D309-3 assumed the
+                       four-space anchor convention, returned empty, and
+                       empty is not zero. The document had already
+                       printed the body's location in a line this seat
+                       had read. Third instance in this session of the
+                       same family, and item two of section 5 of
+                       b9dcd89e is the same error.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code and authorises none.
+    It corrects no byte of the manifest, does not re-sign, does not
+    touch claims.toml or the guard, and moves no byte under
+    website/.well-known or website/blog/index.html. It does not correct
+    website/high-assurance.html:207 or any other false surface, does not
+    decide P3 or P5, does not close D2, does not move the floor and does
+    not cut a release. It does not repair the four remaining orphans,
+    does not resolve the acceptance record that lives only on a
+    third-party page, does not raise manifest_version, does not address
+    the canonicalization difference between the chain links, and does
+    not build the durability guard those findings argue for, which is a
+    capability and needs its own gate. It does not verify
+    supersedes_digest, which remains inherited and unmeasured. It edits
+    no sentence already on this page; it is an append, and it lands
+    below the entry that made this page descend.
