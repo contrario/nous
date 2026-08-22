@@ -6713,3 +6713,288 @@ document itself.
     of which has moved, and it carries no material from the tracks that ran
     beside S325. It edits no sentence already on this page; it is an
     append, and it is the append that makes this page descend.
+
+  - S328 two owed entries land in one arc, the ledger is made whole, and
+    the entry that records it pins the document it was written from
+
+    THIS ENTRY IS WRITTEN IN S329 ABOUT S328, and it records the session
+    that closed the hole this document carried for three consecutive
+    sessions. S328 landed D327 and D325 and wrote nothing about itself,
+    which is the debt this entry discharges. Nothing below is claimed to
+    have been measured in S329 except where a line says so.
+
+    THE PROVENANCE OF EVERY NUMBER BELOW. Every figure was printed by an
+    instrument in S328 and travels in NOUS_SESSION_328_HANDOFF.md, sha
+    9be737a6, 10957 bytes, 246 lines, byte-verified at the opening of
+    S329 before it was read. That handoff is untracked and is not in the
+    repository, and it is the first source a ledger entry in this
+    document has pinned by digest; item 12 records why that is new. Its
+    two companion documents were verified in the same gate and are named
+    where they are used: the opener at b8021f9a with 10583 bytes and the
+    supplement at 86008080 with 14540 bytes. R24 applied to this entry
+    by its own author.
+
+    THE INSTRUMENTS OF S328, AND THE STATE RE-MEASURED IN S329. Twenty
+    gates and two commits. The state at the S328 seal was re-measured
+    live in S329 at the same commit and reproduced exactly: HEAD
+    3e29b22, origin equal, AHEAD 0, BEHIND 0, AHEAD_OF_TAG 76,
+    PORCELAIN_LINES 3, suite 2872 passed and 12 skipped, LINT rc 0 over
+    421 files with 0 violations, MIRROR rc 0 CLEAN over 331 tracked
+    files with 5 orphans, and this document at 288cd831 with 6715 lines,
+    398809 bytes, MAXLEN 79, NONASCII 0, TRAILWS 0, HEADS_TOTAL 37 and
+    STRICT_FG_OCC 214. Sixty-eight assertions were scored against that
+    state and all sixty-eight held. Those figures are inherited AND
+    re-measured. Everything else below is inherited only.
+
+    D328-1  RULE 0 IN S328, AND PASTE TWO REBUILT A THIRD TIME. Paste
+            one was unchanged at 5036909b, 662 characters, 14 legs.
+            Paste two was the S327 rebuild at 7db4a184 with 75 legs and
+            it scored 69 for 69 with 4 declines. All four positive
+            controls fired: S326 printed 5576, S324 5365, S323 4989 and
+            S322 4740, while S327 and S325 printed empty. It was then
+            rebuilt for S329 to b0b1391a with 77 legs, and the rebuild
+            was proved by anchor uniqueness at one each, by a length
+            identity of 5924 plus 188 making 6112, and by a round-trip
+            sha equality back to 7db4a184. Two legs were added,
+            S328_HEAD_LINE and D328_ANCHORED. A third edit corrected the
+            L0 PROVENANCE line, which declared S327 where the values it
+            compares against are now printed in S328. That is the third
+            consecutive session to find a false provenance inside the
+            instrument and correct it the same way.
+
+    D328-2  D327 LANDED. Twelve items, seventeen findings, 314 lines,
+            from a candidate at 407671c1 of 19310 bytes applied by a
+            tool at c8a39221 of 5573 bytes. c75bf79 became 8c3d35a. The
+            entry was owed because S327 held the handoff for S324 and
+            the frozen payload for S326, wrote both, and wrote nothing
+            about itself.
+
+    D328-3  D325 LANDED, AND THE HOLE IS CLOSED. Fifteen items, thirty
+            findings, 478 lines, from a candidate at f941ec80 of 29409
+            bytes applied by a tool at 81b6e24c of 5573 bytes. 8c3d35a
+            became 3e29b22. D325 had been owed since S326 and was
+            UNWRITEABLE in three consecutive sessions because its sealed
+            handoff was in no seat's context. The operator produced both
+            halves in S328, they were byte-verified, read whole, and the
+            entry was written from them. Both commits were verified by
+            reading the blob back from origin/main with git cat-file and
+            not from the worktree. D325 IS NO LONGER OWED.
+
+    D328-4  THE LEDGER DESCENDS, AND IT WAS DELIBERATE. D327-4 recorded
+            that the heads of this document were non-decreasing by
+            session, 33 for 33 and then 35 for 35, and declared that
+            regularity a measured property and not an invariant. D325
+            landed BELOW S327 because the ledger only appends and an
+            insertion is not an append. HEAD_ORDER_DESCENDS printed YES
+            from the origin bytes in the same gate that pushed it, and
+            the two head lines were printed again in S329 at 5925 for
+            S327 and 6239 for S325. Any future detector of monotone head
+            order will go red here and will be right to. D325-15 carries
+            the reason in the document itself.
+
+    D328-5  THE TWO S325 DOCUMENTS, READ WHOLE. The seal at f56ba8e7,
+            26516 bytes and 543 lines, and the addendum at eb87db37,
+            17502 bytes and 362 lines. The seal carries eighteen finding
+            entries, A through R, nine seat and nine world. The addendum
+            carries twelve, S through AD, nine seat, two world and one
+            withdrawal. UNION 30, OVERLAP 0, both printed by an
+            instrument. The inherited claim that eighteen of the thirty
+            lived only in the seal was exactly correct, and it was the
+            reading of the file whole that separated twelve entries from
+            six references.
+
+    D328-6  THE WRITE ARC, AND THE GUARD THE SECOND TOOL ADDED. The
+            sequence was the same for each entry and every step was its
+            own gate: a landing census with existence resolved before
+            any reader ran and every leg printing ABSENT rather than
+            zero; a tool census with the digest as an ENFORCING guard; a
+            dry run; the apply; the stage; the commit; the push; and the
+            blob read back from origin. THE D325 TOOL CARRIED A GUARD
+            THE D327 TOOL DID NOT: it pins the full git blob identity of
+            the target and computes it independently, verified against
+            git hash-object on a known pair before use. Its fixture
+            proved the guard is not redundant, because a same-length
+            mutation passed the byte count and was caught by the blob.
+            The commit guard pins the HEAD it expects and it fired in
+            fixture three times.
+
+    D328-7  THE FOUR ARTIFACT DIGESTS, RECORDED HERE BECAUSE THEY EXIST
+            NOWHERE ELSE. Neither D327 nor D325 names the tool that
+            applied it, and a census over this whole document in S329
+            returned zero for both tool digests beside controls at two
+            for 02cda4e2 and two for 1cf1e3d7. The convention this
+            document already follows is that an entry records the
+            artifacts of the entries before it, which is why they are
+            here:
+
+            d327_append.txt  407671c1  19310 bytes  314 lines
+            append_d327.py   c8a39221   5573 bytes  161 lines
+            d325_append.txt  f941ec80  29409 bytes  478 lines
+            append_d325.py   81b6e24c   5573 bytes  172 lines
+
+            The payload bytes are inside this document and the two tools
+            are reproducible from these pins and nowhere else on the
+            host, which is the class this document records at the
+            served-orphan finding of S250. Whether these pins are
+            sufficient to reproduce what they name was tested in S329
+            and is recorded at item 12.
+
+    D328-8  THE PREDICTION RECORD OF S328. 383 declared, 379 hit, 4
+            missed, 23 declined and 13 unevaluated, counted with awk
+            over a gate-by-gate file whose own identity leg asserts that
+            hits plus misses equals declared. It printed YES. Every miss
+            happened before any byte moved.
+
+    D328-9  THE OPERATOR ARTIFACTS WERE DISPOSED AND THE ABSENCE WAS
+            MEASURED, BECAUSE SILENCE IS NOT EVIDENCE. rm prints nothing
+            on success and nothing on absence. Four legs printed PRESENT
+            before and ABSENT after, a name census printed 0, the entry
+            count under /tmp fell by exactly four from 265 to 261, and a
+            positive control printed PRESENT for a file that still
+            exists. The four fixture roots went with them.
+
+    D328-10  SEVEN OF THE EIGHT FINDINGS ARE SEAT, AND THE DOMINANT
+             DEFECT IS COUNTED THREE DIFFERENT WAYS. The eight are in
+             the findings block below, seven seat and one world, and
+             those two numbers were produced by an anchored pattern over
+             the source rather than read from its prose. The defect the
+             seat findings share is the shape measuring something other
+             than the object, which this document already records at
+             fourteen of eighteen for S325, nine of fifteen for S326 and
+             five of ten for S327. FOR S328 THERE IS NO SINGLE NUMBER.
+             The source states five of seven and then lists four codes
+             in the same sentence, and the S329 opener states four of
+             six against a seat count that measures seven. The
+             enumeration is four. The number carried forward is the
+             enumeration and not the prose, and the disagreement is
+             recorded at item 12 rather than resolved by choosing.
+
+    D328-11  WHAT S328 DID NOT DO. It wrote no code, no config and no
+             served byte. D328 itself was owed and is discharged by this
+             entry. It did not open docs/CLAIM_LINT.md, decide P5, close
+             D2, build E4, move the floor or cut a release.
+
+    D328-12  WHAT THE SEAT THAT LANDED THIS ENTRY ADDS, MARKED AS SUCH.
+             Six things, none of them measured in S328. FIRST, THIS
+             ENTRY PINS ITS OWN SOURCE, and no entry in this document
+             ever has. A census in S329 returned zero occurrences of
+             9be737a6 in these 6715 lines beside a control at one for
+             1a94a0f2, which D327 does pin. An entry that names the
+             session it records but not the bytes it was written from
+             leaves its own provenance unverifiable. SECOND, THE PINS OF
+             ITEM 7 WERE TESTED AND THE TWO PAYLOADS DID NOT COME OUT
+             EQUAL. The D327 payload was reconstructed in a container
+             from the bytes of lines 5924 to 6237 as they arrived
+             through the transport, and its digest, byte count and line
+             count reproduced the pin at 407671c1, 19310 bytes and 314
+             lines: THREE independent producers agreeing. The D325
+             payload agreed across TWO, the span digest printed on the
+             host and the pin, at f941ec80, 29409 bytes and 478 lines.
+             It was not reconstructed independently. Stating both as
+             proved in one sentence was itself an instance of the defect
+             at item 10. THIRD, THE HOUSE SHAPE WAS MEASURED FROM THE
+             BYTES of both entries rather than read from a handoff. The
+             head sits at indent 2 with no double dash and continues at
+             4; three preamble paragraphs sit at 4; an item anchor sits
+             at 4 with two spaces after the code, so a single-digit code
+             puts text at column 13 and continues at 12 while a
+             two-digit code puts text at column 14 and continues at 13;
+             a sub-list sits at its item's continuation indent AND WRAPS
+             AT THAT INDENT PLUS TWO, which is six lines inside D325-13
+             and a bucket D327 does not have at all; a finding anchor
+             sits at 12 with two spaces, so a one-letter code puts text
+             at column 24 and continues at 23 while a two-letter code
+             puts text at 25 and continues at 24; a blank line precedes
+             every item and every finding; and the closing paragraph
+             sits at 4. FOURTH, THE PRACTISED WRAP IS NOT THE STATED
+             ONE. D327 has MAXLEN 76 and D325 has MAXLEN 75, and neither
+             carries a single line at 77 or beyond, against a document
+             MAXLEN of 79 and a limit of 79 stated in every seal. A
+             payload built to 79 passes the guard and is outside the
+             house, and this entry was built to 76. FIFTH,
+             scripts/rule0.sh GAINS A PINNED DIGEST at 074e51af. RULE 0
+             paste one computes the full sha256 as its first act and
+             prints all sixty-four characters at every opening, and a
+             census returned zero occurrences of that prefix in this
+             document beside a control at one for 5036909b. A check
+             whose comparison value does not exist cannot go red. SIXTH,
+             THE CLAIM GUARD PRINTS A RESERVED WORD INTO EVERY
+             TRANSCRIPT. Its output carries one sentence in which PROVES
+             appears in the negative, disclaiming what the scan
+             establishes. That is correct usage and is not a defect; it
+             is recorded because P3 will census that axis and the line
+             lands wherever the guard runs.
+
+    FINDINGS. Eight were named in S328, seven the seat and one the
+    world, and seven plus one is eight; the addition was performed while
+    writing this entry and both numbers were produced by an anchored
+    pattern over the source rather than read from its prose, for the
+    reason item 10 gives. Four of the seven seat findings are the one
+    defect this document has recorded in every entry since D325.
+
+            FG-S328-A  SEAT. The house shape as the S328 supplement
+                       states it is bound to a single-digit item code.
+                       Sixteen lines stood at indent thirteen and all
+                       were the continuation of D326-10. The rule is
+                       that the continuation aligns under the text;
+                       column 13 is the single-digit case of it.
+
+            FG-S328-B  SEAT. A file state was predicted that depended on
+                       an operator action not yet taken. That is an
+                       assumption and not a prediction.
+
+            FG-S328-C  SEAT. A guard inside the D327 append tool could
+                       not fire: it sat after a whole-file digest guard,
+                       so its outcome was determined. R11 on the guard
+                       side. The D325 tool replaced it with a blob guard
+                       whose fixture proved it reachable.
+
+            FG-S328-D  SEAT. A census over the S325 addendum returned
+                       eighteen distinct codes, the same number as the
+                       inherited claim, by matching every mention rather
+                       than every entry. Reading the file whole
+                       separated twelve entries from six references. A
+                       coincidental agreement reddens nothing.
+
+            FG-S328-E  WORLD. The classification in the S325 addendum
+                       does not close. Its buckets carry fourteen
+                       entries but thirteen distinct codes, one code
+                       sits in two buckets, and two of the eighteen seat
+                       codes are in none. It sums because entries were
+                       counted and not codes.
+
+            FG-S328-F  SEAT. The two loose-but-not-strict FG families
+                       were predicted as FG-S250 and FG-S325 from a
+                       sentence in D326-9. They are FG-S308 and FG-S309.
+                       Rewrapping moved those two references into the
+                       middle of a line and not to another line start.
+
+            FG-S328-G  SEAT. A directory was predicted ABSENT because no
+                       run in that session could have created it. The
+                       premise was true and the conclusion did not
+                       follow: the directory is shared and something
+                       else made it.
+
+            FG-S328-H  SEAT. A filename in the container was reused, the
+                       later write silently replaced the earlier
+                       artifact, and the first seal of the S328 handoff
+                       embedded the wrong paste as RULE 0 paste one:
+                       2398 characters and 30 legs where the pin says
+                       662 and 14. IT WAS CAUGHT BY AN EXTRACTION
+                       CONTROL that re-derives the digest from the bytes
+                       that landed rather than trusting what was
+                       written. That control is a practice and not an
+                       anecdote: S329 applied it prospectively to a
+                       313-line span and to a 314-line reconstruction,
+                       and both reproduced their pins.
+
+    WHAT THIS ENTRY DOES NOT DO. It writes no code and authorises none.
+    It does not touch claims.toml or the guard, does not decide P5, and
+    corrects no false surface. It moves no byte under
+    website/.well-known or website/blog/index.html. It does not close
+    D2, build E4, move the floor, cut a release, clear the untracked
+    paths or amend the frozen fixture. It does not open the rationale
+    PDF and it assigns no FG code to any measurement taken in a parallel
+    track. It carries no material from those tracks. It edits no
+    sentence already on this page; it is an append, and it lands below
+    the entry that made this page descend.
