@@ -7777,3 +7777,368 @@ document itself.
     build the durability guard, which is a capability and needs its own
     gate. It does not verify supersedes_digest, which remains inherited
     and unmeasured.
+
+  - S332 the label convention settles as a shape and turns out to be an
+    axis change at S325, item B is measured whole and its class is
+    durability, and a uniqueness claim in the previous handoff is false
+
+    Ten gates. Two RULE 0 pastes run twice, five measuring gates, no
+    code changed, no served byte moved, and no deploy is owed. The
+    session opened on the board item I and closed four questions that
+    were not on the board at all.
+
+    THIS ENTRY CARRIES TWO FINDING NAMESPACES. FG-S331-K through P are
+    the six items that were found in S331 after the content of D331
+    froze; a code records when a finding was FOUND, so they belong to
+    that session. FG-S332-A through P are this session. D332-1 states
+    this so that nobody has to discover it with a grep.
+
+    D332-1  WHAT THIS ENTRY IS. Ten gates, all of them measurement, none
+            of them code. The two RULE 0 pastes, then GATE I over the
+            finding labels, GATE J over the labels and the lending
+            surface, GATE K and GATE L which extracted and ran the
+            served dossiers outside the repository, and GATE M over the
+            orphan set. The working tree is at d8ae567 at the open and
+            at the close, PORCELAIN three at both ends, and the gate
+            document digest b162cd0e unchanged until this append.
+
+    D332-2  AND IT IS NOT THE FIRST ENTRY TO CARRY TWO NAMESPACES. The
+            S331 handoff states that D331 was a first in this document.
+            That is false and GATE J measured it: S315_HEAD is at line
+            2926 and S316_HEAD at 3176, and FG-S314-K, L and M sit at
+            3160, 3163 and 3166, inside the D315 entry. The pattern is
+            at least sixteen sessions old. D332 is the third instance,
+            not the second.
+
+    D332-3  EVERY GATE OF THIS SESSION IS PINNED, WHICH D331 DID NOT DO.
+            S331 pinned two of its ten gates and named the gap as a
+            regression against the S330 shape. This session pins all
+            seven distinct pastes by digest, character count and leg
+            count, each verified before it ran: RULE 0 paste one
+            5036909b at 662 characters and 14 legs, RULE 0 paste two
+            1679d577 at 7433 and 89, GATE I d8521520 at 5431 and 43,
+            GATE J 6e8e858e at 6251 and 62, GATE K abf47838 at 6344 and
+            65, GATE L e22e8f41 at 5518 and 71, GATE M 3d060675 at 4454
+            and 56. The leg convention is top-level separators plus one,
+            with the pinned 14 of paste one as its positive control.
+
+    D332-4  RULE 0 RAN TWICE AND THE TWO RUNS ARE THE SAME TREE. The
+            first at 23:25:51 UTC and the second at 23:56:42, 1851
+            seconds apart. Server A uptime moved 267063 to 268914 and
+            Server B 2499363 to 2501214, both deltas 1851, so the wall
+            clock and both hosts agree and neither restarted.
+            Forty-eight declared values reconcile against the opener
+            with zero difference in each run and zero between the runs,
+            with a negative control firing at four lines. TWO RUNS OF
+            ONE INSTRUMENT IS REPEATABILITY AND NOT INDEPENDENCE; it
+            rules out a transient and it does not rule out a systematic
+            error in the instrument.
+
+    D332-5  THE LABEL CONVENTION IS SETTLED AS TO SHAPE. GATE I declared
+            its set, its shape and what it was blind to before counting,
+            and it settled the question D331 marked DECLARED. The two
+            shapes that have both been used for the strict finding line,
+            the BRE with twelve literal spaces and the ERE with an
+            interval, both return 242 and the delta listing is empty, so
+            they name the same set and the number 242 has not been
+            travelling as a measurement of something else. LABELLED_FG
+            is 100, the raw first token after the code has 33 distinct
+            values, and the separator between code and label is two
+            spaces on 223 lines, one on 16 and none on 3.
+
+    D332-6  A ZERO THAT HAS TRAVELLED FOR TWO SESSIONS IS NOW KNOWN TO
+            BE ALIVE. STRICT_DUP_ROWS is produced by an awk interval
+            expression. If the awk on the host did not support intervals
+            the pattern would be read literally and the leg would print
+            zero for every input, which is the defect class named in the
+            S332 opener. GATE I added the discriminator: the same shape
+            counted 242 matched lines, so the interval works, the awk is
+            GNU 5.2.1, and the zero is a measurement rather than a dead
+            leg.
+
+    D332-7  THE 41.3 PERCENT IN THE SEALED S331 RECORD DESCRIBES
+            SOMETHING OTHER THAN WHAT A READER WILL TAKE IT FOR. It is
+            arithmetic over a denominator that includes lines written
+            before the convention existed. Measured per family in GATE
+            I: the families FG-S313 through FG-S324 hold 152 strict
+            lines and none of them is labelled, and FG-S325
+            through FG-S331 hold 101 lines of which 100 are, the single
+            exception being FG-S325-W whose token is WITHDRAWN. It is a
+            step at S325 and not a gradual adoption.
+
+    D332-8  AND THE STEP IS AN AXIS CHANGE, NOT AN ADOPTION. GATE J read
+            the 142 unlabelled lines rather than counting them.
+            Sixty-six begin with a lowercase seat, ten with operator,
+            and the forms are readable: seat error, seat gap, seat error
+            caught by the operator, operator error, operator no
+            consequence, and operator and seat. BEFORE S325 THE AXIS IS
+            WHO. Three values, the seat, the operator, or both. AFTER
+            S325 THE AXIS IS TWO VALUES, SEAT AND WORLD, and the
+            operator slot has no member after FG-S324-L. No entry
+            records the change.
+
+    D332-9  WHICH MAKES THE RULE DECLARED IN D331 A THIRD THING AGAIN.
+            D331 declares that a defect in an instrument is SEAT and a
+            defect in a record is WORLD, and that the class of the
+            object decides rather than the identity of the author. That
+            rule contradicts the pre-S325 axis outright, since operator
+            error is an identity and nothing else, and it does not
+            describe the post-S325 use either: FG-S331-A is WORLD for a
+            transport event that is not a record, and FG-S331-D is SEAT
+            for a defect the record says the operator claimed. The
+            convention is settled as a shape and open as a meaning.
+
+    D332-10  ITEM B IS MEASURED WHOLE FOR THE FIRST TIME AND ITS CLASS
+             IS DURABILITY. The orphan count and the orphan list had
+             never been compared against each other. GATE M asked the
+             checker for its own list rather than its last line:
+             NOUS_FinQuest_2026.pdf, NOUS_FinQuest_2026.pptx,
+             loan_dossier.zip and loan_dossier_tampered.zip. The number
+             four and the four names carried in the handoff are the same
+             set. Each was then looked up singly and each is present
+             once.
+
+    D332-11  THE TWO ARCHIVES ARE HONEST AND THE PAGE IS ACCURATE. GATE
+             K extracted both under a digest guard shown passing and
+             refusing in the same gate, into directories outside the
+             repository, and ran the archived verifier in each. The good
+             dossier exits zero with a PASS verdict; the tampered
+             dossier exits one on a coverage.farkas.json digest
+             mismatch. The verifier is the same file in both archives at
+             f7447c65. GATE L then followed the served instruction
+             literally, where both lines name the same directory: the
+             eight members of the tampered archive land over eight of
+             the ten good ones, two survive, and the run still fails.
+             Nothing in the repository changed and both served archives
+             are unchanged.
+
+    D332-12  WHAT THE SIGNATURE DOES NOT COVER, AND IT MUST BE WRITTEN
+             DOWN SOMEWHERE. On the tampered dossier the Ed25519 check
+             PASSES. The manifest is intact and a file it names was
+             substituted, so what catches the substitution is the digest
+             chain recorded inside the manifest and not the signature
+             over it. Nobody in this house may ever write that the
+             signature catches tampering of the dossier contents. It
+             evidences that the manifest is the one that was signed.
+
+    D332-13  THE SUCCESS PATH EMITS A TOKEN AND THE FAILURE PATH EMITS
+             ABSENCE. Measured in GATE L with the streams separated. The
+             good run puts sixteen lines on stdout and nothing on
+             stderr, ending in VERDICT PASS. The failing run puts three
+             OK lines on stdout, the single FAIL line on stderr, and no
+             verdict token anywhere. A reader at a terminal sees both
+             streams and the page is not misleading. A consumer that
+             captures stdout must infer the failure from the absence of
+             a token. In a house whose subject is evidence, the negative
+             result has no name.
+
+    D332-14  WHAT REMAINS UNMEASURED AND MAY NOT BE USED AS A PREMISE.
+             The CLASS OF THE OBJECT for the 242 finding bodies; GATE I
+             settled the shape of the label and explicitly not this, and
+             76 bodies were read only to their first 60 characters.
+             Whether the claim_lint exclusion verify_*_offline.py has
+             any member at all in the tree, which is the class of D318.
+             Whether any served orphan is canonical, which no digest can
+             show while no generator is tracked. Whether the pre-D313
+             entries hold findings in shapes the strict census cannot
+             see. The subject of the eight residual monitor lines. The
+             GLM specification version, which two searches on two dates
+             failed to surface.
+
+    D332-16  THIS PAYLOAD WAS BUILT TWICE AND THE FIRST ONE WAS
+             REVERTED. The first build landed in the working tree and
+             raised the strict finding count of the document to 265
+             where 264 are findings, because a continuation line of
+             D332-7 began with FG-S331 at column twelve. The builder
+             guard against exactly that class used a shape narrower than
+             the census shape and did not see it. Nothing was committed
+             and nothing was pushed, so the undo printed before the
+             rename was sufficient and was used. The guard now uses the
+             census shape, a second guard requires the two shapes to
+             agree over the payload, and no FG-S token can begin a
+             wrapped line. FG-S332-Q.
+
+    D332-15  THE SIX ITEMS FOUND IN S331 AFTER ITS CONTENT FROZE ARE
+             CODED HERE AS FG-S331-K THROUGH P. They are recorded in
+             section 9 of the S331 measurement record b51ec27e and none
+             of them had a code. They are written into this entry under
+             the previous session because a code records when a finding
+             was found.
+
+    FINDINGS
+
+            FG-S331-K  SEAT. The operator wrote that the builder has
+                       twelve refuse arms. The seat neither corrected it
+                       nor measured it. Measured afterwards at
+                       MUST_CALL_SITES 32 and ARMS_TOTAL 18. The twelve
+                       was the operator, the silence was the seat, and
+                       the numbers are the seat.
+
+            FG-S331-L  WORLD. A file named build.py sat in /tmp at 2067
+                       bytes carrying the D330 builder 6fc455a6 rather
+                       than f7cbf954 at 7336, exactly where a command
+                       searching by name would have taken it. Found by
+                       size.
+
+            FG-S331-M  SEAT. Three py_compile legs in gate A targeted
+                       /dev/null and could not print OK for any input,
+                       because py_compile refuses a non-regular file. A
+                       check that fails on everything binds as little as
+                       one that passes on everything.
+
+            FG-S331-N  SEAT. Eighteen refuse arms ran red and seventeen
+                       guards were shown individually. The line_over_72
+                       and anchor_collision arms both report the anchor
+                       guard first and the output truncates, so whether
+                       the 72-column guard fired cannot be read from the
+                       transcript.
+
+            FG-S331-O  SEAT. D331-1 lists seven finding codes inside a
+                       six-character item whose continuation column is
+                       twelve, and it does not use the non-breaking glue
+                       that three other item bodies use. Its cleanliness
+                       is a property of that exact wrap and not a
+                       guarantee.
+
+            FG-S331-P  SEAT. Two sentences in the D331 draft stated the
+                       byte count and the line count of the file they
+                       lived in. Each was true when generated and false
+                       one edit later, and no arithmetic guard catches
+                       it because every value the builder can check is
+                       computed from the bytes that just changed. They
+                       were removed.
+
+            FG-S332-A  WORLD. The two RULE 0 paste files were absent
+                       from the first upload for the second consecutive
+                       session and their executed transcripts arrived
+                       instead, which is FG-S331-A repeating. The
+                       command lines were reconstructed from the
+                       transcripts and matched the pinned digests as
+                       preimages; when the files arrived later they were
+                       byte-identical to the reconstructions. The defect
+                       recurs and its cost this time was nothing.
+
+            FG-S332-B  WORLD. The session kickoff stated that no command
+                       had been run since the S331 seal while carrying
+                       two executed transcripts in the same message. The
+                       operator confirmed the pastes were run while this
+                       session was opening, after the opener and the
+                       handoff were written, so the sentence was stale
+                       and not a disagreement about state. Had the seat
+                       accepted it, RULE 0 would have been asked for a
+                       second time for nothing.
+
+            FG-S332-C  SEAT. A reconciliation leg compared a file
+                       against itself with diff and printed zero. It
+                       could not print anything else for any input.
+                       Repaired in the same message with a real
+                       comparator and a negative control that fired at
+                       four lines.
+
+            FG-S332-D  SEAT. The seat wrote that lending.html:283 sends
+                       the reader to a script that S264 withdrew. Two
+                       objects share that name: the standalone download,
+                       which was withdrawn, and the copy inside the
+                       archive, which was not. A conclusion about item B
+                       was written from the confusion. Caught by the
+                       operator.
+
+            FG-S332-E  WORLD. The two HTTP legs in the canonical RULE 0
+                       runner cannot fail. Measured by the operator: a
+                       control request for a path that does not exist
+                       returns 200 and the byte counts of the home page,
+                       a nonsense path and an env path are all 94682,
+                       because the site answers every path with the same
+                       single-page fallback. These legs open every
+                       session in this house.
+
+            FG-S332-F  SEAT. The board item F was carried into a written
+                       summary as a question addressed to the
+                       maintainer. Since 2026-08-23 it is a requested
+                       deliverable, the maintainer having asked for the
+                       rationale as a separate document. Carried from
+                       the opener without being checked against what the
+                       operator held.
+
+            FG-S332-G  SEAT. The seat wrote that it was handing over a
+                       paste as a file and handed over no file. A
+                       sentence declaring a deliverable that does not
+                       exist.
+
+            FG-S332-H  WORLD. The 41.3 percent in the sealed S331
+                       measurement record is arithmetic over a
+                       denominator containing 152 lines written before
+                       the convention existed. The number is correct and
+                       it describes a different thing from what its
+                       sentence will be read to mean.
+
+            FG-S332-I  WORLD. The S331 handoff asserts that D331
+                       carrying two finding namespaces is a first in
+                       this document. Measured false by GATE J. A
+                       uniqueness claim about a document written without
+                       measuring the document, which is the class D330
+                       belonged to.
+
+            FG-S332-J  WORLD. The label convention did not go from
+                       absent to present. It changed axis at S325, from
+                       a three-valued attribution of who to a two-valued
+                       classification, no entry records the change, and
+                       the rule declared in D331 describes neither axis.
+
+            FG-S332-K  WITHDRAWN. Recorded during the session as an
+                       unmeasured claim by the operator about the
+                       content of claims.toml. GATE M measured it: the
+                       operator was right, the exclusion is present and
+                       deliberate, and the seat instrument was blind.
+                       Withdrawn and superseded by FG-S332-P.
+
+            FG-S332-L  SEAT. GATE J printed the digest of the tampered
+                       archive and never its member listing, while
+                       printing both for the good one. An asymmetry the
+                       seat built into its own instrument, leaving one
+                       half of a two-sided object unmeasured.
+
+            FG-S332-M  WORLD. The tampered archive is not a minimally
+                       altered copy of the good one. It holds eight
+                       members against ten, omitting annex_iv_map.json
+                       and verify_annex_iv_map.py, and one shared member
+                       differs. The demonstration is honest and it is
+                       noisier than a reader comparing the two would
+                       expect.
+
+            FG-S332-N  WORLD. The archived verifier emits a VERDICT
+                       token on success and no token at all on failure.
+                       Measured with the streams separated: three OK
+                       lines on stdout, one FAIL on stderr, no verdict
+                       anywhere. A consumer reading stdout must infer
+                       failure from absence.
+
+            FG-S332-O  SEAT. The seat wrote that item B was closed after
+                       measuring two of its four members. A conclusion
+                       with a scope wider than the set that was
+                       measured, and the third instance of that class in
+                       this session.
+
+            FG-S332-Q  SEAT. The builder guard against a wrapped prose
+                       line beginning with a finding code used a shape
+                       narrower than the shape this house censuses the
+                       document with. The guard required a code with a
+                       dash and a letter; the census needs only FG-S and
+                       a digit. A continuation line beginning
+                       with FG-S331 passed the guard and would have
+                       raised the strict count of the document by one
+                       without being a finding. Caught by a missed
+                       prediction, not by the guard. The payload was
+                       reverted before any commit, every FG-S token is
+                       now bound to the word before it, and the guard
+                       moved to the wider shape.
+
+            FG-S332-P  SEAT. A fixed-string search for verify_offline
+                       was run against claims.toml and returned zero,
+                       and the zero was read as the file being silent.
+                       The field holds verify_*_offline.py, in which
+                       that substring does not occur. The shape missed
+                       the object and its absence was read as a fact.
+                       R27 asks what else a shape can match; this asks
+                       what a shape can miss.
+
