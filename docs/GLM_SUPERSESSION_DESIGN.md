@@ -8142,3 +8142,68 @@ document itself.
                        R27 asks what else a shape can match; this asks
                        what a shape can miss.
 
+    D332-17  TWO SENTENCES IN THIS ENTRY STATE A PROPERTY OF THE SESSION
+             THAT CONTAINS THEM, AND BOTH BECAME FALSE AFTER THE ENTRY
+             WAS SEALED. D332-1 opens by counting the gates of the
+             session. D332-3 asserts that EVERY gate is pinned and then
+             lists the pastes it pins. Both were true when the payload
+             was generated and both were false as soon as the session
+             continued, because landing this entry required further
+             gates: the builder transfer, the sidecar and rename, a
+             revert and a rebuild after the first attempt failed a shape
+             check, the commit, the push, and this correction.
+
+    D332-18  THE CORRECTION DOES NOT SUPPLY REPLACEMENT NUMBERS, AND
+             THAT IS DELIBERATE. Any count written here is subject to
+             the same defect the moment another gate runs, and another
+             gate must run to land these bytes. A ledger entry is
+             written from inside the session it describes and can
+             therefore never state a true total of that session. THE
+             RULE: an entry never states a number that counts the
+             session containing it. Such counts belong in the sealed
+             measurement record, which is written after the session ends
+             and can therefore be right. This generalises the fixed
+             point recorded as FG-S331-P, which named the case where a
+             sentence states the size of the file it lives in. The file
+             is one instance. The session is the other, and it is the
+             one that has now cost twice: D330 stated a finding count of
+             its own session and was wrong by two, and this entry stated
+             a gate count of its own session and was wrong by more.
+
+    D332-19  THIS BLOCK ALSO REPAIRS A SEAM THE D332 PAYLOAD BROKE. The
+             house rule, written in the S332 opener, is that the
+             document ends with a newline and its last line is NOT
+             blank, which is why a payload opens with one blank line.
+             The D332 builder carried a guard that REQUIRED its payload
+             to close with a blank line, so the document ended blank and
+             the next payload would have opened onto two. The guard
+             enforced a shape contradicting the documented rule and was
+             green the whole time. This block therefore opens with no
+             blank line, since the document already ends with one, and
+             closes with no blank line, which restores the invariant.
+
+    FINDINGS
+
+            FG-S332-R  WORLD. A sentence that states a property of the
+                       SESSION it lives in is a fixed point over the
+                       session, in the same way a sentence stating the
+                       size of its own file is a fixed point over the
+                       file. It is true when generated and false as soon
+                       as the session continues, and no builder guard
+                       can catch it because the builder can only measure
+                       the bytes in front of it. Two such sentences
+                       reached a signed history in this entry. The same
+                       class, at the level of the file, is FG-S331-P;
+                       the same class, as a count of findings, is what
+                       D330 got wrong and D331 spent a whole session
+                       correcting.
+
+            FG-S332-S  SEAT. The seam guard in the D332 builder required
+                       the payload to close with a blank line. The
+                       documented house rule is the opposite: the
+                       document ends on a line that is not blank so that
+                       a payload can open with one blank line. The guard
+                       was green on every run and enforced a shape that
+                       contradicts the rule it was meant to protect.
+                       Caught by reading the landed bytes against the
+                       opener, not by any check.
