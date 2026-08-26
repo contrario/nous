@@ -31,7 +31,7 @@ background:rgba(5,7,14,0.95);border-bottom:1px solid rgba(201,165,84,0.12);
 .ide-logo{display:flex;align-items:center;gap:10px}
 .ide-logo-n{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--gold);letter-spacing:0.06em}
 .ide-logo-sub{font-family:var(--mono);font-size:11px;color:var(--td);letter-spacing:0.04em}
-.ide-version{font-family:var(--mono);font-size:10px;color:var(--t3);background:rgba(255,255,255,0.04);padding:3px 8px;border-radius:4px}
+.ide-version{font-family:var(--mono);font-size:10px;color:var(--t3);background:rgba(255,255,255,0.04);padding:3px 8px;border-radius:4px}.ide-version:empty{display:none}
 
 .tab-bar{
 display:flex;gap:0;padding:0 20px;height:38px;min-height:38px;
@@ -256,7 +256,7 @@ transition:all 0.2s;white-space:nowrap;
       <span class="ide-logo-n">NOUS IDE</span>
       <span class="ide-logo-sub">Νοῦς</span></div><a href="/" style="display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--td);text-decoration:none;padding:4px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:4px;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(201,165,84,0.3)';this.style.color='#c9a554'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#94a3b8'">2190 Home</a><div style="display:none">
     </div>
-    <span class="ide-version" data-nous-version>v5.77.0</span>
+    <span class="ide-version" data-nous-version></span>
   </div>
 
   <div class="tab-bar">
