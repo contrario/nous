@@ -8418,3 +8418,294 @@ document itself.
                        it, and the declaration is what a later reader
                        would inherit. A declaration is not an
                        enforcement.
+
+  - S334 a served version badge is found to carry two meanings decided
+    by the network, the rule that forbids the second one is landed red
+    before green and verified where a reader reads, and the owed codes
+    of the preceding session gain their anchor (S334)
+
+    THIS ENTRY CARRIES TWO FINDING NAMESPACES AND NAMES BOTH. The S333
+    codes below were found after D333 was composed and had no anchor in
+    this document; this append is that anchor. The S334 codes are new.
+
+    THIS SESSION MEASURED THE SURFACE A READER RECEIVES. Every earlier
+    rule in this house binds the repository to itself. This one was
+    checked against the bytes returned over HTTP, with a positive
+    control beside it, and that had never been done before.
+
+    D334-1  THE BADGE CARRIED TWO MEANINGS AND THE NETWORK DECIDED
+            WHICH. website/js/nous-version.js fetches /v1/health and
+            rewrites the text of every element carrying
+            data-nous-version; on failure it keeps what the HTML holds,
+            which its own second line calls graceful degradation. So the
+            element read as the running version when the fetch succeeded
+            and as the version at authoring time when it did not, and
+            nothing on the page distinguishes the two. The measured
+            spread was seven sites in six tracked files and three forms:
+            five nav-ver spans, one ide-version span, and one span in
+            the footer with no class. Four pages held v5.66.0 while
+            /v1/health returned 5.78.0 to two independent vantage
+            points.
+
+    D334-2  THE RULE IS THAT NO SUCH ELEMENT CARRIES A VERSION TOKEN,
+            AND THE RULE THAT PINS IT TO THE CURRENT VERSION WAS
+            REJECTED. The release-coupled shape has two working
+            precedents in this house, the README rule of S323 and the
+            hero stat, and it was still rejected: it needs an oracle,
+            costs six files at every version bump, and still prints a
+            number the page cannot confirm at the moment it prints it.
+            The rule adopted needs no oracle, cannot go stale, and says
+            nothing when the system that would confirm it is down.
+            website/ide.html also gains ide-version:empty display none,
+            because that class carries a background and padding and an
+            empty span would render as a box; the other two forms have
+            neither.
+
+    D334-3  THE RULE WAS VERIFIED AT FOUR LEVELS AND EACH LEVEL CARRIED
+            A POSITIVE CONTROL. The remote blob at origin/main, the
+            served filesystem against that blob, the mirror checker, and
+            the bytes returned by curl. At the last level
+            SERVED_RESIDUAL_VERSION returned zero while a shape beside
+            it returned two for the attribute itself, so the zero is
+            absence and not silence. The control path and the home page
+            moved together, from equal at one size to equal at another,
+            which closes FG-S332-E on byte counts rather than on digests
+            that were never stable.
+
+    D334-4  A LANDED COMMIT SUBJECT CLAIMS UNIVERSALITY AND IS FALSE,
+            AND NO INSTRUMENT IN THIS HOUSE READS COMMIT SUBJECTS.
+            b9186c2 says it brings every data-nous-version fallback to
+            v5.77.0 and its own stat shows two files; six carried the
+            attribute. claim_lint scans files and the signed history is
+            the one surface that cannot be corrected afterwards. The
+            subject written in this session was checked from the landed
+            object rather than from a copy of the string, and the check
+            included a search for words that claim universality.
+
+    D334-5  THE VERSION MECHANISM ENTERED THE REPOSITORY WITHOUT A GATE.
+            website/js/nous-version.js has one commit, ad278dd, whose
+            subject is sync production state to repo. It was not
+            designed in the repository and deployed; it was copied
+            backwards from the running server. No entry authorises it.
+            Two facts about it are owed to whoever next touches served
+            JavaScript: the edge answers it with cf-cache-status HIT
+            under a four hour max-age, so a change reaches a reader only
+            after that window, and the cache-busting token in the six
+            script tags has never moved. That token is untested, which
+            is not the same as broken.
+
+    D334-6  A FRESHNESS CLAIM IN docs/index.html IS CONTRADICTED BY THE
+            HISTORY OF THE FILE THAT CARRIES IT, AND IT IS LEFT OPEN.
+            Line 205 reads v5.8.1 and a date in May; the file was
+            committed twice in July, and one of those commits reconciles
+            the honest boundary on that same file. It is a different
+            class from the badge: the badge was ambiguous and filled at
+            runtime, this is a static claim that is simply false, and it
+            needs its own shape. Two neighbouring version tokens are NOT
+            of that class and are not touched: one is the title of a
+            published article in quotation marks and the other is sample
+            output inside a code block.
+
+    D334-7  THE FALLBACK WAS DECLARED NOT RELEASE-COUPLED YEARS BEFORE
+            ANYONE ASKED WHAT THAT MEANT. 447e1b1 wrote the phrase in
+            its own subject at S175 and the declaration was never
+            written as a rule. 4320c1b then showed what it means in
+            practice: the release commit touched website/index.html,
+            moved the hero stat because a test enforces it, and left the
+            badge on a neighbouring line of the same file because
+            nothing did. One file, one commit, one moment, two lines,
+            and only the one with a rule moved.
+
+    D334-8  TWO RULES. A PREDICTION IS DECLARED RISKED ONLY IF THE
+            INSTRUMENT THAT WILL JUDGE IT CAN BE NAMED. A prediction
+            with a basis that fails is information; a prediction with no
+            basis that fails is noise wearing the shape of a
+            measurement. AND A COUNTER OVER A FILE IS NOT WRITTEN INSIDE
+            THE COMMIT THAT BRINGS THAT FILE. D332-18 forbids the
+            session case and FG-S331-P named the file case; this is the
+            commit case, and it is why the subject that landed the new
+            test says nothing about how many controls the test contains.
+
+    D334-9  THE DEFECT CLASS OF THE PRECEDING SESSION RECURRED
+            THROUGHOUT THIS ONE AND ONE INSTANCE WAS CAUGHT BY AN
+            INSTRUMENT RATHER THAN BY A READER. A read-back guard tested
+            whether a directory existed when its object was whether the
+            run that was being reported had produced it; a stale
+            directory from an earlier run would have been read back as
+            this run's result. Its own fixture drove it red before the
+            paste was sent. Every other instance of the class in this
+            session was found by the operator reading output line by
+            line. The tally belongs in the sealed record and not here.
+
+    FINDINGS
+
+            FG-S333-L  SEAT. A DIGEST WAS PUBLISHED BEFORE THE FILE WAS
+                       BUILT. The seat wrote a digest and a character
+                       count for a gate in prose before the builder ran,
+                       and the built object carried different ones. A
+                       number entered a message with no instrument
+                       behind it.
+
+            FG-S333-M  WORLD. A HYGIENE CONTROL READ A LITERAL AS A
+                       DELIMITER. The single-quote parity control
+                       reported an odd count on a payload both shells
+                       parse. The cause is a leg that counts apostrophes
+                       in a commit subject, where the apostrophe is a
+                       literal inside double quotes. The control assumes
+                       every apostrophe delimits.
+
+            FG-S333-N  WORLD. A REDIRECTION CONTROL COUNTED AWK
+                       COMPARISONS AS WRITES. The top-level greater-than
+                       control reported eight where the real writes were
+                       one, counting stderr duplications, /dev/null, and
+                       the awk expressions NR greater-than and length
+                       greater-than inside nested quoting the control
+                       does not track.
+
+            FG-S333-O  WORLD. THE PIN IS UNSEARCHABLE BY CONSTRUCTION. A
+                       search of the landed blob for the whole
+                       sixty-four character digest of the canonical
+                       runner returns zero; each of the two fragments
+                       returns one. The entry that makes drift in the
+                       runner detectable cannot itself be found by the
+                       shape anyone would use to look for it, and
+                       nothing compares the fragments against the whole
+                       line in the record.
+
+            FG-S333-P  SEAT. A COUNTING LEG AND A LISTING LEG IN THE
+                       SAME GATE CARRIED DIFFERENT SETS. One listed
+                       lines matching four tokens and the other counted
+                       lines matching two. Both are correct within
+                       themselves and their outputs cannot be read
+                       against each other. The prediction used the
+                       listing set on the counting leg.
+
+            FG-S333-Q  SEAT. A REPLACEMENT THAT MATCHED NOTHING WROTE
+                       NOTHING AND SAID NOTHING. An edit pass replaced a
+                       paragraph whose first sentence an earlier
+                       replacement in the same pass had already changed.
+                       It found no match, made no change, reported no
+                       error, and the record shipped carrying two
+                       different numbers for one object. Every patcher
+                       in this house asserts anchor uniqueness or
+                       refuses; the editor used on that document did
+                       not.
+
+            FG-S334-A  WORLD. A FILE NAMED IN THE OPENER READ ORDER DID
+                       NOT ARRIVE, AND THEN TWO MORE DID NOT. The
+                       measurement record was absent from the first
+                       upload and the two builder files were absent from
+                       a later one, because the target directory had not
+                       been created. Neither the seat nor the world
+                       names this object, which is the same
+                       gap FG-S333-C recorded on the label axis.
+
+            FG-S334-B  SEAT. A RESIDUAL WAS COMPUTED AND REPORTED AS
+                       MEASURED. The seat ran two fixed strings over a
+                       reproduced payload and then added one to a
+                       carried total, rather than running the census.
+                       The census was run afterwards on the blob and
+                       agreed, and the ninth member is the item of the
+                       preceding entry that described the residual, at
+                       line 8256. The class the entry named came true
+                       inside the entry itself.
+
+            FG-S334-C  SEAT. OUTPUT FROM A TOOL THAT DOES NOT RUN THE
+                       MECHANISM WAS READ AS THE MECHANISM'S RESULT. A
+                       page fetched by a reader that executes no script
+                       showed the fallback text, and the seat carried
+                       that as evidence that the badge was stale for
+                       everyone. It was evidence only that one reader
+                       executes no script.
+
+            FG-S334-D  SEAT. A CONTROL WAS BUILT ON A PREMISE THAT DOES
+                       NOT APPLY. The seat measured a cross-origin
+                       header on a same-origin fetch and declared in
+                       advance that its absence would mean the mechanism
+                       fails. The header is not required there and its
+                       absence means nothing.
+
+            FG-S334-E  SEAT. A DISPLAY FILTER DESTROYED A READING AND
+                       THE RESULT WAS NEARLY DECODED INSTEAD OF RETAKEN.
+                       Header lines end with two control characters; a
+                       filter replaced one and left the other, so each
+                       line overwrote the one before it on the terminal.
+                       The remaining string was not decodable and the
+                       reading was taken again.
+
+            FG-S334-F  SEAT. A PREDICTION WAS MADE FROM NARRATIVE WHILE
+                       THE NUMBER WAS ALREADY PRINTED IN THIS SESSION.
+                       The seat predicted six files carrying an
+                       attribute; an earlier leg in its own output had
+                       printed seven. Same class as FG-S333-A and the
+                       second occurrence in the same document.
+
+            FG-S334-G  SEAT. A SHAPE SEARCHED CONTENT WHERE ITS OBJECT
+                       WAS A PATH NAME. A census for a token returned
+                       zero over the test directory while the file
+                       carrying that token in its FILENAME was read
+                       whole by the next leg. The zero was survivable
+                       only because a control beside it was not zero.
+
+            FG-S334-H  SEAT. THREE LEGS PRINTED STRINGS AND WERE READ AS
+                       NUMBERS. A count with a pathspec prints the path
+                       and the count joined by a colon. One of the three
+                       was reported as a number for a file the same gate
+                       had declared out of scope, so a declared scope
+                       limit was crossed by arithmetic on a string.
+
+            FG-S334-I  SEAT. A READ-BACK GUARD TESTED WHETHER A
+                       DIRECTORY EXISTED WHEN ITS OBJECT WAS WHETHER THE
+                       REPORTED RUN HAD PRODUCED IT. A directory left by
+                       an earlier run would have been read back and
+                       reported as the result of a run that had refused.
+                       The repair is that the read-back lives inside the
+                       success branch of the build itself, so it cannot
+                       read another run's bytes. THIS ONE WAS FOUND BY
+                       ITS OWN FIXTURE before the paste was sent, which
+                       no earlier instance of this class in this session
+                       was.
+
+            FG-S334-J  SEAT. ONE SHAPE COUNTS A RULE AND A USE. A fixed
+                       string for a class name matches both the
+                       attribute that carries it and the stylesheet rule
+                       that styles it. It happened twice, and the second
+                       time the seat predicted the count without
+                       carrying the first case forward.
+
+            FG-S334-K  SEAT. A NUMBER WAS DECLARED A RISKED PREDICTION
+                       WITH NO INSTRUMENT BEHIND IT. The seat predicted
+                       the line count of a diff whose shape it had never
+                       measured. Declaring a guess as risked does not
+                       make it a measurement, and this is the rule
+                       stated in D334-8.
+
+            FG-S334-L  SEAT. A PREDICTION CONTRADICTED A MEASUREMENT
+                       ALREADY PRINTED IN THE SAME SESSION. The seat
+                       predicted that the control path would keep its
+                       size while the home page shrank, after an earlier
+                       gate had established that the control path IS the
+                       home page. The two moved together, which is the
+                       correct result and the stronger evidence.
+
+            FG-S334-M  WORLD. THE SIGNED HISTORY IS THE MOST DURABLE
+                       SURFACE IN THIS PROJECT AND NOTHING SCANS IT. A
+                       landed subject claims universality and is false
+                       by its own diffstat. Files can be corrected by
+                       append; a subject cannot be corrected at all once
+                       pushed.
+
+            FG-S334-N  WORLD. A MECHANISM ENTERED THE REPOSITORY FROM
+                       THE RUNNING SERVER RATHER THAN THE OTHER WAY. The
+                       version display has one commit and its subject
+                       says it synchronises production state into the
+                       repository. Everything known about its failure
+                       behaviour was learned by reading it in this
+                       session.
+
+            FG-S334-O  WORLD. A DOCUMENTATION PAGE CLAIMS A FRESHNESS
+                       ITS OWN HISTORY DENIES. The claim names a version
+                       and a date; the file was committed twice after
+                       that date, once by a commit whose subject is
+                       about reconciling the honest boundary on that
+                       page.
