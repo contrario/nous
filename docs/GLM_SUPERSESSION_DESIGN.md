@@ -8207,3 +8207,214 @@ document itself.
                        contradicts the rule it was meant to protect.
                        Caught by reading the landed bytes against the
                        opener, not by any check.
+
+  - S333 the four numbers that had never been read are read, the 139
+    turns out to be forbidden rather than unrepaired, the residual
+    monitor set loses another member, and a session head that was never
+    written is found missing (S333)
+
+    THIS SESSION READ INSTEAD OF COUNTING. The read-only gates printed
+    whole lines. Every object they printed had travelled as a count, and
+    each one named something other than what the count was carried as.
+
+    D333-1  THE 139 IS NOT A SURFACE THAT CAN BE REPAIRED. It is one
+            that may not be touched. The lines live in sixty-nine files
+            and the distribution is now measured: 102 under
+            website/.well-known/nous, of which 95 are release-vsa
+            artifacts, and 14 in website/blog/index.html, which is a
+            published post. SHA-PINNING IS MEASURED IN ONE OF THEM. The
+            5.78.0 release-vsa index carries vsaPayloadSha256,
+            policyDigest and fifteen sixty-four-character hex digests.
+            SIGNING IS NOT ESTABLISHED BY THAT READING. The same file
+            carries verifierKeyid and verifierPublicKeyRaw at its top
+            level and no signature key there, and only the top level was
+            read, so signed remains INHERITED. THE PROHIBITION IS REAL
+            AND LIVES SOMEWHERE OTHER THAN WHERE THIS ITEM FIRST PUT IT.
+            It is ADR-0009 at line 115, which says a published post is
+            not edited to make a link tidy. ADR-0011 carries no such
+            sentence under the shape that was read. Subject to the
+            signing question, the question this surface poses changes:
+            not how many lines can be corrected, but what it means that
+            a sha-pinned published artifact carries the subject ADR-0010
+            abandoned.
+
+    D333-2  THE DOCUMENT HAS NO HEAD FOR S312. Nothing stands between
+            the S311 head at 2337 and the S313 head at 2458. Every
+            session prints a head total and no session has ever asked
+            whether the sequence has holes.
+
+    D333-3  THE FIVE LINES AT 1480 AND AT 1575 BELONG TO TWO DIFFERENT
+            ENTRIES. There are two S309 heads, at 1348 and at 1508. The
+            lines at 1480, 1485 and 1488 fall under the first; the lines
+            at 1575 and 1576 fall under the second. The seat had written
+            that they were one entry, then marked that unmeasured. It
+            was not unmeasured. It was wrong, and the instrument that
+            settles it is a head listing with line numbers.
+
+    D333-4  closure_ledger.py:21 IS A MEMBER OF THE 139 AND NOT OF THE
+            RESIDUAL. Line 20 ends with the token NOUS and line 21
+            begins with the words is a monitor. The subject is present
+            and wrong, split across a line break, which is the condition
+            every shape in this house declares itself blind to. The
+            residual loses a member to the set it was defined as
+            excluding.
+
+    D333-5  THE RESIDUAL AFTER READING. Of the eight lines the
+            arithmetic named, two are the census output recorded inside
+            this document, one belongs to the 139 by the item above,
+            three carry the subject on the same line in a form the fixed
+            string does not match, one carries the subject gated inline,
+            and one, in docs/SANTANDER_ADAPTER.md, resolves its referent
+            on a neighbouring line and is left undecided. None is an
+            unqualified claim waiting for a subject. The count that
+            travelled as an open item was not an open count.
+
+    D333-6  THE 139 PLUS 25 PLUS 8 SPLIT IS NOT THE PARTITION THE TOKENS
+            GIVE. Of the 172, 143 carry the token NOUS somewhere on the
+            line and 29 carry the token layer. Five carry both and five
+            carry neither. Four carry NOUS without matching either fixed
+            string. The three-way split has travelled since S323 as
+            though it partitioned the set. It does not, and its residual
+            is a remainder of one shape, not a class.
+
+    D333-7  THE CANONICAL RUNNER IS PINNED. The sha256 of
+            scripts/rule0.sh is written as two fragments that join with
+            no separator: 074e51afa8e746c5c0eace8f548dee197dfb7c3b9f2
+            53455eea2a2f248ea358f. The file is 57 lines, 2093 bytes,
+            blob e34ddd3a, and the worktree copy equals origin/main.
+            This file opens every session and no artifact before this
+            entry has ever recorded its digest, so drift in it was
+            undetectable by construction. The board item that proposes
+            writing to it now has a base to write from.
+
+    D333-8  THE BUILDER COULD NOT BUILD THIS ENTRY AND HAS BEEN
+            SUPERSEDED, NOT FORKED. Five defects were measured in the
+            shipped builder. It appends a blank line whenever a head is
+            present and its own seam guard then refuses that blank, so
+            entry mode was dead on arrival. It writes the head prefix as
+            a literal S332. It counts findings only in the S331 and S332
+            namespaces, so the findings of any later session are guarded
+            by nothing. And its session-count shape requires the number
+            to stand immediately before the noun. And it names an arm
+            that no injection can drive, kept from its own predecessor
+            after the branch that drove it was dropped. The successor
+            takes the session and both namespaces as arguments, binds
+            D-codes as well as FG-codes so neither can begin a wrapped
+            line, and reproduces the predecessor's landed payload byte
+            for byte with the predecessor's own arm suite green against
+            it. That is the test FG-S332-U named and the predecessor
+            failed.
+
+    FINDINGS
+
+            FG-S333-A  SEAT. A PREDICTION MADE FROM NARRATIVE WHILE THE
+                       BYTES WERE ALREADY PRINTED. The seat predicted
+                       that no line in the document begins with the
+                       token D307 at any indent. The preceding gate had
+                       already printed three such lines at indent six,
+                       in its own output. The same class has recurred
+                       within this session; the tally belongs in the
+                       sealed record and not here.
+
+            FG-S333-B  SEAT. A FRAMING WAS CARRIED INTO A NUMERIC
+                       PREDICTION WITHOUT THE MEASUREMENT THAT WOULD
+                       HAVE BOUNDED IT. The seat was told that the
+                       census feeds itself and grows, and predicted a
+                       large share of the 172 inside this document. The
+                       measured share is five lines: two are the census
+                       output, two are prose and one is a definition.
+                       The operator has since named his own wording an
+                       overclaim. What is recorded here is the seat half
+                       only.
+
+            FG-S333-C  SEAT. THE LABEL AXIS HAS NO VALUE FOR A SENTENCE
+                       WRITTEN BY THE OPERATOR. The finding above is
+                       labelled SEAT because the seat acted, but the
+                       object it names is an operator sentence. Neither
+                       SEAT nor WORLD names that object. This is
+                       evidence for the open reading of the class of the
+                       object and it is not resolved here.
+
+            FG-S333-D  WORLD. THE HEAD CENSUS HAS NO CONTIGUITY LEG. The
+                       missing head recorded above is an absence that
+                       every previous head census could have printed and
+                       none did, because a total cannot show a hole.
+
+            FG-S333-E  WORLD. A SHAPE THAT READS ONE LINE MISCLASSIFIED
+                       A CLAIM FOR SIX SESSIONS. The blindness was
+                       declared in every gate that ran the shape, and
+                       the declaration did not stop the result being
+                       carried as an open item.
+
+            FG-S333-F  WORLD. THIS DOCUMENT IS INSIDE THE SET IT
+                       CENSUSES AND NO MEASUREMENT HAS EVER DECLARED IT.
+                       Five of the 172 are in this file, two of them the
+                       recorded output of the census itself. The share
+                       is small and the property is not: every entry
+                       written about the monitor surface enters the
+                       surface. The shape must either exclude this file
+                       or declare that it includes it. Neither has ever
+                       been done.
+
+            FG-S333-G  WORLD. THE VERSION SPREAD OF THE 139 IS STILL NOT
+                       PRINTED, AND THE LEG BUILT TO PRINT IT MEASURED
+                       THE WRONG FIELD. It split the path on the
+                       separator and took the fourth component, which is
+                       the release-vsa directory name and not the
+                       version below it, so it reported one distinct
+                       value and printed that directory name as though
+                       it were a version. The operator named one number
+                       for the spread and a hand count of a printed file
+                       list gave another. Neither came from an
+                       instrument. The leg is owed and now has a named
+                       defect to avoid.
+
+            FG-S333-H  WORLD. THE GUARD AGAINST SESSION COUNTS WAS
+                       NARROWER THAN THE RULE IT ENFORCES, AND WIDENING
+                       IT EXPOSED A SECOND DEFECT. The shipped shape
+                       required the number to stand immediately before
+                       the noun, so one adjective blinded it. The first
+                       widening then refused the landed continuation
+                       payload, because a reference of the form
+                       D-code-digit followed by three words and the word
+                       gate reads as a count under it. The shape now
+                       refuses a number that is part of a code. It is
+                       still narrower than the rule: the rule binds any
+                       count of the session and the shape names two
+                       nouns, and widening the noun set would begin
+                       refusing counts of the world.
+
+            FG-S333-I  WORLD. AN ARM NAMED IN THE GUARD LIST THAT NO
+                       INJECTION CAN DRIVE. The shipped builder lists
+                       seam_close among its arms. Its own predecessor
+                       carried the branch that built that condition; the
+                       supersession dropped the branch, replaced it with
+                       a differently named arm, and left the old name in
+                       the list. Asking for it returns the did-not-fire
+                       code rather than a refusal, so a fixture that
+                       never asks cannot tell the arm is inert. The name
+                       has been removed and the guard it pointed at is
+                       driven by the arm that replaced it.
+
+            FG-S333-J  WORLD. A FIXED-STRING SHAPE RETURNED EMPTY WHILE
+                       A SECOND READER IN THE SAME LEG PRINTED THE THING
+                       IT WAS LOOKING FOR. The shape searched for quoted
+                       signature and key tokens in one exact spelling.
+                       The key listing printed beside it shows
+                       verifierKeyid and verifierPublicKeyRaw, which
+                       that spelling does not match. The empty result
+                       was one sentence away from being written down as
+                       absence. R27 asks what else a shape can match;
+                       this is the other direction, and the only reason
+                       it was caught is that the leg carried a second
+                       reader.
+
+            FG-S333-K  SEAT. THE DECLARED SHAPE AND THE IMPLEMENTED
+                       SHAPE DISAGREED INSIDE THE SAME GATE. The
+                       declaration said the directory split takes the
+                       first two path components. The implementation
+                       takes three where three exist. Nothing checked
+                       the declaration against the code that followed
+                       it, and the declaration is what a later reader
+                       would inherit. A declaration is not an
+                       enforcement.
