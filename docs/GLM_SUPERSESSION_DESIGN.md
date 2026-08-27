@@ -8709,3 +8709,214 @@ document itself.
                        that date, once by a commit whose subject is
                        about reconciling the honest boundary on that
                        page.
+
+  - S335 the transport rules are measured against the path they were
+    written for and found not to bind a file, the two blind HTTP legs
+    gain a shape that discriminates on size and on type, and the rule
+    that would have caught every miss of this arc was broken again by
+    the house that inherited it
+
+    THIS ENTRY CARRIES TWO FINDING NAMESPACES. FG-S334 and FG-S335.
+    The FG-S334 codes are the two that were found after D334 was
+    composed and left the preceding seal with no anchor. They gain one
+    here. The FG-S335 codes belong to the session that writes this
+    entry.
+
+    THE OBJECT WAS NOT ON THE BOARD EITHER. The preceding entry observed
+    that its whole object came from two fetches taken before any board
+    item was chosen. This one came from the transport of its own opening
+    instrument, which entered the terminal inline rather than as a file,
+    and the finding that produced was the object the operator then
+    chose.
+
+    WHAT IS NOT DECIDED HERE. Item G remains the operator's and
+    undecided. Item F remains blocked on a URL. The replacement legs for
+    rule 0 are measured and named in D335-6 and are NOT written into the
+    canonical paste by this entry; that is a separate action under a
+    separate gate.
+
+    D335-1  THE OBJECT WAS THE TRANSPORT, AND IT WAS CHOSEN BECAUSE THE
+            SESSION PRODUCED IT RATHER THAN INHERITED IT. Every other
+            item on the board was written by an earlier session and does
+            not decay while it waits. The transport failure was made in
+            this session, by the house, using a rule the preceding
+            session had written for exactly that failure. A rule broken
+            on the first session in which it exists is not a rule.
+
+    D335-2  T1 THROUGH T4 DO NOT BIND A FILE. They were written for text
+            typed into a chat message and were carried as though they
+            bound every path into the host. A fixture carrying every
+            forbidden class was built in the seat, declared at fc937d7d
+            with 772 bytes and 34 lines, uploaded by the operator, and
+            digested on the host. The digest matched, so all 772 bytes
+            matched. A complete octal census was printed beside it as
+            the diagnostic that would say where, had the digest said no.
+
+    D335-3  THE READING THAT MATTERS INSIDE THAT CENSUS IS THE PAIR 012
+            AND 015. Line feed 34, carriage return 1, which is the
+            single one the fixture carries in the middle of a line. A
+            text-mode transfer converts every line feed and the pair
+            would have read 35 and 806 bytes. Backslash 4, asterisk 6,
+            dollar 5, underscore 26, backtick 4, tilde 4, pipe 1, tab 1,
+            and one line of trailing whitespace all survived. The octal
+            for the at sign is absent from the census and the fixture
+            contains none, which is the control that the census reports
+            absence rather than reporting nothing.
+
+    D335-4  THE CONSEQUENCE IS THAT THE CANONICAL INSTRUMENT WAS
+            MUTILATED FOR A REASON THAT DOES NOT APPLY TO IT. The
+            GEN_SHAS leg of the second canonical paste carries a shell
+            loop and shell variables, which the preceding opener
+            recorded as a standing violation inside the canonical
+            instrument. Delivered as a file it is not a violation. The
+            rules are re-scoped, not repealed: T1 through T4 bind a
+            paste written inside a chat message and do not bind a file
+            uploaded in binary mode.
+
+    D335-5  T5 EARNED ITS FIRST LIVE RESULT AND IT WAS A REFUSAL. A
+            block of commands was delivered on several physical lines,
+            the terminal joined them, and the shell was asked to open a
+            path ending in the characters of the following line. It
+            answered that it could not open the file and ran nothing.
+            Executed inline the same corrupted bytes would have run.
+            This is the argument for T5 stated as a measurement rather
+            than as a reason.
+
+    D335-6  FG-S332-E IS CONFIRMED ON A SECOND AXIS AND THE REPLACEMENT
+            IS MEASURED. The home page and a path proven absent on the
+            served root before it was requested both returned 94668
+            bytes, code 200, and content type text slash html. The two
+            legs are not weak; they are empty. A tracked asset chosen by
+            an instrument in the same run returned 655 bytes as
+            application slash javascript and the health endpoint
+            returned 151 bytes as application slash json. Either
+            discriminates from the fallback on size and on type. The
+            home leg cannot, and no threshold repairs it.
+
+    D335-7  AND A MEASUREMENT NOBODY ASKED FOR. The served byte count of
+            that asset minus its byte count on the served root is 0. For
+            html the preceding session measured a difference of 247,
+            because the edge rewrites one mailto into a protected link
+            and a script reference. Served against disk identity on byte
+            count is therefore AVAILABLE for non-html and NOT AVAILABLE
+            for html. That bears on the served-versus-produced question
+            and not only on these legs.
+
+    D335-8  THE SELF WITNESS LEG IS A WITNESS AND NOT A GUARD. A leg
+            reading the script argument prints whether the thing
+            executing is a file and prints its digest. Run as a file it
+            names the file and its digest; run inline it prints that it
+            is not a file; entered twice it prints twice. It makes the
+            failure visible in the transcript. It does not prevent it.
+            The comparison against the digest declared when the file was
+            built is still done by a reader. R30 stands.
+
+    D335-9  THE BUILDER READS TWO ATTRIBUTE NAMES THAT NAME THE WRONG
+            SESSIONS. It takes the namespaces as arguments and then
+            reads them from attributes fixed at the session for which it
+            was first written. The names are wrong and the behaviour is
+            correct. It is recorded and NOT repaired: the object has
+            been reproduced byte for byte across successive payloads and
+            an edit costs that provenance for a cosmetic gain. A defect
+            of the same class sits in its session-count guard: it
+            forbids a number standing close to the word paste and cannot
+            tell a count from the numeral inside a name. It fired on
+            this payload for that reason, and the prose was reworded
+            rather than the guard weakened.
+
+    D335-10  WHAT THESE GATES DID NOT MEASURE. One file, one direction,
+             one moment: this is not a census of the transport over
+             time. Bytes at or above octal 200 were never in the fixture
+             and remain UNKNOWN. Every fetch left from the server
+             itself, so no cache node between the edge and any other
+             reader was touched. Sizes and types were compared and
+             content never was. The asset arrives with a cache hit and a
+             long max age, so its size is evidence that the edge serves
+             an asset and not evidence that the asset is current.
+
+    FINDINGS
+
+            FG-S334-P  SEAT. A gate file was corrected and reissued
+                       under one name and the earlier bytes ran. Two
+                       byte sequences carried one filename. The digest
+                       in the message named the later one and the
+                       transcript shows the earlier one executed, and
+                       the control it was missing is the one that then
+                       failed. The remedy is T5 and it is now measured
+                       in D335-5.
+
+            FG-S334-Q  SEAT. A rule was written and then broken by the
+                       hand that wrote it. A count given a rev and a
+                       pathspec prints three colon-joined fields. That
+                       was named as a correction and then used again
+                       later in the same session. A rule stated is not a
+                       rule applied.
+
+            FG-S335-A  WORLD. T5 is a declaration and nothing enforces
+                       it. Every paste of this arc entered the terminal
+                       inline rather than as a file, so no digest of the
+                       executed bytes exists for either opening or for
+                       the second read-only gate. What ran can be argued
+                       from the values it printed and cannot be proven.
+                       R30 again, on the first session in which T5
+                       existed.
+
+            FG-S335-B  WORLD. A paste entered the terminal twice and the
+                       copies joined with no separator between them. The
+                       seam corrupted the final leg of the first copy
+                       into an echo carrying the opening command of the
+                       second, and the second copy therefore never
+                       changed directory. Different elapsed times prove
+                       two executions rather than one duplicated
+                       display.
+
+            FG-S335-C  SEAT. The seat proposed the self witness gate
+                       before the transport fidelity gate. The first
+                       needs a shell variable to read its own argument
+                       and the second is what decides whether a shell
+                       variable survives the path into the host. The
+                       order was inverted before anything was built, at
+                       no cost, and the dependency should have been
+                       visible when the two were proposed.
+
+            FG-S335-D  SEAT. The seat delivered a gate as several
+                       physical lines immediately after measuring that
+                       the terminal joins them. The instruction to send
+                       one physical line was written by the seat, in the
+                       same arc, and not applied to the seat's own
+                       delivery.
+
+            FG-S335-E  SEAT. A sed expression was written with an
+                       unquoted vertical bar as its delimiter, so the
+                       shell read two pipes and a syntax error. The
+                       builder ran dash and bash in check mode before
+                       the file was presented and the file never left.
+                       Instrument caught, at the cost of one anchored
+                       repair.
+
+            FG-S335-F  WORLD. The classes named in FG-S335-A
+                       and FG-S335-B recurred after being named, inside
+                       the same arc, on the last gate of it. Naming a
+                       class does not close it. This is the fourth
+                       consecutive session in which that sentence has
+                       had to be written.
+
+            FG-S335-G  WORLD. An artifact named in the operator kickoff
+                       was not among the uploaded files. The read order
+                       requires the measurement record whole before
+                       anything runs, and the seat had only the opener
+                       and the handoff. It was reported before any other
+                       output and supplied, and the arc proceeded.
+                       Arrival was verified by digest and not by the
+                       file name, which was correct and described a
+                       different thing in the message body.
+
+            FG-S335-H  SEAT. One code letter was issued twice for two
+                       different objects. The letter first named the
+                       absent artifact and later named the transport
+                       rule that was not applied. The second use
+                       travelled into later messages, so the first
+                       object is re-lettered here and the collision is
+                       recorded rather than silently resolved. The
+                       builder refuses a duplicate anchor and would have
+                       caught it only at this entry, which is late.
