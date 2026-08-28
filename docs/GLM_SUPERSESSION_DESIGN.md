@@ -8920,3 +8920,219 @@ document itself.
                        recorded rather than silently resolved. The
                        builder refuses a duplicate anchor and would have
                        caught it only at this entry, which is late.
+
+  - S336 the census of this document is measured against its own object
+    and found to count one shape, the label count is corrected by
+    seventy five, the population of codes is decomposed into three named
+    sets, and the discriminator that would have closed the last question
+    failed its own test
+
+    R24 governs this entry. Every value below was printed by an
+    instrument in the session that carries it, and the set and the shape
+    are named beside it. Values inherited from the preceding seal are
+    corrected here rather than repeated.
+
+    D336-1  THE OBJECT. Whether the census of this document counts
+            findings or counts the findings that one shape can see. SET:
+            this document at the digest the reading gate pinned before
+            it counted. SHAPE: a code at the start of a line at exactly
+            twelve spaces, at any indent, at column zero, and a code
+            anywhere in the line. BLIND TO: every other file, fenced
+            blocks, and a code split across a line break.
+
+    D336-2  ATTRIBUTION IS 241 AND THE RESIDUE IS 68. The labelled shape
+            reads capitals after exactly two spaces and returns 166.
+            Case folded in the same position it returns 222. In any case
+            within twenty four characters after the code it returns 241.
+            The rows that carry neither word are 68 and each one has a
+            name and a line number. 166 plus 75 is 241 and 241 plus 68
+            is 309.
+
+    D336-3  THE REPORTED 143 WAS OVERSTATED BY 75 AND IS CORRECTED BY
+            APPEND. It is not the count of rows without an attribution.
+            It is the count of rows that the capital shape cannot read.
+
+    D336-4  THE POPULATION OF CODES IS THREE SETS. 309 carry a row at
+            twelve spaces and every code in that set is distinct. 314
+            carry an occurrence at the start of a line at some indent.
+            332 are named anywhere in this document. The five between
+            the first set and the second
+            are FG-S308-A, FG-S309-A, FG-S309-B, FG-S309-C
+            and FG-S314-H. The eighteen between the second and the third
+            were listed by the instrument that counted them.
+
+    D336-5  THE BLANK LINE BEFORE A ROW IS A PROPERTY OF HEADS AND NOT
+            OF ROWS. Of the rows at twelve spaces, 250 are preceded by a
+            blank line and 59 are not, and the 59 lie in S314 through
+            S321, before the builder emitted that separation.
+            HEADS_TOTAL and BLANK_BEFORE agree at 44 and say nothing
+            about rows.
+
+    D336-6  THE CLASS OF THE FIVE IS UNDECIDED. The discriminator that
+            would have decided it was measured on the rows where the
+            answer is known and returned nineteen per cent false
+            negatives, so it does not classify. Two of the occurrences
+            outside twelve spaces pair with a row of the same code, and
+            one code, FG-S314-H, has no row anywhere in this document.
+
+    D336-7  A DIGEST DECLARED DEAD IS LIVE. The opener lists d3c726e4
+            among dead digests because the sidecar no longer exists
+            under that name. The rename made those bytes the content
+            digest of this document, and an instrument printed it here
+            twice.
+
+    D336-8  THE OWED CODES OF THE PRECEDING SESSION GAIN AN ANCHOR.
+            Five, not four. The record of that session names four and is
+            correct at the moment it was sealed. The fifth was named
+            while the opener was being written, after the record had
+            closed.
+
+    D336-9  THE SEAL ORDER CHANGES. The measurement record is the only
+            artifact permitted to state a count of its own session, and
+            it was written before the artifacts it must count existed.
+            From here the order is handoff, then opener, then record.
+
+    D336-10  NO LETTER WITHOUT AN ANCHOR. A finding is named with a code
+             when the entry that will carry it is ready to be written,
+             and not before. Until then it is written as a description.
+             The builder allocates letters in document order and refuses
+             on a duplicate.
+
+    D336-11  THE SET OF ISSUED LETTERS HAS NO INSTRUMENT. A census of
+             this document reports what is anchored. A letter that lives
+             in a message is invisible to it, which is the
+             state FG-S334-P and FG-S334-Q were in for a whole session.
+
+    D336-12  T5 IS STILL A DECLARATION. Executions continued inline in
+             this session with no digest taken on the host, and the self
+             witness leg reported the fact after it had happened. The
+             only thing that would make it an enforcement is a builder
+             for the things that are executed, and the constitution asks
+             for a full Innovation Gate before a capability.
+
+    D336-13  THE SUITE, THE LINT AND THE MIRROR WERE RE-MEASURED. The
+             preceding seal carried them unmeasured. At this open they
+             returned 2878 passed and 12 skipped against a floor of
+             2722, LINT_RC 0 over 421 files with no violation, and
+             MIRROR_RC 0 clean over 332 tracked files. The item that
+             carried them closes.
+
+    D336-14  A FINDING FROM A SECOND SEAT IS BANKED AND NOT DECIDED. The
+             tier default in the verifier is reported to be the
+             strongest value at two signatures, with a skipped analysis
+             carrying that value in served output and a guard scoped to
+             one bucket that cannot see it. It arrived as chat text with
+             a declared digest and no file, so the digest was never
+             checked against anything. Three preconditions and a census
+             of what reads the field are owed before anything is
+             written.
+
+    D336-15  A NOTE CARRIED A STATE OF THIS SESSION THAT THE INSTRUMENT
+             CONTRADICTED. The note asserted anchored codes in this
+             namespace and a letter conflict between concurrent seats.
+             The document returned an empty head line and no anchors at
+             all. The instrument decided. The note is recorded as a
+             reason to ask and not as a measurement.
+
+    FINDINGS
+
+            FG-S335-I  SEAT. A guard matched a name and not a count. The
+                       session count guard of the builder read the
+                       numeral inside a name as a count. The prose was
+                       reworded and the guard was not weakened.
+
+            FG-S335-J  SEAT. A control that cannot fire on its own. The
+                       stop condition of the append gate was subsumed by
+                       the target digest check above it and was
+                       relabelled a reading inside the gate.
+
+            FG-S335-K  SEAT. T5 protects the bytes and not the act.
+                       Inline executions of the rename and commit gates
+                       returned zero. The self witness leg reports after
+                       the fact and prevents nothing.
+
+            FG-S335-L  SEAT. Two defects that only the dry run found: a
+                       leg carrying an unreplaced placeholder, and two
+                       legs whose nested quotes the leg census could not
+                       parse.
+
+            FG-S335-M  SEAT. A value travelled in the opener as the
+                       correction of an earlier value rather than as a
+                       measurement. It was found while the opener was
+                       being written and repaired before the seal, which
+                       is why the record of that session does not carry
+                       it.
+
+            FG-S336-A  WORLD. A digest declared dead is the live content
+                       digest of this document. A list of dead digests
+                       that carries a live one will make a later session
+                       reject a correct reading.
+
+            FG-S336-B  WORLD. The transport rule is not held by
+                       anything. Executions went in inline in this
+                       session and in the one before it, and the leg
+                       that witnesses the fact reports it after the
+                       bytes have run.
+
+            FG-S336-C  SEAT. A note asserted a state of this session
+                       that the instrument contradicted. The note was
+                       not used as a premise and the question it raised
+                       was asked instead.
+
+            FG-S336-D  WORLD. The seal order placed the artifact that
+                       counts the session before the artifacts it must
+                       count.
+
+            FG-S336-E  WORLD. The blank line before a row binds heads
+                       and not rows. Fifty nine rows fail it, all of
+                       them in the era before the builder, and the
+                       invariant had never been measured on rows.
+
+            FG-S336-F  SEAT. The seat published a discriminator as
+                       mechanical and it returned nineteen per cent
+                       false negatives on the population where the
+                       answer is known. A declared split of the
+                       candidates was refuted by it, and the refutation
+                       establishes only that the shape cannot tell.
+
+            FG-S336-G  WORLD. The label census measures capitalisation
+                       and not attribution. Seventy five rows carry the
+                       word in a form the shape cannot read, and twenty
+                       two rows carry no separator of two spaces at all.
+
+            FG-S336-H  WORLD. Two shapes that have agreed for many
+                       sessions share one blind spot. Agreement between
+                       them is one shape wearing two names, and R20 was
+                       satisfied in letter and not in fact.
+
+            FG-S336-I  WORLD. Five codes are anchored only outside
+                       twelve spaces and eighteen more are named with no
+                       occurrence at the start of any line. The owed
+                       code is not a habit of the preceding session.
+
+            FG-S336-J  WORLD. One code anchored outside twelve spaces
+                       has no row anywhere, and two others pair with a
+                       row of the same code, so the eight occurrences
+                       are not one class.
+
+            FG-S336-K  WORLD. Reported by a second seat and banked here
+                       without decision: the tier default in the
+                       verifier is the strongest value, a skipped
+                       analysis carries it in served output, and the
+                       guard that names the rule is scoped to one bucket
+                       and cannot see it.
+
+            FG-S336-L  SEAT. A finding arrived as chat text with a
+                       declared digest and no file. The digest was never
+                       checked against anything and the content is
+                       recorded as unverified bytes.
+
+            FG-S336-M  WORLD. The set of letters issued in a namespace
+                       has no instrument. The document shows what is
+                       anchored, and a letter that lives in a message is
+                       invisible to every census in this house.
+
+            FG-S336-N  SEAT. Letters were named in messages before an
+                       entry existed to carry them, which is the
+                       practice that left two codes of an earlier
+                       session travelling without an anchor.
