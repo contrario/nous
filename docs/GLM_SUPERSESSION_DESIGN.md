@@ -9136,3 +9136,264 @@ document itself.
                        entry existed to carry them, which is the
                        practice that left two codes of an earlier
                        session travelling without an anchor.
+
+  - S337 the transport rule becomes an enforcement and refuses three
+    real executions on the host, the suite gate is measured against its
+    own object and found narrower by one hundred and thirty eight, the
+    repository root is found to hold a second body of files, and the
+    surface the wheel carries is read from the wheel
+
+    R24 governs this entry. Every value below was printed by an
+    instrument in the session that carries it, and the set and the shape
+    are named beside it. Two values that a preceding reading printed are
+    recorded here as VOID rather than repeated, because the instrument
+    that printed them also printed a warning that voided them.
+
+    D337-1  THE OBJECT. Whether the instrument that gates every release
+            counts the tests of this repository or counts the tests that
+            one invocation can see. SET: the node identifiers returned
+            by two collections at the pinned head. SHAPE: pytest over
+            the tests directory against pytest with no argument,
+            identifiers kept when the line holds a double colon, sorted.
+            BLIND TO: an identifier that moves with a parametrisation
+            seed and any test that neither collection reaches.
+
+    D337-2  THE TRANSPORT RULE IS AN ENFORCEMENT AND NO LONGER A
+            DECLARATION. The first leg of every executed file now
+            refuses unless it is a file, unless an expected digest is
+            supplied as an argument, and unless the digest it computes
+            over itself equals that argument. It refused three real
+            executions on this host: an inline paste, a duplicated
+            command line, and a second inline paste. The comparison
+            value enters as an argument and is never computed from the
+            thing being checked.
+
+    D337-3  THE THING THAT MAKES IT AN ENFORCEMENT IS ONE LEG AND NOT A
+            BUILDER. The preceding seal recorded that only a builder for
+            the things that are executed would convert the rule. That
+            conflated two claims. Refusing a single execution costs one
+            leg and no new capability. Guaranteeing that every executed
+            thing carries that leg is the builder, and it is not taken
+            here.
+
+    D337-4  THE SUITE GATE IS NARROWER THAN ITS OBJECT BY 138. SET: the
+            repository at the pinned head. SHAPE: the two collections
+            named above. The narrow invocation returns 2890 and the wide
+            one 3028, no identifier is duplicated, and no identifier is
+            in the narrow set and absent from the wide one. The release
+            phase runs the narrow invocation and the floor is compared
+            against it, so those 138 have never gated anything.
+
+    D337-5  THE ROOT HOLDS A SECOND BODY OF FILES. SET: names at the
+            root matching the two default discovery patterns. There are
+            30. Twenty three are in the index and seven are ignored by
+            two rules of the ignore file. Nineteen yield the 138 and
+            eleven yield nothing. Ten of the eleven carry the marker
+            that names them generated output of this compiler, and seven
+            of those ten pair with a source of the same stem. The
+            eleventh is a runner.
+
+    D337-6  THE ROOT FILES ARE NOT STALE COPIES. SET: the tracked file
+            names under the tests directory. SHAPE: equality of base
+            names. There are 345 such files and the intersection is
+            empty. They entered the index in one act on the twenty first
+            of April, and four of them were touched again in July, so
+            they are maintained and not abandoned.
+
+    D337-7  THE SHIPPED SURFACE IS 143 TOP LEVEL NAMES AND IT IS READ
+            FROM THE WHEEL. SET: the declaration in the project file at
+            its pinned digest, and the archive listing of a wheel that
+            already existed on the disk. SHAPE: the bracketed list, and
+            the entries of the archive that hold no separator and end in
+            the source suffix. Both give 143 and the symmetric
+            difference is empty. BLIND TO: the published artifact, since
+            nothing reached the network, and the wheel read is one minor
+            version behind.
+
+    D337-8  NONE OF THE 143 COLLIDES WITH THE STANDARD LIBRARY OF THIS
+            INTERPRETER, AND THAT IS NOT THE RISK. SET: the 143 against
+            the name set the interpreter reports. The intersection is
+            empty. The risk is a third party distribution claiming the
+            same name, which this shape cannot see. One such collision
+            was found on the other host between two versions of one
+            distribution.
+
+    D337-9  THE UNQUALIFIED IMPORT SURFACE IS 866 SITES. SET: tracked
+            paths at the pinned head. SHAPE: a line beginning with the
+            import keyword or the from keyword followed by one of the
+            143 names. Each resolves by first match on the search path
+            of whatever environment the code runs in. The evidence this
+            system signs covers the program and the cost bound. It does
+            not cover the identity of the modules that were imported.
+
+    D337-10  THE WHEEL GATE HAS ONLY THE BRANCH OF PRESENCE. SET: the
+             body of the phase delimited by its own definition line and
+             the next one, read by an instrument and not by line
+             numbers. It is 89 lines with 65 required entries and three
+             refusals, and all three ask whether something is missing,
+             whether a count equals an expected value, or whether a
+             version string appears. No leg asks what is present that
+             should not be. It is the class this ledger already records
+             under a surface predicate with no false branch.
+
+    D337-11  THE PRESENCE TEST OF THAT GATE IS A SUFFIX MATCH. A
+             required name is satisfied by any entry whose path ends
+             with it, so a differently prefixed file of the same ending
+             discharges the requirement. Loose in the branch that exists
+             and absent in the one that does not.
+
+    D337-12  AN INSTRUMENT THAT WARNS MUST BE ABLE TO VOID ITS OWN LEG.
+             Two readings printed a count beside a warning on the error
+             stream that made the count meaningless, on two hosts. From
+             here the error stream of a comparison is captured to a file
+             and counted, and a leg whose comparison warned declares
+             itself VOID and prints no number. The two counts already
+             printed are VOID.
+
+    D337-13  A CONTROL THAT DEPENDS ON THE ENVIRONMENT IS NOT A CONTROL.
+             The first version of that guard was driven by a difference
+             between two orderings, and on the machine where it was
+             validated the two orderings agreed, so the guard never
+             fired and bound nothing. It was replaced by a deliberately
+             unsorted input, which fires everywhere.
+
+    D337-14  THE INSTALLED SURFACE IS NOT MEASURABLE ON EITHER HOST.
+             Both carry an editable install, so the record of installed
+             files names a finder and not the modules. The declaration
+             and the wheel on the disk answer the question instead. What
+             a stranger receives from the index is still unmeasured and
+             is owed.
+
+    D337-15  THE OWED NUMBER OF THE PRECEDING SESSION CLOSES AT 351.
+             SET: this document at its pinned digest and its parent
+             blob. SHAPE: the code pattern anywhere in a line, distinct.
+             The parent returns 332, which is the value the preceding
+             seal carried, so the shape is the one that produced it. The
+             declared band was 346 to 351 and the value is the upper
+             bound. Occurrences are 479.
+
+    D337-16  WHAT IS NOT DECIDED. Whether the 138 pass. Whether the ten
+             generated files belong in the index. Whether the runner is
+             live. Whether the 143 names should be moved behind a
+             package. Nothing in this entry authorises a change to any
+             of them.
+
+    FINDINGS
+
+            FG-S336-O  SEAT. A reading printed five values beside the
+                       word expect and compared none of them, and one of
+                       the five disagreed without moving the verdict.
+                       The identity it appeared to test was proven
+                       separately by a digest comparison inside the
+                       verdict.
+
+            FG-S336-P  SEAT. A shape measured on the payload was
+                       declared for the sidecar. The payload contributes
+                       none, the document already held eight, and the
+                       concatenation holds eight.
+
+            FG-S336-Q  WORLD. The gate document is owned by root and the
+                       repository is not. Mode and owner were the same
+                       before and after the rename, so nothing changed
+                       in that session. It was already so.
+
+            FG-S336-R  WORLD. A finding reported by a second seat about
+                       the tier default is banked and not decided. It
+                       arrived as chat text with a declared digest and
+                       no file, so the digest was never checked against
+                       anything.
+
+            FG-S337-A  SEAT. An argument list builder invoked without
+                       the flag that suppresses an empty run called its
+                       command once with no operands, and that command
+                       then read the terminal. A reading stopped on the
+                       host and had to be interrupted. Reproduced under
+                       a stream that never closes and repaired by
+                       redirection and by the flag.
+
+            FG-S337-B  SEAT. A pattern file that is empty makes the
+                       matcher accept every line. On a fixture it
+                       returned 997 where the true answer was 3. The leg
+                       now refuses on an empty pattern file and the
+                       refusal is driven both ways in the same reading.
+
+            FG-S337-C  SEAT. The system sort and the language sort
+                       disagree under the locale of this host. The
+                       comparison warned on the error stream and the
+                       count printed anyway, on two hosts, and both
+                       counts are void. Both sides are now sorted under
+                       the byte ordering.
+
+            FG-S337-D  SEAT. A helper was written with escaped quotation
+                       marks that survived into the file, so it was
+                       syntactically dead and produced no output while
+                       every heading around it still printed. Only its
+                       own control caught it.
+
+            FG-S337-E  SEAT. Two declared values transplanted a number
+                       produced by one shape into a prediction about a
+                       different shape. The set of files that collect is
+                       not the set of files that match a name, and the
+                       second is larger. Both were refuted by the
+                       instrument.
+
+            FG-S337-F  SEAT. A range of line numbers chosen by eye stood
+                       in for an instrument, and the two counts taken
+                       over it were meaningless. The body is now
+                       delimited by its own definition line and the next
+                       one.
+
+            FG-S337-G  SEAT. A search combined an alternation with a
+                       depth limit so that the limit bound only the
+                       first branch. The answer returned was correct and
+                       the shape was not.
+
+            FG-S337-H  SEAT. A refusal printed only the digest it
+                       computed and not the one it was given, so a
+                       refusal on a mistyped argument read as if the two
+                       had matched. Both are printed now.
+
+            FG-S337-I  WORLD. The instrument that gates every release is
+                       scoped to one directory while its object is the
+                       whole tree. The difference is 138 tests in 19
+                       files that nothing has ever run.
+
+            FG-S337-J  WORLD. The root of the repository holds 30 files
+                       matching the default discovery patterns, of which
+                       10 are output of this compiler and carry a marker
+                       saying so. A generated artifact is collected as a
+                       test because of the stem of the source it came
+                       from.
+
+            FG-S337-K  WORLD. A module that ships in the wheel and is
+                       imported by the command line entry point is
+                       collected as a test suite by an unqualified
+                       invocation, because its name matches the
+                       discovery pattern.
+
+            FG-S337-L  WORLD. The wheel carries 143 top level module
+                       names and one top level package. The declaration
+                       and the archive agree exactly. Many of the names
+                       are ordinary words and carry no prefix of this
+                       project.
+
+            FG-S337-M  WORLD. The gate over the wheel has only the
+                       branch of presence. Nothing in it asks what the
+                       archive contains that it should not, and its
+                       presence test is satisfied by a suffix match.
+
+            FG-S337-N  WORLD. 866 import sites name a top level module
+                       without qualification, and each resolves by first
+                       match on the search path of the environment. The
+                       signed evidence does not cover which module
+                       answered.
+
+            FG-S337-O  WORLD. Both hosts carry an editable install, so
+                       neither can report the installed surface. The
+                       record of installed files names a finder. What
+                       the index serves to a stranger is unmeasured.
+
+            FG-S337-P  WORLD. One name on the second host is claimed by
+                       two directories of metadata belonging to two
+                       versions of one distribution, which is the state
+                       left behind when one install writes over another.
