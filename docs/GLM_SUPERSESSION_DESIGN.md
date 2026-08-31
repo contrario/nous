@@ -9792,3 +9792,354 @@ document itself.
                        a single file. For one pair both halves are
                        excluded by adjacent rules and the test half
                        still yields seven of the 138.
+
+  - S339 the wheel content gate is opened and the inherited sentence
+    about it is superseded, the rule it matches by is found to leave
+    five of its names uncheckable on their own, the phase that decides
+    what leaves the house gains its first caller in the tree, and the
+    alphabet of the finding namespace is exhausted
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument in the session that carries it, and the set, the shape
+    and what the shape could not see are named beside it. Values
+    arriving from an earlier seal without a recorded shape are marked
+    INHERITED and were compared by a counter separate from the verdict,
+    because a disagreement with a shape nobody wrote down is not a
+    failure of the reading.
+
+    THE OBJECT WAS CHOSEN BECAUSE IT WAS INHERITED, NOT BECAUSE IT WAS
+    BELIEVED. The sentence this session set out to test came from a seal
+    two sessions back with no set, no shape and nothing recorded about
+    what it could not see. Testing it was cheap and both outcomes were
+    worth having. It turned out to be wrong in the way it was written
+    and right in what it pointed at, which is why it is superseded here
+    rather than repaired.
+
+    THE SEAT'S OWN ERRORS ARE LABELLED SEAT AND THERE ARE MORE OF THEM
+    THAN OF ANYTHING ELSE. Two of them are rules this seat stated in
+    writing and then broke in the next execution. One is a summary
+    filter that dropped exactly the evidence the reading had declared it
+    would read, and reported a control that ran green as one that had
+    gone red. That one was caught by a value in the following execution
+    and not by any guard.
+
+    D339-1  THE OBJECT. The wheel content gate, the phase that decides
+            which modules must be inside the artifact that leaves the
+            house. SET: one tracked path at the pinned head, read as
+            text and as a syntax tree and never imported. Every other
+            set below is derived in the reading that uses it and none is
+            carried.
+
+    D339-2  THE INHERITED SENTENCE IS SUPERSEDED, NOT REPAIRED. It said
+            the wheel gate has no absence branch. SHAPE: the enclosing
+            definitions printed whole between their own definition line
+            and their end, with every branch and every exit inside those
+            spans. The gate raises when a required name is matched by
+            nothing in the archive, so an absence branch is present.
+            What is absent is different and is stated in the three items
+            that follow. The sentence travelled two seals without a
+            shape, which is why it could be neither confirmed nor
+            corrected until it was measured.
+
+    D339-3  THE REQUIRED SET IS SEVENTY FOUR LITERAL MEMBERS AND TWO
+            SHAPES AGREE. A census of every literal list of strings in
+            the file gives a longest list of seventy four. A tree
+            reading that locates the list by name inside the named
+            function, and refuses unless it is found exactly once as a
+            literal list of string constants, gives seventy four
+            distinct members at the same line. Seventy three end in the
+            python suffix and one is a grammar file. BLIND TO: any name
+            assembled while the script runs.
+
+    D339-4  THE MATCHING RULE LEAVES FIVE NAMES UNCHECKABLE ON THEIR
+            OWN. The rule written in the file matches an archive entry
+            when the entry ends with the required name. SHAPE: that same
+            rule run over the required set against itself, and then over
+            the declared set. Seven ordered pairs inside the required
+            set have the property, over five distinct shadowed names,
+            and one of the five is satisfied by four different declared
+            modules. An archive that carries the longer name and not the
+            shorter passes. The set checked independently is sixty
+            eight, not seventy three.
+
+    D339-5  THE SET HAS NO COUNT AND THE CHECK BELOW IT HAS ONE. Four
+            lines after the list, a template count is compared against a
+            named constant with an inequality, which fails in both
+            directions. The list of module names has no such constant. A
+            name removed from it reduces what the gate examines and
+            nothing in the file says so. The pattern for the repair is
+            already inside the same function.
+
+    D339-6  THE PHASE HAD NO CALLER ANYWHERE IN THE TREE. SET: tracked
+            paths at the pinned head, whole tree. SHAPE: two fixed
+            strings, the name of the function and the marker family,
+            matched anywhere in a line with no anchor. Every hit lies
+            inside the file that defines the function and none lies
+            under the tests directory. BLIND TO: a phrase split across a
+            line break, and untracked paths.
+
+    D339-7  THE METADATA LOOKUP HAS NO DEFAULT. The entry naming the
+            metadata member is taken from a generator with no fallback,
+            so an archive without that member raises an exception of a
+            type the entry point does not catch. The failure leaves as a
+            traceback and not as the abort the pipeline defines for
+            itself. Recorded as read, not as judged.
+
+    D339-8  THE TWO SETS, AND WHAT THE SIZE OF THE DIFFERENCE DOES NOT
+            MEAN. The project file declares one hundred and forty three
+            module names and they are distinct. SHAPE: the whole
+            document walked for lists whose members are all strings,
+            selecting the one whose dotted path ends with the
+            declaration key, so no key path is assumed. Every python
+            member of the required set is among them and none is
+            undeclared. Seventy of the declared names lie outside the
+            required set. THE GATE NEVER CLAIMED THEM. That number is
+            the size of a silence and not a verdict on it.
+
+    D339-9  THE FILE HAD ALREADY WRITTEN THE RULE FOR ITS OTHER LIST.
+            Above a second hand written list, a comment pins a
+            measurement to a date and to a head, then instructs the
+            reader not to trust the count and to measure again, and then
+            says the list should be derived from the declared modules
+            rather than enumerated so that a new module gains coverage
+            without a second registration. The wheel gate has the same
+            form and carries no such comment.
+
+    D339-10  THE DECISION IS A TEST AND NOTHING ELSE. No byte of the
+             release path changes. The test locates the list by the
+             tree, binds every python member to the declared set as a
+             relation and not as a number, forbids duplicates, and holds
+             the length above a floor that is a one way ratchet.
+             REJECTED: a constant count written into the gate, which
+             would be a third registration of the same set and is the
+             thing the file's own comment forbids.
+
+    D339-11  EVERY LIVE RULE OF THAT TEST WAS DRIVEN RED BEFORE IT WAS
+             TRUSTED. SHAPE: a fixture repository built at the same
+             path, carrying a list of the same size and a declaration of
+             the same size, mutated one thing at a time. Removing a
+             name, repeating a name, adding an undeclared name,
+             replacing the literal with a call, removing the
+             declaration, repeating a declared name and renaming the
+             function each drove a named test red. WHAT THIS SHOWS IS
+             THE CONTROL FLOW AND NOT THE SHIPPED BYTES.
+
+    D339-12  WHAT IS BANKED AND WHAT BLOCKS IT. Two changes belong
+             together and neither is made here: the oracle, which reads
+             the archive listing and matches by suffix where a canonical
+             record of exact paths and hashes exists inside the same
+             archive; and the set, which is enumerated where it could be
+             derived. Neither can be designed before an archive is
+             opened. NO ARCHIVE WAS OPENED IN THIS SESSION.
+
+    D339-13  THE WORLD, FETCHED IN THIS SESSION. The binary distribution
+             format carries a record listing almost every file in the
+             archive with a hash of sha256 or better, and installers
+             verify those hashes against the file contents during
+             extraction. The phase after the gate installs the artifact,
+             so the pipeline already verifies that record while the
+             phase that decides content does not read it. A maintained
+             external tool implements the missing direction as two named
+             checks. Whether either fits a project whose modules are
+             flat rather than a package tree is undecided and belongs
+             with the banked item.
+
+    D339-14  THE TRANSPORT ENFORCEMENT REFUSED AND THE REFUSAL COST THE
+             OPERATOR SESSION. Rule zero was incomplete twice. The
+             second body was delivered as text rather than as a file,
+             the first leg refused because what it was asked to digest
+             was not a file, and the refusal ended the operator session
+             because the exit leaves the shell itself when there is no
+             child. THE REFUSAL WAS CORRECT. Its cost on that delivery
+             path had never been written down anywhere, and it is
+             written down now.
+
+    D339-15  THE FIRST RULE ZERO BODY CANNOT IDENTIFY ITSELF. Its self
+             leg sits after the change of directory, so an argument
+             given as a relative name no longer resolves and the leg
+             reports that it is not a file when it is one. The position
+             is the defect and not the report. A refusing guard placed
+             there would refuse every relative invocation. Both later
+             readings of that body were taken from an instrument no leg
+             had identified, and the identity was established from
+             outside instead, by digest, before the body ran.
+
+    D339-16  THE ALPHABET OF THE FINDING NAMESPACE IS EXHAUSTED AND THE
+             CONVENTION EXTENDS TO TWO LETTERS. The preceding session
+             used twenty four contiguous letters, measured from the
+             module that produced its payload and agreeing with the
+             count of rows in the document. SHAPE: a payload built with
+             a two letter code and every counter of the house run over
+             it. All of them count it and the delta listing is empty.
+             TWO PROPERTIES ARE MEASURED AND ACCEPTED: a continuation
+             anchor is fixed at a value that assumes a code of nine
+             characters, so a longer code wraps one column to the left;
+             and a two letter code sorts between the first and the
+             second letter, while no shape in the house orders codes.
+             REJECTED: a numeric suffix, because every code already
+             assigned would stop conforming and every counter would have
+             to change; and moving the owed codes into the current
+             namespace, because that breaks the correspondence the
+             namespace exists for.
+
+    D339-17  THE BUILDER IS NOT TOUCHED. It has produced six consecutive
+             payloads unchanged and one unrepaired property of it is
+             already on record. The misalignment above is cosmetic,
+             violates no stated rule of the house shape, and is recorded
+             rather than fixed.
+
+    D339-18  THE DISAGREEMENT COUNTER SHOWED ITS LIMIT AGAIN. A leg
+             compared a count of exits inside the printed spans against
+             an inherited three and disagreed with thirteen. The
+             inherited value was correct: the three refusals it named
+             lie inside the gate function alone, and the shape built
+             here was wider than the claim it was compared against. A
+             disagreement counter does not say which side is wrong, and
+             this is the second consecutive session in which the
+             inherited side was the right one.
+
+    D339-19  WHAT THIS ENTRY DOES NOT CLAIM. It does not claim that any
+             built archive contains the required members, since none was
+             opened. It does not claim the external tool fits. It does
+             not claim that the number of declared names outside the
+             required set is a defect. It does not claim the fixture
+             proves the shipped bytes. It does not claim that the gate
+             is now guarded against the matching rule, which is
+             untouched.
+
+    FINDINGS
+
+            FG-S338-Y  SEAT. The sealed opener declared positive
+                       controls that its own instrument does not print.
+                       One of them was reconstructible by summing a
+                       listing the instrument does print. The rest were
+                       unmeasured until a closing reading gave them a
+                       shape.
+
+            FG-S338-Z  SEAT. A leg count carried for each rule zero body
+                       travels without a shape. Four shapes were run
+                       against them and none reproduces both declared
+                       values. The digests and the byte counts match
+                       exactly; only the leg counts are undiagnosed, and
+                       they are carried no further.
+
+            FG-S338-AA  SEAT. A format placeholder printed a literal
+                       instead of a number. The first instance was
+                       caught on a fixture and repaired, and no sweep
+                       was made for the rest, so more of the same class
+                       reached a later fixture before being caught.
+
+            FG-S338-AB  SEAT. Two refusal tokens were split across
+                       source lines and carry a space inside the token.
+                       Both were repaired together. One of the same
+                       class shipped inside a write arc and never fired.
+
+            FG-S338-AC  SEAT. A sentence of the sealed opener compared
+                       two candidate paths and attributed to one of them
+                       a property it does not have. The path described
+                       as containing no unproven bytes reproduces the
+                       same unexecuted transport prefix as the other,
+                       and the claim was withdrawn on measurement in the
+                       following session.
+
+            FG-S338-AD  SEAT. The file table of the sealed opener omits
+                       instruments the session built and used, including
+                       a frozen analyser that was re-run in five
+                       readings. The omission was found by the operator
+                       and the instruments were carried forward by hand.
+
+            FG-S339-A  SEAT. The seat stated which letters a namespace
+                       had used, having only a count of rows. A counter
+                       of lines does not say which letters were spent.
+                       The statement was true and was not measured,
+                       which makes it a guess that landed.
+
+            FG-S339-B  SEAT. The seat declared how many decisions and
+                       how many findings an entry would carry before any
+                       payload existed. R22 says a count is taken from
+                       the built bytes and not from the intent. All
+                       three numbers were withdrawn.
+
+            FG-S339-C  SEAT. The seat wrote down that the content module
+                       keeps two fixed attribute names whatever the
+                       namespaces are, and then used different names in
+                       the next execution. The builder refused. A rule
+                       stated and broken inside the same session.
+
+            FG-S339-D  SEAT. The seat predicted the value of a self
+                       identification leg from the semantics of the
+                       argument, while the bytes that decided it were
+                       already in front of it. The position of the leg,
+                       not the semantics, produced the value.
+
+            FG-S339-E  SEAT. A summary filter dropped exactly the
+                       evidence a reading had declared it would read. A
+                       control that ran green was reported as having
+                       gone red, and a second filter cut the refusal
+                       line of another control. Both happened in one
+                       execution and the first was caught only by a
+                       value printed in the next.
+
+            FG-S339-F  SEAT. The seat declared a threshold where a value
+                       was owed and then scored the threshold as a
+                       prediction. A bound that the text in front of the
+                       seat had already satisfied is not a prediction.
+
+            FG-S339-G  SEAT. A leg compared a count against an inherited
+                       value using a shape wider than the claim the
+                       value came from. The inherited value was correct
+                       and the disagreement was the seat's.
+
+            FG-S339-H  SEAT. A self digest leg prints the error text of
+                       the tool it calls in the position where a digest
+                       belongs, so an absence appears where a value is
+                       expected. The leg reports and does not refuse.
+
+            FG-S339-I  WORLD. An exit inside a body delivered as text to
+                       an interactive login shell ends that shell,
+                       because there is no child process to leave. A
+                       refusal on that delivery path costs the operator
+                       session. The behaviour belongs to the shell and
+                       not to the decision of the guard.
+
+            FG-S339-J  WORLD. The continuation anchor of the payload
+                       builder is fixed at a value that assumes a
+                       finding code of nine characters. A code of ten
+                       wraps one column to the left of the text above
+                       it. No stated rule of the house shape is
+                       violated.
+
+            FG-S339-K  WORLD. A two letter finding code sorts between
+                       the first and the second single letter code under
+                       the ordinary collation. SET: the two rule zero
+                       bodies held in this session. No shape in either
+                       orders codes; both order families and both count
+                       distinct codes without regard to order.
+
+            FG-S339-L  WORLD. Five of the required names cannot be
+                       checked independently, because each is a suffix
+                       of another name that the same rule accepts. One
+                       of the five is satisfied by four different
+                       declared modules.
+
+            FG-S339-M  WORLD. The required list carries no count of
+                       itself while a check four lines below it compares
+                       a count against a named constant in both
+                       directions. The pattern for the repair sits
+                       inside the same function as the defect.
+
+            FG-S339-N  WORLD. The phase that decides the content of the
+                       artifact was named nowhere in the tracked tree
+                       outside the file that defines it, and no test
+                       called or read it. It has one now.
+
+            FG-S339-O  WORLD. The metadata lookup inside the gate takes
+                       the first matching member from a generator with
+                       no default, and the exception raised when there
+                       is none is not of the type the entry point
+                       catches.
+
+            FG-S339-P  WORLD. Seventy of the declared module names lie
+                       outside the set the gate examines, and every name
+                       the gate examines is declared. The gate makes no
+                       claim about the seventy.
