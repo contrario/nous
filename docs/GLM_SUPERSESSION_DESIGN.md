@@ -9397,3 +9397,398 @@ document itself.
                        two directories of metadata belonging to two
                        versions of one distribution, which is the state
                        left behind when one install writes over another.
+
+  - S338 the premise the entry rests on is opened and holds, the file
+    set that produces the gap is read by an instrument that never
+    imports, the pairing key is found after three shapes that added
+    something, and the identity a collected module receives is found to
+    depend on where the repository sits on the disk
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument in the session that carries it, and the set, the shape
+    and what the shape could not see are named beside it. Two values
+    arriving from the preceding seal without a recorded shape are marked
+    INHERITED and were compared by a counter that is separate from the
+    verdict, because a disagreement with a shape nobody wrote down is
+    not a failure of this reading.
+
+    THE SEAT WAS WRONG ELEVEN TIMES AND THE ENTRY SAYS SO. Three of
+    those were the same question attacked three ways, each time by
+    adding something the question did not need. Four were caught by
+    fixtures before the bytes reached the host. One was caught by the
+    instrument's own control after it ran. One was an inherited premise
+    the seat was about to make a title of. One was an explanation formed
+    from documentation that the measurement then refuted.
+
+    D338-1  THE OBJECT. The body of files at the repository root that
+            the default discovery patterns name, the tests they carry
+            that no release phase reaches, and what a release would ship
+            of them. SET: the repository at the pinned head. Every set
+            below is derived in the reading that uses it and none is
+            carried.
+
+    D338-2  THE PREMISE IS OPENED AND IT HOLDS. SET: the release script
+            at its pinned digest. SHAPE: every line naming the test
+            runner or the floor, each with the definition that encloses
+            it, and every such definition printed whole between its own
+            definition line and the next. The second phase runs the
+            runner over the tests directory and compares a passed count
+            against the floor. Three further phases invoke it and all
+            three name paths under that same directory. Nothing in the
+            script reaches the root.
+
+    D338-3  THE FLOOR IS SKIPPABLE BY A FLAG. The second phase returns
+            before any comparison when the skip argument is given, and
+            the argument is documented as an emergency. This is recorded
+            as read, not as judged.
+
+    D338-4  THE GAP IS 138 AND TWO INSTRUMENTS AGREE EXACTLY. SET: the
+            identifiers one invocation returns minus those the other
+            returns. SHAPE: set difference under the byte ordering, then
+            a syntax tree reading of each distinct file. The difference
+            is 138 identifiers and the tree finds 138 functions whose
+            name begins with the test prefix. No parametrisation and no
+            test class appears in that set, so the expansion factor the
+            second shape is blind to has no members here.
+
+    D338-5  SEVEN OF THE NINETEEN ARE NOT IN THE INDEX. SET: the
+            distinct file components of the difference. Twelve are
+            tracked and seven are ignored, and the two partitions close
+            against the whole. DERIVED, by arithmetic over the per file
+            counts the instrument printed and not by a leg of its own:
+            51 of the 138 come from files a stranger who clones does not
+            receive.
+
+    D338-6  A RULE THAT MATCHES DOES NOT IGNORE WHAT THE INDEX HOLDS.
+            SET: the thirty names at the root. SHAPE: the ignore check
+            run twice, once as the tool answers by default and once with
+            the index taken out of the question. The rule matches eight
+            names and seven are ignored. The eighth is in the index, and
+            the default answer never reports a tracked path. The two
+            answers differ by exactly one and that one is tracked.
+
+    D338-7  FIVE ROOT FILES MUTATE THE SEARCH PATH WHEN THEY ARE
+            IMPORTED. SET: the thirty. SHAPE: every mutation site
+            classified into three buckets by walking the tree, import
+            and main guard and function, and the three close against the
+            total of six. Five are reached at import and one sits inside
+            a test function. The preceding opener said one, and its
+            shape was not recorded.
+
+    D338-8  THE INVOCATION THAT GATES A RELEASE HOLDS NO ROOT MODULE.
+            SET: the module table of the process after collection
+            finishes. SHAPE: each entry asked which file it was read
+            from, the file compared against the thirty, so that no
+            naming scheme can hide a match. The wide invocation holds
+            thirty and the narrow holds none, with the identifier counts
+            of both agreeing with every earlier reading. BLIND TO:
+            anything imported when the suite runs rather than when it
+            collects.
+
+    D338-9  THERE IS NO CONFTEST AT THE ROOT. SET: every file of that
+            name in the tree. There is one and it is under the tests
+            directory, it is tracked, and its two module level import
+            lines name the future module and the runner itself. A second
+            and independent shape over every import line under that
+            directory finds no line naming any of the thirty, and the
+            shape was driven against a name the suite does import so
+            that it is known to be able to find one.
+
+    D338-10  THE COLLECTOR IMPORTS WHAT IT DISCOVERS. Measured on this
+             host against a synthetic file that writes a marker when its
+             module body runs. It follows that every wide collection
+             executes the import level code of all thirty, and that is a
+             NECESSITY drawn from the identifiers, not a separate
+             measurement of those thirty.
+
+    D338-11  THE IDENTITY A COLLECTED MODULE RECEIVES IS BUILT FROM ITS
+             ABSOLUTE PATH. SET: the same module table. Not one of the
+             thirty is present under its own stem, and all thirty are
+             present under a dotted name whose leading components are
+             the directories the repository happens to sit in. The
+             identity therefore moves when the checkout moves. Nothing
+             in the configuration of this repository asks for that; it
+             has two entries and both are marker declarations.
+
+    D338-12  EIGHT OF THE ELEVEN THAT COLLECT NOTHING CARRY A GENERATED
+             MARKER. SET: the eleven. SHAPE: two different fixed
+             strings, each over the whole file. Both give the same
+             eight. The preceding seal said ten and its shape was not
+             recorded. An earlier reading in this session used only the
+             first three lines of each file and gave the same eight, so
+             the two depths agree here.
+
+    D338-13  NO FILE CARRYING THAT MARKER IS AMONG THE 138, AND ONE FILE
+             THAT PAIRS WITH A SOURCE IS. Two shapes over one question.
+             Under the marker the count inside the collecting set is
+             zero. Under the pairing the count is one. That one carries
+             no marker, so whether it is generated IS NOT DECIDED and
+             the finding it would refute stands with one member.
+
+    D338-14  THE PAIRING KEY IS THE WHOLE STEM AND NOTHING IS REMOVED
+             FROM EITHER SIDE. SET: the eleven against the base names of
+             every source file of this language in the tree. The
+             intersection is seven, which is the value the preceding
+             seal carried. Over the thirty it is eight, and the extra
+             member is the file that both collects and pairs.
+
+    D338-15  THE BANNER NAMES THE AGENT THE SOURCE DECLARES, NOT THE
+             FILE. SET: the seven pairs. SHAPE: the name the banner
+             carries, searched inside the paired source. Seven of seven.
+             The file name and the banner name are two names for two
+             different things and the seat spent three shapes conflating
+             them.
+
+    D338-16  SIX CLASSES IN ONE FILE ARE VISIBLE TO THE COLLECTOR AND IT
+             REFUSES ALL SIX. Three are written there and three are
+             names it imports from a module that ships. The refusals are
+             six. Three mechanisms produce them: a decorator that
+             synthesises the initialiser in two cases, a written
+             initialiser in one, and in three cases neither, which by
+             elimination leaves the base class or the metaclass. The
+             base was not opened, so the third is a CONCLUSION BY
+             ELIMINATION and not a reading.
+
+    D338-17  A SYNTAX TREE OF ONE FILE CANNOT DECIDE WHETHER A CLASS HAS
+             AN INITIALISER. The collector resolves the attribute on the
+             class object, which traverses the whole inheritance chain.
+             The tree sees what one file writes. This is a structural
+             mismatch of shapes and not a repairable defect of the
+             instrument. The documented attribute that would suppress
+             the refusal appears nowhere in either file.
+
+    D338-18  TWO MODULES THAT THE DECLARATION SHIPS CARRY OR IMPORT
+             THOSE NAMES. SET: the declared list of top level modules at
+             the pinned digest. It holds 143 names, all distinct, every
+             one present at the root, and every one parses. One of the
+             thirty root files is in that list. Nine imported names
+             beginning with the test prefix appear across four shipped
+             modules, two of which are the parser and the formatter of
+             this compiler. BLIND TO: the built archive, which is
+             inherited from the preceding seal and was read there at one
+             minor version behind.
+
+    D338-19  FOUR SHIPPED MODULES MUTATE THE SEARCH PATH AND ONE OF THEM
+             DOES IT AT IMPORT. The one that does it at import is the
+             server module. A reader who imports it moves the search
+             path of their own process. This was on no board and had
+             never been measured.
+
+    D338-20  THE SHORT NAME SURFACE HAS MEMBERS NOW. Of the 143, twenty
+             six are eight characters or fewer, and they include the
+             words for a parser, a formatter, a registry, a runtime, a
+             manifest, an envelope and a repl. The interpreter floor of
+             this project is 3.11, and the two names that were standard
+             library modules until 3.10 removed them therefore cannot
+             collide on any interpreter this project accepts. That worry
+             is measured and dead.
+
+    D338-21  THREE SOURCES OF THIS LANGUAGE ARE EXCLUDED BY THREE NAMED
+             RULES. SET: every source file of this language in the tree.
+             Fifty six are tracked and three are not, and the two close
+             against the whole. Each of the three is excluded by its own
+             rule and two of those rules name a single file. For one
+             pair both halves are excluded, by adjacent rules, and its
+             test half still yields seven of the 138.
+
+    D338-22  THE ENFORCEMENT DECLARED IN THE PRECEDING ENTRY DID NOT
+             BIND THE FIRST TWO EXECUTIONS OF THE SESSION THAT FOLLOWED
+             IT. SET: the two rule zero executions of this session.
+             SHAPE: whether the executing bytes carry a refusing first
+             leg. The first reported that it was not a file and
+             continued. The second was the preceding session's text,
+             which has no such leg at all. This is exactly the
+             distinction the preceding entry drew between refusing one
+             execution and guaranteeing that every execution carries the
+             refusal.
+
+    D338-23  A DISAGREEMENT COUNTER IS ADDED AND ITS LIMIT IS RECORDED
+             WITH IT. A comparison against a number whose shape was
+             never written down increments a counter that is separate
+             from the verdict. In one reading it recorded a disagreement
+             where the inherited value was right and the shape this
+             session had built was defective. A disagreement counter
+             does not say which side is wrong.
+
+    D338-24  WHAT WAS NOT MEASURED AND IS OWED. Whether any of the 138
+             pass. What the built archive of the current version
+             contains. Whether the base class of the three refused
+             classes supplies the initialiser. Why an in-process
+             invocation of the collector returns a failing exit state on
+             this host. Whether the eleven belong in the index at all.
+
+    D338-25  WHAT THIS ENTRY DOES NOT AUTHORISE. No file moves. No rule
+             is added or removed. No name leaves the declaration.
+             Nothing is run that has not run before. Every reading
+             recorded here was read only, and the only writes were to a
+             temporary directory outside the repository.
+
+    FINDINGS
+
+            FG-S337-Q  SEAT. A reading invoked the runner twice to
+                       obtain one number. It cost two minutes of silence
+                       and looked like a stall. One invocation to a file
+                       would have given both.
+
+            FG-S337-R  SEAT. A write leg printed an exit code beside the
+                       word that announces an expectation and compared
+                       nothing. Found on a fixture in the push leg,
+                       which is the most dangerous place it could have
+                       been.
+
+            FG-S337-S  WORLD. The operator terminal duplicates pasted
+                       lines. Four of six refusals in the preceding
+                       session were caused by it. The cause is
+                       unmeasured and lives outside this repository.
+
+            FG-S337-T  SEAT. Escaped quotation marks survived into two
+                       shipped files and were caught by fixtures both
+                       times. Both passed two syntax checks.
+
+            FG-S338-A  SEAT. One question was attacked with three shapes
+                       and each added something it did not need: a
+                       source of the wrong suffix at the wrong depth,
+                       then a stem with its suffix removed, then a name
+                       read out of a banner. The shape that answers
+                       removes nothing from either side and was tried
+                       last.
+
+            FG-S338-B  SEAT. The first three lines of a file stood in
+                       for the whole file in a marker census. The two
+                       depths happened to agree, which is luck and not a
+                       property of the shape.
+
+            FG-S338-C  SEAT. A format placeholder inside a generated
+                       string collided with the generator's own
+                       formatting and raised before anything was
+                       written. Caught by the interpreter, not by the
+                       discipline.
+
+            FG-S338-D  SEAT. A search expected a single space where the
+                       instrument pads a field to twenty one columns. It
+                       would have printed nothing on the host and been
+                       read as an absence. Caught on a fixture.
+
+            FG-S338-E  SEAT. A value that must be read from an
+                       instrument's output was written into a comparison
+                       as a constant taken from the host. On the fixture
+                       it went red for the right reason; on the host it
+                       would have passed for the wrong one.
+
+            FG-S338-F  SEAT. A census of a warning class matched every
+                       identifier containing that word. The number it
+                       produced was meaningless and the class it was
+                       meant to count was found by a fixed string
+                       instead.
+
+            FG-S338-G  SEAT. The collector invoked inside the reading's
+                       own interpreter returned a failing exit state and
+                       collected nothing, and the positive control the
+                       leg had declared for itself came back dead. The
+                       leg was declared void. The cause was not
+                       diagnosed; the shape was replaced by one already
+                       known to work.
+
+            FG-S338-H  SEAT. An import line shape anchored on a keyword
+                       matched ordinary prose in docstrings that begins
+                       with the same word. The line count it produced is
+                       void. The zero it produced for the question asked
+                       is not, because a false positive cannot create a
+                       false zero.
+
+            FG-S338-I  SEAT. A control asserting that every paired
+                       source is tracked was declared over one partition
+                       and read as covering another. The source beside
+                       the file that both collects and pairs was never
+                       inside it, and the prediction about that file was
+                       refuted.
+
+            FG-S338-J  SEAT. The seat was about to make the title of
+                       this entry out of a sentence inherited from the
+                       preceding seal whose shape was not recorded,
+                       having never opened the script that sentence is
+                       about. R24 forbids exactly that. The premise was
+                       then opened and it held, which does not make the
+                       omission smaller.
+
+            FG-S338-K  SEAT. An explanation for a measured surprise was
+                       assembled from the tool's own documentation and
+                       was wrong. The documented modes both predict the
+                       plain stem for a file at the root; the measured
+                       cause is a walk up the directory hierarchy.
+                       Reading the manual is not measuring the host.
+
+            FG-S338-L  WORLD. Seven of the nineteen files that produce
+                       the gap are not in the index, and by arithmetic
+                       over the printed per file counts 51 of the 138
+                       come from files a clone does not receive.
+
+            FG-S338-M  WORLD. An ignore rule matches eight names at the
+                       root and ignores seven. The eighth is in the
+                       index, and the check that answers by default
+                       never reports a tracked path, so the rule appears
+                       narrower than it is.
+
+            FG-S338-N  WORLD. Five files at the root mutate the
+                       interpreter search path when they are imported,
+                       and four of those five are inside the collecting
+                       set. The sixth mutation sits inside a test
+                       function that has never run.
+
+            FG-S338-O  WORLD. The narrow invocation holds no root module
+                       after collection, measured by asking each module
+                       table entry which file it came from rather than
+                       by looking a name up. There is no conftest at the
+                       root and no import line under the tests directory
+                       names any of the thirty.
+
+            FG-S338-P  WORLD. Eight of the eleven that collect nothing
+                       carry a generated marker, under two different
+                       fixed strings and over the whole file. The
+                       preceding seal said ten.
+
+            FG-S338-Q  WORLD. No file carrying that marker is inside the
+                       collecting set, and one file that pairs with a
+                       source is. The two shapes give zero and one and
+                       the file in question carries no marker.
+
+            FG-S338-R  WORLD. The pairing key is the whole file stem and
+                       the banner names the agent its source declares.
+                       Seven pairs under the first and seven of seven
+                       under the second.
+
+            FG-S338-S  WORLD. Six classes in one file are visible to the
+                       collector and it refuses all six. Three are
+                       written there, three are imported from a module
+                       that ships, and the attribute that would suppress
+                       the refusal appears in neither file.
+
+            FG-S338-T  WORLD. The declaration ships 143 top level names,
+                       one of which is a root file matching the
+                       discovery patterns, and nine imported names
+                       beginning with the test prefix appear across four
+                       shipped modules including the parser and the
+                       formatter.
+
+            FG-S338-U  WORLD. Four shipped modules mutate the
+                       interpreter search path and the server module
+                       does it at import, so a reader who imports it
+                       moves the search path of their own process.
+
+            FG-S338-V  WORLD. Twenty six of the 143 names are eight
+                       characters or fewer. The interpreter floor is
+                       3.11, so the two of them that were standard
+                       library modules until 3.10 cannot collide on any
+                       accepted interpreter.
+
+            FG-S338-W  WORLD. The identity a collected module receives
+                       on this host is a dotted name built from the
+                       absolute path of the checkout. Not one of the
+                       thirty appears under its own stem. The identity
+                       moves when the checkout moves.
+
+            FG-S338-X  WORLD. Three sources of this language are
+                       excluded by three named rules, two of which name
+                       a single file. For one pair both halves are
+                       excluded by adjacent rules and the test half
+                       still yields seven of the 138.
