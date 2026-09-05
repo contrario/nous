@@ -10671,3 +10671,122 @@ document itself.
                        restructured before any write. A form guessed is
                        a form unmeasured, and it was not written down
                        as if it were known.
+
+  - S343 the correction owed to the preceding entry is landed as an
+    append, the sentence it corrects is found to be a copied form
+    rather than a single lapse, the preceding entry is found to carry
+    its findings without the header every other entry uses, and the
+    ancestry check the preceding handoff introduced is driven red for
+    the first time
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument in the session that carries it, and the set, the shape
+    and what the shape could not see are named beside it. Nothing was
+    built. No module of this project was imported. NO SENTENCE HERE
+    ASSERTS A PROPERTY OF THE WORKING TREE OVER AN INTERVAL, WHICH IS
+    THE SUBJECT OF THE CORRECTION BELOW.
+
+    SIX READ-ONLY GATES CLOSED BEFORE THIS ENTRY WAS DRAFTED. Across
+    them forty-seven predictions were declared and five missed. Gates
+    after this sentence are outside that count and are not summarised
+    here. THE DOMINANT CLASS IS UNCHANGED FROM THE PRECEDING SESSION:
+    a prediction that comes out right for a mechanism the seat named
+    and did not check.
+
+    D343-1  CORRECTION BY APPEND TO D342, AN APPEND AND NOT AN EDIT.
+            The preamble of that entry states at 10456 that the
+            working tree carried the same three untracked paths from
+            the first reading to the last. THAT SENTENCE ASSERTS A
+            PROPERTY OVER AN INTERVAL AND NO INSTRUMENT THIS PROJECT
+            OWNS SAMPLES AN INTERVAL. It was uncheckable when it was
+            written, which is prior to and independent of whether it
+            was true. The preceding session record, INHERITED and not
+            re-measurable here, reports five untracked paths at its
+            commit gate and three at every other reading. THE
+            SENTENCE STAYS ON THE PAGE AS WRITTEN, which is the rule
+            D320-5 applied to D319-7.
+
+    D343-2  THE SENTENCE IS A COPIED FORM AND NOT A LAPSE. Measured
+            this session over the whole document under LC_ALL=C: the
+            same wording stands at 10158 in the S340 entry, in the
+            same preamble position. Three further lines carry a
+            statement of the same class in other words, at 748, 3104
+            and 7023, and ONE FOLDED LINE OF EACH IS ALL THAT HAS
+            BEEN READ. Correcting one instance corrects nothing. NO
+            INSTANCE OTHER THAN 10456 HAS BEEN CHECKED AGAINST
+            ANYTHING.
+
+    D343-3  THE PRECEDING ENTRY CARRIES ITS FINDINGS WITHOUT THE
+            HEADER EVERY OTHER ENTRY USES. Measured: the word
+            FINDINGS occurs thirty-two times in this document,
+            twenty-seven of them as a heading at four spaces, and
+            zero times at any indent within lines 10445 to 10673.
+            The twelve codes of that entry sit directly under a
+            blank line. The form is enforced by nothing and the
+            entry is not false. NOTHING IS EDITED.
+
+    D343-4  TWO FINDINGS OF THE PRECEDING SESSION ARE REGISTERED AND
+            NEITHER IS RE-MEASURED. FG-S342-M, an informational leg
+            joined to an irreversible action by a conjunction, and
+            FG-S342-N, homoglyphs emitted into an artifact declared
+            ASCII only. Both were found after the commit that carries
+            D342 and neither is in it. THEY REACH THIS DOCUMENT AS
+            TESTIMONY. Their source is two untracked documents
+            outside this repository, no byte of which was digested by
+            this seat.
+
+    D343-5  THE HOMOGLYPHS DID NOT REACH THIS DOCUMENT. Measured this
+            session: zero bytes outside the printable ASCII range in
+            10673 lines and 633705 bytes under LC_ALL=C. The same
+            instrument returned 4022 on the pinned primary text in
+            the same paste, so THE CHECK WAS SHOWN CAPABLE OF A
+            NON-ZERO BEFORE ITS ZERO WAS TRUSTED.
+
+    D343-6  NOTHING ENFORCES THAT ZERO. The gate forbidding non-ASCII
+            is at tools/patcher.py line 70 and has no caller outside
+            its own test, which D342-11 records. This document is
+            clean by practice and not by mechanism.
+
+    D343-7  THE ANCESTRY CHECK IS DRIVEN RED AND ITS GREEN AT THE
+            OPENING MEANS LESS THAN IT LOOKS. The shape the preceding
+            handoff introduced asks whether the sealed commit is an
+            ancestor of the head. At the opening of this session the
+            head equalled the seal, so the leg returned zero because
+            the two commits are one object. Driven deliberately
+            against a commit that is not the head it returned five
+            against e0ac46f, and against a proper ancestor it
+            returned zero. THE LEG DISCRIMINATES. It was not asked to
+            discriminate at the opening, and its zero there carries
+            no more than the equality it restates.
+
+    D343-8  NOT DECIDED. The caller for the ASCII gate. The suite
+            floor at 2722 against a live 2894 taken from the
+            preceding session and not re-measured here. The
+            Commission Opinion and the AI Board adequacy assessment.
+            The CELEX identifier. Which points of Article 113 the
+            amendment replaces. Whether the three lines named in
+            D343-2 belong to the class. None was measured far enough
+            to decide and none is decided by silence.
+
+    FINDINGS
+
+            FG-S343-A  SEAT. A Rule 0 leg declared to verify a
+                       relation returned its expected value for a
+                       different reason. The seat named ancestry as
+                       the mechanism and did not check that the two
+                       commits differed. Same class as fourteen of
+                       the twenty-five misses of the preceding
+                       session.
+
+            FG-S343-B  WORLD. A sentence asserting a property of the
+                       working tree over an interval stands in at
+                       least two session entries of this document,
+                       carried forward with the preamble it sits in.
+                       Nothing checks such a sentence at commit time
+                       against the tree it describes.
+
+            FG-S343-C  SEAT. The findings block of the preceding
+                       entry has no header while twenty-seven other
+                       blocks in this document have one. The defect
+                       is presentational, it edits nothing, and it
+                       was found by a census run for another purpose.
