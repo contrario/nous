@@ -10441,3 +10441,233 @@ document itself.
                        continued and every value it was carrying was
                        printed by other legs. Caught by reading the
                        output, not by a guard.
+
+  - S342 the two items the preceding handoff named are opened and both
+    close with no write to the object either of them named, the
+    inherited size of each is wrong in the opposite direction, the rule
+    against non-ASCII is found in neither script that was said to hold
+    it, and one word of a second file is corrected against the enacted
+    text
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument in the session that carries it, and the set, the shape
+    and what the shape could not see are named beside it. Nothing was
+    built. No module of this project was imported and the working tree
+    carried the same three untracked paths from the first reading to
+    the last.
+
+    THE INHERITED SIZE OF BOTH OBJECTS WAS WRONG, IN OPPOSITE
+    DIRECTIONS. The blog was described as six lines and measured as
+    four. The invariant was described as living in two named scripts
+    and measured, under a word census and four boundary forms, as
+    living in neither.
+
+    THE SEAT'S PREDICTION RECORD IN THIS ARC IS POOR AND IS RECORDED AS
+    SUCH. Twenty two of seventy declared predictions missed. The
+    dominant class is a prediction that came out right for a mechanism
+    the seat named and did not check, which the house rule scores as a
+    miss and which is scored as a miss here.
+
+    D342-1  THE OBJECT. Two objects, taken in sequence. First the
+            tracked blog page and its served copy. Second the rule that
+            forbids non-ASCII, wherever it is enforced.
+    D342-2  SET AND SHAPE, BLOG. SET: website/blog/index.html at head
+            2fe1f98, digest bd1b3cac, 468931 bytes, 3539 lines, and the
+            served copy at the same digest. SHAPE: term census, then
+            line numbers with no content, then the whole lines folded
+            at 100 with one header each. BLIND TO: any statement about
+            this Regulation that names neither the number, nor the word
+            Omnibus, nor the base act, nor the words provisional or
+            political.
+    D342-3  THE INHERITED COUNT DOES NOT REPRODUCE AND ITS NAMED LINE
+            IS NOT IN ITS OWN SET. The preceding handoff records six
+            lines containing 2026/1744 and enumerates five. Measurement
+            gives four lines and five occurrences, at 737, 945 twice,
+            1905 and 2593. Line 1899, the only line the handoff
+            described by content, contains no occurrence of the number
+            at all. It carries Omnibus once, provisional twice and
+            political once, and political occurs exactly once in the
+            whole file. THE LINE NUMBER WAS REAL AND THE LABEL ON IT
+            WAS NOT.
+    D342-4  THE TRUE SET IS TEN LINES AND SIX OF THEM WERE NEVER NAMED.
+            737, 938, 942, 945, 1896, 1899, 1905, 2472, 2587, 2593. The
+            word Omnibus occurs seven times on seven lines and is not a
+            superset: 2593 carries the number and not the word.
+    D342-5  EVERY SUPERSEDED STATEMENT IN THE SET CARRIES A DATED
+            CORRECTION BESIDE IT. Four corrected sites were read. Three
+            are separate blocks beneath the original text, at 945, 1905
+            and 2593. The fourth is an inline updated note inside the
+            excerpt at 737. Each states a date, what was true when the
+            original was written, and what changed. Line 1905 states
+            that the 2 December 2026 date is not the activation of the
+            Article 50(2) obligation but a period under the inserted
+            Article 111(4). THE CORRESPONDENCE OF THAT SENTENCE TO THE
+            ENACTED TEXT WAS NOT RE-MEASURED IN THIS ARC; Article
+            111(4) was not read here. NO WRITE WAS PROPOSED TO THIS
+            FILE AND NONE WAS MADE.
+    D342-6  THE BIBLIOGRAPHIC CLAIMS ON LINE 945 WERE CHECKED AGAINST
+            THE PINNED PRIMARY TEXT AND TWO OF THREE HOLD. The
+            publication date 24.7.2026 occurs at line 39 of the pinned
+            text. The entry-into-force rule is at line 3894 under the
+            heading at 3892 and reads that the Regulation enters into
+            force on the third day following that of its publication;
+            the recital at 871 gives the urgency reason for it; the
+            word twentieth occurs zero times in the whole instrument.
+            THE CELEX IDENTIFIER IS NOT DECIDABLE BY THIS INSTRUMENT.
+            It occurs zero times in the body of the pinned document.
+            The instrument cannot decide it either way. It is recorded
+            UNVERIFIED and it is not recorded as wrong.
+    D342-7  TWO RESIDUES ARE NAMED AND NEITHER IS TOUCHED. Line 938
+            states that no harmonised AI Act standard is yet published
+            in the Official Journal. It is a present-tense claim about
+            the world, it is not covered by the correction block
+            beneath it, and no instrument in this project decides it
+            offline. THE SAME CLAIM APPEARS IN docs/PCE.md. Separately,
+            the string datetime occurs zero times in the whole blog
+            file: every date on that page is prose.
+    D342-8  SET AND SHAPE, INVARIANT. SET: tracked files at head
+            2fe1f98, 1313 of them, via git grep. SHAPE: first the word,
+            then the boundary forms the word does not spell. BLIND TO:
+            untracked files, and any check written with a boundary form
+            other than the four searched.
+    D342-9  THE INVARIANT IS NOT IN EITHER SCRIPT THE INHERITED
+            SENTENCE NAMED. The word occurs 519 times in the tree and
+            zero times in scripts/release.py and zero times in
+            scripts/claim_lint.py. The enforcing code is
+            tools/patcher.py at line 70 and compares a codepoint
+            against 0x7F. Point checks also exist in
+            scripts/sidecar_lint.py, scripts/cold_audit.py and
+            scripts/s293_blog_dates.py. Four tests assert the property
+            of a specific artifact directly, and they are named here
+            because a count without its enumeration is checkable by
+            nothing: tests/test_annex_iv_verifier.py,
+            tests/test_s157_u2_vsa_verifier.py,
+            tests/test_s226_backfill_disclosure.py and
+            tests/test_s237_nginx_config.py.
+    D342-10  THE LOCALE CONCERN CARRIED BY THE HANDOFF DOES NOT REACH
+            THE REPOSITORY. A grep bracket range over a printable
+            boundary occurs in no text file in the tree. The single
+            match is a compressed embeddings archive, reported by the
+            tool as a binary match with no line and no count. The POSIX
+            printable class occurs zero times; its three apparent
+            matches are substrings of fingerprint and imprint. THE
+            FALSE POSITIVE THE PRECEDING SESSION MEASURED WAS A
+            PROPERTY OF ITS OWN MEASURING INSTRUMENT AND NOT OF ANY
+            SHIPPED CHECK.
+    D342-11  THE ENFORCING FUNCTION HAS NO CALLER OUTSIDE ITS OWN TEST.
+            Its name occurs in tools/patcher.py and in
+            tests/test_s169_patcher.py and nowhere else in the tree.
+            The rule is correctly implemented and is not executed by
+            any release phase, any deploy path or any commit path. It
+            is carried by discipline and by a checkbox.
+    D342-12  ARTICLE 1(40) AMENDS; IT DOES NOT REPLACE. The pinned
+            primary text at line 3172 reads that in Article 113, the
+            third paragraph is amended as follows. docs/PCE.md line 349
+            said it replaces the third paragraph. One word is corrected
+            in this arc. WHICH POINTS THE AMENDMENT REPLACES WAS NOT
+            MEASURED IN THIS ARC AND IS NOT WRITTEN. The dates the
+            sentence goes on to state were already correct and are
+            untouched.
+    D342-13  THE PRECEDING SESSION LANDED NO ENTRY IN THIS LEDGER. D341
+            occurred zero times here and FG-S341 occurred zero times
+            here before this entry. Its findings exist only in a sealed
+            handoff that is not in this repository and not on this
+            host. NOTHING FROM IT IS ADOPTED AS MEASURED BY THIS ENTRY.
+            Where this entry uses one of its statements, the statement
+            was re-measured here and the line it was read from is
+            given.
+    D342-14  NOT DECIDED. Whether to acquire and read the Commission
+            Opinion and the AI Board adequacy assessment on the
+            transparency code of practice. Whether to resolve the CELEX
+            identifier against a source that carries it. Whether to
+            enumerate the amended points of Article 113. Whether the
+            enforcing function should gain a caller. Whether the suite
+            floor should be raised.
+
+            FG-S342-A  SEAT. The canonical opening block pins the head
+                       as an equality. Two lanes advance this
+                       repository, and a lawful append on one of them
+                       turns the check the same colour a rewritten
+                       history would. A check that returns one colour
+                       for two incompatible events discriminates
+                       nothing. The shape that does is: the sealed
+                       commit is an ancestor of the head, and the set
+                       of paths changed since it is disjoint from the
+                       sealed surfaces.
+
+            FG-S342-B  SEAT. A count and a line list travelled in a
+                       handoff, disagreed with each other in the same
+                       sentence, and were carried forward for a session
+                       without either being reproduced. The line that
+                       carried the description belonged to a different
+                       query than the one it was filed under.
+
+            FG-S342-C  WORLD. Two tracked documents state the ASCII
+                       rule with different scope. The pull request
+                       template states it over the whole file; the
+                       contributing guide states it over what a change
+                       introduces. The implementation follows the
+                       second. Under the first reading the release
+                       script itself is in breach, by three characters
+                       recorded earlier in this ledger.
+
+            FG-S342-D  WORLD. The suite floor is 2722 and the live pass
+                       count is 2894. The gate tolerates the
+                       disappearance of 172 tests without changing
+                       colour. The house rule for that floor is live
+                       minus one.
+
+            FG-S342-E  WORLD. A timer reported active is a statement
+                       that it is scheduled, not that its last run
+                       succeeded. It measures a different object than
+                       the one the reader wants.
+
+            FG-S342-F  WORLD. The ASCII gate has no caller outside its
+                       test. A rule that is never invoked at the moment
+                       it governs is carried by discipline, not by the
+                       tree.
+
+            FG-S342-G  WORLD. A leg written to evidence that a body was
+                       delivered as a file printed its negative branch
+                       while the body was in fact being run from a
+                       file, and printed no digest beside it.
+
+            FG-S342-H  WORLD. The same undecidable present-tense claim
+                       about published harmonised standards appears on
+                       two independent served surfaces. Neither is
+                       wrong. Neither is checkable by anything this
+                       project owns.
+
+            FG-S342-I  SEAT. Twenty two of seventy predictions missed.
+                       THE TALLY IS A HAND COUNT OVER THE SESSION
+                       RECORD, NOT AN INSTRUMENT OUTPUT; it is
+                       auditable from that record and from nothing
+                       else. The dominant class is a prediction that
+                       lands for a mechanism the seat named and did not
+                       check. The sharpest instance predicted that
+                       occurrences of the ASCII boundary would be
+                       unrelated to the ASCII check, and the enforcing
+                       line was one of them.
+
+            FG-S342-J  SEAT. A six-line window was opened on a document
+                       whose table cells each occupy their own line.
+                       The window covered one row. The seat had drafted
+                       wording that depended on what lay outside it and
+                       withdrew the wording rather than assert it.
+
+            FG-S342-K  WORLD. In the seat's own container a formatted
+                       write immediately following a file read inside
+                       one brace group fails, reproducibly, and left a
+                       generated file missing its closing delimiter
+                       twice. THE PAYLOAD DIGEST MATCHED BOTH TIMES. It
+                       was caught by a delimiter count, which is a
+                       second leg on a different property. A digest
+                       over the part is not a check on the whole.
+
+            FG-S342-L  SEAT. The entry drafted for this ledger was
+                       written before the form of an entry heading had
+                       been read. The two-phase payload printed the
+                       region that carries it and the draft was
+                       restructured before any write. A form guessed is
+                       a form unmeasured, and it was not written down
+                       as if it were known.
