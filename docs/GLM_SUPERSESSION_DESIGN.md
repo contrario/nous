@@ -10143,3 +10143,301 @@ document itself.
                        outside the set the gate examines, and every name
                        the gate examines is declared. The gate makes no
                        claim about the seventy.
+
+  - S340 an archive of this project is opened for the first time, the
+    rule the content gate matches by is run against real bytes and its
+    five ambiguous names are named, the canonical record inside the
+    artifact is found complete and found silent about membership, and
+    the phase that builds is read whole
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument in the session that carries it, and the set, the shape
+    and what the shape could not see are named beside it. Nothing here
+    was built. No archive was produced, no module of this project was
+    imported, and the working tree carried the same three untracked
+    paths from the first reading to the last.
+
+    THE ARC OPENED A BLOCKED ITEM AT LOWER COST THAN THE PLAN IT
+    REPLACED. The seat proposed to build an archive locally. The first
+    reading went red on two of its own predictions and the red showed an
+    archive already on the disk. Reading it cost no write at all, where
+    the proposed build would have written inside the repository and
+    would have used a backend the shipped pipeline does not use.
+
+    THE SEAT'S OWN ERRORS ARE LABELLED SEAT AND THEY ARE THE LARGER
+    HALF. Two were caught by an instrument's own leg on first execution,
+    three by reading output that a guard did not judge, and one by a
+    comparison whose shape the seat had left undeclared. The last of
+    these is the recurring class of this whole arc appearing inside the
+    arc that was measuring it.
+
+    D340-1  THE OBJECT. The binary artifact this project ships, and the
+            phase that decides what is inside it. The object was chosen
+            because it was the item that blocked the most other items,
+            and because opening it needed no network and no build.
+
+    D340-2  SET AND SHAPE. SET: one archive present in the build
+            directory of the working tree, named nous_lang 5.77.0,
+            817101 bytes, digest 904ef418, together with the tracked
+            release script at commit 6136d12. SHAPE: the archive opened
+            as a zip and read; the script read as text and as a syntax
+            tree and never imported. BLIND TO: which commit produced the
+            archive. It is one published version and ninety one commits
+            past the tag behind 6136d12, which is the head at which
+            every tracked file named in this entry was read, and nothing
+            in this entry joins them. THE HEAD IS WRITTEN DOWN BECAUSE A
+            SET THAT NAMES NO COMMIT CANNOT BE RESOLVED BY A LATER
+            READER.
+
+    D340-3  THE CANONICAL RECORD INSIDE THE ARTIFACT IS COMPLETE AND
+            CORRECT, AND THIS IS THE FIRST TIME THE HOUSE HAS MEASURED
+            IT. 165 archive members and 165 recorded rows. 164 rows
+            carry a sha256 digest and one carries none, which is the row
+            of the record itself and is what the format requires. All
+            164 digests were recomputed from the archive bytes and none
+            disagreed. No member lies outside the record and no row
+            names a member that is absent. No weaker digest appears
+            anywhere in it.
+
+    D340-4  A CANONICAL RECORD PROVES THE LISTED BYTES ARE THE LISTED
+            BYTES AND SAYS NOTHING ABOUT WHETHER THEY BELONG. A file was
+            injected into a fixture copy of the archive together with a
+            correctly computed row for it. Every integrity reading
+            stayed green. Only a membership reading caught it. Any
+            design that replaces the present name matching with record
+            matching inherits this boundary and must carry a membership
+            decision of its own.
+
+    D340-5  THE SATISFACTION RULE WAS RUN AGAINST REAL BYTES FOR THE
+            FIRST TIME. The rule is written as a comprehension: a
+            required name is met when some archive member ends with it.
+            Over the 74 members of the required list and the 165 members
+            of the archive, none is unsatisfied, 69 are satisfied by
+            exactly one member, and 5 are satisfied by more than one.
+
+    D340-6  THE FIVE AMBIGUOUS NAMES ARE NAMED. Four are satisfied by
+            two members each and one by four. The one satisfied by four
+            is the vector store algebra module, whose name is a suffix
+            of three other shipped modules. Two instruments on two
+            different objects agreed on seven ordered pairs over five
+            shadowed names, which reproduces the value an earlier
+            session recorded without naming the members. The earlier
+            session counted over the python members alone and this one
+            over the whole list, so the two denominators differ and the
+            two readings do not.
+
+    D340-7  ONE REQUIRED MEMBER IS NOT AT THE ROOT OF THE ARCHIVE AND IS
+            REACHABLE ONLY THROUGH THE SUFFIX RULE. The grammar file
+            arrives through a data table of the project file and is
+            placed under a directory whose name carries the distribution
+            name and the version. AN EXACT PATH ORACLE IS THEREFORE NOT
+            A DROP IN REPLACEMENT. The seat proposed one after reading
+            the format specification and before reading any archive. The
+            replacement must carry constructed paths, not literal names.
+
+    D340-8  THE PHASE THAT BUILDS REMOVES THE BUILD DIRECTORY, THE
+            DISTRIBUTION DIRECTORY AND EVERY METADATA DIRECTORY BEFORE
+            IT RUNS. Two consequences follow and both are measured from
+            the printed bytes. The glob that follows can never find two
+            archives, so an earlier concern of this session is answered
+            and withdrawn. And the archive read in this arc is the only
+            copy on the host, is untracked, and is destroyed by the next
+            run of the release path.
+
+    D340-9  THE BUILD RUNS WITH ISOLATION AND THE BACKEND HAS NO UPPER
+            BOUND. The artifact read here records a generator two major
+            versions above the one installed on the host, which is what
+            an isolated environment fetching the current release would
+            produce. The requirement is written with a lower bound only.
+            THE TOOLCHAIN THAT PRODUCES THE ARTIFACT IS THEREFORE CHOSEN
+            BY THE NETWORK ON THE DAY OF THE BUILD, and no tracked file
+            records which version produced which release.
+
+    D340-10  THE WORLD OFFERS A LEVER FOR THE PRECEDING ITEM AND IT IS
+             NOT THE ONE A READER WOULD REMEMBER. Fetched in this
+             session: the installer now separates ordinary constraints
+             from build constraints, and the older environment variable
+             no longer reaches an isolated build environment when build
+             constraints are in use. A pin therefore belongs in the
+             build constraint mechanism or in the requirement itself.
+             NOT DECIDED HERE. This records the lever, not a choice to
+             pull it.
+
+    D340-11  THE COUNT THE REQUIRED LIST LACKS EXISTS FOURTEEN LINES
+             BELOW IT. The template count is bound to a named constant
+             and compared with an inequality that fails in both
+             directions. The required list four lines above has no such
+             constant, which is the shape an earlier session recorded
+             and this one locates.
+
+    D340-12  THE PIN ON THE RELEASE SCRIPT WAS READ FOR THE FIRST TIME.
+             It had been declared as a positive control in a sealed
+             opener and no leg of the environment verification printed
+             it. It holds. The seat found its own omission by comparing
+             an output against the opener by hand, not by any guard.
+
+    D340-13  CORRECTION BY APPEND TO D339-16. That entry presents a
+             finding code of more than one letter as a new convention.
+             It is not new. Two earlier sessions had already used one,
+             and every counter of the house matches such a code. The
+             entry is not false and it is incomplete, and this item
+             completes it without rewriting it. IT REMAINS UNKNOWN
+             whether either earlier session recorded a decision about
+             the convention; only the practice was measured.
+
+    D340-14  AN EXTERNAL FINDINGS DOCUMENT IS REGISTERED AND NOTHING IN
+             IT IS USED AS A PREMISE. Digest 834855fe, 441 lines, nine
+             defects and one dated operational item, produced by a
+             second seat from a black box session against this host. It
+             names its own re-run path, so every claim in it is
+             re-measurable rather than merely asserted. NONE HAS BEEN
+             RE-MEASURED HERE. It is not ascii and exceeds the width of
+             this document, so nothing in it may enter as bytes. Its one
+             dated item, a pricing verification threshold, is the only
+             clock any open object of this session carries.
+
+    D340-15  THE HEAD MOVED WHILE THIS ARC WAS OPEN AND THE ARC WAS
+             STOPPED RATHER THAN CARRIED. A reading late in the session
+             found a different head from the one nine earlier readings
+             had asserted. One commit was added, none lost, and the
+             earlier head is an ancestor of the later one. Every tracked
+             object this entry names was re-read at the later head and
+             none had moved: the document blob is the same object at
+             both heads, the release script holds its digest and its
+             line count, and the archive holds its digest. The added
+             commit touches one served path and nothing this entry
+             reads. THE ARC RESUMED ONLY AFTER THAT WAS MEASURED, not
+             after it was assumed from the document digest alone.
+
+    D340-16  NOT DECIDED. Whether to replace the name matching with
+             record matching. Whether to pin the backend and where.
+             Whether the seventy declared modules outside the required
+             list are a defect. Whether the archive should be preserved
+             before the next release run destroys it. Whether any claim
+             of the registered external document holds. None of these
+             was measured far enough to decide and none is decided by
+             silence.
+
+    FINDINGS
+
+            FG-S339-Q  SEAT. A finding code of more than one letter was
+                       presented as a new convention while two earlier
+                       sessions had already used one. The single command
+                       that would have found them was never run until a
+                       closing reading failed. Corrected by append in
+                       this entry.
+
+            FG-S339-R  SEAT. A shape was run over a payload and its
+                       value declared as a prediction about the whole
+                       document. It says something about the payload.
+                       The document already held six such codes from two
+                       earlier sessions and the prediction was wrong by
+                       a factor.
+
+            FG-S339-S  SEAT. A prediction counted files where the leg it
+                       was compared against counts lines. The
+                       occurrences outside the release script are lines
+                       of a single file, the one that session added, and
+                       no unknown reference exists.
+
+            FG-S339-T  WORLD. Codes of a preceding session sit under the
+                       head of a later one. They were owed when the
+                       later payload was sealed and could not have
+                       entered it. The earlier codes of more than one
+                       letter sit under their own heads, so the shape is
+                       shared and the cause is not.
+
+            FG-S340-A  SEAT. A comparison of a hand transcription
+                       against a tree extraction carried an undeclared
+                       collation. The two sides sorted the same members
+                       under different orders and the digests disagreed.
+                       The content was proved identical afterwards by
+                       reproducing the host's digest from the seat's own
+                       members under the host's order. THE LEG WAS
+                       DECLARED OF THE MEMBERS AND MEASURED THE ORDER. A
+                       collation belongs in the declared shape.
+
+            FG-S340-B  SEAT. A negative fixture was built with a filter
+                       that does not remove what it was said to remove.
+                       Lines carrying a decision code contain no session
+                       token, so filtering on the session token left
+                       them in place and a leg printed a value the seat
+                       had called zero. The leg was right and the
+                       fixture was wrong. Caught by reading the output.
+
+            FG-S340-C  SEAT. A comparison constant was written into an
+                       instrument as a literal and had never been
+                       computed. The instrument's own leg refused on
+                       first execution. The value now enters as an
+                       argument and was computed outside the instrument
+                       by two toolchains that agree.
+
+            FG-S340-D  SEAT. An import was moved inside a function to
+                       evade the instrument's own self shape rule
+                       instead of the rule being corrected. The evasion
+                       did not work, because the shape walks the whole
+                       tree. The rule was corrected and the evasion
+                       removed.
+
+            FG-S340-E  SEAT. A glob inside a shell redirection does not
+                       expand, and the leg printed an empty value where
+                       a number was owed. Caught by reading the output,
+                       not by a guard. A guard against an empty value
+                       was added for the class.
+
+            FG-S340-F  SEAT. A print key was expected to match one
+                       definition and matched two, because the fixture
+                       had no caller and the shipped file does. The cap
+                       that refuses rather than truncates had eighteen
+                       lines of margin. A fixture narrower than its
+                       object is the warning the preceding session wrote
+                       down.
+
+            FG-S340-G  SEAT. A design was proposed from a format
+                       specification before any instance of the format
+                       had been opened, and one member of the real
+                       archive defeats it. Reading the specification
+                       gave the guarantee and not the placement.
+
+            FG-S340-H  WORLD. Two instruments give different line counts
+                       for the same tracked file, 832 and 833. One
+                       counts newline characters and the other counts
+                       the elements of a split on the newline, which
+                       yields one empty trailing element for a file that
+                       ends properly. Neither is wrong and neither may
+                       be compared with the other.
+
+            FG-S340-I  WORLD. The operator terminal duplicated input a
+                       fourth time and this time it corrupted a printed
+                       digest rather than a command. Every earlier
+                       occurrence was caught by the transport guard
+                       refusing. This one produced a wrong value on
+                       screen and was caught only because a separate leg
+                       checked the same file independently. THE DEFECT
+                       CAN CORRUPT EVIDENCE AND NOT ONLY INSTRUCTIONS.
+
+            FG-S340-J  WORLD. The declared module set, the archive root
+                       and the top level listing inside the archive give
+                       143, 143 and 144, and the difference is one
+                       package that is not a module. Three counts
+                       agreeing is not three sets agreeing, and two of
+                       the three were taken at different heads. The
+                       membership was not compared.
+
+            FG-S340-K  SEAT. A head was pinned in a sealed opener and
+                       asserted as a fact by nine consecutive readings
+                       across the session without one fetch between
+                       them. The house rule that a stale head is a prior
+                       and not a fact was already written down. The
+                       drift was caught by a comparison leg inside a
+                       preflight and not by any fetch, which means it
+                       would have been caught only at the moment of
+                       writing had that leg not been there.
+
+            FG-S340-L  SEAT. A format string beginning with two hyphens
+                       was read by the shell builtin as the end of its
+                       own options, and the separator it was meant to
+                       print never appeared. The surrounding loop
+                       continued and every value it was carrying was
+                       printed by other legs. Caught by reading the
+                       output, not by a guard.
