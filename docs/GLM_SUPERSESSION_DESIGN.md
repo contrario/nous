@@ -10790,3 +10790,261 @@ document itself.
                        blocks in this document have one. The defect
                        is presentational, it edits nothing, and it
                        was found by a census run for another purpose.
+
+  - S344 the identifier space of the ledger is measured before a number
+    is taken and is found free of name collisions, the census that said
+    otherwise is found to have assumed a grammar rather than measured
+    one, the place where the published artifact is built is read for the
+    first time, and the namespace this entry was first built for is
+    taken by another writer before it lands
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument in the session that carries it, and the set, the shape
+    and what the shape could not see are named beside it. TWO HEADS
+    APPEAR BELOW AND THEY ARE NOT THE SAME THING. The head at which the
+    measurements were taken is named beside them. The head onto which
+    this entry lands is different, because the remote moved twice while
+    the session was reading.
+
+    THE ARC BEGAN FROM A WRONG ANSWER THAT THIS ENTRY DOES NOT HIDE. A
+    census reported three colliding decision codes and seven repeated
+    session heads. None of them exist. The codes carry a parenthesised
+    letter and the census keyed on the digits before it, so four
+    distinct identifiers became one. The correction was not to add the
+    letter. The correction was to stop assuming a grammar and to measure
+    the one the document actually carries.
+
+    THE RULE THIS ENTRY RECORDS WAS EXERCISED BEFORE IT LANDED. The
+    namespace this entry was first built for was measured free at both
+    oracles, and was taken by the other writer before the rename. A
+    precondition inside the write arc refused, nothing was written, and
+    the entry was rebuilt under the next free number. The rule is not a
+    proposal. It has already prevented one collision in the session that
+    proposes it.
+
+    D344-1  THE OBJECT. The identifier space of this document, and the
+            mechanism by which a session number is allocated to it. The
+            object was chosen because a foreign entry landed in the
+            expected namespace during the session, which made the
+            mechanism the blocking question for every write that
+            follows.
+
+    D344-2  THE DECISION. NO SESSION NUMBER IS COMMITTED IN ADVANCE. An
+            identifier is allocated at the moment of writing, after a
+            fetch, and only when its session head, its decision anchor
+            and its finding anchor are all absent BOTH from the document
+            at the remote and from the document in the working tree.
+            Where any of the three is present the candidate is refused
+            and the next is measured. THE MEASUREMENT IS VALID ONLY AT
+            THE INSTANT IT IS TAKEN, so it is repeated immediately
+            before the irreversible step and not once at the opening.
+            THIS BINDS THIS TRACK ONLY. It makes a collision visible at
+            the moment it would be created and it does not prevent
+            another writer from taking the same number first.
+
+    D344-3  THE ABSENCE CHECK IS DRIVEN ON A PRESENCE FIRST. A rule that
+            passes when it finds nothing is satisfied by an instrument
+            that can find nothing at all. Before any free answer is
+            read, the same detector is run against namespaces known to
+            be occupied and must return their measured occupancy. The
+            detector matches by prefix and carries no regular
+            expression, so no metacharacter can widen it.
+
+    D344-4  SET AND SHAPE OF THE CENSUS. SET: every line of this
+            document AT THE HEAD NAMED IN D344-12 AS THE READING HEAD,
+            beginning with four spaces then D then a digit, and every
+            line beginning with twelve spaces then FG-S then a digit.
+            Both taken whole. SHAPE: the identifier is the whole run of
+            non-space characters, keyed after trailing punctuation is
+            removed, and every line is partitioned on three axes that
+            carry no judgement: what follows the token, the last
+            character of the token, and the case of the next word. BLIND
+            TO: a code in lower case, a code split across a line break,
+            a code inside a fenced block, and the meaning of every
+            entry. THIS FINDS COLLISIONS OF NAME AND NEVER OF MEANING.
+
+    D344-5  THE RESULT. 368 candidate decision lines and 367 distinct
+            identifiers. The single repetition is one identifier
+            appearing once as an anchor and once inside a wrapped
+            sentence, which is not two entries. Under the narrower key
+            of two spaces after the token there are 312 lines and 312
+            distinct identifiers and no repetition. 426 finding lines
+            and 426 distinct identifiers with no repetition under any of
+            the three keys. AT THE READING HEAD THE LEDGER CARRIED NO
+            NAME COLLISION.
+
+    D344-6  THE INHERITED NUMBER AND THE MEASURED NUMBER AGREE AND DO
+            NOT MEASURE THE SAME THING. The anchored total the house has
+            carried for many sessions was 367 and counts LINES under a
+            shape that requires a hyphen after the digits. The distinct
+            identifier count was also 367 and counts NAMES under a shape
+            that accepts a trailing comma. They coincide because the
+            second set holds 368 members with one repeated. A number
+            that agrees with another by arithmetic accident is not a
+            confirmation of it, and the anchored total is not and never
+            was a count of entries.
+
+    D344-7  FIVE LINES BEGIN WITH A DECISION CODE AT FOUR SPACES AND ARE
+            NOT ANCHORS. Lines 635, 1518, 2120, 2426 and 6995 at the
+            reading head, each a wrapped continuation of a sentence,
+            read whole and not truncated. The class cannot be
+            constructed by the present builder, which binds every code
+            to the word before it so that no wrap can place one at the
+            head of a line. All five predate that builder. TWO CELLS OF
+            THE PARTITION HOLDING 310 AND 33 LINES WERE ABOVE THE
+            LISTING THRESHOLD AND WERE NOT PRINTED, so the count of
+            prose lines is a floor and not a total.
+
+    D344-8  WHERE THE PUBLISHED ARTIFACT IS BUILT, READ FOR THE FIRST
+            TIME. SET: every tracked path under the forge directory,
+            seven files. SHAPE: digest, size and a fixed string census
+            per file, then the whole bytes of the one file naming the
+            index. It is triggered by a tag push, it builds by calling
+            the tracked release script on a runner, and it publishes
+            through a trusted publisher with a build provenance
+            attestation. Every action it calls is pinned to a full
+            commit name. THE ARTIFACT IN THE BUILD DIRECTORY ON THE HOST
+            IS ONE MINOR VERSION BEHIND AND IS NOT WHAT WAS PUBLISHED.
+            BLIND TO: whether the reviewer protection the file names is
+            configured at the forge, which is not bytes in this
+            repository.
+
+    D344-9  THE CONSEQUENCE OF D344-8 FOR WORK ALREADY LANDED. The path
+            that leaves the house runs through the tracked release
+            script. The exit-state defects corrected in the preceding
+            sessions were therefore not local to this host; they guarded
+            the publication itself. This is a reading of the trigger and
+            the invocation, not a claim about any particular published
+            version.
+
+    D344-10  THE BUILD BACKEND CARRIES NO UPPER BOUND IN THE FILE THE
+             PIPELINE USES. Read from the build system block of the
+             project file. A build started today therefore takes
+             whatever major version exists at that moment, which is not
+             the one that produced the artifact on the host.
+
+    D344-11  THE COMMITS SINCE THE TAG WERE CLASSIFIED AND THE RANGE WAS
+             LARGER THAN EVERY INHERITED DOCUMENT SAYS. The inherited
+             value is 93. The classification ran over 94 because a
+             foreign entry landed between two readings of the same
+             session. 70 commits touch only documentation or the website
+             and 24 touch something else, including the release script,
+             the provenance tools and twenty test files. BLIND TO:
+             whether any changed path is a member of the published
+             archive, which is the membership rule of the project file
+             and was not run here.
+
+    D344-12  TWO HEADS, AND THEY ARE NOT INTERCHANGEABLE. THE READING
+             HEAD IS a721a1c, at which the document was da2ba2c1 and
+             10673 lines, and every count in D344-5, D344-6, D344-7
+             and D344-11 was taken there. THE LANDING HEAD IS dda5878,
+             at which the document is 8ccf3c86 and 640294 bytes, reached
+             after the remote moved a second time inside the session.
+             NOTHING IN THIS ENTRY WAS RE-MEASURED AT THE LANDING HEAD
+             except the state legs of the write arc itself. A LATER
+             READER MUST RESOLVE THE COUNTS AGAINST THE READING HEAD AND
+             NOT AGAINST THE COMMIT THAT CARRIES THEM.
+
+    FINDINGS
+
+            FG-S344-A  SEAT. A duplicate census keyed decision codes on
+                       the digits alone and collapsed four distinct
+                       lettered identifiers into one. It reported three
+                       colliding codes and seven repeated session heads
+                       and none of them exist. The shape was assumed and
+                       not measured, which is the recurring class of
+                       this whole arc appearing inside the instrument
+                       built to close it.
+
+            FG-S344-B  SEAT. Reading the output of the corrected census,
+                       the seat concluded that a separator convention
+                       held without exception after a named session,
+                       from a single printed example of one cell. The
+                       cell holding thirty three counterexamples was
+                       above the listing threshold and was never
+                       printed. The class is the same as A and it was
+                       committed while reading the instrument that
+                       exists to prevent it.
+
+            FG-S344-C  SEAT. Two synthetic control legs returned red on
+                       the arithmetic the seat had declared, before
+                       either instrument ran against the document, and
+                       both were corrected before the body was given to
+                       the operator. They could only do this because a
+                       control that cannot fail had already been
+                       forbidden.
+
+            FG-S344-D  SEAT. Two read only bodies judged the number of
+                       untracked paths and never enumerated them. The
+                       number moved from three to five and back to three
+                       inside the session, and no evidence of what the
+                       two additional paths were survives. A COUNT
+                       WITHOUT ITS MEMBERS IS CHECKABLE BY NOTHING,
+                       WHICH THE HOUSE HAD ALREADY WRITTEN DOWN FOR
+                       PROSE AND NOT FOR INSTRUMENTS.
+
+            FG-S344-E  SEAT. The first proposal for this decision was to
+                       take the next number by counting the highest one
+                       present. That is precisely the mechanism that
+                       produced the collision it was meant to avoid,
+                       since the count is evaluated against whichever
+                       tree the writer happens to hold. It was replaced
+                       by allocation against a measured absence at two
+                       oracles.
+
+            FG-S344-F  WORLD. A second track holding this repository
+                       landed an entry in the namespace this track
+                       expected to take, and pushed it, while this
+                       session was reading. The author identity on both
+                       is the same, so nothing in the commit metadata
+                       distinguishes them. The subject line is the only
+                       discriminator and it is prose.
+
+            FG-S344-G  WORLD. The identifier convention of this document
+                       is not one convention. The separator after a
+                       decision code, the punctuation that ends it, and
+                       the number of session heads written per session
+                       all vary. Only the last has a measured boundary,
+                       and it is that one head per session holds from a
+                       named session onward. The other two were checked
+                       and the boundary the seat proposed for them was
+                       false.
+
+            FG-S344-H  WORLD. Enforcement of a uniqueness rule at the
+                       forge is not available to this repository. Server
+                       side hooks are an appliance feature and the push
+                       rules offered select by path, extension and size
+                       rather than by content, and are scoped to
+                       repositories that are not public. THE ONLY
+                       ENFORCEMENT POINT IS A REQUIRED CHECK IN THE
+                       PIPELINE, AND UNTIL ONE EXISTS THE RULE ABOVE IS
+                       A DISCIPLINE AND NOT A GUARD.
+
+            FG-S344-I  WORLD. THE REMOTE MOVED TWICE INSIDE ONE SESSION
+                       AND THE SECOND MOVE WAS CAUGHT BY A PRECONDITION
+                       INSIDE THE WRITE ARC AND NOT BY A FETCH. The
+                       sidecar had already been built on the earlier
+                       bytes. Had the rename carried no precondition on
+                       the document digest it would have overwritten the
+                       other writer's work in full, and the loss would
+                       have been invisible until a later reader missed
+                       the entry. Nothing was written and the sidecar
+                       was removed.
+
+            FG-S344-J  SEAT. The seat predicted that the namespace
+                       measured free at the opening of the write arc
+                       would still be free at the rename. It was not. A
+                       MEASUREMENT OF ABSENCE IS TRUE ONLY AT THE
+                       INSTANT IT IS TAKEN, and the entry was rebuilt
+                       under the next free number. The prediction was
+                       declared before the body ran and is scored a miss
+                       here rather than explained away.
+
+            FG-S344-K  WORLD. A finding token ending in a comma appeared
+                       at twelve spaces in the foreign entry. The
+                       partition of the whole document taken earlier in
+                       the session held no such cell in 426 lines, so
+                       this is the first of its kind under that shape.
+                       BLIND TO: whether it is an anchor carrying
+                       unusual punctuation or a wrapped sentence. It was
+                       not read and it is not this track's object.
