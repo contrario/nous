@@ -11184,3 +11184,350 @@ document itself.
                        precondition it had placed for its own reasons.
                        There is no channel between the lanes and the
                        commit metadata does not distinguish them.
+
+  - S346 the question of whether an obligation can fail is carried from
+    source to artefact to corpus to reason code, instrument after
+    instrument is found wrong in a way its own controls caught, the
+    specification is found to have already made the honest move in three
+    consecutive revisions, and the one thing it did not declare is
+    declared
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument in the session that carries it, and the set, the shape
+    and what the shape could not see are named beside it. TWO HEADS
+    APPEAR BELOW. The reading head is the one at which the corpus was
+    measured; the landing head is different because the other track
+    pushed while this session was reading, and the corpus was PROVEN
+    unchanged across the two rather than assumed.
+
+    THE OBJECT WAS CHOSEN BECAUSE OF A PROPERTY OF THIS HOUSE AND NOT OF
+    THE WORLD. Every instrument here drives its comparator red before it
+    trusts it, and forbids a leg that cannot fail. The product ships a
+    conformance verdict and nothing in it declared which of its own
+    checks could not fail. The arc carried the rule from the notebook
+    into the thing an auditor reads.
+
+    THE PROBLEM HAS A NAME AND IT IS OLDER THAN THIS HOUSE. Antecedent
+    failure, named by Beatty and Bryant, extended to vacuity by Beer and
+    others, who report that a vacuous pass always pointed at a real
+    problem. The detection method used here is the reduction of
+    Kupferman and Vardi applied to source and to artefacts rather than
+    to temporal logic: replace the interesting part with a constant, or
+    read every value it ever took, and see whether the verdict could
+    still change.
+
+    D346-1  THE OBJECT. Whether any part of the evidence surface can
+            return the answer it is not returning. The object was
+            reached by elimination: two mechanisms for the ledger
+            namespace were designed and both were WITHDRAWN before they
+            were built, because measurement showed each solved a problem
+            this house does not have. That withdrawal is recorded as
+            work, not as waste.
+
+    D346-2  THE STATIC READING. SET: every tracked python file,
+            enumerated by git and delivered on standard input so no glob
+            is expanded. SHAPE: the abstract syntax tree; a function is
+            MONO when every return yields the same constant, BI when two
+            or more, OPAQUE otherwise. BLIND TO: a verdict word
+            assembled at run time, a value read from a data file, a
+            branch unreachable in practice, and the MEANING of anything.
+            RESULT: 625 files parsed, none unparsed; 89 functions carry
+            a verdict word; two of them can only return one constant and
+            one of those sits on the path that publishes.
+
+    D346-3  THE STATIC READING DID NOT FIND WHAT IT WAS BUILT TO FIND,
+            AND SAYING SO IS THE RESULT. The inherited claim is that
+            four verifier tiers all write one severity. The shape found
+            eight distinct severity values, none of them at the
+            conformance verifier, because the shape reads dict keys,
+            keyword arguments and attribute assignment and does not read
+            dataclass field defaults, enum members or plain name
+            binding. THE CLAIM IS NEITHER CONFIRMED NOR REFUTED AND MUST
+            NOT TRAVEL AS EITHER.
+
+    D346-4  THE ONLY AUTOMATED CLAIM GUARD SCANS A SET THAT IS NOT A
+            PROPERTY OF THIS REPOSITORY. It walks the filesystem; every
+            census this house has ever run used git. The two are
+            different sets and NEITHER MAY BE SUBTRACTED FROM THE OTHER.
+            Enumerated in both directions: 32 scanned paths are not
+            tracked, and 0 tracked paths matching its own rules escape
+            it. On a clean checkout the same guard scans a smaller set,
+            so the number this house quotes depends on what clutter sits
+            on the disk.
+
+    D346-5  WHAT THE CLAIM GUARD EXCLUDES, READ FROM ITS OWN
+            CONFIGURATION FOR THE FIRST TIME. Eleven directory names,
+            among them the test tree, the examples tree, and the served
+            evidence tree that holds 301 tracked paths. The guard that
+            was wired into the deploy path so that no overclaim reaches
+            the served surface does not read a large part of the served
+            surface. NAMING THIS IS A MEASUREMENT; judging it is an
+            operator decision and is not taken here.
+
+    D346-6  THE ARTEFACTS WERE OPENED AND THEY ARE NOT WHAT THE SEAT
+            EXPECTED. 206 tracked json, 261 distinct top level keys,
+            none of them a conformance certificate. The fourteen
+            carrying an obligations key are the reference corpus INPUT
+            SPECIFICATION, not an output verdict, and twelve of the
+            thirteen vector copies are byte identical. The question of
+            whether an obligation ever returned a negative verdict is
+            NOT ANSWERABLE FROM COMMITTED BYTES, and that is the answer.
+
+    D346-7  THE CORPUS AT FILE RESOLUTION. SET: 149 tracked paths under
+            the vector tree, grouped by directory. SHAPE: the set of
+            file names whose digest differs from the reference, plus
+            those lacking and those added. RESULT: no vector is byte
+            identical to the reference, so the equivalent mutant class
+            is EMPTY here, against a literature rate of four to thirty
+            nine per cent. But twelve vectors carry only five distinct
+            signatures, eight of them altering one file, and four of
+            eleven reference files are ever altered by anything.
+
+    D346-8  THE CORPUS AT LINE AND FIELD RESOLUTION. The record is a
+            line, so the signature becomes added, removed, permuted and
+            first difference, which separates a reordering from a
+            deletion from a truncation. Twelve vectors, ten distinct
+            line signatures. Three are REFUSED for positional comparison
+            because their record counts differ or their records are
+            permuted, and comparing those position by position
+            manufactures differences that belong to the shape. THE
+            REFUSED ARE NAMED AND ENTER NO COUNT.
+
+    D346-9  THE CHAIN IS SEPARATED FROM THE MUTATION. Every record links
+            to its predecessor, so one early change rewrites every later
+            record. Fields moved AT THE FIRST DIFFERING RECORD are the
+            intent; fields moved ONLY LATER are propagation. Over the
+            nine comparable vectors: 39 fields in the reference, 12
+            moved inside it, 1 introduced from outside it, 4 propagated
+            only, and 27 NEVER MOVED BY ANY OF THEM. Among the twenty
+            seven is the field that carries the verdict.
+
+    D346-10  THE REASON CODE REGISTRY AGAINST THE CORPUS. The registry
+             names 41 codes. The shipped vectors drive 9. The remaining
+             32 include the code that was added in a later revision
+             precisely because a pack with a contradictory policy
+             verified as valid, and it has no vector that can fail on
+             it. Two pairs of vectors share one code each, and BOTH
+             PAIRS ARE ALREADY DECLARED in the conformance section, so
+             they are not a hidden overlap.
+
+    D346-11  THE SPECIFICATION HAD ALREADY MADE THE HONEST MOVE THREE
+             TIMES AND THE SEAT DID NOT KNOW. A normative requirement
+             was downgraded because the reference implementation did not
+             satisfy it, restored when it did, and a recommendation was
+             withdrawn because it pointed at a backend no conforming
+             verifier could check. The conformance section already
+             declares that the vectors exercise one role only, and
+             records that a requirement went unimplemented for five
+             revisions BECAUSE no vector could fail on it. That sentence
+             is the strongest evidence for this whole arc and it
+             predates it.
+
+    D346-12  WHAT WAS SHIPPED, AND WHY IT CARRIES NO NUMBER. One
+             informative sentence in the conformance section, declaring
+             coverage against the registry BY POINTER: the codes
+             exercised are exactly those named per vector in the
+             published results, and a code absent from that table has no
+             vector that can fail on it. A number written into a
+             specification is a copy of a measurement and copies rot;
+             this house already carries three different counts of one
+             obligation set. The commit subject says so and a leg in the
+             committing body forbids any digit in it other than the
+             section number.
+
+    D346-13  TWO HEADS AND ONE CORPUS. The corpus readings were taken at
+             one head and the entry lands at a later one, because the
+             other track pushed while this session was reading and took
+             the namespace this session had measured free at its
+             opening. The later instrument does not assume the earlier
+             readings carry: it diffs the corpus path between the two
+             heads, requires zero, and drives that detector on a path
+             KNOWN to have changed first.
+
+    D346-14  WHAT IS OWED AND IS NOT DONE. The declaration is prose and
+             a later reader must re-derive the two sets by hand to check
+             it. The machine-checked form, a required check that
+             regenerates the registry and the exercised set and fails
+             when one is not a subset of the other, is a BUILD and needs
+             the full Innovation Gate. It is the same enforcement point
+             the numbering rule already waits on.
+
+    FINDINGS
+
+            FG-S346-A  SEAT. A field census reported nine fields that
+                       never varied. One did. The bucket mixed a genuine
+                       single value with two length classes standing in
+                       for digests and five paths truncated at the
+                       declared depth. A count that merges a value, a
+                       summary and an unknown is not a count of
+                       anything.
+
+            FG-S346-B  SEAT. The same census declared a maximum depth
+                       and five of seventeen paths hit it. The blindness
+                       was declared and the number derived under it was
+                       still presented as though the shape had reached
+                       the bottom.
+
+            FG-S346-C  SEAT. A census over every tracked python file did
+                       not separate the library from its own test suite,
+                       so a constant that lives only in a test looked
+                       identical to one the runtime emits. The house had
+                       already paid for this class and the seat repeated
+                       it.
+
+            FG-S346-D  SEAT. A reproduction of the claim guard compared
+                       directory exclusions by base name while the guard
+                       compares by path. One excluded directory is
+                       written as a path, so the reproduction descended
+                       into it and overshot by exactly one file. The leg
+                       was declared falsifiable, went red, and named
+                       itself; the diagnosis cost a further reading.
+
+            FG-S346-E  SEAT. The seat wrote that an inherited value had
+                       been discharged from its inherited status because
+                       the NUMBER was re-measured at a new head. The
+                       number was re-measured. The composition of the
+                       set it counts has never been measured in any
+                       session. STABILITY IS NOT COVERAGE.
+
+            FG-S346-F  SEAT. The seat subtracted a count taken over
+                       tracked paths from a count taken over walked
+                       paths and presented the difference as missing
+                       files. The two are different sets and the
+                       difference does not exist. This is the dominant
+                       recurring class of this house, committed inside
+                       the arc that exists to close it.
+
+            FG-S346-G  SEAT. A prediction was declared that was finer
+                       than the instrument that would score it. The
+                       shape was explicitly blind to how two vectors
+                       alter one file and the prediction asked exactly
+                       that. The miss measured the seat and said nothing
+                       about the corpus.
+
+            FG-S346-H  SEAT. A count of fields no vector moves was
+                       printed as a reading about the corpus when the
+                       field comparison had run over three of twelve
+                       vectors. It measured the limit of the shape. A
+                       number derived under a restriction carries the
+                       restriction beside it or it carries nothing.
+
+            FG-S346-I  SEAT. An instrument asserted an identity that is
+                       arithmetically invalid whenever a vector moves a
+                       field the reference does not carry, and its
+                       fixture contained no member of that class, so the
+                       fixture could not have caught it. The corpus
+                       contained one. A FIXTURE THAT DOES NOT CARRY A
+                       CLASS DOES NOT TEST IT. The correction splits the
+                       bucket, adds a fixture member, and keeps the
+                       invalid identity as a leg that must now FAIL.
+
+            FG-S346-J  SEAT. A reading was capped at a fixed number of
+                       lines while its input was sorted so that another
+                       directory came first. Not one line of the file
+                       the reading existed for reached the output. A
+                       second cap in the same command hid four of seven
+                       sizes. Two limits, one line, and both cut the
+                       object.
+
+            FG-S346-K  SEAT. The seat wrote that the corpus carried
+                       folder names and nothing else. It carries a
+                       results table naming the expected verdict and
+                       reason code for every vector, which is the very
+                       shape the seat said was missing. An absence found
+                       by a shape that never looked in the right place
+                       is not an absence.
+
+            FG-S346-L  SEAT. An extraction anchored on the first line
+                       containing a section number and caught a
+                       reference to that section inside a changelog
+                       paragraph, hundreds of lines before the section
+                       itself. An anchor that is not anchored is a
+                       search.
+
+            FG-S346-M  SEAT. Legs that compared a line against a literal
+                       prefix took the length from the seat counting
+                       characters by hand, and the counts were wrong.
+                       The body refused to write, which is what it is
+                       for. The correction is not a better count: the
+                       test now uses pattern matching and carries no
+                       length at all, and the helper is driven in both
+                       directions and proven to treat a glob character
+                       in the pattern as literal.
+
+            FG-S346-N  SEAT. A body carried a leg whose computed value
+                       was forced to a constant by the pipeline that
+                       produced it, so it could only pass. It was caught
+                       by reading the body before shipping and removed.
+                       A leg that cannot fail inside the instrument that
+                       measures whether obligations can fail is the
+                       defect under examination, in the examiner.
+
+            FG-S346-O  WORLD. The number of files the claim guard scans
+                       is not a property of this repository. Thirty two
+                       of the scanned paths are untracked working files.
+                       A guard whose reported scope depends on disk
+                       clutter reports a different scope in continuous
+                       integration than on this host.
+
+            FG-S346-P  WORLD. The served evidence tree is excluded from
+                       the claim guard by name, and it holds 301 tracked
+                       paths. So are the test tree and the examples
+                       tree. This is a deliberate configuration, read
+                       for the first time, and the operator decision
+                       about it is owed.
+
+            FG-S346-Q  WORLD. The reason code registry names 41 codes
+                       and the shipped vectors drive 9. Among the
+                       undriven are the chain break, the merkle
+                       mismatch, the checkpoint range, both proof
+                       artifact codes, and the code added in a later
+                       revision BECAUSE a pack with a contradictory
+                       policy had verified as valid. The rule written to
+                       close a hole has no vector that can fail on it.
+
+            FG-S346-R  WORLD. The proof artifact is touched by no vector
+                       at file level and by no vector at code level. It
+                       is the object the obligation set points at beside
+                       the assurance value that reserves the strongest
+                       word this house allows. Its negative coverage is
+                       empty by two independent measurements.
+
+            FG-S346-S  WORLD. One vector carries a trace file byte
+                       identical to the reference. It is not an
+                       equivalent mutant, because it removes a payload
+                       the trace refers to, and its declared reason code
+                       is the missing assignment. But it is the only
+                       vector that cannot be caught by any check over
+                       the trace alone, and that is a property no
+                       document states.
+
+            FG-S346-T  WORLD. The specification adjusts the force of its
+                       own normative language to match what the
+                       reference implementation does, and has done so in
+                       three consecutive revisions. It also records that
+                       a requirement went unimplemented for five
+                       revisions because no vector could fail on it. THE
+                       HOUSE DISCIPLINE WAS ALREADY INSIDE THE
+                       SPECIFICATION BEFORE THIS ARC LOOKED FOR IT.
+
+            FG-S346-U  WORLD. A namespace measured free at the opening
+                       of this session was taken by the other track
+                       before the session wrote anything. It has now
+                       happened in this session and in the one before
+                       it. The rule that requires measurement at the
+                       moment of writing is not a precaution; it is the
+                       only thing standing between the two lanes.
+
+            FG-S346-V  SEAT. The entry as first built stated a number
+                       that counts the session containing it, in its own
+                       head line and twice in its findings. The house
+                       rule forbids this and the builder enforces it,
+                       but the enforcing shape names two nouns while the
+                       rule names none, so a count written against any
+                       other noun passes. IT WAS CAUGHT BY READING THE
+                       BUILT BYTES AND NOT BY THE GUARD. The arc was
+                       undone to the last reversible body and the entry
+                       rebuilt. A GUARD NARROWER THAN THE RULE IT
+                       ENFORCES IS THE CLASS THIS WHOLE ENTRY IS ABOUT,
+                       FOUND IN THE INSTRUMENT THAT WROTE IT.
