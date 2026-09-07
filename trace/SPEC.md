@@ -504,6 +504,8 @@ Each tampered vector MUST yield INVALID with the expected reason code under §12
 
 *Scope of the shipped vectors (informative):* every vector above is fed to a Verifier and checked for verdict and reason code, so the set exercises Verifier conformance only. No vector exercises a Producer or a Signer obligation directly, and no Producer or Signer conformance regime is defined here. A Producer obligation therefore has no vector that can fail; §9's cadence went unimplemented from 0.2.0 to 0.2.5 for exactly this reason.
 
+*Coverage against the reason-code registry (informative):* not every code registered in section 12.4 is driven by a shipped vector. The codes the vector set exercises are exactly those named, per vector, in the conformance results published with the reference implementation (RESULTS.md); a code that does not appear there has no vector that can fail on it. This records scope, not defect: the registry enumerates every reason a Verifier may report, and a conformance set is not required to drive all of them. No count appears here on purpose: a number written into a specification is a copy of a measurement and copies rot, so the enumeration is referenced rather than summarised.
+
 ---
 
 *Reference implementation status: complete for this version — self-contained Verifier, vector generator acting as reference Producer/Signer, 13/13 conformance vectors. Production anchor backends (RFC 3161, Rekor, and the composite both) and the standalone Signer process are implemented. Next: the AetherLang Producer adapter.*
