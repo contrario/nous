@@ -11048,3 +11048,139 @@ document itself.
                        BLIND TO: whether it is an anchor carrying
                        unusual punctuation or a wrapped sentence. It was
                        not read and it is not this track's object.
+
+  - S345 the line-oriented instrument this document has been censused
+    with is weighed against the wrapping of its own text and is found
+    to undercount, the two paths a preceding finding says left no
+    evidence are named, and two write lanes are found to have survived
+    the same collision by two independent guards and no coordination
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument in the session that carries it, and the set, the shape
+    and what the shape could not see are named beside it. Nothing was
+    built. No module of this project was imported. THE SET OF EVERY
+    COUNT BELOW IS THE REMOTE BLOB AND NOT THE WORKING TREE, and the
+    two were shown equal in the same paste that took the counts.
+
+    NINETEEN PASTES RAN BEFORE THIS ENTRY WAS DRAFTED, eighteen of
+    them carrying declared predictions. 162 predictions were declared,
+    21 missed and 2 could not be judged because the condition they
+    named did not arise. The forty-seven that D343 reports are inside
+    that total. THE DOMINANT CLASS IS UNCHANGED: a prediction that
+    comes out right or wrong for a mechanism the seat named and did
+    not check.
+
+    D345-1  THE OBJECT. Not this document. The instrument every census
+            of this document has been run with, measured against the
+            wrapping of the text it reads.
+
+    D345-2  SET AND SHAPE. SET: the blob at origin/main ed995f7,
+            digest 103d0d60, 11050 lines, read through cat-file and
+            not from the working tree, which was shown equal to it in
+            the same paste. SHAPE: each phrase counted twice, once
+            line by line and once over a stream in which every line
+            break has been turned into a space and runs of spaces
+            collapsed to one. The difference between the two counts is
+            the blind spot and nothing else is inferred from it. BLIND
+            TO: line numbers in the flattened leg, every phrase not in
+            the declared list of six, a phrase broken by a hyphen
+            rather than by a space, and every other file in the tree.
+
+    D345-3  THE RESULT. Line-oriented against flattened, in that
+            order. The phrase beginning from the first reading, 2 and
+            3. The phrase naming the same three untracked paths, 2 and
+            3. The phrase was measured, 21 and 24. The phrase
+            correction by append taken without regard to case, 2 and
+            2. Across those four the totals are 27 and 32, so FIVE OF
+            THIRTY-TWO OCCURRENCES ARE INVISIBLE to the line-oriented
+            instrument. Two controls returned zero under both legs in
+            the same paste.
+
+    D345-4  THE DEFECT DOES NOT REACH SINGLE TOKENS. The token
+            a721a1c returned 1 and 1. The word unchanged returned 40
+            and 40. A census keyed on one token is unaffected. THE
+            EXPOSURE IS EXACTLY THE MULTI-WORD PHRASE OVER A HARD
+            WRAPPED DOCUMENT, and this document is hard wrapped.
+
+    D345-5  THE CONSEQUENCE, STATED WITHOUT A PROPOSAL. Every
+            multi-word census ever run over this document is a FLOOR
+            and not a total. That includes censuses whose conclusions
+            are already committed here. The preceding entry names this
+            exposure three times, in D344-4 as a blind spot, in
+            D344-5 as one identifier inside a wrapped sentence and in
+            D344-7 as five wrapped continuations, AND NEVER WEIGHS IT.
+            Naming a blind spot and measuring its size are different
+            acts and only the second bounds anything.
+
+    D345-6  THE TWO PATHS OF FG-S344-D ARE NAMED, AND THE EVIDENCE
+            STILL DOES NOT SURVIVE. That finding records that the
+            untracked count moved from three to five and back to three
+            with no evidence of the members. The names, REACHING THIS
+            DOCUMENT AS TESTIMONY from an untracked handoff outside
+            this repository and not measured here, are
+            templates/cost.farkas.json and
+            templates/cost_cap_with_souls.manifest.json. Measured
+            here: neither name occurs anywhere in this document, the
+            directory templates carries cost_cap_with_souls.nous at
+            1048 bytes, and the directory itself carries a modified
+            time of 2026-09-05 12:38:29 UTC while no file inside it
+            carries a time from that day. NO CAUSE IS ASSERTED.
+
+    D345-7  TWO LANES SURVIVED THE SAME COLLISION BY TWO INDEPENDENT
+            GUARDS AND NO COORDINATION. FG-S344-I records a
+            precondition on the document digest that refused when the
+            remote moved. This lane carried a precondition of the same
+            kind, on digest and on line count, in the payload that
+            landed D343. Neither lane read the other. Either guard
+            alone was sufficient and NEITHER WAS PLACED BECAUSE THE
+            OTHER LANE WAS KNOWN TO EXIST. The rule of D344-2 is
+            adopted here without amendment and the payload that landed
+            this entry measured the absence of its own namespace at
+            both oracles after driving its detector on a known
+            presence.
+
+    D345-8  THE SEAT USED AN INSTRUMENT ITS OWN INHERITED LIST NAMES
+            AS BROKEN. A count was taken with a case-sensitive match
+            over a document whose headings are upper case, returning
+            zero where the phrase occurs twice. The list carried by
+            the handoff names that exact defect. Reading a warning and
+            applying it are different acts.
+
+    D345-9  NOT DECIDED. Whether any committed conclusion changes when
+            its census is re-run flattened. The caller for the ASCII
+            gate. The suite floor. The Commission Opinion and the AI
+            Board adequacy assessment. The CELEX identifier. Which
+            points of Article 113 the amendment replaces. None was
+            measured far enough to decide and none is decided by
+            silence.
+
+    FINDINGS
+
+            FG-S345-A  WORLD. A line-oriented match undercounts every
+                       multi-word phrase in this document because the
+                       document is hard wrapped and a phrase may cross
+                       a line break. Measured at five of thirty-two
+                       occurrences across four phrases. Single tokens
+                       are unaffected. This applies retroactively to
+                       every multi-word census in this ledger.
+
+            FG-S345-B  SEAT. The seat took a count with a
+                       case-sensitive match over upper-case headings
+                       and read the resulting zero as an absence. The
+                       inherited instrument list names that defect
+                       explicitly and the seat had read the list in
+                       the same session.
+
+            FG-S345-C  SEAT. A gate declared its set as one digest and
+                       measured another, because the remote had moved
+                       between two gates of the same session. Every
+                       number that gate printed was discarded and the
+                       measurement was retaken against a set that was
+                       named and shown. The gate was caught by its own
+                       first leg and not by a fetch.
+
+            FG-S345-D  WORLD. Two lanes wrote to this ledger within
+                       five minutes and each was protected only by a
+                       precondition it had placed for its own reasons.
+                       There is no channel between the lanes and the
+                       commit metadata does not distinguish them.
