@@ -11531,3 +11531,361 @@ document itself.
                        rebuilt. A GUARD NARROWER THAN THE RULE IT
                        ENFORCES IS THE CLASS THIS WHOLE ENTRY IS ABOUT,
                        FOUND IN THE INSTRUMENT THAT WROTE IT.
+
+  - S347 the coverage sentence shipped in the specification is measured
+    against the thing it describes for the first time, the reason code
+    registry is found fully implemented and partly unregistered, the
+    corpus that is the only evidence the verifier can say no is found
+    outside the suite entirely, and the gate that would close all of it
+    is written with its rejection argument first
+
+    R24 governs this entry. Every value below was printed by a named
+    instrument on the host that keeps the repository, in the session
+    that carries it, and the set, the shape and what the shape could not
+    see are named beside it. THE READING HEAD IS THE ONE AT WHICH THE
+    PRECEDING ENTRY LANDED, AND THE LANDING HEAD OF THIS ONE IS ITS
+    DESCENDANT. Neither is written here as a hash; hashes belong to the
+    handoff and to the record, and this document has never carried one.
+    WHERE A NUMBER WAS FIRST DERIVED BY THE SEAT IN ITS OWN CONTAINER
+    FROM TERMINAL OUTPUT, IT WAS RECOMPUTED ON THE HOST BEFORE IT
+    ENTERED THIS ENTRY, AND THE RECOMPUTATION IS THE SOURCE.
+    Transcription is not measurement.
+
+    THE OBJECT WAS CHOSEN BY THE PRECEDING ENTRY AND NOT BY THIS
+    ONE. D346-14 recorded that the coverage declaration is prose, that a
+    later reader must re-derive two sets by hand to check it, and that
+    the machine-checked form is a build owing a full Innovation Gate.
+    This entry supplies the measurement that such a gate needs and
+    writes the gate. It does not build.
+
+    THE STRONGEST RESULT HERE IS A REFUSAL TO CLAIM. The verifier can
+    emit a reason code the normative registry does not carry; the
+    registry has no code the verifier cannot emit; and a green harness
+    says nothing at all about the codes no vector drives. Each of those
+    is a different sentence about a different set, and the failure mode
+    this house pays for most often is joining them.
+
+    D347-1  THE OBJECT. Whether the coverage sentence committed in the
+            specification during the preceding session can be checked by
+            anything other than a reader doing the work by hand. The
+            sentence declares coverage BY POINTER: the codes the vector
+            set exercises are exactly those named per vector in the
+            results table, and a code absent from that table has no
+            vector that can fail on it. Until this reading the relation
+            was asserted and unmeasured.
+
+    D347-2  THE THREE SETS. SET: the registry sentence of the
+            specification; every raise site in the reference verifier;
+            every code named in the published results table. SHAPE:
+            uppercase token extraction with the prose word FIRST
+            excluded BY NAME, then set difference by comm, with comm
+            driven on a known left-only, a known right-only, a known
+            common member and a known identity before any real answer
+            was read. BLIND TO: a code written in lower case, a code
+            split across a line break, and a code reached through a name
+            bound elsewhere. RESULT: the registry names 41, the verifier
+            can raise 42, the table names 9.
+
+    D347-3  THE IMPLEMENTATION GAP IS EMPTY AND THE SEAT PREDICTED THE
+            OPPOSITE. The seat argued that the interesting gap would run
+            from the registry to the verifier, that codes would be
+            registered with no implementation behind them, and that this
+            would be a stronger finding than the vector gap. Measured:
+            every registered code has a raise site. THE PREDICTION WAS A
+            BETTER STORY AND A WORSE PREDICTION, and it is scored as a
+            miss rather than quietly dropped.
+
+    D347-4  THE ORPHAN. One code is raised by the verifier and is absent
+            from the registry: JCS_TYPE. A third party implementing from
+            the specification cannot know what it means, and a checker
+            validating an emitted verdict against the registry would
+            reject a legitimate answer as unknown. THIS IS A DEFECT IN A
+            NORMATIVE DOCUMENT and it is owed a correction independent
+            of anything else here.
+
+    D347-5  THE ORPHAN DOES NOT CONTRADICT THE PRECEDING ENTRY, AND
+            SAYING WHY IS THE POINT. The preceding session recorded that
+            no exercised code is missing from the registry. That was
+            measured over the set the vectors exercise. This is measured
+            over the set the verifier can emit. TWO DIFFERENT SETS, TWO
+            DIFFERENT SENTENCES, AND NEITHER ANSWERS THE OTHER. Joining
+            them would have produced a false contradiction or a false
+            agreement depending on which was read first.
+
+    D347-6  THE COUNT OF RAISE SITES IS EXACT AND NOT A FLOOR, AND THE
+            SEAT DECLARED IT A FLOOR UNTIL IT WAS CLOSED. The census of
+            literal codes could not see a raise site that passes a
+            variable, so the first reading was published as a lower
+            bound. The closing measurement: the lines carrying the
+            exception name exceed the literal occurrences by exactly
+            one, and that one line is the class definition. No raise
+            site passes a variable.
+
+    D347-7  THE UNDRIVEN SET, ENUMERATED AND NOT ONLY COUNTED.
+            Registered, implemented, and driven by no vector: 32 codes,
+            each named in the instrument output. Among them the chain
+            break, the merkle mismatch, the checkpoint range, both proof
+            artifact codes, and RUN_START_ANCHORING, which a later
+            revision of the specification added BECAUSE a pack carrying
+            a contradictory policy had verified as valid. THE CODE ADDED
+            TO CLOSE A FALSE POSITIVE HAS NO VECTOR THAT CAN MAKE IT
+            FIRE.
+
+    D347-8  THREE HAND MAINTAINED COPIES OF ONE SET, AND NOTHING IN THE
+            TREE CHECKS ANY AGAINST ANOTHER. The registry sentence in
+            the specification, the conformance table in the published
+            results, and the expectation mapping inside the harness. The
+            second and third were compared on the host by digest over
+            their sorted code multisets and are IDENTICAL. That
+            agreement is a fact about today and is guarded by nothing.
+
+    D347-9  THE CORPUS IS OUTSIDE THE SUITE ENTIRELY. The reference
+            verify entry point is called from ten tracked test files.
+            NOT ONE OF THEM NAMES THE CORPUS PATH. The suite that gates
+            every release, and the floor that ratchets with it, never
+            touch the only artefacts in this repository that make the
+            verifier say no. This is a defect SEPARATE from the copies
+            above and is not closed by closing them.
+
+    D347-10  BOTH EXECUTABLES ARE PURE READERS, MEASURED BEFORE EITHER
+             WAS RUN. SET: the harness and the reference verifier.
+             SHAPE: fixed string search for every open call, every write
+             attribute, the atomic replace, directory creation, process
+             spawning, sockets and the url library. RESULT: every open
+             call is a read mode; the harness spawns only the verifier;
+             neither reaches the network. THE READING PRECEDED THE
+             EXECUTION, which is the whole reason a read only body was
+             allowed to run them.
+
+    D347-11  THE CORPUS PASSES TODAY, AT THIS HEAD, MEASURED. The
+             harness reports every vector passing and exits zero, and
+             the porcelain digest taken immediately before and
+             immediately after is identical, so nothing was written. The
+             published table describes a verifier of 445 lines; the
+             entry point of the verifier that just ran sits past line
+             1380. THE TABLE WAS NEVER STALE, BECAUSE ITS OWN STATUS
+             LINE DISCLAIMS ONLY REVISION AND LINE COUNTS AND NOT THE
+             MATRIX. It was UNMEASURED, which is a different word.
+
+    D347-12  WHAT THE GREEN DOES NOT SAY, AND THIS IS THE HONEST
+             BOUNDARY OF THE WHOLE READING. Fail-closed ordering is
+             normative: the reported reason is the FIRST failing check.
+             A vector that breaks more than one thing reports only the
+             earliest, so a correct code is NECESSARY and NOT SUFFICIENT
+             evidence that the vector exercises the check its author
+             intended. Nothing here measured that, and nothing here
+             measured whether any of the undriven raise sites is
+             reachable at all.
+
+    D347-13  THE RELEASE PIPELINE ALREADY CARRIES A PHASE OF EXACTLY
+             THIS SHAPE, FOR A DIFFERENT REGISTRY. It refuses a release
+             the published verifier digest registry does not cover, it
+             answers one question offline with no network and no key, it
+             explicitly does NOT mint and does NOT re-verify a signature
+             because that would add a second trust root, and its own
+             docstring closes by saying it evidences coverage and proves
+             nothing. THE FORM THIS HOUSE WOULD USE IS ALREADY WRITTEN
+             AND ALREADY DISCIPLINED.
+
+    D347-14  THE FORM OF THE GATE WAS READ AND NOT REMEMBERED. The
+             constitution requires ten named sections, and the one
+             worked example this house holds adds a section the
+             constitution does not require, a substrate of live bytes
+             measured in the session that writes it. THAT GATE IS A
+             TRACKED DOCUMENT AND IS THE HEAD OF THE VERY FILE THIS
+             LEDGER LIVES IN. NO SUCH DOCUMENT WAS WRITTEN HERE. What
+             this entry supplies is the measurement a gate would rest
+             on. THE DOCUMENT IS OWED AND IS NAMED AS OWED.
+
+    D347-15  THE REJECTION ARGUMENT IS WRITTEN FIRST BECAUSE THE FORM
+             DEMANDS IT, AND IT IS RECORDED WITHOUT SOFTENING. The check
+             is composable from primitives that already exist and are
+             named: the harness, the verify entry point, and a single
+             search over the registry sentence. A reader who runs the
+             reading by hand obtains the same answer at no code cost and
+             no maintenance cost. AND THE HOST REPRODUCED THE SEAT
+             NUMBERS EXACTLY, WHICH IS A MEASURED POINT IN FAVOUR OF THE
+             REJECTION AND IS RECORDED AS ONE.
+
+    D347-16  WHAT DEFEATS THE REJECTION IS NOW MEASURED RATHER THAN
+             ASSERTED. The manual reading runs only when somebody asks
+             for it and nothing in the tree ever asks. A suite test runs
+             at every opening of every session, because the opening
+             protocol runs the suite, and it runs again inside the
+             release script. THE DIFFERENCE IS NOT RHETORIC. THE
+             DECISION BETWEEN THE TWO REMAINS THE OPERATOR DECISION AND
+             IS NOT TAKEN IN THIS ENTRY.
+
+    D347-17  THE PLACEMENT QUESTION IS ANSWERED BY THE FORGE AND HAD
+             BEEN GUESSED. The behavioural diff workflow fires only on a
+             pull request touching a program file, and this lane pushes
+             to the branch directly, so it never fires here at all. The
+             release workflow triggers only on a version tag; inside it
+             the suite is installed and then invoked by the release
+             script, so a release phase and a suite test both run at a
+             release. ONLY THE TEST ALSO RUNS AT EVERY SESSION OPENING.
+             A TEST DOMINATES A PHASE IN REACH.
+
+    D347-18  THE RATCHET PRICE OF A TEST WAS QUOTED BEFORE IT WAS
+             MEASURED AND IT IS CURRENTLY ZERO. The declared suite floor
+             sits far below the passing count at this head, so a further
+             passing test moves nothing. The rule that the floor be kept
+             just below the live count is not being applied, which is
+             why the price is zero, and that is a reading about the
+             floor and not a licence.
+
+    D347-19  A PROPOSAL WAS WITHDRAWN ON MEASUREMENT AND THE WITHDRAWAL
+             IS RECORDED AS WORK. The seat proposed that this check and
+             the ledger numbering rule share one enforcement point, on
+             the strength of a sentence in the preceding entry saying
+             they wait on the same place. The reservation work the seat
+             had seen lives OUTSIDE the repository and no tracked path
+             carries it, so there is no shared point to share. The
+             proposal rested on files git has never seen.
+
+    D347-20  THE SHAPE THIS READING HAS IS OLD, IT HAS A NAME, AND USING
+             THE NAME IS THE OPPOSITE OF CLAIMING NOVELTY. Eliminative
+             argumentation, due to Goodenough, Weinstock and Klein,
+             rests on the eliminative induction of Bacon: confidence in
+             a claim rises as the reasons for doubting it are enumerated
+             and eliminated, and each such reason is a defeater. The
+             associated measure is written as a resolved count beside a
+             total count of defeaters and is explicitly NOT a
+             probability. A REGISTRY OF REASON CODES WITH THE DRIVEN
+             ONES SEPARATED FROM THE UNDRIVEN IS EXACTLY THAT MEASURE
+             OVER THE EVIDENCE LAYER. The prior art does not threaten
+             the work; it names it, and a gate section that claimed
+             novelty here would be false.
+
+    D347-21  THE CORPUS IS GENERATED AND THE SEAT HAD ASSUMED IT WAS
+             HAND BUILT. The reference producer builds the golden
+             bundle, then for each vector clones it, loads the trace,
+             applies one mutation and writes it back, with one vector
+             re-chaining every event and recomputing a merkle root after
+             the forgery. A NEW VECTOR IS A BLOCK INSIDE ONE FUNCTION,
+             NOT A NEW ARTEFACT BUILT BY HAND. The cost of closing any
+             one of the undriven codes is therefore far lower than the
+             preceding reading implied.
+
+    D347-22  AND THE PRODUCER IS A HAZARD THAT NO RULE OF THIS HOUSE
+             NAMED. Its entry point removes the golden directory and
+             rebuilds it before cloning, so running it inside the
+             repository rewrites the tracked corpus. IT SITS IN THE SAME
+             DIRECTORY AS THE HARNESS AND IS ONE MISTAKEN FILENAME AWAY.
+             The harness was read before it was run and was measured to
+             call only the verifier; that reading is the only reason a
+             read only body was allowed near either of them. WHETHER THE
+             CORPUS CAN BE REGENERATED BYTE FOR BYTE AT ALL IS NOT
+             MEASURED HERE and the keys the producer makes are the
+             reason to doubt it.
+
+    FINDINGS
+
+            FG-S347-A  SEAT. The seat declared a gap in the published
+                       literature and did not enumerate who occupies it.
+                       A survey saying substantial work remains is a
+                       statement about INCOMPLETENESS, not about
+                       VACANCY. The claim was corrected by an outside
+                       reader who named prior work from several years
+                       back doing the same bridging. THE SHAPE THAT
+                       PRODUCED THE ERROR WAS THREE SEARCHES, NONE OF
+                       WHICH CARRIED THE VOCABULARY OF THE FIELD BEING
+                       CLAIMED EMPTY, and the blind spot was never
+                       declared. A count without its members again, in
+                       prose.
+
+            FG-S347-B  SEAT. A comparison of a digest against a literal
+                       took the literal length from the seat counting
+                       characters by hand and went red on the count
+                       rather than on the tool. This is the class
+                       recorded in the preceding session under its own
+                       code, repeated in the first instrument of this
+                       one. It was caught by the arm that exists for it
+                       and the comparison was rebuilt to carry no length
+                       at all.
+
+            FG-S347-C  SEAT. A census of the top level names of a
+                       content module used a character class that
+                       excludes digits, and therefore could not see the
+                       two names that carry the finding groups, in a
+                       file the seat had just read. THE SHAPE WAS
+                       NARROWER THAN THE OBJECT and the output looked
+                       complete. Caught only when the builder was read
+                       and the missing names were required by it.
+
+            FG-S347-D  SEAT. A search for the harness name inside the
+                       suite returned a file, and the match was a marker
+                       comment rather than a caller. The seat read a
+                       filename as evidence of a call. The correction
+                       cost a further reading and the wrong answer would
+                       have understated the defect it was measuring.
+
+            FG-S347-E  SEAT. The seat predicted a non-empty
+                       implementation gap between the registry and the
+                       verifier and measured zero. The prediction was
+                       built from what would have been the more
+                       interesting result. PREDICTING FROM THE EXPECTED
+                       OUTCOME RATHER THAN FROM THE INSTRUMENT is the
+                       oldest failure class this house records.
+
+            FG-S347-F  WORLD. The reference verifier can emit a reason
+                       code that its own normative registry does not
+                       list. The registry is the interface a third party
+                       implements against.
+
+            FG-S347-G  WORLD. No tracked test names the corpus path. The
+                       suite gates every release and the corpus is the
+                       only set of artefacts in the tree that makes the
+                       verifier return a negative verdict.
+
+            FG-S347-H  WORLD. One set exists in three hand maintained
+                       copies across a specification, a published report
+                       and an executable, and no tracked artefact
+                       compares any pair. Two of the three were compared
+                       by digest for the first time in this session and
+                       agree.
+
+            FG-S347-I  WORLD. Terminal output pasted back into a shell
+                       is EXECUTED. The house transport rules bind the
+                       direction from the notebook to the shell and say
+                       nothing about the reverse. The lines that ran in
+                       this session happened to begin with punctuation
+                       and capitals and failed as unknown commands; a
+                       transcript carrying a line that begins with a
+                       removal or a version control verb would have run
+                       it. THE RULE OWED IS THAT AN OUTPUT IS NEVER
+                       PASTED INTO A SHELL.
+
+            FG-S347-J  WORLD. The published conformance table carries a
+                       status line that disclaims its own revision
+                       number and its own line counts and says nothing
+                       about the matrix beside them. A reader is
+                       therefore entitled to read the matrix as current
+                       while every number around it is declared out of
+                       date. The matrix held when measured, so this is a
+                       hazard of the form and not a false statement.
+
+            FG-S347-L  SEAT. The seat priced an operator decision before
+                       measuring the price. It wrote that placing the
+                       check inside the suite would move a floor that
+                       never comes down, and offered that as a cost
+                       against the choice. The floor sits far below the
+                       passing count, so the cost is zero today. A COST
+                       ASSERTED WITHOUT AN INSTRUMENT IS THE SAME CLASS
+                       AS A COUNT ASSERTED WITHOUT ONE, and it was aimed
+                       at a decision that is not the seat's to make.
+
+            FG-S347-K  SEAT. THE BUILDER THAT ENFORCES THE RULE AGAINST
+                       A LEG THAT CANNOT FAIL DECLARES ARMS THAT CANNOT
+                       FIRE. Every declared arm was driven against this
+                       content before the payload was trusted. Two are
+                       structurally dead: their names appear in the
+                       declared list and no injection block exists for
+                       either anywhere in the builder, so neither can
+                       ever fire, while the guards behind them are live
+                       and were shown red by other means. A third could
+                       not fire on this content because it truncates a
+                       group that is empty here, which is a property of
+                       the content and not of the builder. VACUITY IN
+                       THE INSTRUMENT THAT WRITES THE ENTRY ABOUT
+                       VACUITY.
