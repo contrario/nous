@@ -735,3 +735,122 @@ ARTEFACT, THE TWO MOVE IN THE SAME COMMIT.
     lane, recoverable only from this machine.
 
 END OF CORRECTION
+
+---
+
+## 13. SECOND CORRECTION BY APPEND
+
+A CONDITIONAL SENTENCE WAS TRANSCRIBED INTO SECTION 11 AS
+UNCONDITIONAL. NOTHING ABOVE THIS LINE IS EDITED. This is the second
+falsification of this Gate inside its own arc, and it is recorded for
+the same reason as the first.
+
+### 13.1 What was wrong
+
+Section 11 requires that the resolved repository root and the walk that
+found it are PRINTED ON EVERY RUN, GREEN OR RED, on the ground that a
+SET that is not printed is not declared.
+
+THAT REQUIREMENT WAS TRANSCRIBED FROM A CONDITIONAL SENTENCE. The
+review that produced it recommended dropping the environment override
+outright, and said that IF an override were kept for some reason, then
+the check must print which root it resolved and by which walk. THE
+OVERRIDE WAS DROPPED IN THE SAME CORRECTION. The condition never held,
+so the requirement should never have entered this document.
+
+THE MECHANISM IS NOT THE DEFECT AND THE COLLECTION BEHAVIOUR OF THE
+TEST RUNNER IS NOT THE DEFECT. THE TRANSCRIPTION IS. A conditional
+carried across a boundary and stripped of its condition is the same
+class this Gate names elsewhere: a thing bound to the shape that
+produced it, reused where that shape does not hold.
+
+### 13.2 Printing was the wrong instrument even where it applies
+
+A PRINTED ROOT IS TESTIMONY. AN ASSERTED ROOT IS A MEASUREMENT.
+
+If the walk lands on a different tree that happens to carry a registry,
+a verifier and a conformance table, every leg passes and the check
+silently measures the wrong tree. Naming the root in a printed line
+does not catch that, because nothing fails and nobody reads the line.
+
+### 13.3 What replaces it
+
+THE ROOT GETS ITS OWN LEG, ASSERTING ITS IDENTITY AND NOT ONLY ITS
+EXISTENCE. The resolved root must carry all four files the check reads,
+AND the specification found there must carry the header line by which
+that document names itself. That leg goes red when the walk lands
+somewhere else, which is what the printing was reaching for and never
+achieved.
+
+The root is then named in the assertion message of every leg, so that a
+red is actionable without a second run, and it is printed as well for a
+reader who runs the check with output capture disabled.
+
+NO PERMANENT WARNING IS EMITTED.
+
+### 13.4 Why not a warning, on this house's own recorded measurement
+
+A warning would satisfy the printed-on-every-run requirement literally,
+because the runner shows warnings on a green run.
+
+IT IS REFUSED, AND THE EVIDENCE IS ALREADY IN THE TREE.
+tests/test_spec_normative_baseline.py records in its own docstring what
+happens to a signal that fires every time: including the changelog
+lines made the hash move at every revision, so the check fired at every
+revision, updating the baseline became routine, AND THAT IS HOW AN
+UNIMPLEMENTED CADENCE STAYED INVISIBLE WHILE THAT TEST WAS GREEN.
+
+A permanent warning is that shape. A reader who meets the same warning
+at every opening stops reading warnings, and the next warning that
+means something arrives into a habit of ignoring them. THE COST IS NOT
+A COUNT MOVING BY ONE. It is the signal value of the warnings summary,
+spent permanently, on a value that never changes.
+
+### 13.5 Non-ASCII in the frozen fixture
+
+THE FIXTURE CARRIES NON-ASCII BYTES, BY MEASUREMENT AND BY NECESSITY.
+The registry line carries the section sign, which is not ASCII. The
+specification carries many such lines.
+
+A VERBATIM FROZEN FIXTURE THEREFORE PUTS NON-ASCII BYTES INTO A NEW
+TRACKED FILE. The house rule against non-ASCII binds INSERTED content,
+and this is inserted content. The two requirements are in direct
+conflict and only one can win: THE FIXTURE MUST BE VERBATIM OR IT IS
+NOT FROZEN. A fixture with the sign replaced by its name is a
+paraphrase, and a paraphrase cannot evidence that a parser went red on
+the bytes that were actually there.
+
+WHAT FOLLOWS FROM THAT, AND IT IS NOT OPTIONAL:
+
+    every read and every write of the test file names its encoding
+      explicitly and never relies on the locale
+    an ASCII leg, if the body carries one at all, asserts that the ONLY
+      non-ASCII bytes in the file lie inside the frozen fixture and
+      nowhere else, and NEVER refuses the correct bytes
+    the test file declares the divergence in prose beside the fixture,
+      so a later reader meets a recorded decision instead of a
+      surprise
+
+This is the same shape as the preceding session, which recorded a
+deliberate divergence in the other direction and wrote it down rather
+than leaving it to be discovered.
+
+### 13.6 What a splice owes that an append does not
+
+AN APPEND HAS ONE SEAM AND ITS EVIDENCE IS A PREFIX. A SPLICE HAS TWO
+SEAMS AND ITS EVIDENCE IS A ROUND TRIP.
+
+The frozen fixtures are not transcribed. A template carrying a marker
+is uploaded, and a body on the host replaces the marker with the live
+bytes read from the file itself, so that the bytes never pass through a
+conversation or a terminal. That body therefore carries:
+
+    the marker appears EXACTLY ONCE before the splice and EXACTLY ZERO
+      times after it, because a marker surviving the splice is a splice
+      that did not happen where it was meant to
+    after the write, the fixture is RE-EXTRACTED from the test file and
+      compared against the live line again, because verifying the input
+      evidences the input and only the round trip evidences the result
+    the result compiles
+
+END OF SECOND CORRECTION
