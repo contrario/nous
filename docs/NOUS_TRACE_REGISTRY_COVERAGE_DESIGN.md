@@ -608,3 +608,130 @@ surface, any signing ceremony, any change to the suite floor, and any
 widening of the SET beyond the reference Verifier.
 
 END OF GATE
+
+---
+
+## 12. CORRECTION BY APPEND. THE PATH LIST OF SECTION 11 WAS INCOMPLETE.
+
+NOTHING ABOVE THIS LINE IS EDITED. A Gate rewritten whenever the world
+contradicts it is not a Gate: it is a document that is always right
+because it is edited to be right. THE TEST THIS GATE APPLIES TO A
+SPECIFICATION APPLIES TO THE GATE. A specification that cannot be
+violated by its own reference implementation is not a specification, and
+a Gate that cannot be falsified by measurement is not a Gate. This one
+was falsified. The falsification is recorded here rather than smoothed
+away above.
+
+### 12.1 What was wrong
+
+Section 11 allocates two paths. A third is required:
+
+    tests/spec_normative_baseline.json
+
+### 12.2 Why it was wrong, which is worth more than the path
+
+SECTION 11 MEASURED THE FILES THE CHECK WOULD READ AND NOT THE TRACKED
+FILES THAT READ THE OBJECT THIS ARC WRITES TO. THE GATE MEASURED ITS OWN
+INPUTS AND NOT ITS OWN BLAST RADIUS. That is a class, not an oversight.
+
+The evidence that it is a class: two further tracked tests name the
+specification and either could have been bound to the revision number.
+tests/test_wire_compat.py reads only the wire version out of the
+normative example, and tests/test_s257_f4_checkpoint_cadence.py names
+the specification in prose and reads packs instead. Neither is bound to
+the revision, SO NEITHER MOVES. THAT IS LUCK AND NOT DESIGN. The read
+that found the baseline found those only because it was widened to every
+tracked file naming the specification, and it was widened after this
+Gate was written.
+
+### 12.3 The third path is a different kind, and the difference matters
+
+    AUTHORED, by this arc:
+      docs/NOUS_TRACE_REGISTRY_COVERAGE_DESIGN.md
+      tests/test_s345_trace_reason_code_registry.py
+
+    REGENERATED, by the test that guards it:
+      tests/spec_normative_baseline.json
+
+The baseline record is not content this arc writes. It is the output of
+tests/test_spec_normative_baseline.py, which fails ON PURPOSE when the
+normative text and the revision have both moved, and which PRINTS THE
+EXACT RECORD TO WRITE. The record is transcribed from that failing
+output and is never computed a second time by any other instrument,
+because a second implementation of the same hash is a second thing that
+can drift. NO BODY OF THIS ARC HAND EDITS THAT FILE.
+
+### 12.4 The revision bump is the act of registering, not a further act
+
+Section 11(a) authorises registering a code and declaring a policy. It
+does not mention the document revision, and the seat that wrote it
+leaned toward leaving the revision alone on the strength of a single
+instance. THAT LEAN WAS WRONG FOR THE SAME REASON THE PATH LIST WAS
+INCOMPLETE: it reasoned from a single instance and did not read the
+file.
+
+The file answers it. The header carries a Version line, a Status line
+naming what it supersedes, and a Changes block for every revision since
+0.2.0. THE EXACT PRECEDENT IS THE 0.2.3 TO 0.2.4 BLOCK: a reason code
+registered in section 12.4, placed to match the section 12.2 check
+order, and the revision moved with it. A REVISION BUMP IS HOW THIS FILE
+REGISTERS A CODE. It is the act, not a further act requiring further
+authority, and the specification body transcribes a measured convention
+instead of choosing one.
+
+The registry parenthetical names the revision in which THE REGISTRY last
+changed, not the revision of the document: it reads v0.2.4 while the
+document reads 0.2.6, because the revisions between them changed other
+sections. That is measured, and it is what makes the parenthetical
+correct today rather than stale.
+
+### 12.5 The normative hash moves BY DESIGN
+
+The allocation policy carries MUST. A policy without MUST is not
+normative and the check would enforce nothing declared. So the policy
+enters the RFC 2119 surface that tests/test_spec_normative_baseline.py
+hashes, and the hash moves.
+
+THAT IS INTENDED AND IT IS WRITTEN HERE BEFORE IT HAPPENS, so that it is
+a design decision rather than a test that had to be appeased. The
+registry line itself carries no RFC 2119 keyword, so registering the
+code alone would not move the hash. The policy is what moves it, and the
+policy is the part that has force.
+
+### 12.6 The order the third path imposes
+
+THE SPECIFICATION AND THE BASELINE RECORD MOVE IN THE SAME COMMIT. The
+record is a statement about the bytes of that specification, so a commit
+carrying either without the other leaves the tree red between them.
+
+This is the constraint section 11 already recorded for the reference
+Verifier and the registry, now observed on a different pair inside this
+same arc. IT GENERALISES, AND THE GENERALISATION IS THE FINDING:
+WHENEVER A TRACKED ARTEFACT RECORDS A PROPERTY OF ANOTHER TRACKED
+ARTEFACT, THE TWO MOVE IN THE SAME COMMIT.
+
+### 12.7 The order as it now stands
+
+    1. The Gate lands.
+    2. This correction lands by append.
+    3. The test file sits at an absolute path OUTSIDE the collected
+       tree, the specification is UNCORRECTED, the check runs, and the
+       leg named RAISE_SITES_SUBSET_OF_REGISTRY is RED. THE FROZEN
+       FIXTURES ARE TAKEN HERE, from the file as it stands, printed
+       whole by the body that captures the red. They are never
+       reconstructed afterwards from memory of what the line said.
+    4. trace/SPEC.md and tests/spec_normative_baseline.json together:
+       the code registered, the policy declared, the revision bumped,
+       the Changes block added, and the record transcribed from the
+       failing output of its own producer.
+    5. The test file is moved into the collected tree and committed,
+       green.
+    6. The ledger entry.
+
+    Then the push. The window in which a policy is committed with
+    nothing enforcing it exists only on this machine and never reaches
+    the remote. IF THE SESSION ENDS INSIDE IT, the handoff names a state
+    this Gate did not: work committed locally, invisible to the other
+    lane, recoverable only from this machine.
+
+END OF CORRECTION
