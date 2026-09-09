@@ -854,3 +854,110 @@ conversation or a terminal. That body therefore carries:
     the result compiles
 
 END OF SECOND CORRECTION
+
+---
+
+## 14. THIRD CORRECTION BY APPEND
+
+NOTHING ABOVE THIS LINE IS EDITED. This is the third falsification of
+this Gate inside its own arc, and with it the pattern is no longer a run
+of accidents. Section 14.6 states what it is.
+
+### 14.1 Removing a name this Gate carries, with the authority
+
+Section 11(b) names FROZEN_REGISTRY_LINE_AFTER, and says the build may
+add fixtures but may not remove a named one without a further decision.
+THIS IS THAT DECISION. The name is removed. What stands in its place is
+a derived value, named for what it is.
+
+### 14.2 Why the name could not be kept over the object
+
+The corrected registry line DOES NOT EXIST at the moment the frozen
+bytes must be taken, and section 11 requires the bytes producing the
+live red to be byte-identical to the bytes that land, which forbids a
+second splice afterwards. THE NAMED FIXTURE CANNOT EXIST AS SPECIFIED.
+That is a fact about the world and not a preference.
+
+Keeping the name over a computed object was refused for the plainer
+reason: a name that says frozen over something derived is the class this
+whole arc exists to close, written into the instrument that closes it.
+
+The division is clean. The derived pair evidences that THE
+TRANSFORMATION changes the colour, from bytes in the tree, forever.
+Whether the live specification received that transformation is the
+subject of the live legs. The derived value is never compared against
+the live file, so a later registration cannot turn it red.
+
+### 14.3 The build added guards the Gate did not name, and it was right
+
+A SUBSET RELATION WITH AN EMPTY LEFT SIDE IS TRIVIALLY TRUE. Had the
+raise-site extractor returned nothing, the relation legs would have gone
+green while nothing was measured. That is antecedent failure, appearing
+inside the instrument built to close it. Asserting that the registry is
+populated does not help, because the registry is the RIGHT side of two
+of those relations, and a subset relation is not made informative by a
+populated superset.
+
+SO EACH OF THE FOUR SETS ASSERTS ITS OWN NON-EMPTINESS, as a relation
+and never as a count.
+
+A POPULATED SET IS STILL NOT A MEASURED ONE. A locator pointed at the
+wrong tracked file returns a populated set, so every emptiness guard
+passes and every relation is measured over the wrong object. The check
+therefore also asserts that its four paths are distinct AND that each
+carries a phrase by which that file names its own kind. Driven on a tree
+whose conformance table had been replaced by a copy of the harness
+mapping, that guard is the ONLY one that goes red.
+
+### 14.4 The build removed a leg that could not fail
+
+A function that computes the four sets and calls print asserts nothing.
+It passes forever, and the runner captures its output on a green run, so
+it is unreadable exactly when it is green. THAT IS THE SHAPE THIS GATE
+REFUSED ONE SECTION EARLIER, in 13.4, reappearing inside the artefact.
+
+The counts now travel inside the message of every leg that can fail,
+where a reader needs them and where the runner will show them. THE
+LEDGER TAKES ITS NUMBERS FROM THE READ-ONLY BODY, which is where a
+measurement belongs, and not from a suite that hides its output.
+
+An identity relating the four sets to one another would not have rescued
+such a leg: any such algebra is a tautology and cannot fail, which is
+worse than a print.
+
+### 14.5 Section 9 counted the deliverable, and the count is wrong
+
+Section 9 closes by calling the ongoing cost ONE FURTHER PASSING TEST.
+Section 5 refuses to let the check pin a count, and the section that
+records the decision gives its legs and its fixtures by name rather than
+by number. The rule was applied in two places and not in the third, by
+this document, in one sitting, and the number is now false.
+
+IT IS CORRECTED WITHOUT A REPLACEMENT NUMBER. The ongoing cost is the
+suite time of one test file. What that file contains is measured at the
+commit that lands it and recorded in the ledger entry, not here.
+
+### 14.6 The pattern, which is worth more than the corrections
+
+    the path list, which measured what the check READS and not what
+      READS the object this arc writes to
+    the printed root, transcribed from a conditional whose condition
+      was dropped in the same correction
+    the frozen-after fixture, named as a copy of bytes that do not
+      exist at the moment the copy must be taken
+    the cost sentence, counting the deliverable in the one section
+      where the rule against counting was not applied
+
+FOUR MEMBERS, ONE SHAPE: A GATE AUTHORISES ARTEFACTS, ARTEFACTS ARE
+CONSTRAINED BY MATERIAL, AND THIS GATE DESCRIBED ITS ARTEFACTS BEFORE
+READING THE MATERIAL THAT CONSTRAINS THEM.
+
+That is not a run of accidents. IT IS HOW THIS GATE WAS WRITTEN, and it
+is recorded as such rather than as a list of separate mistakes. The
+constitution requires the Gate before implementation; it does not
+require the Gate to specify artefacts it has not yet measured the
+material for. A Gate may authorise an object and leave its shape to the
+build, and where this one did that, in the placement decision and in the
+order, it needed no correction.
+
+END OF THIRD CORRECTION
