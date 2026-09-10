@@ -11889,3 +11889,427 @@ document itself.
                        the content and not of the builder. VACUITY IN
                        THE INSTRUMENT THAT WRITES THE ENTRY ABOUT
                        VACUITY.
+
+  - S348 an arc this lane did not run is recorded from artifacts, the
+    four paths it landed are read back from the remote and stop being
+    testimony, three numbers written by the preceding lane are corrected
+    by append, and the entry states in its own first sentence which of
+    its values were measured here and which were carried
+
+    R24 GOVERNS THIS ENTRY, AND IT GOVERNS IT AS A WHOLE DOCUMENT RATHER
+    THAN AS A SENTENCE. THIS LANE DID NOT RUN THE ARC. Every value below
+    that describes the specification, the registry, the vector corpus or
+    the suite reached this entry through the handoff and the measurement
+    record of the preceding session and is TESTIMONY until re-measured.
+    Values re-measured on the host in the session that carries this
+    entry are named as such and carry their set, their shape and what
+    the shape could not see. The reading head is the one the preceding
+    entry landed at and the landing head of this one is its descendant.
+    Neither is written here as a hash; hashes belong to the handoff and
+    to the record, and this document has never carried one.
+
+    THE OBJECT WAS OWED AND NOT CHOSEN. The remote carried the gate, the
+    specification, the baseline record and the check, and carried no
+    entry describing them. The preceding handoff named that state so it
+    would not have to be discovered. The operator brought the object;
+    this lane did not select it and does not select the next.
+
+    THE STRONGEST RESULT HERE IS A CONVERSION AND NOT A CLAIM. Four
+    paths that arrived as sentences in a handoff were read back from the
+    remote by digest and by blob and now rest on bytes. Nothing else in
+    this entry was converted. The registry counts, the coverage
+    relation, the archaeology and the specification findings remain
+    exactly as strong as the artifacts that carried them, which is to
+    say they are one lane deep and were not re-derived.
+
+    D348-1  THE OBJECT AND THE PROVENANCE OF ITS VALUES. This entry
+            records the arc that landed the reason-code registry
+            coverage check. The arc ran in a different session under a
+            different seat. The material is a sealed handoff, a sealed
+            measurement record and a sealed opener, whose bytes were
+            verified against digests supplied separately from the files
+            themselves before any of them was read. THAT VERIFICATION
+            ESTABLISHES THAT THE ARTIFACTS ARE THE ONES THE PRECEDING
+            SEAT SEALED. IT ESTABLISHES NOTHING ABOUT WHETHER THE
+            MEASUREMENTS INSIDE THEM WERE CORRECT.
+
+    D348-2  WHAT STOPPED BEING TESTIMONY. SET: the four paths the arc
+            moved, at the remote. SHAPE: the content of each path read
+            out of the committed tree, digested, and its object name
+            resolved, both compared against the values the handoff
+            states, with the comparator driven red on a far pair, on a
+            pair differing in the last character only, and on a
+            truncated expectation before either side was trusted.
+            RESULT: eight comparisons, eight matches. BLIND TO: whether
+            the content of those paths is correct, which is a different
+            question from whether it is the content the handoff
+            describes.
+
+    D348-3  THE LEDGER WAS READ AT TWO ORACLES BEFORE IT WAS APPENDED
+            TO. SET: this document. SHAPE: the committed object at the
+            remote and the file in the working tree, digested separately
+            and compared to each other and to the value the handoff
+            pins. RESULT: all three agree. The document opens with no
+            non-ASCII character, no trailing whitespace on any line, a
+            longest line well inside the house bound, and a final byte
+            that is a newline. A GUARD REFUSING WHEN THE TWO ORACLES
+            DISAGREE WAS DRIVEN RED BY EDITING THE WORKING COPY AND
+            LEAVING THE REMOTE ALONE.
+
+    D348-4  THE NAMESPACE WAS MEASURED WITH ITS PRESENCE SIDE DRIVEN
+            FIRST. An instrument that has not been shown to see an
+            occupied namespace cannot be trusted to report an empty one.
+            SHAPE: four patterns per family, anchored and unanchored,
+            numeric and alphabetic. The occupied families answered
+            before the target families were asked. The target families
+            answered zero at both oracles. THE READING IS VALID AT THE
+            INSTANT IT WAS TAKEN AND IS RETAKEN IMMEDIATELY BEFORE THE
+            WRITE, BECAUSE ANOTHER WRITER SHARES THIS BRANCH AND HAS
+            TAKEN A NUMBER OUT FROM UNDER AN ENTRY OF THIS DOCUMENT
+            BEFORE.
+
+    D348-5  WHAT THE ARC SHIPPED, CARRIED FROM THE HANDOFF AND NOT
+            RE-DERIVED. An Innovation Gate as a new tracked document
+            with its decision recorded as build, then three corrections
+            by append to that gate, then the specification and its
+            normative baseline record together, then the check entering
+            the suite. TESTIMONY: the ordering and the reasoning.
+            MEASURED HERE: only that the four resulting paths are at the
+            remote with the stated bytes.
+
+    D348-6  THE REGISTRY RELATION AS THE PRECEDING SEAT MEASURED IT,
+            UNVERIFIED HERE. Forty-one registered reason codes,
+            forty-two raise sites, nine codes in the published results
+            table, nine exercised by the harness, no registered code
+            without a raise site, and exactly one code raised and not
+            registered. THE SET REGISTERED AND DRIVEN BY NO VECTOR ROSE
+            BY ONE WHEN THE ORPHAN WAS REGISTERED, WHICH THE GATE
+            DECLARED BEFORE THE ARC RAN SO THAT A LATER READER MEETING
+            THE RISE WOULD FIND THE REASON RECORDED RATHER THAN HAVE TO
+            RECONSTRUCT IT.
+
+    D348-7  THE ORPHAN WAS NEVER ONE SITE, AND THE CONSEQUENCE IS NOT
+            SYMMETRIC. Five tracked files name it and four raise it: the
+            reference Verifier, two bridge scripts, and an embed that
+            travels as bytes inside every emitted offline verifier. THE
+            EMBEDDED COPY IS THE ONE THAT REACHES AN AUDITOR. It may
+            report a code that no rule obliges it to register, and the
+            arc named this as the highest-consequence adjacent gap and
+            did not close it.
+
+    D348-8  THE ALLOCATION RULE BINDS ONE IMPLEMENTATION AND NOTHING
+            ENFORCES IT FOR THE OTHERS. The specification now closes the
+            set of codes the reference Verifier may emit and gives every
+            other implementation a private-use prefix. The three other
+            tracked emitters are given the prefix by the text and are
+            checked against it by nothing. A RULE STATED IN A NORMATIVE
+            DOCUMENT AND UNCHECKED IN THE TREE IS A DECLARATION, NOT A
+            CONSTRAINT.
+
+    D348-9  THE PRIVATE-USE PREFIX CANNOT COLLIDE TODAY. SET: the
+            registry sentence, every raise site, and the whole subtree.
+            SHAPE: a token pattern anchored on the prefix. RESULT: zero
+            in all three. BLIND TO: any future code, which is what a
+            prefix reservation is for and is why the measurement is
+            worth recording rather than assuming.
+
+    D348-10  THE ARCHAEOLOGY RETURNED A SINGLE COMMIT. The code and the
+             registry were born together and the code never entered the
+             list. SHAPE: a content search over the history of one path.
+             BLIND TO: the same code entering the other three emitters,
+             which was not searched. THE FINDING IS NARROWER THAN THE
+             SENTENCE THAT REPORTS IT WOULD SUGGEST IF THE SHAPE WERE
+             OMITTED, WHICH IS THE REASON THE SHAPE IS NEVER OMITTED.
+
+    D348-11  THE THREAT MODEL THE SPECIFICATION ASSERTS IS ABSENT FROM
+             IT, AND TWO THINGS ARE TRUE AT ONCE. The live file carries
+             exactly one adversary label on exactly one line and no
+             heading names a threat model, while the earliest archived
+             revision carried the full taxonomy and the heading. So a
+             run of Changes blocks assert that no part of a threat model
+             changed, about an object the document does not contain, AND
+             the normative text carries a dangling reference to an
+             adversary of a taxonomy it does not define. THIS IS A
+             DEFECT IN A NORMATIVE DOCUMENT AND IT IS LARGER THAN THE
+             CLAUSE THE ARC OMITTED.
+
+    D348-12  THE HOUSE RULE ON THE WORD PROVED IS ALREADY NORMATIVE
+             INSIDE A SPECIFICATION AND NO SESSION HAD CITED IT. A
+             non-claim of the trace specification reserves the word to
+             design-time solver and certificate artifacts attached to
+             obligations of that assurance level. THAT IS THE STRONGEST
+             PLACEMENT THE RULE HAS ANYWHERE IN THIS PROJECT. It was
+             found by reading a document for a different purpose, which
+             is the ordinary way such things are found.
+
+    D348-13  THE DOMINANT DEFECT CLASS OF THE ARC, IN ONE SENTENCE
+             INSTEAD OF SIX INSTANCES. A guard that means to say
+             something holds must assert the relation and read the
+             number, because a count is the easiest thing to write and
+             the hardest thing to keep true. Every instance went red for
+             a CORRECT state and every instance was caught by its own
+             output rather than by review, which is the only reason the
+             class is legible at all.
+
+    D348-14  CORRECTION BY APPEND, AGAINST THE MEASUREMENT RECORD OF THE
+             PRECEDING SESSION. Its section headed with the words that
+             the instruments measured states a passing count that no
+             instrument produced at the tree that section describes. The
+             count was taken at an earlier head, on a working tree where
+             the new test file was present and untracked, and was
+             CARRIED forward. The transport rested on five legs
+             asserting that the bytes did not move between the two
+             moments. ALL FIVE LEGS ARE OVER THE REPOSITORY AND NONE IS
+             OVER THE ENVIRONMENT: the installed distribution, the
+             interpreter, the plugin set, and every file the ignore
+             rules exclude from status. A CARRIED NUMBER MUST SAY
+             CARRIED AND NAME THE AXIS ITS LEGS DO NOT COVER.
+
+    D348-15  CORRECTION BY APPEND, AGAINST THE OPENER OF THE PRECEDING
+             SESSION. It states that the opening pastes pin three stale
+             values and will go red for correct states. The pins are the
+             opener's own; neither paste carries those literals in its
+             output and neither compares anything, which the second
+             declares in its own preamble. AN INSTRUMENT THAT DOES NOT
+             COMPARE CANNOT GO RED. The three values are correctly
+             identified as stale. The verb was attached to the wrong
+             artifact. SET: the opener section and the output of both
+             pastes. BLIND TO: the source of the pastes, which this seat
+             has never read.
+
+    D348-16  CORRECTION BY APPEND, AGAINST THE SAME OPENER. It carries a
+             scanned-file count forward as an expectation for the next
+             session. That count comes from a tool that walks the disk
+             under directory exclusion rules, in a repository whose
+             status has not been empty at any point across these
+             sessions, and two earlier entries of this document record
+             that whether the tool honours those rules in practice is
+             unread. THE COUNT IS A PROPERTY OF A TREE AND WAS WRITTEN
+             AS A PROPERTY OF A HEAD. An untracked script sits at the
+             repository root today and nothing has established whether
+             it is inside the scanned set.
+
+    D348-17  TWO CANDIDATE RULES, DRAFTED HERE AND NOT NUMBERED. FIRST:
+             a number produced by a tool that reads the disk names the
+             TREE, not the head, because a head is not a tree when the
+             status is not empty; and a number moved between moments
+             says CARRIED, names the legs that carried it, and names the
+             axis those legs do not cover. SECOND: a document built by
+             append is in LANDING order, so no leg may read an entry
+             number, or a line number keyed to one, as position or as
+             ordering. THE SECOND WAS MEASURED: five entries in one
+             range are strictly ordered by landing and carry two
+             inversions when ordered by their own numbers, with the red
+             arm driven.
+
+    D348-18  TESTIMONY OF THE OTHER WRITER, RECORDED UNSIGNED BY BOTH
+             LANES. The pricing commit touches one path and changes
+             verification dates and a source link on three entries with
+             no numeric value moved, leaving nine entries unchecked. A
+             conformance case does not expire when a carried date said
+             it did. And after a change to the pricing table, artifacts
+             must be rebuilt before they are run, or several cases fail
+             because the artifacts carry the earlier commitment, while
+             the reproduction check reports success concurrently because
+             it builds and verifies in the same breath and is
+             structurally blind to that class. NONE OF THIS WAS MEASURED
+             BY EITHER LANE. THE EXPIRY IS A DATE, AND DATES ARE THE
+             CLASS THIS HOUSE HAS PAID MOST FOR.
+
+    D348-19  THE CONFORMANCE CASE HARNESS HAS BEEN RUN BY NO LANE AT NO
+             HEAD. The house suite is green at the current head and the
+             house suite is a different oracle from the case harness, by
+             two orders of magnitude in size and by construction in
+             purpose. IF ANY LATER SENTENCE IN THIS PROJECT LEANS ON THE
+             WORD GREEN, IT NAMES WHICH ORACLE. The suite count itself
+             was measured twice over the same pricing bytes, once
+             uncommitted and once committed, and did not move, which
+             bounds the pricing change and bounds nothing else.
+
+    D348-20  TWO WRITERS SHARE ONE BRANCH AND ONE CHECKOUT, AND THE
+             PROTOCOL AGREED FOR IT HAS A MEASURED HOLE. A push cannot
+             send a commit without its ancestors, so an entry committed
+             above another lane's unpushed work can only travel with it.
+             The protocol adopted was that the owner publishes a
+             specific commit by name first, which is a documented push
+             form and needs no force where the target is already an
+             ancestor. THE OWNER'S PUBLICATION RAN BY HAND, BEFORE ITS
+             GUARD EXISTED. It came out correct. A CORRECT OUTCOME IS
+             NOT EVIDENCE THAT THE PROCESS WAS SOUND, AND THIS ENTRY
+             RECORDS THE HOLE RATHER THAN THE OUTCOME.
+
+    D348-21  THE BUILDER THAT WROTE THIS ENTRY WAS VALIDATED AGAINST
+             GROUND TRUTH AND NOT ONLY AGAINST ITSELF. Its declared
+             refuse arms were driven off host, and separately its
+             content module and the preceding entry already in this
+             document were compared byte for byte: the reconstruction
+             and the landed text agree exactly in digest, in line count
+             and in byte count, with a window shifted by a single line
+             driven as the red arm. THE PAYLOAD OF THIS ENTRY WAS THEN
+             BUILT ON TWO MACHINES FROM THE SAME SOURCES AND AGREED IN
+             DIGEST, IN LINE COUNT AND IN BYTE COUNT, SO IT RESTS ON TWO
+             INDEPENDENT PATHS AND NOT ON ONE RUN. THREE DECLARED ARMS
+             DO NOT FIRE AND ARE NAMED IN THE FINDINGS. IN ALL THREE
+             CASES THE GUARD BEHIND THE ARM WAS DRIVEN RED FROM ANOTHER
+             DIRECTION AND IS LIVE.
+
+    D348-22  WHAT THIS ENTRY LEAVES OPEN AND DOES NOT PRETEND TO CLOSE.
+             The emitter that reaches an auditor is still unbound. The
+             vector corpus is still outside the suite and no vector
+             drives the registered orphan. Whether the corpus
+             regenerates identically is unmeasured and needs two runs in
+             two scratch trees diffed against each other before either
+             is diffed against the tracked copy. The threat-model defect
+             is a board item and not part of this arc. Two served
+             numbers are further from true than they were. A wider
+             census shape sees more finding families in this document
+             than the anchored shape does and neither difference has
+             been named. And a label printed by the second opening paste
+             carries no value at all.
+
+    FINDINGS
+
+            FG-S348-A  SEAT. The seat labelled its own findings in a
+                       namespace it had not measured, and that namespace
+                       is occupied in this document by more than twenty
+                       members. The correct number was one higher and
+                       was free at both oracles. This is the defect an
+                       earlier entry of this document already recorded
+                       once, repeated by a seat that had read that
+                       entry's summary in the same session.
+
+            FG-S348-B  WORLD. The opener of the preceding session states
+                       that the opening pastes pin three stale values
+                       and will go red for correct states. Neither paste
+                       compares anything and neither carries those
+                       literals in its output; the pins are the opener's
+                       own. The values are correctly stale and the
+                       behaviour is misdescribed. Corrected by append in
+                       this entry.
+
+            FG-S348-C  SEAT. A correct finding was downgraded in
+                       retransmission inside a single session. The seat
+                       first recorded, accurately, that a decoration
+                       printed beside a head line names a local tracking
+                       ref and that no fetch had run, so the remote
+                       state was not established. Summarising its own
+                       list of errors minutes later, the same seat wrote
+                       instead that the head had already moved, which
+                       the measured timestamps refute. THE MEASUREMENT
+                       WAS RIGHT AND THE SUMMARY OF IT WAS WRONG.
+
+            FG-S348-D  WORLD. The family census legs of the second
+                       opening paste count occurrences at the start of a
+                       line and are therefore blind to cross-references
+                       inside prose. One family in this document answers
+                       one higher under an unanchored shape than under
+                       the anchored one. The anchored total
+                       under-reports by that difference. The namespace
+                       decision in this session deliberately used the
+                       wider shape, because a namespace is judged free
+                       by the shape that sees more and never by the
+                       shape that sees less.
+
+            FG-S348-E  WORLD. The builder's declared arm for the rule
+                       against an entry counting its own session does
+                       not drive the wired path. It calls the guard
+                       function on a constant of its own instead of on
+                       the payload, so it evidences the function and not
+                       the connection. The connection was driven
+                       separately by placing a matching phrase inside a
+                       real item, after confirming at the syntax tree
+                       that the injection had taken, and the guard
+                       refused. THE GUARD IS ALSO OPT-IN: without its
+                       flag the same payload is written without
+                       complaint.
+
+            FG-S348-F  WORLD. The builder's guard against a payload
+                       stating its own size compares forbidden tokens
+                       against the text after lines have been joined, so
+                       any token containing a space is invisible
+                       whenever the wrapper splits it. A multi-word
+                       token present in the payload passed; a
+                       single-word token in the same payload refused
+                       immediately. Size tokens are digit strings and
+                       contain no space, so the guard is sound for its
+                       stated purpose and unsound for the general one.
+
+            FG-S348-G  SEAT. The seat read a negative result without
+                       confirming that the stimulus had arrived. Its
+                       first attempt to drive a guard modified a source
+                       file by matching a literal that does not occur,
+                       because the string in question is written as an
+                       implicit concatenation across lines. The edit
+                       silently did nothing and the seat was one step
+                       from recording that the guard was dead. A
+                       NEGATIVE READING WITHOUT EVIDENCE THAT THE
+                       STIMULUS ARRIVED IS NOT A MEASUREMENT.
+
+            FG-S348-H  SEAT. The seat inferred a repository state from a
+                       cross-reference inside one file. A content module
+                       named an item of an earlier entry, and the seat
+                       concluded that the entry owed for the coverage
+                       arc had therefore already been written. The
+                       commit log refutes it: entry numbers in this
+                       document do not track session numbers, and both
+                       referenced entries had landed in earlier
+                       sessions. A CROSS-REFERENCE EVIDENCES THAT ITS
+                       TARGET EXISTS, NEVER WHEN AND NEVER TO WHAT.
+
+            FG-S348-I  SEAT. The seat predicted that an instrument would
+                       go red, having already been told in writing that
+                       the instrument performs no comparison. The
+                       prediction could not have held under any state of
+                       the tree. It was scored as a miss and it is the
+                       cheapest kind of miss to avoid: read what the
+                       instrument is said to do before predicting what
+                       it will say.
+
+            FG-S348-J  WORLD. Three of the builder's declared refuse
+                       arms do not fire. One is conditional on content
+                       and is inert whenever the first finding group is
+                       empty, which it is here. Two perform no mutation
+                       at all and are inert by construction. In every
+                       case the guard behind the arm was driven red from
+                       another direction and is live, so the defect is
+                       in the arm inventory and not in the guard set. AN
+                       ARM THAT CANNOT FIRE IS AN INSTRUMENT THAT CANNOT
+                       GO RED, AND THE ONLY REASON THIS ONE IS HARMLESS
+                       IS THAT ANOTHER PATH REACHES THE SAME GUARD.
+
+            FG-S348-K  WORLD. The head line of every entry in this
+                       document is prefixed with the letter S and the
+                       ENTRY number, while commit subjects use the same
+                       letter with the SESSION number, and the two
+                       differ by as much as three in the recent range.
+                       Nothing declares the distinction anywhere. A
+                       reader comparing a head line against a commit
+                       subject will read the same prefix as the same
+                       quantity.
+
+            FG-S348-L  WORLD. The single irreversible action of the
+                       two-writer protocol agreed in this session ran by
+                       hand, before the body written to guard it
+                       existed, and that body reported after the fact
+                       that the work had already landed. The commit
+                       shape was validated retrospectively and was
+                       correct. THE PROTOCOL WAS DESIGNED SO THAT NO
+                       IRREVERSIBLE ACTION WOULD RUN UNGUARDED AND ITS
+                       FIRST APPLICATION DID EXACTLY THAT.
+
+            FG-S348-M  SEAT. The seat wrote a leg that named the exit
+                       state of an action and could not read it. The
+                       transport rules of this project forbid the shell
+                       variable sigil inside a pasted line, which makes
+                       the exit code of the preceding command unreadable
+                       inline, and the remedy available and unused was
+                       to move the action into a file body where the
+                       sigil is permitted. The exit state was INFERRED
+                       instead, from the shape of the output, and the
+                       inference is sound because the builder has
+                       exactly one path that reports a write and that
+                       path returns success immediately afterwards. AN
+                       INFERENCE IS NOT A READING. This is the defect
+                       class of a release phase that discards an exit
+                       code, committed by the seat inside the write that
+                       builds the entry recording that class.
