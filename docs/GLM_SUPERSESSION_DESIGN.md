@@ -12313,3 +12313,436 @@ document itself.
                        class of a release phase that discards an exit
                        code, committed by the seat inside the write that
                        builds the entry recording that class.
+
+  - S349 the question of which copy of itself this project runs is
+    settled and found to have no second copy at all, the packaging
+    surface is measured at four sources and two shipped modules are
+    found to import four that do not ship, the published distribution is
+    read from the index and carries the defect since July, and no server
+    this project owns installs its own wheel
+
+    R24 GOVERNS THIS ENTRY AND THIS ENTRY IS THE INVERSE OF THE ONE
+    BEFORE IT. The preceding entry opened by declaring that this lane
+    had not run the arc it recorded and that almost every value in it
+    was testimony. EVERY FINDING BELOW WAS MEASURED BY THIS SEAT, ON
+    THESE HOSTS, IN THE SESSION THAT CARRIES THIS ENTRY. Each
+    measurement declared its set, its shape and what the shape could not
+    see BEFORE the value was printed, and every comparator was driven
+    red before it was trusted. A reader who learned from the preceding
+    entry to distrust the numbers in an entry is told here, in the same
+    position, why these are different. THE ONE THING CARRIED IS THE
+    DEFECT CLASS VOCABULARY, WHICH IS THIS DOCUMENT'S OWN.
+
+    NOTHING WAS FIXED AND THAT IS A DECISION, NOT AN OMISSION. The
+    defect recorded here is live in a published artifact. The remedy is
+    a change to the packaging manifest and a release ceremony together,
+    which is the largest-risk action available to this project, AND THE
+    REMEDY INHERITS A HOLE UNLESS A CLOSURE IS COMPUTED FIRST. The four
+    modules named below are undeclared, so their own imports cannot
+    matter today; declaring them admits those imports to the shipped
+    set, and that closure has never been computed. THE RECORD LANDS
+    FIRST. THE REMEDY IS NOT THIS OBJECT.
+
+    THE ARC WAS ONE OBJECT AND IT KEPT OPENING. The operator chose a
+    single read-only question about which copy of the package the test
+    runner imports. Answering it required naming the invocation form,
+    which exposed a module that resolves under one form and not another,
+    which exposed a packaging surface nobody had measured, which ended
+    at the index. AT NO POINT DID THIS LANE CHOOSE THE NEXT OBJECT.
+
+    D349-1  THE OBJECT AND THE PROVENANCE OF ITS VALUES. The object was
+            the question of which copy of its own package the test suite
+            imports, held open across sessions and banked behind a
+            larger structural remedy. It was chosen because it bounds
+            numbers that are already published and because either answer
+            changes what a revised opening instrument must print. Every
+            value in this entry was printed by an instrument on a named
+            host in this session.
+
+    D349-2  THE ANSWER, AND THE QUESTION DISSOLVES RATHER THAN
+            RESOLVING. THERE IS NO SECOND COPY. The distribution
+            installs no package; it installs a path configuration file
+            and a finder module holding a static map of about one
+            hundred and fifty flat top-level names, every one pointing
+            into the checkout. The provenance record states editable
+            true against the checkout directory. SO EVERY SUITE NUMBER
+            THIS HOUSE HAS EVER TAKEN NAMES THE DISK, UNCONDITIONALLY,
+            AND IT WAS NEVER A QUESTION OF IMPORT MODE.
+
+    D349-3  MEASURED AT THE COLLECTED SUITE AND NOT INFERRED. A plugin
+            loaded from outside the checkout read what collection had
+            already loaded, rather than importing anything itself, and
+            bucketed every loaded module by where its file resolved.
+            Four hundred and eighteen top-level names resolved inside
+            the repository against fifty-one from the installed tree.
+            The repository sits on the interpreter search path twice,
+            once from the working directory and once from the collection
+            root.
+
+    D349-4  THE ORACLE IS NOT ONE THING AND THIS SETTLES A SENTENCE THE
+            PRECEDING ENTRY LEFT OPEN. An earlier item required that any
+            later sentence leaning on the word green must name its
+            oracle. AN ORACLE HERE IS A HARNESS, AN INVOCATION FORM AND
+            A SET. The house invocation was read from the instrument
+            that runs it: the interpreter module form, over the tests
+            directory, quiet. So the passing and collected counts are
+            over that directory and the wider collected count is over
+            the whole tree, and the difference between them is a set
+            difference and not a behavioural one.
+
+    D349-5  TWO INVOCATION FORMS DISAGREE AT THE SAME TREE IN THE SAME
+            MINUTE. Under the console script form, one tracked file at
+            the repository root fails to import a module and collection
+            reports an error; under the interpreter module form it does
+            not. Both report the same collected count. THE MECHANISM IS
+            UNREAD. The house never meets this because that file lies
+            outside the directory the suite is run over.
+
+    D349-6  THE PACKAGING SURFACE MEASURED AT FOUR SOURCES, EACH NAMED
+            SEPARATELY AND EACH DECLARING ITS OWN BLINDNESS BEFORE ANY
+            VALUE. Tracked root modules at the head, two hundred and
+            sixty-eight. The installed finder map, one hundred and
+            forty-four. The packaging manifest, one hundred and
+            forty-three under py-modules and one package. The release
+            check list, seventy-four entries. MEMBERSHIP IN THE FIRST IS
+            NOT A CLAIM THAT A MODULE OUGHT TO SHIP, and the instrument
+            said so before it printed a name.
+
+    D349-7  THE RELEASE CHECK LIST HOLDS FILENAMES AND THE MANIFEST
+            HOLDS MODULE NAMES. The two are of different types. One
+            member of the check list is not a module at all but a
+            grammar file placed at the archive root by a data row of the
+            manifest. A DIFFERENCE TAKEN BETWEEN THEM BY SUBTRACTING
+            NAMES IS VOID. The relation survives and needs no
+            normalisation: seventy-four entries against one hundred and
+            forty-three declared modules, with at least one entry that
+            is not a module, PUTS AT LEAST SEVENTY DECLARED MODULES
+            OUTSIDE THE CHECK UNDER EVERY NAMING CONVENTION. A check
+            that requires a subset is blind to the remainder.
+
+    D349-8  THE FINDING THE ARC WAS FOR. TWO MODULES THAT SHIP IMPORT
+            FOUR THAT DO NOT. The importing modules are the command line
+            entry point and the runtime, both declared. The four are a
+            strategy module, a migration module and two reasoning
+            modules, none declared, none in the finder map, all present
+            as tracked files. The derived set was computed one hop from
+            the declared set by syntax tree, never by executing
+            anything.
+
+    D349-9  THE SEVERITY IS DECIDED BY THE SITE AND BY NOTHING ELSE. All
+            four imports sit inside functions, so an install imports the
+            package cleanly and nothing breaks at import time. Two sit
+            inside command handlers with NO handler around them, so
+            those two subcommands raise when a user invokes them. Two
+            sit inside a runtime accessor under a broad exception
+            handler, so the runtime degrades in silence and nobody has
+            mapped what it degrades to. THE OPERATOR PREDICTED AN
+            UNCONDITIONAL IMPORT AND WAS WRONG IN THE DIRECTION THAT
+            MATTERS: a noisy failure would have been caught by anything
+            that imports the package.
+
+    D349-10  THE DEFECT IS NOT A PROPERTY OF THE HEAD. The two importing
+             files and the packaging manifest are THE SAME OBJECTS at
+             the release tag and at the head, compared by object name
+             and not by content digest alone. One hundred and eight
+             commits and not one byte of the packaging surface moved. So
+             the sites and the declaration are the tag's condition as
+             much as the head's.
+
+    D349-11  NO SERVER THIS PROJECT OWNS INSTALLS ITS OWN WHEEL. Both
+             are editable installs pointing at local checkouts on their
+             own hosts. The record each install carries holds thirteen
+             entries, of which three are the path file, the finder and
+             its cache, and exactly one is a top-level module file, the
+             finder itself. THE HOUSE HAS CARRIED A DESCRIPTION OF ONE
+             SERVER AS TAG-PINNED AND THAT PHRASE NAMES NO INSTALL KIND.
+             Whether that checkout sits at a tag is a separate and
+             unmeasured question.
+
+    D349-12  AN ABSENCE THAT IS UNIVERSAL EVIDENCES NOTHING ABOUT ITS
+             SUBJECT. The four are absent from the record of the second
+             server because EVERY module is absent from it. The
+             condition set for upgrading the finding from inference to
+             measurement was not met and the upgrade was refused at that
+             point. The presence sentinel read absent for a healthy
+             state, and only the count of editable entries distinguished
+             the two cases.
+
+    D349-13  THE PUBLISHED ARTIFACT, READ AND NOT INSTALLED. The index
+             was asked for one pinned version and was not allowed to
+             choose. The archive was fetched, its bytes digested against
+             the digest the index publishes with the comparator driven
+             red first, and opened as an archive. NOTHING WAS INSTALLED,
+             PLACED ON A SEARCH PATH, IMPORTED OR EXECUTED. One hundred
+             and sixty-five entries, one hundred and forty-three
+             top-level modules, both importing modules present, ALL FOUR
+             ABSENT, the presence sentinel present and the negative
+             sentinel absent.
+
+    D349-14  THE CONSEQUENCE, STATED ONCE AND NOT SOFTENED. Anyone who
+             installs this distribution at the version under test
+             receives a package whose evolve and migrate subcommands
+             raise when invoked and whose runtime reasoning accessor
+             fails into its exception handler. THE PUBLISHED STATE HAS
+             BEEN THIS SINCE THE TWENTY FIFTH OF JULY, TWO THOUSAND AND
+             TWENTY SIX, which is the upload time the index records.
+
+    D349-15  THE ARCHIVE AGREES WITH THE MANIFEST EXACTLY, AND THIS
+             CLOSES A QUESTION PERMANENTLY. The set of top-level modules
+             inside the published archive and the set declared under
+             py-modules at the head were differenced in both directions
+             by an instrument reading both from bytes. BOTH DIFFERENCES
+             ARE EMPTY. The backend ships what the manifest declares, no
+             more and no less, so the omission of the four is entirely
+             an omission from the manifest and there is no second
+             packaging defect.
+
+    D349-16  THE FOUR ARE UNREACHABLE OFF THE CHECKOUT ON BOTH HOSTS. A
+             locator that finds a module without executing it was run
+             from a working directory that is not a checkout, on each
+             host, through each host's own interpreter. The presence
+             sentinel resolved into that host's checkout and all four
+             returned not found, with the negative sentinel absent in
+             every run.
+
+    D349-17  THE INTERPRETER WAS CHOSEN BY MEASUREMENT AND THE CHOICE
+             REFUSED ONCE. Candidates were gathered from the search
+             path, from every service definition on the host naming an
+             interpreter, and from the usual environment locations, then
+             each was asked whether it carries the distribution. The
+             first host returned three carriers, two of them old check
+             environments at versions years behind, and THE BODY REFUSED
+             AND MEASURED NOTHING rather than selecting one. The second
+             host returned exactly one and named it.
+
+    D349-18  TWO READINGS TAKEN AND NOT PURSUED, NAMED SO THEY ARE NOT
+             LOST. One service on each host executes a file straight out
+             of a checkout rather than through any install, which is a
+             third deployment shape this house has never counted. And
+             the listing of service definitions was capped, so one line
+             was not shown and the service serving the interface on the
+             second host was not necessarily among those printed.
+
+    D349-19  WHAT THIS ENTRY DOES NOT ESTABLISH. It does not establish
+             that the published bytes were built from the tag, which no
+             archive records. It does not establish what commit the
+             second host's checkout sits at, nor whether the four files
+             exist in it. It does not establish whether the release
+             check is exercised by the suite. It does not compute the
+             closure. IT FIXES NOTHING.
+
+    D349-20  OWED AND CHEAP AND REPEATEDLY LOSING TO LARGER THINGS. The
+             wrapper the opening rule runs is pinned in the opener; the
+             instrument inside the repository that does the work is
+             pinned by no sealed artifact, in a tree two writers share.
+             Its digest was printed this session and can be pinned at no
+             cost. IT HAS NOW BEEN DEFERRED TWICE IN ONE SESSION IN
+             FAVOUR OF THINGS THAT COULD REACH A USER.
+
+    FINDINGS
+
+            FG-S349-A  WORLD. The instrument that performs the opening
+                       rule is a tracked file in this repository and no
+                       sealed artifact carries its digest. The wrapper
+                       invoked by hand is pinned in the opener; the
+                       wrapper prints the digest of the instrument and
+                       nothing compares it. Every opening reading this
+                       house has taken rests on bytes no document pins,
+                       in a tree two writers share.
+
+            FG-S349-B  WORLD. A declared filename and the filename that
+                       arrives on the host may differ by a mechanism
+                       nobody has read. SET: six transfers this session
+                       plus three counterexamples the operator holds.
+                       SHAPE: declared name against arrived name.
+                       RESULT: the difference occurs, IT IS NOT A FIXED
+                       WIDTH, and most transfers are unaffected; a stem
+                       of thirty-three characters and one of forty-six
+                       survived while one of twelve did not. AN EARLIER
+                       FORM OF THIS FINDING PINNED A COUNT WHERE A
+                       RELATION WAS MEANT, WHICH IS THE CLASS THIS
+                       DOCUMENT EXISTS TO RECORD. CONSEQUENCE,
+                       UNCHANGED: a body that hardcodes its own path is
+                       name-bound; a body reads its own path from how it
+                       was invoked.
+
+            FG-S349-C  SEAT. The seat piped two collection legs through
+                       a fixed-count tail over output whose length it
+                       had not bounded. A warnings summary consumed the
+                       window and eleven printed values were destroyed
+                       by the seat's own leg, inside the very body
+                       written to bound them. A LEG THAT TRUNCATES BY A
+                       FIXED COUNT IS NOT A LEG FOR OUTPUT IT DOES NOT
+                       BOUND.
+
+            FG-S349-D  SEAT. Two of four sources in the same body
+                       hardcoded two candidate package names. Neither
+                       exists on the host. Both returned absent and
+                       evidenced nothing. The name-free bucketing that
+                       answered the question was in the same body,
+                       written by the same seat in the same hour.
+
+            FG-S349-E  WORLD. THIS FINDING IS A REPLACEMENT AND THE
+                       REPLACEMENT IS THE FINDING. The seat first
+                       recorded that the installed finder map was stale
+                       against a tree one hundred and eight commits
+                       ahead. THAT WAS FALSE AND THE SEAT'S OWN SET
+                       DIFFERENCE REFUTED IT: the map is exactly the
+                       declared set plus the one package, with no member
+                       on either side unaccounted. What is true is
+                       weaker and structural. The map is a static
+                       snapshot built at install time; it is complete
+                       today only because no declared module has been
+                       added since, and NO INSTRUMENT WATCHES THE DAY
+                       THAT STOPS BEING SO.
+
+            FG-S349-F  WORLD. The opening rule prints a version read
+                       from installation metadata frozen at install
+                       time. Measured this session it agrees with the
+                       version attribute read from repository bytes. THE
+                       LEG IS SOUND TODAY AND IS STRUCTURALLY UNABLE TO
+                       DETECT THE STATE IN WHICH IT STOPS BEING SOUND,
+                       because metadata cannot move without a reinstall
+                       while the attribute moves with the tree.
+
+            FG-S349-G  WORLD. Collection differs between two invocation
+                       forms at the same tree in the same minute. Under
+                       one form a root-level tracked file raises on
+                       import and collection reports an error; under the
+                       other it does not. THE MECHANISM IS UNREAD AND IS
+                       NOT ASSERTED HERE. The house is blind to it
+                       because its harness is run over a subdirectory
+                       that does not contain the file.
+
+            FG-S349-H  SEAT. The seat wrote that a metadata leg is a
+                       statement about an install-time date, before any
+                       instrument had printed the version attribute it
+                       was being contrasted with. The instrument then
+                       printed agreement. THE CLAIM WAS ASSERTED AHEAD
+                       OF ITS MEASUREMENT and was corrected by the same
+                       seat in the following message. R24 BINDS INSIDE A
+                       SESSION.
+
+            FG-S349-I  SEAT. The seat subtracted a list of filenames
+                       from a list of module names and printed three
+                       differences that looked catastrophic and meant
+                       nothing. THE TYPE ERROR WAS CAUGHT BY A PRESENCE
+                       SENTINEL: a name certainly present read absent
+                       from the check list, because the list holds that
+                       name with a suffix. The seat then over-corrected
+                       and called the difference meaningless, when a
+                       relation over the two printed counts survives and
+                       is stated in this entry.
+
+            FG-S349-J  SEAT. A derived set subtracted only one row of
+                       the packaging manifest and reported a member that
+                       the adjacent row declares. The instrument had
+                       printed the names of all five rows of that table
+                       in its own output and the seat read two of them.
+                       A TABLE THAT PRINTS ITS OWN KEYS IS AN INSTRUMENT
+                       TELLING THE READER WHAT IT HAS NOT BEEN ASKED.
+
+            FG-S349-K  WORLD. Two shipped modules import four modules
+                       that are not declared and do not ship. SET: the
+                       command line entry point and the runtime, both
+                       declared. SHAPE: syntax tree at the head with a
+                       parent map giving the enclosing construct of
+                       every import site, plus a locator run from
+                       outside the checkout, plus the whole packaging
+                       table read. RESULT: two imports sit in command
+                       handlers with no handler and raise when those
+                       subcommands are invoked; two sit under a broad
+                       exception handler and degrade in silence. BLIND
+                       TO: dynamic imports, and the closure. ONE HOP IS
+                       CORRECT ONLY WHILE THE FOUR ARE UNDECLARED;
+                       DECLARING THEM ADMITS THEIR OWN IMPORTS TO THE
+                       SHIPPED SET AND THAT CLOSURE HAS NEVER BEEN
+                       COMPUTED. THE REMEDY INHERITS A HOLE UNLESS IT IS
+                       COMPUTED FIRST.
+
+            FG-S349-L  SEAT. A membership question was answered with a
+                       substring test against a serialised table, and
+                       one of the four names returned present because it
+                       is a prefix of a different declared module. The
+                       seat caught it and withdrew it in the same
+                       message. A SUBSTRING IS NOT A MEMBER.
+
+            FG-S349-M  SEAT. A re-implementation narrower than its
+                       working predecessor produced a not-found that
+                       reads exactly like a finding about the tree. The
+                       first instrument matched annotated and plain
+                       assignments; the second matched only plain, and
+                       the list it sought is annotated. IT WAS CAUGHT
+                       ONLY BECAUSE AN EARLIER INSTRUMENT IN THE SAME
+                       SESSION HAD PRINTED THE VALUE. WITH NO
+                       PREDECESSOR IT WOULD HAVE SHIPPED AS A DISCOVERY.
+                       An absence reported by a rewritten instrument is
+                       a claim about the instrument until the
+                       predecessor is re-run.
+
+            FG-S349-N  SEAT. A normalisation step destroyed the object
+                       under measurement. The body resolved an
+                       interpreter path to its target before invoking
+                       it. A VIRTUAL ENVIRONMENT IS IDENTIFIED BY THE
+                       PATH INVOKED, NOT BY THE FILE IT POINTS AT, so
+                       resolving the link silently substitutes the
+                       system interpreter. The second server is such an
+                       environment. Uncaught, the body would have
+                       reported that its installation carries neither
+                       the four nor the presence sentinel, which reads
+                       as a catastrophe and is entirely an artifact.
+                       CAUGHT IN PRE-VALIDATION AGAINST A REAL INSTALL,
+                       BEFORE ANY HOST SAW IT, BECAUSE THE SAME RUN
+                       REPORTED THAT THE INTERPRETER BOTH CARRIES AND
+                       DOES NOT CARRY THE DISTRIBUTION. A SENTINEL THAT
+                       MUST BE PRESENT IS WHAT MAKES AN INSTRUMENT'S
+                       SELF-CONTRADICTION VISIBLE.
+
+            FG-S349-O  SEAT. A body pre-validated on one host was
+                       written as though a second host carried the same
+                       standard library. The import sat at module level
+                       and killed the driver before any leg ran,
+                       including three that never needed it. AN IMPORT A
+                       SINGLE BRANCH NEEDS BELONGS IN THAT BRANCH. The
+                       measurement it cost is free and is recorded: the
+                       second host's system interpreter is older than
+                       the release that introduced that module, which no
+                       artifact of this house records.
+
+            FG-S349-P  SEAT. One body said correctly that there is no
+                       checkout AT A NAMED PATH and then said in its
+                       closing leg that there is no checkout ON THIS
+                       HOST. A checkout exists on that host at another
+                       path and the installation points at it. The
+                       scoped sentence and the unscoped summary were
+                       three hundred lines apart in the same body. R24
+                       BINDS INSIDE AN INSTRUMENT, NOT ONLY INSIDE A
+                       SESSION.
+
+            FG-S349-Q  WORLD. NO WHEEL INSTALL OF THIS PROJECT EXISTS ON
+                       ANY SERVER IT OWNS. Both servers carry editable
+                       installs pointing at local checkouts, each
+                       recording editable true against its own
+                       directory. THIS IS LARGER THAN THE FINDING THE
+                       ARC WAS FOR. Nothing this project runs has ever
+                       exercised its own distribution, so THE PACKAGING
+                       SURFACE IS VALIDATED BY NO DEPLOYMENT, and no
+                       instrument on any host this project controls can
+                       confirm a packaging defect by construction. A
+                       phrase describing one server as pinned to a tag
+                       has travelled for many sessions as though it
+                       named an install kind. IT NAMES NOTHING.
+
+            FG-S349-R  WORLD. THE DEFECT IS MEASURED ON THE PUBLISHED
+                       ARTIFACT AND IS NO LONGER AN INFERENCE. SET: the
+                       distribution at one pinned version on the index.
+                       SHAPE: metadata read, archive fetched, bytes
+                       digested against the published digest with the
+                       comparator driven red first, archive opened and
+                       its entry list read, confirmed against the record
+                       and the declared list inside the same archive;
+                       read twice, on two machines, agreeing in digest
+                       and in every count. NOT INSTALLED, NOT IMPORTED.
+                       RESULT: both importing modules present, all four
+                       absent. BLIND TO: whether these bytes were built
+                       from the tag, which no archive records.
