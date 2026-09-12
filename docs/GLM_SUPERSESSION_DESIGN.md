@@ -12746,3 +12746,429 @@ document itself.
                        RESULT: both importing modules present, all four
                        absent. BLIND TO: whether these bytes were built
                        from the tag, which no archive records.
+
+  - S350 the instrument every session's premises come from is found to
+    carry no sentinel on any ledger leg and is replaced, the closure the
+    preceding entry refused to write is computed and collapses when the
+    published artifact is read rather than inferred, the custody of
+    every signing key on both hosts is enumerated to a fixpoint, and the
+    two files that share a name are settled as two keys and not one
+
+    R24 GOVERNS EVERY VALUE BELOW AND EVERY ONE OF THEM WAS PRINTED BY A
+    NAMED INSTRUMENT ON A NAMED HOST IN THE SESSION THAT CARRIES THIS
+    ENTRY. Each instrument declared its set, its shape and what it was
+    blind to before any value was printed. Every instrument was driven
+    green and driven red on a synthetic tree before it touched a host,
+    and every comparator was driven red before its green was trusted.
+    Where an entry number below is derived by arithmetic over printed
+    counts rather than measured directly, the text says so in the
+    sentence that carries it.
+
+    THE NAMESPACE COLLISION THIS DOCUMENT HAS CARRIED IS RESOLVED BY THE
+    OPERATOR AND THE RESOLUTION IS RECORDED HERE ONCE. The ledger's
+    internal number is keyed to the ENTRY and the commit subject's
+    number is keyed to the SESSION. They are two sequences sharing one
+    prefix and neither is wrong. This is entry three hundred and fifty;
+    the session that produced it labelled itself one lower. EVERY
+    FINDING BELOW IS ADDRESSED IN THIS ENTRY'S NAMESPACE, INCLUDING FOUR
+    THAT WERE FIRST FOUND IN EARLIER SESSIONS AND SAY SO IN THEIR OWN
+    TEXT. AN ADDRESS IS NOT A FINDING.
+
+    NOTHING WAS FIXED IN THE PUBLISHED ARTIFACT AND THAT IS A DECISION.
+    The preceding entry recorded a live defect in a published
+    distribution and refused to write its remedy until a closure was
+    computed. The closure is computed here. IT THEN COLLAPSED, because
+    the severity was measured on the published bytes rather than
+    reasoned from the tree, and the remedy the closure appeared to price
+    is not the remedy the artifact needs. THE REMEDY IS STILL NOT THIS
+    OBJECT.
+
+    D350-1  THE OBJECTS AND WHO CHOSE THEM. The operator chose three:
+            the guards of the second opening instrument, the packaging
+            closure the preceding entry left owed, and the custody items
+            the preceding board carried as cheap and open. AT NO POINT
+            DID THIS LANE CHOOSE THE NEXT OBJECT. Four instruments were
+            written, each driven on a synthetic tree first, and every
+            one of them is read-only except where its own header says
+            otherwise.
+
+    D350-2  THE INSTRUMENT THAT OPENS EVERY SESSION HAD NO SENTINEL ON
+            ANY LEDGER LEG. The second opening paste carries counts over
+            the supersession document in the high dozens and not one
+            control that the engine producing them can speak. A leg that
+            printed an empty value was the demonstration: an absent head
+            and a dead grep render identically. The preceding session
+            built exactly these sentinels into two new bodies and
+            back-ported none of them to the one every premise comes
+            from.
+
+    D350-3  THE REPLACEMENT, AND WHAT IT ADDS AND DOES NOT. Five engines
+            are now driven positive and negative before any value: the
+            repository, the gate document, a line-anchored regular
+            expression, a fixed string and the awk engine. Three
+            negative controls mutate a value by one character and must
+            find nothing. A pinned leg that finds no head now prints an
+            explicit absence rather than an empty string, WHICH IS ONLY
+            MEANINGFUL BECAUSE THE ENGINE WAS DRIVEN. The pinned legs
+            remain a name sweep over a set that can be enumerated, and
+            an enumerating second oracle is added beside them rather
+            than replacing them.
+
+    D350-4  TWO ORACLES ON THE LATEST TAG AGREED TODAY AND WOULD HAVE
+            DIVERGED SILENTLY AT THE NEXT ONE. The wrapper the opening
+            rule runs enumerates the latest tag; the second paste
+            hardcoded it. Both read one hundred and nine at this head.
+            The replacement enumerates by two methods, reachability and
+            version order, prints both distances, and flags
+            disagreement. A DISTANCE FROM A TAG THE HEAD CANNOT REACH IS
+            NOT A DISTANCE AND IS WITHHELD RATHER THAN PRINTED.
+
+    D350-5  THE HEAD COUNT AND THE DISTINCT HEAD COUNT ARE NOT THE SAME
+            NUMBER. Fifty-seven head lines carry forty-three distinct
+            session numbers, so fourteen head lines repeat a number
+            already used. WHICH FOURTEEN IS UNMEASURED. The enumerating
+            leg that produced this was shipped in the same message in
+            which the seat predicted the two numbers were equal.
+
+    D350-6  THE FIVE ABSENT FAMILIES SPLIT INTO TWO CLASSES, WHICH A
+            COUNT COULD NOT SHOW. Head numbers run from three hundred
+            and four to three hundred and forty-nine with three gaps.
+            Anchored families run from three hundred and five with five
+            gaps. So two sessions have a head and no anchored finding at
+            all, one has a head and no family, and three have neither.
+            The preceding record said five were absent and only one
+            explained.
+
+    D350-7  THE PREMISE OF THE PACKAGING DEFECT IS CONFIRMED TO THE
+            DIGIT AND ITS RESTRICTION IS WHAT MAKES IT TRUE. Thirty-two
+            modules in the tree import the four undeclared ones.
+            Restricted to modules the manifest declares, exactly two do:
+            the command line entry point takes two of the four, and the
+            runtime takes the other two. The other thirty importers are
+            themselves undeclared, do not ship, and cannot reach a
+            consumer.
+
+    D350-8  THE FOUR SPLIT INTO TWO CLASSES OF WILDLY DIFFERENT COST AND
+            THE ONE-LINE DESCRIPTION HID IT. Two of them import only
+            already-declared modules and standard library names, so
+            their closure adds nothing. The other two reach twenty
+            further undeclared first-party modules, every one of them
+            belonging to a single agent subsystem, and one of them takes
+            an external HTTP client at module level. Declaring that half
+            would admit a subsystem and a numerical stack into a
+            distribution whose stated virtue is an offline verifier
+            needing one dependency.
+
+    D350-9  THE CLOSURE REACHED A FIXPOINT AND THE BOUND WAS DRIVEN AT
+            TWO DEPTHS TO SHOW IT. Twenty-four modules reached and
+            twenty-two undeclared at both a low bound and a high one,
+            with the low bound reporting no truncation. A bound the data
+            clears, printed as such, beside a synthetic case in the same
+            instrument where the low bound did truncate and said so.
+
+    D350-10  THE SEVERITY WAS MEASURED ON THE PUBLISHED BYTES AND IT IS
+             NOT WHAT THE TREE IMPLIED. The distribution was fetched
+             from the index into memory, its digest verified against the
+             digest the index publishes, and its own members parsed.
+             NOTHING WAS INSTALLED, IMPORTED OR EXECUTED. Read twice on
+             two independent machines, agreeing in digest and in every
+             count. ZERO SHIPPED MODULES FAIL TO IMPORT ON A CLEAN
+             INSTALL.
+
+    D350-11  ALL FOUR IMPORTS SIT INSIDE FUNCTION BODIES AND THE COUNT
+             OF SITES IS FOUR. Two in the command line entry point and
+             two in the runtime. None runs at import time. Each raises
+             when its enclosing function is called. THE TWENTY-MODULE
+             CLOSURE COLLAPSES WITH THEM, because every one of those
+             twenty is reachable only through a single function body.
+
+    D350-12  TWO EXTERNAL NAMES ARE UNDECLARED AND NOBODY WAS LOOKING
+             FOR THEM. The release minting module imports two
+             distributions that the published metadata does not require.
+             They do not bite today because both servers run that module
+             out of a checkout and not from an installed distribution.
+             They would bite anyone who installed the package and tried
+             to mint. The published metadata also names the distribution
+             itself as one of its own requirements.
+
+    D350-13  THE DISTRIBUTION IS EXACTLY WHAT THE MANIFEST DECLARES AND
+             THE TREE ROOT IS NOT. The archive carries one hundred and
+             forty-four top-level names and the difference against the
+             declared set is empty in both directions. The repository
+             root holds two hundred and ninety-eight importable names,
+             so one hundred and fifty-four sit undeclared at the root of
+             a published package's source tree, among them trading
+             scripts, a messaging sender, and some thirty patch scripts.
+
+    D350-14  EVERY DIRECTORY NAMED FOR KEYS ON THE FIRST HOST IS NOW
+             DECLARED AND ENUMERATED, AND THE CROSS CHECK IS WHAT MAKES
+             THAT A MEASUREMENT. The preceding instrument printed a list
+             of found directories and compared it to nothing, so two
+             entries sat unmeasured for a whole arc. The replacement
+             compares the found list to the declared list and prints the
+             difference. It is zero on both hosts.
+
+    D350-15  THE TWO FILES THAT SHARE A NAME ARE TWO KEYS. Same name,
+             same hundred and nineteen bytes, same day in April, five
+             hours apart, DIFFERENT DIGESTS. This is consistent with the
+             documented behaviour that the file is generated on first
+             use. The second host holds exactly one key file, it is its
+             own, and it mirrors nothing on the first. The key the
+             minter names exists on one host, has no copy on the other,
+             AND NOW HAS AN IDENTITY THAT ANY FUTURE COPY CLAIM CAN BE
+             TESTED AGAINST.
+
+    D350-16  TWO FILES IN A CREDENTIAL DIRECTORY, ONE LIVE AND ONE
+             LABELLED CORRUPTED, ARE BYTE IDENTICAL. The preceding arc
+             could say only that they were equal in size and seventy
+             milliseconds apart. With digests they are the same bytes.
+             EITHER THE LIVE FILE IS THE CORRUPTED ONE OR THE LABEL IS
+             FALSE, and this measurement does not decide between them.
+
+    D350-17  ELEVEN WAS WRONG IN THE SAME DIRECTION THAT SIX WAS.
+             Counting every private key on the first host across every
+             directory this arc enumerated or listed gives twenty-two.
+             The eleven was true of one directory and has travelled as
+             though it were true of the host. TWO SERVICE UNITS CARRY AN
+             INLINE SECRET, NOT ONE, and both run as the superuser under
+             a standing finding that such values cannot be removed from
+             the process environment.
+
+    D350-18  A PATH THAT EXISTS ON BOTH HOSTS NAMES TWO DIFFERENT FILES.
+             A service unit on the second host reads an environment file
+             at a path that belongs to the first host's layout. That
+             file exists on the second host, so the unit is not broken.
+             It is a different size, a different owner and a different
+             date from the file at the same path on the first. THE SAME
+             SHAPE AS THE TWO KEY FILES: one name, two hosts, two
+             objects. A third file name occurs at the top of the home
+             directory of both hosts and is undecided.
+
+    D350-19  THE SECOND HOST'S NAME IS RECORDED BY NO ARTIFACT OF THIS
+             HOUSE AND THE SEAT USED A LABEL AS THOUGH IT WERE ONE. The
+             label names the deployment, not the machine. The host
+             identity leg exists in these instruments precisely so two
+             outputs cannot be confused, and it printed a name that no
+             sealed document carries. The host was confirmed as the
+             intended one by its repository root, its head and its
+             tracked count, NOT BY ITS NAME.
+
+    D350-20  WHAT THIS ENTRY DOES NOT ESTABLISH. It does not establish
+             which fourteen head lines repeat a session number. It does
+             not establish whether the source distribution has the same
+             shape as the archive read here, which was one wheel. It
+             does not establish whether the test suite exercises the
+             four call sites. It does not establish whether the two
+             undeclared external names are intentionally optional. It
+             does not decide the corrupted file. It does not read the
+             source distribution, and IT FIXES NOTHING.
+
+    FINDINGS
+
+            FG-S350-A  WORLD. The second opening instrument carries no
+                       sentinel and no negative control on any ledger
+                       leg. SET: every count it prints over the
+                       supersession document. SHAPE: line-anchored
+                       patterns and fixed strings with no positive
+                       control that the engine speaks. RESULT: one
+                       pinned leg printed an empty string, which is
+                       indistinguishable from a dead engine.
+                       CONSEQUENCE: every opening reading this house has
+                       taken rests on engines that were never driven.
+                       Superseded by a replacement in this session,
+                       which lives at the home directory of one host and
+                       in no repository.
+
+            FG-S350-B  WORLD. The first opening paste contains no branch
+                       at all. Its self check is two print statements
+                       and nothing consumes either value. A preceding
+                       artifact called it a label rather than a guard,
+                       which understates it: a label sits above
+                       something. The canonical body runs identically
+                       whether the file is intact, altered, or absent
+                       from the path it was invoked by.
+
+            FG-S350-C  WORLD. A hardcoded tag in one opening instrument
+                       and an enumerated tag in another agreed at this
+                       head and would have diverged at the next tag with
+                       no flag on either side. TWO ORACLES THAT AGREE
+                       TODAY AND DIVERGE SILENTLY LATER ARE ONE ORACLE
+                       WITH A DELAY. The ordering that makes it sharp:
+                       the next tag is the remedy for a published
+                       defect, so the instrument that measures every
+                       session would go wrong inside the ceremony that
+                       fixes the thing.
+
+            FG-S350-D  SEAT. A comparator clipped its comparison field
+                       to a fixed width and returned green for an
+                       overlong value whose prefix was correct. Caught
+                       by its own arm before any file was trusted, in
+                       the first instrument of the session, immediately
+                       after reading the rule that a shape matching
+                       everything is not a shape.
+
+            FG-S350-E  SEAT. TWO EMPTY ORACLES WERE REPORTED AS
+                       AGREEING. In a repository with no tag both tag
+                       legs return an empty string and the body printed
+                       that they agree. THE BLINDNESS DEFECT THE
+                       INSTRUMENT WAS BEING WRITTEN TO REMOVE,
+                       REPRODUCED INSIDE THE FIX FOR IT. Caught by a
+                       synthetic arm. Two silences are not an agreement
+                       and the corrected body prints undecidable.
+
+            FG-S350-F  SEAT. A distance was computed from a tag the head
+                       cannot reach and printed as a number. Caught by a
+                       synthetic arm carrying a higher version string on
+                       an unreachable branch. The corrected body tests
+                       reachability and withholds the number.
+
+            FG-S350-G  WORLD. The command that reads the head of a
+                       repository prints the literal word HEAD on
+                       standard output when the repository has no
+                       commits, and returns it beside its error. A guard
+                       that tests only for an empty result therefore
+                       passes a four character string as a commit
+                       identifier. FOUND IN TWO SEPARATE INSTRUMENTS OF
+                       THIS HOUSE, one written this session and one
+                       validated in the preceding one. Both corrected to
+                       verify the shape. CAUGHT ONLY BECAUSE AN ARM
+                       FIRED ON THE WRONG TOKEN: the refusal came two
+                       legs later than it should have.
+
+            FG-S350-H  SEAT. An instrument header asserted that it
+                       performs no write of any kind while its own body
+                       runs a fetch, which writes the fetch head and the
+                       remote tracking references. Not the working tree,
+                       not history, but a write. The false sentence sat
+                       in the header of the instrument that opens every
+                       session. Corrected in the header and in the
+                       closing boundary section, because correcting one
+                       and not the other leaves the artifact half
+                       honest.
+
+            FG-S350-I  SEAT. A prediction was computed over a set that
+                       had not been enumerated, in the same message that
+                       shipped the leg which enumerates it. Fifty-seven
+                       predicted against forty-three measured. THE EXACT
+                       ERROR CLASS THE PRECEDING SESSION PAID FOR AND
+                       LISTED AS A STANDING RULE. The miss is the
+                       finding: fourteen head lines repeat a session
+                       number.
+
+            FG-S350-J  SEAT. A leg answered a wider question than the
+                       premise asked and buried the answer. The premise
+                       concerns modules that ship; the leg printed all
+                       thirty-two importers without splitting declared
+                       from undeclared, so the two that matter sat under
+                       thirty that cannot reach a consumer. The split
+                       had to be computed afterwards, by machine,
+                       because a hand count over a list of a hundred and
+                       forty-three is the error class this session had
+                       already paid for twice.
+
+            FG-S350-K  WORLD. AN IMPORT INSIDE AN EXCEPTION HANDLER IS
+                       THE ONE SHAPE THAT SEPARATES A CRASH FROM A
+                       DEGRADATION, AND THE FIRST DETECTOR WRITTEN THIS
+                       SESSION LABELLED IT UNCONDITIONAL. The detector
+                       walked the body of a try block and not its
+                       handlers, and did not walk loop, context manager
+                       or class bodies at all. Closure membership was
+                       unaffected; every conditional label it printed
+                       was a lower bound and every unconditional label
+                       an upper bound. The replacement carries three
+                       labels and a flag recording whether the enclosing
+                       handler catches an import failure, and was driven
+                       on fifteen constructs.
+
+            FG-S350-L  SEAT. An output granularity choice hid the
+                       answer. The instrument printed full detail for
+                       the class expected to matter and only distinct
+                       names for the deferred class. THE DEFERRED CLASS
+                       WAS THE WHOLE ANSWER. Corrected to print every
+                       row, and the corrected output is what located the
+                       four call sites by file and line.
+
+            FG-S350-M  SEAT. AN EXACT NAME MATCH BETWEEN AN IMPORT NAME
+                       AND A DISTRIBUTION NAME PRODUCED SEVEN FALSE
+                       POSITIVES, THREE OF THEM PRINTED UNDER A LABEL
+                       MEANING BREAKAGE. An import name is not a
+                       distribution name and the instrument declared
+                       that weakness about itself before printing. The
+                       correction was not to guess the mapping but to
+                       attach a weak-match advisory and to print, beside
+                       the raw count, the count with no such match. THE
+                       SECOND NUMBER IS ZERO AND IT IS THE ONE THAT
+                       MEANS SOMETHING.
+
+            FG-S350-N  SEAT. A red arm was scored as disagreeing when
+                       the instrument was right and the prediction was
+                       wrong. The mutation broke the distinction between
+                       an unparseable source and an empty one, and the
+                       body refused with exactly the correct token while
+                       the seat had named a different one. A SEAT MISS,
+                       NOT AN INSTRUMENT MISS, and the two are scored
+                       differently.
+
+            FG-S350-O  SEAT. A red arm tested nothing because its
+                       mutation never applied. The driver expression
+                       contained a newline in a tool that operates line
+                       by line, so the unmutated body ran and produced
+                       no refusal, which the driver reported as a
+                       disagreement. AN ARM THAT FAILS TO MUTATE IS NOT
+                       AN ARM, and it is indistinguishable in the output
+                       from an instrument that failed to refuse.
+
+            FG-S350-P  SEAT. A leak control planted a secret outside
+                       every directory the instrument reads, so its zero
+                       result evidenced nothing. The arm was reported as
+                       weak rather than counted as passing. A CONTROL
+                       THAT CANNOT REACH THE OBJECT UNDER TEST IS NOT A
+                       CONTROL.
+
+            FG-S350-Q  SEAT. The seat read a shell prompt as one host
+                       when it was the other, and had earlier used a
+                       deployment label as though it were a machine name
+                       that no sealed artifact records. Caught because
+                       the host identity leg exists for exactly this and
+                       printed a name that matched nothing. THE HOST WAS
+                       CONFIRMED BY ITS REPOSITORY ROOT, ITS HEAD AND
+                       ITS TRACKED COUNT, NOT BY ITS NAME.
+
+            FG-S350-R  WORLD. FIRST FOUND IN AN EARLIER SESSION AND
+                       LANDING HERE. A declared filename and the
+                       filename that arrives on a host may differ, and
+                       the difference is not a fixed width. Two files
+                       declared in one transfer this session never
+                       arrived at all while four did, and both were
+                       later found already present on the host at their
+                       declared digests. CONSEQUENCE, UNCHANGED: a body
+                       reads its own path from how it was invoked and
+                       hardcodes no filename. ADDED HERE: a file located
+                       by name and confirmed by digest is not the same
+                       operation as a file located by digest, and only
+                       the second survives a transport that renames.
+
+            FG-S350-S  WORLD. FIRST FOUND IN AN EARLIER SESSION AND
+                       LANDING HERE. A stale size printed beside a fresh
+                       digest, and a size predicate assumed rather than
+                       measured, are the same class: a value carried
+                       from one reading and rendered beside a value
+                       taken from another, with nothing in the output
+                       distinguishing them. THE RULE THIS SESSION
+                       APPLIED THROUGHOUT: locate by size and digest,
+                       never by name, and take both in the same reading.
+
+            FG-S350-T  WORLD. A DEPTH BOUND AND AN ENUMERATION AGREED ON
+                       ONE HOST AND THIS IS THE FIRST TIME THIS ARC
+                       CROSS CHECKED THEM. SET: files whose name carries
+                       the key suffix under two directory trees on each
+                       host. SHAPE: a depth-bounded search driven at
+                       three depths, against a whole-directory
+                       enumeration of a declared list. RESULT: seventeen
+                       on the first host and three on the second,
+                       matching the bound at its clearing depth. Two
+                       files on each host lie outside every declared
+                       directory and were enumerated by no leg until
+                       now. BLIND TO: a private key whose filename
+                       carries no such suffix, of which this house holds
+                       several.
