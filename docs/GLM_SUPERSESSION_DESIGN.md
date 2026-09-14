@@ -13513,3 +13513,602 @@ document itself.
                        ARTIFACT OF THIS HOUSE HAS SAID SO. BLIND TO:
                        whether any payload in this document was rendered
                        by a builder that lacked it.
+
+  - S352 the source distribution of this project is read for the first
+    time and found to carry three files that exist in no commit and to
+    be governed by an untracked cache rather than by any rule its
+    configuration declares, the bodies that open and measure every
+    session gain a second home in this repository, and the placement
+    that put them there was refused by its own stated condition and
+    lifted only after the condition's wording was measured against the
+    condition's purpose
+
+    R24 GOVERNS EVERY VALUE BELOW. Each was printed by a named
+    instrument on a named host in the session that carries this entry.
+    Each instrument declared its set, its shape and what it was blind to
+    before any value was printed, and each was driven green and driven
+    red on a synthetic tree before it touched a host. Where a value
+    below is derived by arithmetic or by reclassification rather than
+    printed, the sentence carrying it says so.
+
+    WHICH OBJECT IS THE LARGE ONE. A reader who takes this entry as the
+    record of a small repository write has read it wrong. The write is
+    real and it is narrow: bodies that existed in one place now exist in
+    two. THE LARGE OBJECT IS THE SOURCE DISTRIBUTION, which was on the
+    board for several sessions as a cheap deferred item and is now a
+    live question about bytes already published to an index. It was
+    found while measuring something else, and it outranks the write that
+    uncovered it.
+
+    THE SCOPE WAS THE OPERATOR'S AND SO WAS EVERY IRREVERSIBLE ACTION.
+    The opening rule ran first and in full. The operator then chose one
+    object, and the seat brought each placement decision decided with
+    its own attack on it. No served surface was touched, no key was
+    read, no release was cut, no artifact was rebuilt to test a theory,
+    and the untracked cache this entry reports on was read and left
+    exactly as it was found.
+
+    WHAT THE WRITE DID NOT CLOSE, STATED HERE SO NO LATER ARTIFACT HAS
+    TO INFER IT. Filing a body in a repository makes it recoverable and
+    makes it nothing else. The renderer's two opt-in guards still run
+    only when a caller passes a flag, the substitution that keeps codes
+    out of the census column is still undocumented, and this ledger is
+    still enforced by no test. A TRACKED FILE THAT NO TEST INVOKES IS
+    NOT AN ENFORCEMENT.
+
+    D352-1  THE OBJECT AND WHO CHOSE IT. The operator chose the set of
+            bodies that live on one host and in no repository, with the
+            scope fixed at placement and the requirement that the seat
+            bring the placement decided and attack it itself before
+            anything was written. AT NO POINT DID THIS LANE CHOOSE THE
+            OBJECT, and every question the placement turned on was
+            settled by a read-only instrument before a byte moved.
+
+    D352-2  THE RELEASE GATE ENUMERATES A BUILT ARCHIVE AND NOT THE
+            TREE. SET: the release script at the head of this session.
+            SHAPE: the lines invoking a directory walk, a zip read, and
+            the wheel gate. RESULT: the gate opens the built wheel and
+            compares its member list against a required list of modules;
+            the only directory globs in the file reach the egg-info at
+            the repository root and the two artifacts in the
+            distribution directory. A NEW DIRECTORY CANNOT TRIP A GATE
+            THAT NEVER LOOKS AT DIRECTORIES. The rule requiring a new
+            top-level module to be declared in two places does not reach
+            a directory, and the seat had claimed as much from a reading
+            of the rule before measuring the mechanism, which is a
+            different act.
+
+    D352-3  THE CLAIM GUARD'S SET IS DEFINED BY EXTENSION AND BY
+            DIRECTORY NAME, NEVER BY LOCATION. SET: the guard's own
+            configuration and its traversal code, read at the head of
+            this session. RESULT: the surfaces table includes three
+            extensions and excludes ten directory names, and neither the
+            destination directory of this write nor the documentation
+            directory is among them. Of the bodies filed by this
+            session, those with a Python extension are inside the
+            guard's set and those with a shell or text extension are
+            outside it by construction. THE GUARD WAS THEN RUN OVER
+            THEIR REAL BYTES, TWICE, AND RETURNED NO VIOLATION IN ANY OF
+            THEM. That a clean result at one path transfers to the same
+            bytes at another is an argument the configuration supports
+            and it is not a measurement.
+
+    D352-4  THE SOURCE DISTRIBUTION IS READ FOR THE FIRST TIME AND IT IS
+            NOT WHAT THE CONFIGURATION DESCRIBES. SET: the two archives
+            on disk at the version preceding the current one, enumerated
+            whole by their first path component after the single archive
+            root. SHAPE: a member with no separator is reported as a
+            file at the root and never folded into a directory. RESULT:
+            of the one thousand two hundred and sixty-nine paths tracked
+            at that tag, four hundred and ninety are in the tarball and
+            seven hundred and seventy-nine are not, and the absent set
+            includes thirteen whole top-level directories: the site, the
+            trace corpus, the documentation, the scripts, the standard
+            library, the examples, the infrastructure, the editor
+            extension, the deployment files, the workflow files, the
+            pricing directory, the tools directory, and forty-two files
+            of the test directory itself. The wheel carries no tracked
+            top-level directory other than the one declared package.
+            BLIND TO: what a build would do today, and to the published
+            artifact of the current version, which was not read.
+
+    D352-5  THREE FILES IN A PUBLISHED SOURCE DISTRIBUTION EXIST IN NO
+            COMMIT. Nine members of that archive are absent from the
+            tree at its own tag. Six are products of the packaging
+            metadata directory. THE OTHER THREE ARE ORDINARY
+            WORKING-DIRECTORY FILES that the manifest template swept in
+            by extension, tracked or not, and they went to an index
+            inside a distribution. A CONSUMER HOLDS BYTES THIS PROJECT
+            CANNOT REPRODUCE FROM ITS OWN HISTORY. This is the class of
+            an untracked served orphan, which this house recorded long
+            ago, except that this one was published rather than served.
+
+    D352-6  THE ROUTE IS NOT VERSION CONTROL AND TWO INDEPENDENT
+            MEASUREMENTS SAY SO. The entry-point group through which the
+            packaging tool consults a source-control file finder is
+            empty on this interpreter, enumerated by group and never by
+            distribution name so that a finder nobody thought of would
+            still be seen. And the release script invokes the build with
+            no request to disable isolation anywhere in the file, so the
+            build runs in an environment where the ambient distributions
+            of this host do not participate at all. WHAT REMAINS
+            CONSISTENT WITH EVERY VALUE MEASURED IS THE CACHED FILE LIST
+            IN THE PACKAGING METADATA DIRECTORY, which is untracked,
+            which differs from the shipped one, and which no gate reads.
+            THAT IS CONSISTENT AND IT IS NOT DEMONSTRATED. The only
+            thing that would demonstrate it is a build, and a build is a
+            write.
+
+    D352-7  THE TEST DIRECTORY SHIPS STALE AND PARTIAL. Two hundred and
+            ninety-two of its files are in the tarball and forty-two
+            tracked ones are not, while the cache on disk already
+            carries one more than the tarball does. Nothing in the
+            project configuration, the manifest template or the build
+            invocation asks for that directory at all. THE SET THAT
+            SHIPS IS WHATEVER THE CACHE ACCUMULATED, and it moves when
+            the cache is touched and not when a test is written.
+
+    D352-8  A PLACEMENT WAS REFUSED BY ITS OWN CONDITION AND THE LIFT IS
+            RECORDED WITH ITS REASONING. The seat declared before the
+            measurement that if a tracked directory reached the source
+            distribution the placement was wrong and a different one
+            would be brought rather than the same one patched. A tracked
+            directory does reach it, so the condition fired. THE
+            ENUMERATION THEN SHOWED THAT NO DIRECTORY SWEEPS IN:
+            thirteen of fourteen are absent from both artifacts,
+            including all three candidate destinations, and the one that
+            is present is frozen into a stale cache rather than admitted
+            by a rule. The condition was written against the proposition
+            that directories sweep in, and that proposition is false.
+            LIFTING A REFUSAL AFTER SEEING THE DATA ONE WANTED DESERVES
+            SUSPICION AND THE REASONING IS WRITTEN HERE SO A READER CAN
+            REFUSE IT.
+
+    D352-9  THE PLACEMENT, AND WHAT DECIDED EACH PART OF IT. The names
+            do not change, because every sealed artifact of the
+            preceding sessions cites these bodies by name and digest
+            together and a rename inside a relocation is two writes
+            travelling as one. The directory is flat, because the names
+            already carry the role and a second classification by
+            directory would drift from the first. The bodies are loose
+            and are never packaged, because they are this house's
+            measurement apparatus and not the product. THE COPIES ON THE
+            HOST REMAIN WHERE THEY ARE: a copy is not a move, the host
+            copy is the authority the transport is not, and the leg that
+            says so counted the source directory after the copy rather
+            than asserting it.
+
+    D352-10  AN ALTERNATIVE DESTINATION WAS ANSWERED BY STRUCTURE AND
+             THE LEG THAT WOULD HAVE READ ITS CONTENTS WAS DROPPED AS
+             DECORATION. The existing tools directory holds an
+             initialisation module, which makes it an importable
+             package, and that package is itself undeclared and sits
+             inside the undeclared set this house measured. A shell
+             script and a text file cannot live in a Python package
+             whatever it contains, and the modules that could would
+             become importable names inside an undeclared package, on
+             the exact surface a prior entry found broken. THE SEAT
+             COULD NAME NO OUTCOME OF READING THAT PACKAGE THAT WOULD
+             MOVE THE DECISION, AND A LEG WHOSE RESULT CANNOT ACT IS NOT
+             A MEASUREMENT.
+
+    D352-11  WHERE A GATE DOCUMENT BELONGS IS MEASURED AND THE FILE THAT
+             NEEDED IT IS STILL NOT PLACED. Two commits that this
+             house's own log describes as Innovation Gates each landed a
+             single file in the documentation directory, and one of
+             those files is the ledger this entry is appended to. The
+             destination is therefore measured rather than argued. THE
+             KEY SUCCESSION GATE IS NOT IN THIS WRITE BECAUSE IT WAS
+             NEVER PLACED ON THE HOST, which is an omission and not a
+             scoping decision, and it remains the single copy this house
+             has of a document that exists nowhere else. ITS PLACEMENT
+             IS DECIDED AND ITS WRITE IS OWED.
+
+    D352-12  THE APPENDS OWED BY THE PRECEDING SESSION ARE DISCHARGED
+             HERE AND THEY ARE THE SEAT'S. A claim that a commit subject
+             carried no count of any kind, contradicted by the subject
+             itself. An irreversible paste shipped alongside a
+             precondition that had not run, caught by a fatal on a
+             missing file, which is luck. A here-document opened with a
+             blank line while relying on a cleanup mode that had not
+             been named. A dollar sign and a command substitution inside
+             an inline paste ending in an irreversible action. A guard
+             behaviour flagged from a pattern the seat had written
+             rather than the one in the renderer. A gap declared as
+             carried that was closeable in a single read-only leg. And a
+             value read from a line where it sat concatenated onto
+             unrelated echoed text.
+
+    D352-13  WHAT THE NEXT SESSION MUST NOT ASSUME. That the bodies now
+             in this repository are enforced by anything: none is
+             invoked by any test. That the destination directory changes
+             what any distribution contains: it is in no cache and
+             admitted by no rule, and if the cache is ever regenerated
+             what the source distribution contains changes in ways
+             nobody has measured. That the guard result transfers by
+             measurement rather than by argument. That the head is still
+             the head, because two lanes write to this branch. And that
+             a figure counting rows under the convention beginning at
+             entry three hundred and thirteen is the number of findings
+             this project has made, WHICH IT IS NOT AND WHICH THE
+             PRECEDING ENTRY EXISTS TO FIX.
+
+    FINDINGS
+
+            FG-S352-A  SEAT. THE OLDEST BODY IN THE OPENING RULE ASSERTS
+                       A CAPABILITY ITS OWN OUTPUT CONTRADICTS IN THE
+                       SAME RUN. Its first line states that a pasted
+                       body cannot check itself and a file can. Invoked
+                       as a file, from the directory holding it, at a
+                       digest verified one leg earlier, it printed that
+                       it is not a file and emitted a truncated error in
+                       place of its own digest. The cause was measured
+                       afterwards and is the first token of the body: it
+                       changes directory before the check, against a
+                       relative path. THAT ITS CHECK IS DECORATIVE WAS
+                       ALREADY SEALED; THAT IT MAKES A FALSE CLAIM ABOUT
+                       ITSELF WAS NOT. It also breaks the rule its own
+                       successor obeys, that a self check runs before
+                       any change of directory. THE REMEDY COSTS NOTHING
+                       AND CHANGES NO BYTE: invoked by absolute path,
+                       both lines become true and the opening rule
+                       becomes self verifying for the first time.
+
+            FG-S352-B  SEAT. A VALUE DESCRIBING ONE SET WAS PREDICTED
+                       OVER ANOTHER, ONE SESSION AFTER THE SAME CLASS
+                       WAS WRITTEN INTO THE OPENER THE SEAT READ WHOLE.
+                       A census figure for codes carrying more than one
+                       row at any indent was predicted over a leg
+                       counting rows at the strict indent alone. THE
+                       FINDING IS NOT THE MISS. The finding is that the
+                       warning was read in the same session and did not
+                       prevent it.
+
+            FG-S352-C  SEAT. A VALUE WAS INVENTED RATHER THAN
+                       MISPREDICTED. A leg counting one shape of an
+                       unqualified claim on the served surface was
+                       declared at zero. NO ARTIFACT THIS SEAT HOLDS
+                       STATES THAT FIGURE, so there was nothing to
+                       mispredict; a number was supplied where the
+                       honest entry was unknown, on a leg where four
+                       other fields were correctly declared unknown.
+                       INVENTING A VALUE IS A DIFFERENT ACT FROM
+                       PREDICTING ONE WRONGLY and it does not merge with
+                       one.
+
+            FG-S352-D  SEAT. AN ARM NAMED AS A NEGATIVE CONTROL CARRIED
+                       A POSITIVE EXPECTATION. It would have printed a
+                       passing token forever and evidenced nothing.
+                       Replaced by a true negative and by an explicit
+                       arm recording that the shape over-matches a
+                       longer identifier beginning with the same
+                       letters.
+
+            FG-S352-E  SEAT. THE SEAT PREDICTED A ROW OUT OF ITS OWN
+                       SYNTHETIC OUTPUT AND GOT THE COLUMN COUNT WRONG.
+                       The self test refused before any repository byte
+                       was read. Same class as a finding of the
+                       preceding session, one session later.
+
+            FG-S352-F  SEAT. A CLEARANCE WAS GIVEN OVER A NARROWER SET
+                       THAN THE CONFIGURATION DECLARES. The seat scanned
+                       candidate files for one family of reserved words
+                       and reported a clean result as though it covered
+                       the guard, whose configuration declares four
+                       families of reserved words, a list of forbidden
+                       objects and a two-field axis rule. Closed by
+                       rescanning against the configuration's own
+                       vocabulary before the real guard ran.
+
+            FG-S352-G  SEAT. A SET WAS PRINTED WHOLE AND FOUR OF ITS
+                       FIVE MEMBERS WERE READ. The instrument enumerated
+                       the keys of the packaging table and then read
+                       only the ones the seat had thought to name,
+                       leaving unread the single key that can place an
+                       arbitrary path into a distribution and that
+                       therefore decided the question the leg was built
+                       to answer. The replacement iterates whatever keys
+                       exist and refuses if the count it enumerated
+                       differs from the count it read.
+
+            FG-S352-H  SEAT. A FIGURE WAS FILED AS IRREPRODUCIBLE WHILE
+                       A SECOND SHAPE PRODUCING IT SAT UNREAD ON THE
+                       SAME HOST. The count of undeclared modules at the
+                       repository root differs between two shapes and
+                       both are exact: one counts importable names on
+                       disk, including package directories, two
+                       generated files and at least one file git does
+                       not track, and the other counts tracked root
+                       modules whose stem is absent from the declared
+                       list. NEITHER NUMBER IS THE UNDECLARED MODULES
+                       WITHOUT ITS SHAPE ATTACHED. Corrected by append
+                       below.
+
+            FG-S352-I  WORLD. A FLOOR IS NOT A FENCE. The release gate
+                       opens the built wheel and checks that its member
+                       list CONTAINS the required modules. Nothing in
+                       the pipeline checks that it contains nothing
+                       else. This house found its packaging defect on
+                       the containment side, where shipped modules
+                       imported modules that did not ship, and the gate
+                       that runs at every release cannot see that class
+                       of error in the other direction.
+
+            FG-S352-J  SEAT. A ROW WAS PREDICTED OUT OF THE SEAT'S OWN
+                       FORMAT STRING BY HAND-COUNTING COLUMN PADDING,
+                       REPEATEDLY, AND THE FIRST TWO WERE FIXED BY
+                       COUNTING AGAIN, WHICH IS THE ACT THAT PRODUCED
+                       THEM. The remedy adopted is to stop comparing
+                       rendered columns: both sides are collapsed to
+                       single spaces and the collapse engine is itself
+                       driven positive and negative. A DEFECT FIXED BY
+                       REPEATING ITS CAUSE IS NOT FIXED.
+
+            FG-S352-K  SEAT. A FINDING WAS FILED AGAINST THE BOARD WHILE
+                       THE INSTRUMENT THAT SETTLES IT SAT LOCATED,
+                       READ-ONLY, ON THE SAME HOST. The body that
+                       produced the disputed figure had been located by
+                       digest in the very leg that produced the
+                       conflicting one. A GAP CLOSEABLE IN A SINGLE
+                       READ-ONLY LEG IS NOT A GAP TO CARRY, AND IT IS
+                       NOT A GAP TO FILE AGAINST SOMEONE ELSE.
+
+            FG-S352-L  SEAT. A DIRECTORY'S CONTENTS WERE ASSERTED FROM
+                       COMMIT SUBJECTS BEFORE THE DIRECTORY WAS LISTED.
+                       The seat argued that gate documents belong in the
+                       documentation directory because two commit
+                       subjects describe themselves that way. A SUBJECT
+                       LINE IS EVIDENCE OF A COMMIT AND NOT OF A FILE.
+                       Corrected by append below; the conclusion
+                       survived and the reasoning did not.
+
+            FG-S352-M  WORLD. THE CLAIM GUARD EXCLUDES DIRECTORIES BY
+                       EXACT NAME. Two spellings of a virtual
+                       environment are excluded and any other spelling
+                       is not, nor is a package-manager cache directory.
+                       Pointed at a home directory the guard walked
+                       thirty-one thousand files and returned violations
+                       from third-party libraries and from unrelated
+                       notes. HARMLESS OVER THIS REPOSITORY, WHICH
+                       CONTAINS NO SUCH DIRECTORY. It means an exit code
+                       from this guard over any tree containing a
+                       differently named environment is noise, and the
+                       exit code is not the verdict.
+
+            FG-S352-N  SEAT. A STATE WAS PREDICTED FROM AN ANNOUNCEMENT.
+                       The seat predicted a file present on the host on
+                       the strength of a sentence saying it would be
+                       placed there, and flagged only the risk that its
+                       name might disagree, never that it might be
+                       absent. It was absent. AN INTENTION TO ACT IS NOT
+                       A MEASURED STATE, on a host whose transport this
+                       house has measured as dropping files without
+                       saying so.
+
+            FG-S352-O  OPERATOR. AN ANNOUNCED PLACEMENT DID NOT HAPPEN,
+                       TWICE. The operator stated that the key
+                       succession gate was being placed on the host
+                       before a guard leg ran, and again after the first
+                       leg reported it absent. It was not placed either
+                       time and the omission was found by the instrument
+                       rather than reported. THE ONLY COPY OF THAT
+                       DOCUMENT SPENT THE WHOLE ARC WHERE IT STARTED,
+                       and it is the reason that document is not in the
+                       commit this entry records. THIS IS THE FIRST
+                       FINDING OF THIS CLASS IN THIS LEDGER. The label
+                       is new and it changes a count: the leg that
+                       counts labelled rows matches two labels and the
+                       leg that counts rows matches any, so a row
+                       carrying this label is counted by one and not the
+                       other. THE PATTERN LIVES IN A BODY THIS SESSION
+                       FILED AND THE COUNTER DRIFT IS OWED UNTIL THAT
+                       PATTERN IS WIDENED.
+
+            FG-S352-P  WORLD. A CONTROL NOBODY PLANTED. Two check
+                       environments on the host hold this project's own
+                       shipped bytes at two earlier versions. Pointed at
+                       that directory the claim guard fired the axis
+                       rule on three command sites and one engine
+                       rendering a reserved word from the wrong axis,
+                       and the list rule on a module heading a list with
+                       five forbidden objects. THE GUARD IS NOW DRIVEN
+                       RED ON THIS HOUSE'S OWN PAST OUTPUT AND GREEN ON
+                       ITS CURRENT TREE. No artifact records that this
+                       control exists, nothing pins those two trees, and
+                       an ordinary cleanup deletes the only red this
+                       guard has ever had on real bytes of this project.
+
+            FG-S352-Q  WORLD. THIS LEDGER IS A GROWN INNOVATION GATE AND
+                       NO ARTIFACT SAYS SO. The file every session
+                       appends to entered this repository as a single
+                       Innovation Gate document of a few hundred lines
+                       and now holds every entry this house has written.
+                       Its name describes the gate and not the ledger,
+                       every session reads that name, and nothing
+                       written down explains it.
+
+            FG-S352-R  WORLD. THE SOURCE DISTRIBUTION CARRIES A TRACKED
+                       TOP-LEVEL DIRECTORY THE CONFIGURATION DECLARES NO
+                       ROUTE FOR. The test directory ships. It appears
+                       in no declared module, no declared package, no
+                       data-file source and no manifest-template
+                       pattern, and the configuration that built the
+                       artifact is byte-identical to the configuration
+                       at the current head.
+
+            FG-S352-S  SEAT. THE SEAT REASONED FROM CONFIGURATION TO A
+                       CLAIM ABOUT AN ARTIFACT ONE TURN AFTER VOIDING
+                       FIVE VALUES FOR THAT EXACT REASON. It wrote that
+                       a directory which is neither a declared module, a
+                       declared package, a data-file source nor a
+                       manifest-template pattern has no route into
+                       either artifact. The artifact refutes it. THE
+                       SEAT HAD ALREADY LABELLED THE SENTENCE A RULE AND
+                       NOT A MEASUREMENT, WHICH MAKES THIS A LABELLED
+                       PROXY TREATED AS THE OBJECT ANYWAY.
+
+            FG-S352-T  SEAT. CORRECTION BY APPEND TO TWO ROWS OF THIS
+                       ENTRY. The claim that no Innovation Gate document
+                       sits in the documentation directory is false; two
+                       do, both printed in the listing the seat had
+                       already read, and the search shape looked for a
+                       word the naming convention does not use. And the
+                       figure filed as irreproducible reproduces exactly
+                       under the shape that produced it. WHAT SURVIVES
+                       IN BOTH IS NARROWER: an absence reported by a
+                       shape blind to its object's vocabulary, and a
+                       figure filed without its shape attached.
+
+            FG-S352-U  SEAT. A VERIFICATION LEG WAS BUILT WITH A SCOPE
+                       NARROWER THAN THE CLAIM IT WAS MEANT TO CHECK,
+                       AND SHIPPED TWICE AS THE CHECK FOR THAT CLAIM.
+                       The claim was that a file is on the host. The
+                       instrument enumerates one directory and does not
+                       recurse, and it declared that blindness in its
+                       own output while the seat used it anyway. AN
+                       ABSENCE FROM A SET SMALLER THAN THE QUESTION IS
+                       NOT AN ANSWER TO THE QUESTION.
+
+            FG-S352-V  SEAT. A SEARCH SHAPE WAS BLIND TO THE MOST LIKELY
+                       FORM OF THE THING IT SEARCHED FOR. The pattern
+                       for a build invocation matched the command-line
+                       form and not the argument-list form, which is how
+                       a script actually calls it. Caught on a synthetic
+                       tree where the arm expected a hit and got none.
+                       HAD IT REACHED THE HOST, A SILENT ZERO WOULD HAVE
+                       READ AS AN ABSENCE OF THE THING, and the
+                       isolation question would have been answered by a
+                       blindness.
+
+            FG-S352-W  WORLD. WHAT THIS PROJECT PUBLISHES AS SOURCE IS
+                       DECIDED BY AN UNTRACKED FILE. The cached list in
+                       the packaging metadata directory is not tracked,
+                       carries two more entries than the shipped
+                       artifact does, and no source-control file finder
+                       is registered on this interpreter. Of the paths
+                       tracked at the tag, more than three fifths are
+                       absent from the source distribution, including
+                       thirteen whole top-level directories. NO GATE
+                       READS THAT FILE AND NO TEST PINS IT.
+
+            FG-S352-X  WORLD. A PUBLISHED SOURCE DISTRIBUTION CARRIES
+                       FILES THAT ARE IN NO COMMIT. Three ordinary
+                       working-directory files are in the archive and in
+                       no tree at its own tag, swept in by a
+                       manifest-template pattern that matches by
+                       extension and does not care whether a file is
+                       tracked. THE PROJECT CANNOT REPRODUCE ITS OWN
+                       PUBLISHED ARTIFACT FROM ITS OWN HISTORY, and the
+                       current version was built by the same invocation
+                       with the same cache and the same template and has
+                       not been read.
+
+            FG-S352-Y  WORLD. THE SHIPPED TEST SET IS STALE AND PARTIAL
+                       AND DRIFTS ON THE WRONG EVENT. Two hundred and
+                       ninety-two test files ship, forty-two tracked
+                       ones do not, and the cache already carries one
+                       more than the artifact. The set moves when the
+                       cache is touched and stands still when a test is
+                       written.
+
+            FG-S352-Z  SEAT. AN ARM WAS WRITTEN TO ASSERT A DEFECT AS
+                       CORRECT AND IT PASSED. An enumerator labels a
+                       bare directory member of an archive as a file at
+                       the root, and the self test did not miss that
+                       behaviour: IT ENCODED THE WRONG ANSWER AS THE
+                       EXPECTED ONE. A blessed-wrong arm is worse than
+                       an undriven arm, because an undriven arm is
+                       silent and this one reported a passing token over
+                       a count a reader would have trusted. Four
+                       directory entries were counted among the files at
+                       the root of the source archive, and the corrected
+                       figure differs from the cached list by exactly
+                       the two files the packaging tool generates at
+                       build time.
+
+            FG-S352-AA  SEAT. A COUNT OF A RENDERING WAS MISTAKEN FOR A
+                       COUNT OF THE THING RENDERED. The member count of
+                       the wheel was predicted from a line count over a
+                       listing tool's output, which carries a header
+                       line that the equivalent tool for the other
+                       archive does not. FILED AS ITS OWN ROW RATHER
+                       THAN FOLDED INTO THE PROXY FINDING ABOVE, because
+                       the classes differ: that one reasoned from
+                       configuration to an artifact and this one counted
+                       a rendering, one leg apart from the arm that
+                       blessed the same error. THE SEAT FOLDED IT ONCE
+                       TO AVOID ADDING A ROW, WHICH IS AVOIDING A COUNT
+                       AND NOT A FACT.
+
+            FG-S352-AB  SEAT. A SUM WAS DONE BY HAND IN THE MESSAGE THAT
+                       ANNOUNCED THE SEAT WOULD STOP DOING THINGS BY
+                       HAND. A predicted byte total over eight files was
+                       declared two low against the measured value. The
+                       eight sizes were on the screen and a machine was
+                       available. THE FIRST INSTANCE THIS SESSION THAT
+                       IS ARITHMETIC RATHER THAN A SHAPE.
+
+            FG-S352-AC  SEAT. COMMANDS WERE SHIPPED AFTER A
+                       HERE-DOCUMENT TERMINATOR IN THE SAME PASTE AND
+                       THE TERMINAL INTERLEAVED THE ECHOED TEXT WITH THE
+                       PROMPT. The values printed cleanly on their own
+                       lines, WHICH IS THE SHELL'S DOING AND NOT THE
+                       SEAT'S. This is the same reading hazard as a
+                       finding of the preceding session about a value
+                       sitting concatenated onto unrelated echoed text,
+                       reintroduced by paste construction. A
+                       HERE-DOCUMENT SHOULD END ITS PASTE.
+
+            FG-S352-AD  SEAT. A PRECONDITION LEG FAILED INSIDE THE
+                       IRREVERSIBLE PASTE AND THE PASTE PROCEEDED TO THE
+                       COMMIT. A revision-parsing invocation was
+                       malformed and the tool answered that it needed a
+                       single revision, so the remote identity the seat
+                       had predicted was never measured, and the
+                       separators this house uses to defeat a search
+                       tool's exit code also meant a fatal on a
+                       precondition did not stop the action behind it.
+                       WHAT SAVED IT WAS THAT THE LEG CARRYING THE
+                       ACTUAL SAFETY PROPERTY IS A SEPARATE COMMAND, DID
+                       RUN, AND PRINTED ZERO. The seat wrote the gating
+                       condition on the property that survived, WHICH IS
+                       NOT THE SAME AS THE GATE HAVING WORKED.
+
+            FG-S352-AE  SEAT. A TOKEN WAS PREDICTED IN AN OUTPUT THAT
+                       DOES NOT CARRY IT. The marker a diff prints for a
+                       file with no final newline was predicted to
+                       appear in a commit summary, which never prints
+                       it. Same family as the rendering count above and
+                       distinct from it: that one counted a rendering
+                       and this one expected a token in the wrong
+                       rendering.
+
+            FG-S352-AF  SEAT. THE SEAT STATED A COUNT OF ITS OWN
+                       FINDINGS TO THE OPERATOR AND IT WAS WRONG. The
+                       rows of this entry were counted by hand in a
+                       sentence and the figure given was two low. The
+                       rows were enumerable by machine from the payload
+                       that carries them. SAME CLASS AS THE HAND-SUMMED
+                       BYTE TOTAL ABOVE, in the arc that landed that
+                       finding, and the count is stated in no artifact
+                       of this session but the measurement record.
+
+            FG-S352-AG  WORLD. THE RENDERER'S COLLISION ARM INJECTS A
+                       HARDCODED FINDING LETTER AND STOPS DRIVING ITS
+                       OWN GUARD ONCE A PAYLOAD REACHES THAT LETTER. The
+                       arm appends a row carrying the last letter of the
+                       alphabet and expects the collision guard to
+                       refuse it as a strict anchor that no intended
+                       finding claims. THIS PAYLOAD CLAIMS THAT LETTER.
+                       The injected row is therefore intended, the
+                       collision guard passes it, and the duplicate-code
+                       guard three guards later refuses instead, naming
+                       the very row this entry carries. PREDICTED FROM
+                       THE RENDERER'S BYTES BEFORE THE ARM WAS RUN AND
+                       CONFIRMED BY RUNNING IT. THE CONSEQUENCE IS THAT
+                       THE COLLISION GUARD WENT UNDRIVEN FOR THIS BUILD
+                       AND ITS GREEN IS UNDRIVEN RATHER THAN EVIDENCE.
+                       It is worse than the two arms that print an
+                       ambiguous token for two outcomes, because this
+                       one prints a refusal and a reader credits it to
+                       the guard the arm is named for.
