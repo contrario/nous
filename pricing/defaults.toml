@@ -183,6 +183,31 @@ source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
 verified_by   = "manual"
 
 
+# DeepSeek-V4.1-Flash, served by model id `deepseek-flash`.
+# Verified first-party 2026-09-16 against the Models & Pricing page.
+# PEAK rates are recorded. Off-peak is half of peak; a cost bound must
+# use the maximum, so peak is the only sound choice for --smt.
+# Provider documents `deepseek-v4-flash` as retired and temporarily
+# routed to this model, billed at this price. The legacy section below
+# is left unchanged and carries its own original verified_date.
+# THINKING MODE IS BOUNDED, MEASURED 2026-09-16. Every runtime call
+# site sets max_tokens (300, and 200 in dream_engine). Reasoning
+# tokens bill as output and count toward that ceiling, so the
+# multiplier of 1.0 below holds at those sites. OPEN: the ceiling is
+# a hardcoded constant, not the envelope the program declares.
+[models."deepseek-flash"]  # __s353_deepseek_flash_pricing_v1__
+provider       = "deepseek"
+pricing_model  = "per_token"
+input_per_1m  = "0.30"
+output_per_1m = "1.20"
+prompt_caching_supported = true
+batch_discount_pct = 0
+reasoning_token_multiplier = "1.0"
+verified_date = "2026-09-16"
+source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
+verified_by   = "manual"
+
+
 [models."deepseek-v4-flash"]  # __s217_deepseek_v4flash_pricing_v1__
 provider       = "deepseek"
 pricing_model  = "per_token"
