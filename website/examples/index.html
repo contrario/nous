@@ -120,7 +120,7 @@ const EXAMPLES=[{id:"conscious-team",title:"Conscious Research Team",desc:"Fully
 }
 
 soul Researcher {
-    mind: claude-3-haiku @ Tier0A
+    mind: claude-haiku-4-5 @ Tier0A
     senses: [http_get, arxiv_search, check_dream_cache]
 
     memory {
@@ -194,7 +194,7 @@ soul Researcher {
 }
 
 soul Analyst {
-    mind: deepseek-v4-flash @ DeepSeek
+    mind: deepseek-flash @ DeepSeek
     listen: Researcher
 
     memory {
@@ -271,7 +271,7 @@ soul Collector {
     dream_system {
         enabled: true
         trigger_idle_sec: 10
-        dream_mind: deepseek-v4-flash @ Tier1
+        dream_mind: deepseek-flash @ Tier1
         max_cache: 10
         speculation_depth: 3
     }
