@@ -5,6 +5,49 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [5.80.0]  <!-- __s358_changelog_v5_80_0__ -->
+
+### Changed
+
+- Shipped templates no longer declare retired provider model ids.
+  `claude-3-haiku`, which the provider retired on 2026-04-20 and which has
+  no entry in `pricing/defaults.toml`, becomes `claude-haiku-4-5` at 6
+  sites. `deepseek-v4-flash` becomes `deepseek-flash` at 13 sites: the
+  provider documents the former as retired and serves its requests from
+  V4.1-Flash at the Flash rate, so the legacy table entry at 0.14/0.28
+  understated every `--smt` cost bound taken over it against a live
+  0.30/1.20 peak. A bound must use the maximum, so the understatement was
+  the one error class this project's use of "proves" cannot absorb.
+  <!-- __s358_changelog_model_ids_v1__ -->
+- The rename is verdict-neutral, measured before and after on every
+  affected template: the four that emit SMT return PROVEN unchanged, and
+  the other seven refuse on missing `cost_cap:` or `max_ticks:`
+  declarations exactly as before.
+
+### Added
+
+- `tests/test_s358_shipped_template_pricing.py` binds every model declared
+  by a shipped template to the pricing table. Nothing previously connected
+  a `mind:` declaration to a pricing key at any gate, which is why the
+  suite stayed green while `nous dossier-spec` refused over a documented
+  workflow. The gate covers both grammar declaration sites (`mind_decl`
+  and `dream_mind`) and is time-independent by construction: resolution is
+  asserted with no date, lifecycle against a pinned one, and staleness not
+  at all, so a release cannot break on a calendar date for a reason
+  unrelated to the defect being gated.
+  <!-- __s358_changelog_corpus_gate_v1__ -->
+- `tests/test_s358_skill_chain_e2e.py` characterises the documented
+  `skill-export` -> `dossier-spec` path end to end. It also pins two
+  preconditions that are easy to lose: the skill directory name must equal
+  the SKILL.md name, and `skill-export` refuses a world with no cost law.
+
+### Fixed
+
+- `tests/regression_baseline.json` registers `greek_tax_advisor.nous`,
+  tracked since e3e74d6 but never baselined. The harness reports an
+  unregistered file without failing, so the gap was silent.
+
+
 ## [5.78.0]  <!-- __s259_changelog_v5_78_0__ -->
 
 ### Changed
