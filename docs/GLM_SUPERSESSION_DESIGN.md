@@ -14608,3 +14608,455 @@ document itself.
                        row is therefore carried by byte counts and by
                        short forms named as short forms, as this entry
                        does throughout.
+
+  - S354 the session that went looking for the published source
+    distribution of the current version, did not find its bytes on this
+    disk, and measured in the artifacts of the preceding version the
+    mechanism the correction it owes rests on
+
+    R24 GOVERNS EVERY VALUE BELOW. Each was printed by a named
+    instrument on this host in the session that carries this entry. Each
+    instrument took its own digest as its first argument and refused on
+    mismatch, declared its set and its blindness before any value was
+    printed, and was driven on synthetic fixtures before it read a byte
+    of the host. Where a value below is derived by arithmetic rather
+    than printed, or is carried from a reading taken in an earlier
+    session rather than measured in this one, or was measured in the
+    session that lands this entry rather than in the one it describes,
+    the sentence carrying it says so. THE WORLD FACTS OF THIS SESSION
+    ARE FILED AS NUMBERED ITEMS EXCEPT WHERE A ROW LABELLED WORLD
+    CARRIES ONE. The sealed record of the session counts them as one set
+    of eight; this entry classifies the same session differently and
+    that is not a discrepancy.
+
+    READ THIS PARAGRAPH BEFORE ANY OTHER. NOTHING IN THIS ENTRY HOLDS
+    FOR THE CURRENT VERSION. The archive the index serves for the
+    current version is not on this disk and was not read. Every
+    measurement below was taken in two archives of the preceding
+    version, and the mechanism it describes would have to be measured
+    again in the current one before a word of this could be said of it.
+    A READER WHO FINISHES THIS ENTRY BELIEVING THE SWEEP WAS MEASURED IN
+    WHAT THE INDEX SERVES TODAY HAS READ AN ENTRY THAT FAILED.
+
+    WHAT IS REAL IS NARROW AND IT IS VISIBLE IN THE ARTIFACTS
+    THEMSELVES. Two archives of the preceding version, one built on this
+    host and one held in the package tool's own cache, differ by exactly
+    three members in one direction and by nothing in the other. The
+    manifest template is byte identical in both and its fourth line
+    includes every file at the repository root carrying the language
+    extension. The file list each build recorded names all three in one
+    archive and none of them in the other. At the tag of that version
+    all three are ignored and none of them is tracked. FOUR READS, TWO
+    ARCHIVES, TWO READINGS OF VERSION CONTROL AT THE TAG, AND NO
+    NETWORK.
+
+    THE SCOPE WAS THE OPERATOR'S AND SO WAS EVERY GATE. ZERO
+    IRREVERSIBLE ACTIONS: no commit, no push, no ceremony, and no
+    request of any kind left this host. Three bodies were transferred
+    and executed, all of them read only, none of them committed, and
+    they are the only copies. The cache this entry reports on had no
+    byte of it written.
+
+    WHAT THIS ENTRY DOES NOT CLOSE, STATED HERE SO NO LATER ARTIFACT HAS
+    TO INFER IT. It cannot say the cached archive is what the index
+    served, because nothing sits beside it recording where it came from
+    and its provenance is the path it occupies. It cannot say what built
+    either archive, because a source distribution carries no generator
+    line. It cannot say why the three files were present in the
+    directory the local build ran on. And this ledger is still enforced
+    by no test.
+
+    D354-1  THE OBJECT AND WHO CHOSE IT, AND THE QUESTION THAT CAME
+            BEFORE IT. The operator chose the board item asking whether
+            the set of test members in the published source distribution
+            of the current version equals the output of the default
+            patterns in the vendored packaging command. THE FIRST
+            QUESTION WAS NOT THE MATCH. It was whether those bytes are
+            on this disk at all, and they are not. The object returns to
+            the board unmeasured and narrower than it left it: it is one
+            gated request away and it sits beside the item that asks the
+            index for a digest. AT NO POINT DID THIS LANE CHOOSE THE
+            OBJECT.
+
+    D354-2  THE NEGATIVE, AT ITS REAL WIDTH, WHICH IS NOT THIS HOST. No
+            source distribution of this project at the current version
+            exists under four de-overlapped roots: the operator's home,
+            the repository, and the two temporary trees. Six roots were
+            given, two were dropped by containment before any count was
+            trusted, and no pair among the four that remained overlaps.
+            The walk identified candidates by magic bytes rather than by
+            name or extension and saw three hundred and eighty-four
+            thousand one hundred and forty-three files, with an empty
+            operating-system error census over that set. SEPARATELY, AND
+            OVER A DIFFERENT SET: of one thousand six hundred and
+            thirty-one gzip candidates, five hundred and eighty-six
+            opened as tar archives and one thousand and forty-five did
+            not, the second figure derived by arithmetic. THOSE ARE NOT
+            FAULTS. They are gzip bodies that are not tar archives, and
+            saying so is what keeps the empty error census meaning what
+            it measured. THE WALK LISTED FOURTEEN THOUSAND FOUR HUNDRED
+            AND SEVEN SYMLINKED DIRECTORIES AND DESCENDED INTO NONE OF
+            THEM. A NEGATIVE IS A RESULT AND THIS ONE IS BOUNDED BY THAT
+            BLINDNESS AND BY THOSE FOUR ROOTS.
+
+    D354-3  THE PAIR, AND THE DELTA THAT IS NOT ATTRIBUTED. One archive
+            sits in the build output directory of this host; the other
+            is a body in the package tool's own cache, its name a
+            hexadecimal word under a sharded path. Both carry the same
+            archive root, both declare the same name and version in
+            their packaging metadata, and both were digested whole
+            before any member was read. The local one is larger by eight
+            thousand four hundred and forty bytes. THAT DELTA IS NOT
+            ATTRIBUTED: the sizes compared are compressed, four members
+            differ between the two, and no uncompressed size was
+            printed.
+
+    D354-4  THE DIFFERENCE IS THREE MEMBERS IN ONE DIRECTION, AND THREE
+            ARITHMETIC PATHS REACH IT. Five hundred and six members
+            against five hundred and three, five hundred and one regular
+            files against four hundred and ninety-eight, and one hundred
+            and ninety-two root-level entries against one hundred and
+            eighty-nine. All three differences are the same three files,
+            each carrying the language extension, each at the archive
+            root, of six thousand six hundred and ninety-one, one
+            thousand and one and one thousand and twenty-six bytes. THE
+            CACHED ARCHIVE CARRIES NOTHING THE LOCAL BUILD LACKS. The
+            three were digested individually, in a second body, after
+            the first had digested both archives and skipped them.
+
+    D354-5  OF FOUR HUNDRED AND NINETY-EIGHT COMMON REGULAR FILES, FOUR
+            HUNDRED AND NINETY-SEVEN ARE BYTE IDENTICAL. The sole
+            exception is the generated file list inside the packaging
+            metadata directory, which is the member whose job is to
+            record what the build included. It is seventy-seven bytes
+            shorter in the cached archive, four hundred and ninety-nine
+            entries against four hundred and ninety-six, and the three
+            entries it lacks are exactly the three members its archive
+            lacks, in both directions. The packaging metadata file and
+            the tool configuration are both among the identical four
+            hundred and ninety-seven.
+
+    D354-6  THE MANIFEST TEMPLATE IS BYTE IDENTICAL IN BOTH ARCHIVES AND
+            ITS RULE IS A ROOT-LEVEL ONE. A hundred and two bytes, the
+            same digest in each, and its fourth line includes every file
+            at the repository root carrying the language extension,
+            which reaches all three. Its fifth line is a recursive
+            directive scoped to a template directory and reaches no file
+            at the root. THE TEMPLATE IS NOT WHERE THE TWO BUILDS
+            DIFFER.
+
+    D354-7  AT THE TAG OF THE PRECEDING VERSION ALL THREE ARE IGNORED
+            AND NONE OF THEM IS TRACKED. The ignore file was read at
+            that tag and not at the head of the branch, because a
+            reading at the head is the wrong revision answering
+            confidently. Two of the three are named literally and the
+            third is covered by a pattern, and no negation follows any
+            of them, so the decision is ignored for all three under last
+            match wins. A TRACKED FILE IS NEVER IGNORED, so the tracked
+            status was read at the same tag, and it is that reading
+            rather than the pattern match that makes the rules apply at
+            all.
+
+    D354-8  THE CORRECTION OWED TO THE PRECEDING ENTRY, FIRST HALF: THE
+            GROUND IS INVALID. That entry excluded the untracked cached
+            file list as the input to what shipped on the ground that it
+            is a strict superset of both shipped lists. The packaging
+            tool reads such a list by appending every line, then keeps
+            only the paths that exist, then prunes further. A SUPERSET
+            READ, FILTERED AND PRUNED, YIELDS A SUBSET. The argument
+            excludes nothing, and the modification time it leaned on
+            does not rescue it. THE TOOL'S BEHAVIOUR IS CARRIED FROM THE
+            PRECEDING SESSION'S READING OF ITS SOURCE AND WAS NOT READ
+            AGAIN HERE.
+
+    D354-9  THE CORRECTION, SECOND HALF: THE CONCLUSION IS UNSUPPORTED
+            IN BOTH DIRECTIONS. The cache is read, at a named pair of
+            lines in the packaging tool's own source, whenever the
+            version control walk yields nothing, and no file-finder
+            entry point is declared on this host. That refutes the
+            entry's exclusion. But a build that reaches the index runs
+            on a clean checkout and reads back a file list generated
+            there, which is not this host's cache, and that refutes the
+            opposite reading just as plainly. NEITHER DIRECTION IS
+            ESTABLISHED AND THE ENTRY IS CORRECTED TO SAY SO. BOTH
+            READINGS OF THE TOOL'S SOURCE, AND THE ABSENCE OF A
+            FILE-FINDER ENTRY POINT AMONG THE DISTRIBUTIONS INSTALLED
+            HERE, ARE CARRIED FROM THE PRECEDING SESSION AND WERE NOT
+            TAKEN AGAIN IN THIS ONE.
+
+    D354-10  THE DEFAULT REMOVES THE CACHE FROM THE EXPLANATION RATHER
+             THAN ARGUING WITH IT. On a clean checkout the packaging
+             command falls through to its own default patterns, which is
+             a reading of the tool's source, carried from the preceding
+             session, and not a measurement of a build. THE SWEEP HALF
+             OF THIS CORRECTION CITES MEASUREMENT AND THE CACHE HALF
+             DOES NOT, and the two are kept apart here so that no later
+             artifact reads the second as though it carried the evidence
+             of the first.
+
+    D354-11  FIVE SOURCE DISTRIBUTIONS OF THIS PROJECT ARE ON THIS DISK
+             AND ONE OF THEM IS ON THE SERVED SURFACE. The preceding
+             version in the build output directory, three versions in
+             the package tool's cache, and one older version under the
+             well-known provenance path of the served tree, carrying
+             three hundred and eighty-seven members. WHETHER THAT LAST
+             ONE IS AMONG THE ORPHANS THE MIRROR CHECK REPORTS IS
+             UNMEASURED, and it is filed here rather than carried as a
+             guess.
+
+    D354-12  VERSION CONTROL READ VERBS WORK FROM THE ROOT ACCOUNT AT A
+             TAG ON THIS HOST. The standing footgun says that the
+             repository is owned by another account and that the root
+             account needs a safe-directory entry. For read verbs at a
+             tag it did not fire, which was measured rather than assumed
+             because the whole of the preceding item rests on two such
+             readings.
+
+    D354-13  THE WATCH THIS HOUSE HAS CARRIED AS OPEN IS CARRIED CLOSED
+             BY A COMMIT SUBJECT, AND THE READING IS STILL NOT TAKEN.
+             The enumeration of commits ahead of the tag contains a
+             subject announcing the regulatory publication this house
+             has waited on, with commits downstream of it. THAT IS
+             TESTIMONY IN A COMMIT SUBJECT AND NOT A READING OF THE
+             OFFICIAL JOURNAL. The watch is not open, the reading is not
+             taken, and the distinction is recorded because a later seat
+             finding the subject will otherwise treat it as the reading.
+
+    FINDINGS
+
+            FG-S354-A  SEAT. A REPORT DROWNED ITS OWN SIGNAL. The
+                       walking body printed a full block for every one
+                       of the five hundred and eighty-six archives it
+                       opened, several hundred of them content-addressed
+                       blobs of an unrelated package manager with no
+                       name to show. Five lines mattered. THE RULE
+                       AGAINST THIS WAS IN THE RECORD THIS SEAT READ
+                       BEFORE WRITING THE BODY. The engine is sound and
+                       the report is not, so the report is what a reuse
+                       must fix.
+
+            FG-S354-B  SEAT. AN INSTRUMENT LOCATED FIVE ARCHIVES BY PATH
+                       AND SIZE AND DIGESTED NONE OF THEM. The hashing
+                       sat inside the branch that had already matched on
+                       version, so every source distribution the walk
+                       reported outside that branch was identified by
+                       two properties that do not identify anything. IN
+                       A HOUSE WHOSE RULE IS LOCATE BY DIGEST.
+
+            FG-S354-C  SEAT. A DIFFERENCING BODY DIGESTED BOTH ARCHIVES
+                       AND FOUR HUNDRED AND NINETY-EIGHT COMMON MEMBERS
+                       AND SKIPPED THE THREE MEMBERS THE OBJECT WAS
+                       ABOUT. Second time in one session that a leg
+                       invoked the digest rule in its own preamble and
+                       then broke it on exactly the thing under
+                       examination. It was paid in the third body, which
+                       digests them.
+
+            FG-S354-D  SEAT. A PREDICTION WAS ILL FORMED RATHER THAN
+                       WRONG. A per-root count of symlinked directories
+                       was predicted against a body that emits one
+                       global count. The body could not produce the
+                       number the prediction was about, so nothing was
+                       scored. SAME CLASS AS A FINDING OF THE PRECEDING
+                       SESSION, which the opener this seat read whole
+                       carries as a rule.
+
+            FG-S354-E  SEAT. TWO NUMBERS THAT DIFFER WERE GIVEN ONE
+                       CAUSE. Four hundred and ten zip candidates from
+                       this session's walk were set against five hundred
+                       and seventy-seven from a voided earlier census
+                       and the difference was attributed to duplication,
+                       with a hedge. The two root sets are INCOMPARABLE
+                       in the part that decides the number. The hedge
+                       did not make the sentence measured. Same class as
+                       a pair of equal counts this house already refuses
+                       to call one set, four hours later in the same
+                       session.
+
+            FG-S354-F  SEAT. AN UNMEASURED BUILDER RODE INSIDE A CAREFUL
+                       SENTENCE. A difference in packaging tool versions
+                       was read out of the published record of a
+                       different version's wheel and offered as bearing
+                       on the two archives of the preceding version. It
+                       says nothing about either of them. The clause was
+                       struck. A SENTENCE WHOSE MEASURED HALF CARRIES AN
+                       UNMEASURED HALF READS AS ENTIRELY MEASURED.
+
+            FG-S354-G  SEAT. A SCOPED DIRECTIVE WAS REPORTED AS A ROOT
+                       HIT, AND THE ARM BUILT TO CATCH THAT PASSED FOR
+                       THE WRONG REASON. The manifest matcher stripped
+                       the directory argument of a recursive directive
+                       and then matched on the remaining pattern,
+                       turning one scoped line into three false hits out
+                       of six. The arm named for exactly this defect was
+                       green, because its fixture differed from the real
+                       case by file extension rather than by directory
+                       scope. AN ARM THAT PASSES FOR THE WRONG REASON
+                       DID NOT FIRE. What caught it was the verbatim
+                       print of the object beside the matcher's own
+                       output.
+
+            FG-S354-H  SEAT. NINE IGNORE LINES PRINTED UNDER EVERY NAME
+                       AND EIGHT OF THEM COULD NOT APPLY. Directory-only
+                       rules were listed as candidates against files;
+                       the ninth line under each name is the rule that
+                       does match it. The decision is unaffected and the
+                       report is not. THIRD REPORT-SHAPE DEFECT OF THE
+                       SESSION, which is what makes it worth a row
+                       rather than a note. THE SEALED RECORD OF THAT
+                       SESSION PUTS THE COUNT AT NINE INAPPLICABLE LINES
+                       AND IS WRONG BY ONE. It is sealed, so the error
+                       travels with its own seal and is corrected here
+                       rather than there.
+
+            FG-S354-I  SEAT. CARRIED IN, NOT OF THIS SESSION, AND
+                       COUNTED APART. When the opening body's refusal
+                       arms were driven in an earlier session, the
+                       echoed digest tail was cut at column seventy, so
+                       three refusals that differ only past that column
+                       printed one identical line. It is filed here
+                       because the count of this session's own defects
+                       would otherwise absorb it and a later seat would
+                       inherit a number one too high.
+
+            FG-S354-J  SEAT. NOT A DEFECT ROW. A candidate for the
+                       identity of the three members was formed before
+                       the bytes were read and was withheld, and it was
+                       wrong: it named three untracked entries of the
+                       working tree and the answer is three files
+                       carrying the language extension. HAD IT BEEN
+                       NAMED, THE AGREEMENT OF THE COUNTS WOULD HAVE
+                       READ AS CONFIRMATION OF IT. Filed as the
+                       discipline working on its first use, and filed
+                       only because a rule with no recorded instance is
+                       a rule nobody applies.
+
+            FG-S354-K  WORLD. THE CACHED ARCHIVE HAS NOTHING BESIDE IT
+                       RECORDING WHERE IT CAME FROM. The package tool's
+                       cache holds the body alone under a sharded path,
+                       with no sibling metadata naming the index, the
+                       request or the response. ITS PROVENANCE IS THE
+                       PATH IT OCCUPIES, WHICH IS WEAKER THAN THIS HOUSE
+                       ASSUMED WHEN IT REACHED FOR THE FILE. Location
+                       can evidence provenance and testimony can
+                       describe it; neither is a digest match, and no
+                       instrument here can turn the one into the other.
+
+            FG-S354-L  WORLD. A SOURCE DISTRIBUTION OF AN OLDER VERSION
+                       SITS ON THE SERVED SURFACE OF THIS PROJECT. It is
+                       under the well-known provenance path of the
+                       tracked web tree and carries three hundred and
+                       eighty-seven members. It was found by a walk
+                       looking for something else. WHETHER IT IS ONE OF
+                       THE ORPHANS THE MIRROR CHECK REPORTS AND NEVER
+                       FAILS ON IS UNMEASURED, and the mirror check
+                       reports orphan counts without snapshotting a byte
+                       of them.
+
+            FG-S354-M  WORLD. A TRACKED INSTRUMENT'S REFUSAL NAMES THE
+                       PAYLOAD AS THE SUBJECT OF A PHRASE THE PAYLOAD
+                       DOES NOT CONTAIN. The builder's self-count guard
+                       can be driven by a named arm, which calls it on
+                       an injected literal rather than on the rendered
+                       payload. The refusal it prints says the payload
+                       contains the phrase. IT DOES NOT. A reader
+                       finding that line in a log without the invocation
+                       beside it concludes the entry carries a
+                       self-count it does not carry. The report-shape
+                       family this arc keeps producing has lived until
+                       now in bodies that die with their disk; THIS ONE
+                       IS IN THE REPOSITORY AND WILL MISLEAD A LATER
+                       SEAT. Measured in the session that lands this
+                       entry, not in the one it describes.
+
+            FG-S354-N  WORLD. THE RULE AGAINST SELF-COUNTS IS STATED AT
+                       FULL WIDTH AND ENFORCED OVER FOUR NOUNS. The
+                       ledger entry the guard's own source cites was
+                       read verbatim on this host in the session that
+                       lands this entry, at its own anchor in this
+                       document. IT SAYS that an entry never states a
+                       number counting the session containing it, and
+                       sends such counts to the sealed measurement
+                       record instead, which is written after the
+                       session ends and can therefore be right. The
+                       guard implementing it matches a number, then at
+                       most three words, then a noun from a short fixed
+                       set. That set names the gate and the paste and
+                       nothing else. A count of items, of findings, of
+                       defects or of rows passes it untouched. THE
+                       PATTERN IS ALSO TOO WIDE FOR ITS OWN SUBJECT:
+                       this row's first drafting spelled that set out
+                       inline and the guard refused the build on the
+                       phrase it found there, which counted no session
+                       and was a false positive. IT IS NARROWER THAN THE
+                       RULE IT CITES AND WIDER THAN THE SENTENCE THAT
+                       DESCRIBES IT. THE NARROW SIDE IS A READING OF
+                       BOTH TEXTS ON THIS HOST; THE WIDE SIDE IS A
+                       REFUSAL THE BUILD ITSELF PRODUCED. THE GAP IS NOT
+                       THEORETICAL. While this entry was drafted it
+                       carried a sentence counting its own rows of one
+                       label; the guard returned clean over it; and that
+                       sentence would have become false the moment two
+                       rows were added to this entry, which is the fixed
+                       point the cited entry generalises. It was removed
+                       by reading the rule, not by any instrument. WHERE
+                       THIS ENTRY STANDS UNDER THE RULE IS NOT SETTLED
+                       BY THE RULE'S OWN WORDS: it is written after the
+                       session it describes was sealed and takes its
+                       counts from that session's record, which is where
+                       the rule sends them, but an entry numbered for
+                       one session and written in another gives the
+                       phrase the session containing it two candidates.
+                       Measured in the session that lands this entry,
+                       not in the one it describes.
+
+            FG-S354-O  SEAT. AN INSTRUMENT WAS CHOSEN WIDER THAN THE
+                       GATE IT WAS ANSWERING, AND ITS OUTPUT BEARS ON
+                       CONFIDENTIALITY. The operator opened one thing:
+                       digest two named files and compare them against
+                       their pins. The body run instead digested every
+                       regular file at the top of the operator's home
+                       and emitted the lot into a channel that keeps
+                       what passes through it. AMONG THEM, THE DIGEST OF
+                       EVERY CREDENTIAL-BEARING PATH IN THAT DIRECTORY.
+                       NO SECRET WAS DISCLOSED AND NONE IS RECOVERABLE
+                       FROM A DIGEST. What a digest is, is an oracle
+                       against a guess, and for a short or structured
+                       file a guess is cheap. ONE OF THEM IS WORSE THAN
+                       AN ORACLE: a credential store digests to the
+                       digest of the empty file, so the output states
+                       that the file is empty. That is a fact about a
+                       credential store disclosed by a listing rather
+                       than by a read. The report-shape family this arc
+                       keeps producing has cost legibility every time
+                       until now; THIS ONE DID NOT. THE RULE IT PAYS
+                       FOR: the instrument is scoped to the gate, and a
+                       listing of a directory nobody chose to enumerate
+                       is not a digest of two named files. The same
+                       output also carried three paths whose names are
+                       fragments of text nobody meant as a filename, one
+                       of them holding a character that made the
+                       digesting tool escape its own output line and
+                       another holding a non-ASCII character. THE SILENT
+                       TERMINAL WELD A PRECEDING ENTRY RECORDED AS
+                       MEASURED WITH ITS MECHANISM UNKNOWN LEAVES
+                       DURABLE EVIDENCE ON DISK, and this is the first
+                       artifact of it anyone has looked at. Measured in
+                       the session that lands this entry, not in the one
+                       it describes.
+
+            FG-S354-P  WORLD. EVERY CONTENT MODULE THIS HOUSE HAS
+                       RENDERED UNTIL NOW LEFT A COMPILED COPY IN THE
+                       OPERATOR'S HOME. The bytecode directory there
+                       holds five compiled content modules and one
+                       compiled test module, the newest of them from the
+                       session before last, and the directory's own
+                       timestamp is that same instant. THIS ARC IS THE
+                       FIRST TO SUPPRESS THE WRITE, which is why the
+                       directory could be used to check that nothing was
+                       written tonight. IT DOES NOT HOLD ONE PER MODULE:
+                       fourteen content modules sit in that home and
+                       five have a compiled form beside them, and why
+                       the others do not is unmeasured. Measured in the
+                       session that lands this entry, not in the one it
+                       describes.
