@@ -202,7 +202,7 @@ def cmd_prices_verify(args: argparse.Namespace) -> int:
     print()
 
     life, life_msg = lifecycle_status(entry)
-    stale, stale_msg = staleness_status(entry)
+    stale, stale_msg = staleness_status(entry, under_smt=True)
     print("Lifecycle:")
     print(f"  status:        {life} — {life_msg}")
     print(f"  freshness:     {stale} — {stale_msg}")
@@ -233,6 +233,12 @@ def cmd_prices_age(args: argparse.Namespace) -> int:
                   if entry.verified_date else "-")
             rows.append((name, vd, ag, "OK",
                          "free; no vendor price to verify"))
+            continue
+        if entry.pricing_model == "per_hour":
+            vd = (entry.verified_date.isoformat()
+                  if entry.verified_date else "-")
+            rows.append((name, vd, "-", "N/A",
+                         "per_hour; not SMT-verifiable at any age"))
             continue
         if entry.verified_date is None:
             rows.append((name, "—", "—", "WARN", "no verified_date"))
