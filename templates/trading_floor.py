@@ -78,9 +78,10 @@ class Soul_Watcher:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "Watcher"
         self._runtime = runtime
-        self.model = "deepseek-v4-flash"
+        self._mood = None
+        self.model = "deepseek-flash"
         self.tier = "Tier1"
-        self.senses = ['http_get']
+        self.senses = ['http_get', 'superbrain_search']
         self.cycle_count = 0
         self.ticks_collected = 0
         self.last_price = 0.0
@@ -95,8 +96,8 @@ class Soul_Watcher:
         """Instinct cycle for Watcher"""
         data = await self._sense("http_get", url="https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT")
         self.last_price = 0.0
-        self.ticks_collected = (ticks_collected + 1)
-        await self._runtime.channels.send("Watcher_PriceSnapshot", PriceSnapshot(symbol="BTCUSDT", price=last_price, volume=0.0, change_pct=0.0, timestamp="now"))
+        self.ticks_collected = (self.ticks_collected + 1)
+        await self._runtime.channels.send("Watcher_PriceSnapshot", PriceSnapshot(symbol="BTCUSDT", price=self.last_price, volume=0.0, change_pct=0.0, timestamp="now"))
 
     async def heal(self, error: Exception) -> bool:
         error_type = type(error).__name__.lower()
@@ -149,7 +150,8 @@ class Soul_Strategist:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "Strategist"
         self._runtime = runtime
-        self.model = "claude-3-haiku"
+        self._mood = None
+        self.model = "claude-haiku-4-5"
         self.tier = "Tier0A"
         self.senses = ['http_get']
         self.cycle_count = 0
@@ -163,11 +165,11 @@ class Soul_Strategist:
     async def instinct(self) -> None:
         """Instinct cycle for Strategist"""
         snapshot = await self._runtime.channels.receive("Watcher_PriceSnapshot")
-        if not ((snapshot != null)):
+        if not ((snapshot is not None)):
+            await asyncio.sleep(HEARTBEAT_SECONDS * 5)
             return
-        await asyncio.sleep(HEARTBEAT_SECONDS * 5)
         await self._runtime.channels.send("Strategist_TradeSignal", TradeSignal(symbol=snapshot.symbol, action="HOLD", confidence=0.65, reason="awaiting confirmation"))
-        self.signals_generated = (signals_generated + 1)
+        self.signals_generated = (self.signals_generated + 1)
 
     async def heal(self, error: Exception) -> bool:
         error_type = type(error).__name__.lower()
@@ -189,7 +191,8 @@ class Soul_Executor:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "Executor"
         self._runtime = runtime
-        self.model = "deepseek-v4-flash"
+        self._mood = None
+        self.model = "deepseek-flash"
         self.tier = "Tier1"
         self.senses = []
         self.cycle_count = 0
@@ -203,10 +206,10 @@ class Soul_Executor:
         """Instinct cycle for Executor"""
         signal = await self._runtime.channels.receive("Strategist_TradeSignal")
         if not ((signal.confidence > 0.7)):
+            await asyncio.sleep(HEARTBEAT_SECONDS * 10)
             return
-        await asyncio.sleep(HEARTBEAT_SECONDS * 10)
         await self._runtime.channels.send("Executor_TradeOrder", TradeOrder(symbol=signal.symbol, side=signal.action, quantity=0.001, price=0.0, order_type="LIMIT"))
-        self.orders_placed = (orders_placed + 1)
+        self.orders_placed = (self.orders_placed + 1)
 
     async def heal(self, error: Exception) -> bool:
         error_type = type(error).__name__.lower()
@@ -228,7 +231,8 @@ class Soul_RiskGuard:
     def __init__(self, runtime: NousRuntime) -> None:
         self.name = "RiskGuard"
         self._runtime = runtime
-        self.model = "claude-3-haiku"
+        self._mood = None
+        self.model = "claude-haiku-4-5"
         self.tier = "Tier0A"
         self.senses = []
         self.cycle_count = 0
@@ -242,14 +246,14 @@ class Soul_RiskGuard:
     async def instinct(self) -> None:
         """Instinct cycle for RiskGuard"""
         order = await self._runtime.channels.receive("Executor_TradeOrder")
-        if not ((order != null)):
+        if not ((order is not None)):
+            await asyncio.sleep(HEARTBEAT_SECONDS * 15)
             return
-        await asyncio.sleep(HEARTBEAT_SECONDS * 15)
-        self.shared_exposure = (shared_exposure + order.quantity)
-        if not ((shared_exposure < 1.0)):
+        self.shared_exposure = (self.shared_exposure + order.quantity)
+        if not ((self.shared_exposure < 1.0)):
+            await self._runtime.channels.send("RiskGuard_RiskAlert", RiskAlert(level="HIGH", message="exposure limit", exposure=self.shared_exposure, drawdown=self.max_drawdown))
             return
-        await self._runtime.channels.send("RiskGuard_RiskAlert", RiskAlert(level="HIGH", message="exposure limit", exposure=shared_exposure, drawdown=max_drawdown))
-        self.alerts_fired = (alerts_fired + 1)
+        self.alerts_fired = (self.alerts_fired + 1)
 
     async def heal(self, error: Exception) -> bool:
         error_type = type(error).__name__.lower()
@@ -359,7 +363,7 @@ def build_runtime() -> NousRuntime:
         DreamConfig(
             enabled=True,
             trigger_idle_sec=45,
-            dream_mind_model="deepseek-v4-flash",
+            dream_mind_model="deepseek-flash",
             dream_mind_tier="Cerebras",
             max_cache=50,
             speculation_depth=3,
