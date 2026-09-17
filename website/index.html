@@ -513,9 +513,9 @@ img{max-width:100%;display:block}
     <h2 class="section-title">Why NOUS Is Different</h2>
   </div>
   <div class="doc-block fade-in">
-    <div class="doc-block-title">The part the academic papers call &ldquo;an unfulfilled vision&rdquo;</div>
+    <div class="doc-block-title">When a change breaks a proof</div>
     <p>In formal methods, there&rsquo;s a clean definition for when a change breaks a system: the new contract must imply the old one. If it doesn&rsquo;t, the proof is dead.</p>
-    <p>The theory is elegant. The problem is practical: nobody has a routine way to check that implication in real systems. The research itself admits this &mdash; it calls it &ldquo;a largely unfulfilled vision.&rdquo;</p>
+    <p>The theory is elegant. Turning it into a check you can run on a real system, and hand to someone else to re-run, is the hard part.</p>
     <p>Most tools fall back to judgment: semver, test suites, &ldquo;this feels minor.&rdquo;</p>
     <p>NOUS doesn&rsquo;t.</p>
   </div>
@@ -523,7 +523,6 @@ img{max-width:100%;display:block}
     <div class="doc-block-title">The contract the papers describe &mdash; NOUS already carries it</div>
     <p>The coverage proof in NOUS is exactly the contract the literature talks about: a mathematical region that proves the declared rules hold across every path the agent could take.</p>
     <p>And when the system changes, NOUS can check whether the new region still contains the old one &mdash; offline, deterministically, with Farkas arithmetic, no solver to trust.</p>
-    <p>This is the part the papers don&rsquo;t have. NOUS does.</p>
   </div>
   <div class="doc-block fade-in">
     <div class="doc-block-title">From theory &rarr; to evidence that travels</div>
