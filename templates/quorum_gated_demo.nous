@@ -55,7 +55,7 @@ soul Approver {
 }
 
 soul Requester {
-    mind: deepseek-v4-flash @ Tier1
+    mind: deepseek-flash @ Tier1
     tokens: input=150 output=60
     senses: [http_get]
     memory {

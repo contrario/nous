@@ -55,7 +55,7 @@ soul Intake {
 }
 
 soul Validator {
-    mind: deepseek-v4-flash @ Tier1
+    mind: deepseek-flash @ Tier1
     tokens: input=300 output=150
     senses: [http_get]
     memory {

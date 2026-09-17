@@ -51,7 +51,7 @@ message Ruling {
 }
 
 soul Adjudicator {
-    mind: deepseek-v4-flash @ Tier1
+    mind: deepseek-flash @ Tier1
     senses: [http_get]
     memory {
         cases_seen: int = 0

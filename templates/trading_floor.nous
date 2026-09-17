@@ -37,7 +37,7 @@ message RiskAlert {
     drawdown: float
 }
 soul Watcher {
-    mind: deepseek-v4-flash @ Tier1
+    mind: deepseek-flash @ Tier1
     senses: [http_get, superbrain_search]
     memory {
         ticks_collected: int = 0
@@ -72,12 +72,12 @@ soul Watcher {
     dream_system {
         enabled: true
         trigger_idle_sec: 45
-        dream_mind: deepseek-v4-flash @ Cerebras
+        dream_mind: deepseek-flash @ Cerebras
         max_cache: 50
     }
 }
 soul Strategist {
-    mind: claude-3-haiku @ Tier0A
+    mind: claude-haiku-4-5 @ Tier0A
     senses: [http_get]
     memory {
         signals_generated: int = 0
@@ -115,7 +115,7 @@ soul Strategist {
     }
 }
 soul Executor {
-    mind: deepseek-v4-flash @ Tier1
+    mind: deepseek-flash @ Tier1
     memory {
         orders_placed: int = 0
         total_volume: float = 0.0
@@ -139,7 +139,7 @@ soul Executor {
     }
 }
 soul RiskGuard {
-    mind: claude-3-haiku @ Tier0A
+    mind: claude-haiku-4-5 @ Tier0A
     memory {
         alerts_fired: int = 0
         max_drawdown: float = 0.0
