@@ -226,6 +226,14 @@ def cmd_prices_age(args: argparse.Namespace) -> int:
 
     for name in table.model_names():
         _, entry = table.resolve(name)
+        if entry.pricing_model == "free":
+            vd = (entry.verified_date.isoformat()
+                  if entry.verified_date else "-")
+            ag = (f"{days_since(entry.verified_date, today=today)}d"
+                  if entry.verified_date else "-")
+            rows.append((name, vd, ag, "OK",
+                         "free; no vendor price to verify"))
+            continue
         if entry.verified_date is None:
             rows.append((name, "—", "—", "WARN", "no verified_date"))
             worst = max(worst, 1)

@@ -388,6 +388,8 @@ def staleness_status(
 ) -> tuple[Literal["ok", "warn", "error"], str]:
     if entry.alias_of is not None:
         return "ok", "alias entry; freshness inherited from target"
+    if entry.pricing_model == "free":
+        return "ok", "free entry; no vendor price to verify"
     if entry.verified_date is None:
         return "warn", "no verified_date declared"
     age = days_since(entry.verified_date, today=today)
@@ -431,16 +433,16 @@ def get_price_for_smt(
         raise ValueError(
             f"model {canonical!r} cannot be used: {life_msg}"
         )
-    stale, stale_msg = staleness_status(entry, today=today, under_smt=True)
-    if stale == "error":
-        raise ValueError(
-            f"model {canonical!r} pricing too old for --smt: {stale_msg}. "
-            f"Refresh verified_date in your pricing TOML."
-        )
     if entry.pricing_model == "per_hour":
         raise ValueError(
             f"model {canonical!r} uses per_hour billing; SMT verification "
             f"of per-hour models requires expected runtime declaration "
             f"(deferred to Phase 5c). Use --no-smt or pick a per_token model."
+        )
+    stale, stale_msg = staleness_status(entry, today=today, under_smt=True)
+    if stale == "error":
+        raise ValueError(
+            f"model {canonical!r} pricing too old for --smt: {stale_msg}. "
+            f"Refresh verified_date in your pricing TOML."
         )
     return canonical, entry
