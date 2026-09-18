@@ -216,17 +216,10 @@ source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
 verified_by   = "manual"
 
 
-[models."deepseek-v4-flash"]  # __s217_deepseek_v4flash_pricing_v1__
-provider       = "deepseek"
-pricing_model  = "per_token"
-input_per_1m  = "0.14"
-output_per_1m = "0.28"
-prompt_caching_supported = false
-batch_discount_pct = 0
-reasoning_token_multiplier = "1.0"
-verified_date = "2026-07-07"
-source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
-verified_by   = "manual"
+[models."deepseek-v4-flash"]  # __s361_deepseek_v4flash_alias_v1__
+alias_of   = "deepseek-flash"
+source_url = "https://api-docs.deepseek.com/quick_start/pricing"
+notes      = "Legacy name, still accepted. api-docs.deepseek.com/quick_start/pricing (fetched on Server A 2026-09-18, sha256 31902010ee5d690de6b0c79c9e05c507fedf11007a23a965551b5ecebdc4adc8) and api-docs.deepseek.com (fetched on Server A 2026-09-17, sha256 5cbf7f811500872c40b2c32ea1ef023056d52f28a9a3cbf668d4a37da7c83587) state the model is retired and its requests are served by DeepSeek-V4.1-Flash and billed at the Flash price. Priced through deepseek-flash, so the --smt bound and the freshness clock are that entry's. Replaces 0.14/0.28 (verified 2026-07-07), below both Flash bands on the 2026-09-18 page."
 
 
 # DeepSeek R1 is a REASONING model -- emits 5K-20K hidden thinking
