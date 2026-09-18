@@ -5,6 +5,57 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [5.80.2]  <!-- __s361_changelog_v5_80_2__ -->
+
+### Fixed
+
+- `deepseek-v4-flash` is now an alias of `deepseek-flash` in
+  `pricing/defaults.toml`. DeepSeek still accepts the legacy name, has
+  retired the model, and bills its requests at the Flash price; the
+  entry's notes name both first-party pages and their sha256. A `--smt`
+  bound over the legacy name now uses the Flash rates (0.30/1.20 per 1M,
+  the peak band) instead of 0.14/0.28, which was below both published
+  bands, and it follows the `deepseek-flash` freshness clock instead of
+  refusing as stale from 2026-10-06. No `verified_date` moved. The
+  canonical pricing digest written into manifests moves from 32400dc5 to
+  686d1cf2. This closes the second 5.80.1 known limit.
+  <!-- __s361_changelog_v4flash_alias_v1__ -->
+- The documentation page no longer says the generated runtime's circuit
+  breaker trips when spend exceeds `cost_ceiling`. No shipped module calls
+  `CostTracker.charge`, so observed spend is never metered; the runtime's
+  only cost check compares a fixed per-call estimate at the tier price
+  with the ceiling. The 5.80.1 notes called `runtime.CostTracker` a spend
+  limit; it is not one.
+  <!-- __s361_changelog_runtime_copy_v1__ -->
+
+### Added
+
+- `tests/test_s361_v4flash_alias.py` asserts against the shipped table:
+  the legacy name resolves to `deepseek-flash`, carries no price, date or
+  lifecycle of its own, prices at the target past 2026-10-06, refuses on
+  the target's clock, and carries its evidence into the canonical digest.
+- `tests/test_s361_runtime_copy.py` fails if the documentation page
+  claims a spend breaker, or if a shipped module starts calling
+  `CostTracker.charge` while the page says spend is not metered.
+- `docs/ONE_PRICE_SOURCE_DESIGN.md`: design for routing every dollar
+  figure through `pricing.py`. Design only; nothing built.
+
+### Known limits
+
+- `deepseek-r1` refuses under `--smt` from 2026-09-28, deliberately, as
+  in 5.80.1.
+- `nous_runtime.RUNTIME_TIERS` still dispatches the id
+  `deepseek-v4-flash` and computes call cost at 0.14/0.28 per 1M, while
+  the pricing table resolves the same name to 0.30/1.20.
+- `nous verify` from the CLI runs the tier-label estimate (VR001) without
+  the Z3 bound over pricing (VR003); the API runs both, so the two can
+  report different findings for the same program. VR001 is an
+  error-level finding priced from tier constants that carry no
+  verification date.
+- The tier-label cost constants in the verifier, runtime, profiler, cost
+  oracle and behavioral diff carry no verification date, as in 5.80.1.
+
+
 ## [5.80.1]  <!-- __s360_changelog_v5_80_1__ -->
 
 ### Fixed
