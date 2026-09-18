@@ -41,6 +41,10 @@ _source_url     = "https://www.digitalapplied.com/blog/llm-api-pricing-index-q2-
 # were NOT re-checked and keep 2026-06-29 / 2026-07-07. This field stays
 # at the weakest entry deliberately. Only verified_date drives the 90-day
 # --smt gate; this one is printed by `nous prices show` and nothing else.
+# On 2026-09-17 gpt-5-2, gpt-5-mini, gpt-4o-mini and gemini-3-1-pro were
+# re-verified against first-party pages fetched and hashed on Server A;
+# each entry's notes name the page and its sha256. _last_verified stays
+# at 2026-06-29 because four entries still carry that date.
 _last_verified  = "2026-06-29"
 _currency       = "USD"
 
@@ -119,16 +123,18 @@ pricing_model  = "per_token"
 input_per_1m  = "1.75"
 output_per_1m = "14.00"
 
-# OpenAI cache hit = 50% of input rate (less aggressive than Anthropic).
-# OpenAI does NOT charge a cache-write premium; first call is base price.
+# OpenAI sets the cached-input rate per model; it is not a fixed share
+# of the input rate, so each value is read from the published table.
+# OpenAI publishes a cache-write rate for some models only. Where the
+# table shows "-" the field is omitted, not derived.
 prompt_caching_supported = true
-input_cached_per_1m      = "0.875"
-input_cache_write_per_1m = "1.75"
+input_cached_per_1m      = "0.175"
 batch_discount_pct = 50
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-06-29"
-source_url    = "https://openai.com/api/pricing"
+verified_date = "2026-09-17"
+source_url    = "https://developers.openai.com/api/docs/pricing"
 verified_by   = "manual"
+notes         = "Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-09-17, sha256 63878741d55c9dc3c928cd88ac8f55399198daedfb49456f816d7d2cbab96768. Fast mode (formerly Priority) bills at a higher published rate and is not bounded by this entry."
 
 
 [models."gpt-5-mini"]
@@ -137,13 +143,13 @@ pricing_model  = "per_token"
 input_per_1m  = "0.25"
 output_per_1m = "2.00"
 prompt_caching_supported = true
-input_cached_per_1m      = "0.125"
-input_cache_write_per_1m = "0.25"
+input_cached_per_1m      = "0.025"
 batch_discount_pct = 50
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-06-29"
-source_url    = "https://openai.com/api/pricing"
+verified_date = "2026-09-17"
+source_url    = "https://developers.openai.com/api/docs/pricing"
 verified_by   = "manual"
+notes         = "Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-09-17, sha256 63878741d55c9dc3c928cd88ac8f55399198daedfb49456f816d7d2cbab96768. Fast mode bills at a higher published rate and is not bounded by this entry. developers.openai.com/api/docs/deprecations.md (fetched on Server A 2026-09-18, sha256 dfdfac83f084aceebe8dfef1697fee36263eb6fb2ffe9f2069ae61e546aa663f) retires the dated snapshot gpt-5-mini-2025-08-07 on 2026-12-11 and does not list the alias gpt-5-mini, so no lifecycle is recorded here."
 
 
 # ---------------------------------------------------------------------
@@ -157,13 +163,12 @@ input_per_1m  = "2.00"
 output_per_1m = "12.00"
 prompt_caching_supported = true
 input_cached_per_1m      = "0.20"
-input_cache_write_per_1m = "2.00"
 batch_discount_pct = 50
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-06-29"
-source_url    = "https://ai.google.dev/pricing"
+verified_date = "2026-09-17"
+source_url    = "https://ai.google.dev/gemini-api/docs/pricing"
 verified_by   = "manual"
-notes         = "Listed price for context <=200K tokens. Tiered pricing for >200K is a v2.x schema feature (deferred)."
+notes         = "Standard tier, prompts <=200K tokens, published for gemini-3.1-pro-preview. Verified from ai.google.dev/gemini-api/docs/pricing fetched on Server A 2026-09-17, sha256 b7e17f4e46cdb8ba7a6427d6c7c8a538455834a8454853870ea4bc93ad55bdca. Not bounded by this entry: prompts >200K (4.00 input, 18.00 output, 0.40 cached), cache storage (4.50 per 1M tokens per hour), and the Priority tier. Tiered pricing is a v2.x schema feature (deferred). No cache-write rate is published, so none is recorded."
 
 
 # ---------------------------------------------------------------------
@@ -181,6 +186,9 @@ reasoning_token_multiplier = "1.0"
 verified_date = "2026-06-29"
 source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
 verified_by   = "manual"
+removed_after = "2026-07-24"
+renamed_to    = "deepseek-flash"
+notes         = "Legacy API name, discontinued 2026-07-24 per api-docs.deepseek.com/updates (fetched on Server A 2026-09-18, sha256 8ab3cf3f95fb3544ce56903eae14a957f230ba0a0c72a0dd29f50d5c502253b1), which also states it pointed to the non-thinking mode of deepseek-v4-flash. api-docs.deepseek.com (fetched on Server A 2026-09-17, sha256 5cbf7f811500872c40b2c32ea1ef023056d52f28a9a3cbf668d4a37da7c83587) lists deepseek-v4-flash as retired and served by deepseek-flash, the current model name."
 
 
 # DeepSeek-V4.1-Flash, served by model id `deepseek-flash`.
@@ -272,5 +280,7 @@ pricing_model  = "per_token"
 input_per_1m  = "0.15"
 output_per_1m = "0.60"
 input_cached_per_1m = "0.075"
-source_url    = "https://openai.com/api/pricing"
-notes         = "Inference (standard API) rates, verified live 19 Jul 2026. NOT fine-tuning rates."
+verified_date = "2026-09-17"
+source_url    = "https://developers.openai.com/api/docs/pricing"
+verified_by   = "manual"
+notes         = "Inference (standard API) rates, NOT fine-tuning rates. Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-09-17, sha256 63878741d55c9dc3c928cd88ac8f55399198daedfb49456f816d7d2cbab96768. Fast mode bills at a higher published rate and is not bounded by this entry."
