@@ -5,6 +5,68 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [5.80.1]  <!-- __s360_changelog_v5_80_1__ -->
+
+### Fixed
+
+- Pricing staleness is a claim about a vendor price. An entry with
+  `pricing_model = "free"` can no longer go stale, and a `per_hour` entry
+  is refused under `--smt` for its billing model before its date is read,
+  so neither is refused from 2026-09-28 with an instruction to refresh a
+  verification that no vendor publishes. `nous prices verify` now grades
+  freshness the way `--smt` does, and `nous prices age` reports a
+  `per_hour` row as not SMT-verifiable at any age instead of as stale.
+  <!-- __s359_changelog_staleness_category_v1__ -->
+- `pricing/defaults.toml`: four entries re-verified on 2026-09-17 against
+  first-party pages fetched and hashed on the release host; each entry's
+  notes name the page and its sha256. `gpt-5-2` cached input moves from
+  0.875 to 0.175 and `gpt-5-mini` from 0.125 to 0.025, both previously
+  five times the published rate. Both drop `input_cache_write_per_1m`,
+  which OpenAI publishes as "-", and `gemini-3-1-pro` drops its
+  unpublished cache-write rate. `gpt-4o-mini` gains its first
+  `verified_date`; an entry with no date could never be refused as stale.
+  Cached and cache-write rates do not enter a `--smt` bound, which prices
+  uncached input and output, so no bound value moves. The canonical
+  pricing digest written into manifests moves from 73199b82 to 32400dc5.
+  <!-- __s360_changelog_pricing_reverify_v1__ -->
+- `deepseek-chat` carries `removed_after = "2026-07-24"` and
+  `renamed_to = "deepseek-flash"`, both from DeepSeek's own change log and
+  API documentation. `--smt` refuses it as removed and names the
+  successor, instead of pricing a model name the provider no longer
+  accepts. `nous prices age` reports a removed entry the same way instead
+  of grading it on its date.
+  <!-- __s360_changelog_lifecycle_v1__ -->
+
+### Added
+
+- `tests/test_s360_shipped_table.py` asserts against the shipped pricing
+  table, not a fixture: every `renamed_to` resolves, the re-verified
+  entries clear the 2026-09-28 staleness date, and cache fields carry only
+  published rates. Every earlier pricing test built its own TOML, so the
+  shipped data had no gate.
+- `tests/test_s359_staleness_category.py`,
+  `tests/test_s359_verify_age_agreement.py` and
+  `tests/test_s360_age_lifecycle.py` pin the behaviour above, each red
+  before its change.
+
+### Known limits
+
+- `deepseek-r1` refuses under `--smt` from 2026-09-28, deliberately. It is
+  an open-weights model served by many providers at widely different
+  prices, and the table keys a price on model identity alone, so it cannot
+  carry a bound that a single verification supports.
+- `deepseek-v4-flash` keeps its legacy 0.14/0.28 entry. DeepSeek bills
+  requests under that name at the Flash price, which the `deepseek-flash`
+  entry records as 0.30/1.20, so a `--smt` bound taken over the legacy
+  name understates. It refuses as stale from 2026-10-06; declare
+  `deepseek-flash` instead.
+- The runtime spend limits (`runtime.CostTracker`,
+  `nous_runtime.BudgetGuard`) and the cost estimators price calls from
+  constants keyed by tier label, not from `pricing/defaults.toml`, and
+  those constants carry no verification date. They do not enter a `--smt`
+  bound, and traces record tokens, not these costs.
+
+
 ## [5.80.0]  <!-- __s358_changelog_v5_80_0__ -->
 
 ### Changed
