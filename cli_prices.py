@@ -226,6 +226,12 @@ def cmd_prices_age(args: argparse.Namespace) -> int:
 
     for name in table.model_names():
         _, entry = table.resolve(name)
+        life, life_msg = lifecycle_status(entry, today=today)
+        if life == "removed":
+            vd = (entry.verified_date.isoformat()
+                  if entry.verified_date else "-")
+            rows.append((name, vd, "-", "N/A", life_msg))
+            continue
         if entry.pricing_model == "free":
             vd = (entry.verified_date.isoformat()
                   if entry.verified_date else "-")
