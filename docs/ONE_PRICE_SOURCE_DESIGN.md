@@ -265,3 +265,246 @@ external prior-art search was run for this arc. Closest internal
 precedent: S359/S360 routing of --smt and `nous prices age` through
 pricing.py. Patent landscape: UNKNOWN; not searched, no claim class at
 stake.
+
+<!-- __s362_p0_findings_v1__ -->
+## 14. P0 findings (S362)
+
+Recon only, no code. Basis: HEAD 785180f, read from a clone of origin at
+785180f492e08ac05395fd56fc8468019d793f8a (three file sha256 values equal
+Server A's and Server A's tree was clean, so tracked bytes are
+identical); the published 5.80.2 wheel 08807185... (165 entries) and
+sdist 1fc98f9f... (525 entries); Server A reads at 2026-09-18T23:07:34Z,
+printed to stdout and not stored. A read marked "chat-side" was made
+from the chat, not from Server A, and is not a pin.
+
+### 14.1 Claims audit (the section 3 UNMEASURED item)
+
+Surfaces: README.md, CHANGELOG.md, ROADMAP.md, docs/*.md,
+website/**/*.html, ide.html, nous-vscode/snippets.json. Pattern:
+breaker|budget|spend limit|cost ceiling|circuit, plus every cost_cap
+line. website/docs/index.html excluded (corrected in S361, bound by
+tests/test_s361_runtime_copy.py). All 98 pattern lines read. Not
+audited: CLI help strings, .py docstrings.
+
+No new copy describes a breaker that stops spend. Found instead:
+
+| id | surface | claim | measured against |
+|---|---|---|---|
+| C1 | README.md:22 | Z3 proves no execution path can ever exceed the cost_cap | 14.3 dream reproducer; the bound holds over the declared envelope only |
+| C2 | README.md:40 | proves before execution that total cost cannot exceed the cap | same |
+| C3 | website/blog/index.html:2546 | spend above EUR 0.50 per cycle: "Z3 proved it cannot" | same; cost_cap bounds a total over max_ticks, not a cycle |
+| C4 | website/blog/index.html:2331, 2390, 2605 | "we proved we will not exceed"; the bound "matches the alarm"; every path stays under the cap | same |
+| C5 | docs/COST_VERIFICATION_GUIDE.md:13-15 | prove the agent will not exceed a declared cost ceiling | same; the proven object is cost_cap, not the cost law |
+| C6 | website/index.html:875, website/coverage.html:107 | proves the cost ceiling | smt_emit reads no cost law (14.6) |
+| C7 | website/blog/index.html:3221 | clones formally verified against the cost ceiling | VMI001 is a warning-level estimate; the runtime gate is VR001, an estimate |
+| C8 | website/blog/index.html:3427-3433 | cost overrun statically verified not to occur (VR001-VR002) | VR001 estimates from undated tier constants; VR002 is a warning |
+| C9 | docs/SKILL_EXPORT.md:222 | law form and cost_cap form semantically equivalent at runtime | false (14.6 reproducer) |
+| C10 | website/examples/index.html:413 | heal rule `on budget_exceeded` | no module raises budget_exceeded (low) |
+
+Not flagged: website/index.html:857 and website/coverage.html:79
+(qualified "in the proven bound"), docs/SKILL_MD_SIDECAR.md:31,
+README.md:287, the CHANGELOG [5.80.1] runtime-spend-limit line
+(corrected by [5.80.2]), root ide.html (not served, not in wheel or
+sdist).
+
+### 14.2 `_noesis_engine`
+
+- codegen emits `from noesis_engine import NoesisEngine` and a
+  module-level `_noesis_engine = NoesisEngine()` when the program has a
+  top-level `noesis { }` block (codegen.py:163-164, 249-263); `resonate`
+  compiles to `_noesis_engine.think(...)` (codegen.py:561-563).
+- noesis_engine.py is tracked and ships in neither the wheel nor the
+  sdist. It imports nine `noesis_*_patch` modules at module level;
+  .gitignore:18 excludes them. Server A holds ten such files, untracked,
+  none with an HTTP API endpoint literal.
+- Reproducer (5.80.2 wheel, clean venv): a program with `noesis {}` and
+  `resonate` validates and compiles; importing the generated module
+  raises ModuleNotFoundError: noesis_engine.
+- Pricing: none in tracked code. OracleBridge(call_fn=None).consult
+  returns None; noesis_engine.py has 0 price, cost, max_tokens or httpx
+  tokens. No tracked .nous uses a noesis block or resonate.
+- Arc B consequence: none. The import defect is 14.10 O1.
+
+### 14.3 Dispatch sites and usage
+
+| site | ships | reached from | max_tokens | model | reads usage |
+|---|---|---|---|---|---|
+| generated soul | yes | every generated program | none | none; self.model is set, never used | no call |
+| nous_runtime call | yes | /v1 chat, webhook, classifier; `nous run --mode live` | 300 | RUNTIME_TIERS cascade | yes; cost = usage x RUNTIME_TIERS |
+| nous_runtime stream_call | yes | /v1 chat_stream | 300 | cascade | parses usage; the request sets no stream_options.include_usage |
+| dream_engine _call_dream_llm | yes | programs with dream_system | 200 | TIER_CONFIGS host and dream model; fallback deepseek-v4-flash, mistral-small-latest | no |
+| immune_engine _default_llm_caller | yes | programs with immune_system | 300 | deepseek-v4-flash, mistral-small-latest, claude-3-haiku-20240307 | no |
+| natural_lang _call_llm_local | yes | natural-language CLI | 4096 | claude-sonnet-4-20250514 | no |
+| noesis_oracle, noesis_gemini_oracle | no | none | 300, 1024 | n/a | yes, no |
+
+- `nous run` defaults to dry-run, which makes no call. With `--mode live`
+  it calls NousRuntime.think, which walks RUNTIME_TIERS whatever the soul
+  declares; the declared model is kept as model_hint only
+  (nous_runtime.py:479-487).
+- The live trace records soul, tick 0 and tokens, not the answering
+  model (nous_runtime.py:492-498, trace_recorder.py:213-225).
+  conformance prices each event at the declared model's governed rate
+  (conformance.py:106-127, 571-575), so realized_total is the declared
+  rate times tokens from whichever cascade model answered.
+- /v1 chat (nous_api_server.py:1419), chat_stream (1647) and webhook
+  (2086) call RUNTIME_TIERS directly; nous_api_server.py has 0
+  references to BudgetGuard, can_spend or think. BudgetGuard gates
+  NousRuntime.think only.
+- Dream reproducer: cost_cap 0.50 USD, max_ticks 4, one soul with tokens
+  and a dream_system. `nous verify --smt`: PROVEN, 1 soul x 4 ticks. The
+  compiled program wires DreamEngine. smt_emit.py has 0 dream, immune or
+  mitosis references, so engine calls are outside the bound.
+- Provider responses (chat-side, not pins): DeepSeek's chat completion
+  reference (api-docs.deepseek.com/api/create-chat-completion/)
+  documents a non-stream usage object (prompt_tokens, completion_tokens,
+  total_tokens, prompt_cache_hit_tokens, prompt_cache_miss_tokens, and a
+  reasoning-token detail). OpenRouter's models guide states the response
+  usage field carries input and output token counts. Mistral and the
+  other dream tier hosts: UNMEASURED. The Server A pins 5cbf7f81,
+  d928c166 and 31902010 contain 0 occurrences of these field names.
+- BudgetGuard file on Server A (runtime_budget.json, root:root 0644,
+  mtime 2026-05-30): last record dated 2026-04-14, spend 0.000051. Save
+  errors are swallowed, so whether the writer can still write is
+  UNMEASURED.
+
+### 14.4 RUNTIME_TIERS first-party status (nous_runtime.py:332-398)
+
+OpenRouter single-model endpoint GET /api/v1/model/{id}, read on
+Server A at 2026-09-18T23:07:34Z:
+
+| id | code price per 1M | http | body sha256 | status |
+|---|---|---|---|---|
+| nousresearch/hermes-3-llama-3.1-405b:free | 0/0 | 404 | 99186f73887203cac00f688dbe53d9c78210a52f2ffa3c3f2848b40f692b35a3 | not in catalog |
+| nvidia/nemotron-3-super-120b-a12b:free | 0/0 | 200 | 539c4a1d3a575f2c10c271461a4626e6b22793e3601f25a773bc39f9cfb2c6ae | prompt 0, completion 0, expiration null |
+| openrouter/elephant-alpha | 0/0 | 404 | d61383f4e8cba15a5499c0c61499f1c6a697ca21b24f8f0e421eff27c22eb58f | not in catalog |
+| openai/gpt-oss-120b:free | 0/0 | 404 | d22ae74b9fa7f42d40b088edbfb78df43cd6c6ba3f2b3cce767a200b1c868a40 | not in catalog |
+| google/gemma-4-31b-it:free | 0/0 | 200 | a357caa3d7b5233abc39de760c4b1b265aee0c2794211c634b962ed5d0b9b159 | prompt 0, completion 0, expiration null |
+
+- deepseek-v4-flash (0.14/0.28 in code): pinned (5cbf7f81, 31902010);
+  billed at the Flash price, which the governed table resolves to
+  0.30/1.20.
+- claude-3-haiku-20240307 (0.25/1.25 in code): Anthropic model
+  deprecations page, Server A, same instant, http 200, 427584 bytes,
+  sha256 72defeab1fdfb09f299084d3c09f58e18222e5432586ca195092e8842356ec97:
+  Retired, deprecated 2026-02-19, retired 2026-04-20, replacement
+  claude-haiku-4-5-20251001. immune_engine.py:169 dispatches the same id.
+
+None of these reads was stored. P1 stores the pins.
+
+### 14.5 Declared tokens
+
+- 56 tracked .nous: 48 parse, 8 fail with UnexpectedToken
+  (cross_world_command, customer_service, noesis_alpha,
+  noosphere_migrated, research_pipeline, stdlib/logger/main,
+  stdlib/watcher/main, topology_test). The 48 hold 88 souls; 15 declare
+  tokens.
+- Shipped templates (12): 24 souls, 9 with tokens, all 9 in cost_cap
+  templates. smt_emit refuses a soul without tokens
+  (smt_emit.py:308-313), so D5 has a value exactly where a --smt bound
+  exists.
+- The shipped templates split in two. content_pipeline,
+  customer_service, market_monitor and trading_floor declare a cost law
+  and no tokens; the last three carry dream_system or immune_system.
+  cost_cap_basic, cost_cap_emit_demo, cost_cap_with_souls,
+  quorum_gated_demo and sequence_law_demo declare cost_cap and no cost
+  law.
+
+### 14.6 world.cost_cap and the cost law
+
+Two unrelated values.
+
+- `cost_cap: <amount> USD|EUR` (world body) is read only by smt_emit
+  (smt_emit.py:276-280, 339, 489-490, 524-525), which feeds --smt, VR003
+  (API only), the dossier and manifest cost_cap_usd. It bounds a total
+  over max_ticks. codegen never reads it: a world with only
+  `cost_cap: 0.50 USD` compiles to COST_CEILING = 0.1 (the default) and
+  the generated file carries neither cost_cap nor 0.5.
+- `law <name> = $<amount> per cycle` is read by codegen for COST_CEILING
+  (codegen.py:41, 143-144), by VR001, VR002, VMI001 and VDR002
+  (verifier.py:178, 228-229), by the runtime mitosis gate
+  (mitosis_engine.py:313-331), by the AST runner (logged only) and by
+  skill_export. smt_emit.py has 0 LawCost references.
+- skill_export writes the first cost law of any period into nous.yaml
+  cost_cap (skill_export.py:162-170, 254-296); dossier-spec translates
+  it into world.cost_cap with max_ticks = sum of tool max_calls
+  (skill_md.py:312-333), and Z3 bounds the total. A per-cycle amount
+  becomes a total cap: stricter, so the bound stays sound, but it is
+  labelled per cycle.
+- Four selection rules for the cost law: codegen and verifier take the
+  last per-cycle law, nous_ast_runner.py:53-57 the first per-cycle law,
+  skill_export the first law of any period.
+- The rule that no copy ties cost_ceiling to the Z3 bound stands. C3, C5,
+  C6 and C9 already do.
+
+### 14.7 Corrections to sections 2-4
+
+- Section 2, nous_runtime row: BudgetGuard does not gate /v1 chat,
+  chat_stream or webhook (14.3).
+- Section 3: pre_check is constant per soul, and it enforces. A listener
+  soul skips its instinct when the tier estimate exceeds COST_CEILING
+  (runtime.py:402-407). Measured: CostTracker(ceiling=0.01).pre_check
+  with 500/200 tokens is False for Tier3; an unknown tier falls back to
+  Tier1 and is True.
+- Section 4: generated souls make no LLM call. max_tokens 300 at
+  nous_runtime caps `nous run --mode live` and /v1, not generated
+  programs. The endpoint list missed api.mistral.ai (dream_engine,
+  immune_engine) and the dream TIER_CONFIGS hosts (OpenAI, Gemini, Groq,
+  Together, Fireworks, Cerebras, local Ollama).
+
+### 14.8 Kill criteria
+
+- K1 not fired. Beyond VR001 at verify time and BudgetGuard, ungoverned
+  tier prices decide three more things: runtime pre_check (listener
+  souls skip), VR001 re-run at runtime to admit mitosis clones
+  (mitosis_engine.py:256-257, 324-331), and is_free routing
+  (nous_api_server.py:1341-1343, NousRuntime.think). P3 and P4 stay.
+- K2 fired for four ids. hermes-3-llama-3.1-405b:free,
+  openrouter/elephant-alpha and openai/gpt-oss-120b:free are absent from
+  the OpenRouter catalog; claude-3-haiku-20240307 is retired. They leave
+  the cascade. The free cascade does not empty (nemotron and gemma :free
+  remain at 0/0), so P1 does not stop.
+- K3 not fired for DeepSeek, the first provider at both engine sites
+  (documented usage object). Open for Mistral and the dream tier hosts.
+  Plain souls make no call, so charge() has nothing to meter outside
+  DreamEngine and ImmuneEngine. Per provider: no usage, no metering, no
+  estimate.
+- K4 not fired as written: no breaker copy beyond S361. C1-C9 are the
+  same class (Constitution Article IV) and are corrected in the next
+  release ahead of P1, under section 3's rule.
+
+### 14.9 Implications for the phases (decided at each phase)
+
+- Next release, first unit: C1-C9 corrected, red first, as in S361.
+- P1: RUNTIME_TIERS drops the four K2 ids; nemotron and gemma :free
+  enter the table as pricing_model = "free" with stored pins. The
+  engines' hardcoded dispatch ids (deepseek-v4-flash,
+  mistral-small-latest, claude-3-haiku-20240307) carry no price and fall
+  outside D6; mistral-small-latest has no table entry and no pin.
+- P3: charge() wiring, if chosen, covers two sites (DreamEngine,
+  ImmuneEngine).
+- D1 and D5 gain a site. `nous run --mode live` dispatches the cascade,
+  not the declared mind, and its trace carries no model id, so a
+  conformance realized_total can price one model's tokens at another
+  model's rate. Either live dispatch honours mind and tokens.output, or
+  the trace records the answering model and conformance refuses a
+  mismatch.
+- D5: 73 of 88 tracked souls declare no tokens; D5 needs a rule for
+  them (refuse at dispatch, or a labelled default).
+
+### 14.10 Found outside arc B
+
+- O1 A `noesis {}` program compiles from the wheel and fails at import
+  (14.2).
+- O2 `nous verify --smt` on an unpriced model prints a raw KeyError
+  traceback (pricing.py:192) instead of a typed refusal.
+- O3 `nous verify --smt` returned PROVEN and signed a manifest for a
+  program that `nous compile` rejects (DR001, trigger_idle_sec 1): the
+  --smt path does not run the validator.
+- O4 Four cost-law selection rules (14.6).
+- O5 BudgetGuard persists to a hardcoded operator path
+  (/opt/aetherlang_agents/nous/runtime_budget.json) in a shipped module
+  and swallows save errors.
+- O6 Eight tracked .nous files do not parse (14.5).
+- O7 Anthropic's deprecations page lists claude-haiku-4-5-20251001 as
+  Active, retirement not sooner than 2026-10-15. Recorded only:
+  FG-S360-I forbids writing alias lifecycle from a snapshot row.
