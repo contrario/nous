@@ -297,7 +297,7 @@ $ python cli.py run hello.nous</code></pre>
     timezone = <span class="st">"UTC"</span>
 }</code></pre>
 <h4>Laws</h4>
-<p>Laws are constraints enforced at compile-time and runtime. <code>cost_ceiling</code> sets the maximum LLM spend per cycle — the circuit breaker trips automatically if exceeded. <code>max_retries</code> caps retry attempts in heal blocks.</p>
+<p>Laws are declared constraints. <code>cost_ceiling</code> declares the maximum LLM spend per cycle. The generated runtime does not meter observed spend against it; its cost check compares a fixed per-call estimate at the tier price with the ceiling. <code>max_retries</code> caps retry attempts in heal blocks.</p><!-- __s361_runtime_copy_v1__ -->
 <h4>Heartbeat</h4>
 <p>The <code>heartbeat</code> interval determines how often heartbeat souls wake up. Supports: <code>s</code> (seconds), <code>m</code> (minutes), <code>h</code> (hours).</p>
 </div>
@@ -563,7 +563,7 @@ $ python cli.py run hello.nous</code></pre>
 <ul>
 <li><strong>SoulRunner</strong> — manages a soul's lifecycle. Heartbeat souls sleep between cycles. Listeners block on channel receive.</li>
 <li><strong>ChannelRegistry</strong> — named async channels with backpressure (max queue 100).</li>
-<li><strong>CostTracker</strong> — shared across all souls. Trips circuit breaker if cost exceeds ceiling.</li>
+<li><strong>CostTracker</strong> — shared across all souls. Holds the per-cycle ceiling and compares a fixed per-call estimate at the tier price with it; it does not meter observed spend.</li>
 <li><strong>SenseCache</strong> — deduplicates identical sense calls within a single instinct execution.</li>
 <li><strong>SenseExecutor</strong> — routes sense calls to registered tool functions or HTTP endpoints.</li>
 </ul>
@@ -858,7 +858,7 @@ BREAKING</code></pre>
 <pre><code>Per-cycle cost      Estimated LLM cost for one full cycle
 Daily cost          Per-cycle x cycles per day (based on heartbeat)
 Monthly cost        Daily x 30
-Ceiling headroom    Budget remaining before circuit breaker trips
+Ceiling headroom    Estimated budget remaining under the per-cycle ceiling
 Per-soul breakdown  Visual bar chart of cost distribution</code></pre>
 
 <h3>Optimization Suggestions</h3>
