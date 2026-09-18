@@ -195,9 +195,9 @@ notes         = "Legacy API name, discontinued 2026-07-24 per api-docs.deepseek.
 # Verified first-party 2026-09-16 against the Models & Pricing page.
 # PEAK rates are recorded. Off-peak is half of peak; a cost bound must
 # use the maximum, so peak is the only sound choice for --smt.
-# Provider documents `deepseek-v4-flash` as retired and temporarily
-# routed to this model, billed at this price. The legacy section below
-# is left unchanged and carries its own original verified_date.
+# Provider documents `deepseek-v4-flash` as retired and served by this
+# model, billed at this price. Since S361 that legacy name is an alias
+# of this entry; its notes name the pinned first-party reads.  __s361_s353_comment_v1__
 # THINKING MODE IS BOUNDED, MEASURED 2026-09-16. Every runtime call
 # site sets max_tokens (300, and 200 in dream_engine). Reasoning
 # tokens bill as output and count toward that ceiling, so the
