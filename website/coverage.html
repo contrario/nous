@@ -71,7 +71,7 @@ pre.code{background:var(--bg2);border:1px solid var(--gold-b);border-radius:6px;
 <main class="container">
 
   <h1>Coverage Proof &amp; the Farkas Certificate</h1>
-  <p class="lede">A NOUS dossier has always carried a cost proof: a guarantee, checked before execution, that a governed agent cannot exceed its declared spend. Coverage is the second proof beside it &mdash; that over a declared risk threshold, no input escapes the declared blocking-policy net. And it is checkable by a third party with nothing but standard-library arithmetic.</p>
+  <p class="lede">A NOUS dossier has always carried a cost proof: a Z3/Farkas result, checked before execution, that the agent's declared cost envelope cannot exceed its declared cost cap. It does not meter what a run spends. Coverage is the second proof beside it &mdash; that over a declared risk threshold, no input escapes the declared blocking-policy net. And it is checkable by a third party with nothing but standard-library arithmetic.</p><!-- __s362_n3_v1__ -->
   <p class="hook">"The verifier does not trust the producer. It verifies the producer."</p>
 
   <h2>What is proven, before execution</h2>
@@ -104,7 +104,7 @@ pre.code{background:var(--bg2);border:1px solid var(--gold-b);border-radius:6px;
     <div class="path-card">
       <div class="path-card-n">1 &mdash; THE BANK'S AI</div>
       <div class="path-card-t">Probabilistic execution</div>
-      <div class="path-card-d">Build any agent. NOUS sits above as a governance shell and proves the cost ceiling and the coverage net before any model call. If it cannot prove it, it refuses to sign.</div>
+      <div class="path-card-d">Build any agent. NOUS sits above as a governance shell and proves the cost cap over the declared cost envelope and the coverage net over the declared threshold, before any model call. If it cannot prove them, it refuses to sign.</div><!-- __s362_c6b_v1__ -->
     </div>
     <div class="path-card">
       <div class="path-card-n">2 &mdash; THE ARTIFACT</div>

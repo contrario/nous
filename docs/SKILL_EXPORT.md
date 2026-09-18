@@ -219,9 +219,14 @@ ERROR: world '<X>' has no cost law; cannot derive cost_cap.
 Add a 'law cost_<name> = $<amount> per cycle' declaration.
 ```
 
-The two forms are semantically equivalent at runtime; only the export
-path requires the explicit `law` syntax. Recognition of the shorthand
-is tracked for a future minor.
+The two forms are not equivalent. The cost law sets the generated
+runtime's `COST_CEILING` and the verifier's VR001 estimate; the
+world-level `cost_cap:` is read only by the SMT bound (`--smt`, VR003,
+the dossier). The export path needs the `law` form. In the exported
+`nous.yaml` the per-cycle amount becomes `cost_cap`, which
+`nous dossier-spec` proves as a total over `max_ticks` (the sum of the
+tools' `max_calls`), a stricter bound than per cycle. Recognition of
+the shorthand is tracked for a future minor. <!-- __s362_c9_v1__ -->
 
 ## 6. Tool budget defaults and overrides
 

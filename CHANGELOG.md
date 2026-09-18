@@ -4,6 +4,31 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+### Fixed
+
+- Shipped copy stated the Z3 cost bound as a limit on what an agent
+  spends. The bound is proven over the declared cost envelope (each
+  soul's declared tokens at the pinned prices, over `max_ticks`);
+  nothing meters or caps what a run spends, and LLM calls made by the
+  dream and immune engines are not in the bound. README, the cost
+  verification guide, the Annex IV mapping, the homepage, the coverage
+  page, the docs page and the blog now say so. The homepage and the
+  coverage page no longer say NOUS proves the cost ceiling: the bound
+  reads the world `cost_cap`, never the per-cycle cost law. The mitosis
+  gate and the resource category are static checks whose cost part is
+  an estimate from tier constants, no longer called formally verified.
+  docs/SKILL_EXPORT.md no longer says the cost law and `cost_cap:` are
+  equivalent at runtime; the generated runtime reads only the law.
+  Findings: docs/ONE_PRICE_SOURCE_DESIGN.md section 14.
+  <!-- __s362_changelog_claims_v1__ -->
+
+### Added
+
+- `tests/test_s362_claims_copy.py` fails if a corrected claim returns,
+  or if codegen starts reading `cost_cap`, smt_emit starts reading the
+  cost law, or VR001 stops pricing from tier constants; each would make
+  the new copy stale.
+
 
 ## [5.80.2]  <!-- __s361_changelog_v5_80_2__ -->
 

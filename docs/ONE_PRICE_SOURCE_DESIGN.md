@@ -508,3 +508,19 @@ Two unrelated values.
 - O7 Anthropic's deprecations page lists claude-haiku-4-5-20251001 as
   Active, retirement not sooner than 2026-10-15. Recorded only:
   FG-S360-I forbids writing alias lifecycle from a snapshot row.
+
+<!-- __s362_claims_sweep_v1__ -->
+### 14.11 Claim-class sweep (S362, before the correction)
+
+14.1 matched a fixed word list. A sweep for the claim itself (the cost
+bound stated as spend, or an estimate called verified), over the same
+surfaces plus website/docs/index.html, found eight more sites:
+website/blog/index.html:832, 1401 and 3258, website/coverage.html:74,
+website/index.html:396 and 430, docs/ANNEX_IV_MAPPING.md:178 and
+website/docs/index.html:895. They are corrected with C1-C9 and bound
+by tests/test_s362_claims_copy.py. Left as written: design documents
+(dated records), CLI transcripts of the PROVEN line (there
+`total_cost` is the declared-envelope total), and sentences whose
+subject is the declared total rather than a run
+(website/index.html:857, website/coverage.html:79,
+website/blog/index.html:1247 and 2631). C10 is deferred (low).

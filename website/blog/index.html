@@ -829,7 +829,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
         <span class="post-tag" style="background:rgba(201,165,84,0.1);border:1px solid rgba(201,165,84,0.2);color:var(--gold)">Release</span>
       </div>
       <div class="post-title">NOUS v4.13.1 &mdash; Formal SMT Cost-Bound Verification</div>
-      <div class="post-excerpt">Declare a <code>cost_cap</code> in any <code>world</code> block, declare per-soul <code>tokens</code> and <code>max_ticks</code>, run <code>nous verify --smt</code>. Z3 proves every reachable execution path stays under the cap &mdash; or returns a counterexample with constructive fix suggestions. Every verified program emits an ed25519-signed JSON manifest with full provenance: source SHA-256, pricing SHA-256, SMT spec SHA-256, solver name+version, verdict, timestamp. EU AI Act Annex IV audit-ready. 264 tests, 54/54 regression byte-identical. Shipped on PyPI as <code>nous-lang[smt]==4.13.1</code>.</div>
+      <div class="post-excerpt">Declare a <code>cost_cap</code> in any <code>world</code> block, declare per-soul <code>tokens</code> and <code>max_ticks</code>, run <code>nous verify --smt</code>. Z3 proves that the declared cost envelope stays under the cap on every path the declarations allow &mdash; or returns a counterexample with constructive fix suggestions. Every verified program emits an ed25519-signed JSON manifest with full provenance: source SHA-256, pricing SHA-256, SMT spec SHA-256, solver name+version, verdict, timestamp. EU AI Act Annex IV audit-ready. 264 tests, 54/54 regression byte-identical. Shipped on PyPI as <code>nous-lang[smt]==4.13.1</code>.</div><!-- __s362_n1_v1__ -->
       <span class="post-read">Read post &rarr;</span>
     </a>
     <a class="post-card" href="#" onclick="showPost('session60-stability');return false">
@@ -1398,7 +1398,7 @@ code{font-family:'JetBrains Mono',monospace;font-size:0.88em;background:rgba(77,
     <button class="post-back" onclick="showList()">&larr; All posts</button>
     <h1 class="post-full-title">NOUS v5.27.0 &mdash; Coverage Proof, Checked Without a Solver</h1>
     <div class="post-full-meta">6 June 2026 &middot; 3 min read</div>
-    <p>A NOUS dossier has always carried a cost proof: a guarantee, checked before execution, that a governed system cannot exceed its declared spend across every path in the proven bound. v5.27.0 puts a second proof beside it &mdash; <em>coverage</em>: that over a declared threshold region, no input escapes the blocking-policy net. The obligation travels inside the one signed dossier, and it is honest about its edge. Declare a threshold your rules cover and coverage is PROVEN; declare one they do not and it is REFUTED, fail-closed &mdash; NOUS writes no manifest for a system with a gap.</p>
+    <p>A NOUS dossier has always carried a cost proof: a Z3/Farkas result, checked before execution, that the system's declared cost envelope cannot exceed its declared cost cap on any path in the proven bound. It does not meter what a run spends. v5.27.0 puts a second proof beside it &mdash; <em>coverage</em>: that over a declared threshold region, no input escapes the blocking-policy net. The obligation travels inside the one signed dossier, and it is honest about its edge. Declare a threshold your rules cover and coverage is PROVEN; declare one they do not and it is REFUTED, fail-closed &mdash; NOUS writes no manifest for a system with a gap.</p><!-- __s362_n2_v1__ -->
     <p>The harder question is who you must trust to believe the proof. Re-running the same solver does not raise trust: a solver bug is reproduced, not caught, and it forces an auditor to install and trust a solver. So v5.27.0 ships the coverage claim as a <em>Farkas certificate</em>. For this linear-real fragment, an unsatisfiable system has a list of non-negative rational multipliers that combine its inequalities into a numeric contradiction &mdash; here, <code>0 &lt; 0</code>. That list is the certificate, and checking it is multiply-and-add over fractions: about forty lines of standard-library Python.</p>
     <p>The result is asymmetric verification. Producing the proof uses a solver once, at build time. Checking it needs no solver at all, no NOUS install, and no network &mdash; only the <code>cryptography</code> library, to verify the Ed25519 signature. z3 is demoted to an optional second opinion. The coverage SMT stays in the dossier as a human-inspectable cross-check, but it is no longer on the trust path. Cost-only and earlier coverage dossiers remain byte-identical; the manifest field is drop-when-None.</p>
     <p>The boundary is stated, not hidden. NOUS proves the cost envelope holds and the control net has no gap &mdash; not that the agent cannot misbehave. The policies are monitors, and the certificate attests that the declared governance is sound and was in force. A third party verifies all of it offline, trusting neither the solver nor the party that produced the dossier. <code>nous-lang 5.27.0</code>.</p>
@@ -2328,7 +2328,7 @@ mv ./nous_prices.v2.toml ./nous_prices.toml</code></pre>
     <h1 class="post-full-title">NOUS v4.13.3 &mdash; Conservative Cost Caps with <code>--smt-margin</code></h1>
     <div class="post-full-meta">29 April 2026 &middot; Session 64 &middot; 4 min read</div>
 
-    <p>v4.13.1 introduced formal SMT proof that <code>total_cost &le; declared_cap</code>. v4.13.2 made manifests self-verifying offline. v4.13.3 closes a small but real gap: regulators and procurement teams sometimes want a <strong>visible buffer</strong> between the proven bound and the budget line. Not "we proved we will not exceed $0.50" but "we proved we will not exceed $0.40, against a $0.50 declared cap, with 20% safety margin."</p>
+    <p>v4.13.1 introduced formal SMT proof that <code>total_cost &le; declared_cap</code>. v4.13.2 made manifests self-verifying offline. v4.13.3 closes a small but real gap: regulators and procurement teams sometimes want a <strong>visible buffer</strong> between the proven bound and the budget line. Not "we proved the declared envelope stays under $0.50" but "we proved it stays under $0.40, against a $0.50 declared cap, with 20% safety margin."</p><!-- __s362_c4a_v1__ -->
 
     <h2>The flag</h2>
     <pre><code>nous verify file.nous --smt --smt-margin 20</code></pre>
@@ -2387,7 +2387,7 @@ Suggested fixes (any one):
 
     <p><strong>2. Regulatory and procurement language.</strong> EU AI Act compliance dossiers, FedRAMP boundaries, and large-account procurement contracts all prefer "we proved a buffer" to "we proved exactly the limit." A margin makes the buffer first-class. The auditor sees the declared cap, the effective bound, and the margin in one line.</p>
 
-    <p><strong>3. Layered defense for live deployments.</strong> Today the typical agentic-AI deployment has a runtime budget alarm at, say, 80% of the per-request limit. With <code>--smt-margin 20</code>, the proven bound matches the alarm. The static proof and the runtime monitor are guarding the same line. No silent gap between what the verifier proved and what the on-call engineer sees.</p>
+    <p><strong>3. Layered defense for live deployments.</strong> Today the typical agentic-AI deployment has a runtime budget alarm at, say, 80% of the per-request limit. With <code>--smt-margin 20</code>, the proven bound over the declared envelope sits at the alarm line. The proof covers declared tokens at pinned prices; calls outside those declarations are not in it, so the runtime alarm still does its own job.</p><!-- __s362_c4b_v1__ -->
 
     <h2>Backward compatibility &mdash; no surprises</h2>
     <ul>
@@ -2543,7 +2543,7 @@ nous verify file.nous --smt    # signs manifest, no network needed</code></pre>
       <li><strong>Version-controlled.</strong> The risk management system lives in git, side by side with the agent source. Every change is tracked, reviewed, and can be rolled back. Article 9’s "continuous iterative process" maps to the same workflow as a code review.</li>
     </ul>
 
-    <p>And v4.13.1 adds a fourth dimension: <strong>operational bounds</strong>. A <code>cost_cap</code> declaration on a world is a risk management measure expressible in code, mechanically provable, and pinned in the signed manifest. The risk "this agent will spend more than €0.50 per cycle" goes from "we set a rate limit somewhere" to "Z3 proved it cannot, and here is the certificate".</p>
+    <p>And v4.13.1 adds a fourth dimension: <strong>operational bounds</strong>. A <code>cost_cap</code> declaration on a world is a risk management measure expressible in code, mechanically provable, and pinned in the signed manifest. The statement "this agent's declared calls cannot cost more than &euro;0.50 over its declared cycles" goes from "we set a rate limit somewhere" to "Z3 proved it, and here is the certificate". The proof covers the declarations; it does not meter what a run spends.</p><!-- __s362_c3_v1__ -->
 
     <h2>Article 12 → deterministic replay</h2>
     <p>Article 12 requires high-risk AI systems to "technically allow for the automatic recording of events (logs) over the lifetime of the system" with sufficient detail to identify risks, support post-market monitoring, and let deployers monitor operation. The regulatory principle, distilled by the practitioner literature, is <em>full reconstructability of algorithmic decisions</em>.</p>
@@ -2602,7 +2602,7 @@ cat cost_cap_with_souls.manifest.json</code></pre>
     <h1 class="post-full-title">NOUS v4.13.1 &mdash; Formal SMT Cost-Bound Verification</h1>
     <div class="post-full-meta">28 April 2026 &middot; Session 62 + 63 &middot; 7 min read</div>
 
-    <p>Most agentic frameworks let you set a <em>max budget</em> at <em>runtime</em> and abort when it’s exceeded &mdash; by which point the spend has already happened. NOUS v4.13.1 lets you <strong>prove before you ship</strong> that every reachable execution path stays under the cap. The proof is mechanical (Z3), the cost model is auditable (signed pricing TOML with SHA-256), and the artefact is verifiable by anyone holding your public key.</p>
+    <p>Most agentic frameworks let you set a <em>max budget</em> at <em>runtime</em> and abort when it’s exceeded &mdash; by which point the spend has already happened. NOUS v4.13.1 lets you <strong>prove before you ship</strong> that the declared cost envelope stays under the cap on every path the declarations allow. The proof covers the declarations, not metered spend. The proof is mechanical (Z3), the cost model is auditable (signed pricing TOML with SHA-256), and the artefact is verifiable by anyone holding your public key.</p><!-- __s362_c4c_v1__ -->
 
     <h2>The shape of the feature</h2>
     <pre><code>world TradingFloor {
@@ -3218,7 +3218,7 @@ nous version  # &rarr; 4.0.0</code></pre>
       </div>
 
       <h2>Soul Mitosis &mdash; Self-Replicating Agents</h2>
-      <p>When a soul detects overload &mdash; queue too deep, latency too high, cycles piling up &mdash; it splits. A clone is spawned, formally verified against the world's cost ceiling and deadlock constraints, and deployed into the nervous system. The clone shares the parent's listen channel, providing automatic load balancing. One keyword block:</p>
+      <p>When a soul detects overload &mdash; queue too deep, latency too high, cycles piling up &mdash; it splits. A clone is spawned, checked by the static verifier against the world's cost ceiling (a tier-price estimate) and deadlock constraints, and deployed into the nervous system. The clone shares the parent's listen channel, providing automatic load balancing. One keyword block:</p><!-- __s362_c7_v1__ -->
       <pre><code>mitosis {
     trigger: queue_depth > 10
     max_clones: 3
@@ -3255,7 +3255,7 @@ nous version  # &rarr; 4.0.0</code></pre>
 immune {}     &rarr; LLM-generated patches, broadcast to clones
 dream {}      &rarr; Pre-computed insights for instant response
 mitosis {}    &rarr; Self-replication under load</code></pre>
-      <p>Every system is formally verified and was tested against live LLM calls.</p>
+      <p>Every system's declaration is checked at compile time, and each was tested against live LLM calls.</p><!-- __s362_n6_v1__ -->
 
       <h2>What's Next</h2>
       <p>Clone retirement (auto-kill when load drops), telemetry sense (built-in observability), hot reload (swap souls without restart), and soul symbiosis (shared memory evolution). The living language keeps evolving.</p>
@@ -3424,7 +3424,7 @@ mitosis {}    &rarr; Self-replication under load</code></pre>
         <li>Agent speaks a message type that no one listens to → <strong>dead letter</strong></li>
         <li>Agent listens for a message that no one speaks → <strong>starvation</strong></li>
       </ul>
-      <p>You can write tests to catch some of these. But NOUS statically verifies they cannot occur.</p>
+      <p>You can write tests to catch some of these. NOUS checks the declared topology for deadlock, dead letters and starvation before the program runs. Cost overrun it only estimates here, against the world's cost law.</p><!-- __s362_c8_v1__ -->
 
       <h2>The Seven Categories</h2>
 

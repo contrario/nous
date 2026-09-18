@@ -10,9 +10,11 @@ Phase 5c.
 
 ## What this is
 
-NOUS is the first agentic programming language where you can
-**mathematically prove** that your agent will not exceed a
-declared cost ceiling, before deploying.
+With NOUS you can **prove**, before deploying, that your program's
+declared cost envelope (each soul's declared tokens at the pinned
+prices, over `max_ticks`) cannot exceed its declared `cost_cap`. The
+proof is over the declarations; it does not meter or cap what a run
+actually spends. <!-- __s362_c5_v1__ -->
 
 The proof is performed by an SMT solver (Z3) at compile time
 under the `--smt` flag. The solver either succeeds (UNSAT of

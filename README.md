@@ -19,7 +19,7 @@ Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Web
 
 NOUS is a programming language for agentic AI systems where every program is:
 
-- **Verifiable** -- declare a `cost_cap` in USD or EUR and Z3 proves at compile time that no execution path can ever exceed it.
+- **Verifiable** -- declare a `cost_cap` in USD or EUR and Z3 proves at compile time that the declared cost envelope (each soul's declared tokens at the pinned prices, over `max_ticks`) cannot exceed it. The proof covers what the program declares; it does not meter or stop spend at runtime. <!-- __s362_c1_v1__ -->
 - **Auditable** -- every verified program emits an Ed25519-signed manifest with full provenance (source SHA-256, AST SHA-256, pricing SHA-256, SMT obligations SHA-256, solver name+version, verdict, timestamp).
 - **Annex IV-ready** -- `nous dossier` emits an EU AI Act Annex IV-aligned compliance bundle directly from the AST plus the signed manifest plus the pricing table.
 - **Rekor-anchored** -- since v5.3.0, optional `--anchor rekor` anchors emitted manifests into the public Sigstore Rekor transparency log via Path-beta dual signing (per-submission ECDSA-P-256 leaf, long-lived Ed25519 manifest signature preserved). Since v5.10.0 a Rekor v2 path (`--anchor rekor_v2`) targets the tile-backed Sigstore log with an RFC 3161 trusted timestamp over the leaf signature, all re-verifiable offline. External, third-party-auditable durability, with no NOUS-side trust assumption on the offline verification path. See `docs/REKOR_ANCHOR.md` and `docs/REKOR_V2_MIGRATION.md`.
@@ -37,7 +37,7 @@ Evidence collection and conformance verification are **observational**: they rec
 
 ## Why this matters
 
-Runtime budget caps abort only after the spend has already happened. NOUS instead **proves before execution**, across every reachable path, that total cost cannot exceed the declared cap -- a Z3/Farkas result, not a runtime check. The cost model is auditable (signed pricing TOML with SHA-256), and the artefact (signed manifest) is verifiable by anyone holding your public key -- making it directly useful for EU AI Act Annex IV / Article 11(1) technical documentation. <!-- __s224_whymatters_v2__ -->
+Runtime budget caps abort only after the spend has already happened. NOUS instead **proves before execution** that the declared cost envelope (declared tokens at pinned prices, over `max_ticks`) cannot exceed the declared cap -- a Z3/Farkas result, not a runtime check. The proof is over the declarations; it does not meter or cap what a run actually spends. The cost model is auditable (signed pricing TOML with SHA-256), and the artefact (signed manifest) is verifiable by anyone holding your public key -- making it directly useful for EU AI Act Annex IV / Article 11(1) technical documentation. <!-- __s224_whymatters_v2__ --> <!-- __s362_c2_v1__ -->
 
 With v5.3.0 Rekor anchoring and v5.4.0 public verification surface, the trust model is closed end-to-end: third-party auditors no longer need the NOUS CLI to validate a dossier. A regulator, journalist, or compliance officer can drag a manifest into `nous-lang.org/verify` and see three independent PASS/FAIL pills in their browser, or run `verify_offline.py` on an air-gapped machine. The cryptographic chain extends from your build pipeline to a public transparency log to anyone holding a copy of the dossier.
 

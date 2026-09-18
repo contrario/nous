@@ -393,7 +393,7 @@ img{max-width:100%;display:block}
   <div class="section-head fade-in">
     <div class="section-tag">Proofs</div>
     <h2 class="section-title">Formally Verified</h2>
-    <p class="section-sub">Before your agents run, NOUS statically verifies seven structural-safety categories across every execution path — resource, deadlock, protocol, liveness, reachability, memory-safety, topology — and emits Z3/Farkas mathematical proofs for cost-cap, policy-coverage and sequence-ordering. Machine-checked, not unit tests.</p><!-- __s224_overclaim_hero_v2__ -->
+    <p class="section-sub">Before your agents run, NOUS statically verifies seven structural-safety categories across every execution path — resource (an estimate, not a proof), deadlock, protocol, liveness, reachability, memory-safety, topology — and emits Z3/Farkas mathematical proofs for cost-cap, policy-coverage and sequence-ordering. Machine-checked, not unit tests.</p><!-- __s224_overclaim_hero_v2__ --><!-- __s362_n8_v1__ -->
   </div>
   <div class="two-col">
     <div class="fade-in">
@@ -427,7 +427,7 @@ img{max-width:100%;display:block}
   <div class="section-head fade-in" style="text-align:center;margin-bottom:64px">
     <div class="section-tag" style="border-color:rgba(56,217,122,0.19);color:var(--green);background:rgba(56,217,122,0.05)">Live Proof</div>
     <h2 class="section-title">Proof of the Cost Envelope</h2>
-    <p class="section-sub">Real verification output from a production NOUS program. Each run is proven to stay inside its declared cost-cap across every execution path before it runs — a mathematical guarantee for the cost bound, not a test sample.</p><!-- __s224_overclaim_proofsafety_v2__ -->
+    <p class="section-sub">Real verification output from a production NOUS program. Before it runs, Z3 proves that the program's declared cost envelope stays inside its cost-cap on every path the declarations allow. The proof covers the declarations, not metered spend, and it is a proof, not a test sample.</p><!-- __s224_overclaim_proofsafety_v2__ --><!-- __s362_n4_v1__ -->
   </div>
   <div style="max-width:780px;margin:0 auto" class="fade-in">
     <div id="verifTerminal" style="position:relative;border-radius:14px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.5),0 0 1px rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.06)">
@@ -872,7 +872,7 @@ if(term)obs.observe(term);
     <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
       <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">1 &mdash; THE AGENT</div>
       <div style="font-family:'Playfair Display',serif;font-size:16px;color:var(--bright);margin-bottom:8px">Probabilistic execution</div>
-      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Build any agent. NOUS sits above as a governance shell and proves the cost ceiling and the coverage net before any model call. If it cannot prove it, it refuses to sign.</div>
+      <div style="color:var(--dim);font-size:12.5px;line-height:1.6">Build any agent. NOUS sits above as a governance shell and proves the cost cap over the declared cost envelope and the coverage net over the declared threshold, before any model call. If it cannot prove them, it refuses to sign.</div><!-- __s362_c6a_v1__ -->
     </div>
     <div style="padding:22px;background:var(--card);border:1px solid var(--border);border-radius:8px">
       <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">2 &mdash; THE ARTIFACT</div>
