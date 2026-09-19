@@ -4,6 +4,9 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+
+## [5.81.0]  <!-- __s363_changelog_v5_81_0__ -->
+
 ### Fixed
 
 - Shipped copy stated the Z3 cost bound as a limit on what an agent
@@ -56,6 +59,25 @@
   removal date or hourly billing, or if a tier's cost fields or free
   status differ from the table's, and checks that a refused tier never
   builds a network client. <!-- __s363_changelog_p1_test_v1__ -->
+
+### Known limits  <!-- __s363_changelog_known_limits_v1__ -->
+
+- `deepseek-r1` refuses under `--smt` from 2026-09-28, deliberately, as
+  in 5.80.1.
+- `dream_engine`, `immune_engine` and the code generated for a
+  `dream_system` without a dream mind still dispatch `deepseek-v4-flash`.
+  DeepSeek says that name is temporarily routed to V4.1 Flash and gives
+  no end date. The engines' `mistral-small-latest` has no pricing entry.
+- Every `pricing_model = "free"` entry counts as current in
+  `nous prices age` and under `--smt`, so the `verified_date` of the two
+  OpenRouter free entries starts no clock.
+- A `/v1` chat replay log recorded on the 5.80.2 cascade may not replay
+  on this one: the replay key includes the tier name and the model. Not
+  measured.
+- `nous verify` from the CLI runs the tier-label estimate (VR001) without
+  the Z3 bound over pricing (VR003); the API runs both, as in 5.80.2.
+- The tier-label cost constants in the verifier, runtime, profiler, cost
+  oracle and behavioral diff carry no verification date, as in 5.80.2.
 
 
 ## [5.80.2]  <!-- __s361_changelog_v5_80_2__ -->

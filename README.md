@@ -10,7 +10,7 @@ An agentic programming language with end-to-end formal cost-bound verification, 
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v5.80.2
+ |_| \_|\___/ \___/|____/   v5.81.0
 ```
 
 Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Website: nous-lang.org
@@ -255,7 +255,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 
 - [Cost Verification Guide](docs/COST_VERIFICATION_GUIDE.md) -- end-to-end walkthrough for USD and EUR
 - [SMT Verification Design](docs/SMT_VERIFICATION_DESIGN.md) -- soundness contract, Z3 pin rationale
-- [One Price Source Design](docs/ONE_PRICE_SOURCE_DESIGN.md) -- arc B, build-eligible-deferred: every dollar figure from pricing.py  <!-- __s361_readme_price_source_link_v1__ -->
+- [One Price Source Design](docs/ONE_PRICE_SOURCE_DESIGN.md) -- arc B, every dollar figure from pricing.py: P0 findings and P1 (the live dispatch cascade) shipped, P2-P5 open  <!-- __s361_readme_price_source_link_v1__ -->  <!-- __s363_readme_price_source_link_v1__ -->
 - [Coverage Proof](docs/COVERAGE_PROOF.md) -- policy-coverage SMT obligation, Farkas certificate, stdlib-only offline verification  <!-- __s116_readme_coverage_proof_xref_v1__ -->
 - [VSA Conformance Vectors](docs/VSA_CONFORMANCE_VECTORS.md) -- published frozen input/expected-output bundle; implementation-independent offline verification of the manifest canon, signatures, and cost/coverage Farkas verdicts (cryptography + stdlib, no solver)  <!-- __s223_readme_vsa_vectors_xref_v1__ -->
 - [Memory Evidence Design](docs/MEMORY_EVIDENCE_DESIGN.md) -- signed per-soul memory, Phase 0 freeze
@@ -304,11 +304,11 @@ NOUS is developed under a non-standard model: single maintainer, chat-driven, id
 
 Security issues should be reported via GitHub Security Advisories, not public issues.
 
-## Stats (v5.80.2)  <!-- __s323_readme_version_current_v1__ -->
+## Stats (v5.81.0)  <!-- __s323_readme_version_current_v1__ -->
 
 | Metric | Value |
 |---|---|
-| Tests | 2966 passing, floor 2965 (PYTEST_FLOOR enforced) |
+| Tests | 2986 passing, floor 2985 (PYTEST_FLOOR enforced) |
 | Regression | byte-identical harness, 0 baseline drift |
 | Shipped templates | 12 (`nous templates list`) |
 | Grammar | Lark LALR, bilingual EN+GR |
@@ -332,6 +332,6 @@ The MIT License covers the source code. Trademark rights over "NOUS", "Noosphere
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.80.2](https://github.com/contrario/nous/releases/tag/v5.80.2).  <!-- __s323_readme_version_current_v1__ -->
+See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.81.0](https://github.com/contrario/nous/releases/tag/v5.81.0).  <!-- __s323_readme_version_current_v1__ -->
 <!-- __session89_readme_freshen_v1__ -->
 <!-- __s94_readme_v5_11_0_sync_v1__ -->
