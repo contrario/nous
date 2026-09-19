@@ -587,7 +587,12 @@ nous_api_server.app through the re-export in nous_api.py.
   (FG-S361-H). On Server A (2026-09-19) nous-api runs as root with cwd
   /opt/aetherlang_agents/nous and neither nous_prices.toml nor
   ~/.config/nous/prices.toml exists, so it resolves the shipped table.
-  Server B: not measured.
+  Server B was not measured when this was written. Measured later in
+  S363, after the 5.81.0 sync (2026-09-19T11:13Z): nous-api runs as
+  root with cwd /opt/neuroaether/nous, neither file exists, and the
+  table resolves to canonical 1f0a3ede. Server B runs two uvicorn
+  workers; each caches its own table, and one restart covers both
+  (FG-S363-H). <!-- __s364_doc_b_measured_v1__ -->
 - `is_free` is the resolved entry's pricing_model == "free". A tier the
   table refuses is neither free nor dispatched.
 
@@ -626,6 +631,19 @@ deepseek-v4-flash is an alias of deepseek-flash. dream_engine,
 immune_engine and codegen.py:844 still dispatch deepseek-v4-flash;
 codegen emits it into generated Python, so moving it is a P3 change.
 
+<!-- __s364_doc_e5_v1__ -->
+immune_engine.py:169 also names `claude-3-haiku-20240307`, the third
+provider in `_default_llm_caller`. It is tried when DEEPSEEK_API_KEY
+and MISTRAL_API_KEY are unset or their calls fail. Anthropic retired
+that id on 2026-04-20 (/root/anthropic_deprecations_s363.html
+010edb14..., 15.4), and it has no table entry. The caller does not
+check the HTTP status: a response without `content` text raises
+inside its try, which it logs as a warning and skips. It then
+returns an empty string, so `_generate_antibody` returns None.
+RUNTIME_TIERS dropped the same id under K2; the engine kept it. The
+5.81.0 known limits omit it (S363 E5, found after the release).
+Anthropic's response to the retired id was not measured.
+
 ### 15.6 Open after P1
 
 - A free entry never ages (15.1). Whether an OpenRouter ":free" id can
@@ -642,3 +660,6 @@ codegen emits it into generated Python, so moving it is a P3 change.
   dream_engine sends Tier0A to Anthropic.
 - Engine dispatch ids (15.5); mistral-small-latest has no table entry
   and no pin.
+- immune_engine's retired Claude fallback (15.5) is missing from the
+  5.81.0 known limits. The next release's CHANGELOG carries it.
+  <!-- __s364_doc_e5_open_v1__ -->
