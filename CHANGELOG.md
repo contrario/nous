@@ -4,6 +4,25 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+### Fixed
+
+- `/v1/verify` labelled every error, warning and info finding with tier
+  `PROVEN`, including the VR001 cost estimate and notes about checks that
+  did not run. `PROVEN` now appears only on the Z3/Farkas cost bound
+  (VR003) when it holds. An error or warning carries the tier of the
+  check that raised it when that check has one (VR001 and VR002 are
+  `ESTIMATED`); an info note, a finding from a check that never passes
+  affirmatively, and a VR003 error carry `null`. The CLI report prints no
+  tiers and does not change. Design: docs/ONE_PRICE_SOURCE_DESIGN.md
+  sections 16.2 and 16.6. <!-- __s364_changelog_f1_v1__ -->
+
+### Added
+
+- `tests/test_s364_nonaffirmative_tiers.py` fails if a non-affirmative
+  finding carries `PROVEN`, if an info note carries a tier, or if the
+  verifier's tier map drifts from the tiers its checks carry when they
+  pass. <!-- __s364_changelog_f1_test_v1__ -->
+
 
 ## [5.81.0]  <!-- __s363_changelog_v5_81_0__ -->
 

@@ -69,6 +69,30 @@ class VerificationTier:  # __s_verify_tier_v1__
     REPORTED = "REPORTED"
 
 
+NON_AFFIRMATIVE_TIER: dict[str, str] = {  # __s364_f1_tier_map_v1__
+    "VCS004": VerificationTier.REPORTED,
+    "VD001": VerificationTier.VERIFIED,
+    "VDR001": VerificationTier.REPORTED,
+    "VDR002": VerificationTier.ESTIMATED,
+    "VE001": VerificationTier.VERIFIED,
+    "VIM003": VerificationTier.REPORTED,
+    "VL002": VerificationTier.VERIFIED,
+    "VMB002": VerificationTier.VERIFIED,
+    "VMB003": VerificationTier.REPORTED,
+    "VMI001": VerificationTier.ESTIMATED,
+    "VMI002": VerificationTier.REPORTED,
+    "VMI003": VerificationTier.REPORTED,
+    "VR001": VerificationTier.ESTIMATED,
+    "VR002": VerificationTier.ESTIMATED,
+    "VRT002": VerificationTier.VERIFIED,
+    "VRT003": VerificationTier.REPORTED,
+    "VSY001": VerificationTier.REPORTED,
+    "VSY003": VerificationTier.REPORTED,
+    "VT001": VerificationTier.VERIFIED,
+    "VTL002": VerificationTier.REPORTED,
+}
+
+
 @dataclass
 class VerificationItem:
     severity: str
@@ -77,7 +101,7 @@ class VerificationItem:
     message: str
     location: str = ""
     detail: str = ""
-    tier: str = "PROVEN"
+    tier: Optional[str] = None  # __s364_f1_item_tier_v1__
 
     def __str__(self) -> str:
         icon = {"ERROR": "✗", "WARNING": "⚠", "INFO": "ℹ", "PROVEN": "✓"}.get(self.severity, "?")
@@ -110,14 +134,14 @@ class VerificationResult:
     def ok(self) -> bool:
         return len(self.errors) == 0
 
-    def add(self, severity: str, code: str, category: str, message: str, location: str = "", detail: str = "", tier: str = "PROVEN") -> None:
+    def add(self, severity: str, code: str, category: str, message: str, location: str = "", detail: str = "", tier: Optional[str] = None) -> None:  # __s364_f1_add_tier_v1__
         self.items.append(VerificationItem(severity, code, category, message, location, detail, tier))
 
     def error(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
-        self.add(VerificationSeverity.ERROR, code, category, message, location, detail)
+        self.add(VerificationSeverity.ERROR, code, category, message, location, detail, tier=NON_AFFIRMATIVE_TIER.get(code))
 
     def warning(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
-        self.add(VerificationSeverity.WARNING, code, category, message, location, detail)
+        self.add(VerificationSeverity.WARNING, code, category, message, location, detail, tier=NON_AFFIRMATIVE_TIER.get(code))
 
     def prove(self, code: str, category: str, message: str, location: str = "", detail: str = "") -> None:
         self.add(VerificationSeverity.PROVEN, code, category, message, location, detail, tier=VerificationTier.PROVEN)

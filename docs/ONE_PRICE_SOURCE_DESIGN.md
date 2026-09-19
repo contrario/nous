@@ -796,3 +796,28 @@ open).
 
 Units in order, each red first in its own commit: F1, E5, P2. Then one
 version bump; floor and hero move once, from the live count.
+
+<!-- __s364_f1_amend_v1__ -->
+### 16.6 Amendment to 16.2 (found writing the F1 red test)
+
+F1.2 derived the tier by code for every non-affirmative item. VD001 is
+affirmative as VERIFIED, so its INFO note that no routes are defined
+and deadlock analysis was skipped would have carried VERIFIED for a
+check that did not run. All 14 INFO sites in verifier.py are notes of
+this kind (skipped, disabled, partial, capacity, coverage), not results
+of a check. F1.2 and F1.3 now read:
+
+- F1.2 An ERROR or WARNING item carries the tier its code carries when
+  affirmative, where that is a single tier other than PROVEN: 20 sites,
+  20 codes.
+- F1.3 Every other non-affirmative item carries no tier (JSON null):
+  the 14 INFO sites, the 9 ERROR or WARNING sites whose code is never
+  affirmative, and both VR003 errors, 25 sites in all.
+
+The red test prices its fixture from a table built in the test and
+dated the day it runs, so its refuted VR003 does not go dark when a
+shipped entry passes 90 days. By code reading,
+tests/test_s189_vr003_unpriceable.py::test_api_verify_lights_vr003_for_default_priced
+prices claude-opus-4-7 (verified 2026-09-08) from the shipped table and
+fails from 2026-12-08 unless that entry is re-verified first. Recorded,
+not changed here.

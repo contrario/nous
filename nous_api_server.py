@@ -295,7 +295,7 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
                     "category": item.category,
                     "message": item.message,
                     "severity": item.severity.value if hasattr(item.severity, 'value') else str(item.severity),
-                    "tier": getattr(item, "tier", "PROVEN"),
+                    "tier": getattr(item, "tier", None),  # __s364_f1_api_tier_v1__
                 }
                 _sev = entry["severity"]
                 if _sev == "ERROR":
