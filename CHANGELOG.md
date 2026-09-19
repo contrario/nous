@@ -15,6 +15,13 @@
   affirmatively, and a VR003 error carry `null`. The CLI report prints no
   tiers and does not change. Design: docs/ONE_PRICE_SOURCE_DESIGN.md
   sections 16.2 and 16.6. <!-- __s364_changelog_f1_v1__ -->
+- The immune engine's default LLM caller no longer tries
+  `claude-3-haiku-20240307`, which Anthropic retired on 2026-04-20. That
+  leg could not return text: the caller logged a warning and returned an
+  empty string. DeepSeek (`deepseek-v4-flash`) and Mistral
+  (`mistral-small-latest`) remain, as listed in the 5.81.0 known limits.
+  Design: docs/ONE_PRICE_SOURCE_DESIGN.md section 16.3.
+  <!-- __s364_changelog_e5_v1__ -->
 
 ### Added
 
@@ -22,6 +29,10 @@
   finding carries `PROVEN`, if an info note carries a tier, or if the
   verifier's tier map drifts from the tiers its checks carry when they
   pass. <!-- __s364_changelog_f1_test_v1__ -->
+- `tests/test_s364_immune_providers.py` fails if the immune engine's
+  default caller calls Anthropic, or lists a model the pricing table
+  cannot price or marks removed, other than the disclosed
+  `mistral-small-latest`. <!-- __s364_changelog_e5_test_v1__ -->
 
 
 ## [5.81.0]  <!-- __s363_changelog_v5_81_0__ -->

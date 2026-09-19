@@ -140,6 +140,12 @@ class AntibodyCache:
         return len(self._cache)
 
 
+IMMUNE_DEFAULT_PROVIDERS: tuple[tuple[str, str, str], ...] = (  # __s364_e5_providers_v1__
+    ("DEEPSEEK_API_KEY", "https://api.deepseek.com/v1/chat/completions", "deepseek-v4-flash"),
+    ("MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-small-latest"),
+)
+
+
 class ImmuneEngine:
     """Manages adaptive error recovery across all souls and their clones."""
 
@@ -163,32 +169,20 @@ class ImmuneEngine:
 
     async def _default_llm_caller(self, soul_name: str, prompt: str) -> str:
         import os
-        providers = [
-            ("DEEPSEEK_API_KEY", "https://api.deepseek.com/v1/chat/completions", "deepseek-v4-flash"),
-            ("MISTRAL_API_KEY", "https://api.mistral.ai/v1/chat/completions", "mistral-small-latest"),
-            ("ANTHROPIC_API_KEY", "https://api.anthropic.com/v1/messages", "claude-3-haiku-20240307"),
-        ]
-        for env_key, base_url, model in providers:
+        for env_key, base_url, model in IMMUNE_DEFAULT_PROVIDERS:  # __s364_e5_caller_v1__
             api_key = os.environ.get(env_key)
             if not api_key:
                 continue
             try:
                 import httpx
-                if "anthropic" in base_url:
-                    headers = {"x-api-key": api_key, "content-type": "application/json", "anthropic-version": "2023-06-01"}
-                    payload = {"model": model, "max_tokens": 300, "messages": [{"role": "user", "content": prompt}]}
-                else:
-                    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
-                    payload = {"model": model, "max_tokens": 300, "messages": [{"role": "user", "content": prompt}]}
+                headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+                payload = {"model": model, "max_tokens": 300, "messages": [{"role": "user", "content": prompt}]}
                 async with httpx.AsyncClient(timeout=15.0) as client:
                     if "api.deepseek.com" in base_url:
                         payload["thinking"] = {"type": "disabled"}
                     resp = await client.post(base_url, json=payload, headers=headers)
                     data = resp.json()
-                    if "anthropic" in base_url:
-                        return data["content"][0]["text"]
-                    else:
-                        return data["choices"][0]["message"]["content"]
+                    return data["choices"][0]["message"]["content"]
             except Exception as e:
                 log.warning(f"Immune LLM call failed ({env_key}): {e}")
                 continue
