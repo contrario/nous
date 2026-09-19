@@ -277,3 +277,32 @@ verified_date = "2026-09-17"
 source_url    = "https://developers.openai.com/api/docs/pricing"
 verified_by   = "manual"
 notes         = "Inference (standard API) rates, NOT fine-tuning rates. Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-09-17, sha256 63878741d55c9dc3c928cd88ac8f55399198daedfb49456f816d7d2cbab96768. Fast mode bills at a higher published rate and is not bounded by this entry."
+
+# ---------------------------------------------------------------------
+# OpenRouter -- free variants dispatched by nous_runtime.RUNTIME_TIERS
+# ---------------------------------------------------------------------
+# __s363_openrouter_free_v1__
+# Each entry is backed by OpenRouter's single-model endpoint for the
+# exact ":free" id, fetched and hashed on Server A. staleness_status
+# treats every free entry as current, so verified_date here records when
+# the read was taken; it starts no clock.
+
+[models."nvidia/nemotron-3-super-120b-a12b:free"]
+provider       = "openrouter"
+pricing_model  = "free"
+input_per_1m  = "0"
+output_per_1m = "0"
+verified_date = "2026-09-19"
+source_url    = "https://openrouter.ai/api/v1/model/nvidia/nemotron-3-super-120b-a12b:free"
+verified_by   = "manual"
+notes         = "OpenRouter single-model endpoint for this :free id, fetched on Server A 2026-09-19, sha256 539c4a1d3a575f2c10c271461a4626e6b22793e3601f25a773bc39f9cfb2c6ae (http 200; pricing prompt 0, completion 0; expiration_date null). Availability and rate limits of free variants are OpenRouter's and are not bounded by this entry."
+
+[models."google/gemma-4-31b-it:free"]
+provider       = "openrouter"
+pricing_model  = "free"
+input_per_1m  = "0"
+output_per_1m = "0"
+verified_date = "2026-09-19"
+source_url    = "https://openrouter.ai/api/v1/model/google/gemma-4-31b-it:free"
+verified_by   = "manual"
+notes         = "OpenRouter single-model endpoint for this :free id, fetched on Server A 2026-09-19, sha256 a357caa3d7b5233abc39de760c4b1b265aee0c2794211c634b962ed5d0b9b159 (http 200; pricing prompt 0, completion 0; expiration_date null). Availability and rate limits of free variants are OpenRouter's and are not bounded by this entry."

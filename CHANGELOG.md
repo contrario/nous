@@ -22,12 +22,40 @@
   Findings: docs/ONE_PRICE_SOURCE_DESIGN.md section 14.
   <!-- __s362_changelog_claims_v1__ -->
 
+### Changed
+
+- `nous_runtime.RUNTIME_TIERS`, the cascade behind `/v1` chat, chat
+  stream, webhook, the soul router and `nous run --mode live`, takes each
+  tier's price from the pricing table instead of literals in the module.
+  A tier whose model the table cannot price, or whose entry is removed or
+  billed per hour, refuses before any network call and the cascade moves
+  on; "free" is the entry's `pricing_model`. The cascade keeps three
+  tiers: `nvidia/nemotron-3-super-120b-a12b:free` and
+  `google/gemma-4-31b-it:free`, new free entries each backed by
+  OpenRouter's single-model endpoint read and hashed on Server A on
+  2026-09-19, and DeepSeek, now dispatched as `deepseek-flash`, the name
+  DeepSeek's pages say to use. Removed: three OpenRouter ids that are no
+  longer in the catalog and `claude-3-haiku-20240307`, retired
+  2026-04-20; each already failed at dispatch. The DeepSeek tier's
+  reported call cost moves from 0.14/0.28 to 0.30/1.20 per 1M, the
+  table's Flash entry (the peak band). The canonical pricing digest
+  written into manifests moves from 686d1cf2 to 1f0a3ede. Restart
+  nous-api after upgrading: it caches the table. This closes the 5.80.2
+  known limit on `RUNTIME_TIERS`. Design:
+  docs/ONE_PRICE_SOURCE_DESIGN.md section 15.
+  <!-- __s363_changelog_p1_v1__ -->
+
 ### Added
 
 - `tests/test_s362_claims_copy.py` fails if a corrected claim returns,
   or if codegen starts reading `cost_cap`, smt_emit starts reading the
   cost law, or VR001 stops pricing from tier constants; each would make
   the new copy stale.
+- `tests/test_s363_runtime_tiers_pricing.py` fails if a cascade id stops
+  resolving in the shipped table, resolves through an alias, carries a
+  removal date or hourly billing, or if a tier's cost fields or free
+  status differ from the table's, and checks that a refused tier never
+  builds a network client. <!-- __s363_changelog_p1_test_v1__ -->
 
 
 ## [5.80.2]  <!-- __s361_changelog_v5_80_2__ -->

@@ -18,10 +18,14 @@ import logging
 import os
 import time
 from dataclasses import dataclass, field
+from datetime import date
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Callable, Optional
 
 import httpx
+
+from pricing import PricingTable, lifecycle_status, load_pricing, staleness_status  # __s363_p1_pricing_import_v1__
 
 log = logging.getLogger("nous.runtime")
 
@@ -116,14 +120,69 @@ class BudgetGuard:
         }
 
 
+class TierPricingRefused(Exception):  # __s363_p1_tier_pricing_v1__
+    pass
+
+
+@dataclass(frozen=True)
+class TierPrice:
+    canonical: str
+    pricing_model: str
+    cost_per_1k_in: float
+    cost_per_1k_out: float
+    staleness: str
+    staleness_msg: str
+
+
+_DISPATCH_PRICING: Optional[PricingTable] = None
+_STALE_WARNED: set[str] = set()
+
+
+def dispatch_pricing() -> PricingTable:
+    global _DISPATCH_PRICING
+    if _DISPATCH_PRICING is None:
+        _DISPATCH_PRICING = load_pricing()
+    return _DISPATCH_PRICING
+
+
+def resolve_tier_price(
+    model: str,
+    table: PricingTable,
+    today: Optional[date] = None,
+) -> TierPrice:
+    try:
+        canonical, entry = table.resolve(model)
+    except (KeyError, ValueError) as e:
+        raise TierPricingRefused(
+            f"unpriceable: model {model!r} does not resolve in the pricing table"
+        ) from e
+    life, life_msg = lifecycle_status(entry, today=today)
+    if life == "removed":
+        raise TierPricingRefused(f"removed: model {canonical!r} {life_msg}")
+    if entry.pricing_model == "per_hour":
+        raise TierPricingRefused(
+            f"per_hour: model {canonical!r} bills per hour; a token count cannot price it"
+        )
+    zero = Decimal("0")
+    per_1m_in = entry.input_per_1m if entry.input_per_1m is not None else zero
+    per_1m_out = entry.output_per_1m if entry.output_per_1m is not None else zero
+    stale, stale_msg = staleness_status(entry, today=today, under_smt=False)
+    return TierPrice(
+        canonical=canonical,
+        pricing_model=entry.pricing_model,
+        cost_per_1k_in=float(per_1m_in / Decimal(1000)),
+        cost_per_1k_out=float(per_1m_out / Decimal(1000)),
+        staleness=stale,
+        staleness_msg=stale_msg,
+    )
+
+
 @dataclass
 class RuntimeTier:
     name: str
     base_url: str
     model: str
     api_key_env: str
-    cost_per_1k_in: float = 0.0
-    cost_per_1k_out: float = 0.0
     timeout: float = 15.0
     headers_fn: Optional[Callable] = None
 
@@ -135,13 +194,36 @@ class RuntimeTier:
     def available(self) -> bool:
         return bool(self.api_key)
 
+    def price(self) -> TierPrice:  # __s363_p1_tier_price_v1__
+        p = resolve_tier_price(self.model, dispatch_pricing())
+        if p.staleness == "warn" and p.canonical not in _STALE_WARNED:
+            _STALE_WARNED.add(p.canonical)
+            log.warning(f"pricing for {p.canonical!r} (tier {self.name}): {p.staleness_msg}")
+        return p
+
+    @property
+    def cost_per_1k_in(self) -> float:
+        return self.price().cost_per_1k_in
+
+    @property
+    def cost_per_1k_out(self) -> float:
+        return self.price().cost_per_1k_out
+
     @property
     def is_free(self) -> bool:
-        return self.cost_per_1k_in == 0.0 and self.cost_per_1k_out == 0.0
+        try:
+            return self.price().pricing_model == "free"
+        except TierPricingRefused:
+            return False
 
     async def call(self, system_prompt: str, user_prompt: str) -> dict[str, Any]:
         if not self.available:
             return {"success": False, "error": f"No key: {self.api_key_env}"}
+        try:
+            price = self.price()  # __s363_p1_call_refusal_v1__
+        except TierPricingRefused as e:
+            log.warning(f"tier {self.name}: {e}")
+            return {"success": False, "error": str(e), "refused": "pricing"}
 
         headers = {
             "Content-Type": "application/json",
@@ -196,7 +278,7 @@ class RuntimeTier:
         usage = data.get("usage", {})
         tok_in = usage.get("input_tokens", usage.get("prompt_tokens", 0))
         tok_out = usage.get("output_tokens", usage.get("completion_tokens", 0))
-        cost = (tok_in / 1000 * self.cost_per_1k_in) + (tok_out / 1000 * self.cost_per_1k_out)
+        cost = (tok_in / 1000 * price.cost_per_1k_in) + (tok_out / 1000 * price.cost_per_1k_out)  # __s363_p1_call_cost_v1__
 
         return {
             "success": True,
@@ -216,6 +298,12 @@ class RuntimeTier:
         """
         if not self.available:
             yield ("error", {"error": f"No key: {self.api_key_env}"})
+            return
+        try:
+            price = self.price()  # __s363_p1_stream_refusal_v1__
+        except TierPricingRefused as e:
+            log.warning(f"tier {self.name}: {e}")
+            yield ("error", {"error": str(e), "refused": "pricing"})
             return
 
         headers = {
@@ -308,7 +396,7 @@ class RuntimeTier:
             return
 
         ms = (time.perf_counter() - t0) * 1000
-        cost = (tok_in / 1000 * self.cost_per_1k_in) + (tok_out / 1000 * self.cost_per_1k_out)
+        cost = (tok_in / 1000 * price.cost_per_1k_in) + (tok_out / 1000 * price.cost_per_1k_out)  # __s363_p1_stream_cost_v1__
 
         yield ("done", {
             "text": full_text,
@@ -329,41 +417,12 @@ def _anthropic_headers(api_key: str) -> dict[str, str]:
     }
 
 
-RUNTIME_TIERS: list[RuntimeTier] = [
-    RuntimeTier(
-        name="Hermes-405B",
-        base_url="https://openrouter.ai/api/v1/chat/completions",
-        model="nousresearch/hermes-3-llama-3.1-405b:free",
-        api_key_env="OPENROUTER_API_KEY",
-        cost_per_1k_in=0.0,
-        cost_per_1k_out=0.0,
-        timeout=30.0,
-    ),
+RUNTIME_TIERS: list[RuntimeTier] = [  # __s363_p1_runtime_tiers_v1__
     RuntimeTier(
         name="Nemotron-120B",
         base_url="https://openrouter.ai/api/v1/chat/completions",
         model="nvidia/nemotron-3-super-120b-a12b:free",
         api_key_env="OPENROUTER_API_KEY",
-        cost_per_1k_in=0.0,
-        cost_per_1k_out=0.0,
-        timeout=25.0,
-    ),
-    RuntimeTier(
-        name="Elephant",
-        base_url="https://openrouter.ai/api/v1/chat/completions",
-        model="openrouter/elephant-alpha",
-        api_key_env="OPENROUTER_API_KEY",
-        cost_per_1k_in=0.0,
-        cost_per_1k_out=0.0,
-        timeout=25.0,
-    ),
-    RuntimeTier(
-        name="GPT-OSS-120B",
-        base_url="https://openrouter.ai/api/v1/chat/completions",
-        model="openai/gpt-oss-120b:free",
-        api_key_env="OPENROUTER_API_KEY",
-        cost_per_1k_in=0.0,
-        cost_per_1k_out=0.0,
         timeout=25.0,
     ),
     RuntimeTier(
@@ -371,28 +430,14 @@ RUNTIME_TIERS: list[RuntimeTier] = [
         base_url="https://openrouter.ai/api/v1/chat/completions",
         model="google/gemma-4-31b-it:free",
         api_key_env="OPENROUTER_API_KEY",
-        cost_per_1k_in=0.0,
-        cost_per_1k_out=0.0,
         timeout=20.0,
     ),
     RuntimeTier(
         name="DeepSeek",
         base_url="https://api.deepseek.com/v1/chat/completions",
-        model="deepseek-v4-flash",
+        model="deepseek-flash",
         api_key_env="DEEPSEEK_API_KEY",
-        cost_per_1k_in=0.00014,
-        cost_per_1k_out=0.00028,
         timeout=20.0,
-    ),
-    RuntimeTier(
-        name="Claude",
-        base_url="https://api.anthropic.com/v1/messages",
-        model="claude-3-haiku-20240307",
-        api_key_env="ANTHROPIC_API_KEY",
-        cost_per_1k_in=0.00025,
-        cost_per_1k_out=0.00125,
-        timeout=15.0,
-        headers_fn=_anthropic_headers,
     ),
 ]
 

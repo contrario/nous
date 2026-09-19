@@ -524,3 +524,121 @@ by tests/test_s362_claims_copy.py. Left as written: design documents
 subject is the declared total rather than a run
 (website/index.html:857, website/coverage.html:79,
 website/blog/index.html:1247 and 2631). C10 is deferred (low).
+
+<!-- __s363_p1_decisions_v1__ -->
+## 15. P1 decisions (S363, written before the code)
+
+Basis: HEAD 1979eff, Server A tree clean. Files read from a clone of
+origin whose sha256 values equal Server A's: pricing.py e9021eb9...,
+nous_runtime.py 35580bdb..., nous_api_server.py 08d1adea...,
+nous_ast_runner.py 5e3ae532..., nous_api.py 8a8187ab..., run_shas.py
+89a22aca.... Reads and pins below were taken on Server A.
+
+### 15.1 D3 today
+
+pricing.py holds a free entry without a schema change: PricingModel
+includes "free", the validator requires `provider` and accepts zero or
+omitted prices, and the shipped table already carries `local-ollama`.
+`staleness_status` returns ok for every free entry before it reads
+`verified_date` (pricing.py:391), and `nous prices age` does the same
+(cli_prices.py:235). A free entry's `verified_date` therefore records
+when the read was taken and starts no clock. Unchanged in P1 (15.6).
+
+### 15.2 RUNTIME_TIERS consumers
+
+| site | reads |
+|---|---|
+| nous_runtime RuntimeTier.call, stream_call | cost = reported tokens x tier price |
+| nous_runtime RuntimeTier.is_free | free status |
+| nous_runtime NousRuntime.think | the cascade; skips paid tiers when BudgetGuard is low |
+| nous_api_server _classify_soul (1341) | free tiers only |
+| nous_api_server chat (1501), chat_stream (1724), webhook (2146) | the cascade |
+| nous_ast_runner (31, module level) | NousRuntime; reached from `nous run`, /v1/run with emit_trace, eight test modules |
+
+No test referenced RUNTIME_TIERS or the per-1k fields before S363, and
+no generated code reads them. `uvicorn nous_api:app` serves
+nous_api_server.app through the re-export in nous_api.py.
+
+### 15.3 Where a refusal fires
+
+- Build: tests/test_s363_runtime_tiers_pricing.py fails if a
+  RUNTIME_TIERS id does not resolve in the shipped table, resolves
+  through an alias, carries removed_after, deprecated_after or per_hour
+  billing, or if a tier's cost fields or free status differ from the
+  table's.
+- Dispatch: RuntimeTier.call and stream_call resolve the tier's model
+  before any network client is built. Not in the table gives
+  "unpriceable: ...", a removed entry "removed: ...", per_hour billing
+  "per_hour: ...". The refusal is a failed tier result, so the cascade
+  moves on. Staleness is `staleness_status(under_smt=False)`: one
+  warning per entry per process, no refusal. The 90-day refusal stays
+  with --smt, which bounds declared tokens; dispatch prices the tokens
+  a provider reported.
+- Import: nothing. nous_api_server imports nous_runtime inside four
+  request handlers, so an import-time refusal would not stop nous-api
+  from starting (the S363 opener's prior is false). It would fail every
+  /v1 chat, chat_stream, webhook and classifier request, `nous run`
+  including dry-run, and collection of eight test modules, and a
+  date-driven cause would fail the suite on a calendar date with no
+  code change.
+- Table: `load_pricing()` with no path, the loader run_shas and the API
+  use, so dispatch prices and a trace's pricing_sha256 name the same
+  table. Cached per process: a table change needs a nous-api restart
+  (FG-S361-H). On Server A (2026-09-19) nous-api runs as root with cwd
+  /opt/aetherlang_agents/nous and neither nous_prices.toml nor
+  ~/.config/nous/prices.toml exists, so it resolves the shipped table.
+  Server B: not measured.
+- `is_free` is the resolved entry's pricing_model == "free". A tier the
+  table refuses is neither free nor dispatched.
+
+### 15.4 Cascade after P1
+
+| tier | dispatch id | table entry | read |
+|---|---|---|---|
+| Nemotron-120B | nvidia/nemotron-3-super-120b-a12b:free | free | /root/openrouter_nemotron_free_s363.json 539c4a1d3a575f2c10c271461a4626e6b22793e3601f25a773bc39f9cfb2c6ae |
+| Gemma4-31B | google/gemma-4-31b-it:free | free | /root/openrouter_gemma_free_s363.json a357caa3d7b5233abc39de760c4b1b265aee0c2794211c634b962ed5d0b9b159 |
+| DeepSeek | deepseek-flash | per_token 0.30/1.20 per 1M | /root/deepseek_docs_s360.html 5cbf7f81..., /root/deepseek_pricing_s361.html 31902010... |
+
+Left the cascade (K2), each read stored on Server A at
+2026-09-19T00:08:07Z:
+
+| id | read | sha256 |
+|---|---|---|
+| nousresearch/hermes-3-llama-3.1-405b:free | 404 | 99186f73887203cac00f688dbe53d9c78210a52f2ffa3c3f2848b40f692b35a3 |
+| openrouter/elephant-alpha | 404 | d61383f4e8cba15a5499c0c61499f1c6a697ca21b24f8f0e421eff27c22eb58f |
+| openai/gpt-oss-120b:free | 404 | d22ae74b9fa7f42d40b088edbfb78df43cd6c6ba3f2b3cce767a200b1c868a40 |
+| claude-3-haiku-20240307 | Anthropic deprecations page: retired 2026-04-20 | 010edb1466a16b3f652c3fc6fe53af6562a6cb2a8c57988ba0bbbbaa4da6fe69 |
+
+The five stored OpenRouter bodies are byte-identical to the S362 reads
+(2026-09-18T23:07:34Z) and the S363 R2 reads (2026-09-19T00:01:07Z).
+Each removed id already failed at dispatch, so no working tier was
+lost.
+
+### 15.5 DeepSeek dispatch id
+
+RUNTIME_TIERS dispatches `deepseek-flash`. Both stored DeepSeek pages
+(5cbf7f81, 31902010) say to use deepseek-flash as the model name; the
+legacy names are still accepted, their models are retired, and their
+requests are served and billed as V4.1 Flash. The updates page
+(8ab3cf3f) says the legacy names are temporarily routed to V4.1 Flash
+and states no end date. The price does not change with the move:
+deepseek-v4-flash is an alias of deepseek-flash. dream_engine,
+immune_engine and codegen.py:844 still dispatch deepseek-v4-flash;
+codegen emits it into generated Python, so moving it is a P3 change.
+
+### 15.6 Open after P1
+
+- A free entry never ages (15.1). Whether an OpenRouter ":free" id can
+  bill instead of failing is not pinned.
+- /v1 chat replay keys each recorded call by provider (the tier name)
+  and model. A log recorded on the old cascade may not replay on the
+  new one. Not measured.
+- FG-S363-A: the Anthropic deprecations page gave three sha256 values
+  at one byte length (427584) in three fetches (S362 72defeab, S363 R2
+  92f810a4, S363 pin 010edb14). The pin identifies the stored copy; the
+  check is the two rows it must contain.
+- website/ide.html:693 describes Tier0A as Hermes-405B via OpenRouter;
+  the generated runtime prices Tier0A at 0.25/1.25 per 1M and
+  dream_engine sends Tier0A to Anthropic.
+- Engine dispatch ids (15.5); mistral-small-latest has no table entry
+  and no pin.
