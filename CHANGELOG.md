@@ -4,6 +4,9 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+
+## [5.82.0]  <!-- __s364_changelog_v5_82_0__ -->
+
 ### Fixed
 
 - `/v1/verify` labelled every error, warning and info finding with tier
