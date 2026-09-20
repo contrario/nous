@@ -156,5 +156,9 @@ def test_api_verify_dark_for_unpriceable_no_422() -> None:
     r = client.post("/v1/verify", json={"source": BAD_SRC})
     assert r.status_code == 200
     j = r.json()
-    assert j.get("ok") is True
+    assert j.get("ok") is False  # __s364_p2_s189_reversal_v1__
+    assert any(
+        e["code"] == "VR001" and "totally-unknown-model-xyz" in e["message"]
+        for e in j.get("errors", [])
+    )
     assert not any(e["code"] == "VR003" for e in j.get("proven", []))

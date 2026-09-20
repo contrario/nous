@@ -62,6 +62,7 @@ DISCLOSURES: dict[str, tuple[str, ...]] = {
         "the runtime alarm still does its own job",
         "(a tier-price estimate)",
         "Cost overrun it only estimates here",
+        "priced from its declared model in the pricing table",  # __s364_p2_s362_disclosure_v1__
     ),
     "website/docs/index.html": ("its cost check is an estimate",),
 }
@@ -106,9 +107,14 @@ def test_smt_emit_does_not_read_the_cost_law() -> None:
     )
 
 
-def test_vr001_still_prices_from_tier_constants() -> None:
-    assert "TIER_COSTS" in _text("verifier.py"), (
-        "verifier.py no longer prices from TIER_COSTS; the blog and docs "
-        "page call the mitosis and resource checks a tier-price estimate, "
-        "so review that copy"
+def test_vr001_prices_by_model_and_mitosis_by_tier() -> None:  # __s364_p2_s362_rebind_v1__
+    text = _text("verifier.py")
+    assert "TIER_COSTS" in text, (
+        "verifier.py no longer prices from TIER_COSTS; the blog calls the "
+        "clone admission check a tier-price estimate, so review that copy"
+    )
+    assert "self._pricing.resolve(" in text, (
+        "VR001 no longer resolves the soul's model through the pricing table; "
+        "the blog says the resource estimate is priced from the declared "
+        "model, so review that copy"
     )

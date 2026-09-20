@@ -23,6 +23,36 @@
   Design: docs/ONE_PRICE_SOURCE_DESIGN.md section 16.3.
   <!-- __s364_changelog_e5_v1__ -->
 
+### Changed
+
+- `nous verify` and `/v1/verify` return the same findings for the same
+  program. The CLI loads the pricing table (the layered lookup, or
+  `--prices`, which now applies to plain `nous verify` as well as
+  `--smt`) and passes it to the verifier, so the Z3/Farkas cost bound
+  (VR003) runs from the CLI as it did from the API. On an install
+  without the `smt` extra, a program that declares `cost_cap` now fails
+  `nous verify` with a VR003 error naming `pip install nous-lang[smt]`,
+  as `/v1/verify` does on such a host. This covers the nine
+  CLI commands that run the verifier: `verify`, `dream`, `immune`,
+  `mitosis`, `consciousness`, `metabolism`, `symbiosis`, `telemetry` and
+  `retire`.
+- With a pricing table, VR001 and VR002 price each soul by its declared
+  model through the table instead of by tier label, with the `--smt`
+  per-call formula over the verifier's token estimates. A model the
+  table does not hold, holds as removed, bills per hour, or prices in a
+  currency other than the cost law's is a VR001 error; there is no Tier1
+  fallback. A price older than 30 days, or a deprecated entry, is a
+  VR001 warning. Programs that declare a model absent from the table now
+  fail `nous verify` and `/v1/verify`: 27 of the 88 souls in the
+  repository's parseable .nous files do, none in the shipped templates.
+  Without a table (the runtime mitosis gate) the verifier keeps the
+  tier-label estimate.
+- A pricing table that fails to load is an error on both surfaces
+  (`Error: pricing table could not be loaded` from the CLI, a 422 from
+  the API); the API used to skip VR003 without a finding. Design:
+  docs/ONE_PRICE_SOURCE_DESIGN.md sections 16.4 and 16.7.
+  <!-- __s364_changelog_p2_v1__ -->
+
 ### Added
 
 - `tests/test_s364_nonaffirmative_tiers.py` fails if a non-affirmative
@@ -33,6 +63,36 @@
   default caller calls Anthropic, or lists a model the pricing table
   cannot price or marks removed, other than the disclosed
   `mistral-small-latest`. <!-- __s364_changelog_e5_test_v1__ -->
+- `tests/test_s364_one_verify.py` fails if `nous verify` and `/v1/verify`
+  return different finding sets for a shipped template or fixture, if a
+  CLI command runs the verifier without a table, if VR001 prices by tier
+  where a table is supplied, or if a pricing load failure passes without
+  an error. `tests/test_s189_vr003_unpriceable.py` now expects a VR001
+  error for an unpriceable model; VR003 stays dark for it.
+  <!-- __s364_changelog_p2_test_v1__ -->
+
+### Known limits  <!-- __s364_changelog_known_limits_v1__ -->
+
+- The mitosis (VMI) and dream (VDR) estimates still price by tier label:
+  a clone names only a tier and a dream mind is optional. The runtime
+  mitosis gate re-runs the verifier without a table.
+- VR001 still estimates tokens (300 plus 500 per sense in, 200 out); it
+  does not read a soul's declared tokens.
+- The tier-label cost constants in the verifier, runtime, profiler, cost
+  oracle and behavioral diff carry no verification date.
+- `deepseek-r1` refuses under `--smt` from 2026-09-28, deliberately, and
+  is past the 30-day VR001 warning.
+- `dream_engine`, `immune_engine` and the code generated for a
+  `dream_system` without a dream mind still dispatch `deepseek-v4-flash`;
+  `mistral-small-latest` in both engines has no pricing entry.
+- Every `pricing_model = "free"` entry counts as current, so free
+  entries start no staleness clock.
+- `--prices` naming a missing file still falls back to the next pricing
+  layer without an error under `--smt`, `nous emit-smt`, `nous prices`,
+  conformance, the dossier and the governance ledger; plain
+  `nous verify` and its eight sibling commands refuse it.
+- A `/v1` chat replay log recorded on the 5.80.2 cascade may not replay
+  on this one. Not measured.
 
 
 ## [5.81.0]  <!-- __s363_changelog_v5_81_0__ -->

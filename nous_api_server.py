@@ -251,14 +251,20 @@ _DEFAULT_PRICING = None
 _DEFAULT_PRICING_LOADED = False
 
 
+class PricingUnavailable(RuntimeError):  # __s364_p2_api_pricing_v1__
+    pass
+
+
 def _get_default_pricing():
     global _DEFAULT_PRICING, _DEFAULT_PRICING_LOADED
     if not _DEFAULT_PRICING_LOADED:
+        from pricing import load_pricing
         try:
-            from pricing import load_pricing
             _DEFAULT_PRICING = load_pricing()
-        except Exception:
-            _DEFAULT_PRICING = None
+        except Exception as exc:
+            raise PricingUnavailable(
+                f"pricing table could not be loaded ({type(exc).__name__}): {exc}"
+            ) from exc
         _DEFAULT_PRICING_LOADED = True
     return _DEFAULT_PRICING
 

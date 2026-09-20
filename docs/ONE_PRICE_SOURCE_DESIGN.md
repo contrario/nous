@@ -821,3 +821,46 @@ tests/test_s189_vr003_unpriceable.py::test_api_verify_lights_vr003_for_default_p
 prices claude-opus-4-7 (verified 2026-09-08) from the shipped table and
 fails from 2026-12-08 unless that entry is re-verified first. Recorded,
 not changed here.
+
+<!-- __s364_p2_build_v1__ -->
+### 16.7 P2 build notes (written with the code)
+
+- The blog sentence is website/blog/index.html:3432; 16.4 said 3431,
+  its section heading.
+- A soul with no mind fails validation (S002) before either surface runs
+  the verifier, so the no-mind fixture of P2.6 cannot reach VR001 from
+  the CLI or the API and is dropped. The verifier still refuses such a
+  soul for a direct caller.
+- website/docs/index.html:606 and website/index.html:403 show no source
+  program for their Scout transcript, so there is nothing to recompute;
+  they stay as illustrations of the output format.
+- VR001 compares the table's currency with the cost law's (`$` is USD,
+  a euro-sign literal is EUR), the rule --smt applies to the cost cap
+  (smt_emit._validate_currency_consistency). A mismatch is a VR001 error.
+- VR001's figure uses the --smt per-call formula, reasoning multiplier
+  included, over the verifier's token estimates. A free entry prices at
+  0.
+- A deprecated entry is a VR001 warning, as is a price older than 30
+  days; one warning per model.
+- VR002 with an unpriceable soul in a cascade is a warning that the
+  total was not estimated.
+- NousVerifier and verify_program take `today` so tests pin the date;
+  VR003 passes it to emit_smt. With no date both use the UTC date, as
+  before.
+- The CLI now runs VR003. Without z3 installed, a program with a
+  cost_cap fails `nous verify` with a VR003 error that names the smt
+  extra (measured with the z3 import blocked); the API behaves the same
+  on a host without z3. The release smoke verifies sycophancy_guard,
+  which declares no cost_cap.
+- The five direct CLI sites share identical surrounding lines, so their
+  edit must match exactly five times; a partial state refuses.
+- load_pricing(custom_path) falls through to the other layers when the
+  explicit path does not exist, so `--prices missing.toml` used the
+  shipped table without a word. The P2 CLI helper refuses a missing
+  explicit path itself. The loader and its ten other explicit-path
+  call sites (--smt, emit-smt, `nous prices`, conformance, dossier,
+  run_shas, the governance ledger) are unchanged here and carried as a
+  known limit.
+- nous_api_server raises PricingUnavailable from _get_default_pricing,
+  and /v1/verify reports it as VERIFY001 (422). Only a successful load
+  is cached.

@@ -852,6 +852,18 @@ def cmd_create(args: argparse.Namespace) -> int:
 
 
 # __governance_lint_verify_integration_v1__
+def _verify_pricing(args: Any) -> Any:  # __s364_p2_cli_pricing_v1__
+    from pricing import load_pricing
+    custom = getattr(args, "prices", None)
+    try:
+        if custom and not Path(custom).is_file():
+            raise FileNotFoundError(f"--prices path is not a file: {custom}")
+        return load_pricing(Path(custom) if custom else None)
+    except Exception as exc:
+        print(f"Error: pricing table could not be loaded ({type(exc).__name__}): {exc}", file=sys.stderr)
+        raise SystemExit(1) from exc
+
+
 def cmd_verify(args: argparse.Namespace) -> int:
     # __cost_cap_phase4_cmd_verify_smt_delegate_v1__
     if getattr(args, "smt", False):
@@ -870,7 +882,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
         return result
     from verifier import verify_program, print_verification_report
     world_name = program.world.name if program.world else "Unknown"
-    vresult = verify_program(program)
+    vresult = verify_program(program, _verify_pricing(args))  # __s364_p2_cli_verify_v1__
     print_verification_report(vresult, world_name)
     verify_ok = vresult.ok
     skip_lint = getattr(args, "no_lint", False)
@@ -1029,7 +1041,7 @@ def cmd_dream(args: argparse.Namespace) -> int:
     print(f"\n  \u2550\u2550\u2550 NOUS Dream Analysis \u2014 {world_name} \u2550\u2550\u2550")
     print()
     from verifier import verify_program
-    vresult = verify_program(program)
+    vresult = verify_program(program, _verify_pricing(args))  # __s364_p2_cli_dream_v1__
     for soul in dream_souls:
         ds = soul.dream_system
         dm = f"{ds.dream_mind.model}@{ds.dream_mind.tier.value}" if ds.dream_mind else "default"
@@ -1074,7 +1086,7 @@ def cmd_immune(args: argparse.Namespace) -> int:
     print()
 
     from verifier import verify_program
-    vresult = verify_program(program)
+    vresult = verify_program(program, _verify_pricing(args))  # __s364_p2_cli_immune_v1__
 
     for soul in immune_souls:
         im = soul.immune_system
@@ -1127,7 +1139,7 @@ def cmd_consciousness(args: Any) -> None:
         print(f"  ERROR [{e.code}] {e.message}")
     for w in val_result.warnings:
         print(f"  WARN  [{w.code}] {w.message}")
-    verifier = NousVerifier(program)
+    verifier = NousVerifier(program, _verify_pricing(args))  # __s364_p2_cli_direct_v1__
     ver_result = verifier.verify()
     print("")
     print("  \u2550\u2550\u2550 NOUS Consciousness Analysis \u2550\u2550\u2550")
@@ -1167,7 +1179,7 @@ def cmd_metabolism(args: Any) -> None:
         print(f"  ERROR [{e.code}] {e.message}")
     for w in val_result.warnings:
         print(f"  WARN  [{w.code}] {w.message}")
-    verifier = NousVerifier(program)
+    verifier = NousVerifier(program, _verify_pricing(args))  # __s364_p2_cli_direct_v1__
     ver_result = verifier.verify()
     print("")
     print("  \u2550\u2550\u2550 NOUS Metabolism Analysis \u2550\u2550\u2550")
@@ -1213,7 +1225,7 @@ def cmd_symbiosis(args: Any) -> None:
     for w in val_result.warnings:
         print(f"  WARN  [{w.code}] {w.message}")
 
-    verifier = NousVerifier(program)
+    verifier = NousVerifier(program, _verify_pricing(args))  # __s364_p2_cli_direct_v1__
     ver_result = verifier.verify()
 
     print("")
@@ -1260,7 +1272,7 @@ def cmd_telemetry(args: Any) -> None:
     for w in val_result.warnings:
         print(f"  WARN  [{w.code}] {w.message}")
 
-    verifier = NousVerifier(program)
+    verifier = NousVerifier(program, _verify_pricing(args))  # __s364_p2_cli_direct_v1__
     ver_result = verifier.verify()
 
     print("")
@@ -1324,7 +1336,7 @@ def cmd_retire(args: Any) -> None:
     for w in val_result.warnings:
         print(f"  WARN  [{w.code}] {w.message}")
 
-    verifier = NousVerifier(program)
+    verifier = NousVerifier(program, _verify_pricing(args))  # __s364_p2_cli_direct_v1__
     ver_result = verifier.verify()
 
     print("")
@@ -1379,7 +1391,7 @@ def cmd_mitosis(args: argparse.Namespace) -> int:
     print()
 
     from verifier import verify_program, TIER_COSTS
-    vresult = verify_program(program)
+    vresult = verify_program(program, _verify_pricing(args))  # __s364_p2_cli_mitosis_v1__
 
     for soul in mitosis_souls:
         m = soul.mitosis
@@ -1841,7 +1853,7 @@ def build_parser() -> "argparse.ArgumentParser":  # __s104_build_parser_v1__
     p.add_argument("--lint-error-on", default=None, metavar="CODES", help="Lint: elevate rules (e.g. L010,L007)")
     # __cost_cap_phase4_smt_options_v1__
     p.add_argument("--smt", action="store_true", help="Run SMT cost_cap proof (Phase 4)")
-    p.add_argument("--prices", metavar="PATH", help="Override pricing TOML path (--smt only)")
+    p.add_argument("--prices", metavar="PATH", help="Override pricing TOML path (default: layered lookup)")  # __s364_p2_cli_prices_help_v1__
     p.add_argument("--timeout-ms", type=int, default=30000, help="Z3 timeout in ms (--smt only)")
     p.add_argument("--no-manifest", action="store_true", help="Skip signed manifest (--smt only)")
     p.add_argument("--manifest-out", metavar="PATH", help="Manifest output path (--smt only)")

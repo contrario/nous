@@ -27,6 +27,8 @@ QF_LRA fragment, independently checkable by rational arithmetic.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import date  # __s364_p2_imports_v1__
+from decimal import Decimal
 from typing import Any, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:  # __s189_vr003_pricing_typeonly_v1__
@@ -187,9 +189,11 @@ class VerificationResult:
 
 class NousVerifier:
 
-    def __init__(self, program: NousProgram, pricing: Optional[PricingTable] = None) -> None:  # __s189_vr003_init_pricing_v1__
+    def __init__(self, program: NousProgram, pricing: Optional[PricingTable] = None, today: Optional[date] = None) -> None:  # __s189_vr003_init_pricing_v1__ __s364_p2_init_today_v1__
         self.program = program
         self._pricing: Optional[PricingTable] = pricing
+        self._today: Optional[date] = today
+        self._cost_ceiling_currency: str = "USD"
         self.result = VerificationResult()
         self._soul_map: dict[str, SoulNode] = {}
         self._message_map: dict[str, MessageNode] = {}
@@ -251,6 +255,7 @@ class NousVerifier:
             for law in self.program.world.laws:
                 if isinstance(law.expr, LawCost) and law.expr.per == "cycle":
                     self._cost_ceiling = law.expr.amount
+                    self._cost_ceiling_currency = law.expr.currency  # __s364_p2_law_currency_v1__
 
     def _collect_speak_listen(self, stmts: list[Any], soul_name: str) -> None:
         for stmt in stmts:
@@ -287,24 +292,28 @@ class NousVerifier:
                         f"world {world.name}",
                     )
 
-    def _verify_resource_bounds(self) -> None:
+    def _verify_resource_bounds(self) -> None:  # __s364_p2_resource_bounds_v1__
+        costs: dict[str, Optional[float]] = {}
+        notes: dict[str, str] = {}
         for soul in self.program.souls:
-            tier = soul.mind.tier.value if soul.mind else "Tier1"
-            tier_info = TIER_COSTS.get(tier, TIER_COSTS["Tier1"])
-            sense_count = self._count_sense_calls(soul)
-            est_input = EST_TOKENS_PER_INSTINCT_BASE + (sense_count * EST_TOKENS_PER_SENSE)
-            est_output = EST_TOKENS_OUTPUT
-            est_cost = (
-                (est_input / 1000) * tier_info["input_per_1k"]
-                + (est_output / 1000) * tier_info["output_per_1k"]
-            )
+            est_cost, basis, note = self._soul_estimate(soul)
+            costs[soul.name] = est_cost
+            if note is not None and soul.mind is not None:
+                notes.setdefault(soul.mind.model, note)
             loc = f"soul {soul.name}"
-            if est_cost > self._cost_ceiling:
+            if est_cost is None:
+                self.result.error(
+                    "VR001", "resource_bound",
+                    f"Soul {soul.name} cost not estimated: {basis}",
+                    loc,
+                    "A model the pricing table cannot price is refused; it is not estimated at a tier price.",
+                )
+            elif est_cost > self._cost_ceiling:
                 self.result.error(
                     "VR001", "resource_bound",
                     f"Soul {soul.name} estimated max cost ${est_cost:.6f} exceeds ceiling ${self._cost_ceiling:.2f}",
                     loc,
-                    f"Tier={tier}, senses={sense_count}, est_input={est_input}tok, est_output={est_output}tok",
+                    basis,
                 )
             else:
                 ratio = est_cost / self._cost_ceiling if self._cost_ceiling > 0 else 0
@@ -313,15 +322,28 @@ class NousVerifier:
                     f"Soul {soul.name} cost bounded: ${est_cost:.6f} ≤ ${self._cost_ceiling:.2f} ({ratio:.0%} of ceiling)",
                     loc,
                 )
+        for model, note in notes.items():  # __s364_p2_price_notes_v1__
+            self.result.warning(
+                "VR001", "resource_bound",
+                f"Price for {model} is not current: {note}",
+                f"model {model}",
+                "The estimate uses this price; refresh the pricing entry.",
+            )
 
         total_max = 0.0
+        unpriced: set[str] = set()
         for soul in self.program.souls:
             if soul.name not in self._incoming:
-                tier = soul.mind.tier.value if soul.mind else "Tier1"
-                cascade_cost = self._estimate_cascade_cost(soul.name, set())
-                total_max += cascade_cost
+                total_max += self._estimate_cascade_cost(soul.name, set(), costs, unpriced)
 
-        if total_max > self._cost_ceiling:
+        if unpriced:
+            self.result.warning(
+                "VR002", "resource_bound",
+                f"Total cascade cost not estimated: unpriceable soul(s) {', '.join(sorted(unpriced))}",
+                "world",
+                "Sum of all entrypoint cascades through nervous_system",
+            )
+        elif total_max > self._cost_ceiling:
             self.result.warning(
                 "VR002", "resource_bound",
                 f"Total cascade cost ${total_max:.6f} may exceed ceiling ${self._cost_ceiling:.2f}",
@@ -343,7 +365,7 @@ class NousVerifier:
         from smt_emit import EmitError, emit_smt
         from smt_verify import verify as _smt_verify
         try:
-            spec = emit_smt(self.program, self._pricing)
+            spec = emit_smt(self.program, self._pricing, today=self._today)  # __s364_p2_smt_today_v1__
         except (EmitError, KeyError, ValueError):  # __s189_vr003_unpriceable_dark_v2__
             return
         result = _smt_verify(spec, timeout_ms=10_000)
@@ -389,23 +411,77 @@ class NousVerifier:
                 f"solver={result.solver_name} {result.solver_version}",
             )
 
-    def _estimate_cascade_cost(self, soul_name: str, visited: set[str]) -> float:
+    def _soul_estimate(self, soul: SoulNode) -> tuple[Optional[float], str, Optional[str]]:  # __s364_p2_soul_estimate_v1__
+        sense_count = self._count_sense_calls(soul)
+        est_input = EST_TOKENS_PER_INSTINCT_BASE + (sense_count * EST_TOKENS_PER_SENSE)
+        est_output = EST_TOKENS_OUTPUT
+        if self._pricing is None:
+            tier = soul.mind.tier.value if soul.mind else "Tier1"
+            tier_info = TIER_COSTS.get(tier, TIER_COSTS["Tier1"])
+            est_cost = (
+                (est_input / 1000) * tier_info["input_per_1k"]
+                + (est_output / 1000) * tier_info["output_per_1k"]
+            )
+            return est_cost, f"Tier={tier}, senses={sense_count}, est_input={est_input}tok, est_output={est_output}tok", None
+        if soul.mind is None:
+            return None, "the soul declares no mind, so there is no model to price", None
+        from pricing import lifecycle_status, staleness_status
+        model = soul.mind.model
+        try:
+            canonical, entry = self._pricing.resolve(model)
+        except KeyError:
+            return None, f"model {model!r} is not in the pricing table", None
+        life, life_msg = lifecycle_status(entry, today=self._today)
+        if life == "removed":
+            return None, f"model {model!r} was {life_msg} in the pricing table", None
+        if entry.pricing_model == "per_hour":
+            return None, f"model {model!r} is billed per hour, not per token", None
+        if self._pricing.currency != self._cost_ceiling_currency:
+            return None, (
+                f"the pricing table is in {self._pricing.currency} and the cost law "
+                f"is in {self._cost_ceiling_currency}"
+            ), None
+        stale, stale_msg = staleness_status(entry, today=self._today, under_smt=False)
+        note: Optional[str] = None
+        if life == "deprecated":
+            note = life_msg
+        elif stale != "ok":
+            note = stale_msg
+        basis = (
+            f"model={model} (table entry {canonical}), senses={sense_count}, "
+            f"est_input={est_input}tok, est_output={est_output}tok"
+        )
+        if entry.pricing_model == "free":
+            return 0.0, basis, note
+        if entry.input_per_1m is None or entry.output_per_1m is None:
+            return None, f"model {model!r} has no per-token prices in the pricing table", None
+        est_cost = float(
+            (
+                entry.input_per_1m * est_input
+                + entry.output_per_1m * est_output * entry.reasoning_token_multiplier
+            )
+            / Decimal(1000000)
+        )
+        return est_cost, basis, note
+
+    def _estimate_cascade_cost(  # __s364_p2_cascade_costs_v1__
+        self,
+        soul_name: str,
+        visited: set[str],
+        costs: dict[str, Optional[float]],
+        unpriced: set[str],
+    ) -> float:
         if soul_name in visited:
             return 0.0
         visited.add(soul_name)
-        soul = self._soul_map.get(soul_name)
-        if not soul:
+        if soul_name not in self._soul_map:
             return 0.0
-        tier = soul.mind.tier.value if soul.mind else "Tier1"
-        tier_info = TIER_COSTS.get(tier, TIER_COSTS["Tier1"])
-        sense_count = self._count_sense_calls(soul)
-        est_input = EST_TOKENS_PER_INSTINCT_BASE + (sense_count * EST_TOKENS_PER_SENSE)
-        cost = (
-            (est_input / 1000) * tier_info["input_per_1k"]
-            + (EST_TOKENS_OUTPUT / 1000) * tier_info["output_per_1k"]
-        )
+        cost = costs.get(soul_name)
+        if cost is None:
+            unpriced.add(soul_name)
+            cost = 0.0
         for tgt in self._outgoing.get(soul_name, []):
-            cost += self._estimate_cascade_cost(tgt, visited)
+            cost += self._estimate_cascade_cost(tgt, visited, costs, unpriced)
         return cost
 
     def _count_sense_calls(self, soul: SoulNode) -> int:
@@ -1127,8 +1203,8 @@ class NousVerifier:
         )
 
 
-def verify_program(program: NousProgram, pricing: Optional[PricingTable] = None) -> VerificationResult:  # __s189_vr003_verify_program_pricing_v1__
-    verifier = NousVerifier(program, pricing)
+def verify_program(program: NousProgram, pricing: Optional[PricingTable] = None, today: Optional[date] = None) -> VerificationResult:  # __s189_vr003_verify_program_pricing_v1__ __s364_p2_verify_program_today_v1__
+    verifier = NousVerifier(program, pricing, today)
     return verifier.verify()
 
 
