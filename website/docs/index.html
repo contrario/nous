@@ -297,7 +297,7 @@ $ python cli.py run hello.nous</code></pre>
     timezone = <span class="st">"UTC"</span>
 }</code></pre>
 <h4>Laws</h4>
-<p>Laws are declared constraints. <code>cost_ceiling</code> declares the maximum LLM spend per cycle. The generated runtime does not meter observed spend against it; its cost check compares a fixed per-call estimate at the tier price with the ceiling. <code>max_retries</code> caps retry attempts in heal blocks.</p><!-- __s361_runtime_copy_v1__ -->
+<p>Laws are declared constraints. <code>cost_ceiling</code> declares the maximum LLM spend per cycle. The generated runtime does not meter observed spend against it; its cost check, run before each message-driven cycle, compares a fixed per-call estimate priced by the soul's declared model from the pricing table with the ceiling, and a model the table cannot price is refused when the runtime is built. <code>max_retries</code> caps retry attempts in heal blocks.</p><!-- __s361_runtime_copy_v1__ -->
 <h4>Heartbeat</h4>
 <p>The <code>heartbeat</code> interval determines how often heartbeat souls wake up. Supports: <code>s</code> (seconds), <code>m</code> (minutes), <code>h</code> (hours).</p>
 </div>
@@ -563,7 +563,7 @@ $ python cli.py run hello.nous</code></pre>
 <ul>
 <li><strong>SoulRunner</strong> — manages a soul's lifecycle. Heartbeat souls sleep between cycles. Listeners block on channel receive.</li>
 <li><strong>ChannelRegistry</strong> — named async channels with backpressure (max queue 100).</li>
-<li><strong>CostTracker</strong> — shared across all souls. Holds the per-cycle ceiling and compares a fixed per-call estimate at the tier price with it; it does not meter observed spend.</li>
+<li><strong>CostTracker</strong> — shared across all souls. Holds the per-cycle ceiling and compares a fixed per-call estimate, priced by the soul's declared model from the pricing table, with it; it does not meter observed spend.</li>
 <li><strong>SenseCache</strong> — deduplicates identical sense calls within a single instinct execution.</li>
 <li><strong>SenseExecutor</strong> — routes sense calls to registered tool functions or HTTP endpoints.</li>
 </ul>
@@ -1816,8 +1816,8 @@ for m in result.fired:
 
 <!-- TESTS -->
 <div class="doc-section" id="tests">
-<h2>Test Suites — 2986 Tests</h2><!-- __s363_docs_tests_2986__ -->
-<p>Full suite: 3035 tests passing (PYTEST_FLOOR 3034).<!-- __s364_docs_count_3035__ --> The table below lists representative suites; the floor is enforced per release and is monotone non-decreasing.</p>
+<h2>Test Suites — 3072 Tests</h2><!-- __s365_docs_tests_3072__ -->
+<p>Full suite: 3072 tests passing (PYTEST_FLOOR 3071).<!-- __s365_docs_count_3072__ --> The table below lists representative suites; the floor is enforced per release and is monotone non-decreasing.</p>
 <table class="doc-table">
 <thead><tr><th>Suite</th><th>Tests</th><th>Coverage</th></tr></thead>
 <tbody>

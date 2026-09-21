@@ -10,7 +10,7 @@ An agentic programming language with end-to-end formal cost-bound verification, 
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v5.82.0
+ |_| \_|\___/ \___/|____/   v5.83.0
 ```
 
 Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Website: nous-lang.org
@@ -304,11 +304,11 @@ NOUS is developed under a non-standard model: single maintainer, chat-driven, id
 
 Security issues should be reported via GitHub Security Advisories, not public issues.
 
-## Stats (v5.82.0)  <!-- __s323_readme_version_current_v1__ -->
+## Stats (v5.83.0)  <!-- __s323_readme_version_current_v1__ -->
 
 | Metric | Value |
 |---|---|
-| Tests | 3035 passing, floor 3034 (PYTEST_FLOOR enforced) |
+| Tests | 3072 passing, floor 3071 (PYTEST_FLOOR enforced) |
 | Regression | byte-identical harness, 0 baseline drift |
 | Shipped templates | 12 (`nous templates list`) |
 | Grammar | Lark LALR, bilingual EN+GR |
@@ -332,6 +332,6 @@ The MIT License covers the source code. Trademark rights over "NOUS", "Noosphere
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.82.0](https://github.com/contrario/nous/releases/tag/v5.82.0).  <!-- __s323_readme_version_current_v1__ -->
+See [CHANGELOG.md](CHANGELOG.md). Latest release: [v5.83.0](https://github.com/contrario/nous/releases/tag/v5.83.0).  <!-- __s323_readme_version_current_v1__ -->
 <!-- __session89_readme_freshen_v1__ -->
 <!-- __s94_readme_v5_11_0_sync_v1__ -->

@@ -5,6 +5,37 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [5.83.0]  <!-- __s365_changelog_v5_83_0__ -->
+
+### Changed
+
+- A generated program passes each soul's declared model to the runtime:
+  every `SoulRunner(...)` call gains a `model="..."` argument, so
+  regenerating a program changes its Python. The runtime's cost check,
+  run before each message-driven cycle, prices its fixed estimate (500
+  input and 200 output tokens) by that model through the pricing table
+  instead of by the tier label. A soul that runs on the heartbeat is not
+  checked, as before. The runtime still does not meter observed spend.
+  The shipped `templates/trading_floor.py` is regenerated. Design:
+  docs/ONE_PRICE_SOURCE_DESIGN.md section 17.
+- `build_runtime()` in a generated program refuses a soul whose declared
+  model the pricing table cannot price: not in the table, removed, or
+  billed per hour. It raises `UnpriceableSoulModel`, whose message starts
+  with the reason and names the model. The same program already fails
+  `nous verify` with a VR001 error since 5.82.0.
+- The mitosis runtime re-verify names each soul's declared model instead
+  of `runtime` and `cloned`. It still passes no pricing table, so clone
+  admission is still estimated by tier.
+
+### Known limits  <!-- __s365_changelog_known_limits_v1__ -->
+
+- `nous run`, replay, hot reload and compiled trace report the refusal as
+  an uncaught `UnpriceableSoulModel` traceback, not a one-line message.
+- A clone spawned by mitosis carries no model, so its cost check prices by
+  tier.
+- The dream and immune engines still dispatch `deepseek-v4-flash` and
+  `mistral-small-latest`; `mistral-small-latest` has no pricing entry.
+
 ## [5.82.0]  <!-- __s364_changelog_v5_82_0__ -->
 
 ### Fixed
