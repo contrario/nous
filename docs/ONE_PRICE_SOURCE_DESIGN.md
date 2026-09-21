@@ -1065,3 +1065,187 @@ code:
   dependency, so a module-level pricing import would add no requirement
   and the second 17.5 kill criterion cannot fire. The lazy import stays:
   importing runtime does not load the pricing code.
+
+<!-- __s366_sec18_v1__ -->
+## 18. S366 decisions (FG-S364-A), written before the code
+
+Basis: HEAD 4b89d1c = origin/main, tree clean, tag v5.83.0 one commit
+behind HEAD, read by RULE 0 on Server A at 2026-09-21 23:16Z. The code
+was read and executed in a container clone at 4b89d1c between 23:16Z
+and 23:41Z. Server A's tree was clean at the same commit, so its files
+are the committed blobs the clone holds; the 16 files RULE 0 hashes
+(runtime.py, codegen.py, cli.py, pricing.py, this document, and 11
+more) match byte for byte. The container runs used an isolated HOME
+and working directory, so layers 2 and 3 were absent. Server A's own
+layer 2 and 3 files were not read. Nothing ran against a provider.
+File sha256 at read time: this document 62002608..., pricing.py
+e9021eb9..., dossier.py 9cd972de..., cli.py b3d90e7a..., cli_prices.py
+b4ed6546..., cli_verify.py bbc564f5..., cli_emit_smt.py 63b10a9c...,
+cli_conformance.py 9accb6a4..., dossier_spec.py bccabbaa...,
+run_shas.py 89a22aca..., canonical table 1f0a3ede....
+
+### 18.1 Corrections to 16.7 and to the 5.83.0 CHANGELOG
+
+- Y1 "ten other explicit-path call sites" (16.7, the S365 handoff and
+  the S366 opener). There are eleven besides the P2 helper
+  (cli.py:855-864): cli_verify.py:135 (`--smt`), cli_emit_smt.py:45,
+  cli_prices.py:79, 132 and 218 (`show`, `verify`, `age`),
+  cli_conformance.py:206, dossier.py:100, dossier_spec.py:177 (`nous
+  dossier-spec`), run_shas.py:63 and 108, and cli.py:1475 (the
+  governance ledger). The list folded dossier-spec into "dossier".
+  Repro: `git grep -n "load_pricing(" -- '*.py' ':!tests/*'`.
+- Y2 Conformance never fell back. `--prices` is required
+  (cli_conformance.py:73 and 115) and `_derive_inputs` refuses a path
+  that is not a file before it calls load_pricing
+  (cli_conformance.py:193-200). Measured: `nous conformance verify` and
+  `nous conformance certify` with a missing `--prices` print
+  "PRECONDITION ERROR: prices file not found: <path>" and exit 2. The
+  5.83.0 CHANGELOG known limit (CHANGELOG.md:124) and 16.7 name
+  conformance wrongly and do not name dossier-spec.
+- Y3 The fall-through is wider than a missing file. A layer counts as
+  found only when `p.is_file()` (pricing.py:291), so a directory given
+  as `--prices` falls through exactly as a missing path does. Measured
+  with both.
+- Y4 The dossier's fall-through is not in load_pricing.
+  `_find_pricing_match` (dossier.py:91-108) skips a custom path that is
+  not a file and searches layers 2-4 for a table whose sha256 equals the
+  manifest's, calling load_pricing only on files that exist. A loader
+  change alone leaves `nous dossier` unchanged.
+
+### 18.2 Behaviour today, measured
+
+Explicit path missing, layers 2 and 3 absent, so every fall-through
+landed on the shipped table (layer 4, canonical 1f0a3ede...).
+
+| site | exit | what happens |
+|---|---|---|
+| plain `nous verify` (P2 helper) | 1 | refuses: "--prices path is not a file" |
+| `nous verify --smt` | 0 | "Loaded pricing: layer 4"; the proof runs and prints PROVEN against the shipped table |
+| `nous emit-smt -o` | 0 | writes the spec; "layer used: 4" |
+| `nous prices show` | 0 | layer 1 "not found", layer 4 marked ACTIVE, summary of the shipped table |
+| `nous prices verify`, `age` | 0 | report the shipped table |
+| `nous conformance verify`, `certify` | 2 | refuse (Y2) |
+| `nous dossier`, manifest under the shipped table | 0 | builds; the sha search matches layer 4 |
+| `nous dossier`, manifest under a custom table | 1 | refuses with the wrong cause: "no pricing TOML in candidate layers matches" |
+| `nous dossier-spec` | 0 | signs a manifest whose pricing_sha256 is the shipped table's |
+| run_shas, both functions | none | return values derived from the shipped table |
+| ledger, trace under the shipped table | 0 | attaches K without a word |
+| ledger, trace under a custom table | 1 | refuses with the wrong cause: "smt_spec_sha256 mismatch" |
+
+The Z3 results in these rows hold for the table they name, and each
+signed manifest binds that table's pricing sha256. The defect is that
+it is not the table the operator named, and nothing says so.
+
+### 18.3 Decisions
+
+- A1 Loader. load_pricing refuses when `custom_path` is not None and
+  is not a regular file, before any layer is consulted. It raises
+  `PricingPathError`, new in pricing.py, a subclass of
+  FileNotFoundError, with a message that starts with the cause and
+  names the path: "explicit pricing path is not a file: <path>".
+  Subclassing FileNotFoundError keeps every existing handler catching
+  it. `custom_path=None` keeps the layered lookup byte for byte, so the
+  API, dispatch, the generated runtime and the VSA vector minter, which
+  all pass no path, do not change. `_candidate_layers` does not change.
+- A2 Existing handlers carry the refusal. `--smt` exits 3 ("ERROR:
+  pricing load failed"), emit-smt 2, `prices verify` and `age` 2,
+  dossier-spec 1 (through DossierSpecError), the ledger 1 ("REFUSED:
+  --source pricing load failed"). None of these handlers is edited.
+- A3 `nous prices show`. When `--prices` is given and is not a file, no
+  layer is marked ACTIVE; the four layer lines still print, and the
+  command exits 2 through its existing load handler with the loader's
+  message. That handler loses its `# pragma: no cover`, since it becomes
+  reachable and tested. The "no pricing TOML available" message stays
+  for the case with no flag.
+- A4 `nous dossier`. `_find_pricing_match` raises DossierError before
+  probing any layer when an explicit path is given and is not a file,
+  message starting with the cause and naming the path. cli_dossier.py
+  already turns DossierError into exit 1.
+- A5 Not changed in this unit: a `nous dossier --prices` path that is a
+  file but does not load, or loads with a sha256 that does not match the
+  manifest, is still skipped in favour of a matching layer
+  (dossier.py:96-104, by code reading; the mismatch case measured in
+  18.2). The resulting dossier is consistent with its manifest, and the
+  operator's path is ignored without a word. Whether that refuses too is
+  an operator decision, carried in the S366 handoff.
+- A6 run_shas is not edited. Both functions let PricingPathError
+  propagate. Both production callers pass no path
+  (compiled_trace.py:73 and 75, nous_ast_runner.py:246 and 248), so no
+  command reaches the explicit branch. Wrapping it in RunShasError
+  would also change the type of the existing no-layer and invalid-TOML
+  errors, which is outside this unit.
+- A7 The P2 helper is not edited. Its own check now duplicates A1 and
+  refuses first, so plain `nous verify` keeps its message and exit 1.
+- A8 Release-unit work: the CHANGELOG states the change and corrects
+  Y2 (conformance always refused; dossier-spec fell back and was not
+  named); docs/COST_VERIFICATION_GUIDE.md gains one sentence under the
+  layer table: an explicit `--prices` that is not a file is an error,
+  and layers 2-4 are consulted only when no path is given. The `--prices`
+  help text "(default: layered lookup)" describes the case with no flag
+  and stays true. The site is grepped for layer and fallback statements
+  before release (FG-S365-G). The blog post and docs/DECISION_LEDGER.md
+  line saying the ledger refuses on a pricing failure become true for a
+  missing prices file; neither is edited.
+- A9 No new module, so pyproject py-modules and the wheel-content gate
+  do not change. No codegen change, so templates/trading_floor.py and
+  the regression baseline do not move. The verifier registry entries
+  are digests of the VERIFY_OFFLINE templates, which A4 does not touch.
+
+### 18.4 Blast radius, measured
+
+- A log-only probe in load_pricing and in `_find_pricing_match` recorded
+  every call with an explicit path that is not a file, and every explicit
+  dossier path that is a file with a mismatching sha256: 0 events across
+  the suite (3071 passed, 13 skipped in the container). A direct call
+  wrote one event, so the probe reaches its target.
+- The suite with A1 and A4 applied as raising probes: 3071 passed, 13
+  skipped, failed set empty.
+- The container runs one test fewer and skips one more than Server A
+  (3072 passed, 12 skipped there). The green gate runs on Server A.
+- One handler in the call-site files and the run_shas callers continues
+  after a failed load: `except Exception: continue` at dossier.py:101,
+  inside the sha search. A4 refuses before that loop, so a path that is
+  not a file never reaches it. Every other broad handler in those files
+  wraps something other than a pricing load: a version import, a health
+  probe, a subprocess launch, a witness file read, a Farkas JSON parse,
+  a trace-bridge shutdown and a discount percentage.
+
+### 18.5 Red first
+
+tests/test_s366_prices_path_refused.py, written and failing before any
+code. Each CLI case runs in process with HOME and the working directory
+set to a temporary directory, so layers 2 and 3 are absent. Tables the
+tests need are built in the test and dated the day it runs. The new
+exception is checked by type name and by `isinstance(...,
+FileNotFoundError)`, never imported at module level, so the file
+collects before the code exists.
+
+- Red, and failing for the stated reason: the loader refuses a missing
+  path and a directory with the typed error; each of `verify --smt`,
+  emit-smt, `prices show` (no ACTIVE marker), `prices verify`, `prices
+  age`, dossier-spec and the ledger exits with its A2 code and the
+  loader's message; `nous dossier` refuses with the A4 cause; both
+  run_shas functions raise the typed error.
+- Controls, green before and after: `custom_path=None` resolves the
+  shipped table at layer 4; an explicit path that exists loads at layer
+  1; conformance verify and certify already refuse; plain `nous verify`
+  already refuses.
+
+The red gate compares the set of failed test ids with the expected red
+set and the set of passed ids with the controls, and prints each failed
+id with its first assertion line, so a case red for the wrong reason is
+visible before the code (FG-S365-B).
+
+### 18.6 Kill criteria
+
+- If the green run on Server A fails any test outside the new file, the
+  change had an effect 18.4 did not measure: restore, then measure
+  before any retry.
+- If anything that passes no explicit path changes, A1 is wrong: the
+  regression harness must show 0 diffs, and `nous prices show` with no
+  flag must print the same bytes before and after the code.
+- If the refusal reaches a handler that continues instead of failing,
+  the site is recorded here before the code changes again.
+
+The UnpriceableSoulModel CLI message is a separate unit, with its own
+recon and decisions written as section 19 before its code.
