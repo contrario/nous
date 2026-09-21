@@ -36,6 +36,72 @@ TIER_COSTS: dict[str, dict[str, float]] = {
 }
 
 
+_RUNTIME_PRICING: Optional[Any] = None  # __s365_p3_runtime_pricing_v1__
+
+
+class UnpriceableSoulModel(Exception):
+    """A soul's declared model cannot be priced from the governed pricing table."""
+
+    def __init__(self, reason: str, model: str, detail: str) -> None:
+        self.reason = reason
+        self.model = model
+        self.detail = detail
+        super().__init__(f"{reason}: soul model {model!r} {detail}")
+
+
+@dataclass(frozen=True)
+class SoulPrice:
+    model: str
+    canonical: str
+    cost_per_1k_in: float
+    cost_per_1k_out: float
+    reasoning_multiplier: float
+    staleness: str
+
+
+def runtime_pricing() -> Any:
+    global _RUNTIME_PRICING
+    if _RUNTIME_PRICING is None:
+        from pricing import load_pricing
+        _RUNTIME_PRICING = load_pricing()
+    return _RUNTIME_PRICING
+
+
+def resolve_soul_price(model: str, table: Optional[Any] = None) -> SoulPrice:
+    from pricing import lifecycle_status, staleness_status
+    source = table if table is not None else runtime_pricing()
+    try:
+        canonical, entry = source.resolve(model)
+    except KeyError:
+        raise UnpriceableSoulModel(
+            "unpriceable", model, "is not in the pricing table"
+        ) from None
+    life, life_msg = lifecycle_status(entry)
+    if life == "removed":
+        raise UnpriceableSoulModel(
+            "removed", model, f"was {life_msg} in the pricing table"
+        )
+    if entry.pricing_model == "per_hour":
+        raise UnpriceableSoulModel(
+            "per_hour", model, "is billed per hour, not per token"
+        )
+    stale, _stale_msg = staleness_status(entry, under_smt=False)
+    if entry.pricing_model == "free":
+        return SoulPrice(model, canonical, 0.0, 0.0, 1.0, stale)
+    if entry.input_per_1m is None or entry.output_per_1m is None:
+        raise UnpriceableSoulModel(
+            "unpriceable", model, "has no per-token prices in the pricing table"
+        )
+    return SoulPrice(
+        model=model,
+        canonical=canonical,
+        cost_per_1k_in=float(entry.input_per_1m / 1000),
+        cost_per_1k_out=float(entry.output_per_1m / 1000),
+        reasoning_multiplier=float(entry.reasoning_token_multiplier),
+        staleness=stale,
+    )
+
+
 class CircuitBreakerTripped(Exception):
     def __init__(self, soul_name: str, spent: float, ceiling: float) -> None:
         self.soul_name = soul_name
@@ -95,12 +161,26 @@ class CostTracker:
                 raise CircuitBreakerTripped(soul_name, self._spent, self._ceiling)
         return cost
 
-    async def pre_check(self, soul_name: str, est_input: int, est_output: int, tier: str) -> bool:
-        tier_info = TIER_COSTS.get(tier, TIER_COSTS["Tier1"])
-        est_cost = (
-            (est_input / 1000) * tier_info["input_per_1k"]
-            + (est_output / 1000) * tier_info["output_per_1k"]
-        )
+    async def pre_check(  # __s365_p3_pre_check_model_v1__
+        self,
+        soul_name: str,
+        est_input: int,
+        est_output: int,
+        tier: str,
+        model: Optional[str] = None,
+    ) -> bool:
+        if model is None:
+            tier_info = TIER_COSTS.get(tier, TIER_COSTS["Tier1"])
+            est_cost = (
+                (est_input / 1000) * tier_info["input_per_1k"]
+                + (est_output / 1000) * tier_info["output_per_1k"]
+            )
+        else:
+            price = resolve_soul_price(model)
+            est_cost = (
+                (est_input / 1000) * price.cost_per_1k_in
+                + (est_output / 1000) * price.cost_per_1k_out * price.reasoning_multiplier
+            )
         async with self._lock:
             return (self._spent + est_cost) <= self._ceiling
 
@@ -291,6 +371,7 @@ class SoulRunner:
         tier: str = "Tier1",
         cost_tracker: Optional[CostTracker] = None,
         sense_cache: Optional[SenseCache] = None,
+        model: Optional[str] = None,  # __s365_p3_runner_model_v1__
     ) -> None:
         self.name = name
         self.wake_strategy = wake_strategy
@@ -299,6 +380,9 @@ class SoulRunner:
         self._listen_channel = listen_channel
         self._heartbeat = heartbeat_seconds
         self._tier = tier
+        self._model = model  # __s365_p3_runner_refuse_v1__
+        if model is not None:
+            resolve_soul_price(model)
         self._cost_tracker = cost_tracker
         self._sense_cache = sense_cache
         self._alive = True
@@ -401,7 +485,7 @@ class SoulRunner:
             self._sense_cache.clear()
 
         if self._cost_tracker:
-            can_run = await self._cost_tracker.pre_check(self.name, 500, 200, self._tier)
+            can_run = await self._cost_tracker.pre_check(self.name, 500, 200, self._tier, self._model)  # __s365_p3_pre_check_call_v1__
             if not can_run:
                 log.warning(f"Soul [{self.name}]: pre-check failed, budget exhausted, skipping")
                 return

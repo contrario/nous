@@ -300,6 +300,7 @@ def build_runtime() -> NousRuntime:
         listen_channel=None,
         heartbeat_seconds=HEARTBEAT_SECONDS,
         tier="Tier1",
+        model="deepseek-flash",
     ))
 
     _soul_strategist = Soul_Strategist(rt)
@@ -311,6 +312,7 @@ def build_runtime() -> NousRuntime:
         listen_channel="Watcher_PriceSnapshot",
         heartbeat_seconds=HEARTBEAT_SECONDS,
         tier="Tier0A",
+        model="claude-haiku-4-5",
     ))
 
     _soul_executor = Soul_Executor(rt)
@@ -322,6 +324,7 @@ def build_runtime() -> NousRuntime:
         listen_channel="Strategist_TradeSignal",
         heartbeat_seconds=HEARTBEAT_SECONDS,
         tier="Tier1",
+        model="deepseek-flash",
     ))
 
     _soul_riskguard = Soul_RiskGuard(rt)
@@ -333,6 +336,7 @@ def build_runtime() -> NousRuntime:
         listen_channel="Executor_TradeOrder",
         heartbeat_seconds=HEARTBEAT_SECONDS,
         tier="Tier0A",
+        model="claude-haiku-4-5",
     ))
 
 

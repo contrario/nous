@@ -1009,3 +1009,59 @@ code:
   baseline entries carrying souls (46 at the time of writing), the
   emission has a second effect that was not decided here: stop and
   measure it before committing.
+
+<!-- __s365_p3_build_v1__ -->
+### 17.6 P3 build notes (written with the code)
+
+- Refusal placement. A scan of tests/*.py and tests/**/*.nous found 20
+  files declaring a model the shipped table cannot price; two of them
+  load a generated module: tests/test_inject_message.py (model `test`)
+  and tests/test_intervention.py (model `claude-haiku`). Neither file
+  calls build_runtime, and a generated module constructs SoulRunner only
+  inside build_runtime, which it calls from main(). The 17.5 kill
+  criterion is checked by the full suite before the commit, not assumed
+  here.
+- `model` is the last parameter of SoulRunner.__init__, after
+  `sense_cache`, so a positional caller keeps its meaning. codegen emits
+  it after `tier=`.
+- The refusal lives in `resolve_soul_price`, which SoulRunner.__init__
+  calls when a model is passed and pre_check calls when it prices by
+  model. The table is memoised per process in `_RUNTIME_PRICING` through
+  `runtime_pricing()`, loaded by `load_pricing()` with no path, the
+  loader the API and dispatch use.
+- runtime.py imports pricing only inside `runtime_pricing` and
+  `resolve_soul_price`, so importing runtime does not import pricing.
+  tests/test_s365_p3_runtime_surface.py asserts it in a fresh
+  interpreter.
+- A deprecated or stale entry prices normally. The staleness result is
+  carried on SoulPrice and not logged; P3 adds no runtime log line.
+- A command that builds a runtime (`nous run`, replay, hot reload,
+  compiled trace) now meets the refusal as an uncaught
+  UnpriceableSoulModel whose message names the model and the reason. A
+  clean CLI message instead of a traceback is release-unit work.
+- The clone runner built at mitosis_engine.py:387 passes no model, as
+  17.2 P3.3 decided, so a clone pre-checks at its tier price, and a
+  re-verify that includes an existing clone names it `"unknown"`.
+  Carried to P4 with the admission-table question.
+- The P3.5 test lives in tests/test_s365_p3_runtime_surface.py, not in
+  the 17.4 file, so the committed red test stays byte-identical to the
+  file the red gate ran.
+- The CHANGELOG entry, and a check of shipped copy that describes the
+  runtime pre-check price basis, are release-unit work, not this commit.
+- Amendment to 17.4, found on the first apply. The codegen test as first
+  written asserted a SoulRunner call for every template.
+  templates/cost_cap_basic.nous and templates/sycophancy_guard.nous
+  declare no soul, so those two parameters were red for a false premise
+  and stayed red after the code. The first apply failed its green gate on
+  exactly those two and restored every original byte. The assertion now
+  requires a call only when the template declares a soul; the
+  emitted == declared comparison is unchanged, so a soul-bearing template
+  that emits nothing still fails. The red gate compares the set of
+  failed test ids with an expected set, not a count.
+- 17.4 names the gate-clean corpus; the test covers the 12 templates. The
+  corpus-wide check is the rebaseline: every hashed baseline entry that
+  carries a soul must change and no other may (17.5).
+- Correction to 17.2 P3.2. pyproject declares pydantic>=2.0.0 as a
+  dependency, so a module-level pricing import would add no requirement
+  and the second 17.5 kill criterion cannot fire. The lazy import stays:
+  importing runtime does not load the pricing code.

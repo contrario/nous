@@ -289,8 +289,9 @@ class MitosisEngine:
             if not parent_runner:
                 return False, f"parent runner {parent_name} not found"
 
-            parent_soul = self._build_soul_node(parent_name, config)
-            clone_soul = self._build_soul_node(clone_name, config, is_clone=True)
+            parent_model = getattr(parent_runner, "_model", None) or "unknown"  # __s365_p3_mitosis_parent_model_v1__
+            parent_soul = self._build_soul_node(parent_name, config, model=parent_model)
+            clone_soul = self._build_soul_node(clone_name, config, is_clone=True, model=parent_model)
 
             existing_souls = []
             existing_messages = []
@@ -303,7 +304,7 @@ class MitosisEngine:
                     tier_enum = Tier(tier_str)
                 except ValueError:
                     tier_enum = Tier.TIER1
-                s.mind = MindNode(model="runtime", tier=tier_enum)
+                s.mind = MindNode(model=getattr(runner, "_model", None) or "unknown", tier=tier_enum)  # __s365_p3_mitosis_runner_model_v1__
                 s.heal = HealNode(rules=[])
                 existing_souls.append(s)
 
@@ -339,6 +340,7 @@ class MitosisEngine:
         name: str,
         config: MitosisConfig,
         is_clone: bool = False,
+        model: str = "unknown",  # __s365_p3_mitosis_node_model_v1__
     ) -> Any:
         from ast_nodes import SoulNode, MindNode, HealNode, Tier
 
@@ -350,7 +352,7 @@ class MitosisEngine:
 
         return SoulNode(
             name=name,
-            mind=MindNode(model="cloned", tier=tier_enum),
+            mind=MindNode(model=model, tier=tier_enum),  # __s365_p3_mitosis_node_mind_v1__
             heal=HealNode(rules=[]),
         )
 

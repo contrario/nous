@@ -1,19 +1,19 @@
 {
   "aml_transaction_governance.nous": {
     "error": null,
-    "hash": "36adf410f6ed57781d4cb658ae927b1b069a8472e766c26034bb8236273f278c",
+    "hash": "a8c8cdc56ce19328770f48d58e89040911883f51f2d8fdfb7f80795f88f93124",
     "replay_block": false,
     "skipped": false
   },
   "compiler.nous": {
     "error": null,
-    "hash": "1e26c8ced5679805217ed8b2c59edd4e6e1dbd6e0f69e20a6d90a2ddb5014fb1",
+    "hash": "5599dc70042d335f8e57ad498d99cdb6d5a910dfff135f48bc59abb4d6e0a55d",
     "replay_block": false,
     "skipped": false
   },
   "consciousness_test.nous": {
     "error": null,
-    "hash": "3713b9e69a97f12b042e37e35cf2b7da81084c573703eefb1028939b84f09b3e",
+    "hash": "8fff312b989273aa1c7415dd70b8849561d13f5727787ba58e31570d00587037",
     "replay_block": false,
     "skipped": false
   },
@@ -25,7 +25,7 @@
   },
   "cross_world_test.nous": {
     "error": null,
-    "hash": "76e39900621adcc370e37accc76e88d680359bccebcc2ab041540f5887075de4",
+    "hash": "420cbbe53111e94935a883bde3bf40d1c8cab363b6e2b59181b61171048a9df6",
     "replay_block": false,
     "skipped": false
   },
@@ -37,97 +37,97 @@
   },
   "dream_lucid_test.nous": {
     "error": null,
-    "hash": "ed596e539cd853a9c9ef25501c73fc67abe1f3766ee5399e4691cea7be3d224f",
+    "hash": "2fb5810d93d205686b424828335bbfcb5cec48ea4ea46a669a0c52506a281758",
     "replay_block": false,
     "skipped": false
   },
   "dream_test.nous": {
     "error": null,
-    "hash": "e6330cdc421b7d715513c184aaad2217e48936882413c72d8e4f9ad655554ce5",
+    "hash": "859d3ed732d1152611cf6e90321c412b09b62742cb5599d2d1bd2dc9aca81995",
     "replay_block": false,
     "skipped": false
   },
   "examples/demos/cert-4679350/source.nous": {
     "error": null,
-    "hash": "231ab4fa2c71d632995e721ebf35822319040ce86a61ba7358b7a0777800bc7c",
+    "hash": "2b4fec29adbb851b166a3142673a9606ed1b54f172c1d1079cb4f21ad6bdb33c",
     "replay_block": false,
     "skipped": false
   },
   "fullstack_builders.nous": {
     "error": null,
-    "hash": "c74cc2608349bb9ecf67672233f789d8619fb9f2251b5ea5c9b95d867a82d0a1",
+    "hash": "00a1bcf6fe6ec12c0c6999909aefe66a1f10e02035a49903cb1c628737b9ba35",
     "replay_block": false,
     "skipped": false
   },
   "gate_alpha.nous": {
     "error": null,
-    "hash": "c7309e73bb5afe665a32253ffea2581b809b839e328f9f2d37cd4c4f808da46d",
+    "hash": "7d8a8c4986d479ac8a4418fdd89779a25ff4d1af41df43d4c4667efe6b7226ac",
     "replay_block": false,
     "skipped": false
   },
   "gate_alpha_test.nous": {
     "error": null,
-    "hash": "a0218b07365b4237e0bb97766fd827bdf5ae4005f34447c91284be20d651d0f4",
+    "hash": "52f7b019a287a8d6424bd9d71157b061d3acd34c71a2ee54d21a1a97cf460abc",
     "replay_block": false,
     "skipped": false
   },
   "greek_tax_advisor.nous": {
     "error": null,
-    "hash": "dcbbaa6618c7b5b32fe0937bee6fe503d5a084292793360ea6d5905d420b722b",
+    "hash": "2c70ccecb5a35c645512c3a08d6dba1d2775384d1d11810707717405050545c0",
     "replay_block": false,
     "skipped": false
   },
   "immune_test.nous": {
     "error": null,
-    "hash": "82f3fefeecf9fa2f38883467eb06d3c4bc5dfdb834cb86e004fece58f6933b34",
+    "hash": "0d940193dfd648c72f77c0dcf938a5efb01edbffffcb65f9d6a2884c0cf2817d",
     "replay_block": false,
     "skipped": false
   },
   "import_test.nous": {
     "error": null,
-    "hash": "0d06b83595d29aef26bf6f7e762c9782a3574bdd8e27abce580aaa2e756dd73a",
+    "hash": "0b2289010b344692b421c5f7b513f0224b6a17f1d42ddb5cbb17946c2aa21fcd",
     "replay_block": false,
     "skipped": false
   },
   "infra_monitor.nous": {
     "error": null,
-    "hash": "74bdd8d8ca8b9b77beda6352bf941db2a759fdc4e3dedf31cfec4e57a5eaa206",
+    "hash": "3ad90e238d8bd6afa5cad7975df064f5f191b66f181164ec83d837285860d69d",
     "replay_block": false,
     "skipped": false
   },
   "kerberus.nous": {
     "error": null,
-    "hash": "11e887480fc4b6016fe0a9963057ad94072d17bc345bdd8963659b33cdc250c4",
+    "hash": "f3eb3b103e3bf1573dd014d9add32a0af9f01b8a399ab972603694fc689fe119",
     "replay_block": false,
     "skipped": false
   },
   "loan_approval.nous": {
     "error": null,
-    "hash": "f28c577fbe96ad41e497715cf4889865cb6c5703fe4e280651fcd0b7e54c84ae",
+    "hash": "99caf5d441b8a6bbbf33ebc9977e7c5175ecf4954f1d2cd29a16b7534111a49b",
     "replay_block": false,
     "skipped": false
   },
   "mcp_example.nous": {
     "error": null,
-    "hash": "e5da4ab0c091e1a9fd6a272bd3751ee9563b16a1b96452c53acf355e00c940f4",
+    "hash": "343bd32a7139e56bc65aa6c2e4fed8a6b554fbf4473e09ddb8b1b573d6377bbb",
     "replay_block": false,
     "skipped": false
   },
   "metabolism_test.nous": {
     "error": null,
-    "hash": "7fd7949f8ef0f9ffa9b7ca7c16308d5c5197fdb2ede7db2be262ff27335a8bd1",
+    "hash": "a5d43dc4d6fa1dcdf74acc15ae55d03f3b70d36719d297d2f386c304c03aa896",
     "replay_block": false,
     "skipped": false
   },
   "mitosis_test.nous": {
     "error": null,
-    "hash": "f1ba42fd1e28dfd0112262b45fd46e45f9c281dfea0e26bb1f55cbb3d9e4086e",
+    "hash": "283f884e89ec05750a4e9fdee0b86fe4a0c0205f044e1f0a6ced7390a2306a21",
     "replay_block": false,
     "skipped": false
   },
   "mutation_test.nous": {
     "error": null,
-    "hash": "ec508db7fa4c7a248ce3c294f72cde2a9b71b8bda7a8a11f75b249ccc93a881a",
+    "hash": "7c1fbec6973f2352c4ee79d31681c3dd986b1039f61356f4123fae2d037444cf",
     "replay_block": false,
     "skipped": false
   },
@@ -139,13 +139,13 @@
   },
   "noesis_integration_test.nous": {
     "error": null,
-    "hash": "b6afc958f1851254847bb20cba15604e2c44e80733d0939624811ff2adc2e53c",
+    "hash": "2c563b3d62cf0057ba8e1c92a906b80a878bc92a4bac38b6d0edd058868727db",
     "replay_block": false,
     "skipped": false
   },
   "noesis_phase9_test.nous": {
     "error": null,
-    "hash": "ea081a774055f2d98b0ac9dc10433b8293774a2ec1fb6f30c047e207ac29c211",
+    "hash": "8454c17f705756d69148a5dc6c0f29d1002cdf575d99c80dca496d8f56b7fccc",
     "replay_block": false,
     "skipped": false
   },
@@ -163,7 +163,7 @@
   },
   "retire_test.nous": {
     "error": null,
-    "hash": "932e3c0cc7381b78aa9c8d17a4af1b8b12d2a77bd62a824ea0c673c05d4d0cf1",
+    "hash": "6569996faf99e839d58cdb3defb9cc8a8bed8e54c36bdc41b2894fe42fdf1705",
     "replay_block": false,
     "skipped": false
   },
@@ -175,7 +175,7 @@
   },
   "stdlib/aggregator/main.nous": {
     "error": null,
-    "hash": "f4ed90e4822bc2f31e5888836ca9e0d9e62ce6a5ee5d11e85bc027f779c3d0f0",
+    "hash": "9efb2a09010a1dd9eb7dd9e86b3c6d33da117dceebffd74ad143347f05c322ad",
     "replay_block": false,
     "skipped": false
   },
@@ -187,13 +187,13 @@
   },
   "stdlib/router/main.nous": {
     "error": null,
-    "hash": "e723cf8062b978ff84fb437b3d39fce014b73c1ad349aee715d11aea2b70a9b1",
+    "hash": "b41e3b205fa278d34a26ce0f38aa003511f18ec92e65b1d8d8a35c65bc4381f0",
     "replay_block": false,
     "skipped": false
   },
   "stdlib/scheduler/main.nous": {
     "error": null,
-    "hash": "2a86d7c5561857dd004f1ffe4b158d9e382d0a0120f54d56fbd90fe856c365a5",
+    "hash": "9b2d6b70cc67e98959a7f867262abdc6b646ea182eb139f017ffdd47a9d3038c",
     "replay_block": false,
     "skipped": false
   },
@@ -205,19 +205,19 @@
   },
   "symbiosis_test.nous": {
     "error": null,
-    "hash": "9b0ce9387e3de7f351f3c37dc5aba840ec211f1b07363398ac64442a0fa962ff",
+    "hash": "3288b4022ba37ac300824f79f0ac94ce951f7a396e9afeae486903c3e6ed9cef",
     "replay_block": false,
     "skipped": false
   },
   "telemetry_test.nous": {
     "error": null,
-    "hash": "70b699440ec380623d54a2ddc7d126cf7f526a88fa638f0ce3bd0db537280d55",
+    "hash": "3b4e1757061992c1a5e563aadff870f86ca02ab761a544d99b55b2948f6da3f2",
     "replay_block": false,
     "skipped": false
   },
   "templates/content_pipeline.nous": {
     "error": null,
-    "hash": "bf82258d2b7e0f186721761a1fe460a53ea918bf348c597ea2d934a97360ee48",
+    "hash": "fdc452c70a12937b82c328678037bd963af53aafc0c4f232b6fd507157d98b0a",
     "replay_block": false,
     "skipped": false
   },
@@ -229,49 +229,49 @@
   },
   "templates/cost_cap_emit_demo.nous": {
     "error": null,
-    "hash": "95191f72b2e791ec9bfadef9e2fb4608eb38eeb17b16370236081dd1a6499fdf",
+    "hash": "f1013f4ea72b153b84e80b97eb537f5ee440af94d2c5d9b7d16709e72bd3c55d",
     "replay_block": false,
     "skipped": false
   },
   "templates/cost_cap_with_souls.nous": {
     "error": null,
-    "hash": "231ab4fa2c71d632995e721ebf35822319040ce86a61ba7358b7a0777800bc7c",
+    "hash": "2b4fec29adbb851b166a3142673a9606ed1b54f172c1d1079cb4f21ad6bdb33c",
     "replay_block": false,
     "skipped": false
   },
   "templates/coverage_farkas_demo.nous": {
     "error": null,
-    "hash": "cb879adc38e8a12b348c6d96d600d408af707f7546c373c3937239716399abe1",
+    "hash": "088f170705c61374f90f6734727411e2aac1baeea30aadc4ed5df729225b4262",
     "replay_block": false,
     "skipped": false
   },
   "templates/customer_service.nous": {
     "error": null,
-    "hash": "0798c5cf12b6b841bcc24d9fc6b2f83636349f3911c09c1016d2c75b504be11a",
+    "hash": "a48eaa9bbaa45fd8e4074701b57d32697c5301938b05b4dd29c969a1dd84441c",
     "replay_block": false,
     "skipped": false
   },
   "templates/governance_demo.nous": {
     "error": null,
-    "hash": "1dd9bdcc7e6d6b5ab9fe61d468db1ea933da966971e9794d12dbf0fc655e1d49",
+    "hash": "fdb89f766d09581d79d72c7d3c1420ac446e99349676845f72ed86936691fb0c",
     "replay_block": false,
     "skipped": false
   },
   "templates/market_monitor.nous": {
     "error": null,
-    "hash": "e4b6e1ed04fc3734f36b41961b8309e5a9d03b9eb5fbcb9f0a11329b1dcb9ee7",
+    "hash": "5cb00f0dbc174e15659993215c3beb2a3f7823f070e032c3c75263165ba2fdc3",
     "replay_block": false,
     "skipped": false
   },
   "templates/quorum_gated_demo.nous": {
     "error": null,
-    "hash": "489d4e6d1425c7800e79e65699f619e297d68e47ca0bd62d9174b3fb39c968bd",
+    "hash": "b68f5703abd850f0b7539880d7408d69cc8987186e86fc842606e6a3625eaf85",
     "replay_block": false,
     "skipped": false
   },
   "templates/sequence_law_demo.nous": {
     "error": null,
-    "hash": "cec3859f3ca6f15d3cff0f8169be643fc75af3feb48fb0994b6d006fba734a27",
+    "hash": "c58f1918e34aad086af01009e320873818ad4a53f7c40897b730013ff62f734d",
     "replay_block": false,
     "skipped": false
   },
@@ -283,37 +283,37 @@
   },
   "templates/trading_floor.nous": {
     "error": null,
-    "hash": "e3b667c2a7fbe208705fa2eda311cb944eb02be88696f52bfeb32225a0a21afb",
+    "hash": "e56b6967ada233ea53c7d1682b14a00612352338ae30837b3b422f7ede5f8cb1",
     "replay_block": false,
     "skipped": false
   },
   "test_deploy_topology.nous": {
     "error": null,
-    "hash": "89f111b1e24929612e6590adea2eefb7db3ec4c9fb8ee3faf3be15ae9e2377c5",
+    "hash": "5b3f2a0892aa1ed28d53bdc0bc4a21ce67d340a29fb7dee22630c29e919ddcca",
     "replay_block": false,
     "skipped": false
   },
   "test_distributed.nous": {
     "error": null,
-    "hash": "1bf5da34ae863f968214676b499b7827e1aae97652e39a1fcc4c28b7355e92f8",
+    "hash": "0fb5a8e9a1785a04fe346aa04650e99e223686c5518da1e27914018d1f8b2cc5",
     "replay_block": false,
     "skipped": false
   },
   "test_emotions.nous": {
     "error": null,
-    "hash": "6907c1c21e6ee6a77c9f2119a0b63d600c580835ddb2c1ac431f07600a8ac454",
+    "hash": "d514210ae9e949cd804f5c14933c36bd3f9b82ee59db64ad0a570606adc765f8",
     "replay_block": false,
     "skipped": false
   },
   "test_emotions_full.nous": {
     "error": null,
-    "hash": "24a84a15934153acc1f768ca96d25aa61ffecd4b2d67b8db79e71ea3a6e730ef",
+    "hash": "bce3fbc6d339377b3a9fae7c739ae9e632addcfdd5145c1ecb7618e336075b31",
     "replay_block": false,
     "skipped": false
   },
   "test_lsp_errors.nous": {
     "error": null,
-    "hash": "ccee7b6fb487942b7e76f38597a0d6790a788e72f393652b543694c868032aee",
+    "hash": "3ce23e94af163b87e48daca3fdc428ee3cd91cd97db81ff7f1315ca476e4d999",
     "replay_block": false,
     "skipped": false
   },
@@ -325,13 +325,13 @@
   },
   "test_senses_v2.nous": {
     "error": null,
-    "hash": "5baea446bf4bc508dd81022694a2ceefd56127b336bcf0ef7726d4a08d7c1397",
+    "hash": "f41098ec33c593bcf836c310347014fa8010138835d64829fac052846281ad40",
     "replay_block": false,
     "skipped": false
   },
   "test_senses_v2_valid.nous": {
     "error": null,
-    "hash": "15a7421c408f324f7f9901ca2a82f51546471c08d89d5eabda2a621c0531ede5",
+    "hash": "c5d9d37a861737a5972b5d609aa46dd958bfcbd2ad67ed90e99b745bc2ce0fd2",
     "replay_block": false,
     "skipped": false
   },
@@ -349,7 +349,7 @@
   },
   "website/.well-known/nous/vsa-vectors/v1/vsa_conformance_vector_v1.nous": {
     "error": null,
-    "hash": "a00008e56f4f40e25eb139924957128594dae5c205923ea41b50a530e0e81edb",
+    "hash": "646aa027f8cbd7674c9bb2fddc8885669623f61435a499b1d8acea2c8fbd47da",
     "replay_block": false,
     "skipped": false
   }

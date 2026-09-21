@@ -793,6 +793,7 @@ class NousCodeGen:
             self._emit(f"listen_channel={listen_ch},")
             self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
             self._emit(f"tier={tier},")
+            self._emit('model="' + (soul.mind.model if soul.mind else "unknown") + '",')  # __s365_p3_emit_model_a_v1__
             self._dedent()
             self._emit("))")
             self._emit_blank()
@@ -1031,6 +1032,7 @@ class NousCodeGen:
             self._emit(f"listen_channel={listen_ch},")
             self._emit(f"heartbeat_seconds=HEARTBEAT_SECONDS,")
             self._emit(f"tier={tier},")
+            self._emit('model="' + (soul.mind.model if soul.mind else "unknown") + '",')  # __s365_p3_emit_model_b_v1__
             self._dedent()
             self._emit("))")
             self._dedent()
