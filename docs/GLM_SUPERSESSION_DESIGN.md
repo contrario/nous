@@ -15222,3 +15222,184 @@ document itself.
                        is worse than a wrong number because the reader
                        has no signal to check it. Corrected by append
                        in D355-6.
+
+  - S356 the session that asked whether the bodies that open every
+    session are the bodies this repository holds, answered it by digest
+    at one head, and watched that head move under it while it wrote
+    nothing
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY IS NOT WRITTEN FROM
+    INSIDE THE SESSION IT DESCRIBES. It is landed by S368. UNLESS A
+    SENTENCE SAYS OTHERWISE, EVERY VALUE WAS PRINTED ON THE HOST IN S356
+    BY A NAMED INSTRUMENT AND IS CARRIED HERE FROM THE SEALED HANDOFF,
+    OPENER AND MEASUREMENT RECORD OF S356, each verified by digest
+    against the kickoff of S368 before it was read. Three other kinds
+    appear and are marked where they do. MEASURED ON THE HOST IN S368:
+    printed on Server A in S368. READ IN THE SEAT'S CONTAINER: taken in
+    S368 from files whose identity rests on the operator's transfer
+    alone. TESTIMONY: what the seal of S356 itself marks as testimony,
+    carried with that mark.
+
+    READ THIS PARAGRAPH BEFORE ANY OTHER. THE ANSWER BELOW HOLDS AT ONE
+    HEAD, cd8d057, AND AT NO OTHER. A negative computed at one head does
+    not transfer to another, and the tree has moved many commits since.
+    A READER WHO QUOTES THE TWIN RESULT AT A LATER HEAD WITHOUT
+    MEASURING IT AGAIN HAS READ AN ENTRY THAT FAILED.
+
+    THE SCOPE WAS THE OPERATOR'S AND SO WAS EVERY GATE, AND NONE OF THEM
+    WAS IRREVERSIBLE. S356 cut no commit, made no push, and made no
+    network request of its own; the single fetch the opening instrument
+    makes ran before any work. It wrote one file to the host, the
+    instrument described below, and nothing to the repository.
+
+    D356-1  THE OBJECT AND WHO CHOSE IT. The operator chose the board
+            item asking whether the uncommitted bodies in the operator's
+            home earn a place in the repository. As a first leg the seat
+            proposed a map of which of them already have a copy there,
+            and was corrected twice on its scope and once on a blindness
+            it had not declared, before anything ran. The second leg,
+            the placement itself, was not taken. AT NO POINT DID THE
+            SEAT CHOOSE THE OBJECT.
+
+    D356-2  THE INSTRUMENT. J1_TWIN_MAP.py, at digest 8698d2e2, names
+            its eighteen bodies in its own table and lists no directory.
+            Its oracle is every tracked blob at the head, and a match is
+            by the digest of a blob's content only, with the file name
+            printed as a second axis that never decides. It was built
+            off host and every refusal arm was driven red for the reason
+            it is named for, each with its own exit code. A synthetic
+            repository exercised every branch its report can take,
+            including a body whose name matches a tracked file while its
+            bytes do not. Transport to the host was verified by digest
+            before it ran, and its selftest ran on the host before the
+            real reading.
+
+    D356-3  THE ANSWER, AT cd8d057. The head carried one thousand three
+            hundred and twenty-seven tracked blobs with one thousand one
+            hundred and six distinct digests. All eighteen bodies were
+            present and none differed from a pin it carried. Seven
+            matched their pins and eleven carried none. TWO HAD A TWIN
+            AT THAT HEAD, AND THEY ARE THE PAIR OF BODIES THAT OPENS
+            EVERY SESSION: the opening rule and the second opening
+            instrument, each byte identical to its tracked copy under
+            instruments, on the digest axis and on the name axis
+            both. FG-S353-A AND FG-S353-B CLOSE GREEN. A question that
+            had stood open on the strength of a shared name became a
+            digest.
+
+    D356-4  TWO AXES AGREE ON THE REST. The other sixteen bodies had no
+            twin on the digest axis, and the eleven that carried no pin
+            also had no tracked file of the same name. That second axis
+            agreeing with the first is what turns into a measurement the
+            worry that the eight bodies of one family were the eight to
+            which cc8411d gave a second home: none of the eleven is
+            among them.
+
+    D356-5  THE GRAFT IS MEASURED. At cd8d057 the clone reported itself
+            shallow and carried a graft file. That stopped being
+            inherited from earlier entries and the blindness the
+            instrument declared became exact rather than borrowed.
+            MEASURED ON THE HOST IN S368: an instrument reported the
+            clone shallow again at a later head.
+
+    D356-6  THE TREE MOVED UNDER A SESSION THAT WROTE NOTHING. The
+            opening instrument read 2d810b6 with the remote identical
+            after a real fetch. The twin map then read cd8d057, whose
+            parent is 2d810b6, committed at 11:27:14Z by another lane, a
+            version bump with a new floor. The move needed no network
+            request; it was a local commit on the same tree. THE RULE
+            THIS HOUSE KEPT, FETCH BEFORE A WRITE DECISION, ASSUMES THE
+            DANGER IS REMOTE. A reading of the remote would not have
+            caught this. The stronger form is to read the head again at
+            the moment of the decision. IT IS ALSO WHY NO COMMIT WAS
+            CUT: at the last reading the tree carried an untagged bump
+            and two modified tracked files, and a release lane between
+            bump and tag is not a tree to write into. The measurement
+            made that a decision rather than a preference.
+
+    D356-7  A REFUSAL THAT WAS NOT A DEFECT. The seat twice refused to
+            take eleven pins out of an artifact whose digest it could
+            not check, and that was the correct application of the rule
+            it had been given. THE GATE WORKED AGAINST THE SEAT THAT
+            WROTE IT. PIN_NOT_CARRIED is therefore a result and not a
+            gap.
+
+    D356-8  CORRECTION BY APPEND, AGAINST THE HANDOFF OF THIS SESSION.
+            It counts three ledger entries as owed and assigns one of
+            them to the session of the other lane, by that lane's own
+            numbering. That was an assumption and not a reading. READ IN
+            THE SEAT'S CONTAINER: across the ten sealed handoffs of that
+            lane from S357 to S366, no line names this document by its
+            path, by its short name, as the gate document, or as the
+            D-ledger, and the one mention of this ledger uses it to
+            choose a session number. The later handoffs of that lane
+            call their own sealed sections the ledger. IN S368 THE
+            OPERATOR RULED, IN WORDS, THAT THIS DOCUMENT IS THE LEDGER
+            OF THIS LANE ONLY. The entry that handoff assigned to the
+            other lane is therefore not owed. SET: those handoffs, the
+            handoff of S356, and the ruling. BLIND TO: any name for this
+            document the search did not try.
+
+    D356-9  WHAT THIS ENTRY DOES NOT ESTABLISH. It does not establish
+            the twin result at any head after cd8d057. It does not
+            establish that a body with no twin was never committed,
+            because the oracle was the head and the history is grafted.
+            It says nothing about the eleven uncarried pins, for which a
+            wrong name is not separable from a missing body. TESTIMONY:
+            that the three untracked members that left the working tree
+            were moved to an attic in the operator's home and not
+            deleted; S356 measured their absence and not the move. It
+            does not establish what a commit of the instrument would do
+            to either published archive. BYTE IDENTITY IS NOT
+            PROVENANCE: a twin means equal bytes and says nothing about
+            which copy came first. IT PROVES NOTHING. Z3 AND FARKAS OWN
+            THAT WORD.
+
+    FINDINGS
+
+            FG-S356-A  SEAT. A DECLARATION BLOCK ASSERTED COUNTS ITS OWN
+                       TABLE CONTRADICTED. The draft's preamble named
+                       eighteen paths, seven pins and eleven without as
+                       literal words while the table beside it held
+                       five. A fixture caught it before the host did.
+                       Same class as a gate naming a condition without
+                       its oracle.
+
+            FG-S356-B  SEAT. THE FIRST SCOPE TOOK ONE DIRECTORY AS THE
+                       TWIN ORACLE. A copy anywhere in the tree makes a
+                       body non-unique, so the oracle is every tracked
+                       file at the head. Corrected by the operator
+                       before anything ran.
+
+            FG-S356-C  SEAT. ONE BLINDNESS WAS DECLARED WHERE THERE WERE
+                       TWO. Blind to history is not the whole of it when
+                       the clone is grafted, because a search of history
+                       would then be a lower bound rather than an
+                       enumeration. Corrected by the operator, then
+                       measured.
+
+            FG-S356-D  WORLD. A TRANSFER FAILED BY NEVER HAPPENING. The
+                       opener of S354 reached the seat as message text
+                       on both attempts and never as a file. No byte was
+                       dropped and nothing was corrupted; the channel
+                       was not used. A sweep of the receiving directory
+                       by size and digest is what separated it from a
+                       file that had landed.
+
+            FG-S356-E  WORLD. EVERY REFUSAL ARM OF THE SECOND OPENING
+                       INSTRUMENT RETURNS THE SAME EXIT CODE. Its tokens
+                       differ and its exit code does not, so a caller
+                       scoring on the exit code cannot separate a digest
+                       mismatch from a missing argument. MEASURED ON THE
+                       HOST IN S368: the same, at a later head. The twin
+                       map ships a distinct code per class because of
+                       it.
+
+            FG-S356-F  WORLD. THE WORKING TREE MOVED LOCALLY UNDER A
+                       READ-ONLY SESSION. The rule that says fetch
+                       before a write decision cannot see it. Recorded
+                       in D356-6.
+
+            FG-S356-G  SEAT. A HANDOFF ASSIGNED A LEDGER ENTRY TO A LANE
+                       THAT DOES NOT KEEP THIS LEDGER. Found in S368 and
+                       not in S356. Corrected by append in D356-8.
