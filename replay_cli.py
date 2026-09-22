@@ -337,6 +337,7 @@ def cmd_replay_mutate(args: argparse.Namespace) -> int:
         if ev.kind == "cycle.start":
             cycles_per_soul[ev.soul] = cycles_per_soul.get(ev.soul, 0) + 1
 
+    from runtime import UnpriceableSoulModel  # __s366_mutate_build_refusal_v1__
     try:
         spec.loader.exec_module(mod)
         if not hasattr(mod, "build_runtime"):
@@ -358,6 +359,13 @@ def cmd_replay_mutate(args: argparse.Namespace) -> int:
                     await soul.instinct()
 
         asyncio.run(_drive())
+    except UnpriceableSoulModel as exc:
+        print(f"error: cannot build the runtime for {src_path}: {exc}", file=sys.stderr)
+        try:
+            out_path.unlink()
+        except OSError:
+            pass
+        return 1
     except Exception as exc:
         divergence = exc
 

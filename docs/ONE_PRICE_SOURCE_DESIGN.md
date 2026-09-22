@@ -1377,3 +1377,26 @@ first line (FG-S365-B).
 - If building the new runtime before any removal changes what a swap
   does for a priced edit, the priced control fails; C2 is then recorded
   here as wrong before the code changes again.
+
+<!-- __s366_sec19_notes_v1__ -->
+### 19.6 Build notes, written with the code
+
+- C1 cli.py: `_run_hot_reload` catches UnpriceableSoulModel around the
+  initial build_runtime only. The import is local to the function, like
+  the other imports there.
+- C2 hot_reload_engine.py: `_swap_souls` builds the new runtime before
+  any removal and now returns a bool; `_reload` returns without counting
+  the reload or logging "HOT RELOAD COMPLETE" when it is False, so a
+  refused swap does not reach `_reload_count`. The existing path for a
+  generated module with no build_runtime() returns True and keeps its
+  old accounting; this unit does not change it.
+- C3 One line copies `_model` after `_tier`.
+- C4 replay_cli.py: the new except sits before the existing `except
+  Exception` and covers the whole build-and-drive block. Inside that
+  block only build_runtime raises UnpriceableSoulModel: the drive calls
+  `instinct()` directly and never the runner's pre-check.
+- Measured in the container at d406670: red 4 of 4 for the reasons in
+  19.4 and controls 2 of 2; green 6 of 6; suite 3095 passed, 13 skipped,
+  0 failed; regression harness 0 diffs; inserted lines ASCII. On Server
+  A at 3a52768 the red gate matched by set, 4 red and 2 green, for the
+  same reasons.

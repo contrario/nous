@@ -86,7 +86,8 @@ class HotReloadEngine:
         if module is None:
             return
 
-        await self._swap_souls(module, new_program)
+        if not await self._swap_souls(module, new_program):  # __s366_swap_refused_return_v1__
+            return
 
         elapsed = (time.perf_counter() - t0) * 1000
         self._reload_count += 1
@@ -189,10 +190,10 @@ class HotReloadEngine:
         finally:
             gen_path.unlink(missing_ok=True)
 
-    async def _swap_souls(self, module: Any, program: Any) -> None:
+    async def _swap_souls(self, module: Any, program: Any) -> bool:
         if not hasattr(module, 'build_runtime'):
             log.error("  Swap FAILED: no build_runtime() in generated module")
-            return
+            return True
 
         new_soul_names = {s.name for s in program.souls}
         old_soul_names = {r.name for r in self._runtime._runners}
@@ -201,12 +202,18 @@ class HotReloadEngine:
         removed = old_soul_names - new_soul_names
         common = new_soul_names & old_soul_names
 
+        from runtime import UnpriceableSoulModel  # __s366_swap_build_first_v1__
+        try:
+            new_rt = module.build_runtime()
+        except UnpriceableSoulModel as exc:
+            self._errors.append(f"Swap refused: {exc}")
+            log.error(f"  Swap refused: {exc}; world unchanged")
+            return False
+
         if removed:
             for name in removed:
                 self._runtime.remove_soul(name)
                 log.info(f"  Soul REMOVED: {name}")
-
-        new_rt = module.build_runtime()
 
         if added or common:
             new_runners = {r.name: r for r in new_rt._runners}
@@ -223,6 +230,7 @@ class HotReloadEngine:
                     old_runner._instinct = new_runner._instinct
                     old_runner._heal = new_runner._heal
                     old_runner._tier = new_runner._tier
+                    old_runner._model = new_runner._model  # __s366_swap_model_v1__
                     old_runner._heartbeat = new_runner._heartbeat
                     version = self._soul_versions.get(name, 0) + 1
                     self._soul_versions[name] = version

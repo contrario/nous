@@ -256,7 +256,12 @@ def _run_hot_reload(source: Path) -> int:
         print("  Error: generated code has no build_runtime()")
         return 1
 
-    rt = mod.build_runtime()
+    from runtime import UnpriceableSoulModel  # __s366_hot_refusal_v1__
+    try:
+        rt = mod.build_runtime()
+    except UnpriceableSoulModel as exc:
+        print(f"Error: cannot build the runtime: {exc}", file=sys.stderr)
+        return 1
 
     from hot_reload_engine import HotReloadEngine
     hr = HotReloadEngine(rt, source, poll_interval=2.0)
