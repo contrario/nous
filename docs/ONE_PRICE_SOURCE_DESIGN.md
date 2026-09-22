@@ -1400,3 +1400,11 @@ first line (FG-S365-B).
   0 failed; regression harness 0 diffs; inserted lines ASCII. On Server
   A at 3a52768 the red gate matched by set, 4 red and 2 green, for the
   same reasons.
+
+<!-- __s366_sec19_correction_v1__ -->
+### 19.7 Correction to 18.1
+
+18.1, in its heading and in Y2, places the `--prices` known limit in the
+5.83.0 CHANGELOG. It is in the 5.82.0 section (CHANGELOG.md:124 at
+d406670). The 5.84.0 CHANGELOG corrects that entry. Found while drafting
+the 5.84.0 entry.

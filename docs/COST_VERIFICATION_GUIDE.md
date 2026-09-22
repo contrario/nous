@@ -289,6 +289,9 @@ highest to lowest priority:
 Run `nous prices show` to see which layer is active in your
 context.
 
+An explicit `--prices` path that is not a file is an error; layers 2 to 4
+are consulted only when no path is given.  <!-- __s366_prices_path_doc_v1__ -->
+
 ### Customizing the table
 
 ```bash

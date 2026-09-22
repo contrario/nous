@@ -5,6 +5,65 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [5.84.0]  <!-- __s366_changelog_v5_84_0__ -->
+
+### Changed
+
+- An explicit pricing path that is not a regular file is an error.
+  `load_pricing` raises `PricingPathError`, a `FileNotFoundError` whose
+  message starts with the cause and names the path, before any other
+  pricing layer is consulted. `nous verify --smt` exits 3, `nous
+  emit-smt` 2, `nous prices verify` and `nous prices age` 2, `nous
+  dossier-spec` 1 and `nous governance ledger --source` 1, each with the
+  loader's message. `nous prices show` marks no layer active and exits 2.
+  `nous dossier` refuses before it searches the other layers, exit 1. A
+  directory given as `--prices` is refused the same way. Without
+  `--prices` the layered lookup is unchanged. Design:
+  docs/ONE_PRICE_SOURCE_DESIGN.md section 18.
+- A soul model the pricing table cannot price is reported as a build
+  error. `nous run --hot` prints "Error: cannot build the runtime:
+  <cause>" and exits 1 instead of a traceback. `nous replay --mutate`
+  prints "error: cannot build the runtime for <source>: <cause>" and
+  exits 1 instead of reporting a divergence with exit 4. Design: section
+  19.
+- Hot reload builds the new runtime before it removes, swaps or adds any
+  soul. A refused build leaves the running world unchanged, is logged as
+  a refused swap and is not counted as a reload. Before, souls the edit
+  removed stayed removed and souls it added were never added.
+- Hot reload carries a soul's declared model along with its tier. Before,
+  an edit that changed a soul's model left the runtime's cost check
+  pricing the model the world started with.
+
+### Notes
+
+- Correction to 5.82.0: its known limit on a missing `--prices` path
+  named conformance, which always refused one, and did not name `nous
+  dossier-spec`, which fell back.
+- Correction to 5.83.0: its known limit on `UnpriceableSoulModel` was
+  wrong for three of the four commands it named. `nous run` without
+  `--hot` never builds the generated runtime, so it never meets the
+  refusal; `nous replay --mutate` reported it as a divergence; compiled
+  trace fails earlier, as the second known limit below says. Only `nous
+  run --hot` and a compiled program run directly printed the traceback.
+
+### Known limits  <!-- __s366_changelog_known_limits_v1__ -->
+
+- `nous run` without `--hot` checks no soul model against the pricing
+  table: the refusal covers the generated runtime only.
+- `nous verify --smt`, `nous emit-smt`, the governance ledger and compiled
+  trace report a model the table does not carry as a raw `KeyError`
+  traceback; compiled trace raises a raw `ValueError` for a removed or
+  per-hour model.
+- A compiled program run directly (`python prog.py`) still prints a raw
+  `UnpriceableSoulModel` traceback.
+- `nous dossier --prices` with a path that exists but does not load, or
+  whose table does not match the manifest, still falls back to a layer
+  that matches.
+- A clone spawned by mitosis carries no model, so its cost check prices by
+  tier.
+- The dream and immune engines still dispatch `deepseek-v4-flash` and
+  `mistral-small-latest`; `mistral-small-latest` has no pricing entry.
+
 ## [5.83.0]  <!-- __s365_changelog_v5_83_0__ -->
 
 ### Changed

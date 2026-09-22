@@ -1232,7 +1232,7 @@ Telemetry configuration:
 <p>1. The source is reparsed and validated. If validation fails, the change is rejected and the current version continues running.</p>
 <p>2. The new AST is compiled to Python. A structural diff identifies which souls changed.</p>
 <p>3. Only changed souls are swapped. Unchanged souls keep their state, memory, and active connections.</p>
-<p>4. The swap is atomic — there is no moment where the system is partially updated.</p>
+<p>4. The new runtime is built before anything in the running world changes, and the swap itself has no await point. A refused build, such as a soul model the pricing table cannot price, leaves the running world unchanged and is logged as a refused swap.</p><!-- __s366_hot_reload_swap_copy_v1__ -->
 
 <h3>Limitations</h3>
 <p>Hot reload cannot change the <code>world</code> structure (laws, telemetry config). World-level changes require a full restart. Soul additions and removals are supported — only the nervous system routing is rebuilt.</p>
@@ -1816,8 +1816,8 @@ for m in result.fired:
 
 <!-- TESTS -->
 <div class="doc-section" id="tests">
-<h2>Test Suites — 3072 Tests</h2><!-- __s365_docs_tests_3072__ -->
-<p>Full suite: 3072 tests passing (PYTEST_FLOOR 3071).<!-- __s365_docs_count_3072__ --> The table below lists representative suites; the floor is enforced per release and is monotone non-decreasing.</p>
+<h2>Test Suites — 3096 Tests</h2><!-- __s366_docs_tests_3096__ -->
+<p>Full suite: 3096 tests passing (PYTEST_FLOOR 3095).<!-- __s366_docs_count_3096__ --> The table below lists representative suites; the floor is enforced per release and is monotone non-decreasing.</p>
 <table class="doc-table">
 <thead><tr><th>Suite</th><th>Tests</th><th>Coverage</th></tr></thead>
 <tbody>
