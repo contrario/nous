@@ -350,7 +350,13 @@ def _translate_v1_to_v2(data: dict[str, Any], source: str) -> dict[str, Any]:
     return out
 
 
+class PricingPathError(FileNotFoundError):  # __s366_explicit_path_v1__
+    pass
+
+
 def load_pricing(custom_path: Optional[Path] = None) -> PricingTable:
+    if custom_path is not None and not Path(custom_path).is_file():
+        raise PricingPathError(f"explicit pricing path is not a file: {custom_path}")
     for layer in _candidate_layers(custom_path):
         if layer.found and layer.path is not None:
             return _load_from_path(layer.path, layer.index)

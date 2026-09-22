@@ -93,6 +93,8 @@ def _find_pricing_match(
     custom_path: Optional[Path],
 ) -> tuple[Path, PricingTable]:
     """Locate pricing TOML whose load matches target sha256."""
+    if custom_path is not None and not custom_path.is_file():  # __s366_dossier_explicit_v1__
+        raise DossierError(f"explicit pricing path is not a file: {custom_path}")
     for path in _candidate_pricing_paths(custom_path):
         if not path.is_file():
             continue

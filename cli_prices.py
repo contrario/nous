@@ -63,21 +63,22 @@ def cmd_prices_show(args: argparse.Namespace) -> int:
     layers = _candidate_layers(custom)
 
     print("Active pricing layers (highest priority first):")
-    active_idx: Optional[int] = next(
+    explicit_missing: bool = custom is not None and not layers[0].found  # __s366_show_explicit_v1__
+    active_idx: Optional[int] = None if explicit_missing else next(
         (l.index for l in layers if l.found), None
     )
     for layer in layers:
         print(_fmt_layer_line(layer, active_idx))
     print()
 
-    if active_idx is None:
+    if active_idx is None and not explicit_missing:
         print("ERROR: no pricing TOML available. Run "
               "`nous prices init` to create one.", file=sys.stderr)
         return 1
 
     try:
         table = load_pricing(custom)
-    except Exception as e:  # pragma: no cover
+    except Exception as e:
         print(f"ERROR loading pricing: {e}", file=sys.stderr)
         return 2
 
