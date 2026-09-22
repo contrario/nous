@@ -5,6 +5,68 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [5.85.0]  <!-- __s367_changelog_v5_85_0__ -->
+
+### Changed
+
+- A soul model that `emit_smt` cannot price is a typed refusal. A model
+  the pricing table does not carry, a removed model, a per-hour model
+  and a model whose price is more than 90 days old under `--smt` raise
+  `UnpriceableSmtModel`, a subclass of `EmitError` and so of
+  `ValueError`, with the message "soul '<name>': <cause>" and the
+  pricing error as its `__cause__`. `get_price_for_smt` itself keeps its
+  `KeyError` and `ValueError`. `nous verify --smt` and `nous emit-smt`
+  print "ERROR: cannot emit SMT for <file>:" and the cause and exit 3;
+  `nous governance ledger --source` prints "REFUSED: --source emit
+  failed: <cause>" and exits 1. Before, all three printed a raw
+  `KeyError` or `ValueError` traceback and exited 1. Design:
+  docs/ONE_PRICE_SOURCE_DESIGN.md section 20.
+- Compiled trace (`compiled_trace.run_compiled_with_trace`) raises
+  `CompiledTraceError` "cannot derive the trace subject binding:
+  <cause>" for such a model and "parse failed: <cause>" for a source
+  that does not parse, each with the original error as its `__cause__`.
+  Its docstring now lists exactly what raises `CompiledTraceError`.
+- Commands that already caught these errors keep their exit codes and
+  now print the typed name and an unquoted message: `nous conformance
+  certify` and `verify` (exit 2), `nous dossier-spec` (exit 1), `nous
+  run --emit-trace` (exit 1), `POST /v1/run` and `POST /v1/skill/export`
+  (422). `nous verify` without `--smt` and `POST /v1/verify` are
+  unchanged: VR003 stays silent for such a model and VR001 names the
+  cause.
+- `deepseek-r1`'s pricing entry is unchanged. From 2026-09-28 its price
+  is more than 90 days old, and `nous verify --smt` refuses it with the
+  typed message and exit 3.
+
+### Notes
+
+- docs/COST_VERIFICATION_GUIDE.md says a model not in the pricing table
+  makes `--smt` "fail with a clear error". Through 5.84.0 it failed with
+  a traceback; from 5.85.0 the statement holds.
+- Correction to 5.84.0: its known limit gave compiled trace's raw
+  `ValueError` for a removed or per-hour model only. The same raw
+  `ValueError` reached `nous verify --smt`, `nous emit-smt` and the
+  governance ledger, a model more than 90 days old raised it as well,
+  and compiled trace raised a raw parse error for a source that does
+  not parse.
+
+### Known limits  <!-- __s367_changelog_known_limits_v1__ -->
+
+- `nous dossier` reports this refusal as "ERROR: unexpected failure",
+  exit 3. It is reachable only when a model is removed or ages past 90
+  days after its manifest was signed.
+- Compiled trace and `run_shas` let a pricing table that does not load
+  through as a raw error.
+- Unchanged since 5.84.0, since this release changes only smt_emit.py and
+  compiled_trace.py: `nous run` without `--hot` checks no soul model
+  against the pricing table; a compiled program run directly prints a
+  raw `UnpriceableSoulModel` traceback; `nous dossier --prices` with a
+  path that exists but does not load, or whose table does not match the
+  manifest, still falls back to a layer that matches; a clone spawned by
+  mitosis carries no model, so its cost check prices by tier; the dream
+  and immune engines still dispatch `deepseek-v4-flash` and
+  `mistral-small-latest`, and `mistral-small-latest` has no pricing
+  entry.
+
 ## [5.84.0]  <!-- __s366_changelog_v5_84_0__ -->
 
 ### Changed
