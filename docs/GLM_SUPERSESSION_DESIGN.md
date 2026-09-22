@@ -15060,3 +15060,165 @@ document itself.
                        the others do not is unmeasured. Measured in the
                        session that lands this entry, not in the one it
                        describes.
+
+  - S355 the session that landed the preceding entry, recorded by a
+    later session from its seal and from the bytes it left, with the two
+    corrections it owes, one it found itself and one a later session
+    found
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY IS NOT WRITTEN FROM
+    INSIDE THE SESSION IT DESCRIBES. It is landed by S368. Each value is
+    one of four kinds and the sentence carrying it says which. MEASURED
+    ON THE HOST: printed on Server A in S368, either by an instrument
+    that took its own digest as its first argument, declared its set and
+    its blindness before any value, and drove its guards red before its
+    first reading, or by read-only commands of version control pasted
+    whole, where an empty result counts only beside a positive control
+    on the same range and a negative one on a path that does not exist.
+    READ IN THE SEAT'S CONTAINER: taken from copies of the builder and
+    of this document fetched from the public repository at a commit for
+    which the host instrument printed the same digests for both files.
+    CARRIED: taken from the sealed handoff of S355, whose identity rests
+    on the operator's transfer and on no pin this seat could check. FROM
+    THE FOLLOWING SESSION: taken from the sealed handoff, opener and
+    measurement record of S356, each verified by digest against the
+    kickoff of S368 before it was read.
+
+    THIS ENTRY CORRECTS A PUSHED COMMIT SUBJECT. The subject of 2d810b6
+    closes by saying that the guard this house keeps against an entry
+    counting its own session is found narrower than the rule it cites
+    and wider than the sentence describing it, by a refusal it produced
+    against this payload. THE REFUSAL ESTABLISHES THE WIDE SIDE ONLY.
+    The entry that commit landed says so itself, in the row that carries
+    the finding: the narrow side is a reading of both texts and the wide
+    side is a refusal the build produced. The subject attached the
+    refusal to both. This house does not amend a pushed subject, so the
+    correction is a sentence here and this is it. MEASURED ON THE HOST:
+    the subject, printed verbatim. READ IN THE SEAT'S CONTAINER: that
+    row; the rule it cites, which forbids any number counting the
+    session that contains the entry; and the pattern the guard applies,
+    which matches a number, then at most three words, then a noun from a
+    fixed set of four spellings and nothing else. CARRIED: S355
+    identified this correction itself and sealed it as owed. It reaches
+    this entry unchanged in substance.
+
+    THE SCOPE WAS THE OPERATOR'S AND SO WAS EVERY IRREVERSIBLE ACTION,
+    CARRIED. By its seal, S355 took two: the append to a tracked file
+    and the push, and the push was the only network request of its own.
+    The commit exists, and it is the one the host instrument names for
+    the head line of the preceding entry. That the push was its only
+    request is carried, and nothing in S368 measured it.
+
+    D355-1  THE OBJECT AND WHO CHOSE IT, CARRIED. By the seal of S355,
+            the operator chose the board item asking for the preceding
+            entry to be drafted, landed and pushed. AT NO POINT DID THE
+            SEAT CHOOSE THE OBJECT.
+
+    D355-2  THE PRECEDING ENTRY IS LANDED AND THE HOST NAMES ITS COMMIT.
+            MEASURED ON THE HOST, at a head whose ledger digest equals
+            the one sealed by S356: the head line of the preceding entry
+            is at line fourteen thousand six hundred and twelve, its
+            block runs to the last line of the document at fifteen
+            thousand and sixty-two, and the commit that last touched
+            that head line is 2d810b6, with no boundary, authored at
+            2026-09-17T09:33:28Z. READ IN THE SEAT'S CONTAINER: line
+            fourteen thousand six hundred and eleven is blank and opens
+            the payload. DERIVED BY ARITHMETIC: the payload spans four
+            hundred and fifty-two lines. MEASURED ON THE HOST: 2d810b6
+            changes one file, this document, by four hundred and
+            fifty-two insertions and no deletions, which agrees. BLAME
+            NAMES THE COMMIT THAT LAST TOUCHED A LINE AND NOT THE ONE
+            THAT WROTE IT. What makes them the same commit here is its
+            subject, also printed on the host, which says it lands the
+            preceding entry.
+
+    D355-3  THE BUILDER TAKES ITS SESSION AND BOTH NAMESPACES AS
+            ARGUMENTS. MEASURED ON THE HOST: the tracked builder, the
+            working tree's copy and the copy in the operator's home are
+            byte identical. READ IN THE SEAT'S CONTAINER, from a copy at
+            that digest: the session enters by one argument and each of
+            the two finding namespaces by another, while the names of
+            the two finding groups and of their count checks still carry
+            the numbers three hundred and thirty-one and three hundred
+            and thirty-two, from the entry it was written for. MEASURED
+            ON THE HOST: the last commit to touch the tracked builder is
+            cc8411d, whose subject ends S351, and no commit from the
+            parent of 2d810b6 to 1ec01c0 touches it. CARRIED: that the
+            copy S355 ran was the tracked one, unedited. Version control
+            reaches tracked bytes only, so that sentence is testimony.
+
+    D355-4  FOUR GENERATIONS OF THE PAYLOAD, NONE OVERWRITTEN. CARRIED:
+            S355 drafted the payload four times, each superseding the
+            last by measurement, and landed the fourth; the builder's
+            output was byte identical to the fourth render. FROM THE
+            FOLLOWING SESSION: in S356 an instrument found all four
+            generations and the builder's output in the operator's home
+            at the digests the opener of S355 sealed for them, and found
+            no tracked file with the bytes of any of them at that head.
+            At that head they were recoverable only from the host and
+            from the operator's saved copies.
+
+    D355-5  THE PARENT WAS ANOTHER LANE'S COMMIT AND THE SEAT DID NOT
+            FETCH BEFORE COMMITTING. MEASURED ON THE HOST: the parent of
+            2d810b6 is 2c0c370, which changes one file, the pricing
+            table, by twenty-five insertions, disjoint from this
+            document by path. CARRIED: that it is a commit of the
+            operator's own pricing lane, and that S355 committed without
+            a fetch at the moment of the decision. FROM THE FOLLOWING
+            SESSION: the rule this house paid for in S356 goes further
+            than a fetch: re-read the head at the moment of any write
+            decision, because the tree can move locally with no network
+            involved.
+
+    D355-6  CORRECTION BY APPEND, AGAINST THE OPENER OF THIS SESSION. It
+            states the count of commits ahead of the latest tag as one
+            hundred and seventeen. No instrument printed that figure and
+            it carries no marker saying it was derived. It is the figure
+            the seal of S355 reports at its opening, one hundred and
+            sixteen, plus the commit S355 made, arithmetic that ignored
+            a second lane already ahead of the tag. S356 refuted it with
+            one hundred and eighteen from three oracles across two
+            instruments. A WRONG NUMBER THAT SAYS DERIVED CAN BE
+            CHECKED; ONE THAT SAYS NOTHING CANNOT. SET: the sealed
+            handoff and measurement record of S356, and the seal of S355
+            for the opening figure. BLIND TO: the opener of S355 itself,
+            which this seat has not read.
+
+    D355-7  A BOARD ITEM OPENED, CARRIED. In S355 the operator put on
+            the board the question whether this house's rules are
+            enforced at the width they are stated, rather than into the
+            preceding entry. It was opened by the guard that forbids an
+            entry counting its own session, and that guard is the one
+            whose two widths the correction above concerns.
+
+    D355-8  WHAT THIS ENTRY DOES NOT ESTABLISH. It does not establish
+            that the push of 2d810b6 was the only network request of
+            S355, that the copy of the builder S355 ran was the tracked
+            one, or what the opener of S355 says in any line but the one
+            S356 quotes. It does not establish that the four generations
+            still sit in the operator's home today. It corrects no byte
+            of the preceding entry, which needs none. IT PROVES NOTHING.
+            Z3 AND FARKAS OWN THAT WORD.
+
+    FINDINGS
+
+            FG-S355-A  SEAT. A PUSHED COMMIT SUBJECT CREDITED BOTH
+                       HALVES OF A TWO-SIDED FINDING TO ONE INSTRUMENT.
+                       The entry it landed stated the split correctly in
+                       its own row. The subject and the row disagree,
+                       and the row is the one that states what the
+                       refusal established. Corrected by append above.
+
+            FG-S355-B  SEAT. A COMMIT WAS CUT WITHOUT A FETCH AT THE
+                       MOMENT OF THE DECISION. THE MISSING FETCH IS
+                       CARRIED. MEASURED ON THE HOST: the parent changes
+                       only the pricing table, disjoint by path, so
+                       nothing was lost. The rule it breaks is not about
+                       loss.
+
+            FG-S355-C  SEAT. AN OPENER SEALED AN ARITHMETIC VALUE WITH
+                       NO DERIVED MARKER. Found by S356 and not by S355.
+                       R24 was violated inside a sealed artifact, which
+                       is worse than a wrong number because the reader
+                       has no signal to check it. Corrected by append
+                       in D355-6.
