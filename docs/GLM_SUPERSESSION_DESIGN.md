@@ -15403,3 +15403,273 @@ document itself.
             FG-S356-G  SEAT. A HANDOFF ASSIGNED A LEDGER ENTRY TO A LANE
                        THAT DOES NOT KEEP THIS LEDGER. Found in S368 and
                        not in S356. Corrected by append in D356-8.
+
+  - S368 the session that landed the debt of this ledger in its own
+    lane, measured the rule by which its entries are numbered, and found
+    that a second lane of this house keeps its record elsewhere
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY IS WRITTEN FROM INSIDE
+    THE SESSION IT DESCRIBES, SO IT STATES NO NUMBER THAT COUNTS THAT
+    SESSION. Unless a sentence says otherwise, each value was printed on
+    Server A in S368, either by an instrument that took its own digest
+    as its first argument and drove its refusal arms red first, or by
+    read-only commands of version control pasted whole beside controls.
+    Three other kinds are marked where they appear. READ IN THE SEAT'S
+    CONTAINER: taken from files whose identity rests on the operator's
+    transfer alone, or from copies whose digests equal the host's.
+    TESTIMONY: content of the sealed handoffs of another lane. RULING: a
+    decision the operator stated in words.
+
+    READ THIS PARAGRAPH BEFORE ANY OTHER. THE ENTRY NUMBERS OF THIS
+    LEDGER JUMP FROM THREE HUNDRED AND FIFTY-SIX TO THREE HUNDRED AND
+    SIXTY-EIGHT, AND NOTHING IS MISSING. The session numbers between
+    them belong to a second lane of this house, a release lane, which
+    keeps its record in its own sealed handoffs and never in this
+    document. RULING: this document is the ledger of this lane only.
+    READ IN THE SEAT'S CONTAINER: the finding codes of that lane occupy
+    every namespace from FG-S357 to FG-S367 in its handoffs, so an entry
+    numbered inside that range would have given two different findings
+    one code. Three hundred and sixty-eight is the first number free of
+    both.
+
+    THE RECORD OF THAT LANE, BY POINTER ONLY. READ IN THE SEAT'S
+    CONTAINER, the sealed handoffs of that lane carry these digests:
+    S357
+    f6acbf090889875c508d68cf63ed008f577337200bf0b2d186cfb101748194e2,
+    S358
+    48108f2d485a362cc09915a31353dcb945f240b1fd519c9f36eb6d66a9e5db01,
+    S359
+    c5b38cb6b3bdbf1f5eb296ba7b07ebe6800d6ca3cbd0ff7a2cac33e956377c35,
+    S360
+    d027aaaaa2d392a41c18964d6bb0738867eda27b9461511f641dc09c9ff6e332,
+    S361
+    bf1474f032d108402caffdfb503f0c39ea7267ed2a8199844fe616ea6b2e51d8,
+    S362
+    b6d515c194dd71a791e76fd1f87676fdaaba10ea51a476adac4679c33b8d725a,
+    S363
+    b46369f8a2e208914638538bd057a73f904055cd08754f4f6d775f814fa9c914,
+    S364
+    cec35bd1de02ebfde24af0f1f84cd17469a88b68262bc39cb330a0bd713ea6ac,
+    S365
+    df9fdf52443232275c356dbc5177ec33dca4a406aea4d72ec4bc58f9b15f0c28,
+    S366
+    e9403d22ae99d85dc97c1b83efc6da3f861b827608d4d34da74df7ef272f1cbf,
+    and S367
+    860814700c0e166a4650cf256f28c1841d8f6d4c8b4421dd98646696916c16df.
+    Their identity rests on the operator's transfer and on no pin this
+    seat could check, and nothing of their content is carried here
+    except where a sentence says TESTIMONY. A DIGEST PINS IDENTITY AND
+    NOT BYTES: the files are recoverable only from the operator's saved
+    copies.
+
+    THE SCOPE WAS THE OPERATOR'S AND SO WAS EVERY IRREVERSIBLE ACTION.
+    Each had its own gate, and each gate read the head again at the
+    moment of the decision rather than at the opening.
+
+    D368-1  THE OBJECT AND WHO CHOSE IT. After the opening rule the
+            operator asked the seat what it would do. The seat
+            recommended the entries this ledger owed, on the ground that
+            one of them corrects a pushed subject and the others exist
+            only in sealed handoffs, and the operator chose it. The seat
+            recommended; it did not choose.
+
+    D368-2  THE NUMBERING RULE IS MEASURED. An instrument at digest
+            f3d3ea61 derived the shape of a head line from one line and
+            trusted it only after control lines, the enumerated set of
+            head numbers, every anchor family, every finding family and
+            four totals from the opening instrument all agreed. Over the
+            last twelve heads, IN EVERY BLOCK THE HEAD NUMBER EQUALS THE
+            ANCHOR FAMILY AND THE FINDING NAMESPACE, and entries three
+            hundred and forty-three to three hundred and fifty-four are
+            contiguous. The session number appears only in the
+            parenthesis of the commit subject. Where it appears it lies
+            within three of the entry number and below it, except in the
+            subject of entry three hundred and fifty-four, which also
+            names the later session that landed it.
+
+    D368-3  THE NUMBERS ARE ALLOCATED BY THE OPERATOR. TESTIMONY: the
+            release lane derives its session number from markers in
+            three file types, by the reproducer its own seal quotes. It
+            follows that a session that writes nothing leaves no marker
+            and an entry of this ledger, in a fourth type, is never read
+            by it. TESTIMONY: the release lane had already staged its
+            next opener under the number this session took. RULING: this
+            session is three hundred and sixty-eight and the next
+            session of the release lane is three hundred and sixty-nine.
+            The operator is the one thing both lanes share, so the
+            kickoff is where a number is given.
+
+    D368-4  THE TREE MOVED INSIDE THIS SESSION. The opening rule read
+            9b916f3 at 01:05:23Z on 2026-09-21. The second opening
+            instrument read 95dba04 at 01:11:39Z, whose parent is
+            9b916f3, one ahead of a remote it had just fetched. A later
+            instrument read 14bcf22, one ahead of the local remote ref
+            at 1bcbe53, and a reading at 11:15:50Z on 2026-09-22 gave
+            1ec01c0. TESTIMONY: the release lane committed 95dba04
+            before the second instrument read it and pushed it
+            afterwards. THE FINDING OF S356 REPRODUCES INSIDE ONE
+            SESSION: this seat wrote nothing, and the head moved under
+            it, locally.
+
+    D368-5  THIS DOCUMENT HAD NOT MOVED. At every head at which it was
+            read in S368 before the append, its digest equalled the
+            value sealed after entry three hundred and fifty-four
+            landed. READ IN THE SEAT'S CONTAINER: the handoffs of the
+            release lane never name it, and its later handoffs call
+            their own sealed sections the ledger.
+
+    D368-6  THE BUILDER DOES NOT READ THE LEDGER. READ IN THE SEAT'S
+            CONTAINER, from a copy whose digest the host printed for all
+            three of its copies: no guard compares an entry with the
+            document it joins, so nothing in the builder checks
+            continuity, uniqueness of the head, or a code already in
+            use. A validator written in S368 makes those checks against
+            the real document before any append. THREE REFUSAL ARMS
+            CANNOT FIRE IN A COMMON CASE: two have no injection, as S350
+            found, and the arm for the first namespace removes nothing
+            when that namespace is empty, as it is for the entries
+            numbered three hundred and fifty-four to three hundred and
+            fifty-six. Each real guard was driven red through its input
+            instead.
+
+    D368-7  AN APPEND WHOSE RESULT WAS KNOWN BEFORE IT HAPPENED. For the
+            entry numbered three hundred and fifty-five, the digest of
+            this document after the append was computed in the seat's
+            container before any byte was written, computed again on the
+            host from the bytes about to be joined, and read back from
+            the file and from the blob in the commit. All agreed at
+            089ecc91. The remote then carried 23f366e, by the ref the
+            push updated and by a separate read of the remote. Before it
+            writes, the instrument at digest ca4fa650 checks that the
+            head, the working tree, this document and the payload all
+            equal their pins; it writes by an atomic replace that keeps
+            owner and mode, and it restores the original bytes on any
+            failure after the replace.
+
+    D368-8  AN ANOMALY LEFT OPEN. MEASURED ON THE HOST: the session
+            numbers in the commit subjects of recent entries do not rise
+            with the entries. The subject of entry three hundred and
+            forty-four names session three hundred and forty-four, and
+            the subject of entry three hundred and forty-six, committed
+            a day later, names session three hundred and forty-three.
+            The subjects of entries three hundred and forty-three and
+            three hundred and forty-five name none. NO CAUSE IS OFFERED.
+
+    D368-9  WHAT THIS ENTRY DOES NOT ESTABLISH. It does not establish
+            that the handoffs of the release lane are what that lane
+            sealed, nor anything in them beyond what is marked
+            TESTIMONY. It does not establish that the next session of
+            the release lane will take the number given it; that rests
+            on the kickoff. It does not reconcile the rules of the two
+            lanes. It does not establish the twin result of S356 at any
+            head read here, nor where the three untracked members of the
+            earlier porcelain now are. IT PROVES NOTHING. Z3 AND FARKAS
+            OWN THAT WORD.
+
+    FINDINGS
+
+            FG-S368-A  SEAT. AN INSTRUMENT'S MATCHER MISSED ITS OBJECT
+                       AND DID NOT PRINT IT. The pattern for the version
+                       expected a plain assignment. The version file
+                       exists at the named path and did not match, and
+                       the instrument printed UNPARSED without the line
+                       it failed on, so the question whether a release
+                       was in flight went unanswered by it. The cause is
+                       unmeasured.
+
+            FG-S368-B  SEAT. AN INSTRUMENT PRINTED NO WALL CLOCK. The
+                       window in which it ran is therefore derived from
+                       another lane's timestamps and not read.
+
+            FG-S368-C  SEAT. A DECLARED BLINDNESS WAS WRONG IN THE
+                       DRAFT. It said a boundary attribution names the
+                       graft. A synthetic repository showed the true
+                       root is marked the same way. Corrected before the
+                       instrument left the container, without the option
+                       that would have hidden the graft.
+
+            FG-S368-D  SEAT. A TEST THAT COULD NOT FAIL. The test that
+                       the index is not written read an index the
+                       harness had already refreshed. It was rebuilt
+                       with a stale index and a negative control showing
+                       that a plain status call does write it.
+
+            FG-S368-E  SEAT. A CONTROL COPY THAT WAS NEVER MODIFIED. A
+                       validator arm replaced a phrase that the renderer
+                       had split across two lines, so the copy equalled
+                       the original. The harness caught it because it
+                       required the expected refusal. TESTIMONY: the
+                       other lane recorded the same class in its own
+                       handoff on the same day.
+
+            FG-S368-F  SEAT. A CONCLUSION WAS DRAWN FROM A DIGEST THAT
+                       COULD NOT CARRY IT. The seat said the findings of
+                       the other lane existed nowhere in the repository,
+                       from the unchanged digest of this one file.
+                       Withdrawn the same session.
+
+            FG-S368-G  SEAT. AN ENTRY NUMBER WAS TAKEN FOR A SESSION
+                       NUMBER. The seat first named this entry from the
+                       session number, the error the seals of S347 and
+                       S350 already record. The number stands for
+                       another reason, given at the head of this entry.
+
+            FG-S368-H  SEAT. A DECLARED BLINDNESS UNDERSTATED THE REAL
+                       ONE. The first design of a search for the other
+                       lane's codes declared indent and line breaks and
+                       missed that the other lane also files findings
+                       under labels with no FG prefix.
+
+            FG-S368-I  SEAT. A COLLISION WAS STATED AS PAST WHEN IT WAS
+                       ONLY POSSIBLE. The seat said the numbering
+                       collides. The past is one shared counter; only
+                       the number of this session was unowned.
+
+            FG-S368-J  SEAT. A RULING WAS WRITTEN BEFORE IT WAS MADE. A
+                       draft of the preceding entry recorded the
+                       operator as having ruled on the scope of this
+                       ledger when the operator had only proceeded on
+                       the seat's proposal. Corrected before the first
+                       render, and the operator then ruled in words.
+
+            FG-S368-K  SEAT. HARNESS MATCHERS WITH THE WRONG SPACING
+                       REPORTED FALSE REFUSALS. The instrument under
+                       test had the right exit code in every case. The
+                       matcher was loosened, not the instrument.
+
+            FG-S368-L  WORLD. THE WORKING TREE MOVED LOCALLY INSIDE ONE
+                       SESSION. Recorded in D368-4.
+
+            FG-S368-M  WORLD. THE BUILDER NEVER READS THE DOCUMENT IT
+                       BUILDS FOR, AND A THIRD REFUSAL ARM IS DEAD WHEN
+                       THE FIRST NAMESPACE IS EMPTY. Recorded in D368-6.
+
+            FG-S368-N  WORLD. BOTH NUMBERING ORACLES OF THIS HOUSE ARE
+                       BLIND TO THE OTHER LANE. Recorded in D368-3.
+
+            FG-S368-O  WORLD. THE TWO LANES FOUND THE SAME CLASSES
+                       INDEPENDENTLY. A gate scored on one scalar that
+                       does not separate causes, a control that measured
+                       nothing, and a tree that moves under a session
+                       that writes nothing were each found in both
+                       lanes; the other lane's half is TESTIMONY. Each
+                       is an instance of the board item that asks
+                       whether this house's rules hold at the width they
+                       are stated.
+
+            FG-S368-P  WORLD. A LEG OF THE SECOND OPENING INSTRUMENT IS
+                       NAMED WIDER THAN IT MAY READ. It printed the
+                       working tree equal to the remote beside an ahead
+                       count of one. Either the leg is scoped to this
+                       document and its name is the defect, or a push
+                       landed between two of its readings. The source of
+                       the instrument was not read and the question is
+                       UNMEASURED.
+
+            FG-S368-Q  SEAT. A CHAIN CONTINUED PAST A FAILED EDIT. While
+                       this entry was drafted, an edit script refused on
+                       one anchor and wrote nothing, and the build that
+                       followed it ran green over the unedited text. It
+                       was caught because the payload digest had not
+                       changed. The same class as FG-S368-E, recurring
+                       after it was recorded.
