@@ -1408,3 +1408,188 @@ first line (FG-S365-B).
 5.83.0 CHANGELOG. It is in the 5.82.0 section (CHANGELOG.md:124 at
 d406670). The 5.84.0 CHANGELOG corrects that entry. Found while drafting
 the 5.84.0 entry.
+
+<!-- __s367_sec20_v1__ -->
+## 20. S367 decisions (O2: emit_smt's raw pricing errors), written before the code
+
+Basis: HEAD 1bcbe53 = origin/main, pushed 2026-09-22 08:37:22Z, tree
+clean; the Server A RULE 0 at 08:48Z matched every leg of the S367
+opener. Code read and executed in a container clone of 1bcbe53,
+byte-identical to Server A on 17 file sha256 values, with an isolated
+HOME and working directory. One fixture table (sha256 ba9c2b0e...)
+served as `--prices` and as ./nous_prices.toml (layer 2); it carries a
+priced model and one model of each refused kind. Nothing ran against a
+provider. File sha256 at read time: this document 1c30a4b9...,
+smt_emit.py 0bd4036e..., pricing.py 0c12c924..., cli_verify.py
+bbc564f5..., cli_emit_smt.py 63b10a9c..., cli.py 998b052d...,
+compiled_trace.py a54b3252..., run_shas.py 89a22aca...,
+cli_conformance.py 9accb6a4..., dossier_spec.py bccabbaa...,
+cli_dossier.py 5aff4f93..., nous_ast_runner.py 5e3ae532...,
+verifier.py 9c5e1e89..., nous_api_server.py 19d726d5....
+
+### 20.1 Corrections to 14.10 and 19.1
+
+- W1 14.10 names one raw error, a KeyError at pricing.py:192. emit_smt
+  calls get_price_for_smt once per soul (smt_emit.py:537), and that call
+  raises four raw errors, measured: a KeyError for a model the table
+  does not carry (pricing.py:192), and a ValueError for a removed model
+  (439), a per-hour model (443) and a model verified more than 90 days
+  ago under --smt (450). The fourth is the path deepseek-r1 takes from
+  2026-09-28. A fifth, "alias chain too deep" (pricing.py:203), comes
+  from the same call; alias validation at load makes it unlikely, not
+  impossible.
+- W2 19.1 Z1 and the S366 handoff give compiled trace's raw errors as a
+  KeyError, or a ValueError for a removed or per-hour model. The stale
+  ValueError reaches it too, and a source that does not parse raises a
+  raw lark UnexpectedToken at compiled_trace.py:64, before any pricing.
+  The docstring (compiled_trace.py:50) promises CompiledTraceError for a
+  parse failure as well.
+
+### 20.2 Behaviour today, measured
+
+Each caller ran with a soul model of each kind and with the priced
+control, which reached and passed the emit stage. Every refused row
+names its model in its output.
+
+| caller | what catches the error | missing, removed, per-hour, stale |
+|---|---|---|
+| `nous verify --smt` | EmitError only (cli_verify.py:151) | traceback, exit 1 |
+| `nous emit-smt` | EmitError only (cli_emit_smt.py:52) | traceback, exit 1 |
+| `nous governance ledger --source` | EmitError only (cli.py:1490) | traceback, exit 1 |
+| compiled trace (library; no CLI or API caller) | nothing; run_shas.py:64 and :109 do not catch | raw KeyError or ValueError |
+| `nous run --emit-trace` (AST runner, via run_shas) | catch-all (cli.py:198) | "Runtime error: <message>", exit 1; the KeyError text arrives inside double quotes |
+| `nous conformance certify` and `verify` | (ValueError, KeyError) (cli_conformance.py:252, :322) | "PRECONDITION ERROR: KeyError: ..." or "ValueError: ...", exit 2; certify measured, verify shares _derive_inputs and the same except |
+| `nous dossier-spec` | catch-all into DossierSpecError (dossier_spec.py:203) | "SMT emit failed (KeyError): ...", exit 1 |
+| `nous dossier` | catch-all (cli_dossier.py:89) | reachable only as time passes after the manifest: with a manifest signed today for a model removed tomorrow, build_dossier at today+10 raised a raw ValueError; the CLI then prints "ERROR: unexpected failure: ValueError: ...", exit 3 (by reading) |
+| `nous verify` without --smt | (EmitError, KeyError, ValueError) (verifier.py:369) | VR003 dark by design; VR001 names the cause |
+| POST /v1/run with emit_trace | catch-all (nous_api_server.py:1152) | 422 RUN001, the message as for `nous run`, KeyError quoted |
+| POST /v1/skill/export with with_dossier | catch-all (nous_api_server.py:478) | 422 SKILLEXPORT001, "SMT emit failed (KeyError): ..." |
+| POST /v1/verify | the verifier, as above | 200, VR003 dark, VR001 names the cause |
+
+No /v1 route returns 500 for any of the four kinds.
+website/.well-known/nous/vsa-vectors/v1/mint_vsa_vector.py calls
+emit_smt on its fixed vector source only.
+
+### 20.3 Decisions
+
+- D1 emit_smt types the refusal at its source. The one get_price_for_smt
+  call (smt_emit.py:537) is wrapped: a KeyError or ValueError from it is
+  raised again, `from` the original, as UnpriceableSmtModel, a new
+  subclass of EmitError defined in smt_emit.py. The message is
+  "soul '<name>': <cause>", where <cause> is get_price_for_smt's own
+  text; for a KeyError that is its argument, not the quoted repr. It
+  opens the way the existing EmitError messages open ("soul 'A' has no
+  `mind:` declaration").
+- D2 pricing.py does not change. get_price_for_smt keeps its types and
+  messages; six tests call it directly and pin them (test_pricing.py x3,
+  test_s359_staleness_category.py, test_s360_shipped_table.py,
+  test_s361_v4flash_alias.py). pricing.py cannot raise EmitError in any
+  case: smt_emit imports pricing.
+- D3 The three callers that catch EmitError change no code and now
+  refuse with the cause, with the exit code each already gives every
+  other EmitError: `nous verify --smt` prints "ERROR: cannot emit SMT
+  for <file>:" and the message, exit 3; `nous emit-smt` the same, exit
+  3; `nous governance ledger --source` prints "REFUSED: --source emit
+  failed: <message>", exit 1, and no ledger.
+- D4 Compiled trace: run_compiled_with_trace raises CompiledTraceError
+  "parse failed: <cause>" when parse_nous raises, and "cannot derive the
+  trace subject binding: <cause>" when compute_run_shas or
+  compute_run_gated_actions raises EmitError (UnpriceableSmtModel
+  included) or RunShasError, each `from` the original. The docstring
+  lists what raises CompiledTraceError: a source that does not parse,
+  declares no world, fails validation or cannot be priced for its
+  subject binding, and an emitted module that cannot be loaded or has no
+  build_runtime(). Every other error, such as a pricing table that does
+  not load or a memory consultation refusal, propagates unchanged, and
+  the docstring says so.
+- D5 The callers that already catch broadly keep their code; their
+  output now carries the typed name and the unquoted message:
+  conformance "PRECONDITION ERROR: UnpriceableSmtModel: soul ...", exit
+  2; dossier-spec and /v1/skill/export "SMT emit failed
+  (UnpriceableSmtModel): soul ...", exit 1 and 422 SKILLEXPORT001; `nous
+  run --emit-trace` "Runtime error: soul ...", exit 1; /v1/run 422
+  RUN001; `nous dossier` "ERROR: unexpected failure:
+  UnpriceableSmtModel: ...", exit 3. VR003 stays dark: verifier.py:369
+  catches EmitError.
+- D6 deepseek-r1 is not touched. From 2026-09-28 `nous verify --smt`
+  still refuses it, through the stale path; after this unit that
+  refusal is D3's message with exit 3 instead of a traceback. Its entry,
+  its verified_date and the refusal itself do not change.
+- D7 Recorded, not changed here: `nous dossier` calls an expected
+  refusal "unexpected failure"; compiled trace and run_shas let a
+  pricing load failure through raw;
+  tests/test_trace_emission.py::test_unpriced_program_refused_fail_fast
+  accepts any Exception; mint_vsa_vector.py is a published /.well-known
+  artifact and is not edited; neither /v1 route gets its own error code.
+- D8 Release-unit work: the CHANGELOG states W1, W2 and D1-D6, and the
+  site is grepped for statements about how these commands fail before
+  release (FG-S365-G). UnpriceableSmtModel lives in smt_emit.py, so
+  there is no new module and no codegen change: pyproject py-modules,
+  the wheel-content gate, the regression baseline and
+  templates/trading_floor.py do not move.
+
+### 20.4 Blast radius, measured
+
+A log-only hook at smt_emit.py:537, in a copy of the tree, recorded
+every KeyError or ValueError from get_price_for_smt with the current
+test id and raised the same object again. The full suite ran on the
+copy with PYTHONPATH set to it, so subprocess tests loaded it too: 3095
+passed, 13 skipped, the container's figure. Seven events, from seven
+tests:
+
+- tests/test_s189_vr003_unpriceable.py: test_unknown_model_dark_no_raise,
+  test_per_hour_model_dark_no_raise, test_stale_model_dark_no_raise and
+  test_api_verify_dark_for_unpriceable_no_422 stay green after D1: the
+  verifier catches EmitError.
+- tests/test_smt_emit.py::TestEmitErrors::test_per_hour_model_rejected
+  and ::test_removed_model_rejected stay green: UnpriceableSmtModel is a
+  ValueError and keeps "per_hour" and "cannot be used" in its message.
+- tests/test_trace_emission.py::test_unpriced_program_refused_fail_fast
+  stays green: it accepts any Exception.
+
+The hook sees only tests that reach that call. The full suite on the
+green run is the check.
+
+### 20.5 Red first
+
+tests/test_s367_emit_smt_typed.py, written and failing before any code,
+with HOME and the working directory isolated and a fixture table of
+the kind described in the basis:
+
+- Red, for each of missing, removed, per-hour and stale: emit_smt
+  raises UnpriceableSmtModel, an EmitError, whose message starts
+  "soul 'A': " and names the model; `nous verify --smt` exits 3 with
+  D3's message and no traceback; `nous emit-smt` the same; `nous
+  governance ledger --source` exits 1 with "REFUSED: --source emit
+  failed: soul 'A': " and no traceback; run_compiled_with_trace raises
+  CompiledTraceError whose message starts "cannot derive the trace
+  subject binding: soul 'A': " and whose __cause__ is
+  UnpriceableSmtModel. Also red: a source that does not parse makes
+  run_compiled_with_trace raise CompiledTraceError starting "parse
+  failed: "; `nous run --emit-trace` with the missing model prints
+  "Runtime error: soul 'A': model " with no double quote before
+  "model". 22 red: 4 x 5 + 2.
+- Controls, green before and after (7): the priced model emits;
+  `nous verify --smt` and `nous emit-smt` on it exit 0; `nous governance
+  ledger --source` on it reaches the sha comparison and refuses on the
+  mismatch; run_compiled_with_trace on it returns a trace; a soul with
+  no `mind:` still raises plain EmitError with today's message;
+  get_price_for_smt still raises KeyError for the missing model.
+
+The red gate compares the set of failed test ids with the expected red
+set and the passed ids with the controls, prints each failure's first
+line, and a red counts only when that line shows the reason above
+(FG-S365-B, FG-S366-B).
+
+### 20.6 Kill criteria
+
+- If the green run on Server A fails any test outside the new file,
+  restore and measure before any retry.
+- If any of the seven tests in 20.4 changes outcome, D1's subclassing
+  is wrong; record it here before the code changes again.
+- The regression harness must show 0 diffs. A priced program's SMT spec
+  must not change: before the code, the emit-smt sha256 of every
+  shipped template that emits under the shipped table is recorded at a
+  fixed date, and compared after.
+- A caller of emit_smt not listed in 20.2 that the green run exposes is
+  recorded here before release.
