@@ -1593,3 +1593,32 @@ line, and a red counts only when that line shows the reason above
   fixed date, and compared after.
 - A caller of emit_smt not listed in 20.2 that the green run exposes is
   recorded here before release.
+
+<!-- __s367_sec20_notes_v1__ -->
+### 20.7 Build notes, written with the code
+
+- D1 smt_emit.py: UnpriceableSmtModel follows EmitError, and the module
+  docstring lists it. The wrap covers only the get_price_for_smt call,
+  so an EmitError raised later in the loop (a per_token entry with no
+  prices) keeps its own type and text.
+- D4 compiled_trace.py: the parse call and the two run_shas calls are
+  wrapped; the import of compute_run_gated_actions moved above
+  compute_run_shas so both calls share one try. Correction to D4's
+  wording: the code turns a missing import spec for the emitted module
+  into CompiledTraceError, not every load failure; an error while the
+  module executes or builds its runtime propagates. The docstring says
+  exactly that, and also names the two argument checks (an empty
+  source, a max_cycles below 1) that D4 left out.
+- pyflakes reports smt_emit.py's unused `field` import. It predates
+  this unit (line 39 at 1bcbe53) and is not an undefined name.
+- Kill criterion 20.6, measured in the container with the shipped table
+  (sha256 1f0a3ede...) at 2026-09-22: 4 of the 12 shipped templates
+  emit, with spec sha256 equal before and after; the other 8 stop
+  earlier with a plain EmitError, identical before and after. None
+  reaches the pricing refusal, so the templates exercise only the
+  unchanged path. The code patch repeats this comparison on Server A.
+- Measured in the container at 1bcbe53 plus section 20: red 22 of 22
+  for the reasons in 20.5 and controls 7 of 7; green 29 of 29; the
+  seven tests of 20.4 green; suite 3124 passed, 13 skipped, 0 failed;
+  regression harness 0 diffs; inserted lines ASCII. On Server A at
+  14bcf22 the red gate matched by set and by reason, 22 red and 7 green.

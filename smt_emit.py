@@ -24,6 +24,7 @@ execution paths. `sat` produces a counterexample (Phase 4 work).
 Public API:
   SMTSpec          dataclass (declarations, assertions, obligation, meta)
   EmitError        raised on under-declaration / unsupported pricing
+  UnpriceableSmtModel  EmitError: get_price_for_smt refused a soul's model
   emit_smt(prog, pricing, today=None) -> SMTSpec
   SMTSpec.serialize() -> str           byte-deterministic
   SMTSpec.sha256() -> str              canonical hash for manifests
@@ -54,6 +55,15 @@ class EmitError(ValueError):
 
     Distinct from generic ValueError so the CLI can format these as
     user-facing diagnostics.
+    """
+
+
+class UnpriceableSmtModel(EmitError):  # __s367_unpriceable_smt_model_v1__
+    """Raised when get_price_for_smt refuses a soul's model under --smt.
+
+    The model is not in the table, was removed, is billed per hour, or
+    its price is too old for --smt. The message is "soul '<name>':
+    <cause>"; the original KeyError or ValueError is the __cause__.
     """
 
 
@@ -534,9 +544,13 @@ def emit_smt(
     ] = []
 
     for s in souls:
-        canonical, entry = get_price_for_smt(
-            pricing, s.mind.model, today=today,
-        )
+        try:  # __s367_emit_typed_refusal_v1__
+            canonical, entry = get_price_for_smt(
+                pricing, s.mind.model, today=today,
+            )
+        except (KeyError, ValueError) as exc:
+            cause = str(exc.args[0]) if isinstance(exc, KeyError) and exc.args else str(exc)
+            raise UnpriceableSmtModel(f"soul {s.name!r}: {cause}") from exc
         per_call_expr = _per_call_cost_smt(
             canonical, entry,
             s.tokens.input, s.tokens.output,

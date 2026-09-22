@@ -47,7 +47,13 @@ def run_compiled_with_trace(
 
     Drives each soul's real _instinct() for max_cycles. Hermetic: with no
     LLM keys present the compiled cognition completes without network calls.
-    Raises CompiledTraceError on parse/validate/build failure.
+    Raises CompiledTraceError for an empty source or a max_cycles below 1,
+    and when the source does not parse, declares no world, fails
+    validation or cannot be priced for its subject binding, or when no
+    import spec can be built for the emitted module or it has no
+    build_runtime(). Other errors, such as a pricing table that does not
+    load, an error while the emitted module executes or builds its
+    runtime, or a memory consultation refusal, propagate unchanged.
     """
     if not isinstance(source, str) or len(source) < 1:
         raise CompiledTraceError("source must be a non-empty string")
@@ -61,7 +67,10 @@ def run_compiled_with_trace(
     from run_shas import compute_run_shas
     import _version
 
-    program = parse_nous(source)
+    try:  # __s367_ct_parse_typed_v1__
+        program = parse_nous(source)
+    except Exception as exc:
+        raise CompiledTraceError(f"parse failed: {exc}") from exc
     if program.world is None:
         raise CompiledTraceError("program declares no world")
     vresult = NousValidator(program).validate()
@@ -70,9 +79,16 @@ def run_compiled_with_trace(
         raise CompiledTraceError(f"validation failed: {codes}")
 
     code = NousCodeGen(program).generate()
-    src_sha, smt_sha, pricing_sha = compute_run_shas(source)
     from run_shas import compute_run_gated_actions  # __s142_u3_ct_gated_v1__
-    _gated = compute_run_gated_actions(source)
+    from run_shas import RunShasError  # __s367_ct_binding_typed_v1__
+    from smt_emit import EmitError
+    try:
+        src_sha, smt_sha, pricing_sha = compute_run_shas(source)
+        _gated = compute_run_gated_actions(source)
+    except (EmitError, RunShasError) as exc:
+        raise CompiledTraceError(
+            f"cannot derive the trace subject binding: {exc}"
+        ) from exc
     recorder = TraceRecorder(
         _version.__version__,
         program.world.name,
