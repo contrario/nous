@@ -1870,3 +1870,24 @@ passed ids with the controls, and reads each failure's reason from
 - The regression harness must show 0 diffs.
 - If 5.85.1 cannot reach PyPI, Server A and Server B before
   2026-09-28, record that here; nothing else changes.
+
+<!-- __s369_sec22_notes_v1__ -->
+### 22.6 Build notes, written with the code
+
+- D1 dossier.py: EmitError is imported from smt_emit beside emit_smt;
+  the one emit_smt call is wrapped, and an EmitError is raised again,
+  `from` the original, as DossierError "SMT emit failed (<type>):
+  <message>". The module docstring's fourth pre-condition now says that
+  an EmitError from the re-emit is raised as DossierError.
+- pyflakes reports nothing for dossier.py, before or after.
+- Measured in the container at 32211ea: before the change the new file
+  failed 4 of 4 red tests, each because build_dossier raised
+  UnpriceableSmtModel or `nous dossier` exited 3 with "unexpected
+  failure", and passed its 5 controls; after it, 9 of 9 pass. Suite
+  3115 passed, 31 skipped, 0 failed; the container has no `nous`
+  command on PATH, hence its skip count. Regression harness 59 entries,
+  0 diffs, 0 new errors. One signed manifest built into a dossier by
+  the old and by the new code gives byte-identical output, 7 files.
+- On Server A the code patch runs the red gate before it writes, then
+  the new file, the full suite and the regression harness, and puts
+  both files back if any of them fails.

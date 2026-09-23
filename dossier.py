@@ -9,7 +9,10 @@ Pre-conditions verified before emit (raises DossierError otherwise):
   1. Manifest signature is valid (Ed25519 over canonical JSON).
   2. Source bytes hash matches manifest.source_sha256.
   3. Active pricing TOML hash matches manifest.pricing_sha256.
-  4. Re-emitted SMT spec hash matches manifest.smt_spec_sha256.
+  4. The SMT spec re-emits and its hash matches
+     manifest.smt_spec_sha256. An EmitError from the re-emit, such as
+     a model removed or too old for --smt since the signing, is
+     raised as DossierError.  __s369_dossier_emit_typed_doc_v1__
 
 Output structure:
     <output>/source.nous
@@ -46,7 +49,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 from manifest import parse_manifest_json, verify_manifest_signature
 from parser import parse_nous
 from pricing import PricingTable, load_pricing
-from smt_emit import emit_smt
+from smt_emit import EmitError, emit_smt  # __s369_dossier_emit_typed_v1__
 
 
 class DossierError(RuntimeError):
@@ -715,13 +718,18 @@ def build_dossier(
     )
 
     program = parse_nous(source_bytes.decode("utf-8"))
-    spec = emit_smt(
-        program,
-        pricing_table,
-        source_text=source_bytes.decode("utf-8"),
-        today=today,
-        margin_pct=(parsed_manifest.safety_margin_pct or 0),
-    )
+    try:  # __s369_dossier_emit_typed_call_v1__
+        spec = emit_smt(
+            program,
+            pricing_table,
+            source_text=source_bytes.decode("utf-8"),
+            today=today,
+            margin_pct=(parsed_manifest.safety_margin_pct or 0),
+        )
+    except EmitError as e:
+        raise DossierError(
+            f"SMT emit failed ({type(e).__name__}): {e}"
+        ) from e
     if spec.sha256() != parsed_manifest.smt_spec_sha256:
         raise DossierError(
             f"smt_spec.sha256 mismatch: regenerated="
