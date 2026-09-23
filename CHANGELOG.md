@@ -5,6 +5,40 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [5.85.1]  <!-- __s369_changelog_v5_85_1__ -->
+
+### Changed
+
+- `nous dossier` reports a pricing refusal that arises after the
+  manifest was signed as a dossier build failure. When the model has
+  been removed, or its price has passed 90 days under `--smt`, since
+  the signing, `build_dossier` raises `DossierError` "SMT emit failed
+  (UnpriceableSmtModel): soul '<name>': <cause>" with the
+  `UnpriceableSmtModel` as its `__cause__`, and `nous dossier` prints
+  "ERROR: dossier build failed: ..." and exits 1. Through 5.85.0 it
+  printed "ERROR: unexpected failure: UnpriceableSmtModel: ..." and
+  exited 3. What is refused does not change, and a dossier that builds
+  is byte-identical. Design: docs/ONE_PRICE_SOURCE_DESIGN.md section 22.
+
+### Notes
+
+- 5.85.0's first known limit no longer holds.
+- From 2026-09-28 a manifest that names `deepseek-r1` and was signed on
+  or before 2026-09-27 no longer builds a dossier; `nous dossier` gives
+  the refusal above.
+- Measured against 5.85.0 (docs/ONE_PRICE_SOURCE_DESIGN.md section
+  21): the commands that catch these refusals broadly report them as
+  the 5.85.0 entry says, and every command that emits SMT refuses
+  `deepseek-r1` from 2026-09-28 with the typed message.
+
+### Known limits  <!-- __s369_changelog_known_limits_v1__ -->
+
+- Compiled trace and `run_shas` let a pricing table that does not load
+  through as a raw error (as in 5.85.0).
+- `nous dossier` judges `--smt` freshness at the build date, not at the
+  date the manifest was signed (design section 22, D4).
+
+
 ## [5.85.0]  <!-- __s367_changelog_v5_85_0__ -->
 
 ### Changed
