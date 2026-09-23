@@ -7,7 +7,7 @@ external contributions are handled.
 
 NOUS is developed under an unusual model that is worth being
 upfront about: the project is maintained by one person (Hlias
-Staurou, aka Hlia), a chef of 23 years turned AI architect,
+Staurou, aka Hlia), a chef of 23 years turned AI researcher,
 who is not a working software developer. The codebase is
 written interactively in chat with an AI pair, delivered as
 idempotent patch scripts, applied to a Linux server via SCP
