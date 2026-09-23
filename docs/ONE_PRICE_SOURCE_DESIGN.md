@@ -1622,3 +1622,134 @@ line, and a red counts only when that line shows the reason above
   seven tests of 20.4 green; suite 3124 passed, 13 skipped, 0 failed;
   regression harness 0 diffs; inserted lines ASCII. On Server A at
   14bcf22 the red gate matched by set and by reason, 22 red and 7 green.
+
+<!-- __s369_sec21_v1__ -->
+## 21. S369 measurements (broad-catch callers on 5.85.0, the deepseek-r1 cliff), no code
+
+Basis: the Server A RULE 0 at 2026-09-22 11:06:06Z read HEAD 1ec01c0 =
+origin/main, tree clean, 5.85.0 on A and B, suite 3125 passed and 12
+skipped. The probe ran in a container clone of GitHub main 84b3ef8,
+which is 1ec01c0 plus three commits of the S368 lane that touch only
+docs/GLM_SUPERSESSION_DESIGN.md. The 24 file sha256 values the Server A
+RULE 0 printed matched the clone. The caller files match section 20's
+basis: cli_verify.py bbc564f5..., cli_emit_smt.py 63b10a9c...,
+run_shas.py 89a22aca..., cli_conformance.py 9accb6a4...,
+dossier_spec.py bccabbaa..., cli_dossier.py 5aff4f93...,
+nous_ast_runner.py 5e3ae532..., verifier.py 9c5e1e89...,
+nous_api_server.py 19d726d5..., cli.py 998b052d...; smt_emit.py
+a0d64bcd..., pricing.py 0c12c924..., pricing/defaults.toml 58ffc6fa....
+Environment: Python 3.12.3, lark 1.3.1, pydantic 2.13.5, httpx 0.28.1,
+cryptography 46.0.7, fastapi 0.141.1, z3 4.16.0; Server A's own
+environment was not used. Every case ran in its own process with its
+own HOME and working directory under libfaketime 0.9.10 (FAKETIME
+"@<date>", monotonic clock not faked). A guard in the same environment
+printed the clock, the working directory, HOME and the pricing table
+the case resolved. CLI cases called cli.main() as the console script
+does; /v1 cases went through FastAPI's TestClient. Nothing ran against
+a provider. Probe files, sha256: probe_s369.py 05c98226...,
+api_case.py 872d1a5a..., guard_case.py d3c41aef..., fixture.toml
+1fa5ba87..., rows.jsonl 75e45a89....
+
+### 21.1 What was open
+
+- 20.3 D5 gave the output of the callers that catch broadly by
+  construction; the S367 handoff (section 5) says they were not
+  re-probed after the change, and only `nous run --emit-trace` is
+  pinned by a test.
+- The 5.85.0 CHANGELOG gives `nous conformance verify` exit 2 from
+  code reading.
+- 20.2 gave the `nous dossier` command line by reading; only the
+  library call was run.
+
+### 21.2 Broad-catch callers, measured
+
+Fixture table (file 1fa5ba87..., canonical d99997ee...) with a priced
+model and one model of each refused kind, clock 2026-09-22 12:00Z. For
+every caller the priced control reached and passed the emit stage, and
+every refused row names its model and its cause.
+
+| caller | missing, removed, per-hour, stale |
+|---|---|
+| `nous conformance verify` and `certify` | exit 2, "PRECONDITION ERROR: UnpriceableSmtModel: soul 'A': <cause>" |
+| `nous dossier-spec` | exit 1, "ERROR: dossier-spec build failed: SMT emit failed (UnpriceableSmtModel): soul 'summarizer': <cause>" |
+| POST /v1/skill/export with with_dossier | 422 SKILLEXPORT001, "SMT emit failed (UnpriceableSmtModel): soul 'http_get': <cause>" |
+| POST /v1/run with emit_trace | 422 RUN001, "soul 'A': <cause>", no double quote |
+| `nous run --emit-trace` | exit 1, "Runtime error: soul 'A': <cause>" |
+
+`nous dossier`: manifests signed at 2026-09-22 for a model removed
+after 2026-09-23 and for a model verified 2026-06-29, built at
+2026-10-02 12:00Z: exit 3, "ERROR: unexpected failure:
+UnpriceableSmtModel: soul 'A': <cause>" for both. The control, signed
+at 2026-09-22 and built at 2026-10-02 like them, exited 0 with its
+dossier.
+
+No command printed a traceback and no route returned 500. D5 holds for
+every row. D5 wrote "soul ..." for the two skill paths without naming
+the soul; the name printed is the soul of the translated program (21.5
+F2).
+
+### 21.3 deepseek-r1 at its cliff, measured
+
+Shipped table (canonical 1f0a3ede...), a program whose one soul has
+mind deepseek-r1, and the same program with deepseek-flash as the
+control. Ten callers: `nous verify --smt`, `nous emit-smt`, `nous
+governance ledger --source`, `nous conformance verify` and `certify`,
+`nous dossier-spec`, POST /v1/skill/export, POST /v1/run with
+emit_trace, `nous run --emit-trace`, and `nous dossier` on manifests
+signed at 2026-09-27.
+
+- 2026-09-27 12:00Z: every caller passes the emit stage for both
+  models. deepseek-r1 is 90 days old, a warning and not a refusal.
+- 2026-09-28 00:00:30Z: every caller refuses deepseek-r1 with "model
+  'deepseek-r1' pricing too old for --smt: verified 91 days ago;
+  exceeds 90-day threshold for --smt mode", in the form 21.2 gives for
+  that caller, or D3's for the other three: `nous verify --smt` and
+  `nous emit-smt` exit 3 with "ERROR: cannot emit SMT for prog.nous:"
+  then "soul 'A': <cause>", and `nous governance ledger --source` exit
+  1 with "REFUSED: --source emit failed: soul 'A': <cause>".
+  deepseek-flash passes in all ten.
+- The rule is pricing.py:402: refused when age > 90, where age is the
+  UTC date minus verified_date. The first refused date is 2026-09-28
+  by the clock of the host that runs the command.
+
+### 21.4 Checks on the probe
+
+- A refused row counts only when its caller's control passed at the
+  same clock: 37 controls and 36 refusals, none void and none
+  mismatched.
+- The checks were shown to fail on a wrong cause, a wrong exit code,
+  a guard clock on the wrong day and two simulated 5.84.0 forms: the
+  KeyError text inside double quotes from `nous run`, and the untyped
+  "PRECONDITION ERROR: ValueError: ..." from conformance.
+- One control failed on the first run and its rows were replaced: the
+  dossier case lacked cost.farkas.json, which `nous verify --smt`
+  writes beside the manifest. With every signing output copied, the
+  control built its dossier.
+
+### 21.5 Findings and decisions
+
+- F1 `nous dossier` reports an expected refusal as "unexpected
+  failure" with exit 3; the cli_dossier.py docstring defines exit 3 as
+  an argument error or missing input. From 2026-09-28 this is
+  reachable for any manifest that names deepseek-r1 and was signed on
+  or before 2026-09-27. Recorded under D7; not changed here.
+- F2 `nous dossier-spec` and POST /v1/skill/export name the soul of
+  the program translated from the skill, which is a tool name: for a
+  source whose soul is Scanner the route printed 'http_get'. Recorded;
+  not changed here.
+- F3 Read in pricing.py: staleness_status returns "ok" for
+  pricing_model "free", so a free entry never reaches the --smt age
+  refusal. The two OpenRouter ":free" entries dated 2026-09-19 and
+  local-ollama start no clock, as the table's S363 comment says.
+- F4 Read in pricing/defaults.toml, not run: of the four entries with
+  verified_date 2026-06-29 only deepseek-r1 is newly refused on
+  2026-09-28. deepseek-chat carries removed_after 2026-07-24,
+  llama-3-3-70b-local is per_hour and local-ollama is free.
+- D1 No code changes for the callers that catch broadly: D5 holds as
+  measured.
+- D2 No test is added here. A test that pins 21.2 changes the suite
+  count and the floor and is a unit of its own.
+- D3 deepseek-r1 is not touched.
+
+This section records how refusals are reported. No claim class
+changes.
