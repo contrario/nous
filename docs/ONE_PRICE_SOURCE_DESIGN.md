@@ -1753,3 +1753,120 @@ signed at 2026-09-27.
 
 This section records how refusals are reported. No claim class
 changes.
+
+<!-- __s369_sec22_v1__ -->
+## 22. S369 decisions (D7: `nous dossier` calls an expected refusal "unexpected failure"), written before the code
+
+Basis: HEAD 9fbab5e = origin/main, which is section 21 on top of the
+S368 lane's 84b3ef8. Code read and run in a container clone of 9fbab5e
+in the environment of section 21. File sha256 at read time: this
+document 06e0a6c4..., cli_dossier.py 5aff4f93..., dossier.py
+a5175c98..., dossier_spec.py bccabbaa..., smt_emit.py a0d64bcd....
+
+### 22.1 Behaviour today
+
+- build_dossier (dossier.py:651) verifies the manifest's signature,
+  compares the source sha256 with the manifest and finds the pricing
+  table by the manifest's pricing_sha256, then calls emit_smt once
+  (dossier.py:718) with today=None, so emit_smt takes the UTC date of
+  the build. Read, not run: source and table are the ones that were
+  signed, so a model missing from the table or billed per hour would
+  have refused when `nous verify --smt` produced the manifest. Only the
+  two kinds that depend on the date reach this call: a model removed
+  since the signing, and a model whose verified_date has passed 90
+  days.
+- build_dossier does not catch the resulting UnpriceableSmtModel. The
+  catch-all at cli_dossier.py:87 prints "ERROR: unexpected failure:
+  UnpriceableSmtModel: soul 'A': <cause>" and exits 3 (21.2, measured
+  for both kinds; 21.3, measured for deepseek-r1 at 2026-09-28).
+- The cli_dossier.py docstring gives exit 1 for a failed validation and
+  exit 3 for an argument error or missing input. dossier-spec, the
+  other dossier builder, refuses the same cause with exit 1 and "SMT
+  emit failed (UnpriceableSmtModel): soul ..." (dossier_spec.py:203).
+- build_dossier has one caller outside the tests, cli_dossier's
+  cmd_dossier. llm_guard_adapter.py, guardrails_adapter.py and
+  santander_adapter.py each define a build_dossier of their own and do
+  not call this one.
+
+### 22.2 Decisions
+
+- D1 build_dossier types the refusal at its source. An EmitError from
+  its one emit_smt call is raised again, `from` the original, as
+  DossierError "SMT emit failed (<type>): <message>", the text
+  dossier_spec.py:203 uses. UnpriceableSmtModel is an EmitError, so the
+  message reads "SMT emit failed (UnpriceableSmtModel): soul 'A':
+  <cause>". Only EmitError is caught; any other exception from that
+  call propagates as before.
+- D2 cli_dossier.py does not change. Its DossierError branch
+  (cli_dossier.py:69) prints "ERROR: dossier build failed: <message>"
+  and exits 1. The catch-all keeps exit 3 and "unexpected failure" for
+  every error that is still unexpected.
+- D3 What is refused does not change. A manifest whose model has since
+  been removed or aged past 90 days still gets no dossier; the refusal
+  now reads "ERROR: dossier build failed: SMT emit failed
+  (UnpriceableSmtModel): soul 'A': <cause>", exit 1. A build that
+  succeeds is byte-identical: only the path where emit_smt raises
+  changes.
+- D4 Not decided here; for the operator. build_dossier judges --smt
+  freshness at the build date, not at the date the manifest was
+  signed, so a manifest verified inside the 90 days cannot be packaged
+  once they have passed, although its source, table and spec are
+  unchanged (21.3). Passing the manifest's signing date as today would
+  make the outcome of a build depend on its inputs only, not on the
+  clock. Against it: timestamp_utc is asserted by the signer,
+  and a model removed after the signing would no longer stop a build.
+  D1 holds either way.
+- D5 deepseek-r1 is not touched.
+- D6 Release 5.85.1 before 2026-09-28. Its CHANGELOG states that
+  5.85.0's first known limit no longer holds. No new module; codegen,
+  templates/trading_floor.py and the regression baseline do not move.
+
+### 22.3 Blast radius, measured
+
+A log-only hook at build_dossier's emit_smt call, in a copy of the tree
+installed editable so that the `nous` command and subprocess tests
+loaded it, recorded every exception from that call with the current
+test id. Its control, a test that must reach the refusal, recorded one
+UnpriceableSmtModel event. The full suite on the copy recorded none:
+3120 passed, 14 skipped, and 3 failed: three tests in
+test_s334_badge_no_version.py that need a .git directory the copy did
+not have. No existing test reaches the changed path. The skipped
+tests are 4 live tests, 6 ML-DSA tests, a git-checkout guard, a
+trusted_root.json test, a v2ts pair test and a world-less source test.
+
+### 22.4 Red first
+
+tests/test_s369_dossier_refusal_typed.py, written and failing before
+any code, with HOME and the working directory isolated and a fixture
+table holding a priced model verified 5 days before the run, a model
+removed the day after the run and a model verified 85 days before the
+run. Manifests are signed by `nous verify --smt` on the real clock; the
+build moves smt_emit's clock 10 days forward.
+
+- Red (4), for each of removed and stale: build_dossier with today 10
+  days on raises DossierError whose message starts "SMT emit failed
+  (UnpriceableSmtModel): soul 'A': ", names the model and has
+  UnpriceableSmtModel as __cause__; `nous dossier` with the clock 10
+  days on exits 1 with "ERROR: dossier build failed: SMT emit failed
+  (UnpriceableSmtModel): soul 'A': " and prints neither "unexpected
+  failure" nor a traceback.
+- Controls (5), green before and after: the priced model builds on the
+  day it is signed, through build_dossier and through `nous dossier`;
+  it builds with the clock 10 days on; a source changed after signing
+  still exits 1 with "source.sha256 mismatch"; a failure inside
+  build_dossier that is not an EmitError still exits 3 with "ERROR:
+  unexpected failure".
+
+The red gate compares the failed test ids with the red set and the
+passed ids with the controls, and reads each failure's reason from
+--junitxml (FG-S365-B, FG-S366-B, FG-S367-D).
+
+### 22.5 Kill criteria
+
+- If the green run on Server A fails any test outside the new file,
+  restore and measure before any retry.
+- If any existing dossier test's output files change, D3 is wrong;
+  record it here before the code changes again.
+- The regression harness must show 0 diffs.
+- If 5.85.1 cannot reach PyPI, Server A and Server B before
+  2026-09-28, record that here; nothing else changes.
