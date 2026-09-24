@@ -14,6 +14,8 @@ import pytest
 
 from run_shas import RunShasError, compute_run_shas
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a3_dated_v1__
+
 _SOURCE = (
     "world W {\n"
     "  cost_cap: 0.10 USD\n"

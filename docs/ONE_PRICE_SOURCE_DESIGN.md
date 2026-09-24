@@ -2159,3 +2159,56 @@ This section changes no code and no claim class.
   objects in claims.toml do not cover spend, although the binding rules
   of this lane forbid copy that states the Z3 bound as a limit on
   spend.
+
+### 23.7 Build notes, S374: slice 2, routes R1 and R2
+
+- The files: the 27 of routes R1 and R2 in the S371 handoff (its
+  section 7, item 1). 17 reach the price table through cmd_verify with
+  prices = None: test_dossier_coverage.py, test_s120_chain_carry.py,
+  test_s120_chain_verifier.py, test_s121_monotonicity_verifier.py,
+  test_s134_gapw_e2e.py, test_s134_gapw_issue.py,
+  test_s136_annex_iv_gapwitness_refuse.py,
+  test_s156_u5_e2e_codegen.py, test_s157_u5_e2e_vsa.py,
+  test_s171_materiality_e2e.py, test_s171_materiality_producer.py,
+  test_s190_pce_producer.py, test_s191_pce_anchor_dossier.py,
+  test_s191_pce_anchor_producer.py,
+  test_s194_envelope_witness_dossier.py,
+  test_s196_envelope_witness_producer.py and
+  test_s200_emit_request_roundtrip.py. 10 call emit_smt on
+  load_pricing(None): test_run_shas.py,
+  test_s118_compiled_conformance.py, test_s142_u3_e2e_gated_emit.py,
+  test_s143_gated_kind_converse.py, test_s144_witnessed_run_trust.py,
+  test_s154_u3_ledger_source.py, test_s155_u5_codegen_binding.py,
+  test_s156_u3_codegen_obligation.py, test_s156_u4_offline_codegen.py
+  and test_smt_margin.py. Each opts in with the line of slice 1,
+  pytestmark = pytest.mark.usefixtures("dated_shipped_prices"), after
+  its imports; six gain `import pytest` for it. No assertion changes.
+- Recon, container, read at 063d2a8: no file loads a price table at
+  import or defines a fixture wider than function scope; their
+  subprocesses run only the emitted offline verifiers; no file skips on
+  a failed verify. Their skips are taken when
+  aml_transaction_governance.nous is absent from the repository root,
+  or at import when a module is missing (pytest.importorskip); none of
+  them skipped in any run below.
+- Red, container, the 27 files at 063d2a8, 2026-12-08: 106 failed and
+  22 passed. With captured output written into the report
+  (junit_logging=all), each of the 106 reasons carries "pricing too old
+  for --smt" at 91 days: 63 name claude-haiku-4-5 and 43
+  claude-sonnet-4-6. 62 of them fail on the exit code of cmd_verify;
+  their output names claude-haiku-4-5 (57) and claude-sonnet-4-6 (5),
+  where 23.1 gave the model of such failures by reading only. The same
+  expectation at the real date failed the gate, and so did an
+  expectation whose reason was a nonce derived at run time from the
+  gate's own digest.
+- Green, container, the 27 files: 128 passed, none failed or skipped,
+  at the real date, 2026-10-09, 2026-12-08 and 2027-06-30.
+- Full suite, container: at the real date 3141 passed and 13 skipped,
+  the sets equal to those before the change; at 2026-10-09 no failure;
+  at 2026-12-08 59 failed, the 165 before less exactly the 106 of this
+  slice, none new; at 2026-12-16, 2026-12-17 and 2027-06-30 the same 59
+  plus
+  test_s358_skill_chain_e2e::test_chain_completes_for_a_shipped_exportable_template
+  (deepseek-flash). 13 skipped at every date, the same set. Regression
+  harness 59 entries, 0 diffs, 0 new errors; claim lint 0.
+- Left for the next slices: 59 tests in 18 files at 2026-12-08, 60 from
+  2026-12-16, on routes R3 to R6.

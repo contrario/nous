@@ -31,6 +31,8 @@ DOSSIER = pytest.importorskip("dossier")
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a3_dated_v1__
+
 TEMPLATE = (
     Path(__file__).resolve().parent.parent / "aml_transaction_governance.nous"
 )

@@ -19,6 +19,8 @@ from cli_verify import cmd_verify
 from dossier import build_dossier, VERIFY_OFFLINE_PY_CHAIN
 import coverage_farkas
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a3_dated_v1__
+
 FIXTURE = """world TwoAxisGovernance {
     law CostCeiling = $0.50 per cycle
     heartbeat = 10s

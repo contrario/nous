@@ -26,6 +26,8 @@ from parser import parse_nous
 from pricing import load_pricing
 from smt_emit import emit_smt
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a3_dated_v1__
+
 _TS = "2026-06-17T10:00:00+00:00"
 
 _GATED_SRC = (

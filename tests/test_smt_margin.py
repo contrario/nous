@@ -23,6 +23,8 @@ from pricing import load_pricing
 from smt_emit import EmitError, emit_smt
 from smt_verify import VerifyResult
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a3_dated_v1__
+
 
 def _load_program():
     template = (

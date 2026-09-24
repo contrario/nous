@@ -17,6 +17,8 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+import pytest
+
 from compiled_trace import run_compiled_with_trace
 from conformance import verify_conformance
 from manifest import manifest_from_verify
@@ -25,6 +27,8 @@ from pricing import load_pricing
 from run_shas import compute_run_gated_actions
 from smt_emit import emit_smt
 from smt_verify import VerifyResult
+
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a3_dated_v1__
 
 _GATED = (
     "world W {\n"

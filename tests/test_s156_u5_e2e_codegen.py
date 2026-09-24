@@ -18,6 +18,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from cli_verify import cmd_verify
@@ -34,6 +35,8 @@ from pricing import load_pricing
 from run_shas import compute_codegen_sha256
 from smt_emit import emit_smt
 from trace_recorder import TraceRecorder
+
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a3_dated_v1__
 
 _PROG = (
     "world W {\n"

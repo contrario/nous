@@ -26,6 +26,8 @@ build_dossier = _dossier.build_dossier
 DossierError = _dossier.DossierError
 pytest.importorskip("envelope")
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a3_dated_v1__
+
 TEMPLATE = (
     Path(__file__).resolve().parent.parent / "aml_transaction_governance.nous"
 )
