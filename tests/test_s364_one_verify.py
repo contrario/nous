@@ -24,6 +24,7 @@ import pytest
 import tomllib
 
 import cli
+import dated_prices
 import verifier
 from parser import parse_nous
 from pricing import PricingTable, load_pricing
@@ -160,6 +161,7 @@ def test_cli_and_api_return_the_same_finding_set(
 def test_vr001_prices_by_model_on_both_surfaces(
         tmp_path: Path, recorder: list[tuple[bool, list[tuple[str, str, str]]]],
         monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    dated_prices.use_dated_shipped_prices(tmp_path, monkeypatch)  # __s371_a1_dated_v1__
     _, entry = load_pricing().resolve("claude-opus-4-7")
     expected = float(
         (entry.input_per_1m * 300 + entry.output_per_1m * 200 * entry.reasoning_token_multiplier)
