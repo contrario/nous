@@ -20,6 +20,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s371_a2_dated_v1__
+
 _TESTS_DIR = Path(__file__).resolve().parent
 _REPO_DIR = _TESTS_DIR.parent
 if str(_REPO_DIR) not in sys.path:

@@ -2102,3 +2102,60 @@ The red is the existing test at the date that breaks it.
   on main is red from that day and no release passes.
 
 This section changes no code and no claim class.
+
+<!-- __s371_sec23_notes_v1__ -->
+### 23.6 Build notes, written with the code
+
+- A1, commit d526fa1: tests/dated_prices.py holds the helper of D2;
+  tests/test_s371_dated_prices.py holds its 8 tests of D3;
+  test_vr001_prices_by_model_on_both_surfaces calls the helper first and
+  its assertions are unchanged. In the container before the change: at
+  2026-10-09 that test failed with the reason of 23.1, and the new file
+  failed to collect ("No module named 'dated_prices'"). After it: the
+  s364 file passed 31 of 31 and the new file 8 of 8 at the real date,
+  2026-10-09 and 2026-12-08; the full suite at 2026-10-09 had no
+  failure. Three changes to the helper (a changed price, no cache
+  reset, a 95-day offset) were each caught by the expected test. On
+  Server A the patch's own gates passed after the write: the two files
+  39 passed, the full suite 3142 passed and 12 skipped, the regression
+  harness 59 entries and 0 diffs.
+- Slice 1, the files that build on templates/cost_cap_with_souls.nous
+  through cmd_verify with prices = None: test_annex_iv_emit.py,
+  test_dossier.py, test_dossier_regression.py,
+  test_s93_dossier_rekor_v2_emit.py, and the three files of 23.1's
+  skips. tests/conftest.py gains a fixture, dated_shipped_prices, that
+  calls the helper with a directory from tmp_path_factory, so a test's
+  own tmp_path is not touched. It is not autouse: each of the seven
+  files opts in with pytestmark = pytest.mark.usefixtures(
+  "dated_shipped_prices"). test_dossier_regression.py gains
+  `import pytest` for it.
+- D6 as built: in test_trace_bundle_anchor_conformance.py,
+  test_manifest_c2_field.py and test_trace_bundle_dossier_e2e.py a
+  nonzero cmd_verify now fails the test with pytest.fail instead of
+  skipping it. Each of the three files now skips at import when z3 is
+  not installed (pytest.importorskip("z3")), the one environment case
+  the old skip stood for; the release workflow installs the all extra,
+  which includes z3.
+- Red, container, the seven files at d526fa1, 2026-12-08: 20 failed,
+  each with "pricing too old for --smt" or "assert 3 == 0" in its
+  reason, and 17 skipped (the 15 of 23.1 and 2 live tests). The same
+  expectation at the real date failed the gate, as it must.
+- Green, container, the seven files: 36 passed and the 2 live tests
+  skipped at the real date, 2026-10-09, 2026-12-08 and 2027-06-30.
+  With the opt-in line removed from the three former skip files, their
+  15 tests fail at 2026-12-08 instead of skipping.
+- Full suite, container: at the real date the sets equal those after
+  A1 (3141 passed, 13 skipped); at 2026-10-09 no failure; at
+  2026-12-08 165 failed, the 185 after A1 less the 20 of this slice,
+  none new, and the skips back to 13. Regression harness 59 entries, 0
+  diffs, 0 new errors; claim lint 0.
+- Found while building, not changed here:
+  tests/test_signer_persistence.py::test_writeahead_signatures_still_verify
+  failed twice in the container with ConnectionRefusedError at
+  uds_signer_client.py:66 and passed when run again; it is not driven
+  by the date and its cause is not known. scripts/claim_lint.py reports
+  no violation for a planted sentence that claims the runtime never
+  overspends with the verb reserved for Z3 and Farkas: the forbidden
+  objects in claims.toml do not cover spend, although the binding rules
+  of this lane forbid copy that states the Z3 bound as a limit on
+  spend.

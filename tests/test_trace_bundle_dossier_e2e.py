@@ -33,6 +33,9 @@ manifest_mod = pytest.importorskip("manifest")
 trace_bridge = pytest.importorskip("trace_bridge")
 dossier = pytest.importorskip("dossier")
 cli_verify = pytest.importorskip("cli_verify")
+pytest.importorskip("z3")
+
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s371_a2_dated_v1__
 
 _REPO = _Path(__file__).resolve().parent.parent
 _TEMPLATE = _REPO / "templates" / "cost_cap_with_souls.nous"
@@ -74,7 +77,7 @@ def _signed_source(tmp_path):
         lint_error_on = None
 
     if cli_verify.cmd_verify(Args()) != 0:
-        pytest.skip("cmd_verify could not prove the template (env issue)")
+        pytest.fail("cmd_verify could not prove the template")
     return src, src.with_suffix(".manifest.json")
 
 

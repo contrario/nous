@@ -23,6 +23,8 @@ from annex_iv_map import verify_annex_iv_map
 from cli_verify import cmd_verify
 from dossier import build_dossier
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s371_a2_dated_v1__
+
 TEMPLATE = (
     Path(__file__).parent.parent / "templates" / "cost_cap_with_souls.nous"
 )

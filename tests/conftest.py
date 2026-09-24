@@ -41,3 +41,16 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "live" in item.keywords:
             item.add_marker(skip_live)
+
+
+# __s371_a2_dated_fixture_v1__ opt-in, not autouse: a dated copy of the shipped
+# price table in an isolated HOME (docs/ONE_PRICE_SOURCE_DESIGN.md 23, D2).
+from pathlib import Path as _Path
+
+
+@_pytest.fixture
+def dated_shipped_prices(tmp_path_factory: _pytest.TempPathFactory,
+                         monkeypatch: _pytest.MonkeyPatch) -> _Path:
+    import dated_prices
+    return dated_prices.use_dated_shipped_prices(
+        tmp_path_factory.mktemp("dated_prices"), monkeypatch)

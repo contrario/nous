@@ -15,6 +15,8 @@ import pytest
 from cli_verify import cmd_verify
 from dossier import DossierError, build_dossier
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s371_a2_dated_v1__
+
 
 TEMPLATE = (
     Path(__file__).parent.parent
