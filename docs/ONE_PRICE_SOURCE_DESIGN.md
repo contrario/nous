@@ -1891,3 +1891,214 @@ passed ids with the controls, and reads each failure's reason from
 - On Server A the code patch runs the red gate before it writes, then
   the new file, the full suite and the regression harness, and puts
   both files back if any of them fails.
+
+<!-- __s371_sec23_v1__ -->
+## 23. S371 measurements and decisions (the suite's verdict depends on the date), written before the code
+
+Basis: the Server A RULE 0 at 2026-09-24 10:03:52Z read HEAD 9b1b383 =
+origin/main with fetch rc 0, the tree clean, 5.85.1 on A and B, the
+suite at 3134 passed and 12 skipped, and 29 file sha256 values. The
+measurements ran in a container clone of GitHub main at 9b1b383, whose
+bytes matched those 29 values, and again at e37ccc1, which is 9b1b383
+plus one commit of the S370 lane that touches only
+docs/GLM_SUPERSESSION_DESIGN.md. Environment: Python 3.12.3, z3
+4.16.0, the package installed editable with the all and dev extras,
+the `nous` command on PATH; Server A's own environment was not used.
+At the real date the container's suite is 3133 passed and 13 skipped.
+Its composition differs from Server A's (FG-S369-H), so only a
+difference in the failure set against that control counts. Every
+value in 23.1 was measured in the container under a faked clock; for
+Server A it is a prediction, not a measurement.
+
+Clock: libfaketime 0.9.10, FAKETIME "@<date> 10:04:00", monotonic
+clock faked (with it unfaked, time.sleep raised EINVAL). Before each
+suite run a 4-test probe in the same environment checked the date in
+process, in a subprocess and through pricing.days_since for
+deepseek-r1, and that monotonic time advances: 18 probe runs, each 4
+of 4, and a probe given a wrong date failed 3 of 4. Under the faked
+clock pytest hangs at interpreter exit (three threads in a futex
+wait); the runner killed it 20 seconds after the summary line, after
+--junitxml was written. The porcelain was empty before and after every
+run. Failure reasons were read from --junitxml. Files held by the
+operator, not in git: S371_CLOCK_REPORT.txt 648b2749...,
+s371_clock_v2.tar.gz a5e8359b..., S371_RECON_NOTES.txt 31094a03...,
+s371_recon.tar.gz 15b4fcda....
+
+### 23.1 The suite at shifted dates, measured
+
+| date (UTC) | passed | failed or error | skipped | change from the row above |
+|---|---|---|---|---|
+| 2026-09-24, real and faked | 3133 | 0 | 13 | control |
+| 2026-09-28 | 3133 | 0 | 13 | none |
+| 2026-10-08 | 3133 | 0 | 13 | none |
+| 2026-10-09 | 3132 | 1 | 13 | + test_s364_one_verify.py::test_vr001_prices_by_model_on_both_surfaces |
+| 2026-12-07 | 3132 | 1 | 13 | none |
+| 2026-12-08 | 2932 | 186 | 28 | + 185 failed or error, + 15 skipped |
+| 2026-12-16 | 2931 | 187 | 28 | + test_s358_skill_chain_e2e.py::test_chain_completes_for_a_shipped_exportable_template |
+| 2026-12-17 | 2931 | 187 | 28 | none |
+
+2026-10-17 and 2026-10-18 equal 2026-10-09. 2026-10-09, 2026-12-08,
+2026-12-16 and 2026-12-17 were each run twice with equal sets, except
+two tests that failed once with ConnectionRefusedError and passed on
+the second run of the same date
+(test_policy_pack.py::test_obligations_index_populated_from_pack at
+2026-10-09, test_signer_persistence.py::test_writeahead_signatures_still_verify
+at 2026-12-16); they are not counted and their cause is not known. At
+e37ccc1 the real, 2026-10-09 and 2026-12-08 sets equal those at
+9b1b383.
+
+- 2026-09-28: deepseek-r1's refusal (21.3) is not reached by any test.
+- 2026-10-09: the test prices claude-opus-4-7 from the shipped table
+  (verified_date 2026-09-08) at the real date. On day 31
+  (STALENESS_WARN_DAYS = 30) the verifier adds a VR001 WARNING "Price
+  for claude-opus-4-7 is not current: verified 31 days ago", and the
+  test asserts exactly one VR001 item (tests/test_s364_one_verify.py
+  line 177).
+- 2026-12-08: the three claude entries verified 2026-09-08 pass 90
+  days and --smt refuses them (pricing.py:402). By the junitxml text:
+  72 name claude-sonnet-4-6 and 24 name claude-haiku-4-5, "pricing too
+  old for --smt: verified 91 days ago"; 78 are fixtures whose
+  cmd_verify --smt returned 3 ("assert 3 == 0") and 5 expect exit 1 and
+  get 3, with no model in the text, whose templates name
+  claude-opus-4-7 and claude-haiku-4-5
+  (templates/cost_cap_with_souls.nous) or claude-haiku-4-5
+  (aml_transaction_governance.nous), attributed by reading; 5 are POST
+  /v1/skill/export returning 422 for a source whose mind is
+  claude-sonnet-4-6, by reading; 1 is
+  test_s189_vr003_unpriceable.py::test_api_verify_lights_vr003_for_default_priced,
+  as 16.6 predicted; and the 2026-10-09 test.
+- The 15 skips at 2026-12-08 come from three files that skip when
+  cmd_verify returns nonzero, whatever the reason ("cmd_verify could
+  not prove the template"): test_trace_bundle_anchor_conformance.py 9,
+  test_manifest_c2_field.py 4, test_trace_bundle_dossier_e2e.py 2.
+- 2026-12-16: deepseek-flash, verified 2026-09-16, passes 90 days.
+  2026-12-17: the entries verified 2026-09-17 add no failure.
+- The regression harness (59 entries, 0 diffs, 0 new errors) and the
+  UX smoke (sycophancy_guard: extract, compile, verify, exit 0; the
+  template names no model) were run at 2026-12-08 and 2027-06-30 and
+  did not change.
+- Consequence, by reading release.py:196 with the measured exit code:
+  from 2026-10-09 pytest exits nonzero with no commit, phase_pytest
+  raises on any nonzero exit, and no release passes its pipeline until
+  this is resolved or the price is re-verified.
+
+### 23.2 How the failing tests reach a price table, read
+
+All 187 tests price from the default layers with no explicit table and
+today=None. The route of each file was assigned by reading; the totals
+were checked to cover the 50 files once each.
+
+| route | files | tests |
+|---|---|---|
+| cmd_verify fixture with Args.prices = None | 21 | 82 |
+| emit_smt(load_pricing(), today=None) | 10 | 44 |
+| runner, then run_shas, default table | 7 | 19 |
+| dossier_spec, default table | 3 | 16 |
+| `nous` as a subprocess, program naming claude-haiku-4-5 | 5 | 17 |
+| API through TestClient, cached default table | 4 | 9 |
+
+- The clock enters the freshness rule at three reads, each behind a
+  today parameter: pricing.days_since (pricing.py:386),
+  pricing.lifecycle_status (pricing.py:417) and smt_emit.emit_smt
+  (smt_emit.py:523). No command-line flag and no API field carries a
+  date.
+- load_pricing(None) resolves its layers at call time: --prices,
+  ./nous_prices.toml, ~/.config/nous/prices.toml, then the shipped
+  pricing/defaults.toml (pricing.py:277). build_dossier finds its table
+  by the manifest's pricing_sha256 over the same layers (dossier.py:94).
+- nous_api_server._DEFAULT_PRICING, runtime._RUNTIME_PRICING and
+  nous_runtime._DISPATCH_PRICING keep the first table they load.
+- The subprocess tests give the child the test's environment, so an
+  isolated HOME reaches it.
+- S366 and S367 already isolate HOME and the working directory, write a
+  table dated at run time and reset runtime._RUNTIME_PRICING;
+  test_s364_one_verify.py resets the API cache (lines 229 and 230).
+- In the container, load_pricing() from the repository root resolves
+  the shipped file, canonical 1f0a3ede..., equal to Server A's RULE 0
+  value. Which layer Server A resolves is not measured.
+
+### 23.3 Decisions
+
+- D1 A test whose subject is not the age of the shipped prices gives
+  the same verdict for the same tree at any date. The age of the
+  shipped prices stays visible in RULE 0's CLIFFS leg, which gates
+  nothing; whether a release notice should print it is a later
+  decision.
+- D2 The mechanism is a test fixture, not a production change. A
+  shared helper in tests/ writes a copy of pricing/defaults.toml in
+  which every line of the form verified_date = "<date>" carries the
+  run date minus 5 days, into an isolated HOME at
+  .config/nous/prices.toml (layer 3), sets HOME for the test and resets
+  the three caches of 23.2. Every other byte of the copy equals the
+  shipped file: prices, removed_after, deprecated_after,
+  pricing_model. The helper refuses unless the number of lines it
+  changed equals the number of such lines in the shipped file. A file
+  opts in; nothing is autouse.
+- D3 The copy is test data. It is written only under the test's
+  temporary directory, never inside the repository, and nothing calls
+  it a verified price. The helper's own tests check that it writes
+  nothing inside the repository and that the shipped file's sha256 is
+  unchanged after use.
+- D4 No production clock override. No environment variable, flag or
+  API field sets the date the freshness rule reads: it would let a
+  caller choose the date a refusal is judged at, the concern of 22.2
+  D4 from the other side. An in-process test may pass today= where the
+  call already takes it; D2 stays the default because it also reaches
+  subprocesses and the caches.
+- D5 A1 first: test_vr001_prices_by_model_on_both_surfaces moves onto
+  D2 in its own commit, before 2026-10-09. Its assertion stays exactly
+  one VR001 item, an ERROR carrying the model's price. Counting only
+  the ERROR items was rejected: it would accept any extra VR001
+  finding.
+- D6 The rest of 23.1's set follows in slices, one per route or shared
+  fixture of 23.2, each red first, before 2026-12-08. In the slice that
+  covers templates/cost_cap_with_souls.nous the three skips of 23.1
+  become failures: a nonzero cmd_verify fails the fixture instead of
+  skipping it.
+- D7 test_api_verify_lights_vr003_for_default_priced moves onto D2 in
+  its slice. Its subject is that the default table prices the model
+  through the API, not how old the shipped prices are.
+- D8 Prices are not re-verified to make the suite pass. Re-verifying
+  the three claude entries is a pricing decision for the operator,
+  under the rule of a stored, hashed, first-party read on Server A,
+  and does not replace D1 to D7.
+- D9 deepseek-r1 is not touched.
+- D10 D5 and D6 need no release: no module is added, and codegen,
+  templates and the regression baseline do not move. Tests added with
+  the helper raise the suite count; the floor and the hero stat stay
+  until the next release.
+
+### 23.4 Red first (A1)
+
+The red is the existing test at the date that breaks it.
+
+- Red (1): under libfaketime at 2026-10-09,
+  test_vr001_prices_by_model_on_both_surfaces fails, and its junitxml
+  reason contains "Price for claude-opus-4-7 is not current: verified
+  31 days ago".
+- Controls, same run: the date probe passes 4 of 4 and every other test
+  of tests/test_s364_one_verify.py passes.
+- Green, after the change: the test passes at the real date, at
+  2026-10-09 and at 2026-12-08; the helper's own tests pass; the full
+  suite at 2026-10-09 has an empty failure set.
+- The gate compares the failed test ids with the red set and reads each
+  reason from --junitxml (FG-S365-B, FG-S366-B, FG-S367-D).
+- Whether Server A has libfaketime is not known. Installing it is a
+  change to the host with its own pame; without it the shifted-date
+  legs run in the container and Server A runs the suite at the real
+  date.
+
+### 23.5 Kill criteria
+
+- If the helper's copy differs from the shipped file on any line other
+  than a verified_date line, stop.
+- If a green run fails any test outside 23.1's set, restore and measure
+  before any retry.
+- If a changed test passes at the real date but fails at 2026-10-09 or
+  2026-12-08, its slice is not done.
+- If pricing/defaults.toml's sha256 or the canonical table sha256
+  changes, stop.
+- If 2026-10-09 arrives before D5 is on main, record it here: the suite
+  on main is red from that day and no release passes.
+
+This section changes no code and no claim class.
