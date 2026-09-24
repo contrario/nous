@@ -15976,3 +15976,311 @@ document itself.
                        recorded here as FG-S370-B. It is an instance of
                        the board item that asks whether the rules of
                        this house hold at the width they are stated.
+
+  - S372 the session that built a successor to the second opening
+    instrument from its bytes, ran it beside the pinned one at one head,
+    and paid the three findings owed by S370
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY IS WRITTEN FROM INSIDE
+    THE SESSION IT DESCRIBES, SO IT STATES NO NUMBER THAT COUNTS THAT
+    SESSION. Unless a sentence says otherwise, each value was printed on
+    Server A on 2026-09-24, by the opening rule, by instruments that
+    took their own digest as their first argument and whose refusal arms
+    were driven red before their green, or by read-only commands of
+    version control and the shell, pasted whole. Other kinds are marked
+    where they appear. INHERITED: carried from the sealed handoff of
+    S370, whose digest was checked at the opening, or from the entries
+    above. READ IN THE SEAT'S CONTAINER: computed off host, from copies
+    whose digests equal the host's. DERIVED: computed from printed
+    values. TESTIMONY: said by a party and not measured here. OPERATOR:
+    stated by the operator in this session. RULING: a decision the
+    operator stated in words.
+
+    THE SESSION NUMBER. RULING: this session is three hundred and
+    seventy-two. READ IN THE SEAT'S CONTAINER at 11:43:56Z, on a clone
+    whose commit id equals the host's HEAD of 11:43:05Z, e37ccc1, across
+    every tracked file: the finding prefix with that number, the anchor
+    prefix, the bare session token and the marker shape of the release
+    lane each counted zero, beside a positive control on the finding
+    prefix of S370 that counted twenty-three in one file and a negative
+    drawn at runtime that counted zero. The sealed files of the project
+    counted zero for all four. The instrument that appends this entry
+    refuses unless the namespace is still empty at the head of the
+    moment it runs.
+
+    D372-1  THE OBJECT AND WHO CHOSE IT. RULING: object T of the S370
+            board, with V paid in the same entry. T is a successor to
+            the second opening instrument, not an edit of the pinned
+            file, and the pinned one opens sessions until the successor
+            passes the comparison set below. Scope: exactly FG-S370-A to
+            -F, plus the house rule it predates, one exit code per
+            refusal class. Every other leg keeps its name, shape and
+            value, the pinned legs of heads and anchors included; L7 is
+            out of scope. BEFORE PROMOTION: the successor runs beside
+            the pinned one at one head, every shared line is compared
+            off host, and its refusal arms are driven red before its
+            green, one token per class.
+
+    D372-2  THE NAME. The seat proposed G3 from a check at the width of
+            the tree. The host's /root showed the house's usage: G1 to
+            G8 are positions in a session's sequence of gates,
+            preflight, read, sidecar, rename, commit and push, across
+            D348, D349 and S343, and the pinned instrument calls itself
+            the second opening body. A successor to it is still the
+            second opening body. It is instruments/G2_R0_S372.sh. Its
+            own refusal tokens take the prefix G2S372 and the codes
+            forty to fifty-seven; the tokens of T5 keep their names, so
+            a transcript names the instrument that printed it.
+
+    D372-3  WHAT CHANGED, BY LETTER. A: the leg that compares the
+            ledger's working-tree digest with its blob at the local ref
+            origin/main is named DOC_WORKTREE_EQ_ORIGIN_MAIN_BLOB, same
+            computation, same values. B: the fetch line is unchanged;
+            after it the successor prints FETCH_RC, then the size, the
+            modification time in UTC and every line of FETCH_HEAD that
+            names the branch main, and only then refuses a nonzero code.
+            C: the blob of the ledger at origin/main is named
+            DOC_BLOB_ORIGIN_MAIN, and DOC_BLOB_HEAD is printed beside
+            it. D: both status calls run with optional locks off,
+            prefixed on the call and not exported, so no process of L7
+            inherits it; the write set is declared as measured. E: the
+            read set is declared as the source reads it. F: a given root
+            is used or refused, never fallen through, and the two
+            default roots are quoted literals. Built in the seat's
+            container by twenty-six anchored edits on the bytes at
+            8454b210, each anchor found exactly once: sha256 c11e3033,
+            16777 bytes, 379 lines, ASCII, accepted by the shell's
+            syntax check.
+
+    D372-4  E WAS WIDER THAN ITS SCOPE LINE. The operator's line for E
+            named HEAD, the worktree and the origin ref. The source
+            reads more: the index through ls-files and status; the
+            worktree through git grep, not HEAD; untracked and ignored
+            files through the one negative of G0; the local tags; the
+            remote, over the network; FETCH_HEAD, once B prints it;
+            /tmp/nous_s324; and in L7 a lint that reads ignored files
+            and a mirror check that reads two fixed paths whatever the
+            root. The seat pushed back before the build and the
+            successor declares the wider set. A declaration narrower
+            than the reads is the defect FG-S370-E again, at a smaller
+            width.
+
+    D372-5  THE EVIDENCE IN THE SEAT'S CONTAINER, 12:30Z to 12:32Z. READ
+            IN THE SEAT'S CONTAINER: seventeen of eighteen refusal
+            classes driven red on synthetic repositories, each on its
+            exact token and code, the class that is blind to git at both
+            of its sites, a repository with sha256 object names for the
+            class whose head is not a commit id, and the failed fetch by
+            a bad address and by no remote, each printing FETCH_RC 128
+            and FETCH_HEAD_BYTES 0 before refusing. The class of a
+            failed cd was not driven: the test of the root and the cd
+            need the same permission, so it is unreachable. On a stale
+            index the successor left the index at 7d2d1b32 and the
+            pinned one rewrote it to ad34d109, porcelain zero in both.
+            The successor ran green on a root whose path holds a space.
+            Beside the pinned one on the clone at e37ccc1, its origin
+            pointed at a local mirror so that no run touched the
+            network: 257 compared lines each, no difference. The
+            comparator, sha256 04ff5184, was driven red through mutated
+            inputs, one token per class, before its green.
+
+    D372-6  THE ARMS ON THE HOST. Transfer read at 16:09:38Z: the
+            successor c11e3033, 16777 bytes, 379 lines, and its arms
+            30422431, 2107 bytes, 53 lines, equal to the build; no other
+            regular file at the top of /root carries the token prefix.
+            At 16:11:25Z the arms, taking their own digest, drove no
+            argument to T5_NO_DIGEST_ARGUMENT and code 41, a near, a
+            truncated and an overlong digest to T5_DIGEST_MISMATCH and
+            42 each, and an absent path and /proc as the given root to
+            G2S372_GIVEN_ROOT_NOT_A_REPO and 43 each. The pinned
+            instrument falls through to its default root on both. At
+            16:12:08Z standard input gave T5_NOT_A_FILE and 40. No arm
+            reached the fetch.
+
+    D372-7  THE COMPARISON ON THE HOST. The pinned instrument at
+            16:22:31Z and the successor at 16:25:52Z, both at HEAD
+            d526fa1, ORIGIN d526fa1, ahead and behind zero, porcelain
+            zero, the ledger at 74cb3d44 with every leg equal to the
+            seal of S370, the leg of A YES under both names, suite 3142
+            passed and 12 skipped in both. The successor printed
+            FETCH_RC 0, FETCH_HEAD_BYTES 189, a modification time of
+            16:25:54.35Z inside its own run, one main line naming
+            d526fa1 for merge, and DOC_BLOB_HEAD bac3579d equal to the
+            blob at origin/main. READ IN THE SEAT'S CONTAINER at
+            16:30:13Z: the comparator over the seat's transcriptions of
+            the two pastes, 257 lines each, no difference, every line
+            outside L0, L8 and the six added legs equal. The
+            transcriptions were checked against the machine text of the
+            clone runs: L0, the stop condition and L8 equal; the block
+            of the ledger equal except a trailing space on two lines,
+            which the paste strips from both runs alike. The condition
+            the operator set for promotion is met. Whether the next
+            opener pins the successor is the operator's.
+
+    D372-8  THE TREE MOVED INSIDE THE SESSION. The release lane's S371
+            landed 3013e22, section 23 of the price-source design, and
+            d526fa1, a test that no longer depends on the date, between
+            the reading of 11:45:03Z and that of 16:22:31Z. Neither
+            touched the ledger. Tracked files 1467 became 1469, tests
+            collected 3146 became 3154. At 16:44:24Z the dry run of the
+            landing instrument read HEAD 85b4f7b and refused on its
+            first check of the pre-state; the tree had moved again. The
+            comparison ran at d526fa1. The commit that carries this
+            entry names its own parent, and the landing instrument takes
+            that head as an argument at the moment it runs.
+
+    D372-9  WHAT THIS SESSION WROTE BEFORE THIS ENTRY. To /root,
+            untracked: the successor and its arms, at the digests above.
+            Off host, recoverable only from the operator's saved copies:
+            the comparator, the drive, sha256 bc51adba, and the build,
+            sha256 fc782beb. The successor lands tracked in the commit
+            of this entry, byte-equal to its /root copy. No other file
+            of the repository was written.
+
+    FINDINGS
+
+            FG-S372-A  SEAT. OWED BY S370, ONE. A scratch count of FAIL
+                       over the output of the appending instrument's
+                       harness counted seven lines, because FAILED and
+                       FAILS contain the word; the exact verdict token
+                       counted zero. The class of FG-S370-O, recurring.
+
+            FG-S372-B  SEAT. OWED BY S370, TWO. The seat wrote that the
+                       landing instrument of S370 was in a file below
+                       and presented none. The operator pasted the
+                       command, which printed nothing; the seat then
+                       presented the file, and the next run printed the
+                       whole commit.
+
+            FG-S372-C  SEAT. OWED BY S370, THREE. The selftest of the
+                       appending instrument, inherited unchanged from
+                       its predecessor, prints no wall clock. The
+                       selftest of that instrument at 4142aa64 ran at a
+                       time no instrument printed. The class
+                       of FG-S368-B.
+
+            FG-S372-D  SEAT. A DERIVED SENTENCE OF THE SEAT WAS FALSE.
+                       After the opening rule the seat wrote, as derived
+                       from the order of git's fetch, that a failed
+                       connection leaves FETCH_HEAD unwritten. READ IN
+                       THE SEAT'S CONTAINER, git 2.43.0: it truncates
+                       the file and moves its time. The conclusion the
+                       sentence supported held only because the host's
+                       file named e37ccc1; an empty file would not have.
+
+            FG-S372-E  SEAT. THE SEAT USED THE NETWORK BEFORE DECLARING
+                       IT. S370 recorded none from the seat's container.
+                       This session made two requests to the raw content
+                       host of the forge at e37ccc1, one clone, and one
+                       fetch inside a run of the pinned instrument on
+                       that clone. Identity was taken by content: the
+                       instrument at 8454b210 and blob 89efc35f, the
+                       ledger at 74cb3d44 and blob bac3579d, the commit
+                       id equal to the host's HEAD. Every later run on
+                       the clone pointed its origin at a local mirror.
+
+            FG-S372-F  SEAT. A PREDICTION RESTED ON A PRIOR THAT HAD
+                       MOVED. The seat predicted FETCH_HEAD at
+                       11:27:45.06Z; it read 11:41:47.40Z. The class
+                       of FG-S370-J.
+
+            FG-S372-G  SEAT. THE FIRST NAME WAS CHOSEN FROM A CHECK THAT
+                       COULD NOT SEE /root. In the tree the prefix
+                       occurred only inside one binary blob. /root held
+                       five files of that name and two live verdict
+                       tokens with its prefix. The house's numbering is
+                       positional.
+
+            FG-S372-H  SEAT. TWO EXIT-CODE LABELS OF ONE SEAT COMMAND
+                       WERE VOID. One printed the code of the last
+                       process of a pipe, a counter, not the search: the
+                       class of FG-S370-M, recurring. The other printed
+                       an error code from directories, with the error
+                       stream discarded by the seat's own redirect. What
+                       stands of that command is the text it printed,
+                       over the files it could read.
+
+            FG-S372-I  WORLD. A FAILED FETCH EMPTIES FETCH_HEAD. READ IN
+                       THE SEAT'S CONTAINER, git 2.43.0, a missing path,
+                       an ssh address with no client and a refused https
+                       address: code 128, the file cut from 82 bytes to
+                       none, its time moved. Its time alone evidences
+                       nothing; its code and its main line do.
+
+            FG-S372-J  WORLD. A PLAIN STATUS REWRITES A STALE INDEX.
+                       READ IN THE SEAT'S CONTAINER: the index digest
+                       changed under a plain status and did not under a
+                       status with optional locks off, porcelain empty
+                       in both. The pinned instrument does the
+                       first; FG-S370-C described it and this measured
+                       it.
+
+            FG-S372-K  WORLD. A PLAIN FETCH WRITES TAGS. READ IN THE
+                       SEAT'S CONTAINER: a tag on a fetched commit
+                       arrived with no tag argument. The pinned
+                       instrument's statement of what its fetch writes
+                       omits it.
+
+            FG-S372-L  WORLD. THE LINT OF L7 READS FILES THAT ARE NOT
+                       TRACKED. It scanned 431 files on the host and 400
+                       on a clean clone at the same commit, with the
+                       host's porcelain empty. Which files, UNMEASURED.
+
+            FG-S372-M  WORLD. THE MIRROR CHECK OF L7 READS FIXED PATHS.
+                       READ IN THE SEAT'S CONTAINER,
+                       scripts/served_mirror_check.py lines 44 and 45:
+                       the mirror tree and the served root are constants
+                       overridable only by environment, so a run given
+                       another root still reads Server A's.
+
+            FG-S372-N  WORLD. A FETCH THIS LANE DID NOT RUN. FETCH_HEAD
+                       was rewritten at 11:41:47Z; the reflogs of HEAD
+                       and origin/main moved nothing after 11:08:30Z.
+                       Who ran it, UNMEASURED.
+
+            FG-S372-O  WORLD. THE PASTE STRIPS TRAILING SPACES. Two
+                       lines of each transcribed run lack the trailing
+                       space the machine text carries. A comparison of
+                       transcriptions is blind to trailing whitespace.
+
+            FG-S372-P  WORLD. A TRACKED INSTRUMENT MOVES L6. The legs of
+                       L6 count phrases across every tracked file, and
+                       an instrument that searches for them carries them
+                       in its own source. READ IN THE SEAT'S CONTAINER
+                       at 16:33:45Z, on a scratch worktree at e37ccc1:
+                       tracking the successor moved the four counts from
+                       216, 140, 66 and 93 to 219, 141, 67 and 94. The
+                       pinned instrument contributes the same three,
+                       one, one and one to its own counts.
+
+            FG-S372-Q  WORLD. THE CLAIM LINT ALLOWS A RESERVED WORD WITH
+                       NO FORBIDDEN OBJECT NEAR IT. READ IN THE SEAT'S
+                       CONTAINER at 16:34:35Z and 16:35:23Z, on a
+                       scratch worktree with this entry appended: the
+                       lint scans the ledger and returned code 0 over a
+                       draft that used the house's reserved words five
+                       times, and code 1 on a planted line that paired
+                       one with a forbidden object. Its rule is narrower
+                       than the house's, which reserves those words for
+                       results of Z3 and Farkas.
+
+            FG-S372-R  SEAT. THE SEAT'S DRAFT OF THIS ENTRY USED THE
+                       RESERVED WORDS FIVE TIMES, for a comparison of
+                       lines. A search of the rendered bytes found them
+                       before the payload froze; each was rewritten, and
+                       the validator now refuses any of them.
+
+            FG-S372-S  SEAT. A NEAR MISS THAT COULD EQUAL ITS TARGET.
+                       The drive of the commit instrument, composed from
+                       the drive of S370 at b4f9b2e8, built a wrong
+                       object name by overwriting its last character
+                       with a zero. When the real name already ended in
+                       zero, the wrong base was the right one and the
+                       arm committed. READ IN THE SEAT'S CONTAINER at
+                       16:46Z: across twelve runs, one run lost four
+                       arms and another lost one, from that alone; runs
+                       reported green before it was seen had passed by
+                       luck of the name. The near miss now rotates the
+                       last character and is checked to differ; sixteen
+                       runs after that were green. The drive of S370
+                       carries the same construction in two arms.
