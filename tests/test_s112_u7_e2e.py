@@ -25,6 +25,7 @@ import asyncio
 import hashlib
 import json
 
+import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 import memory_keyring
@@ -42,6 +43,8 @@ from nous_ast_runner import execute_program
 from parser import parse_nous
 from remedy_proof import REMEDY_PROOF_SCHEMA_VERSION, RemedyProof
 from run_identity import producing_soul_sha256, world_sha256
+
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
 
 _PROG = (
     "world W {\n"

@@ -21,6 +21,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 _SRC = """world ScalarThreshBoolNet {
     law CostCeiling = $0.50 per cycle
     heartbeat = 10s

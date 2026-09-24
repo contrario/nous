@@ -19,6 +19,8 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 GOOD_KEY: str = "test_key_skill_export"
 
 SIMPLE_NOUS: str = """world MarketMonitor {

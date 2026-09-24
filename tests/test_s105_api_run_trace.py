@@ -13,6 +13,8 @@ from fastapi.testclient import TestClient
 
 from nous_trace import TraceEnvelope, verify_trace_signature
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 GOOD_KEY = "test_key_s105"
 
 _PRICED = (

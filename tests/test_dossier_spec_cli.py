@@ -16,6 +16,8 @@ from dossier_spec import (
     build_dossier_spec,
 )
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 FIXTURES = Path(__file__).parent / "skill_md_fixtures"
 
 

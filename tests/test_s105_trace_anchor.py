@@ -10,6 +10,8 @@ from compiled_trace import run_compiled_with_trace
 from rekor_verify_v2 import RekorAnchorV2
 from trace_anchor import TraceAnchorError, anchor_trace_to_rekor_v2
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 _PROG = (
     "world W {\n"
     "  cost_cap: 0.10 USD\n"

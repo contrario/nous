@@ -21,6 +21,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 
 # Two source variants. NET_WIDE blocks a strictly LARGER region than
 # NET_NARROW on amount (>2000 contains >4000), so NARROW -> WIDE grows the

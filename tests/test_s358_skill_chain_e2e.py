@@ -43,6 +43,8 @@ import pytest
 from cli_skill_export import cmd_skill_export
 from dossier_spec import DossierSpecError, DossierSpecResult, build_dossier_spec
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 _SKILL_NAME_PATTERN: re.Pattern[str] = re.compile(
     r"^SKILL_NAME:[ \t]*(\S+)[ \t]*$",
     re.MULTILINE,

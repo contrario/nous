@@ -2212,3 +2212,71 @@ This section changes no code and no claim class.
   harness 59 entries, 0 diffs, 0 new errors; claim lint 0.
 - Left for the next slices: 59 tests in 18 files at 2026-12-08, 60 from
   2026-12-16, on routes R3 to R6.
+
+### 23.8 Build notes, S374: slice 3, routes R3 to R6; D6 amended
+
+- D6 amended. D6 says one slice per route. Slice 2 (commit ce87085)
+  covered R1 and R2, and this slice covers R3 to R6, without D6 being
+  amended first; the amendment is recorded here. A slice may cover
+  several routes when its red gate compares the failing set of its
+  files and reads the reason of every failure, its green gate runs
+  every file at each date, and the full suite is compared by set at the
+  real date, 2026-10-09 and 2026-12-08. Under those gates a combined
+  slice loses no resolution.
+- The files: the remaining 18. R3, the runner and run_shas:
+  test_s105_anchor_compiled_run.py, test_s105_compiled_trace.py,
+  test_s105_trace_anchor.py, test_s107_u6_e2e_consultation.py,
+  test_s112_u7_e2e.py, test_s155_u4_runner_stamp.py and
+  test_trace_emission.py. R4, dossier_spec: test_dossier_spec_cli.py,
+  test_s95_dossier_spec_rekor_v2_emit.py and
+  test_s358_skill_chain_e2e.py. R5, a `nous` subprocess:
+  test_s123_boundary_and_e2e.py, test_s124_farkas_dnf_bundle.py,
+  test_s125_chain_bundle.py, test_s126_hop_e2e.py and
+  test_s127_net_e2e.py. R6, the API: test_s105_api_run_trace.py,
+  test_skill_export_endpoint.py and test_s189_vr003_unpriceable.py.
+  Each opts in with the line of slices 1 and 2; four gain
+  `import pytest` for it. No assertion changes. D7 as built:
+  test_api_verify_lights_vr003_for_default_priced is in this set.
+- Recon, container, read at ce87085: no file loads a price table at
+  import or defines a fixture wider than function scope. The `nous`
+  subprocesses and the offline verifiers are started without an env
+  argument, so they inherit the HOME the fixture sets.
+  test_trace_emission.py changes into its tmp_path; the helper refuses
+  unless load_pricing resolves the dated copy. No file skips on a
+  failed verify: the five R5 files skip when the `nous` CLI is not on
+  PATH, and test_s123_boundary_and_e2e.py and
+  test_s189_vr003_unpriceable.py when z3 or slowapi is missing. None of
+  them skipped in any run below.
+- Red, container, the 18 files at ce87085: at 2026-12-08 59 failed and
+  47 passed; at 2026-12-16 60 failed, the addition being
+  test_s358_skill_chain_e2e::test_chain_completes_for_a_shipped_exportable_template
+  (deepseek-flash). 57 of the 59 reasons carry "pricing too old for
+  --smt" in the report: 39 name claude-sonnet-4-6 and 18
+  claude-haiku-4-5. Two tests do not print what they assert on, so
+  their reasons were read directly under the same clock, with the real
+  date as control. In
+  test_s127_net_e2e::test_threshold_only_chain_carries_no_net_files
+  `nous verify --smt` exits 3 on claude-haiku-4-5, "pricing too old
+  for --smt", and 0 at the real date. In
+  test_s189_vr003_unpriceable::test_api_verify_lights_vr003_for_default_priced
+  the API verify returns no VR003 and two VR001 warnings that the
+  claude-opus-4-7 and claude-haiku-4-5 prices are not current at 91
+  days; at the real date it returns VR003 and no warning. The gate
+  exempts exactly these two ids from the reason check and fails if
+  either passes. An expectation that exempts an id which does not
+  exist failed the gate, and so did the red expectation at the real
+  date.
+- Green, container, the 18 files: 106 passed, none failed or skipped,
+  at the real date, 2026-10-09, 2026-12-08, 2026-12-16 and 2027-06-30.
+- Full suite, container, with the 18 files changed: 3141 passed, 0
+  failed and 13 skipped at the real date, 2026-10-09, 2026-12-08,
+  2026-12-16, 2026-12-17 and 2027-06-30, the skip set the same at every
+  date. The set of 23.1 is empty in the container: at each of these six
+  dates the suite gives the same verdict for this tree. Regression
+  harness 59 entries, 0 diffs, 0 new errors; claim lint 0.
+- Found while building, not changed here:
+  tests/test_policy_pack.py::test_policy_pack_run_verifies_and_no_deployment_key
+  failed once in the container with ConnectionRefusedError and passed
+  on the next run. Like the signer test of 23.6 it starts a signer
+  process and waits only until the socket file exists; whether that is
+  the cause is not measured.

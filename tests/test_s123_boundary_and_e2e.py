@@ -36,6 +36,8 @@ from policy_coverage import (
 )
 from coverage_farkas import serialize_system, FarkasError
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 
 def _policies(blocking_signal: str):
     src = (

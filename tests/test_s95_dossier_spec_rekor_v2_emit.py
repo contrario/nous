@@ -31,6 +31,8 @@ from dossier_spec import (
 )
 from rekor_verify_v2 import RekorAnchorV2
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 FIXTURES = _TESTS_DIR / "skill_md_fixtures"
 
 

@@ -48,6 +48,8 @@ from coverage_minilang import (
     ml_scan_blocking_signals,
 )
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 
 def _policies(blocking_signal: str):
     src = (

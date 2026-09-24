@@ -28,6 +28,8 @@ from ast_nodes import (
 from pricing import PricingTable, load_pricing
 from verifier import NousVerifier
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 
 z3_available = importlib.util.find_spec("z3") is not None
 api_available = importlib.util.find_spec("slowapi") is not None

@@ -4,9 +4,13 @@
 """
 from __future__ import annotations
 
+import pytest
+
 from compiled_trace import anchor_compiled_run
 from nous_trace import TraceEnvelope, verify_trace_signature
 from rekor_verify_v2 import RekorAnchorV2
+
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
 
 _PROG = (
     "world W {\n"

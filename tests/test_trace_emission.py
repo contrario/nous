@@ -24,6 +24,8 @@ from nous_trace import load_trace, verify_trace_signature
 from parser import parse_nous
 from run_shas import RunShasError
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 _TRACE_NAME = "trace_w_dry-run.json"
 
 _PRICED = (

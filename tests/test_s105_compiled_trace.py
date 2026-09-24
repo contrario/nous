@@ -6,10 +6,14 @@ from __future__ import annotations
 
 import asyncio
 
+import pytest
+
 from compiled_trace import run_compiled_with_trace
 from nous_trace import TraceEnvelope, verify_trace_signature
 from nous_ast_runner import execute_program
 from parser import parse_nous
+
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
 
 _PROG = (
     "world W {\n"

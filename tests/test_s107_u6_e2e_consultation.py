@@ -20,6 +20,8 @@ from run_identity import (
     world_sha256,
 )
 
+pytestmark = pytest.mark.usefixtures("dated_shipped_prices")  # __s374_a4_dated_v1__
+
 _PROG = (
     "world W {\n"
     "  cost_cap: 0.10 USD\n"
