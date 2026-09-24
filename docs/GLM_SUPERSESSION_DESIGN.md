@@ -15673,3 +15673,306 @@ document itself.
                        was caught because the payload digest had not
                        changed. The same class as FG-S368-E, recurring
                        after it was recorded.
+
+  - S370 the session that read the source of the second opening
+    instrument, settled what one of its legs compares, and found a
+    negative control that fires at the width of the tree
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY IS WRITTEN FROM INSIDE
+    THE SESSION IT DESCRIBES, SO IT STATES NO NUMBER THAT COUNTS THAT
+    SESSION. Unless a sentence says otherwise, each value was printed on
+    Server A in S370, by the opening rule, by instruments that took
+    their own digest as their first argument and whose refusal arms were
+    driven red before use, on the host for the second opening instrument
+    and in the seat's container for those this seat wrote, or by
+    read-only commands of version control and the shell, pasted whole.
+    Other kinds are marked where they appear. INHERITED: carried from
+    the sealed handoff of S368, whose digest was checked at the opening,
+    or from the entries above. READ IN THE SEAT'S CONTAINER: computed
+    off host, from copies whose digests equal the host's. DERIVED:
+    computed from printed values. TESTIMONY: said by a party and not
+    measured here. OPERATOR: stated by the operator in this session.
+    RULING: a decision the operator stated in words.
+
+    THE SESSION NUMBER. RULING: this session is three hundred and
+    seventy. At 9fbab5e, read at 11:46:05Z on 2026-09-23, across every
+    tracked file, the finding prefix with that number, the bare session
+    token and the marker shape of the release lane each counted zero,
+    beside a positive control that counted eighteen, all in this
+    document, and a negative on a path that does not exist that counted
+    zero. TESTIMONY, relayed by the operator from the seat of S368: the
+    same prefix occurs nowhere in the sealed handoffs of the release
+    lane from S357 to S367. TESTIMONY, the sealed handoff of the release
+    lane's S369: the operator gave that lane three hundred and
+    seventy-one next, and three hundred and seventy is not that lane's.
+    The instrument that appends this entry refuses unless the namespace
+    is still empty at the head of the moment it runs.
+
+    D370-1  THE OBJECT AND WHO CHOSE IT. After the opening rule the
+            operator named the object: read the tracked source of the
+            second opening instrument, instruments/G2_R0_S349.sh,
+            against its pin, and settle what its leg WORKTREE_EQ_ORIGIN
+            compares. RULING: read only, nothing fixed in this session,
+            a defect of the name recorded, and a rename of a pinned
+            instrument its own gate. The check of the namespace at the
+            width of the tree and the reading of FETCH_HEAD were also
+            the operator's requests; the seat designed them.
+
+    D370-2  WHAT THE LEG COMPARES. At 32211ea, read at 11:52:48Z on
+            2026-09-23, the tracked blob 89efc35f of that instrument,
+            its working-tree copy and the copy in /root that opens every
+            session all had sha256 8454b210, the pin. Its line 259 takes
+            the sha256 of this document in the working tree and the
+            sha256 of the blob of this document at the local ref
+            origin/main, and prints YES when they are equal. IT READS
+            ONE FILE. It does not read HEAD, the ahead count, or any
+            other path. The remote ref is the one its unchecked fetch
+            refreshes.
+
+    D370-3  THE LEG DRIVEN, READ IN THE SEAT'S CONTAINER. Lines 30 and
+            259 were transcribed, and the host printed the sha256 of the
+            same two lines of the blob, 2644a1d0, equal to that of the
+            transcription. Driven on synthetic repositories under git
+            2.43.0: equal and clean gives YES; one commit ahead on
+            another path gives YES; ahead with this document committed
+            gives NO; ahead zero with this document edited and
+            uncommitted gives NO; ahead zero and behind one, with this
+            document changed upstream, gives NO with the porcelain
+            empty; ahead and behind zero, with this document edited
+            under the assume-unchanged bit, gives NO with the porcelain
+            empty; a remote ref without this document, and no remote ref
+            at all, each give NO with an error on the error stream. ITS
+            LIMITS. The working directory and the remote ref were
+            reproduced and not carried as bytes. The host printed git
+            2.43.0, the same version string, and the table is still
+            measured off host. AT AHEAD ZERO, BEHIND ZERO AND AN EMPTY
+            PORCELAIN THE LEG SEPARATES ONLY A CHANGE TO THIS DOCUMENT
+            THAT GIT STATUS DOES NOT REPORT. OPERATOR: the operator
+            withdrew in words a sentence of the operator's own, that at
+            ahead zero its YES cannot discriminate.
+
+    D370-4  THE OPEN QUESTION OF S368 IS SETTLED. INHERITED, from the
+            handoff and the entry of S368: at 01:11:39Z on 2026-09-21
+            the second opening instrument read HEAD 95dba04, the remote
+            ref 9b916f3, ahead one, behind zero, the porcelain empty,
+            and this leg YES. Printed at 10:15:19Z on 2026-09-24:
+            95dba04 has one parent, 9b916f3, and changes one path,
+            docs/ONE_PRICE_SOURCE_DESIGN.md. That is the second state of
+            the table, which gives YES. OF THE TWO HYPOTHESES
+            OF FG-S368-P THE FIRST HOLDS: the leg is scoped to this
+            document and its name is the defect. The second, a push
+            between two readings, is not needed and is not refuted.
+            DERIVED: 95dba04 was committed at 01:11:17Z, twenty-two
+            seconds before that reading.
+
+    D370-5  DEFECTS OF THE SECOND OPENING INSTRUMENT, RECORDED AND NOT
+            FIXED, read from the blob at its pin. Its fetch at line 178
+            is never checked for failure, so after a failed fetch its
+            remote, ahead, behind, blob and this leg all read a stale
+            ref, and only the error stream would say so. The leg it
+            prints as the blob of this document, line 239, is the blob
+            at the remote ref, printed beside a digest of the
+            working-tree file. Its header and its closing section
+            declare that it writes no index and nothing else on the
+            host, and lines 234 and 235 call git status. INHERITED, from
+            the finding D of S368: a plain status call writes the index
+            when the index is stale. The instrument that appended
+            entries in S368, read on the host at its pin ee8a78d3,
+            switches off optional locks before its status call; this one
+            does not. Its declared set is tracked paths at HEAD, while
+            its legs on this document read the working-tree file and two
+            of them read the remote ref; the three coincide only when
+            the ahead and behind counts are zero and the working tree
+            matches HEAD. Its refusal for a missing repository cannot be
+            reached by argument on a host that holds one of its default
+            candidates, since a wrong path falls through to them, and
+            its list of candidates is unquoted in its loop, so a path
+            with a space splits.
+
+    D370-6  ITS REFUSAL ARMS. A missing argument gave
+            T5_NO_DIGEST_ARGUMENT. An argument differing in its last
+            character, one short by a character and one long by a
+            character gave one token, T5_DIGEST_MISMATCH, through the
+            comparison and not a length check. Standard input in place
+            of the file gave T5_NOT_A_FILE. Each gave exit code nine
+            where the code was printed; under standard input it was not.
+            The seat had predicted a distinct token for each arm it
+            drove, and the prediction missed.
+
+    D370-7  A NEGATIVE THAT FIRED. OPERATOR: the negative control of the
+            check of the namespace was named by the operator, a finding
+            code whose session number is nine hundred and ninety-nine.
+            At the width of the tree it counted one, and DERIVED, the
+            bare session token counted one on the same line: line 342 of
+            instruments/C1_CENSUS.py, where another instrument of this
+            house assigns its own negative token, a longer code that
+            begins with the same characters. A fixed string that is a
+            prefix of a longer token matched it. TESTIMONY, relayed by
+            the operator: over this document alone it counts zero.
+            RULING: a negative that fires is not a negative, and the
+            negative of the check at landing is derived at runtime from
+            the digest of the appending instrument itself. The targets
+            are fixed strings too; a prefix match can only add to their
+            count, and any hit refuses and prints its files.
+
+    D370-8  THE TREE MOVED INSIDE THIS SESSION. The opening rule and the
+            second opening instrument read 84b3ef8 at 10:59:11Z and
+            11:18:21Z on 2026-09-23. At 11:34:31Z a fetch that this lane
+            did not run rewrote FETCH_HEAD, its line for main naming
+            84b3ef8, and at 11:34:34Z the remote ref was updated by a
+            push from this checkout to 9fbab5e. HEAD read 9fbab5e at
+            11:46:05Z and 32211ea at 11:52:48Z. The commits from 84b3ef8
+            to 32211ea are 9fbab5e and 32211ea, whose subjects name
+            S369, and 212ac69, committed with a zone offset of three
+            hours; together they change docs/ONE_PRICE_SOURCE_DESIGN.md
+            and CONTRIBUTING.md. The digest of this document was
+            unchanged at every reading of it. THE FETCH OF THE SECOND
+            OPENING INSTRUMENT IS NOT SETTLED. FETCH_HEAD was
+            overwritten after it; its output carried no error text, on a
+            channel shown in this session to carry the error stream; and
+            DERIVED, its remote reading equals the remote named sixteen
+            minutes later. That is consistent with a completed fetch and
+            is not a reading of one. This seat wrote nothing to the
+            repository before this entry.
+
+    D370-9  WHAT THIS ENTRY DOES NOT ESTABLISH. It does not establish
+            the table on the host, nor the value of the leg at any head
+            not read here. It does not establish that the fetch of the
+            second opening instrument completed, nor who ran the fetch
+            and the push at 11:34Z. It does not establish that session
+            three hundred and sixty-nine of the release lane is sealed;
+            RULING: nothing of this entry lands before the operator
+            confirms it. It establishes nothing in
+            instruments/C1_CENSUS.py beyond the line read. IT PROVES
+            NOTHING. Z3 AND FARKAS OWN THAT WORD.
+
+    FINDINGS
+
+            FG-S370-A  WORLD. A LEG OF THE SECOND OPENING INSTRUMENT IS
+                       NAMED WIDER THAN IT READS. It compares one
+                       document, not the working tree with the remote.
+                       This settles the open finding P of S368. Recorded
+                       in D370-2 and D370-4.
+
+            FG-S370-B  WORLD. THE FETCH OF THE SECOND OPENING INSTRUMENT
+                       IS UNCHECKED. Recorded in D370-5.
+
+            FG-S370-C  WORLD. A LEG NAMED AS THE BLOB OF THIS DOCUMENT
+                       PRINTS THE BLOB AT THE REMOTE REF. Recorded
+                       in D370-5.
+
+            FG-S370-D  WORLD. A DECLARED WRITE SET LEAVES OUT THE INDEX.
+                       Recorded in D370-5.
+
+            FG-S370-E  WORLD. A DECLARED SET IS NARROWER THAN THE LEGS
+                       THAT READ IT. Recorded in D370-5.
+
+            FG-S370-F  WORLD. A REFUSAL NO ARGUMENT REACHES ON THIS
+                       HOST, AND AN UNQUOTED LIST OF CANDIDATES.
+                       Recorded in D370-5.
+
+            FG-S370-G  SEAT. A NEGATIVE NAMED BY CONVENTION FIRED AT THE
+                       WIDTH OF THE TREE. The seat built it into an
+                       instrument as given; its declared attack foresaw
+                       that the bare token could fire, and kept it.
+                       Recorded in D370-7.
+
+            FG-S370-H  SEAT. A PREDICTION OF DISTINCT TOKENS MISSED.
+                       Recorded in D370-6.
+
+            FG-S370-I  SEAT. A SENTENCE OF THE KICKOFF WAS READ WIDER
+                       THAN ITS WORDS. The seat took the statement that
+                       only the tokens differ to require a distinct
+                       token for every arm, and presented that as the
+                       operator's meaning. Withdrawn by the seat before
+                       the operator raised it.
+
+            FG-S370-J  SEAT. A HEAD WAS PREDICTED FROM A PRIOR THAT HAD
+                       MOVED. The prediction was marked as a prior and
+                       missed. Recorded in D370-8.
+
+            FG-S370-K  SEAT. A DECLARATION WAS WRONG IN THE DRAFT. An
+                       instrument declared that it did not read the
+                       address of the remote while printing lines that
+                       carry it. Corrected before it left the container.
+
+            FG-S370-L  SEAT. TWO REFUSAL CLASSES SHARED ONE EXIT CODE IN
+                       DRAFTS OF THE SEAT'S INSTRUMENTS. Caught before
+                       transfer, by driving both classes or by reading.
+
+            FG-S370-M  SEAT. A HARNESS READ THE EXIT CODE OF THE WRONG
+                       PROCESS, the last command of a pipe. Caught by
+                       reading the output and rebuilt without the pipe.
+
+            FG-S370-N  SEAT. AN EARLIER CODE WAS CITED FOR THE WRONG
+                       CLASS. The seat called the fired negative an
+                       instance of FG-S368-K, which records harness
+                       matchers with the wrong spacing. Withdrawn.
+
+            FG-S370-O  SEAT. A SCRATCH MATCHER FOR THE WORD RED ALSO
+                       MATCHED A CHECK NAMED PREDICTED. It over-reported
+                       and hid nothing. It is the class of the rule of
+                       S368 that a matcher matches the token, not a word
+                       the declaration also uses.
+
+            FG-S370-P  SEAT. A WRAPPED REFERENCE WOULD HAVE FORGED ROWS.
+                       In drafts of this entry a cited finding code
+                       wrapped to the start of a line at the indent of
+                       findings, where the second opening instrument
+                       would have counted it as a duplicate row, and an
+                       item reference wrapped to the start of a line.
+                       The validator refused both, and the renderer now
+                       keeps each reference on the line of the word
+                       before it.
+
+            FG-S370-Q  WORLD. THE TREE MOVED INSIDE ONE SESSION AGAIN,
+                       while this seat wrote nothing to it. Recorded
+                       in D370-8.
+
+            FG-S370-R  SEAT. A HARNESS MATCHER WITH THE WRONG SPACING
+                       REPORTED FALSE FAILURES. While the instrument
+                       that appends this entry was driven, arms that
+                       returned the right exit code were called
+                       failures, because a matcher typed the padding of
+                       a check name by hand. The matcher now takes the
+                       padding from the rule of the instrument itself.
+                       The class of FG-S368-K, recurring after it was
+                       recorded.
+
+            FG-S370-S  SEAT. A WRITE FAULT WAS INJECTED INTO A DRY RUN,
+                       where it cannot fire. The harness required the
+                       refusal code and caught it.
+
+            FG-S370-T  WORLD. AN INJECTION IN THE APPENDING INSTRUMENT
+                       OF S368 CANNOT FIRE. Read at its pin ee8a78d3:
+                       the fault meant to make the restore after a
+                       failed verification fail sits in a branch that
+                       only a failed verification reaches, and its fault
+                       selector holds one value at a time. The
+                       instrument that appends this entry accepts a
+                       combination, and that arm was driven through it.
+
+            FG-S370-U  WORLD. D368-3 IS CORRECTED BY APPEND. It
+                       concluded that an entry of this ledger, in a
+                       fourth file type, is never read by the release
+                       lane. TESTIMONY, the sealed handoff of that
+                       lane's S369, transferred without a pin at sha256
+                       207f6ad4, and the opener of its next session: its
+                       opening rule reads markers in four file types,
+                       the type of this document among them. READ IN THE
+                       SEAT'S CONTAINER, from a copy at the digest of
+                       this document before this entry: it carries seven
+                       distinct markers of that shape, from one hundred
+                       and nineteen to three hundred and nineteen, where
+                       that handoff says from two hundred and
+                       thirty-six. The conclusion of D368-3 does not
+                       hold for that rule.
+
+            FG-S370-V  WORLD. BOTH LANES FOUND AN UNCHECKED FETCH.
+                       TESTIMONY, the same handoff, its finding B: a
+                       pipe hid the exit code of a fetch, and a guard
+                       then compared a stale ref. The second opening
+                       instrument of this lane carries the same class,
+                       recorded here as FG-S370-B. It is an instance of
+                       the board item that asks whether the rules of
+                       this house hold at the width they are stated.
