@@ -30,6 +30,22 @@
   `verify_annex_iv_map.py`, the scope text of the emitted
   `verify_conformance_offline.py`, and module docstrings.
 <!-- __s377_changelog_patch_b_v1__ -->
+- Breaking for clients of `POST /v1/verify`: the 200 body now starts with
+  `"schema_version": 2`. `proven` holds only the passing items whose tier
+  is `PROVEN` (today VR003, the cost-cap check by Z3); every other passing
+  item, of tier `VERIFIED`, `ESTIMATED`, `REPORTED` or none, is in the new
+  key `evidenced`, which follows `proven`. Items in both lists carry
+  severity `PASS`; their code, category, message and tier are unchanged.
+  Until now `proven` held every passing item with severity `PROVEN`,
+  whatever its tier. The body of a program that fails validation carries
+  `"proven": []` and `"evidenced": []`. An item whose severity the route
+  does not know is refused with 422 `VERIFY001` instead of being passed
+  through. Error bodies, `nous verify` and the Python
+  `VerificationResult` are unchanged (docs/RESERVED_VERB_AUDIT_DESIGN.md,
+  D378-1 to D378-10).
+- The web IDE reads both body shapes, no longer counts an item without a
+  tier as `PROVEN`, and lists such an item as UNTIERED.
+<!-- __s378_changelog_verify_v2_v1__ -->
 
 
 ## [5.85.1]  <!-- __s369_changelog_v5_85_1__ -->

@@ -175,6 +175,7 @@ disabled, and then it protects nothing.
 | **E3** | identifiers are never scanned -- the walker visits only string constants, f-strings, docstrings and comments | every `*_proofs` variable and every `.proven` attribute. **This is why the tool is AST-based and not a regex.** |
 | **E4** | excluded paths: signed and sha-pinned artifacts, tests, generated code | a linter that demands an edit to a signed artifact breaks the signature |
 | **E5** | a literal whose entire value is one reserved token is SCHEMA | the `PROVEN` enum and the `"proven"` JSON key -- separated mechanically, not allowlisted |
+| | E5 on the `/v1/verify` 200 body since `"schema_version": 2` (S378) | the `"proven"` key carries only items whose tier is `PROVEN`; every other passing item is under `"evidenced"`, and items in both lists carry severity `PASS`. The `PROVEN` severity value and `VerificationResult.proven` in `verifier.py` are unchanged and stay SCHEMA under E5 |
 | **E6** | use vs mention: a reserved word wrapped in quotes, or inside a double-quoted / backticked span | the API string that declares the reservation rule; a doc that QUOTES a known overclaim as an example. Without E6 the linter flags the sentence stating its own rule, and flags this README for quoting the defects it found. |
 
 **E1 is token-scoped for a reason, and the reason is a real near-miss.** The

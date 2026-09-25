@@ -282,9 +282,11 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
             val_result = NousValidator(program).validate()
             if not val_result.ok:
                 return {
+                    "schema_version": 2,  # __s378_verify_v2_body_v1__
                     "ok": False,
                     "stage": "validate",
                     "proven": [],
+                    "evidenced": [],
                     "errors": [{"code": e.code, "message": e.message} for e in val_result.errors],
                     "warnings": [{"code": w.code, "message": w.message} for w in val_result.warnings],
                 }
@@ -292,6 +294,7 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
             ver_result = verify_program(program, _get_default_pricing())  # __s189_vr003_wire_pricing_v2__
 
             proven = []
+            evidenced = []
             warnings = []
             errors = []
             info = []
@@ -310,13 +313,23 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
                     warnings.append(entry)
                 elif _sev == "INFO":
                     info.append(entry)
+                elif _sev == "PROVEN":
+                    entry["severity"] = "PASS"
+                    if entry["tier"] == "PROVEN":
+                        proven.append(entry)
+                    else:
+                        evidenced.append(entry)
                 else:
-                    proven.append(entry)
+                    raise ValueError(
+                        "unknown verifier severity: " + repr(_sev) + " for " + str(entry["code"])
+                    )
 
             return {
+                "schema_version": 2,
                 "ok": len(errors) == 0,
                 "stage": "complete",
                 "proven": proven,
+                "evidenced": evidenced,
                 "errors": errors,
                 "warnings": warnings,
                 "info": info,
