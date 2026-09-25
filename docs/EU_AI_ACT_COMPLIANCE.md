@@ -31,9 +31,12 @@ Act requirements:
 2. **Deterministic Replay.** Every agent run produces a
    reproducible, chained event log (Phase D, shipped Session
    54).
-3. **SMT-Verified Compilation.** Constraints are
-   mathematically proven before deployment (shipped end-to-end
-   for both USD and EUR pricing in v5.0.0, 3 May 2026).
+3. **SMT-Verified Compilation.** Three declared legs are proven
+   with Z3 before deployment: the cost cap, policy coverage and
+   sequence ordering; cost and coverage also carry Farkas
+   certificates checked in exact rational arithmetic (the cost
+   leg shipped end-to-end for both USD and EUR pricing in
+   v5.0.0, 3 May 2026).
 
 Combined with cryptographic provenance via Ed25519-signed
 manifests (shipped Session 64) and the `nous dossier` Annex IV

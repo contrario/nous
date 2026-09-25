@@ -12,8 +12,9 @@ evidence means.
 NOUS emits two artifacts that share the same `TraceEnvelope` structure and the
 same offline verifier:
 
-- ENVELOPE evidence (deterministic, design-time). The compiled path proves a
-  cost ENVELOPE: "no execution path can exceed the declared cost cap." Given the
+- ENVELOPE evidence (deterministic, design-time). The compiled path records a
+  cost ENVELOPE: the declared costs, which Z3 bounds by the declared cost cap on
+  every path the declarations allow. Given the
   same source it is byte-deterministic, which is what makes its signature and
   Rekor anchor meaningful. It carries placeholder token counts because it does
   not perform a real model call. This is the conformity proof you compute before
@@ -46,13 +47,14 @@ Cost and model evidence binds across three links. NOUS makes each link's status
 explicit rather than silently assuming it.
 
 1. verifier <- trace. The conformance verifier binds what the trace asserts.
-   PROVEN: obligation #4 recomputes the realized total from the trace's token
+   VERIFIED (recomputation): obligation #4 recomputes the realized total from
+   the trace's token
    counts under the proof's pinned rates. The `cost_binding` field records
    whether those counts are realized (a witnessed run) or envelope placeholders.
 
 2. trace <- runtime. The trace faithfully records what the runtime observed.
-   ASSUMED (trusted recorder), but the trace is signed: the signature proves the
-   ISSUER did not tamper with the recorded values after the fact. It does not
+   ASSUMED (trusted recorder), but the trace is signed: the signature evidences that
+   the ISSUER did not tamper with the recorded values after the fact. It does not
    prove the runtime recorded faithfully in the first place.
 
 3. runtime <- provider. The provider-reported token usage is true. NOT

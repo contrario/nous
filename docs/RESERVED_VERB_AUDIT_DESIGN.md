@@ -303,3 +303,60 @@ the claim around it is complete.
 ## 9. Build notes
 
 (appended with the patches)
+
+### 9.1 Patch A (S377)
+
+<!-- __s377_reserved_verb_patch_a_notes_v1__ -->
+
+Input. S376_PROVE_CLASSIFICATION.tsv at its sealed sha256 (3b9a59f0...). The
+copy first uploaded in S377 was the file as it stood before the S376 09:12Z
+correction (sha256 950f39ca...); replaying that correction (the note column of
+b0005 to b0009, all py-b64 rows of patch B) reproduced the sealed bytes, and a
+mutated control did not [container].
+
+Scope applied. 79 edits in 16 files cover 82 OVER and
+SCOPE ids on README, website pages, the blog index, docs and trace/SPEC.md,
+plus the D376-7 trust line of website/lending.html and the ADR-0004 ledger
+line (D376-1). In 17 of the 82 ids the verb stays because the
+corrected sentence is a Z3 or Farkas leg once its object is scoped (the
+homepage lines of D376-6, the spend readings, index.html:910 and
+lending.html:176 as the coverage leg, the regenerated sample's tier count);
+in the other 65 it is replaced by a verb from claims.toml's
+allowed claim words, with the method named in the sentence or its paragraph.
+
+D377-1. The seven OVER ids in docs/CONTINUITY_LEDGER.md move to patch B. Three
+of them (:174, :186, :198) describe the verifier's printed label and --json
+key, which change only in patch B; editing them first would make the doc
+describe output that has not shipped. The file is edited once, with the
+relabel, the S186 and S187 sections and the key map of D376-3.
+
+D377-2. The OVER id in trace/archive/NOUS-TRACE-spec-v0.2.md stays unedited:
+trace/archive is a dated record under D376-2.
+
+D377-3. website/docs/index.html: the sample output is regenerated (D376-7)
+from templates/sequence_law_demo.nous, which ships in the wheel.
+gate_alpha.nous, the program the old sample showed, now verifies FAILED (two
+of its models are not in the pricing table), and a failing run would not
+illustrate the section. The block is the verbatim output of `nous verify` in
+the chat container on 2026-09-25 10:27:29Z (z3 4.16.0, clone tied to Server A
+by sha256), with non-ASCII characters written as HTML entities so the
+inserted bytes are ASCII. Its cost lines depend on the shipped prices and its
+elapsed_ms line on the machine.
+
+D377-4. The blog's sample output (history, hand-abbreviated at the time)
+keeps its form; its pre-S228 severity count reads "10 checked" instead of
+"10 proven". It is not regenerated.
+
+D377-5. No marker is added at the edited sentences. Each site is bound by
+tests/test_s377_reserved_verb_copy.py, parametrized by classification id:
+the old phrase is absent and the corrected phrase present, with whitespace
+normalized so a phrase may span a wrapped line. The test was red on the tree
+before the patch for every id, by set and reason.
+
+Observed, not edited (outside the classified ids): website/lending.html keeps
+"0 trust in the issuer" (stat card) and "zero trust in the issuer" (list
+item), while its boundary line now names the pinned keys and the
+operator-asserted binding; docs/COST_VERIFICATION_GUIDE.md keeps "audit-ready
+Annex IV compliance" in the demo script; website/index.html:492 keeps
+"all-paths proof of conformance" (the noun family, D376-10); the blog's EDGE
+ids on its v5.30.0 lines are unchanged (D376-5 covers only the wheel).

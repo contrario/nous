@@ -473,11 +473,10 @@ you a linear narrative. Read while running the commands.
 
 ### 0:00 to 0:30 -- The problem
 
-> "Most agentic AI frameworks promise reliability through
-> testing. NOUS proves it through math. Here is a five-minute
-> demo showing how to declare a cost ceiling on an AI agent
-> and have a solver prove the ceiling can never be exceeded
-> -- before any LLM call is made."
+> "Here is a five-minute demo showing how to declare a cost
+> ceiling on an AI agent and have Z3 prove, before any LLM
+> call is made, that the declared cost envelope stays under
+> that ceiling on every path the declarations allow."
 
 ### 0:30 to 2:00 -- Live proof
 
@@ -525,10 +524,7 @@ $ nous prices age
 
 ### 5:00 to 6:00 -- EU AI Act tie-in
 
-> "Article 15 of the EU AI Act requires high-risk AI systems
-> to declare and prove their performance metrics. Cost is one
-> such metric. NOUS is the first language where this
-> declaration is first-class and verifiable. v5.0.0 ships
+> "v5.0.0 ships
 > end-to-end SMT proofs in both USD and EUR, plus
 > Ed25519-signed manifests for audit-ready Annex IV
 > compliance."

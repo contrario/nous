@@ -13,7 +13,8 @@ obligation #5).
 
 ## What this is
 
-Runtime conformance obligation #5 (authorization) proves that every trace
+Runtime conformance obligation #5 (authorization) checks, by Ed25519
+verification, that every trace
 event LABELLED `gated_action` carries a valid approver attestation bound to
 that exact decision (see `docs/RUNTIME_CONFORMANCE.md`). Before v5.41.0 the
 SET of actions that require an approval was read from the manifest's
@@ -104,16 +105,18 @@ byte-identical.
 
 ---
 
-## What this proves, and what it does not
+## What this verifies, and what it does not
 
-**Proves (completeness of the gated set):** the set of actions requiring
+**Verifies (completeness of the gated set, by the `smt_spec_sha256`
+binding):** the set of actions requiring
 an approval is declared in the signed source and re-derived by the
 verifier. It cannot be silently omitted, added, or edited after signing
 without changing `smt_spec_sha256` and failing the binding check.
 
 **Does NOT prove (still the honest boundary):**
 
-- *Key trust.* Obligation #5 proves that SOME key bound to the
+- *Key trust.* Obligation #5 verifies, by Ed25519 signature, that SOME
+  key bound to the
   `principal_id` label signed the decision, not that it is the key the
   policy authorises. Approver-key trust is a separate layer, exactly as
   manifest-author-key trust is separate from manifest signature

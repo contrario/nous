@@ -35,7 +35,8 @@ bargain (probabilistic execution, deterministic evidence):
   the runtime conformance certificate (see `docs/RUNTIME_CONFORMANCE.md`).
 
 The BOX is about all runs; the DICE is about one run. The BOX proves the
-rulebook is coherent; the DICE proves a game was played by the rules.
+rulebook is coherent; the DICE checks, against one signed trace, that a game
+was played by the rules.
 
 ---
 
@@ -159,8 +160,8 @@ handed to Z3:
 - A parse or emit failure for the `.nous` file itself is exit 3.
 
 The polarity is **inverted** relative to the cost proof. The cost proof
-asserts the *negation* of the cost cap and proves `unsat` (no run exceeds
-the cap). The sequence proof asserts the ordering constraints *directly*
+asserts the *negation* of the cost cap and proves `unsat` (no path the
+declarations allow exceeds the cap). The sequence proof asserts the ordering constraints *directly*
 and proves `sat` (a valid order exists). Because the two verbs mean
 opposite things by `sat`/`unsat`, sequence verification is a separate
 top-level command, not a flag on `nous verify`.
@@ -255,7 +256,7 @@ verifies.
   for `gated_action`-kind events). A sequence label on any other event
   kind is unconstrained by that check. If a future change tightens
   `action` validation, the sequence-label use must be accounted for.
-- **The certificate proves the trace conforms, not that the trace
+- **The certificate checks that the trace conforms, not that the trace
   faithfully records reality.** This is the same limitation as the cost
   obligations: emit-from-inside-the-runtime trace generation is the
   mitigation, and full faithfulness against a malicious runtime needs a

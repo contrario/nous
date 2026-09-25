@@ -600,29 +600,30 @@ $ python cli.py run hello.nous</code></pre>
 <div class="doc-section" id="verification">
 <h2>Formal Verification</h2>
 <p>NOUS runs seven static-verification categories (16 codes) before execution &mdash; structural checks, not proofs &mdash; and separately emits Z3/Farkas proofs for cost, coverage, and sequence:</p>
-<pre><code>═══ NOUS Formal Verification — GateAlpha ═══
+<pre><code>&#9552;&#9552;&#9552; NOUS Formal Verification &mdash; OrderPipeline &#9552;&#9552;&#9552;
 
-── Resource Bound ──
-<span class="st">✓ [VR001]</span> Soul Scout: $0.006900 ≤ $0.10 (7% of ceiling)
-<span class="st">✓ [VR002]</span> Total cascade cost $0.021750 ≤ $0.10
+&#9472;&#9472; Resource Bound &#9472;&#9472;
+<span class="st">&#10003; [VR001]</span> @ soul Intake: Soul Intake cost bounded: $0.001300 &le; $0.10 (1% of ceiling)
+<span class="st">&#10003; [VR001]</span> @ soul Validator: Soul Validator cost bounded: $0.000330 &le; $0.10 (0% of ceiling)
+<span class="st">&#10003; [VR001]</span> @ soul Shipper: Soul Shipper cost bounded: $0.001300 &le; $0.10 (1% of ceiling)
+<span class="st">&#10003; [VR002]</span> @ world: Total cascade cost $0.002930 &le; $0.10
+<span class="st">&#10003; [VR003]</span> @ world: Total declared cost provably &lt;= world cost_cap 0.5 USD (Z3/Farkas over declared pricing). This binds the WORLD cost_cap, which is distinct from the law cost ceiling bound by VR001/VR002.
+    solver=z3 z3 4.16.0, elapsed_ms=26
 
-── Deadlock ──
-<span class="st">✓ [VD001]</span> No circular dependencies (3 routes checked)
+&#9472;&#9472; Deadlock &#9472;&#9472;
+&#8505; [VD001]: No routes defined &mdash; deadlock analysis skipped
 
-── Protocol ──
-<span class="st">✓ [VP003]</span> All 2 speak calls reference defined message types
+&#9472;&#9472; Protocol &#9472;&#9472;
+<span class="st">&#10003; [VP003]</span>: All 3 speak calls reference defined message types
 
-── Liveness ──
-<span class="st">✓ [VL002]</span> Pipeline has 1 entrypoint(s): Scout
+&#9472;&#9472; Liveness &#9472;&#9472;
+<span class="st">&#10003; [VL002]</span>: Pipeline has 3 entrypoint(s): Intake, Shipper, Validator
 
-── Reachability ──
-<span class="st">✓ [VE001]</span> All 4 souls reachable from entrypoints
+&#9472;&#9472; Memory Safety &#9472;&#9472;
+<span class="st">&#10003; [VM001]</span>: All 3 memory fields validated for type-safe access
 
-── Memory Safety ──
-<span class="st">✓ [VM001]</span> All 6 memory fields validated for type-safe access
-
-══════════════════════════════
-VERIFIED: 10 proven, 0 warnings, 0 errors</code></pre>
+&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;
+VERIFIED: 1 proven, 3 verified, 4 estimated, 0 reported, 0 warnings, 0 errors (9 checks)</code></pre>
 <h3>Cryptographic Provenance</h3>
 <p>Beyond the SMT formal proofs, NOUS can anchor a manifest's SHA-256 in the Sigstore Rekor transparency log, producing evidence that a specific artifact existed at a specific time. Verification is offline and key-pinned: a third party checks the anchor against a pinned Rekor public key with only the <code>cryptography</code> library, with no network access required.</p>
 <p>Three independent checks must all pass: the Rekor public key is in the allowlist, the signed entry timestamp verifies over the canonical log payload, and the leaf body parses as a hashedrekord whose hash matches the manifest and whose submitter signature verifies.</p>

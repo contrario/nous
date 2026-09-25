@@ -42,6 +42,13 @@ overclaim.
   all subsequent governance copy hold the split.
 - The regression is defined structurally (Section 2 Ship test): if a sound claim
   becomes falsifiable or an overclaim enters, the change is rejected.
+- S376 classified every use of the verb and restated the rule with its legs: a Z3
+  result on the cost-cap, policy-coverage or sequence-ordering leg, or a Farkas
+  certificate checked in exact rational arithmetic (D376-1,
+  docs/RESERVED_VERB_AUDIT_DESIGN.md). S377 corrected the README, site, docs and
+  blog copy that applied the verb to evidence (patch A); the wheel's strings and
+  embedded verifiers follow in patch B.
+  <!-- __s377_adr0004_ledger_v1__ -->
 
 ## Still true?
 

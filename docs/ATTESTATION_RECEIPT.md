@@ -11,9 +11,10 @@ and the witnessed-run record in `docs/WITNESSED_RUN_EVIDENCE.md`.
 
 ---
 
-## 0. Claim boundary -- what tee_attested proves, and what it does not
+## 0. Claim boundary -- what tee_attested evidences, and what it does not
 
-PROVES: the per-event token counts in a signed trace equal the counts in a
+EVIDENCES (signature verification and count equality): the per-event token
+counts in a signed trace equal the counts in a
 signed inference receipt whose signing key is pinned -- via a NOUS-signed
 Attestation Pinning Record (APR) -- to a specific enclave measurement (model
 build) running in genuine TEE hardware.
@@ -182,7 +183,7 @@ on the existing envelope / witnessed-run path).
 
 - First-party unsigned-usage APIs cannot produce a receipt; they remain
   `unattested`. The docs and the artifact both say so.
-- A TEE receipt proves provenance and count-binding, not internal honesty of the
+- A TEE receipt evidences provenance and count-binding, not internal honesty of the
   attested build; the residual trust is named, not hidden.
 - Closing link 3 for the TEE case does not close it for non-attested providers.
 
@@ -277,7 +278,8 @@ within the retention window) and emits a self-contained bundle (request and
 response bytes, signature, signing address, quote hashes), asserting that the
 vendor-returned `text` equals the recomputed `request_sha256:response_sha256`.
 
-Honest bound. S146 proves the mechanism and genuine-signature conformance. It
+Honest bound. S146 verifies the mechanism and genuine-signature conformance
+(a published enclave receipt verifies through the production primitive). It
 does NOT ship a production pin: the full usage-binding KAT needs a captured
 response body, and a production APR needs the trust-root ceremony plus DCAP
 verification of a live enclave. Once such an APR is pinned, `--require-attestation`

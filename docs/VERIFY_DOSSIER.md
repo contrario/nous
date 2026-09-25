@@ -13,8 +13,8 @@ use to verify a dossier they have been given.
 
 ## Three trust paths
 
-| Path | What you need | What it proves |
-|------|---------------|----------------|
+| Path | What you need | What it verifies |
+|------|---------------|------------------|
 | Browser | A modern browser | Same checks as offline, but trust the API operator. Convenience only. |
 | Offline | Python 3.11+ and `cryptography` >= 42 | Full cryptographic verification with no external dependency. Canonical. |
 | Toolchain | `pip install nous-lang` | Full verification plus SMT cost-cap re-check. |

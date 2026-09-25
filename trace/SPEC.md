@@ -55,7 +55,7 @@ Existing tools stop at log integrity. NOUS-TRACE additionally specifies (a) a ma
 2. Run-level correctness. *Proved* refers exclusively to design-time Z3/Farkas artifacts attached to `proved`-assurance Obligations.
 3. Resistance to a fully compromised host including the Signer, for Events after the compromise (§15).
 4. Legal sufficiency under any regulation. The format is designed to support Article 12-style record-keeping; sufficiency is a deployment and legal determination.
-5. That the recorded Assignment Record faithfully reflects external reality. The Verifier proves *consistency of record and verdict*, not sensor truth. A Producer that records false values is adversary A4 (residual).
+5. That the recorded Assignment Record faithfully reflects external reality. The Verifier checks *consistency of record and verdict*, not sensor truth. A Producer that records false values is adversary A4 (residual).
 
 ## 3.1 Bundle-level Temporal Claims (normative)
 

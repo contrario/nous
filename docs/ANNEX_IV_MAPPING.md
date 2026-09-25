@@ -175,7 +175,7 @@ byte-deterministic. The 57-template regression harness
 ## 6. Annex IV (3) -- Monitoring, functioning and control
 
 <!-- __session99_docs_second_pass_v1__ -->
-**Runtime evidence:** beyond the dossier (which records what the static SMT proof establishes over the declared cost envelope, not what any run spends), NOUS emits a runtime conformance certificate per execution. The certificate is a standalone Ed25519-signed artifact that records, for one specific run, six independent obligations (binding, surface, assumption_discharge, bound_transfer, authorization, trace_signature) against the re-derived static spec; with `--anchor rekor_v2` it is also stapled into the Sigstore Rekor v2 transparency log. The verdict is reproducible offline with `cryptography` plus stdlib only, no NOUS install required. See `RUNTIME_CONFORMANCE.md` for the six obligations, the SCITT-shaped rationale for keeping the certificate standalone (one static proof to many runtime certificates), and the honest scope limits (certificate proves the trace conforms, not that the trace faithfully records reality; full faithfulness against a malicious runtime needs a TEE or hardware attestation). Since S144, this trust boundary is made explicit and machine-checkable inside the signed artifact: a witnessed-run trace carries an evidence_kind/cost_binding/provider_token_integrity declaration (see WITNESSED_RUN_EVIDENCE.md and STRATIFIED_TRUST_DESIGN.md), so an auditor reads the provider-token-integrity tier (unattested today) rather than taking the scope limit on faith.  <!-- __s144_u6_docs_v1__ --> <!-- __s362_n5_v1__ -->
+**Runtime evidence:** beyond the dossier (which records what the static SMT proof establishes over the declared cost envelope, not what any run spends), NOUS emits a runtime conformance certificate per execution. The certificate is a standalone Ed25519-signed artifact that records, for one specific run, six independent obligations (binding, surface, assumption_discharge, bound_transfer, authorization, trace_signature) against the re-derived static spec; with `--anchor rekor_v2` it is also stapled into the Sigstore Rekor v2 transparency log. The verdict is reproducible offline with `cryptography` plus stdlib only, no NOUS install required. See `RUNTIME_CONFORMANCE.md` for the six obligations, the SCITT-shaped rationale for keeping the certificate standalone (one static proof to many runtime certificates), and the honest scope limits (the certificate checks that the trace conforms, not that the trace faithfully records reality; full faithfulness against a malicious runtime needs a TEE or hardware attestation). Since S144, this trust boundary is made explicit and machine-checkable inside the signed artifact: a witnessed-run trace carries an evidence_kind/cost_binding/provider_token_integrity declaration (see WITNESSED_RUN_EVIDENCE.md and STRATIFIED_TRUST_DESIGN.md), so an auditor reads the provider-token-integrity tier (unattested today) rather than taking the scope limit on faith.  <!-- __s144_u6_docs_v1__ --> <!-- __s362_n5_v1__ -->
 
 **Annex IV requirement:** "Detailed information about the monitoring,
 functioning and control of the AI system, in particular with regard
@@ -313,7 +313,7 @@ system through its lifecycle."
 - Optional Rekor anchoring (`--anchor rekor`, shipped v5.3.0)
   inserts the manifest signature into the public Sigstore
   transparency log. The inclusion proof embedded in the manifest
-  proves the artifact existed at the log timestamp.
+  evidences that the artifact existed at the log timestamp.
 - Path-beta dual signing: per-submission ephemeral ECDSA-P-256 leaf
   for Rekor compatibility (Sigstore issue 851 EdDSA gap), long-lived
   Ed25519 manifest signature preserved.
@@ -760,8 +760,8 @@ two files that make the crosswalk above machine-checkable offline:
   least one reference; documentation-clause and operator-responsibility
   items index none, so the sidecar cannot over-claim).
 
-Boundary. A passing `verify_annex_iv_map.py` proves presence, authenticity,
-and indexing of the declared evidence. It does NOT prove legal sufficiency,
+Boundary. A passing `verify_annex_iv_map.py` checks presence, authenticity,
+and indexing of the declared evidence (sha256 digests and an Ed25519 signature). It does NOT prove legal sufficiency,
 does NOT prove that a referenced artifact actually satisfies its Annex IV
 item, and does NOT prove anything about execution conformance. The sidecar
 is orthogonal to `verify_offline.py` (which proves the cost-cap / coverage

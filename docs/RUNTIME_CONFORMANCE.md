@@ -9,9 +9,11 @@ end-to-end against the live Sigstore Rekor v2 log at log_index 4653352.
 
 ## What this is
 
-The SMT cost proof (see `docs/SMT_VERIFICATION_DESIGN.md`) proves a property
-of every possible run: the program **cannot** exceed its declared cost
-envelope. It says nothing about any particular run that actually happened.
+The SMT cost proof (see `docs/SMT_VERIFICATION_DESIGN.md`) proves that the
+program's declared cost envelope stays inside its cost cap on every path the
+declarations allow. It is a statement about the declarations: a run can
+exceed what it declared, and the proof says nothing about any particular run
+that actually happened.
 
 The runtime conformance certificate closes that gap. Given a signed execution
 trace, `nous conformance certify` re-derives the proof bounds from the signed
@@ -135,7 +137,7 @@ signed with an ephemeral, per-run Ed25519 key.
   are bound at the speak site. Since v5.20.0 a conformance verdict also
   reports `sequence_vacuous`: laws that passed only because their event
   never occurred in the trace are listed explicitly rather than counted
-  as proven, so an auditor can tell a satisfied law from an empty one.
+  as passing, so an auditor can tell a satisfied law from an empty one.
   <!-- __s104_doc_vacuous_v1__ -->
 - **Verifiable offline.** The written envelope verifies with
   `nous_trace.verify_trace_signature` (or any holder of the embedded public
@@ -155,8 +157,9 @@ certificate-to-manifest bindings, the trace's own Ed25519 signature, the
 internal consistency of the recorded verdict, and -- when the certificate is
 anchored -- the full Rekor v2 inclusion proof over the certificate body.
 
-**Scope, stated honestly.** The offline verifier proves the signed verdict is
-authentic and bound to these exact artifacts. It does **not** re-derive the SMT
+**Scope, stated honestly.** The offline verifier checks, by Ed25519 signature
+and sha256 binding, that the signed verdict is authentic and bound to these
+exact artifacts. It does **not** re-derive the SMT
 bounds offline; that requires the toolchain and is the online
 `nous conformance verify` path. The offline guarantee is the SCITT
 signed-statement guarantee: the issuer's signed claim, verifiably about these
@@ -166,7 +169,7 @@ artifacts and untampered, with a transparency-log inclusion proof when anchored.
 
 ## Honest limitations
 
-- The certificate proves the **trace** conforms, not that the trace faithfully
+- The certificate checks that the **trace** conforms, not that the trace faithfully
   records reality. Interpreter-path trace emission shipped in v5.18.0
   (`nous run --emit-trace`); action-label binding for speaks shipped in
   v5.19.0 (interpreter path); compiled-path emission shipped in v5.22.0
@@ -214,7 +217,7 @@ and added the issuer-side signer `sign_gated_action(...)`. The
 construction is orthogonal to `canonical_body_bytes`, so every existing
 trace signature and conformance certificate stays byte-identical.
 
-**What obligation #5 now proves**, offline, with `cryptography` +
+**What obligation #5 now verifies**, offline, with `cryptography` +
 stdlib alone, for each event the trace labels `gated_action`:
 
 - an approval attestation is present (absence fails the obligation);
@@ -249,7 +252,8 @@ about itself.
   evades obligation #5 until the trace is bound to signed
   instrumentation (a codegen digest); that is a separate arc.
   <!-- __s142_u4_runtime_conformance_doc_v1__ -->
-- *Key trust.* The verifier proves that SOME key bound to the
+- *Key trust.* The verifier checks, by Ed25519 signature, that SOME key
+  bound to the
   `principal_id` label signed the decision, not that it is the key the
   policy authorises. Approver-key trust is a separate layer, exactly as
   manifest-author-key trust is separate from manifest signature
