@@ -6,7 +6,7 @@ with cryptography + stdlib only (no Z3, no network, no NOUS install), reusing
 the manifest's Ed25519 + canonical-JSON recipe verbatim. It adds NO new
 cryptography and grows NO trust base.
 
-WHAT THE SIDECAR PROVES (offline, fail-closed):
+WHAT THE SIDECAR CHECKS (offline, fail-closed; Ed25519 and sha256):
   1. The map is authored: Ed25519 signature over its own canonical body bytes.
   2. The map is bound to THIS dossier: map.manifest_canonical_sha256 equals the
      sha256 of the dossier manifest's canonical body (signature and
@@ -460,7 +460,8 @@ Checks, fail-closed, in order:
      evidence (evidence-backed -> >=1 reference; documentation-clause and
      operator-responsibility -> zero).
 
-BOUNDARY: proves presence + authenticity + indexing of the declared evidence.
+BOUNDARY: checks presence + authenticity + indexing of the declared evidence
+(sha256 digests and an Ed25519 signature).
 It does NOT prove legal sufficiency, that a referenced file satisfies its
 Annex IV item, or anything about execution conformance.
 """
@@ -607,7 +608,8 @@ def main():
     print()
     print("VERDICT: PASS (Ed25519 Annex IV evidence-map sidecar, bound to "
           "this dossier, offline, stdlib-checked)")
-    print("boundary: proves presence + authenticity + indexing; NOT legal "
+    print("boundary: checks presence + authenticity + indexing (sha256 + "
+          "Ed25519); NOT legal "
           "sufficiency, NOT that any file satisfies its item")
     print("  manifest_sha: "
           + str(doc.get("manifest_canonical_sha256", "?"))[:16] + "...")

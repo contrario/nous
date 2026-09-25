@@ -180,7 +180,7 @@ def anchor_manifest_to_rekor(
     bytes with that ephemeral key, and submits the ECDSA signature plus
     ECDSA pubkey to Rekor. The original Ed25519 manifest signature is
     verified separately by the embedded dossier verifier; the Rekor anchor
-    proves only "this SHA-256 was anchored at integrated_time T".
+    evidences only "this SHA-256 was anchored at integrated_time T".
 
     Parameters manifest_signature_b64 and manifest_public_key_b64 are kept
     for API backward compatibility but are unused in the dual-signing path.

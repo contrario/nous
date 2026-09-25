@@ -19,8 +19,9 @@ exact same artifact -- the release VSA payload:
           (reuses rekor_v2_offline.load_pins + verify_entry -- the committed,
           self-tested orchestrator; no second impl.)
 
-  BINDING the two roots are about the SAME bytes : the digest the log proves
-          inclusion of equals sha256(the exact VSA payload ROOT 1 verified).
+  BINDING the two roots are about the SAME bytes : the digest whose log
+          inclusion ROOT 2 verified equals sha256(the exact VSA payload ROOT 1
+          verified).
           Without this leg, ROOT 2 would only evidence "some entry exists," not
           "the log entry is about THIS VSA." This leg is the lynchpin.
 

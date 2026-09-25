@@ -44,9 +44,9 @@ from test_s185_segment_inenvelope import (
     _verify,
 )
 
-_PROVES_INENV = "PROVES: Segment in-envelope conformance"
-_PROVES_POLICY = "PROVES: Segment policy-digest constancy"
-_CHANGED = "Segment policy-digest constancy NOT proven"
+_PROVES_INENV = "EVIDENCES: Segment in-envelope conformance"
+_PROVES_POLICY = "EVIDENCES: Segment policy-digest constancy"
+_CHANGED = "Segment policy-digest constancy does not hold"
 _DROP = "Segment policy-digest constancy not asserted"
 
 _POL_A = _h("policy-A")
@@ -164,7 +164,7 @@ def test_policy_json_three_states(tmp_path) -> None:
     assert r["rc"] == 0, r["err"]
     v = json.loads(r["out"].strip().splitlines()[-1])
     assert v["segment_policy_monotonic"] == {
-        "prior_tree_size": 5, "current_tree_size": 9, "proven": True}
+        "prior_tree_size": 5, "current_tree_size": 9, "holds": True}
 
     # CHANGED
     tp2 = tmp_path / "chg"
@@ -178,7 +178,7 @@ def test_policy_json_three_states(tmp_path) -> None:
     assert r2["rc"] == 0, r2["err"]
     v2 = json.loads(r2["out"].strip().splitlines()[-1])
     assert v2["segment_policy_monotonic"] == {
-        "prior_tree_size": 5, "current_tree_size": 9, "proven": False,
+        "prior_tree_size": 5, "current_tree_size": 9, "holds": False,
         "changed_from": _POL_A, "changed_to": _POL_B}
 
     # DROP (None)
@@ -194,7 +194,7 @@ def test_policy_json_three_states(tmp_path) -> None:
     v3 = json.loads(r3["out"].strip().splitlines()[-1])
     assert v3["segment_policy_monotonic"] is None
     assert v3["segment_inenvelope"] == {
-        "prior_tree_size": 5, "current_tree_size": 9, "proven": True}
+        "prior_tree_size": 5, "current_tree_size": 9, "holds": True}
 
 
 def test_policy_tamper_is_caught_upstream(tmp_path) -> None:

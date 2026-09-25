@@ -4,6 +4,33 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+### Changed
+
+- The continuity offline verifier (`nous continuity emit-verifier`,
+  `verify_continuity_offline.py`, and `nous continuity verify` with
+  `--log-key` or `--prior-checkpoint`, which runs it) prints `EVIDENCES:`
+  instead of `PROVES:` for the segment in-envelope (S185), cap-value
+  monotonicity (S186) and policy-digest constancy (S187) legs, and its
+  `NOTE` lines say "does not hold" instead of "NOT proven". These checks
+  are boolean and exact-rational comparisons over root-committed
+  certificate fields, not Z3 or Farkas results
+  (docs/RESERVED_VERB_AUDIT_DESIGN.md, D376-3). The Farkas
+  `PROVES-budget` line is unchanged.
+- Breaking for `--json` consumers of that verifier: the key `proven` in
+  `segment_inenvelope`, `segment_cap_monotonic` and
+  `segment_policy_monotonic` is renamed `holds`, and every `--json`
+  object it prints carries `report_schema_version: 2`. Values, verdicts
+  and exit codes are unchanged. A verifier emitted by 5.85.1 or earlier
+  keeps the old form until it is re-emitted. Key map:
+  docs/CONTINUITY_LEDGER.md.
+- CLI help, printed boundary lines and docstrings that applied the
+  reserved verb to signatures, digests, log inclusion or trace checks now
+  name the method: the `nous conformance` help, the `--annex-iv-map`
+  help of `nous dossier`, the boundary line of the emitted
+  `verify_annex_iv_map.py`, the scope text of the emitted
+  `verify_conformance_offline.py`, and module docstrings.
+<!-- __s377_changelog_patch_b_v1__ -->
+
 
 ## [5.85.1]  <!-- __s369_changelog_v5_85_1__ -->
 

@@ -41,7 +41,7 @@ from test_s183_continuity_proof import _prefix_dir, _rail_checkpoint
 
 _CAPS9 = ["0.10", "0.11", "0.12", "0.13", "0.14",
           "0.15", "0.16", "0.17", "0.18"]
-_PROVES = "PROVES: Segment in-envelope conformance"
+_PROVES = "EVIDENCES: Segment in-envelope conformance"
 _EVID = "EVIDENCES: Cryptographic consistency proof verified"
 
 
@@ -185,7 +185,7 @@ def test_segment_inenvelope_json_field(tmp_path) -> None:
     assert res["rc"] == 0, res["err"]
     v = json.loads(res["out"].strip().splitlines()[-1])
     assert v["segment_inenvelope"] == {
-        "prior_tree_size": 5, "current_tree_size": 9, "proven": True}
+        "prior_tree_size": 5, "current_tree_size": 9, "holds": True}
     res2 = _verify(script, ledger, cp_pub=tmp_path / "cp_pub.pem",
                    prior_note=None, as_json=True)
     v2 = json.loads(res2["out"].strip().splitlines()[-1])

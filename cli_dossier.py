@@ -174,8 +174,9 @@ def build_dossier_parser(sub: argparse._SubParsersAction) -> None:
              "(verify_annex_iv_map.py). Default off; when off the "
              "dossier is byte-identical to before. The sidecar is an "
              "orthogonal evidence index, never folded into "
-             "verify_offline.py; it proves presence + authenticity + "
-             "indexing of declared Annex IV evidence, not legal "
+             "verify_offline.py; it checks presence + authenticity + "
+             "indexing (sha256 and Ed25519) of declared Annex IV "
+             "evidence, not legal "
              "sufficiency. Refused on a coverage-gap-witness dossier.",
     )
     p.add_argument(  # __s135_annex_iv_cli_v1__

@@ -45,9 +45,9 @@ from test_s185_segment_inenvelope import (
     _verify,
 )
 
-_PROVES_INENV = "PROVES: Segment in-envelope conformance"
-_PROVES_CAP = "PROVES: Segment cap-value monotonicity"
-_ROSE = "Segment cap-value monotonicity NOT proven"
+_PROVES_INENV = "EVIDENCES: Segment in-envelope conformance"
+_PROVES_CAP = "EVIDENCES: Segment cap-value monotonicity"
+_ROSE = "Segment cap-value monotonicity does not hold"
 _DROP = "Segment cap-value monotonicity not asserted"
 
 # [4, 9): floor 0.30 then 0.25 >= 0.20 >= 0.15 >= 0.10  -> non-increasing
@@ -165,7 +165,7 @@ def test_cap_monotonic_json_three_states(tmp_path) -> None:
     assert r["rc"] == 0, r["err"]
     v = json.loads(r["out"].strip().splitlines()[-1])
     assert v["segment_cap_monotonic"] == {
-        "prior_tree_size": 5, "current_tree_size": 9, "proven": True}
+        "prior_tree_size": 5, "current_tree_size": 9, "holds": True}
 
     # ROSE
     tp2 = tmp_path / "asc"
@@ -179,7 +179,7 @@ def test_cap_monotonic_json_three_states(tmp_path) -> None:
     assert r2["rc"] == 0, r2["err"]
     v2 = json.loads(r2["out"].strip().splitlines()[-1])
     assert v2["segment_cap_monotonic"] == {
-        "prior_tree_size": 5, "current_tree_size": 9, "proven": False,
+        "prior_tree_size": 5, "current_tree_size": 9, "holds": False,
         "rose_from": "0.14", "rose_to": "0.15"}
 
     # DROP (None) -- S185 cap-less _CAPS9 fixture, the regression guard:
@@ -196,4 +196,4 @@ def test_cap_monotonic_json_three_states(tmp_path) -> None:
     v3 = json.loads(r3["out"].strip().splitlines()[-1])
     assert v3["segment_cap_monotonic"] is None
     assert v3["segment_inenvelope"] == {
-        "prior_tree_size": 5, "current_tree_size": 9, "proven": True}
+        "prior_tree_size": 5, "current_tree_size": 9, "holds": True}

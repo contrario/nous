@@ -20,7 +20,7 @@ runtime_identity.json is public-only:
   }
 
 The full identity (key_id + algorithm + public_key) is what the runtime startup
-check later proves EQUAL to the live signer's HELLO, and what the offline
+check later verifies to be EQUAL to the live signer's HELLO, and what the offline
 deploy_sign embeds into the signed Keys Manifest. Any mismatch => refuse.
 """
 from __future__ import annotations

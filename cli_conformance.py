@@ -50,8 +50,9 @@ def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
     p = sub.add_parser(
         "conformance",
         help=(
-            "Runtime conformance: prove a signed execution trace stayed "
-            "inside the envelope the static cost proof assumed"
+            "Runtime conformance: check a signed execution trace against the "
+            "envelope the static cost proof assumed (interval checks, a "
+            "Decimal sum and Ed25519; no Z3)"
         ),
     )
     cs = p.add_subparsers(dest="conformance_cmd")

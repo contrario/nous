@@ -473,7 +473,7 @@ class TraceBridge:
                        "hashes": hashes}, f)
 
     def _load_signed_policy_pack(self, policy_pack):
-        # Load pre-signed keys.json + obligations.json VERBATIM, prove the
+        # Load pre-signed keys.json + obligations.json VERBATIM, verify the
         # active signer matches the deployment-approved runtime identity, set
         # the same fields the online build would. No run_start here; the shared
         # __init__ tail emits it once.

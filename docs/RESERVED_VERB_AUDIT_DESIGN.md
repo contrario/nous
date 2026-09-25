@@ -360,3 +360,49 @@ operator-asserted binding; docs/COST_VERIFICATION_GUIDE.md keeps "audit-ready
 Annex IV compliance" in the demo script; website/index.html:492 keeps
 "all-paths proof of conformance" (the noun family, D376-10); the blog's EDGE
 ids on its v5.30.0 lines are unchanged (D376-5 covers only the wheel).
+
+### 9.2 Patch B (S377)
+
+<!-- __s377_reserved_verb_patch_b_notes_v1__ -->
+
+Scope applied. The wheel's OVER ids: 12 in Python strings and 3 in comments
+(annex_iv_map.py, cli_conformance.py, cli_dossier.py, cli_verify_release.py,
+conformance_verifier.py, envelope.py, rekor_anchor.py, remedy_proof.py,
+signerctl.py, trace_anchor.py, trace_bridge.py), the 8 decoded continuity
+verifier ids (D376-3), and the 7 docs/CONTINUITY_LEDGER.md ids moved here by
+D377-1, with the S186 and S187 sections and the key map D376-3 asks for. The
+CHANGELOG [Unreleased] section marks the --json change as breaking.
+
+D377-6. The S121 wording in VERIFY_OFFLINE_PY_CHAIN (dossier.py:214) stays.
+D376-5 made its change conditional on no committed copy or pinned digest of
+the template other than the verifier registry; the search found one,
+tests/baselines/s130_verifier_snapshots.json (test_s130_verifier_snapshot.py),
+which pins VERIFY_OFFLINE_PY_CHAIN at a0e0b83a... [container, 1e48bce]. The gap
+witness keeps the verb (D376-5), so the 8 EDGE ids of the wheel are unchanged.
+
+D377-7. K5 was searched before the rename: in the tree, the consumers of the
+three --json objects are tests/test_s185, s186, s187 and s187b; a web search
+for "segment_inenvelope" found no outside use; GitHub code search needs an
+authenticated token and was not run. No outside consumer is known, so D376-3
+option (a) stands.
+
+D377-8. The continuity verifier payload is decoded, edited at 12 anchors (the
+three labels, the two NOTE lines, the five keys, report_schema_version on the
+FAIL and PASS objects) and re-encoded in the original format (76-character
+chunks in the same wrapper). Before the edit, re-encoding the unedited payload
+reproduced the file byte for byte [container]. The patch markers inside the
+payload (__s185_p1_proves_print_v1__ and the S186 and S187 ones) are
+identifiers and stay.
+
+D377-9. The four test files change their label constants and the JSON
+expectations (FG-S376-C). With only the tests changed, every positive
+assertion on the new labels and keys fails against the unedited verifier; the
+fail-path assertions then check that the new label is absent. Comments in
+those tests that describe the old label are outside the audit and stay.
+
+D377-10. tests/test_s377b_reserved_verb_wheel.py binds patch B: the decoded
+continuity payload carries no PROVES label other than PROVES-budget, no
+"proven" key, five "holds" keys and two report_schema_version fields; each
+corrected string, the ledger ids and the CHANGELOG entry by id. The ndec
+payloads carry no PROVES label today, so a check on them would have no red
+state before this patch and is not added (K4).

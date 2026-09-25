@@ -38,7 +38,7 @@ from test_s185_segment_inenvelope import (
     _verify,
 )
 
-_PROVES_POLICY = "PROVES: Segment policy-digest constancy"
+_PROVES_POLICY = "EVIDENCES: Segment policy-digest constancy"
 _DETECTED = "DETECTED: governing-policy obligation delta"
 
 _SS = "SS:" + "a" * 64
@@ -117,7 +117,7 @@ def test_policy_constant_canons_bind_no_delta(tmp_path) -> None:
     v = json.loads(res["out"].strip().splitlines()[-1])
     assert v["segment_policy_delta"] is None         # constant -> no delta
     assert v["segment_policy_monotonic"] == {
-        "prior_tree_size": 5, "current_tree_size": 9, "proven": True}
+        "prior_tree_size": 5, "current_tree_size": 9, "holds": True}
 
 
 def test_policy_weakening_surfaced(tmp_path) -> None:

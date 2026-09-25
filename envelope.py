@@ -17,7 +17,7 @@ Dual-dimension from the first anchor:
                 exists.
 
 Honest boundary (inviolable):
-  - NOUS PROVES (set ops over root-committed canon fields) that the delta is
+  - NOUS CHECKS (set ops over root-committed canon fields) that the delta is
     within the declared envelope. Within => not a substantial modification is
     the deduction Art 43(4) itself supplies; outside => flagged, never a legal
     determination. The notified body adjudicates.
@@ -397,8 +397,8 @@ def decide_per_step(env: Envelope, prior_canon: str, current_canon: str) -> Memb
 # construction, not detected heuristically.
 #
 # Endpoint comparison is O(1) in chain length; the S120 prior_digest chain
-# (verified separately by the dossier) proves current descends from the
-# baseline-committing build. PROVES tier: set ops + integer drift bound;
+# (verified separately by the dossier) evidences that current descends from
+# the baseline-committing build. Checked by set ops and an integer drift bound;
 # fails closed on any composed transition the cumulative envelope does not
 # explicitly admit.
 # --------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 """Detached Rekor v2 transparency anchoring for trace envelopes (S105 #5).
 
 A signed TraceEnvelope can be anchored to the Sigstore Rekor v2 transparency
-log so a third party can prove the trace existed at a point in time and was
+log so a third party can verify the trace existed at a point in time and was
 not altered after. The anchor is DETACHED: the TraceEnvelope is frozen and its
 canonical bytes are already signed, so the anchor cannot live inside it. The
 binding is cryptographic -- the Rekor leaf signs the same

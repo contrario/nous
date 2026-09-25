@@ -164,40 +164,90 @@ future 0x06 signature will protect.
 
 ## Segment in-envelope conformance (S185)
 
-Layered on the S183 consistency proof, the segment in-envelope leg PROVES that
-every run appended across the witnessed segment stayed inside its own declared
+Layered on the S183 consistency proof, the segment in-envelope leg EVIDENCES
+that every run appended across the witnessed segment stayed inside its own declared
 envelope. When a prior checkpoint and a verified consistency proof establish the
 ledger as an append-only extension from tree size `m` to `n`, the verifier
 checks, for every appended link in `[m, n)`, that the link's conformance
 certificate is `conformant == True` (and `bound_transfer_ok == True`). Any
 appended link that is not fails the verification closed; on success the verifier
-prints a `PROVES:` line.
+prints an `EVIDENCES:` line.
 
-This earns `proves` because the verdict is read from root-committed bytes, not
-from a sidecar. Each certificate's body digest is bound into the leaf through
+The verdict is read from root-committed bytes, not from a sidecar. Each
+certificate's body digest is bound into the leaf through
 `cert_body_sha256 -> run_identity_digest -> this_link_digest`, and the link
-digests are the leaves of the signed Merkle root. The check is therefore boolean
+digests are the leaves of the signed Merkle root. The check is boolean
 arithmetic over data the signed root already commits -- no solver, no new
-dependency in the offline verifier.
+dependency in the offline verifier. That is why the leg evidences: the same
+description fits an Ed25519 signature check, and `proves` is kept for a Z3
+result on a declared leg or a Farkas certificate checked in exact rational
+arithmetic (docs/RESERVED_VERB_AUDIT_DESIGN.md, D376-1).
 
 Enforcement, not restatement. The ledger walk records, but does not gate, a
 self-consistent non-conformant run (NOUS is a monitor: it records what happened,
 including a run that honestly reports `conformant == False`). This leg adds
-segment-scoped enforcement: it refuses the `PROVES:` line and fails the
-verification when the consistency-proven append contains an honestly-recorded
-non-conformant run.
+segment-scoped enforcement: it refuses the `EVIDENCES:` line and fails the
+verification when the append verified by the consistency proof contains an
+honestly-recorded non-conformant run.
 
-The honest boundary. It PROVES the witnessed segment is conformance-certified
-`bound_transfer_ok` under the signed root, and EVIDENCES (unchanged) that the
-segment is the actual append via the S183 consistency proof. It does NOT prove
-that the declared cost ceiling did not rise across the segment; cap-value
-monotonicity would require the cost cap value itself to be committed under the
-root (it is currently sidecar-only) and remains future work.
+The honest boundary. It EVIDENCES that the witnessed segment is
+conformance-certified `bound_transfer_ok` under the signed root, and EVIDENCES
+(unchanged) that the segment is the actual append via the S183 consistency
+proof. It does NOT prove
+that the declared cost ceiling did not rise across the segment; that is
+the S186 leg below.
 
 Under `--json` the verifier emits a drop-when-absent `segment_inenvelope` object
-(`prior_tree_size`, `current_tree_size`, `proven`) alongside the `consistency`
+(`prior_tree_size`, `current_tree_size`, `holds`) alongside the `consistency`
 object; both are `null` when no prior checkpoint is supplied.
 <!-- __s185_segment_inenvelope_doc_v1__ -->
+
+## Segment cap-value monotonicity (S186)
+
+With the same prior checkpoint and consistency proof, the verifier reads the
+declared `cost_cap` from each conformance certificate in `[m - 1, n)` (the link
+before the segment is the floor) and compares consecutive values as exact
+rationals, with no solver. If no value rises it prints `EVIDENCES: Segment
+cap-value monotonicity`. If one rises it prints a `NOTE` that names both values:
+a detected, root-committed change in the declared ceiling, not a verification
+failure (NOUS is a monitor, not a guard). The leg is not asserted when a
+certificate carries no parseable `cost_cap` or there is no floor or second leaf.
+
+Under `--json`, `segment_cap_monotonic` is `null` when the leg is not asserted;
+otherwise it carries `prior_tree_size`, `current_tree_size` and `holds`, plus
+`rose_from` and `rose_to` when `holds` is false.
+
+## Segment policy-digest constancy (S187)
+
+The verifier compares the `smt_spec_sha256` of each certificate in `[m - 1, n)`
+for equality. If it is constant it prints `EVIDENCES: Segment policy-digest
+constancy`; if it changes, a `NOTE` names both digests, again a detected,
+root-committed change and not a verification failure. The leg is not asserted
+when a certificate carries no 64-character `smt_spec_sha256` or there is no
+floor or second leaf. A certificate that carries `obligations_canon` must hash
+it to its own `smt_spec_sha256`, or the verification fails closed; when the
+digest changes and both sides carry a canon, the change is also printed as a
+`DETECTED:` obligation delta that lists weakened and strengthened entries
+(S187b).
+
+Under `--json`, `segment_policy_monotonic` is `null` when the leg is not
+asserted; otherwise it carries `prior_tree_size`, `current_tree_size` and
+`holds`, plus `changed_from` and `changed_to` when `holds` is false. The delta
+appears as `segment_policy_delta` (`weakened`, `strengthened`).
+
+## Report schema of the emitted verifier
+
+Every `--json` object the emitted verifier prints carries
+`report_schema_version: 2`. Version 2 renames the key `proven` to `holds` in
+`segment_inenvelope`, `segment_cap_monotonic` and `segment_policy_monotonic`.
+A report without `report_schema_version` is version 1; verifiers emitted by
+nous-lang 5.85.1 and earlier print it, and their text output reads `PROVES:`
+where this one reads `EVIDENCES:` for the three segment legs and `NOT proven`
+where this one reads `does not hold`. Values, verdicts, exit codes and the
+Farkas `PROVES-budget` line are unchanged. `nous continuity verify` with
+`--log-key` or `--prior-checkpoint` runs the emitted verifier, so it prints the
+same form.
+<!-- __s377_continuity_segment_legs_doc_v1__ -->
 
 ## Witness cosignature (S179)
 

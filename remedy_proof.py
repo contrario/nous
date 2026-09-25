@@ -1,7 +1,7 @@
 """S109 U2 -- typed RemedyProof consumption view (parse-on-read).
 
 A remedy_proof is ADVISORY-BUT-AUTHENTICATED. The embedded conformance
-certificate, re-verified by the EXISTING S97/v5.13 offline verifier, proves only
+certificate, re-verified by the EXISTING S97/v5.13 offline verifier, evidences only
 two things: that a conformant run of a specific program happened (the cert binds
 source_sha256 + smt_spec_sha256 + pricing_sha256 + trace_sha256, all signed), and
 -- together with U3's program-declaration check -- that the promoted heal-path is
