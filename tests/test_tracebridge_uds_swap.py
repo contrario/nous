@@ -6,10 +6,8 @@ process).
 from __future__ import annotations
 
 import importlib.util
-import os
 import subprocess
 import sys
-import time
 from pathlib import Path
 
 import pytest
@@ -20,6 +18,8 @@ sys.path.insert(0, str(_REPO))
 trace_bridge = pytest.importorskip("trace_bridge")
 pytest.importorskip("uds_signer_client")
 from trace_bridge import TraceBridge, _Key, _RuntimeKeyProxy
+
+from signer_spawn import spawn_signer  # __s375_d2_signer_ready_v1__
 
 _SIGNER = _REPO / "signer_main.py"
 
@@ -32,20 +32,8 @@ def _verify(pack):
     return ver.verify_pack(str(pack))
 
 
-def _spawn_signer(tmp, key_path):
-    sock = str(tmp / "signer.sock")
-    state = str(tmp / "signer.state")
-    proc = subprocess.Popen(
-        [sys.executable, str(_SIGNER), "--socket", sock, "--key-path",
-         str(key_path), "--state-path", state], stderr=subprocess.PIPE,
-        cwd=str(_REPO))
-    for _ in range(500):
-        if os.path.exists(sock):
-            break
-        if proc.poll() is not None:
-            raise RuntimeError("signer exited: " + proc.stderr.read().decode())
-        time.sleep(0.01)
-    return proc, sock
+def _spawn_signer(tmp: Path, key_path: Path) -> tuple[subprocess.Popen[bytes], str]:
+    return spawn_signer(tmp, key_path)
 
 
 @pytest.mark.offline

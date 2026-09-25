@@ -7,7 +7,6 @@ anti-rollback property -- plus the audit log and single-session lifecycle.
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 import time
@@ -24,23 +23,15 @@ from trace_bridge import TraceBridgeError, jcs_hash, TAG_EVENT, SPEC
 from uds_signer_client import UdsSignerClient
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
+from signer_spawn import spawn_signer  # __s375_d2_signer_ready_v1__
+
 _SIGNER = _REPO / "signer_main.py"
 
 
-def _spawn(tmp, key_path, state_path, audit_path=None):
-    sock = str(tmp / f"s{time.monotonic_ns()}.sock")
-    cmd = [sys.executable, str(_SIGNER), "--socket", sock, "--key-path",
-           str(key_path), "--state-path", str(state_path)]
-    if audit_path is not None:
-        cmd += ["--audit-path", str(audit_path)]
-    proc = subprocess.Popen(cmd, stderr=subprocess.PIPE, cwd=str(_REPO))
-    for _ in range(500):
-        if os.path.exists(sock):
-            break
-        if proc.poll() is not None:
-            raise RuntimeError("signer exited: " + proc.stderr.read().decode())
-        time.sleep(0.01)
-    return proc, sock
+def _spawn(tmp: Path, key_path: Path, state_path: Path,
+           audit_path: Path | None = None) -> tuple[subprocess.Popen[bytes], str]:
+    return spawn_signer(tmp, key_path, state_path, audit_path=audit_path,
+                        sock_name=f"s{time.monotonic_ns()}.sock")
 
 
 def _core(tid, seq, prev):

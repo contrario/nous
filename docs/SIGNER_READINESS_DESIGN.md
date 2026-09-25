@@ -226,4 +226,51 @@ verifier output.
 
 ## 9. Build notes
 
-Appended with the code.
+<!-- __s375_d2_build_notes_v1__ -->
+
+9.1 S375, the test-side fix of D375-2, built on e0e4231 [container].
+
+- `tests/signer_spawn.py` (new): `spawn_signer(tmp, key_path,
+  state_path=None, audit_path=None, allow_uid=None,
+  sock_name="signer.sock", timeout_s=20.0)`. The signer's stderr goes
+  to `<socket path>.stderr`. Readiness is a line that starts with
+  `signer ready: ` and ends with ` socket=<the requested path>`,
+  polled every 10 ms. SignerSpawnError messages start with the cause:
+  `signer exited before ready (rc N)`, `signer exited right after ready
+  (rc N)`, `signer not ready after 20.0 s`; each carries the last 600
+  bytes of the stderr file. On the deadline the process is terminated
+  before the error is raised.
+- The four test files import it, with the marker
+  `__s375_d2_signer_ready_v1__` on the import line. Each local helper
+  keeps its name and signature and calls the shared one; no test body
+  changed. Imports the edit left unused (`os`, `time`) are removed;
+  pyflakes over the five files reports only the two unused imports
+  test_uds_signer.py already had (`socket`, `tempfile`). The per-file
+  `_SIGNER` constants stay and are no longer read.
+
+9.2 D375-4 [container, 2026-09-24 23:21Z to 23:47Z].
+
+    criterion                              result
+    (a) listen delayed 1.0 s, 5 runs       20 of 20 pass in each run
+    (b) listen delayed 25 s, deadline 20   the 17 fail, each "signer not
+                                           ready after 20.0 s"; 3 pass
+    (c) signer exits in listen, rc 7       the 17 fail, each "signer
+                                           exited before ready (rc 7)";
+                                           3 pass
+    (d) rate arms of 3.2, rerun            idle 150 runs, contended 100
+                                           runs: 0 failures (before the
+                                           fix: 43 and 74)
+    (e) full suite, real date              3141 passed, 0 failed, 13
+                                           skipped; failed and skip sets
+                                           equal to the tree without
+                                           the edits
+
+The expectation of (a), run on the tree without the edits, failed the
+gate with 17 unexpected failures. Arm (c) uses a second switch of the
+injection of 3.1, `S375_LISTEN_EXIT=1`, which ends the signer with exit
+code 7 inside the wrapped `listen`.
+
+9.3 Not shown here. Server A runs only the real-date gates of the patch;
+the injection arms run in the container, as the date arms of section 23
+of ONE_PRICE_SOURCE_DESIGN.md did. The production findings of section 7
+are unchanged.

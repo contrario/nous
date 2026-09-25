@@ -11,7 +11,6 @@ import socket
 import subprocess
 import sys
 import tempfile
-import time
 from pathlib import Path
 
 import pytest
@@ -26,27 +25,14 @@ uds_client = pytest.importorskip("uds_signer_client")
 from uds_signer_client import UdsSignerClient
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
+from signer_spawn import spawn_signer  # __s375_d2_signer_ready_v1__
+
 _SIGNER = _REPO / "signer_main.py"
 
 
-def _spawn_signer(tmp, key_path, allow_uid=None, state_path=None):
-    sock = str(tmp / "signer.sock")
-    if state_path is None:
-        state_path = str(tmp / "signer.state")
-    cmd = [sys.executable, str(_SIGNER), "--socket", sock,
-           "--key-path", str(key_path), "--state-path", str(state_path)]
-    if allow_uid is not None:
-        cmd += ["--allow-uid", str(allow_uid)]
-    proc = subprocess.Popen(cmd, stderr=subprocess.PIPE, cwd=str(_REPO))
-    # wait for the socket + a ready line
-    for _ in range(500):
-        if os.path.exists(sock):
-            break
-        if proc.poll() is not None:
-            raise RuntimeError("signer exited early: "
-                               + proc.stderr.read().decode())
-        time.sleep(0.01)
-    return proc, sock
+def _spawn_signer(tmp: Path, key_path: Path, allow_uid: int | None = None,
+                  state_path: str | None = None) -> tuple[subprocess.Popen[bytes], str]:
+    return spawn_signer(tmp, key_path, state_path=state_path, allow_uid=allow_uid)
 
 
 def _mk_core(tid, seq, prev):
