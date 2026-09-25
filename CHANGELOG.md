@@ -4,6 +4,9 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+
+## [6.0.0]  <!-- __s378_changelog_v6_0_0__ -->
+
 ### Changed
 
 - The continuity offline verifier (`nous continuity emit-verifier`,
@@ -46,6 +49,14 @@
 - The web IDE reads both body shapes, no longer counts an item without a
   tier as `PROVEN`, and lists such an item as UNTIERED.
 <!-- __s378_changelog_verify_v2_v1__ -->
+
+### Notes
+
+- 6.0.0 is a major version because two machine-read outputs change
+  shape: the `/v1/verify` 200 body (`schema_version` 2) and the
+  continuity verifier's `--json` output (`report_schema_version` 2).
+  A client that reads either output should check that field and refuse
+  a value it does not know.
 
 
 ## [5.85.1]  <!-- __s369_changelog_v5_85_1__ -->
