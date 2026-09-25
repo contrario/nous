@@ -406,3 +406,108 @@ continuity payload carries no PROVES label other than PROVES-budget, no
 corrected string, the ledger ids and the CHANGELOG entry by id. The ndec
 payloads carry no PROVES label today, so a check on them would have no red
 state before this patch and is not added (K4).
+
+### 9.3 /v1/verify labels (S378)
+
+<!-- __s378_verify_labels_notes_v1__ -->
+
+Input. The ledger lane's brief to the release lane,
+NOUS_S373_BRIEF_V1_VERIFY_LABELS.md (sha256
+abcea3e3463f0a21b884de6fdc2ab0602732fa03886d3f380b75c417b7049da9), its
+byte references candidate.py (sha256
+db3d5ed41045a314cb740b4202b22d5c2e90053e0490e96d311edde19f75014a), both
+held outside the repository, and the operator's rulings of 2026-09-25:
+option B (the 200 body of /v1/verify changes in place, in the release
+that carries patch B) and D378-1 with four amendments.
+
+Marking. [container] is a value measured in the chat container on a
+clone of 4738cd3 tied to Server A by the 45 file shas of the S378 RULE 0
+paste (12:18:20Z). nous_api_server.py, verifier.py and website/ide.html
+are unchanged since 8ec9e61, the tree the classification was made on.
+
+D378-1. K2 yields to the brief only where an edit cannot be avoided.
+One classified occurrence is edited: o1109, the fallback in
+website/ide.html:1757 that counts an item with no tier as PROVEN (F8,
+deferred by D376-10, closed here). o1110 (:1758) and o1112 (:1765) stay
+byte-unchanged, because the v2 path filters by tier and needs no edit
+there. A checker compared every classified line of the three files the
+arc edits, before and after the drafted edit: one EARNED, NEG or MENTION
+row changes, and it is o1109 [container].
+
+D378-2. o0698 and o0699 (nous_api_server.py:287 and :319, the served
+"proven" key) stay byte-unchanged. Their EARNED class was not true when
+S376 sealed it: the key carried every passing item whatever its tier.
+S373 N1 (Server A, 09:01:58Z) found 6 items in it for
+aml_transaction_governance.nous, tiers ESTIMATED 2, PROVEN 1 and
+VERIFIED 3. Over the 48 tracked .nous programs the route answers with
+200, it carried ESTIMATED 98, VERIFIED 143, REPORTED 115 and PROVEN 9
+items [container, 12:24Z]. The class becomes true with the v2 body,
+where the key carries tier PROVEN only.
+
+D378-3. The sealed classification is inconsistent at one place: o1109
+(ide.html:1757) is EARNED, while the LATENT rows o1111 (:1763) and o1114
+(:1778) name the same fallback as their cause. The TSV stays as sealed
+(3b9a59f0...); this note is the record.
+
+D378-4. The v2 body (brief section 4), for the 200 body only.
+"schema_version": 2 is the first key. The keys that follow keep their
+order and values, except that "proven" holds the passing items whose
+tier is exactly "PROVEN", and "evidenced", inserted right after it,
+holds every other passing item (tier VERIFIED, ESTIMATED, REPORTED, null
+or absent), each list in the verifier's order. Every item in both lists
+carries severity "PASS"; code, category, message, tier and the item's
+key order are unchanged. ok, stage, errors, warnings, info and
+total_checks are unchanged. The validate branch carries "proven": [] and
+then "evidenced": []. A passing item is an item of severity PROVEN. An
+item of any severity other than ERROR, WARNING, INFO and PROVEN makes
+the route refuse with 422 VERIFY001 instead of being relabelled PASS
+(axiom 5). Error bodies are out of scope and unchanged.
+KEY = "evidenced": the operator's amendment to brief section 8, decided
+by the skillctx replication at 11:38Z (no significant excess of empty
+responses on either provider; Chutes Holm p 0.549, Parasail Holm p
+0.413). That result is testimony from the skillctx lane, not re-measured
+here.
+
+D378-5. Two surfaces, two names. The continuity verifier's --json uses
+"holds" with report_schema_version 2 (D376-3), for a boolean property
+that may be false. The /v1/verify body uses "proven" (tier PROVEN only)
+and "evidenced" with schema_version 2, for lists of passing items. The
+/v1/verify names are the ones the skillctx lane tested; neither surface
+is renamed without a new test.
+
+D378-6. E5 of docs/CLAIM_LINT.md is amended by one table row added below
+its row, not by an edit of it. o0249 and o0250 (:177) keep their bytes
+and their line number [container, the checker of D378-1].
+
+D378-7. The IDE (website/ide.html) reads both shapes: schema_version 2
+means "proven" plus "evidenced"; no schema_version means the legacy
+"proven"; any other value renders a refusal and no counts. The tier
+fallback of o1109 is removed. An item whose tier is none of the four is
+listed as UNTIERED and counted in no tier; the count lines name that
+group only when it is non-empty. website/verify-fix.js was read whole:
+no tracked page loads it (git grep finds it only in website/README.md),
+so it stays unchanged and needs no cache purge.
+
+D378-8. Order: the website deploy precedes the nous-api restart on
+Server A. The IDE deployed today opens its result view only on a
+non-empty "proven"; under v2, 30 of the 39 tracked programs that
+complete verification come back with an empty "proven" [container], and
+that IDE would show them as failed.
+
+D378-9. Out of scope (brief section 5): the severity axis and
+VerificationResult.proven in verifier.py (PyPI consumers; S228 guards
+the renders), cli.py, mitosis_engine.py and the error shapes. The NOUS
+skill's SKILL.md changes after the release (brief section 6, step 7).
+
+D378-10. Tests. A contract test on the route checks (a) no item with a
+tier other than PROVEN in "proven", (b) no "severity":"PROVEN" anywhere
+in a 200 body, (c) "proven" plus "evidenced" equals the verifier's
+passing items in order, (d) schema_version is the first key and equals
+2, and (e) the validate-branch shape. It is red on the tree before the
+arc, by set and reason. tests/test_verify_tier_routing.py keeps a local
+copy of the routing contract; the copy is amended to v2 with the
+rationale in its docstring, not deleted.
+
+The version of the release is the operator's ruling at the bump. The
+release carries two breaking changes to machine-read output: this body
+and the continuity --json of D376-3.
