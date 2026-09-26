@@ -511,3 +511,60 @@ rationale in its docstring, not deleted.
 The version of the release is the operator's ruling at the bump. The
 release carries two breaking changes to machine-read output: this body
 and the continuity --json of D376-3.
+
+### 9.4 The docs positioning line (S379)
+
+<!-- __s379_positioning_line_notes_v1__ -->
+
+Marking. [container] is a value measured in the chat container on a
+clone of 31b7f73 tied to Server A by the 53 file shas of the S379 RULE 0
+paste (2026-09-26 00:29:36Z).
+
+Finding. website/docs/index.html:206, written in S171 (marker
+__s171vsa_docs_positioning_v1__), says NOUS "is a formally-verified
+language and runtime for governed agentic AI". What NOUS proves is the
+declared envelope, with Z3 and Farkas certificates, and the next
+sentence of the same paragraph (line 207) states exactly that. The tree
+tracks no proof file for the language or the runtime (no .v, .lean,
+.thy, .tla or .agda file) [container]. The line is the only
+self-description of that form in website/ and README.md [container]. The
+S376 classification has no row for it (the classification covers the
+"prove" family), and claim lint, tests/test_s362_claims_copy.py and
+tests/test_s377_reserved_verb_copy.py do not bind it [container]. The
+nous skill's SKILL.md repeats it on line 8; the release lane removed it
+in the draft c036944f sent to skillctx, outside the repository.
+
+A correction of an overclaim inside this audit, not a new arc: no
+Innovation Gate (Constitution, Article VI).
+
+D379-1. Line 206 only. " is a formally-verified language and runtime
+for governed agentic AI." becomes " is a language and runtime for
+governed agentic AI." No word is added. The proved claim stays in line
+207, so the edit removes an overclaim and adds no underclaim. File sha
+pre 9dbb5f80fde7d985, post 8bfdd88b85871ebc [container].
+
+D379-2. The scope is the self-description only. "Formal Verification"
+as the name of the verify stage stays, under D376-10 (the noun family):
+verifier.py:1212 (the printed banner, in the wheel), cli.py:1853 (help),
+website/docs/index.html:157, 470, 601, 603, 715, 755, 916 and 1869,
+website/index.html:9, 395, 401, 776 and 1053, website/runtime.html:702,
+and the post title at website/blog/index.html:913 and 3410. The site
+demos copy the verifier's output, so renaming the stage on the site
+alone would make the site disagree with the tool. The nearest next
+candidate is the heading "Formally Verified" at website/index.html:395.
+
+D379-3. tests/test_s379_formally_verified_copy.py, red on the tree
+before the edit (K4): (a) the old phrase is absent from
+website/docs/index.html; (b) the new sentence is present there, so (a)
+cannot pass by deleting the paragraph (FG-S376-C); (c) neither README.md
+nor any .html file under website/ says "is a formally-verified" or "is a
+formally verified", so the self-description cannot return elsewhere.
+Each assertion is on a precomputed value (FG-S377-B). docs/ is not
+scanned: design documents quote the old phrase, this section included.
+
+D379-4. The site and one test; no file in the wheel changes, so no
+PyPI release. Order: this section (commit, push); then patch B (the
+test red first, the edit, the host gates); commit; push; deploy through
+scripts/deploy_website.sh after the commit, dry run first; the served
+mirror check after the deploy. Each irreversible step has its own
+approval.
