@@ -16284,3 +16284,412 @@ document itself.
                        last character and is checked to differ; sixteen
                        runs after that were green. The drive of S370
                        carries the same construction in two arms.
+
+  - S380 the session that opened at the head the release lane left, found
+    this document unchanged, and wrote the entry that S373 owed
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY IS WRITTEN FROM INSIDE THE
+    SESSION IT DESCRIBES, SO IT STATES NO NUMBER THAT COUNTS THAT SESSION.
+    Unless a sentence says otherwise, each value was printed on Server A on
+    2026-09-25, by the opening rule, by instruments that took their own
+    digest as their first argument and whose refusal arms were driven red
+    before their green, or by read-only commands of version control and the
+    shell, pasted whole. Other kinds are marked where they appear.
+    INHERITED: carried from the sealed handoff, opener and record of S373,
+    whose digests were checked at the opening, or from the entries above.
+    READ IN THE SEAT'S CONTAINER: computed off host, from copies whose
+    digests equal the host's. DERIVED: computed from printed values.
+    TESTIMONY: said by a party and not measured here. OPERATOR: stated by
+    the operator. RULING: a decision the operator stated in words.
+
+    TWO NAMES. RK below names the JSON key of /v1/verify spelled with the
+    past participle this house reserves for results of Z3 and Farkas, and RV
+    names that word in capitals, a value of both severity and tier. This
+    entry spells neither.
+
+    THE SESSION NUMBER. RULING: this session and this entry are three
+    hundred and eighty. The operator first gave three hundred and
+    seventy-nine, and at 12:34:21Z, at HEAD 4738cd3, every shape of it
+    counted zero in the tree and in every commit message. The release lane's
+    S378, running beside this session, then sealed an opener that names its
+    next session with that number (TESTIMONY, its handoff). The operator
+    moved this lane to three hundred and eighty (FG-S380-Y). S373, the
+    session of this lane before this one, landed no entry, and three hundred
+    and seventy-three, which the handoff of S372 ruled for the next entry,
+    was taken by no entry. At 23:53:25Z, at HEAD 9529359 equal to
+    origin/main after a fetch with code zero, across every tracked file at
+    HEAD and at origin/main and every commit message on every ref: the
+    finding prefix, the anchor prefix, the marker shape of the release lane
+    and the bare session token with this number each counted zero, and so
+    did each with three hundred and seventy-nine. Beside them the finding
+    prefix of S372 counted one file, the anchor prefix of S372 one file and
+    one commit, the marker shape of S378 eight files, and the bare token
+    S378 four files and five commits, and a negative drawn at runtime
+    counted zero. READ IN THE SEAT'S CONTAINER: no sealed file this lane
+    holds and no file of the project carries the finding prefix or the
+    anchor prefix with this number. The instrument that appends this entry
+    refuses unless the namespace is still empty at the moment it runs.
+
+    D380-1  THE OBJECT AND WHO CHOSE IT. RULING: the entry the handoff of
+            S373 owed, written in this session with the change to /v1/verify
+            still open when the choice was made. The handoff of S373 tied
+            this entry to the landing of that change. The seat recommended
+            not to wait, on two grounds: the change had no date in the
+            release lane's sealed files (D380-8), and the debts of S372 and
+            S373 lived only in the operator's saved copies. The seat put two
+            roads; the operator chose this one. The change then landed
+            during this session, and this entry records it as measured
+            (D380-7).
+
+    D380-2  THE OPENING. Paste one at 11:28:31Z: its own digest c027371e,
+            scripts/rule0.sh 074e51af, HEAD 1e48bce equal to the local ref
+            origin/main, twelve commits after v5.85.1; version 5.85.1 on A
+            and on B, B at tag v5.85.1; DERIVED from the uptimes, neither
+            service restarted since 2026-09-23, A from 15:03:09Z and B from
+            15:03:21Z; suite 3303 passed and 12 skipped; Asklepios healthy
+            for both services at 11:30:44Z; both timers active, no failed
+            unit; the served control 94935 bytes, where S373 read 94878 on
+            2026-09-24; the served version asset 655 bytes on the wire and
+            on disk. The arms of the successor at 11:32:46Z, taking their
+            own digest 30422431: no argument gave T5_NO_DIGEST_ARGUMENT and
+            41; a near, a truncated and an overlong digest gave
+            T5_DIGEST_MISMATCH and 42 each; an absent path and /proc as the
+            root gave G2S372_GIVEN_ROOT_NOT_A_REPO and 43 each;
+            ARMS_RC_ALL_AS_WANTED; the exit code of the arms process itself,
+            read for the first time, zero. Standard input at 11:33:20Z gave
+            T5_NOT_A_FILE and 40. The successor at 11:33:57Z, code zero, at
+            HEAD 1e48bce: fetch code zero, one main line, head equal to
+            origin, ahead and behind zero, porcelain zero, this document at
+            36e851a5, 972397 bytes and 16286 lines, equal to the seal of
+            S372, and every pinned and enumerated leg equal to the record of
+            S373. Moved since 063d2a8: tracked files 1470 to 1474; README.md
+            from e63a170a and 337 lines to f14c397d and 339 lines, its
+            marker count still three; tests collected 3154 to 3315 with the
+            house's options and 3292 to 3453 bare; the lint read 433 files
+            where it read 431, with no violation. Unchanged: the test file,
+            the six generator digests, the four counts of L6, and the
+            mirror, clean over 452 files with four orphans.
+
+    D380-3  W CLOSED, AND THE RULING OF S372 RECORDED. RULING of S372, in no
+            entry until this one: the opener of S373 pins G2_R0_S372 as the
+            opening instrument and keeps G2_R0_S349 as the fallback, run
+            only if the successor refuses outside its arms. W asked for the
+            successor's first run as the opening instrument at a head other
+            than d526fa1. INHERITED: S373 ran it at 063d2a8 at 18:30:09Z on
+            2026-09-24, code zero, every leg of this document equal to the
+            seal of S372. This session ran it at 1e48bce (D380-2), with the
+            same result. W is closed by this entry.
+
+    D380-4  THE OBJECT S373 MEASURED. INHERITED, measured in S373 on Server
+            A on 2026-09-25 unless marked. N1: verify_source in
+            nous_api_server.py, lines 272 to 336, sorts the items of a
+            verification by severity alone, and every item whose severity is
+            not ERROR, WARNING or INFO is listed under RK. verifier.py,
+            lines 148 to 158, sets severity RV for all four tiers, RV,
+            VERIFIED, ESTIMATED and REPORTED; the tier is a separate field,
+            added in S364 at 6aa8de3. At 09:01:58Z a POST of
+            aml_transaction_governance.nous, sha256 4bed54fa, answered 200
+            with six items under RK, every one of severity RV: VR001 and
+            VR002 of tier ESTIMATED, VR003 of tier RV, and VP003, VL002 and
+            VM001 of tier VERIFIED. Read from source: 87414f7 kept the
+            severity for compatibility, which made the two axes; 5220b7a, of
+            S228, forbids rendering the word of RK over static checks;
+            docs/CLAIM_LINT.md line 177, its E5, exempts the enum and RK as
+            schema; docs/REJECTED_IDEAS.md holds no entry on renaming RK.
+            N2: SKILL.md of the plugin, sha256 8d4de6fe, line 113, names one
+            error body, with the keys error and code. The service answered
+            401 with detail holding error and the code AUTH001, 422 for a
+            source that does not parse with detail holding error, 422 for a
+            missing field with detail a list, and 404 with detail a string.
+            From source, the handler of 429 at lines 125 to 129 and that of
+            500 at lines 3270 to 3275 return error and code at the top
+            level, and /v1/diff returns detail as a string. TESTIMONY of the
+            skillctx chat, that only the handler of 429 differs: refuted.
+            408 was not measured. SKILL.md is not tracked in this
+            repository. The probes of S373 were not free of writes: four
+            POSTs advanced the service's rate limit in memory and, DERIVED
+            from the code, wrote one error traceback to the service log.
+
+    D380-5  THE CONSUMERS OF /v1/verify, AND WHAT THE COUNT CANNOT SEE.
+            INHERITED. website/ide.html line 1751 is the only caller in the
+            tree, beside the skillctx chat's direct captures on the host's
+            loopback. Server A's nginx over 14.4 days: two requests, both
+            from the IDE. Server B's fifteen logs: none, beside a positive
+            control of 728 lines under /api/. No other caller in code or
+            configuration under /opt; the opening rule and the session
+            sanity script call /v1/health only; the bot calls nothing;
+            systemd and cron call nothing. Not covered: callers rarer than
+            the logs' retention, and local callers on Server B.
+
+    D380-6  E5 AND A MODEL READER. TESTIMONY of the skillctx chat, one model
+            reader: qwen3.8-27b through OpenRouter, thirty-seven cases,
+            three bodies, the plugin's skill absent and present, ten epochs,
+            2220 scored responses. The overclaim rate, as that chat defined
+            it, fell from 0.945 to 0.000 without the skill and from 0.200 to
+            0.000 with it, when the body was rebuilt by the brief's rule,
+            under either name of the second key. E5 holds for the lint and
+            fails for a model reading the JSON: a schema token is a claim
+            when the reader is a model. TESTIMONY, the release lane's
+            handoff of S378: 13b947e added a row below E5, and the row of E5
+            kept its bytes.
+
+    D380-7  THE RULING ON THE CHANGE, AND ITS LANDING. OPERATOR, in S373:
+            option B, /v1/verify changes in place, in one release, built by
+            the release lane. The candidate shape: schema_version 2 first;
+            RK holds the items of tier RV only; a second key right after it
+            holds every other passing item; severity PASS in both lists;
+            every other key unchanged; the second key is named evidenced or
+            passed at the release lane's commit gate, by the rule of the
+            brief. The brief, sha256 abcea3e3, and candidate.py, sha256
+            db3d5ed4, are off host. OPERATOR, after the seal of S373: the
+            rule for that name was amended, with Holm across two providers,
+            a symmetric branch and the replay seeds kept out of the test;
+            the commit gate was set not before 14:00Z; the release lane was
+            told to read the design of its S376 audit against the brief
+            before any write. The digest of the amended brief is not held by
+            this lane. LANDED by the release lane's S378, read from the log
+            at 23:50:39Z: a0760e2 at 12:49:27Z, its design notes; 13b947e at
+            13:06:27Z, the change; 5a0aa18, 31badde and 9529359, the release
+            of 6.0.0 and its evidence; HEAD 9529359, one commit after the
+            tag v6.0.0. The second key is named evidenced. MEASURED at
+            23:50:39Z: the service on Server A started at 14:00:18Z and
+            reports 6.0.0, and the one on Server B started at 14:01:10Z and
+            reports 6.0.0. A POST of aml_transaction_governance.nous, sha256
+            4bed54fa, the program N1 read, answered 200 with 1230 bytes,
+            sha256 b2b4ba10, schema_version its first key: one item under
+            RK, VR003 of tier RV, and five under evidenced, VR001 and VR002
+            of tier ESTIMATED and VP003, VL002 and VM001 of tier VERIFIED,
+            every one of severity PASS. TESTIMONY, the release lane's
+            handoff of S378, pasted as text with no digest: the same body on
+            Server B byte for byte; the IDE reads both shapes and counts an
+            item with no tier in no tier; a draft of SKILL.md, sha256
+            c2b01be0, not deployed. The change was committed at 13:06:27Z
+            and Server A restarted at 14:00:18Z; the gate this lane was told
+            of was not before 14:00Z. Which step it bound is the operator's.
+
+    D380-8  WHAT THE RELEASE LANE'S SEALED FILES SAY. TESTIMONY, its handoff
+            of S377 at sha256 324ae150 and its opener of S378 at f58e0c1d,
+            each a row of its seal file b4acdb61; READ IN THE SEAT'S
+            CONTAINER: neither names /v1/verify, the brief, the second key,
+            the skillctx chat or the gate at 14:00Z, and the opener's next
+            unit is the release. TESTIMONY, its handoff of S378: that
+            session opened with the brief and candidate.py at their digests.
+            Its binding rules forbid the reserved verb outside its D376-1,
+            the three legs and Farkas, and forbid editing an occurrence its
+            classification marks EARNED, NEG or MENTION. Whether tier RV
+            falls inside that set, and how the classification table of S376,
+            sha256 3b9a59f0, reads RK: UNMEASURED here; TESTIMONY, the
+            subject of a0760e2: K2 yields only at o1109, and o0698, o0699
+            and the row of E5 keep their bytes. Its patch B at 4738cd3
+            renames the continuity verifier's JSON key RK to holds, with
+            report_schema_version 2; the landed change names its second key
+            evidenced, with schema_version; the skillctx chat measured the
+            model reader on the brief's two names only. Its D376-10 deferred
+            the default tier of the IDE; 13b947e changed it, by its subject.
+            Its commits after 063d2a8 left this document unchanged: the
+            successor read it at 1e48bce, the landing instrument at 13b947e,
+            and the two namespace checks at 4738cd3 and at 9529359, each at
+            the same digest.
+
+    D380-9  THE TWO LANES ON ONE TREE. The seat asked twice whether the
+            release lane held the tree before the runs of the opening; the
+            runs went ahead. DERIVED afterwards, from this lane's pastes and
+            the release lane's sealed log of S377: this lane's runs on
+            Server A spanned 11:28:31Z to about 11:37Z; the release lane
+            wrote there up to its deploy, before 11:20Z, and again from its
+            dry run at 11:45:53Z to its closing rule at 11:53:45Z. No
+            overlap; the porcelain of zero at 11:33:57Z agrees. The
+            namespace check at 12:34:21Z came after that closing rule. The
+            dry run of this entry's landing instrument at 13:06:51Z did not:
+            it came 24 seconds after 13b947e was committed, and before
+            origin/main moved by push at 13:08:14Z, by the reflog
+            (FG-S380-X). The operator then said the release lane was active.
+            No command of this lane's transcript ran on Server A between
+            13:08:41Z and 23:50:39Z; the release lane's closing rule ran at
+            23:40:44Z (TESTIMONY). TESTIMONY, the log of S377: five pages of
+            the site were deployed from 1e48bce before 11:20Z, which agrees
+            with the control's growth of 57 bytes; which file grew,
+            UNMEASURED.
+
+    D380-10 SEAT NETWORK, THE FIFTH DEBT OF S372. INHERITED: in S373 the
+            operator instructed web research in one message, and the seat
+            ran four web searches and two fast web searches, declared before
+            they ran; the container used no network in S373. In this session
+            the seat's container used the network once, undeclared: at
+            12:58:50Z the fallback of one of its commands installed a lint
+            tool from the package index (FG-S380-V). This document reached
+            the seat as an upload by the operator, read at 12:37:13Z at
+            36e851a5 and 972397 bytes, a near miss of that digest red.
+            Whether seat network is admissible beyond a single message
+            remains the operator's.
+
+    D380-11 WHAT THIS SESSION WROTE BEFORE THIS ENTRY. To the repository and
+            to the services: nothing. From Server A: the opening rule's
+            request to Server B and its wire fetch of the served asset;
+            three fetches, by the successor and by the two namespace checks,
+            each with the write set the successor declares; one POST to
+            /v1/verify at 23:50:39Z, which advanced the service's rate limit
+            in memory; one read-only ssh session to Server B. To /root,
+            untracked, at 13:05:23Z: this entry as it stood for the number
+            three hundred and seventy-nine, and the two instruments pinned
+            to it. That landing instrument refused at 13:06:51Z on its first
+            check of the pre-state and wrote nothing (FG-S380-W). Before the
+            landing, the bytes of this entry and the two instruments that
+            land it join them in /root. They are named with their digests in
+            the handoff of this session and not here, because each
+            instrument carries the digest of this entry.
+
+    FINDINGS
+
+            FG-S380-A  SEAT. OWED BY S372, ONE. A scratch count of FAIL over
+                       the output of the drive of A4 matched FAILED again;
+                       the verdict was scored on the exact token DRIVE_A4
+                       GREEN. The class of FG-S372-A, recurring in the
+                       session that recorded it.
+
+            FG-S380-B  SEAT. OWED BY S372, TWO. The seat reported the drive
+                       of A4 at forty-seven arms. The count on the exact
+                       token is forty-three.
+
+            FG-S380-C  WORLD. OWED BY S372, THREE. The two arms of the drive
+                       of S370 that FG-S372-S names are off host only; no
+                       tracked file carries them.
+
+            FG-S380-D  SEAT. OWED BY S373, ONE. A selector that takes the
+                       first match takes it by sort order: head -1 over git
+                       ls-files chose trace/reference/verifier.py, not the
+                       verifier the service imports.
+
+            FG-S380-E  SEAT. OWED BY S373, TWO. A guessed health path is not
+                       the service's. /health answered 404; the service
+                       answers on /v1/health.
+
+            FG-S380-F  SEAT. OWED BY S373, THREE. A capped listing was read
+                       as complete. head -40 filled with unrelated documents
+                       and cut the list.
+
+            FG-S380-G  SEAT. OWED BY S373, FOUR. A byte cap on a printed
+                       body cut the value the probe was run to see, the code
+                       inside a 422.
+
+            FG-S380-H  SEAT. OWED BY S373, FIVE. A recommendation came
+                       before its measurement: option B was put before the
+                       consumers were counted. Corrected by the counts.
+
+            FG-S380-I  SEAT. OWED BY S373, SIX. A shape sent to another chat
+                       changed after it was sent: a superset became a
+                       partition. The correction was sent.
+
+            FG-S380-J  SEAT. OWED BY S373, SEVEN. Three runs printed no wall
+                       clock: the standard-input arm, the seat's build of
+                       the candidate and the seat's write of the brief. The
+                       class of FG-S372-C.
+
+            FG-S380-K  SEAT. OWED BY S373, EIGHT. The exit code of the arms
+                       process was not read. Read in this session: zero.
+
+            FG-S380-L  WORLD. OWED BY S373, NINE. A paste of many lines
+                       interleaves its echo with its output; a quoted
+                       heredoc keeps the output whole. FG-S380-T qualifies
+                       it.
+
+            FG-S380-M  SEAT. OWED BY S373, TEN. A negative on a second host
+                       needs its own positive control. Server B's zero was
+                       counted only after 728 lines under /api/ were shown.
+
+            FG-S380-N  SEAT. OWED BY S373, ELEVEN. A search that alternated
+                       a bare port and a bare path matched unrelated text:
+                       the slice [:8000] in the bot's code, and a URL
+                       holding v1/verify_ in an index of vectors.
+
+            FG-S380-O  SEAT. OWED BY S373, TWELVE. The pinned legs S344 to
+                       S322 and D344 to D323 had no sealed value in any file
+                       of the project except the head line of S322. The
+                       record of S373 carries every one.
+
+            FG-S380-P  WORLD. ONE LETTER NAMED TWO OBJECTS. In this lane, B
+                       is the option the operator chose for /v1/verify; in
+                       the release lane's S377, patch B is the half of its
+                       audit that renames the continuity verifier's key. A
+                       slot of the kickoff for a report on B could be read
+                       as either.
+
+            FG-S380-Q  WORLD. THE KICKOFF ARRIVED WITH THREE SLOTS UNFILLED:
+                       this session's number, the number of the release
+                       lane's session for B, and its report on B. The seat
+                       named them and ran nothing that needed them.
+
+            FG-S380-R  SEAT. A COUNT OF TRAILING WHITESPACE MATCHED THE
+                       LETTER t. The bracket of a space, a backslash and t
+                       in an extended pattern holds those three characters,
+                       so it counted lines that end in t. It reported nine
+                       for the release lane's handoff of S377. READ IN THE
+                       SEAT'S CONTAINER, the class for blanks, driven with a
+                       positive of two and a negative of zero, counted zero
+                       in that handoff, zero in its opener and zero in this
+                       document. The intake of the files of S373 used
+                       another engine and was not affected.
+
+            FG-S380-S  SEAT. A PROPOSAL CROSSED THE LANE. The seat offered
+                       to write an addendum to the release lane's next
+                       kickoff. The operator asked what this lane is for,
+                       and the seat withdrew it. What this lane takes from
+                       the other lane's files is testimony about its own
+                       object.
+
+            FG-S380-T  WORLD. A STRAY FRAGMENT IN A QUOTED HEREDOC. The
+                       namespace check at 12:34:21Z printed a line holding
+                       only a question mark and a double quote, after its
+                       line PWD. No command of the script prints it. The
+                       evidence of the fetch rests on its code and its main
+                       line, both intact. Its source, UNMEASURED.
+
+            FG-S380-U  SEAT. THE CLASS OF FG-S380-J, IN READS OF THE SEAT'S
+                       CONTAINER. From 12:22Z the seat read files with
+                       commands that print text only, and printed no clock.
+                       What they carried was the bytes of files whose
+                       digests were taken by runs that printed one.
+
+            FG-S380-V  SEAT. THE SEAT USED THE NETWORK WITHOUT DECLARING IT.
+                       A command meant to lint the seat's own landing
+                       instrument ran an install from the package index as
+                       the fallback of a missing tool, at 12:58:50Z; the
+                       installed tool's directory carries that time. The
+                       class of FG-S372-E. No byte of the repository or of
+                       the host came from it; the lint it enabled read one
+                       file in the seat's container.
+
+            FG-S380-W  SEAT. A HEAD WAS PREDICTED FROM A PRIOR THAT HAD
+                       MOVED. The dry run at 13:06:51Z was given 4738cd3,
+                       read at 12:34:21Z; HEAD was 13b947e. The instrument
+                       refused on its first check of the pre-state and wrote
+                       nothing; the ledger at that head was still at the
+                       seal of S372. The class of FG-S372-F.
+
+            FG-S380-X  SEAT. A RUN WENT INSIDE THE OTHER LANE'S WINDOW. The
+                       dry run at 13:06:51Z came between the release lane's
+                       commit at 13:06:27Z and its push, which moved
+                       origin/main at 13:08:14Z. The seat's question whether
+                       that lane was active had not been answered. The run
+                       wrote nothing: its status call runs with optional
+                       locks off.
+
+            FG-S380-Y  WORLD. ONE NUMBER WAS GIVEN TO TWO LANES. Three
+                       hundred and seventy-nine was given to this lane
+                       before 12:34:21Z and found empty at the width of the
+                       tree. The release lane's S378, running beside it,
+                       then sealed an opener naming its next session with
+                       the same number. A check of the tree cannot see a
+                       number claimed in another lane's sealed files.
+                       RULING: this lane took three hundred and eighty.
+
+            FG-S380-Z  SEAT. AN SSH IN A SCRIPT READ FROM STANDARD INPUT
+                       TOOK THE REST OF THE SCRIPT. The measurement at
+                       23:50:39Z ran as a heredoc; its ssh to Server B
+                       forwarded every line after it as input to a remote
+                       command that reads none. The namespace loop, the
+                       closing clock and the END line never ran on Server A,
+                       and the exit code of the whole was that of the last
+                       line that ran. The namespace was measured again at
+                       23:53:25Z with no ssh. An ssh inside such a script
+                       takes -n.
