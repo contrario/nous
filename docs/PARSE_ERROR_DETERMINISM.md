@@ -216,4 +216,33 @@ exists.
 
 ## 9. Build notes
 
-(appended with the code)
+### 9.1 Patch B (S381)
+
+- parser.py: the imports marked `__s381_pe_imports_v1__`
+  (`UnexpectedInput`, `Iterable`, `MethodType`); the function
+  `_format_expected_sorted` (`__s381_pe_sorted_v1__`); the except
+  branch of `parse_nous` (`__s381_pe_hook_v1__`). The two pyflakes
+  findings parser.py already had (unused `Tree`, unused `ListenNode`)
+  are left as they were.
+- tests/test_s381_parse_error_determinism.py
+  (`__s381_parse_error_determinism_v1__`), 8 ids. Red before the fix:
+  test_text_same_across_hash_seeds[customer_service.nous] and
+  [noosphere_migrated.nous], test_expected_lines_in_sorted_terminal_order
+  [customer_service.nous] and [noosphere_migrated.nous],
+  test_cli_parse_error_same_across_hash_seeds. Green before and after:
+  test_same_seed_control, test_raised_object_keeps_lark_class_and_attributes,
+  test_no_process_wide_patch_of_lark.
+- [container, clone 76ae8e2] Before the fix: 5 failed, 3 passed, with
+  8 and 5 distinct texts over seeds 0..7, unsorted lines at seeds 0..7
+  and at 1, 2, 3, 5, 6, 7, and 3 distinct CLI outputs over seeds 1, 2,
+  3. With the fix: 8 passed. The patch refuses to write the fix unless
+  these five ids fail on Server A, each with its reason, and the other
+  three pass.
+- K3 [container]: with the fix, each of the eight tracked failing
+  programs gives one text over seeds 0..7, the same text as under lark
+  master 9a4fb9c7. The patch prints the same probe on Server A.
+- CHANGELOG.md: a Fixed entry under [Unreleased]
+  (`__s381_changelog_parse_error_v1__`); the release moves it under
+  6.0.1.
+- regression_harness.py: 59 entries, 0 diffs, 0 new errors; no
+  rebaseline (section 2).

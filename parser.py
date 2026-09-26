@@ -10,6 +10,9 @@ from pathlib import Path
 from typing import Any
 
 from lark import Lark, Transformer, Token, Tree
+from lark.exceptions import UnexpectedInput  # __s381_pe_imports_v1__
+from collections.abc import Iterable
+from types import MethodType
 from decimal import Decimal  # __cost_cap_decimal_v1__
 
 from ast_nodes import (
@@ -1419,9 +1422,17 @@ class NousTransformer(Transformer):
         return "user"
 
 
+def _format_expected_sorted(exc: UnexpectedInput, expected: Iterable[str]) -> str:  # __s381_pe_sorted_v1__
+    return type(exc)._format_expected(exc, sorted(expected))
+
+
 def parse_nous(source: str) -> NousProgram:
     parser = _get_parser()
-    tree = parser.parse(source)
+    try:
+        tree = parser.parse(source)
+    except UnexpectedInput as exc:  # __s381_pe_hook_v1__
+        exc._format_expected = MethodType(_format_expected_sorted, exc)
+        raise
     transformer = NousTransformer()
     return transformer.transform(tree)
 

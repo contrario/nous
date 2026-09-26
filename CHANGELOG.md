@@ -4,6 +4,21 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+### Fixed  <!-- __s381_changelog_parse_error_v1__ -->
+
+- A parse error gives the same text in every process. The lines after
+  "Expected one of:" followed the per-process string hash seed, so the
+  same source could give a different message from one run to the next
+  (8 orders over 8 seeds for one tracked program). `parse_nous` now
+  lists them sorted by terminal name, the order lark's master branch
+  uses and no lark release carries yet. The fix reaches the 422
+  `detail.error` of `/v1/compile`, `/v1/verify`, `/v1/run`, `/v1/chat`
+  and `/v1/chat/stream`, the CLI `Parse error:` line, the REPL and the
+  diagnostics of `lsp_server.py`. Only the order of those lines
+  changes. The raised exception keeps lark's class and attributes
+  (`expected`, `accepts` and `allowed` stay lark's sets), and the lark
+  floor is unchanged. Design: docs/PARSE_ERROR_DETERMINISM.md.
+
 
 ## [6.0.0]  <!-- __s378_changelog_v6_0_0__ -->
 
