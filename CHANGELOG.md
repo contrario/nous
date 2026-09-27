@@ -4,6 +4,9 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+
+## [6.0.1]  <!-- __s382_changelog_v6_0_1__ -->
+
 ### Fixed  <!-- __s381_changelog_parse_error_v1__ -->
 
 - A parse error gives the same text in every process. The lines after
