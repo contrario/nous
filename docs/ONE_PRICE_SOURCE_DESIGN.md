@@ -2320,3 +2320,106 @@ templates/trading_floor.py and the regression baseline do not move.
 Kill criterion: a consumer of the old line, in the tree or on a server,
 stops the change. None was found in the tree; the servers were not
 searched.
+
+## 25. S388 decisions (D388-1 to D388-5: the 6.0.2 re-read of eight prices), written before the data change
+
+<!-- __s388_doc_d8_reread_v1__ -->
+
+Read on Server A on 2026-09-28, 09:54:49Z to 09:54:51Z, by
+/tmp/s388_d8_read.py (sha256 fb4074d7...). The script checked that
+pricing/defaults.toml was 58ffc6fa, stored each page under /root with
+mode 0644 taken from /root/oai_pricing_s359.md, hashed it, and printed
+its rows. Nothing in the repository was written.
+
+Stored copies, all fetched on A on 2026-09-28:
+
+- /root/anthropic_pricing_s388.html, 821868 bytes, sha256
+  d493a95c63a4cb3ec7d86073e53b40fca8658efcf562872daf751ac871e470a2
+- /root/anthropic_deprecations_s388.html, 434837 bytes, sha256
+  711c787cea727656e64ccfdb3cc89c214d39fbf7f05f6d5ef7fd272ac58ea6a6
+- /root/deepseek_pricing_s388.html, 23982 bytes, sha256
+  210f102275ccf1a6542f08a3bc9e4b4c7c83278cb74b35217bffa112df6363b2
+- /root/oai_pricing_s388.md, 23475 bytes, sha256
+  0de899a93b1d9a8c7cf7b3a01ed3553337636c7ff374153821f218a203a203c8
+- /root/oai_deprecations_s388.md, 37596 bytes, sha256
+  dfdfac83f084aceebe8dfef1697fee36263eb6fb2ffe9f2069ae61e546aa663f,
+  byte-identical to the S360 copy /root/oai_deprecations_s360.md
+- /root/gemini_pricing_s388.html, 257288 bytes, sha256
+  97df41eff4012519abb73d7907eb9fbeaa914e13dce2d9c6eef5da3d134db87f
+
+- D388-1 Scope. The operator chose the widest of three options (the
+  claude page only; claude and DeepSeek; all four pricing pages): every
+  dated per-token entry is re-read except deepseek-r1 (D9) and
+  deepseek-chat (removed_after). With the claude page alone, the shipped
+  6.0.2 table would refuse deepseek-flash under --smt from 2026-12-16,
+  eight days after the claude date the release exists to move. The two
+  free entries are not re-read: staleness_status returns ok for a free
+  entry at any age, so their 2026-12-19 in RULE 0 is a watch value, not
+  a refusal. The Anthropic and OpenAI deprecation pages were read in the
+  same run for lifecycle.
+- D388-2 Rule. An entry moves to verified_date 2026-09-28 only when its
+  row on the stored page is present and equal on every rate the entry
+  records. A missing or differing row keeps its date; a differing price
+  is a separate change with its own tests. All eight rows are present
+  and equal:
+  - claude-opus-4-7, claude-sonnet-4-6, claude-haiku-4-5: input, output,
+    5-minute cache write and cache hit, and the Batch API row at half,
+    read by the script with the table header checked in order;
+  - deepseek-flash: peak cache-miss input 0.3 and output 1.2 in the
+    deepseek-flash column, read by the script;
+  - gemini-3-1-pro: 2.00, 12.00 and 0.20 for prompts up to 200K, and the
+    4.00, 18.00 and 0.40 band above 200K that its notes already name,
+    read by the script;
+  - gpt-5-2, gpt-5-mini, gpt-4o-mini: lines 48, 52 and 60 of the stored
+    md, in the table headed "Standard pricing data", give input, cached
+    input, cache writes and output as 1.75/0.175/-/14.00,
+    0.25/0.025/-/2.00 and 0.15/0.075/-/0.60. The script's column parser
+    did not match the page's new header names ("Short context input"),
+    so these three were read from the printed lines; the data patch
+    re-asserts the three lines against the stored copy before it writes.
+  Lifecycle, same run: claude-opus-4-7 and claude-sonnet-4-6 are Active
+  with no retirement before 2027; claude-haiku-4-5-20251001 is Active,
+  "not sooner than October 15, 2026", with no retirement scheduled. The
+  OpenAI deprecations page is unchanged since 2026-09-18:
+  gpt-5-mini-2025-08-07 retires on 2026-12-11 and the alias gpt-5-mini
+  is not listed. No lifecycle field changes.
+- D388-3 Notes. Each moved entry's notes name the page, the read day and
+  the stored sha256. FG-S363-A measured three sha256 values for one
+  Anthropic page at one length, so the claude notes say that the sha256
+  identifies the stored copy and that a later fetch need not match it
+  byte for byte. The --smt bound prices input and output only
+  (cost_farkas.py); the claude notes name what bills above those rates:
+  cache writes (1.25x input for 5 minutes, 2x for 1 hour) and, for the
+  4.6-and-later models, US-only inference (inference_geo, 1.1x). One
+  header comment records the re-read. Comments recording earlier reads
+  stay as history, _last_verified stays 2026-06-29, and no rate changes.
+  verified_date and notes are inside canonical_bytes, so the canonical
+  pricing digest written into manifests moves; the CHANGELOG states the
+  old and the new value.
+- D388-4 The claude-opus-4 alias. It resolves to claude-opus-4-7 and is
+  priced at 5/25 per 1M tokens. The stored pricing page lists Claude
+  Opus 4 at 15/75, and the stored deprecations page gives
+  claude-opus-4-20250514 as retired on 2026-06-15. No shipped module,
+  template or example names the alias; whether the runtime would send
+  the alias or the canonical id to a provider was not traced. 6.0.2 does
+  not change it. Re-dating claude-opus-4-7 re-dates the alias by
+  inheritance, and the CHANGELOG discloses the mismatch under Known
+  limits. What the name should mean is a later decision with its own
+  tests. Ruled by the operator on 2026-09-28.
+- D388-5 Test. tests/test_s388_d8_reread.py reads the shipped table
+  with fixed dates, so its verdict does not depend on the day the suite
+  runs; the age of the shipped prices is its subject (D1). For each of
+  the eight entries: it prices under --smt on 2026-12-27; it refuses on
+  2026-12-28 with "verified 91 days ago", which pins the date to
+  2026-09-28; and its notes name the stored sha256 and the read day.
+  The 24 cases are red on 32dc51f by reason: 110, 102 and 101 days on
+  2026-12-27, and no stored sha256 in the notes. RULE 0's CLIFFS leg
+  keeps watching the real dates.
+
+Scope: pricing/defaults.toml (eight entries and one header comment), the
+new test and a CHANGELOG [Unreleased] entry. No module, codegen, template
+or regression baseline moves. The suite rises by 24 cases.
+
+Kill criterion: a stored copy whose sha256 differs from this section, or
+a re-asserted line that is no longer in it, stops the data patch before
+it writes.
