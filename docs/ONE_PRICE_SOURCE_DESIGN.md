@@ -2280,3 +2280,43 @@ This section changes no code and no claim class.
   on the next run. Like the signer test of 23.6 it starts a signer
   process and waits only until the socket file exists; whether that is
   the cause is not measured.
+
+## 24. S387 decision (D387-1: the heartbeat summary prints a cost that nothing meters), written before the code
+
+Measured in a container clone of f9373b2 on 2026-09-28.
+
+- runtime.py:727-732. On every heartbeat, NousRuntime._heartbeat_cost_reset
+  logs `Cycle N summary: cost=$<total_cost>/<cost_ceiling>
+  sense_cache=<hits>hit/<misses>miss`, with total_cost printed to six
+  decimals.
+- total_cost is CostTracker._spent at reset. Only charge() adds to it,
+  and no shipped module calls charge() (section 17, X4 and P3.4;
+  tests/test_s361_runtime_copy.py). The line therefore prints
+  cost=$0.000000 on every cycle.
+- The same process can spend: DreamEngine and immune_engine call LLM
+  endpoints (sections 14.3 and 14.7). The line reads as a meter that saw
+  no spend.
+- CycleMetrics (_metrics_history) has no reader outside runtime.py, and
+  no test or script parses the summary line (git grep over tests/ and
+  scripts/).
+
+D387-1. The summary line stops printing a cost figure. It prints
+`Cycle N summary: spend=not-metered pre_check_ceiling=$<cost_ceiling>
+sense_cache=<hits>hit/<misses>miss`. CostTracker, CycleMetrics,
+charge() and the S361 guard do not change; P3.4 stands. The docs page
+already states that the runtime does not meter observed spend and is not
+edited.
+
+Red first: tests/test_s387_cycle_summary_copy.py runs one iteration of
+_heartbeat_cost_reset with a short heartbeat and reads the record from
+the nous.runtime logger. It asserts that the record carries
+`spend=not-metered` and no `cost=$`. It is red on f9373b2 by id and
+reason.
+
+Scope: the one log statement in runtime.py, the new test and a CHANGELOG
+[Unreleased] entry. runtime.py is not generated code, so
+templates/trading_floor.py and the regression baseline do not move.
+
+Kill criterion: a consumer of the old line, in the tree or on a server,
+stops the change. None was found in the tree; the servers were not
+searched.
