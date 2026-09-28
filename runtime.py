@@ -725,9 +725,9 @@ class NousRuntime:
                 if len(self._metrics_history) > 1000:
                     self._metrics_history = self._metrics_history[-500:]
                 hits, misses = self.sense_cache.clear()
-                log.info(
+                log.info(  # __s387_cycle_summary_copy_v1__
                     f"Cycle {self._cycle_id} summary: "
-                    f"cost=${metrics.total_cost:.6f}/{self.cost_ceiling:.2f} "
+                    f"spend=not-metered pre_check_ceiling=${self.cost_ceiling:.2f} "
                     f"sense_cache={hits}hit/{misses}miss"
                 )
 

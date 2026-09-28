@@ -21,6 +21,17 @@
   bundle, the index and the offline verifier are unchanged. Design:
   docs/ANCHOR_JOURNAL_DESIGN.md.
 
+### Changed  <!-- __s387_changelog_cycle_summary_v1__ -->
+
+- The runtime's heartbeat summary log line no longer prints
+  `cost=$0.000000/<ceiling>`. Nothing in the runtime meters spend, so the
+  figure was always zero, also in processes where DreamEngine or
+  immune_engine call a model. The line now reads
+  `Cycle N summary: spend=not-metered pre_check_ceiling=$<ceiling>
+  sense_cache=<hits>hit/<misses>miss`. A log reader that parsed the old
+  `cost=` field must change. Design: docs/ONE_PRICE_SOURCE_DESIGN.md
+  section 24 (D387-1).
+
 
 ## [6.0.1]  <!-- __s382_changelog_v6_0_1__ -->
 
