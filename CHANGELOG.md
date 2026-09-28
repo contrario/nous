@@ -31,6 +31,29 @@
   sense_cache=<hits>hit/<misses>miss`. A log reader that parsed the old
   `cost=` field must change. Design: docs/ONE_PRICE_SOURCE_DESIGN.md
   section 24 (D387-1).
+- `pricing/defaults.toml`: eight entries re-verified on 2026-09-28 against
+  first-party pages fetched and hashed on the release host:
+  `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5`,
+  `deepseek-flash`, `gpt-5-2`, `gpt-5-mini`, `gpt-4o-mini` and
+  `gemini-3-1-pro`. Every rate equals the page; only `verified_date` and
+  `notes` change, and each entry's notes name the page and its sha256.
+  Under `--smt` these entries are refused from 2026-12-28 instead of from
+  2026-12-08 (the three Anthropic entries), 2026-12-16 (`deepseek-flash`)
+  and 2026-12-17 (the other four). The Anthropic notes also name what the
+  `--smt` bound does not cover: cache writes and, for the 4.6 and later
+  models, US-only inference. The canonical pricing digest written into
+  manifests moves from 1f0a3ede to d5d51912. Design:
+  docs/ONE_PRICE_SOURCE_DESIGN.md section 25 (D388-1 to D388-5).
+  <!-- __s388_changelog_d8_reread_v1__ -->
+
+### Known limits  <!-- __s388_changelog_opus4_alias_v1__ -->
+
+- `claude-opus-4` is an alias of `claude-opus-4-7` and is priced at its
+  rates, 5 and 25 USD per 1M input and output tokens. Anthropic's pricing
+  page lists Claude Opus 4 at 15 and 75, and its deprecations page gives
+  `claude-opus-4-20250514` as retired on 2026-06-15. Re-dating
+  `claude-opus-4-7` re-dates the alias. What the name should mean is a
+  later decision (docs/ONE_PRICE_SOURCE_DESIGN.md section 25, D388-4).
 
 
 ## [6.0.1]  <!-- __s382_changelog_v6_0_1__ -->
