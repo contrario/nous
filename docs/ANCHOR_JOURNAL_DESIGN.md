@@ -263,4 +263,52 @@ The five tests in test_s172_p0b2 stay green without edits.
 
 ## 16. Build notes
 
-None yet.
+S387, in mint_release_vsa.py (marker __s387_anchor_journal_v1__) and
+tests/test_s386_anchor_journal.py.
+
+- Journal format. `<resolved dir>.anchor-journal.json`, canonical JSON:
+  json.dumps with sorted keys, separators (",", ":"), ASCII, no trailing
+  newline. Keys: schemaVersion (1), state, version, vsaPayloadSha256,
+  rekorBaseUrl; from LOGGED on also logIndex, logId, canonicalizedBody,
+  checkpointEnvelope, inclusionProofHashes. Another key set, type or state
+  is refused as unreadable, with no network call. Each write is mkstemp in
+  the parent directory, write, flush, fsync, os.replace, then an fsync of
+  the directory. The file keeps mkstemp's mode 0600.
+- rekorBaseUrl is null when anchor_fn is injected without a URL. logId is
+  null when the anchor object carries none: the replay object in
+  test_s172_p0b2 has no log_id, and KC3 keeps that file unedited.
+  RekorAnchorV2 always carries one.
+- One path after the POST. A fresh run writes LOGGED and then runs the
+  same code as a LOGGED resume, so the journaled leaf digest is checked
+  against vsaPayloadSha256 before the TSA in both cases (KC4).
+- The row "LOGGED, bundle present, index absent" also covers the bundle's
+  sidecar, which D386-3 does not name. A missing sidecar is written from
+  the bundle bytes; one that differs is refused. Without this, a stop
+  between the bundle write and its sidecar would leave 11 files after the
+  resume (KC2).
+- Messages start with the cause and end with the journal state and what a
+  rerun does (D386-4). Two are conditional, because an fsync of the
+  directory can fail after os.replace: a failed LOGGED write says a rerun
+  refuses if the journal still reads ATTEMPTED and resumes if it reads
+  LOGGED; a failed index write says a rerun resumes unless index.json was
+  written. A failed ATTEMPTED write removes the journal if it landed, so
+  that a rerun starts fresh.
+- Not converted, per D386-4: cli_verify_release.ConvergenceInputError (a
+  ValueError) from the self-verify keeps its traceback. The journal stays
+  LOGGED and a rerun resumes at the self-verify.
+- Order unchanged, Rekor then TSA (D386-5). rekor_anchor_v2.py,
+  tsa_client.py, cli_verify_release.py and the emitted verifier are
+  unchanged (KC1). The bundle directory holds the same names; the tests
+  assert the exact set (KC2). test_s172_p0b2, test_s236 and test_s226 pass
+  unedited (KC3).
+- Tests: 38 in tests/test_s386_anchor_journal.py, all red on 3130dc5 by id
+  and reason from --junitxml. 15 fail on behaviour (a second POST, an
+  escaped exception, no way to finish, no journal, a seam called with a
+  foreign journal); 23 fail on names the journal adds. The seams that fail
+  call the real Rekor and TSA clients over httpx.MockTransport, so each
+  cause is the one the live client raises. Five mutants, each removing
+  one guard (leaf check, connect classification, payload check, sidecar
+  compare, bundle match), each turn at least one test red.
+- After a successful anchor the journal stays LOGGED beside the
+  directory, and a rerun refuses because the bundle and index exist. The
+  journal is operator state, is not published and is not evidence.

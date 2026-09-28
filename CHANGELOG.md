@@ -4,6 +4,23 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+### Fixed  <!-- __s387_changelog_anchor_journal_v1__ -->
+
+- `mint_release_vsa.py anchor`, rerun after a failure that follows the
+  Rekor POST, resumes instead of submitting a second Rekor entry. It keeps
+  an attempt journal beside the bundle directory,
+  `<dir>.anchor-journal.json`, written before the POST and updated with
+  the entry after it. A rerun after a TSA, bundle-write, self-verify or
+  index-write failure resumes from the journal without a POST. A rerun
+  after a POST whose outcome is unknown (a timeout or an HTTP error after
+  the request left the host) refuses, because an entry may exist. A POST
+  that could not connect removes the journal, and a rerun starts fresh.
+  A journal deleted by hand re-enables a second submission. Network and
+  write failures end in `ANCHOR REFUSED` with rc 2 instead of a
+  traceback. The journal is local operator state, not evidence; the
+  bundle, the index and the offline verifier are unchanged. Design:
+  docs/ANCHOR_JOURNAL_DESIGN.md.
+
 
 ## [6.0.1]  <!-- __s382_changelog_v6_0_1__ -->
 

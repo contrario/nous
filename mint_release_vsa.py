@@ -869,6 +869,179 @@ def build_release_index(
     return index
 
 
+# __s387_anchor_journal_v1__
+ANCHOR_JOURNAL_SUFFIX = ".anchor-journal.json"
+ANCHOR_JOURNAL_SCHEMA_VERSION = 1
+JOURNAL_ATTEMPTED = "ATTEMPTED"
+JOURNAL_LOGGED = "LOGGED"
+_JOURNAL_BASE_KEYS = frozenset(
+    {"rekorBaseUrl", "schemaVersion", "state", "version", "vsaPayloadSha256"}
+)
+_JOURNAL_LOGGED_KEYS = frozenset(
+    {"canonicalizedBody", "checkpointEnvelope", "inclusionProofHashes", "logId", "logIndex"}
+)
+
+
+def anchor_journal_path(out_dir: Path) -> Path:
+    """The anchor journal is a sibling of the resolved bundle directory
+    (D386-1), never inside it, so the bundle's file set does not change."""
+    resolved = out_dir.resolve()
+    if not resolved.name:
+        raise MintError(
+            "bundle directory has no name to place an anchor journal beside: "
+            + str(resolved)
+        )
+    return resolved.parent / (resolved.name + ANCHOR_JOURNAL_SUFFIX)
+
+
+def _journal_bytes(record: dict[str, Any]) -> bytes:
+    return json.dumps(
+        record, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+    ).encode("ascii")
+
+
+def _fsync_dir(path: Path) -> None:
+    fd = os.open(str(path), os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _write_journal(path: Path, record: dict[str, Any]) -> None:
+    data = _journal_bytes(record)
+    fd, tmp = tempfile.mkstemp(dir=str(path.parent), prefix=".anchor-journal-")
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, str(path))
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+    _fsync_dir(path.parent)
+
+
+def _remove_journal(path: Path) -> None:
+    os.unlink(str(path))
+    _fsync_dir(path.parent)
+
+
+def _is_sha256_hex(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(c in "0123456789abcdef" for c in value)
+    )
+
+
+def _journal_problem(record: object) -> str:
+    if not isinstance(record, dict):
+        return "not a JSON object"
+    state = record.get("state")
+    if state == JOURNAL_ATTEMPTED:
+        expected = _JOURNAL_BASE_KEYS
+    elif state == JOURNAL_LOGGED:
+        expected = _JOURNAL_BASE_KEYS | _JOURNAL_LOGGED_KEYS
+    else:
+        return "unknown state " + repr(state)
+    keys = frozenset(record)
+    if keys != expected:
+        return "keys " + str(sorted(keys)) + " are not " + str(sorted(expected))
+    schema = record["schemaVersion"]
+    if type(schema) is not int or schema != ANCHOR_JOURNAL_SCHEMA_VERSION:
+        return (
+            "schemaVersion " + repr(schema) + " is not "
+            + str(ANCHOR_JOURNAL_SCHEMA_VERSION)
+        )
+    if not isinstance(record["version"], str) or not record["version"]:
+        return "version is not a non-empty string"
+    if not _is_sha256_hex(record["vsaPayloadSha256"]):
+        return "vsaPayloadSha256 is not a lowercase sha256 hex digest"
+    if record["rekorBaseUrl"] is not None and not isinstance(record["rekorBaseUrl"], str):
+        return "rekorBaseUrl is neither a string nor null"
+    if state == JOURNAL_ATTEMPTED:
+        return ""
+    if type(record["logIndex"]) is not int or record["logIndex"] < 0:
+        return "logIndex is not a non-negative integer"
+    if record["logId"] is not None and not isinstance(record["logId"], str):
+        return "logId is neither a string nor null"
+    for key in ("canonicalizedBody", "checkpointEnvelope"):
+        if not isinstance(record[key], str) or not record[key]:
+            return key + " is not a non-empty string"
+    hashes = record["inclusionProofHashes"]
+    if not isinstance(hashes, list) or not all(isinstance(h, str) for h in hashes):
+        return "inclusionProofHashes is not a list of strings"
+    return ""
+
+
+def _read_journal(path: Path) -> dict[str, Any] | None:
+    if not (path.is_symlink() or path.exists()):
+        return None
+    try:
+        record = json.loads(path.read_bytes().decode("ascii"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise MintError(
+            "anchor journal unreadable: " + str(path) + ": " + str(exc)
+            + "; refusing with no network call"
+        ) from exc
+    problem = _journal_problem(record)
+    if problem:
+        raise MintError(
+            "anchor journal unreadable: " + str(path) + ": " + problem
+            + "; refusing with no network call"
+        )
+    return record
+
+
+class _JournaledEntry:
+    """The Rekor entry as the journal recorded it; duck-typed like
+    rekor_anchor_v2.RekorAnchorV2 for assemble_rekor_bundle."""
+
+    def __init__(self, record: dict[str, Any]) -> None:
+        self.body_b64: str = str(record["canonicalizedBody"])
+        self.checkpoint_envelope: str = str(record["checkpointEnvelope"])
+        self.inclusion_proof_hashes: list[str] = [
+            str(h) for h in record["inclusionProofHashes"]
+        ]
+        self.log_index: int = int(record["logIndex"])
+
+
+def _logged_journal(attempted: dict[str, Any], anchor_obj: Any) -> dict[str, Any]:
+    log_id = getattr(anchor_obj, "log_id", None)
+    logged = dict(attempted)
+    logged.update(
+        {
+            "canonicalizedBody": str(anchor_obj.body_b64),
+            "checkpointEnvelope": str(anchor_obj.checkpoint_envelope),
+            "inclusionProofHashes": [str(h) for h in anchor_obj.inclusion_proof_hashes],
+            "logId": None if log_id is None else str(log_id),
+            "logIndex": int(anchor_obj.log_index),
+            "state": JOURNAL_LOGGED,
+        }
+    )
+    return logged
+
+
+def _bundle_journal_mismatch(bundle: Any, entry: _JournaledEntry) -> str:
+    """bundle is Any: it is parsed JSON of unchecked shape."""
+    try:
+        tle = bundle["transparency_log_entry"]
+        body = tle["canonicalized_body"]
+        log_index = tle["log_index"]
+    except (KeyError, TypeError):
+        return "the bundle has no transparency_log_entry with canonicalized_body and log_index"
+    if body != entry.body_b64:
+        return "canonicalized_body differs from the journal's"
+    if type(log_index) is not int or log_index != entry.log_index:
+        return "log_index " + repr(log_index) + " is not the journal's " + str(entry.log_index)
+    return ""
+
+
 # __s172_p0b2_anchor_orchestrator_v1__
 def anchor(
     version: str,
@@ -887,8 +1060,17 @@ def anchor(
     live rekor_anchor_v2 / tsa_client / cli_verify_release functions) so this
     orchestrator is testable offline. The single irreversible act is the one
     Rekor POST inside anchor_fn.
+
+    An anchor journal beside the bundle directory records the attempt before
+    the POST and the entry after it (docs/ANCHOR_JOURNAL_DESIGN.md, D386-1 to
+    D386-6). A rerun resumes from a LOGGED journal without a second POST and
+    refuses on an ATTEMPTED one. The journal is local operator state, not
+    evidence.
     """
     import datetime as _dt
+
+    import httpx
+    import rekor_anchor
 
     if anchor_fn is None:
         import rekor_anchor_v2
@@ -939,7 +1121,15 @@ def anchor(
         raise MintError("durable pin not found: " + str(tsa))
 
     bundle_path = out_dir / bundle_name
-    if bundle_path.exists():
+    index_path = out_dir / "index.json"
+    journal_path = anchor_journal_path(out_dir)
+    journal = _read_journal(journal_path)
+    resumable_bundle = (
+        journal is not None
+        and journal["state"] == JOURNAL_LOGGED
+        and not index_path.exists()
+    )
+    if bundle_path.exists() and not resumable_bundle:
         raise MintError(
             "rekor bundle already exists; refusing to re-anchor (a second "
             "Rekor write would create a divergent entry): " + str(bundle_path)
@@ -953,35 +1143,201 @@ def anchor(
     vsa_sha = vsa_payload_sha256(envelope)
     statement = decode_build_vsa_statement(envelope)
 
-    print("ANCHOR: submitting VSA payload digest to Rekor v2 (IRREVERSIBLE)")
-    print("  version:          " + version)
-    print("  vsaPayloadSha256: " + vsa_sha)
-    if rekor_base_url is not None:
-        anchor_obj = anchor_fn(canonical, base_url=rekor_base_url)
-    else:
-        anchor_obj = anchor_fn(canonical)
-    print("  log_index:        " + str(anchor_obj.log_index))
+    if journal is not None and (
+        journal["version"] != version or journal["vsaPayloadSha256"] != vsa_sha
+    ):
+        raise MintError(
+            "anchor journal is for another VSA: " + str(journal_path)
+            + " records version " + str(journal["version"])
+            + " vsaPayloadSha256 " + str(journal["vsaPayloadSha256"])[:16]
+            + "..., this run is version " + version
+            + " vsaPayloadSha256 " + vsa_sha[:16]
+            + "...; refusing with no network call"
+        )
 
-    entry_sig_b64 = _derive_entry_signature(str(anchor_obj.body_b64))
-    entry_sig_raw = base64.b64decode(entry_sig_b64, validate=True)
-    if tsa_base_url is not None:
-        token_der = timestamp_fn(
-            timestamped_data=entry_sig_raw, base_url=tsa_base_url
+    if journal is None:
+        attempted: dict[str, Any] = {
+            "rekorBaseUrl": rekor_base_url,
+            "schemaVersion": ANCHOR_JOURNAL_SCHEMA_VERSION,
+            "state": JOURNAL_ATTEMPTED,
+            "version": version,
+            "vsaPayloadSha256": vsa_sha,
+        }
+        try:
+            _write_journal(journal_path, attempted)
+        except OSError as exc:
+            tail = "; a rerun starts fresh"
+            if journal_path.exists():
+                try:
+                    _remove_journal(journal_path)
+                except OSError:
+                    tail = (
+                        "; the journal " + str(journal_path) + " is left "
+                        "ATTEMPTED and a rerun refuses; no request was made, "
+                        "so it can be deleted by hand"
+                    )
+            raise MintError(
+                "cannot write the anchor journal " + str(journal_path) + ": "
+                + str(exc) + "; no Rekor request was made" + tail
+            ) from exc
+
+        print("ANCHOR: submitting VSA payload digest to Rekor v2 (IRREVERSIBLE)")
+        print("  version:          " + version)
+        print("  vsaPayloadSha256: " + vsa_sha)
+        print("  journal:          " + str(journal_path))
+        try:
+            if rekor_base_url is not None:
+                anchor_obj = anchor_fn(canonical, base_url=rekor_base_url)
+            else:
+                anchor_obj = anchor_fn(canonical)
+        except rekor_anchor.RekorUnavailable as exc:
+            cause = exc.__cause__
+            if isinstance(cause, (httpx.ConnectError, httpx.ConnectTimeout)):
+                head = (
+                    "rekor submit failed before any request left the host ("
+                    + type(cause).__name__ + "): " + str(exc)
+                )
+                try:
+                    _remove_journal(journal_path)
+                except OSError as rm_exc:
+                    raise MintError(
+                        head + "; the anchor journal " + str(journal_path)
+                        + " could not be removed (" + str(rm_exc) + "): it "
+                        "stays ATTEMPTED and a rerun refuses; no entry was "
+                        "created, so it can be deleted by hand"
+                    ) from exc
+                raise MintError(
+                    head + "; anchor journal removed; a rerun submits afresh"
+                ) from exc
+            raise MintError(
+                "rekor outcome unknown (RekorUnavailable"
+                + ("" if cause is None else ", cause " + type(cause).__name__)
+                + "): " + str(exc) + "; an entry may exist; anchor journal "
+                "ATTEMPTED at " + str(journal_path)
+                + "; a rerun refuses with no network call"
+            ) from exc
+        except (rekor_anchor.RekorRejected, httpx.HTTPError, OSError) as exc:
+            raise MintError(
+                "rekor outcome unknown (" + type(exc).__name__ + "): " + str(exc)
+                + "; an entry may exist; anchor journal ATTEMPTED at "
+                + str(journal_path) + "; a rerun refuses with no network call"
+            ) from exc
+        print("  log_index:        " + str(anchor_obj.log_index))
+        logged = _logged_journal(attempted, anchor_obj)
+        try:
+            _write_journal(journal_path, logged)
+        except OSError as exc:
+            raise MintError(
+                "cannot record the Rekor entry in the anchor journal "
+                + str(journal_path) + ": " + str(exc) + "; the entry exists "
+                "(log_index " + str(logged["logIndex"]) + "); a rerun refuses "
+                "if the journal still reads ATTEMPTED and resumes if it reads LOGGED"
+            ) from exc
+    elif journal["state"] == JOURNAL_ATTEMPTED:
+        raise MintError(
+            "rekor outcome unknown from an earlier run: anchor journal "
+            + str(journal_path) + " is ATTEMPTED; an entry may exist; refusing "
+            "with no network call; the tool never submits again for this journal"
         )
     else:
-        token_der = timestamp_fn(timestamped_data=entry_sig_raw)
+        logged = journal
+        print("ANCHOR: resuming from the anchor journal (no Rekor POST)")
+        print("  version:          " + version)
+        print("  vsaPayloadSha256: " + vsa_sha)
+        print("  journal:          " + str(journal_path))
+        print("  log_index:        " + str(logged["logIndex"]))
 
-    bundle = assemble_rekor_bundle(anchor_obj, token_der)
-    bundle_bytes = json.dumps(bundle, sort_keys=True, indent=2).encode("utf-8")
-    _write_with_sidecar(bundle_path, bundle_bytes)
+    entry = _JournaledEntry(logged)
+    resume_note = (
+        "; anchor journal LOGGED at " + str(journal_path)
+        + " (log_index " + str(entry.log_index) + ")"
+    )
+    anchored = _anchored_digest_hex(entry.body_b64)
+    if anchored != vsa_sha:
+        raise MintError(
+            "journaled rekor entry does not bind this VSA: anchored digest "
+            + anchored[:16] + "... != vsaPayloadSha256 " + vsa_sha[:16] + "..."
+            + resume_note + "; no further network call; a rerun refuses the same way"
+        )
 
-    with tempfile.TemporaryDirectory() as td:
-        tdir = Path(td)
-        (tdir / "build-vsa.intoto.json").write_bytes(vsa_path.read_bytes())
-        (tdir / "rekor-v2-bundle.json").write_bytes(bundle_bytes)
-        (tdir / "trusted_root.json").write_bytes(tr.read_bytes())
-        (tdir / "tsa_chain.pem").write_bytes(tsa.read_bytes())
-        result = verify_fn(str(tdir), str(tdir))
+    if bundle_path.exists():
+        sidecar = bundle_path.with_name(bundle_path.name + ".sha256")
+        try:
+            bundle_bytes = bundle_path.read_bytes()
+            bundle = json.loads(bundle_bytes.decode("utf-8"))
+            sidecar_bytes = sidecar.read_bytes() if sidecar.exists() else None
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise MintError(
+                "rekor bundle unreadable: " + str(bundle_path) + ": " + str(exc)
+                + resume_note + "; refusing with no network call"
+            ) from exc
+        mismatch = _bundle_journal_mismatch(bundle, entry)
+        if mismatch:
+            raise MintError(
+                "rekor bundle does not match the anchor journal: " + mismatch
+                + resume_note + "; refusing with no network call"
+            )
+        sidecar_line = (
+            _sha256_hex(bundle_bytes) + "  " + bundle_path.name + "\n"
+        ).encode("ascii")
+        if sidecar_bytes is None:
+            try:
+                _atomic_write(sidecar, sidecar_line)
+            except OSError as exc:
+                raise MintError(
+                    "cannot write the rekor bundle sidecar: " + str(exc)
+                    + resume_note + "; a rerun resumes at the self-verify"
+                ) from exc
+        elif sidecar_bytes != sidecar_line:
+            raise MintError(
+                "rekor bundle sidecar does not match the bundle: " + str(sidecar)
+                + resume_note + "; refusing with no network call"
+            )
+        print("  bundle present; resuming at the self-verify (no network)")
+    else:
+        entry_sig_b64 = _derive_entry_signature(entry.body_b64)
+        entry_sig_raw = base64.b64decode(entry_sig_b64, validate=True)
+        try:
+            if tsa_base_url is not None:
+                token_der = timestamp_fn(
+                    timestamped_data=entry_sig_raw, base_url=tsa_base_url
+                )
+            else:
+                token_der = timestamp_fn(timestamped_data=entry_sig_raw)
+        except (
+            rekor_anchor.RekorUnavailable,
+            rekor_anchor.RekorRejected,
+            httpx.HTTPError,
+            OSError,
+        ) as exc:
+            raise MintError(
+                "TSA timestamp failed: " + str(exc) + resume_note
+                + "; a rerun resumes without a Rekor POST"
+            ) from exc
+
+        bundle = assemble_rekor_bundle(entry, token_der)
+        bundle_bytes = json.dumps(bundle, sort_keys=True, indent=2).encode("utf-8")
+        try:
+            _write_with_sidecar(bundle_path, bundle_bytes)
+        except OSError as exc:
+            raise MintError(
+                "cannot write the rekor bundle: " + str(exc) + resume_note
+                + "; a rerun resumes without a Rekor POST"
+            ) from exc
+
+    try:
+        with tempfile.TemporaryDirectory() as td:
+            tdir = Path(td)
+            (tdir / "build-vsa.intoto.json").write_bytes(vsa_path.read_bytes())
+            (tdir / "rekor-v2-bundle.json").write_bytes(bundle_bytes)
+            (tdir / "trusted_root.json").write_bytes(tr.read_bytes())
+            (tdir / "tsa_chain.pem").write_bytes(tsa.read_bytes())
+            result = verify_fn(str(tdir), str(tdir))
+    except OSError as exc:
+        raise MintError(
+            "cannot stage the post-anchor self-verify: " + str(exc) + resume_note
+            + "; a rerun resumes at the self-verify"
+        ) from exc
 
     convergence = str(result.get("convergence"))
     if convergence != "PASS":
@@ -996,6 +1352,7 @@ def anchor(
         raise MintError(
             "post-anchor dual-root self-verify did NOT converge (convergence="
             + convergence + "); index NOT written. legs: " + detail
+            + resume_note + "; a rerun resumes at the self-verify"
         )
     gen_time = str(result.get("evidence", {}).get("rfc3161_gen_time"))
 
@@ -1019,16 +1376,24 @@ def anchor(
         emitted_at=emitted_at,
     )
     index_bytes = json.dumps(index, sort_keys=True, indent=2).encode("utf-8")
-    _write_with_sidecar(out_dir / "index.json", index_bytes)
+    try:
+        _write_with_sidecar(index_path, index_bytes)
+    except OSError as exc:
+        raise MintError(
+            "cannot write index.json: " + str(exc) + resume_note
+            + "; a rerun resumes at the self-verify if index.json was not "
+            "written, and refuses if it was"
+        ) from exc
 
     ip = bundle["transparency_log_entry"]["inclusion_proof"]
     print("ANCHOR complete for nous-lang " + version)
     print("  bundle:      " + bundle_name)
     print("  index:       index.json")
-    print("  log_index:   " + str(anchor_obj.log_index))
+    print("  log_index:   " + str(entry.log_index))
     print("  tree_size:   " + str(ip["tree_size"]))
     print("  gen_time:    " + gen_time)
     print("  convergence: PASS (offline dual-root)")
+    print("  journal:     " + str(journal_path) + " (LOGGED, operator state, not evidence)")
     print()
     print(
         "Reversible from here: stage <dir> to /var/www + website/ mirror, "
