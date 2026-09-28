@@ -4,6 +4,9 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+
+## [6.0.2]  <!-- __s389_changelog_v6_0_2__ -->
+
 ### Fixed  <!-- __s387_changelog_anchor_journal_v1__ -->
 
 - `mint_release_vsa.py anchor`, rerun after a failure that follows the
