@@ -166,3 +166,30 @@ One block per rejected idea:
   conforming test files would let the a50 degradation measurement run on inputs
   whose provenance NOUS did not control. It needs its own Gate. First kill
   criterion: the licence is CC-BY-SA-4.0 (share-alike), not CC-BY.
+
+### R5 -- a second cost-cap certificate at cap = declared total, to print a tight bound (S400)
+
+- Idea: beside the cost-cap Farkas certificate, extract a second one with
+  the cap set to the declared total (its contradiction is "0 < 0"), so
+  that `nous verify --smt` could print the declared total as the proven
+  bound instead of the cap.
+- Searches run: source trace of smt_emit.emit_smt,
+  cost_farkas.build_cost_system and smt_verify.format_verdict at
+  e8019b2; container probe on aml_transaction_governance.nous:
+  extract_cost_certificate at cap 3/2000 reads "0 < 0" and grades true,
+  at 3/2000 - 10^-9 it returns None (docs/COST_BOUND_DISPLAY_DESIGN.md
+  section 3).
+- Rejection reason: duplicates shipped work / violates the honest
+  boundary. The emitted system fixes every cost by equality, so the
+  tight certificate certifies an identity over declared constants; the
+  existing certificate already carries the same figure (its cost_cap
+  minus its residual). A second certificate adds an artifact and a
+  manifest hash for no new evidence, and a proven-tier line carrying the
+  declared total invites reading it as a bound on what a run costs,
+  which it is not (dispatch max_tokens 300, no runtime metering;
+  docs/COST_BOUND_DISPLAY_DESIGN.md section 4).
+- Revisit trigger: not yet -- if the cost system gains free variables
+  (a per-call cost bounded rather than fixed, for example declared token
+  ranges), the tightest provable bound stops being an identity and a
+  certificate for it would carry information the cap certificate does
+  not.

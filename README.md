@@ -301,6 +301,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 - [Reserved Verb Audit](docs/RESERVED_VERB_AUDIT_DESIGN.md) -- where the tree applies the verb reserved for the three Z3/Farkas legs to results that only evidence, the classification behind the finding, and the decisions D376-1 to D376-10 for correcting it  <!-- __s376_readme_reserved_verb_audit_xref_v1__ -->
 - [Parse Error Determinism](docs/PARSE_ERROR_DETERMINISM.md) -- the same source gives the same parse-error text in every process: the expected-token lines are sorted as lark master sorts them, the raised object keeps lark's class and attributes; decisions D381-1 to D381-7  <!-- __s381_readme_parse_error_determinism_xref_v1__ -->
 - [Anchor Journal](docs/ANCHOR_JOURNAL_DESIGN.md) -- why the release-VSA anchor could submit a second Rekor entry after a failure, and the journal beside the bundle directory that makes a rerun resume or refuse instead; decisions D386-1 to D386-6  <!-- __s386_readme_anchor_journal_xref_v1__ -->
+- [Cost Bound Display](docs/COST_BOUND_DISPLAY_DESIGN.md) -- the declared total behind a proven cost cap, read from the cost-cap Farkas certificate: cost_cap minus the certificate residual is the declared total, the residual is the headroom; shown as declared figures, not as a bound on what a run costs; decisions D400-1 to D400-10  <!-- __s400_readme_cost_bound_display_xref_v1__ -->
 
 ## Contributing
 
