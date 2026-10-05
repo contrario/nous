@@ -339,3 +339,117 @@ residual line is a separate question, not asked here.
 ## 13. Build notes
 
 (empty until the code exists)
+
+## 14. Amendment D401-1 and D401-2 (S401)
+
+<!-- __s401_cost_bound_display_d401_v1__ -->
+
+Recorded in S401 before any code. D401-1 amends D400-2, D400-3 and
+D400-8; D401-2 makes D400-7 and D400-8 precise where the CLI is
+concerned. Sections 1 to 13 are unchanged. [container] in this section
+is a clone of ea899212ae3b8b462e8c4702aa5ae2d733780283 (the S400 docs
+commit, code-identical to e8019b2) on 2026-10-05 with z3 4.16.0; the
+D400-8 tests are read red on that commit. [testimony] marks a result
+another lane reported and this lane did not re-run.
+
+Finding [reading, container]. The three checks of D400-3 bind only the
+certificate's rows. check_serialized reads "constraints" and
+"multipliers" alone and accepts any positive multiple of a valid
+witness; check_serialized_cost compares "constraints" alone against the
+re-derived system and then calls check_serialized. Neither reads
+"cost_cap", "max_ticks", "fragment" or "contradiction". Each of these
+edits to the AML certificate passes all three checks [container; the
+five reproduced by another lane on ea89921, testimony]:
+
+- every multiplier times 2: the weighted constant reads 997/1000 and
+  cost_cap minus it reads -497/1000, where the headroom is 997/2000 and
+  the declared total 3/2000;
+- "cost_cap" set to "1": cost_cap minus the residual reads 1003/2000;
+- "max_ticks" set to 5: the ticks read 5, where the spec has 1;
+- "contradiction" set to "0 < 0": not printed, still accepted;
+- "fragment" changed: not printed, still accepted.
+
+Under D400-2 as written, the first three would print a wrong figure
+(K1 by construction). A changed per-call constant, the D400-8 case, is
+rejected by check_serialized_cost [container].
+
+D401-1. A fourth check, after the three of D400-3 and before anything
+is printed: the certificate's canonical bytes equal the canonical bytes
+of the certificate re-derived from the same spec,
+
+    cost_farkas_json_bytes(doc) == cost_farkas_json_bytes(
+        extract_cost_certificate(souls_from_smtspec(spec),
+                                 spec.max_ticks,
+                                 spec.cost_cap_amount,
+                                 spec.cost_cap_margin_pct))
+
+A re-derivation that returns None or raises CostFarkasError is a
+refusal. Equality pins the multipliers (the cap row's multiplier is 1,
+so the weighted constant is the headroom), "cost_cap", "max_ticks",
+"fragment" and "contradiction". Every printed number is still read from
+the certificate as D400-2 states; the re-derivation only binds the
+certificate and is never printed. Both functions ship in
+cost_farkas.py, which does not change.
+
+- Positive control [container]: the certificates of the five programs
+  of section 3 that reach PROVEN, each at --smt-margin 0 and 10, pass
+  all four checks (10 of 10). At margin 10 the AML certificate reads
+  cap 9/20, headroom 897/2000, declared total 3/2000.
+- check_serialized_cost stays a check (operator preference, S401). A
+  certificate byte-equal to the re-derived one always passes it,
+  because extract_cost_certificate returns only a certificate that
+  check_serialized grades true [reading]; it rejects nothing the fourth
+  check admits. It ships, costs nothing, and names a narrower cause
+  when a row differs.
+- Order and cause. The checks run in a fixed order: check_serialized,
+  variable cancellation, check_serialized_cost, byte equality. The note
+  names the first check that fails. The note is new text and follows
+  the wording rule of D400-5.
+- No negative figure. A declared total below zero cannot pass the
+  fourth check: the re-derived certificate has per-call constants of
+  zero or more (cost_farkas._validated_souls refuses a negative one)
+  and max_ticks of 1 or more [reading]. No separate sign check is
+  added, because no input can reach it and an undriven branch is not
+  a gate (FG-S374-D).
+
+D401-2. Where the checks sit and how the tests reach them.
+
+- smt_verify.format_verdict(result, cost_certificate=doc), on a proven
+  result, runs the four checks through declared_cost_display and raises
+  CostDisplayError when one fails. Without the keyword its output is
+  byte-identical to today (D400-7); on a result that is not proven the
+  keyword is ignored (D400-1).
+- cli_verify extracts the certificate before it prints the verdict only
+  when the verdict is proven, and reuses that certificate at the
+  existing extraction step, whose stdout and stderr lines keep their
+  place. On any other verdict the extraction runs where it runs today,
+  so that output stays byte-identical. When format_verdict raises
+  CostDisplayError, the CLI prints the note to stderr and prints the
+  block without the declared lines. When the verdict is proven and no
+  certificate exists, the CLI prints a note naming that cause to
+  stderr.
+- A tampered certificate is injected into the display only: the test
+  wraps the format_verdict that cli_verify calls and hands it an edited
+  copy. That run writes the untampered cost.farkas.json and manifest,
+  so its verdict, exit code and manifest equal the untampered run's
+  (D400-4), the fields that differ on every run aside (timestamp,
+  elapsed_ms, signature; one throwaway key for both runs).
+- A missing certificate is injected where it is produced
+  (cost_certificate_from_smtspec returns None or raises
+  CostFarkasError). That run, as today, writes no cost.farkas.json and
+  its manifest carries no cost_farkas_sha256. Its verdict and exit code
+  equal the untampered run's, and its manifest equals the untampered
+  run's without cost_farkas_sha256 and the per-run fields. The display
+  adds nothing to the manifest in either case.
+
+D400-8 additions (tests/test_s400_cost_bound_display.py, red first):
+
+- each of the five edits above gives the note naming the byte-equality
+  check, no declared line, and the verdict, exit code and manifest of
+  the untampered run (D401-2);
+- the multipliers-times-2 case also asserts that no negative declared
+  total is printed: neither "-497/1000" nor "-0.497" appears anywhere
+  in the output; the line is refused;
+- the per-call constant case of D400-8 names check_serialized_cost;
+- VR003 gets the same five edits and the missing case: its severity,
+  tier and existing text are unchanged, and the cause is appended.
