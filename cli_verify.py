@@ -41,6 +41,11 @@ from parser import parse_nous
 from pricing import load_pricing
 from smt_emit import EmitError, emit_smt
 from smt_verify import format_verdict, verify
+from smt_verify import (  # __s402_cost_bound_display_v1__
+    NO_CERTIFICATE_NONE,
+    NO_CERTIFICATE_RAISED,
+    CostDisplayError,
+)
 from smt_emit import with_coverage  # __s115_coverage_threshold_v1__
 from smt_verify import verify_coverage  # __s115_coverage_threshold_v1__
 from policy_coverage import (  # __s115_coverage_threshold_v1__
@@ -159,7 +164,29 @@ def cmd_verify(args: argparse.Namespace) -> int:
     print(f"Running solver (timeout {args.timeout_ms}ms)...")
     result = verify(spec, timeout_ms=args.timeout_ms)
     print()
-    print(format_verdict(result))
+    _cost_early_s402: Optional[tuple[Optional[dict], Optional[CostFarkasError]]] = None  # __s402_cost_bound_display_v1__
+    _block_s402: Optional[str] = None  # __s402_cost_bound_display_v1__
+    if result.verdict == "proven":  # __s402_cost_bound_display_v1__
+        try:
+            _cost_early_s402 = (cost_certificate_from_smtspec(spec), None)
+        except CostFarkasError as _ce_s402:
+            _cost_early_s402 = (None, _ce_s402)
+        if _cost_early_s402[0] is None:
+            _why_s402 = (
+                NO_CERTIFICATE_RAISED if _cost_early_s402[1] is not None
+                else NO_CERTIFICATE_NONE
+            )
+            print("NOTE: declared total_cost not shown: " + _why_s402,
+                  file=sys.stderr)
+        else:
+            try:
+                _block_s402 = format_verdict(
+                    result, cost_certificate=_cost_early_s402[0]
+                )
+            except CostDisplayError as _de_s402:
+                print("NOTE: declared total_cost not shown: " + str(_de_s402),
+                      file=sys.stderr)
+    print(_block_s402 if _block_s402 is not None else format_verdict(result))
 
     if result.verdict == "error":
         return 3
@@ -302,7 +329,12 @@ def cmd_verify(args: argparse.Namespace) -> int:
     _cost_sha_s170: Optional[str] = None  # __s170_leg1_cost_emit_v1__
     _cost_bytes_s170: Optional[bytes] = None  # __s170_leg1_cost_emit_v1__
     try:  # __s170_leg1_cost_emit_v1__
-        _cost_doc_s170 = cost_certificate_from_smtspec(spec)
+        if _cost_early_s402 is None:  # __s402_cost_bound_display_v1__
+            _cost_doc_s170 = cost_certificate_from_smtspec(spec)
+        elif _cost_early_s402[1] is not None:  # __s402_cost_bound_display_v1__
+            raise _cost_early_s402[1]
+        else:  # __s402_cost_bound_display_v1__
+            _cost_doc_s170 = _cost_early_s402[0]
     except CostFarkasError as _ce_s170:  # __s170_leg1_cost_emit_v1__
         print(
             f"NOTE: cost-cap Farkas certificate not extracted "

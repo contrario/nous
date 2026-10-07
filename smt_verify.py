@@ -24,6 +24,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from decimal import Decimal
+from fractions import Fraction  # __s402_cost_bound_display_v1__
 from typing import Literal, Optional
 
 from smt_emit import SMTSpec
@@ -494,7 +495,201 @@ def _suggest_max_ticks_reduction(
     return int(fit) if fit >= 1 else None
 
 
-def format_verdict(result: VerifyResult) -> str:
+class CostDisplayError(ValueError):  # __s402_cost_bound_display_v1__
+    """The declared cost lines were refused. The message starts with the
+    name of the first check that failed: check_serialized, variable
+    cancellation, check_serialized_cost or byte equality
+    (docs/COST_BOUND_DISPLAY_DESIGN.md D400-3, D401-1)."""
+
+
+NO_CERTIFICATE_NONE: str = (  # __s402_cost_bound_display_v1__
+    "no certificate: the certificate extractor returned none for this spec"
+)
+NO_CERTIFICATE_RAISED: str = (  # __s402_cost_bound_display_v1__
+    "no certificate: certificate extraction raised CostFarkasError"
+)
+
+
+def _exact_decimal(value: Fraction) -> Optional[str]:  # __s402_cost_bound_display_v1__
+    den = value.denominator
+    twos = 0
+    fives = 0
+    while den % 2 == 0:
+        den //= 2
+        twos += 1
+    while den % 5 == 0:
+        den //= 5
+        fives += 1
+    if den != 1:
+        return None
+    places = max(twos, fives)
+    scaled = abs(value.numerator) * (10 ** places) // value.denominator
+    digits = str(scaled).rjust(places + 1, "0")
+    body = digits if places == 0 else digits[:-places] + "." + digits[-places:]
+    return ("-" if value < 0 else "") + body
+
+
+def _amount(value: Fraction, currency: str) -> str:  # __s402_cost_bound_display_v1__
+    dec = _exact_decimal(value)
+    if dec is None:
+        return f"{value} {currency}"
+    return f"{dec} {currency} ({value})"
+
+
+@dataclass(frozen=True)
+class DeclaredSoul:  # __s402_cost_bound_display_v1__
+    """One soul's declared terms and its per-tick figure from the
+    certificate's cost_<soul>_per_call row."""
+    name: str
+    tokens_input: int
+    input_per_1m: str
+    tokens_output: int
+    output_per_1m: str
+    reasoning_mult: str
+    per_tick: Fraction
+
+
+@dataclass(frozen=True)
+class DeclaredCostDisplay:  # __s402_cost_bound_display_v1__
+    """Figures read from a cost-cap certificate that passed the four checks
+    of D400-3 and D401-1. residual is the headroom; declared_total is the
+    certificate's cost_cap minus the residual."""
+    currency: str
+    cap: Fraction
+    declared_cap: Fraction
+    margin_pct: int
+    residual: Fraction
+    declared_total: Fraction
+    max_ticks: int
+    souls: tuple[DeclaredSoul, ...]
+
+    def _cap_phrase(self) -> str:
+        if self.margin_pct > 0:
+            return (
+                f"effective cap {self.cap} (cost_cap {self.declared_cap}, "
+                f"margin {self.margin_pct}%)"
+            )
+        return f"cost_cap {self.cap}"
+
+    def lines(self) -> tuple[str, ...]:
+        out = [
+            f"  declared total_cost = {_amount(self.declared_total, self.currency)}"
+            f" = {self._cap_phrase()} - certificate residual {self.residual}",
+            f"  headroom = {_amount(self.residual, self.currency)}, "
+            f"the certificate residual",
+        ]
+        for s in self.souls:
+            mult = "" if Fraction(s.reasoning_mult) == 1 else f" x {s.reasoning_mult}"
+            out.append(
+                f"    {s.name}: {s.tokens_input} in x {s.input_per_1m}/M + "
+                f"{s.tokens_output} out x {s.output_per_1m}/M{mult} = "
+                f"{s.per_tick} per tick x {self.max_ticks} ticks"
+            )
+        return tuple(out)
+
+    def vr003_text(self) -> str:
+        return (
+            f" Declared total_cost {_amount(self.declared_total, self.currency)}"
+            f" = {self._cap_phrase()} minus the Farkas certificate residual "
+            f"{self.residual} (the headroom); basis: declared tokens x table "
+            f"price x max_ticks."
+        )
+
+
+def _row_terms(row: object) -> Optional[dict[str, Fraction]]:  # __s402_cost_bound_display_v1__
+    coeffs = row.get("coeffs") if isinstance(row, dict) else None
+    if not isinstance(coeffs, dict):
+        return None
+    try:
+        return {str(k): Fraction(v) for k, v in coeffs.items()}
+    except (ValueError, TypeError, ZeroDivisionError):
+        return None
+
+
+def declared_cost_display(spec: SMTSpec, cost_doc: object) -> DeclaredCostDisplay:  # __s402_cost_bound_display_v1__
+    """Read the declared total and the headroom off a cost-cap certificate,
+    after four checks in a fixed order (D400-3, D401-1). Raises
+    CostDisplayError naming the first check that fails. Every figure comes
+    from the certificate; the re-derivation of check 4 only binds it."""
+    import cost_farkas
+    from coverage_farkas import check_serialized
+
+    if not isinstance(cost_doc, dict) or not check_serialized(cost_doc):
+        raise CostDisplayError(
+            "check_serialized: the multipliers do not reduce the "
+            "certificate's rows to a numeric contradiction"
+        )
+    combined: dict[str, Fraction] = {}
+    for idx, (mult, row) in enumerate(zip(cost_doc["multipliers"], cost_doc["constraints"])):
+        terms = _row_terms(row)
+        if terms is None:
+            raise CostDisplayError(
+                f"variable cancellation: constraints[{idx}] is not a "
+                f"constraint row with readable coefficients"
+            )
+        weight = Fraction(mult)
+        for key, coeff in terms.items():
+            combined[key] = combined.get(key, Fraction(0)) + weight * coeff
+    residual = combined.get("", Fraction(0))
+    souls = cost_farkas.souls_from_smtspec(spec)
+    if not cost_farkas.check_serialized_cost(
+        cost_doc, souls, spec.max_ticks, spec.cost_cap_amount,
+        spec.cost_cap_margin_pct,
+    ):
+        raise CostDisplayError(
+            "check_serialized_cost: the certificate's rows differ from the "
+            "rows re-derived from the spec's declared tokens and table rates"
+        )
+    try:
+        again = cost_farkas.extract_cost_certificate(
+            souls, spec.max_ticks, spec.cost_cap_amount, spec.cost_cap_margin_pct,
+        )
+    except cost_farkas.CostFarkasError:
+        raise CostDisplayError(
+            "byte equality: re-derivation from the spec raised CostFarkasError"
+        ) from None
+    if again is None:
+        raise CostDisplayError("byte equality: the spec re-derives no certificate")
+    if cost_farkas.cost_farkas_json_bytes(cost_doc) != cost_farkas.cost_farkas_json_bytes(again):
+        raise CostDisplayError(
+            "byte equality: the certificate differs from the certificate "
+            "re-derived from the spec"
+        )
+    assumed = {str(a[0]): a for a in spec.soul_assumptions}
+    rows: list[DeclaredSoul] = []
+    for row in cost_doc["constraints"]:
+        coeffs = row["coeffs"]
+        for key in coeffs:
+            if key.startswith("cost_") and key.endswith("_per_call") and len(coeffs) == 2:
+                name = key[len("cost_"):-len("_per_call")]
+                a = assumed[name]
+                rows.append(DeclaredSoul(
+                    name=name,
+                    tokens_input=int(a[2]),
+                    input_per_1m=str(a[4]),
+                    tokens_output=int(a[3]),
+                    output_per_1m=str(a[5]),
+                    reasoning_mult=str(a[6]),
+                    per_tick=-Fraction(coeffs[""]),
+                ))
+    cap = Fraction(cost_doc["cost_cap"])
+    return DeclaredCostDisplay(
+        currency=spec.cost_cap_currency,
+        cap=cap,
+        declared_cap=Fraction(spec.cost_cap_amount),
+        margin_pct=int(spec.cost_cap_margin_pct),
+        residual=residual,
+        declared_total=cap - residual,
+        max_ticks=int(cost_doc["max_ticks"]),
+        souls=tuple(rows),
+    )
+
+
+def format_verdict(
+    result: VerifyResult,
+    *,
+    cost_certificate: Optional[dict] = None,  # __s402_cost_bound_display_v1__
+) -> str:
     """Render a VerifyResult into a CLI-ready text block."""
     spec = result.spec
     lines: list[str] = []
@@ -528,6 +723,8 @@ def format_verdict(result: VerifyResult) -> str:
             f"  bounded by: {len(spec.soul_costs)} soul(s) × "
             f"{spec.max_ticks} ticks"
         )
+        if cost_certificate is not None:  # __s402_cost_bound_display_v1__
+            lines.extend(declared_cost_display(spec, cost_certificate).lines())
         return "\n".join(lines)
 
     if result.verdict == "refuted":

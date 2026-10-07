@@ -338,7 +338,86 @@ residual line is a separate question, not asked here.
 
 ## 13. Build notes
 
-(empty until the code exists)
+<!-- __s402_cost_bound_display_build_v1__ -->
+
+Recorded in S402 with the code (smt_verify.py, cli_verify.py,
+verifier.py) and tests/test_s400_cost_bound_display.py. Operator
+ruling (a) of S402 is recorded under check 2.
+
+Placement (D400-7, D401-2). smt_verify.py carries CostDisplayError (a
+ValueError), DeclaredCostDisplay and DeclaredSoul (frozen
+dataclasses) and declared_cost_display(spec, cost_doc).
+format_verdict(result, *, cost_certificate=None) adds the declared
+lines after the "bounded by" line when the verdict is `proven` and
+ignores the keyword on any other verdict. cli_verify extracts the
+certificate before the verdict block only when the verdict is
+`proven`, and hands that certificate, or the CostFarkasError it
+raised, to the existing extraction step, which prints its lines as
+before; on any other verdict the extraction runs where it ran.
+verifier._verify_smt_cost_bound appends the declared text, or the
+refusal cause, to the VR003 message through _declared_cost_suffix,
+which calls cost_farkas.cost_certificate_from_smtspec at call time.
+No change to smt_emit.py, cost_farkas.py, coverage_farkas.py, the
+manifest or any .well-known artifact.
+
+Checks and causes (D400-3, D401-1). The checks run in this order. The
+refusal message starts with the name of the first check that fails,
+then ": " and a detail.
+
+1. check_serialized: coverage_farkas.check_serialized(doc).
+2. variable cancellation: the display's own multiplier-weighted sum
+   over every row of the certificate, including rows that
+   check_serialized skips at multiplier 0 (in
+   coverage_farkas.check_serialized, "if x == 0: continue" comes
+   before the isinstance check). The sum gives the D400-2 residual;
+   this check is the step that keeps that sum from raising an untyped
+   error on a row it cannot read. Detail: "constraints[<i>] is not a
+   constraint row with readable coefficients". A row at multiplier 0
+   that cannot be read is the only input that fails here first;
+   check_serialized_cost and byte equality would also refuse it (the
+   shipped graders give check_serialized True, check_serialized_cost
+   False). Whenever check 1 passed, every variable cancels in this
+   sum, because rows at multiplier 0 add nothing; no separate
+   leftover-variable refusal is added, since no input reaches it
+   (FG-S374-D, as for the sign check of D401-1).
+3. check_serialized_cost: cost_farkas.check_serialized_cost(doc,
+   souls_from_smtspec(spec), spec.max_ticks, spec.cost_cap_amount,
+   spec.cost_cap_margin_pct).
+4. byte equality: cost_farkas_json_bytes(doc) equals the bytes of
+   extract_cost_certificate(souls_from_smtspec(spec), spec.max_ticks,
+   spec.cost_cap_amount, spec.cost_cap_margin_pct). A re-derivation
+   that returns None or raises CostFarkasError refuses under this name
+   with its own detail. Neither is reachable once check 3 passed; the
+   tests reach both by injecting at cost_farkas.extract_cost_certificate.
+
+A missing certificate gives the cause "no certificate", with the
+detail "the certificate extractor returned none for this spec" or
+"certificate extraction raised CostFarkasError".
+
+Text. The CLI prints "NOTE: declared total_cost not shown: <cause>"
+to stderr immediately before format_verdict's block is printed to
+stdout. These are two streams; when stdout is piped Python buffers
+it, so the order a reader sees is not fixed. On a refusal VR003 keeps
+its message and appends " Declared total_cost not shown: <cause>.".
+The declared lines follow D400-5. Under --smt-margin p the cap reads
+"effective cap <e> (cost_cap <c>, margin p%)"; a reasoning multiplier
+other than 1 reads "x <m>"; an amount whose decimal expansion does
+not terminate prints as the rational followed by the currency code
+(D400-6); the per-soul figure is the rational only, as in the D400-5
+sample.
+
+Tests. tests/test_s400_cost_bound_display.py holds 54 tests: 37 read
+red on 7f8ca01 with their reasons from --junitxml, and 17 invariants
+that hold on 7f8ca01 by construction (byte identity of the output the
+change leaves alone, the grading of each tamper edit, one extraction
+per CLI run). The goldens were captured by running the code at
+7f8ca01. Each invariant was turned red by a mutant of 7f8ca01. Mutants
+of the new code (each check removed in turn, each re-derivation
+refusal removed, re-derivation through cost_certificate_from_smtspec,
+a second extraction in the CLI, the old CLI note dropped, a silent
+VR003 refusal) each turn exactly their predicted tests red; the
+mutant that removes check 2 turns exactly the two zero_weight_row
+tests red.
 
 ## 14. Amendment D401-1 and D401-2 (S401)
 

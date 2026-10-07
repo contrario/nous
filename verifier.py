@@ -33,6 +33,7 @@ from typing import Any, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:  # __s189_vr003_pricing_typeonly_v1__
     from pricing import PricingTable
+    from smt_emit import SMTSpec  # __s402_cost_bound_display_v1__
 
 from ast_nodes import (
     NousProgram, SoulNode, WorldNode, MessageNode,
@@ -377,7 +378,7 @@ class NousVerifier:
                 f"Total declared cost provably <= world cost_cap {cap} {ccy} "
                 f"(Z3/Farkas over declared pricing). This binds the WORLD "
                 f"cost_cap, which is distinct from the law cost ceiling bound "
-                f"by VR001/VR002.",
+                f"by VR001/VR002.{self._declared_cost_suffix(spec)}",  # __s402_cost_bound_display_v1__
                 "world",
                 f"solver={result.solver_name} {result.solver_version}, "
                 f"elapsed_ms={result.elapsed_ms}",
@@ -410,6 +411,25 @@ class NousVerifier:
                 "world",
                 f"solver={result.solver_name} {result.solver_version}",
             )
+
+    def _declared_cost_suffix(self, spec: SMTSpec) -> str:  # __s402_cost_bound_display_v1__
+        import cost_farkas
+        from smt_verify import (
+            NO_CERTIFICATE_NONE,
+            NO_CERTIFICATE_RAISED,
+            CostDisplayError,
+            declared_cost_display,
+        )
+        try:
+            doc = cost_farkas.cost_certificate_from_smtspec(spec)
+        except cost_farkas.CostFarkasError:
+            return " Declared total_cost not shown: " + NO_CERTIFICATE_RAISED + "."
+        if doc is None:
+            return " Declared total_cost not shown: " + NO_CERTIFICATE_NONE + "."
+        try:
+            return declared_cost_display(spec, doc).vr003_text()
+        except CostDisplayError as e:
+            return " Declared total_cost not shown: " + str(e) + "."
 
     def _soul_estimate(self, soul: SoulNode) -> tuple[Optional[float], str, Optional[str]]:  # __s364_p2_soul_estimate_v1__
         sense_count = self._count_sense_calls(soul)
