@@ -594,6 +594,66 @@ a blocking action (ADR-0010).
 **Exit codes.** `0` proven, `1` refuted, `2` precondition/error (file
 missing, not a cost-cap certificate, or `--manifest` binding failure).
 
+## Declared total and headroom (v6.0.3)
+
+<!-- __s402_docs_declared_cost_v1__ -->
+
+Since v6.0.3, when the cost cap is PROVEN, `nous verify --smt` prints
+two figures read off the certificate it writes, and one line per soul:
+
+```
+  declared total_cost = 0.0015 USD (3/2000) = cost_cap 1/2 - certificate residual 997/2000
+  headroom = 0.4985 USD (997/2000), the certificate residual
+    Screener: 500 in x 1.00/M + 200 out x 5.00/M = 3/2000 per tick x 1 ticks
+```
+
+The headroom is the residual: the constant left by the
+multiplier-weighted sum of the certificate's rows. The declared total
+is the certificate's `cost_cap` minus the residual; with
+`--smt-margin p` that cap is the effective cap, and the line reads
+`effective cap <e> (cost_cap <c>, margin p%)`. Each soul's figure is
+minus the constant of its `cost_<soul>_per_call` row, shown beside the
+declared tokens and table rates that produced it, times the
+certificate's `max_ticks`. A decimal is printed beside a rational only
+when the expansion is exact. The VR003 message of `/v1/verify` carries
+the same two figures.
+
+Before printing, the certificate passes four checks in order:
+`check_serialized`, variable cancellation, `check_serialized_cost`,
+and byte equality with the certificate re-derived from the spec. If
+one fails, or no certificate exists, a note on stderr names the first
+cause and the verdict block prints without these lines. The verdict,
+the exit code and the manifest are the same either way.
+
+What the lines claim. Nothing new is proven: Z3 and the Farkas
+certificate already show that the declared total cannot exceed the cap,
+and these figures are rational arithmetic over a certificate you
+already hold. The declared total is not what a run costs. Dispatch
+does not send the declared output tokens (the runtime caps output at
+its own max_tokens), nothing measures the prompt actually sent against
+the declared input tokens, the runtime does not meter spend, and the
+cost model counts one generation per tick. The figure describes the
+envelope your program declares, priced at the governed table.
+
+To recompute both figures offline from `cost.farkas.json`, check the
+certificate first with `nous verify-cost cost.farkas.json`, then:
+
+```
+import json
+from fractions import Fraction
+
+doc = json.load(open("cost.farkas.json"))
+residual = sum(
+    Fraction(m) * Fraction(row["coeffs"].get("", "0"))
+    for m, row in zip(doc["multipliers"], doc["constraints"])
+)
+print("headroom", residual)
+print("declared total", Fraction(doc["cost_cap"]) - residual)
+```
+
+For the AML example this prints `headroom 997/2000` and
+`declared total 3/2000`. Design: docs/COST_BOUND_DISPLAY_DESIGN.md.
+
 ## Web roadmap
 
 - `nous-lang.org/blog/` hosts the v5.0.0 release narrative

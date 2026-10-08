@@ -5,6 +5,42 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [6.0.3]  <!-- __s402_changelog_v6_0_3__ -->
+
+### Added  <!-- __s402_changelog_declared_cost_v1__ -->
+
+- When the cost cap is PROVEN, `nous verify --smt` prints the declared
+  total and the headroom, read from the cost-cap Farkas certificate the
+  same run writes (`cost.farkas.json`), and one line per soul, after
+  the "bounded by" line. For the AML example:
+
+      declared total_cost = 0.0015 USD (3/2000) = cost_cap 1/2 - certificate residual 997/2000
+      headroom = 0.4985 USD (997/2000), the certificate residual
+        Screener: 500 in x 1.00/M + 200 out x 5.00/M = 3/2000 per tick x 1 ticks
+
+  The headroom is the certificate's residual; the declared total is the
+  certificate's cost_cap minus that residual. No figure is recomputed
+  from tokens and prices. Before anything is printed the certificate
+  passes four checks in order: check_serialized, variable cancellation,
+  check_serialized_cost, and byte equality with the certificate
+  re-derived from the spec. When one fails, or no certificate exists, a
+  note on stderr names the cause and the verdict block prints as
+  before. The verdict, the exit code, the manifest and cost.farkas.json
+  do not change. The declared total describes the envelope the program
+  declares, priced at the governed table; it is not a measured cost of
+  a run. Design: docs/COST_BOUND_DISPLAY_DESIGN.md (D400, D401, section
+  13); guide: docs/COST_VERIFICATION_GUIDE.md.
+
+### Changed  <!-- __s402_changelog_vr003_v1__ -->
+
+- The VR003 message of the verifier, as served by `/v1/verify`, keeps
+  its text and appends the same two figures, for the AML example
+  "Declared total_cost 0.0015 USD (3/2000) = cost_cap 1/2 minus the
+  Farkas certificate residual 997/2000 (the headroom); basis: declared
+  tokens x table price x max_ticks.", or the refusal cause. Severity
+  and tier do not change. A consumer that compared the whole message
+  must change.
+
 ## [6.0.2]  <!-- __s389_changelog_v6_0_2__ -->
 
 ### Fixed  <!-- __s387_changelog_anchor_journal_v1__ -->
