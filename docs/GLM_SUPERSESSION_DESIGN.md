@@ -16693,3 +16693,353 @@ document itself.
                        line that ran. The namespace was measured again at
                        23:53:25Z with no ssh. An ssh inside such a script
                        takes -n.
+
+  - S384 the session that held two seats while the release lane held the
+    tree, opened at the head that lane left, found this document unchanged,
+    and wrote the entry that S380, S383 and itself owed
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY IS WRITTEN FROM INSIDE THE
+    SESSION IT DESCRIBES, SO IT STATES NO NUMBER THAT COUNTS THAT SESSION.
+    Unless a sentence says otherwise, each value was printed on Server A on
+    2026-10-10 or 2026-10-13, by the opening rule, by instruments that took
+    their own digest as their first argument and whose refusal arms were
+    driven red before their green, or by read-only commands of version
+    control and the shell, pasted whole. Other kinds are marked where they
+    appear. INHERITED: carried from the sealed handoffs, openers and records
+    of S380, S383 and the first seal of S384, whose digests were checked at
+    intake, or from the entries above. READ IN THE SEAT'S CONTAINER:
+    computed off host, from copies whose digests equal their seals or the
+    host's. DERIVED: computed from printed values. TESTIMONY: said by a
+    party and not measured here; the release lane's sealed files are its
+    testimony. OPERATOR: stated by the operator. RULING: a decision the
+    operator stated in words.
+
+    TWO NAMES, AS IN D380. RK names the JSON key of /v1/verify spelled with
+    the past participle this house reserves for results of Z3 and Farkas,
+    and RV names that word in capitals. This entry spells neither, and no
+    other form of that verb.
+
+    THE SESSION NUMBER. RULING: this session and this entry are three
+    hundred and eighty-four. The operator's cross-lane ruling gave three
+    hundred and eighty-three and three hundred and eighty-four to this lane.
+    TESTIMONY: the release lane records it in its handoff of S385 and
+    carries the line in every sealed opener from its S386 to its S405,
+    except that of S397 (D384-5). At 10:01:20Z on 2026-10-13, at HEAD
+    dcb48dc equal to the local ref origin/main, a run that did not fetch
+    read every tracked file and every commit message on every ref: the
+    finding prefix, the anchor prefix, the marker shape of the release lane
+    and the bare session token with this number each counted zero, raw and
+    bounded, and so did each with three hundred and eighty-three. Beside
+    them the anchor prefix and the bare token of S380 counted one file and
+    one commit each, the finding prefix of S380 one file and no commit, the
+    bare token S402 two files and three commits, S403 no file and one
+    commit, and a nonce drawn at runtime zero, with no anomalous exit code.
+    READ IN THE SEAT'S CONTAINER: the release lane's latest sealed opener
+    held, that of its S405, gives three hundred and eighty-three and three
+    hundred and eighty-four to this lane. The instrument that appends this
+    entry refuses unless the namespace is still empty at the moment it runs.
+
+    D384-1  THE OBJECT AND WHO CHOSE IT. RULING, in the kickoff of the
+            second seat on 2026-10-01: that seat continues S384, its entry
+            is D384, and its object is the entry owed by section 6 of the
+            handoffs of S380, S383 and the first seal of S384. OPERATOR,
+            2026-10-10: the entry is written in that seat, on the seat's
+            proposal, rather than after a seal and a fresh seat. The seat
+            had been open nine days and the client had cleared its early
+            tool results; every input of this entry was read again from disk
+            and hashed against its seal before it was used (D384-9).
+
+    D384-2  THE OPENING, 2026-10-10. Paste one at 12:02:31Z: its own digest
+            c027371e, scripts/rule0.sh 074e51af, HEAD dcb48dc equal to the
+            local ref origin/main, one commit after v6.0.3; version 6.0.3 on
+            A and on B, B at tag v6.0.3; DERIVED from the uptimes, neither
+            service restarted since the release lane's reading at 10:04:11Z;
+            suite 3499 passed and 12 skipped; floor 3498; Asklepios healthy
+            for both services; both timers active, no failed unit; the
+            served control 95011 bytes; the served version asset 655 bytes
+            on the wire and on disk. The arms of the successor at 12:50:06Z,
+            taking their own digest 30422431, gave the tokens and codes of
+            D380-2, ARMS_RC_ALL_AS_WANTED and a process exit code of zero.
+            Standard input at 12:50:51Z gave T5_NOT_A_FILE and 40. The
+            successor at 12:52:30Z, code zero, at HEAD dcb48dc: fetch code
+            zero, one main line, head equal to origin, ahead and behind
+            zero, porcelain zero, both tag oracles at v6.0.3 and one commit
+            after it, 158 tags, 1533 tracked files; this document at
+            3ba6aabb, 998626 bytes and 16695 lines, blob 5ab3ea9b at HEAD
+            and at origin, equal to the seal of S380, and every leg of this
+            document equal to the closing run of S380. READ IN THE SEAT'S
+            CONTAINER: the 52 pinned legs equal to the record of S373,
+            section 3, with a planted change caught. Moved since 31b7f73:
+            README.md from b99688d9 and 339 lines to 56582c04 and 342 lines,
+            its marker count still three; the digest of mint_release_vsa.py
+            among the six generator digests, 43cbe1b7 to 72671ea9; tests
+            collected 3382 to 3511 with the house's options and 3520 to 3649
+            bare; suite 3370 to 3499 passed, 12 skipped; the lint read 436
+            files where it read 433, with no violation; the mirror clean
+            over 500 files where it read 464, four orphans; L6 (D384-8).
+            Unchanged: the test file b718b126, 261 lines.
+
+    D384-3  THE TREE UNDER THE HOLD. TESTIMONY, the release lane's sealed
+            handoffs: twenty-two commits above 31b7f73 before this entry, by
+            its S379 (417e0b4, 1fc1fe6), S381 (76ae8e2, d63d8f2), S382
+            (0746666, 18bb81d), S385 (776327d), S386 (3130dc5), S387
+            (f9373b2, 0315033, 32dc51f), S388 (6393c1e, 21b54aa), S389
+            (cd3d5b6, 6a2f048), S390 (e8019b2), S400 (ea89921), S401
+            (7f8ca01), S402 (f5f66df, 80b35c6, 5b5812f) and S403 (dcb48dc),
+            with the releases 6.0.1, 6.0.2 and 6.0.3 and their tags. None
+            names this document. Its S391 to S399 and S404 wrote nothing to
+            the tree; some of them changed state on Server A and Server B
+            outside it: keys and sshd, three bot tokens rotated, units
+            restarted that are not the API; the API restarted on both
+            servers only for 6.0.3. MEASURED: this document unchanged at
+            dcb48dc (D384-2). The count of commits between 31b7f73 and
+            dcb48dc was not taken on the host; twenty-two is DERIVED from
+            testimony.
+
+    D384-4  THE HOLD. OPERATOR: one lane at a time; no write of this lane
+            while the release lane holds the tree. The first seat of S384
+            waited from 2026-09-26 13:11Z to 2026-09-29 near 11:00Z through
+            the release lane's S381, S382 and S385 to S391; the second from
+            2026-10-01 11:49Z through its S393 to S404, taking twelve
+            intakes of that lane's sealed files. No command of this lane ran
+            on Server A between the successor of S383 at 00:38:03Z on
+            2026-09-26 and paste one at 12:02:31Z on 2026-10-10. OPERATOR,
+            at about 11:39Z on 2026-10-10: S404 sealed at plateau and no new
+            release session open; at 12:52Z, before the successor's fetch:
+            no session open and nothing running on Server A. No release
+            session was asked about before the run of 2026-10-13
+            (FG-S384-V).
+
+    D384-5  AF, THE THIRD FORM. The release lane's opener of its S397,
+            sha256 fcf4bea0 and 19187 bytes, came without the line that
+            gives three hundred and eighty-three and three hundred and
+            eighty-four to this lane, and without the sections of its
+            predecessor that hold its binding rules, its paid findings, its
+            known unknowns and its list of files. READ IN THE SEAT'S
+            CONTAINER: the opener of S396, sha256 0106e9d0, carried them.
+            The seat gave the operator a ruling ready to paste. TESTIMONY,
+            its handoff of S397: the ruling was relayed, the session worked
+            under those sections of the opener of S396, and the opener of
+            S398 restores them. READ IN THE SEAT'S CONTAINER: the openers of
+            S398 to S403 and of S405 carry the line, in their header and in
+            a new section on lanes, and their binding rules, paid findings
+            and known unknowns lose no line of the text of S396 and only
+            add.
+
+    D384-6  WHAT REACHED THE SEAT FROM THE RELEASE LANE, AND WHAT PINS IT.
+            READ IN THE SEAT'S CONTAINER, by sha256 of the bytes: its
+            handoffs of S385, S390 to S393 and S395 to S402 and S404, and
+            its openers of S391 to S394, S396 to S403 and S405. Of its seal
+            files only those of S390 and S393 came: all sixteen entries of
+            the seal of S393 matched a file by digest, and three of the
+            seven of the seal of S390; the other four were not needed. Its
+            handoffs of S392, S393 and S401 print the digest of the opener
+            they seal, and each matched; those of S385, S390, S391, S395 to
+            S400, S402 and S404 do not. Its handoffs of S398 to S401 print
+            the digest of their own opener, and each matched. The handoffs
+            of S394 and S403 never reached the seat. Everything this entry
+            takes from that lane is therefore testimony, corroborated only
+            where a digest is named.
+
+    D384-7  AA, THE SKILL. READ IN THE SEAT'S CONTAINER: the plugin path
+            /mnt/skills/plugins/nous/SKILL.md read b36bf74c and 5683 bytes
+            on 2026-10-01 and on 2026-10-10, and 146 lines on the first,
+            equal to both readings of the first seal of S384. The bytes
+            question stays closed. The mount mechanism, and whether SKILL.md
+            becomes a tracked file under the lints, stay UNMEASURED and the
+            operator's.
+
+    D384-8  L6, THE SURFACE. At 31b7f73 the successor read 224, 142, 71, 0
+            and 94; at dcb48dc 236, 142, 83, 0 and 95. The release lane's
+            commits between the two moved them; which files, UNMEASURED. No
+            count of L6 is a stop condition.
+
+    D384-9  HOW THE BYTES REACHED THE SEAT. SEAT NETWORK: the container used
+            none in either seat of S384; project files came through the
+            platform's project tool. Every upload was identified by its
+            digest, never by its name. The project's mount was absent from
+            2026-10-10: the handoffs of S380 and S383 were read through the
+            platform's project tool, written to disk by the seat, and
+            accepted only as each hashed equal to its seal, 9e2bcdb9 and
+            3a255301, with a near, a truncated and an overlong digest each
+            red. The record of S380 was read the same way and not hashed. On
+            2026-10-13 the operator uploaded from Server A this document,
+            the landing instrument of D380, its commit instrument and its
+            payload; each equalled its digest in the record of S380, this
+            document also its blob 5ab3ea9b, and this document ends with the
+            payload of D380 over a prefix equal to the seal of S372.
+
+    D384-10 WHAT THIS SESSION WROTE BEFORE THIS ENTRY. To the repository and
+            to the services: nothing. From Server A: the opening rule's
+            request to Server B and its wire fetch of the served asset; one
+            fetch, by the successor, with the write set it declares; two
+            runs of the suite. On 2026-10-13 the namespace check wrote one
+            temporary file under /tmp and removed it, and printed that it
+            did. Before the landing, the bytes of this entry and the two
+            instruments that land it join the files of D380 in /root. They
+            are named with their digests in the handoff of this session and
+            not here, because each instrument carries the digest of this
+            entry.
+
+    FINDINGS
+
+            FG-S384-A  SEAT. OWED BY S380, ONE. The closing run of S380 at
+                       00:12:37Z on 2026-09-26 read L6 at 224, 142 and 71,
+                       moved from 219, 141 and 67 by the release lane's
+                       commits; which files, UNMEASURED. DERIVED in that
+                       seat: D380 adds none of its phrases.
+
+            FG-S384-B  WORLD. OWED BY S380, TWO. The pame of the apply, the
+                       commit and the push of D380 arrived as the runs
+                       themselves; the word was not typed.
+
+            FG-S384-C  SEAT. OWED BY S380, THREE. /root/A5_LAND.py was
+                       overwritten in place; its first bytes, 7360e554, live
+                       only off host. The bytes that landed D380, afa912a2,
+                       are still at that path.
+
+            FG-S384-D  WORLD. OWED BY S380, FOUR. The closing paste of S380
+                       showed the commit transcript again above empty
+                       prompts. No error line appeared, so nothing ran
+                       twice; the class of the release lane's FG-S378-B, not
+                       a recurrence.
+
+            FG-S384-E  SEAT. OWED BY S380, FIVE. A seat count of FAIL over a
+                       drive's output matched the FAILED in refusal tokens
+                       of passing arms; the verdict was then scored on the
+                       exact token of each arm. The class of FG-S372-A,
+                       recurring.
+
+            FG-S384-F  SEAT. OWED BY S383, ONE. A positive control that did
+                       not fire. The seat wrote its fixture for bytes above
+                       the ASCII range with printf and a hexadecimal escape
+                       under /bin/sh, which is dash; the bytes were literal
+                       ASCII and the control read zero. Derived again in
+                       Python, the controls read one and zero. The root of
+                       the release lane's FG-S375-D, in a new form.
+
+            FG-S384-G  WORLD. OWED BY S383, TWO. The kickoff of S383 carried
+                       S<381> and S<M>. The seat's check found three hundred
+                       and eighty-one absent in every file it held; the
+                       claim lived in a sealed opener of the release lane it
+                       did not hold, and came to light only when the
+                       operator brought that lane's handoff. AF, realised.
+
+            FG-S384-H  SEAT. OWED BY S383, THREE. A condition printed beside
+                       a command is not a gate. The seat wrote beside the
+                       successor that it runs only if the release lane is
+                       not in the tree, and did not ask; it ran at 00:38:03Z
+                       on 2026-09-26 inside that lane's open S379. The class
+                       of FG-S380-X, recurring.
+
+            FG-S384-I  SEAT. OWED BY S383, FOUR. A prediction about the
+                       other lane's commits was called refuted without the
+                       clock it was made at: the tree had not moved at
+                       00:38:05Z on 2026-09-26 and had moved by 11:41:15Z
+                       (TESTIMONY).
+
+            FG-S384-J  WORLD. OWED BY S383, FIVE. G2_R0_S372 prints its
+                       clock at the start only; its end is derived from the
+                       time of the suite.
+
+            FG-S384-K  WORLD. OWED BY S383, SIX. The paste of the arms in
+                       S383 lost its first byte. Nothing depended on it.
+
+            FG-S384-L  SEAT. OWED BY S383, SEVEN. The plugin path that seat
+                       loaded read 8d4de6fe, its line 8 in the wording the
+                       installed form later replaced, mounted before the
+                       personal skill was replaced (TESTIMONY). Closed in
+                       the first seal of S384: the path reads b36bf74c, the
+                       installed form (D384-7).
+
+            FG-S384-M  WORLD. OWED BY S384, ONE. AF, THE SECOND FORM. On
+                       2026-09-26 three hundred and eighty-three and three
+                       hundred and eighty-four were absent from every file
+                       of the release lane the seat held, and that lane's
+                       namespace check reads the tree and commit messages
+                       only. A ruling ready to paste was given to the
+                       operator; it reached that lane at the opening of the
+                       session that became its S385, which records the blind
+                       spot as FG-S385-B. A warning printed in this lane is
+                       not a ruling in the other until it is pasted.
+
+            FG-S384-N  SEAT. OWED BY S384, TWO. A process substitution under
+                       dash, at 23:35Z on 2026-09-26; the command did not
+                       run. The release lane's FG-S375-D, paid in this lane.
+
+            FG-S384-O  WORLD. OWED BY S384, THREE. Over a long wait the
+                       client clears the seat's early tool results. Sealed
+                       files are read again from disk before anything
+                       carries them forward; both seats of S384 did, and
+                       this entry was built only from bytes hashed when it
+                       was drafted.
+
+            FG-S384-P  WORLD. OWED BY S384, FOUR. Two sealed files of the
+                       release lane arrived pasted, with no bytes. A seat
+                       cannot hash a paste; a file rebuilt from one counts
+                       only when it hashes to its seal, as rule0_s389.txt
+                       did.
+
+            FG-S384-Q  WORLD. OWED BY S384, FIVE. TESTIMONY, the release
+                       lane's S391: finding codes stand in twenty-five
+                       tracked files, which corrects its FG-S371-E. DERIVED:
+                       this document, which carries such codes, should be
+                       one of them. With this entry the numbers three
+                       hundred and eighty-three and three hundred and
+                       eighty-four become visible to that lane's check of
+                       the tree.
+
+            FG-S384-R  SEAT. OWED BY S384, SIX. The bytes question of AA
+                       closed in the first seal of S384 and holds (D384-7).
+
+            FG-S384-S  WORLD. AF, THE THIRD FORM. A reservation holds only
+                       while each new opener carries it. The opener of the
+                       release lane's S397 dropped it with four sections; a
+                       ruling handed over and pasted restored both (D384-5).
+
+            FG-S384-T  WORLD. THE RELEASE LANE PINS UNEVENLY. Three of its
+                       handoffs the seat held print the digest of the opener
+                       they seal; eleven do not; only two seal files came
+                       (D384-6). Its handoff of S402 also dropped the header
+                       line that names this lane. The reservation survives
+                       through its openers alone.
+
+            FG-S384-U  SEAT. A LIST OF THOSE HANDOFFS WAS STATED WRONG. On
+                       2026-10-08 the seat told the operator that the
+                       handoffs of S392, S393, S395 and S401 print the
+                       digest of the opener they seal. Measured in the seat
+                       on 2026-10-13, that of S395 does not. D384-6 carries
+                       the measured list.
+
+            FG-S384-V  SEAT. A GATE ANSWERED THREE DAYS EARLIER WAS TREATED
+                       AS CURRENT. The question whether the release lane
+                       held the tree was answered at 12:52Z on 2026-10-10.
+                       The namespace check ran at 10:01:20Z on 2026-10-13
+                       with no fresh question. It read, fetched nothing and
+                       removed the one file it wrote. FG-S384-H names its
+                       class.
+
+            FG-S384-W  SEAT. A PREDICTION THE INSTRUMENT CANNOT SCORE. The
+                       seat predicted /tmp/nous_s324 present; the successor
+                       prints that leg bare, as it did in S373, S380 and
+                       S383. Board G stays unopened.
+
+            FG-S384-X  WORLD. THE PROJECT'S MOUNT CAN VANISH. From
+                       2026-10-10 no project mount existed in the seat;
+                       files arrive through a tool and the seat writes them
+                       to disk itself. A copy so written counts only when it
+                       hashes to its seal; the release lane's FG-S404-C
+                       shows a transcription that missed twice.
+
+            FG-S384-Y  WORLD. SERVER A'S /tmp IS NOT DURABLE. TESTIMONY, the
+                       release lane's S404: its entries are deleted thirty
+                       days after their last access and at boot. The
+                       successor reads /tmp/nous_s324 (board G). Its
+                       presence and age on Server A, UNMEASURED.
+
+            FG-S384-Z  WORLD. THE RESERVED VERB IN THE OTHER LANE'S SEALED
+                       PROSE. The release lane's handoffs of S393, S396,
+                       S398, S399 and S402 apply the reserved verb, its past
+                       participle or its noun to the results of drives and
+                       runs. The seat named each line to the operator at
+                       intake. Correcting them is that lane's.
