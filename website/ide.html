@@ -453,7 +453,7 @@ transition:all 0.2s;white-space:nowrap;
 // ═══ Monaco Editor Setup ═══
 var _monacoEditor = null;
 var _monacoReady = false;
-var _defaultCode = '// Write your NOUS program here...\n\nworld MyPipeline {\n    law cost_ceiling = $0.50 per cycle\n    heartbeat = 30s\n}\n\nmessage Signal {\n    source: string\n    data: string\n    confidence: float = 0.0\n}\n\nsoul Scanner {\n    mind: claude-sonnet @ Tier0A\n    senses: [http_get]\n    memory {\n        scan_count: int = 0\n    }\n    instinct {\n        let raw = sense http_get(url: "https://api.example.com/data")\n        remember scan_count += 1\n        speak Signal(source: "scanner", data: raw, confidence: 0.85)\n    }\n    heal {\n        on timeout => retry(3, exponential)\n    }\n}';
+var _defaultCode = '# Write your NOUS program here...\n\nworld MyPipeline {\n    law cost_ceiling = $0.50 per cycle\n    heartbeat = 30s\n}\n\nmessage Signal {\n    source: string\n    data: string\n    confidence: float = 0.0\n}\n\nsoul Scanner {\n    mind: claude-sonnet @ Tier0A\n    senses: [http_get]\n    memory {\n        scan_count: int = 0\n    }\n    instinct {\n        let raw = sense http_get(url: "https://api.example.com/data")\n        remember scan_count += 1\n        speak Signal(source: "scanner", data: raw, confidence: 0.85)\n    }\n    heal {\n        on timeout => retry(3, exponential)\n    }\n}';
 
 window.getEditorCode = getEditorCode;
 window.setEditorCode = setEditorCode;
@@ -518,8 +518,7 @@ function setEditorCode(val) {
       symbols: /[=><!~?:&|+\-*/^%@]+/,
       tokenizer: {
         root: [
-          [/\/\/.*$/, 'comment'],
-          [/\/\*/, 'comment', '@comment'],
+          [/#.*$/, 'comment'],
           [/\$[0-9]+\.?[0-9]*/, 'number.currency'],
           [/[0-9]+[smhd]/, 'number.duration'],
           [/[0-9]+\.[0-9]+/, 'number.float'],
