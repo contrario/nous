@@ -1449,6 +1449,8 @@ def _cleanup_sessions() -> None:
 @limiter.limit("30/minute")
 async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = Header(None)):
     require_api_key(x_api_key)
+    if body.replay_mode != "off":  # __s407_replay_confined_v1__
+        require_write_api_key(x_api_key)
     import time as _time
     session_id = body.session_id or str(uuid.uuid4())
     logger.info(f"chat request: session={session_id}, soul={body.soul}, world={body.world}")
@@ -1547,10 +1549,15 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
                         "error": "replay_log is required when replay_mode != 'off'",
                         "code": "CHAT006",
                     })
+                _replay_path = (  # __s407_replay_confined_v1__
+                    _resolve_replay_log(_replay_log)
+                    if _replay_mode == "replay"
+                    else _resolve_replay_log_for_write(_replay_log)
+                )
                 try:
                     from replay_runtime import ReplayContext
                     from replay_store import EventStore
-                    _replay_store = EventStore.open(_replay_log, mode=_replay_mode)
+                    _replay_store = EventStore.open(_replay_path, mode=_replay_mode)
                     _replay_ctx = ReplayContext(
                         store=_replay_store,
                         mode=_replay_mode,
@@ -2474,10 +2481,7 @@ async def governance_interventions(
     except ImportError:
         raise HTTPException(status_code=501, detail={"error": "governance module not available", "code": "GOV001"})
 
-    from pathlib import Path as _P
-    log_path = _P(log)
-    if not log_path.exists():
-        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "GOV004"})
+    log_path = _resolve_replay_log(log)  # __s407_replay_confined_v1__
 
     try:
         glog = GovernanceLog(log_path)
@@ -2509,10 +2513,7 @@ async def governance_stats(
     except ImportError:
         raise HTTPException(status_code=501, detail={"error": "governance module not available", "code": "GOV001"})
 
-    from pathlib import Path as _P
-    log_path = _P(log)
-    if not log_path.exists():
-        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "GOV004"})
+    log_path = _resolve_replay_log(log)  # __s407_replay_confined_v1__
 
     try:
         glog = GovernanceLog(log_path)
@@ -2656,10 +2657,7 @@ async def replay_summary(request: Request, log: str = "", x_api_key: Optional[st
     require_api_key(x_api_key)
     if not log:
         raise HTTPException(status_code=422, detail={"error": "log parameter required", "code": "REP003"})
-    from pathlib import Path as _P
-    log_path = _P(log)
-    if not log_path.exists():
-        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "REP002"})
+    log_path = _resolve_replay_log(log)  # __s407_replay_confined_v1__
     try:
         import json as _json
         by_kind: dict[str, int] = {}
@@ -2735,10 +2733,7 @@ async def replay_events(
     require_api_key(x_api_key)
     if not log:
         raise HTTPException(status_code=422, detail={"error": "log parameter required", "code": "REP003"})
-    from pathlib import Path as _P
-    log_path = _P(log)
-    if not log_path.exists():
-        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "REP002"})
+    log_path = _resolve_replay_log(log)  # __s407_replay_confined_v1__
 
     try:
         import json as _json
@@ -2792,10 +2787,7 @@ async def replay_verify(request: Request, log: str = "", x_api_key: Optional[str
     require_api_key(x_api_key)
     if not log:
         raise HTTPException(status_code=422, detail={"error": "log parameter required", "code": "REP003"})
-    from pathlib import Path as _P
-    log_path = _P(log)
-    if not log_path.exists():
-        raise HTTPException(status_code=404, detail={"error": f"log file not found: {log}", "code": "REP002"})
+    log_path = _resolve_replay_log(log)  # __s407_replay_confined_v1__
 
     try:
         try:
@@ -2842,6 +2834,38 @@ async def replay_verify(request: Request, log: str = "", x_api_key: Optional[str
 NOUS_REPLAY_DIR: Path = Path(os.environ.get("NOUS_REPLAY_DIR", "/var/lib/nous/replays"))
 
 
+# __s407_replay_confined_v1__
+def _replay_name_bad(name: str) -> bool:
+    """A replay log name a caller may not use: a path separator, a
+    leading dot, a NUL byte, or more than 255 characters."""
+    return ("/" in name or "\\" in name or name.startswith(".")
+            or "\x00" in name or len(name) > 255)
+
+
+def _resolve_replay_log_for_write(name: str) -> Path:
+    """Resolve a replay log filename to record into, inside NOUS_REPLAY_DIR.
+
+    S407. The chat's replay_log reached EventStore.open as the caller gave
+    it. The name rules are those of _resolve_replay_log, and the name must
+    end in .jsonl. The file may not exist yet; if it exists it must be a
+    regular file whose resolved path stays inside the directory. The
+    directory is never created here.
+    """
+    if not name:
+        raise HTTPException(status_code=422, detail={"error": "name required", "code": "REP003"})
+    if _replay_name_bad(name) or not name.endswith(".jsonl"):
+        raise HTTPException(status_code=403, detail={"error": "invalid filename", "code": "REP006"})
+    base = NOUS_REPLAY_DIR.resolve()
+    if not base.is_dir():
+        raise HTTPException(status_code=404, detail={"error": "replay dir not configured", "code": "REP007"})
+    candidate = (base / name).resolve()
+    if not candidate.is_relative_to(base):
+        raise HTTPException(status_code=403, detail={"error": "path outside replay dir", "code": "REP006"})
+    if candidate.exists() and not candidate.is_file():
+        raise HTTPException(status_code=403, detail={"error": "not a regular file", "code": "REP006"})
+    return candidate
+
+
 def _resolve_replay_log(name: str) -> Path:
     """Resolve a replay log filename to an absolute path inside NOUS_REPLAY_DIR.
 
@@ -2850,7 +2874,7 @@ def _resolve_replay_log(name: str) -> Path:
     """
     if not name:
         raise HTTPException(status_code=422, detail={"error": "name required", "code": "REP003"})
-    if "/" in name or "\\" in name or name.startswith("."):
+    if _replay_name_bad(name):  # __s407_replay_confined_v1__
         raise HTTPException(status_code=403, detail={"error": "invalid filename", "code": "REP006"})
     base = NOUS_REPLAY_DIR.resolve()
     if not base.exists():
