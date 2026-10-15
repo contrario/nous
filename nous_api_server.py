@@ -210,6 +210,21 @@ def _compile_pipeline(source: str) -> dict[str, Any]:
     }
 
 
+# __s407_public_tiers_free_only_v1__
+def _public_tiers() -> list[Any]:
+    """The tiers a route of this server may call: available and free.
+
+    FG-S406-B (S407). The chat routes and the webhook chat path admit a
+    caller without a key, and their loops fell through to the next
+    available tier, a paid one, when the free tiers failed; no spend
+    check ran on that path. Every tier this server calls now comes from
+    here. A tier whose price does not resolve to free is skipped, so a
+    pricing failure fails closed.
+    """
+    from nous_runtime import RUNTIME_TIERS
+    return [t for t in RUNTIME_TIERS if t.available and t.is_free]
+
+
 # ── Endpoints ──
 
 @app.get("/v1/health")
@@ -1357,10 +1372,7 @@ async def _classify_soul(soul_configs: dict[str, dict], message: str) -> str | N
     agents_block = "\n".join(lines)
     classify_prompt = f"Agents:\n{agents_block}\n\nMessage: \"{message}\"\n\nWhich agent? Reply with ONLY the name."
 
-    from nous_runtime import RUNTIME_TIERS
-    for tier in RUNTIME_TIERS:
-        if not tier.available or not tier.is_free:
-            continue
+    for tier in _public_tiers():  # __s407_public_tiers_free_only_v1__
         try:
             result = await asyncio.wait_for(
                 tier.call("You are a router. Output only the agent name, nothing else.", classify_prompt),
@@ -1517,7 +1529,6 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
     else:
         # __api_chat_llm_replay_v1__
         try:
-            from nous_runtime import RUNTIME_TIERS
             reply = ""
             cost = 0.0
             tier_used = "none"
@@ -1556,9 +1567,7 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
             sess["_replay_turn"] = _turn_cycle + 1
 
             try:
-                for tier in RUNTIME_TIERS:
-                    if not tier.available:
-                        continue
+                for tier in _public_tiers():  # __s407_public_tiers_free_only_v1__
 
                     async def _do_call(_t=tier) -> dict:
                         return await asyncio.wait_for(
@@ -1740,12 +1749,9 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
         )
 
     async def _stream_gen():
-        from nous_runtime import RUNTIME_TIERS
         nonlocal chosen_soul
 
-        for tier in RUNTIME_TIERS:
-            if not tier.available:
-                continue
+        for tier in _public_tiers():  # __s407_public_tiers_free_only_v1__
 
             gen = tier.stream_call(system_prompt, user_prompt)
             first_event = None
@@ -2162,7 +2168,6 @@ async def _webhook_chat(
 
     sess["history"].append({"role": "user", "content": message})
 
-    from nous_runtime import RUNTIME_TIERS
     reply = ""
     cost = 0.0
     tier_used = "none"
@@ -2170,9 +2175,7 @@ async def _webhook_chat(
     tokens_out = 0
     elapsed_ms = 0.0
 
-    for tier in RUNTIME_TIERS:
-        if not tier.available:
-            continue
+    for tier in _public_tiers():  # __s407_public_tiers_free_only_v1__
         try:
             result = await asyncio.wait_for(
                 tier.call(system_prompt, user_prompt),
