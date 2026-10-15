@@ -17043,3 +17043,364 @@ document itself.
                        participle or its noun to the results of drives and
                        runs. The seat named each line to the operator at
                        intake. Correcting them is that lane's.
+
+  - S407 the seat that opened at the head S406 left, found this document
+    unchanged, closed the chat's paid fallthrough and the caller-supplied
+    replay paths, put a guard on the provider key, and wrote the entry that
+    S406 and itself owed
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY IS WRITTEN FROM INSIDE THE
+    SESSION IT DESCRIBES, SO IT STATES NO NUMBER THAT COUNTS THAT SESSION.
+    Unless a sentence says otherwise, each value was printed on Server A
+    between 2026-10-13 and 2026-10-15, by the opening rule, by instruments
+    that printed their own digest and whose refusal arms were driven in the
+    seat before their first run on the host, or by read-only commands of
+    version control, systemd and the shell, pasted whole. Other kinds are
+    marked where they appear. INHERITED: carried from the sealed handoff,
+    opener and record of S406, whose digests were checked at intake, or from
+    the entries above. READ IN THE SEAT'S CONTAINER: computed off host, from
+    a clone whose files equal the host's by digest. DERIVED: computed from
+    printed values or read from code. TESTIMONY: said by a party and not
+    measured here. OPERATOR: stated by the operator. RULING: a decision the
+    operator stated in words.
+
+    THE SESSION NUMBERS. INHERITED: the operator numbered S406 at 22:38:50Z
+    on 2026-10-13, and four hundred and five stays reserved for the release
+    lane. RULING: at 23:26Z on 2026-10-14 the operator gave this seat four
+    hundred and seven, and at 22:14Z on 2026-10-15 ruled that this entry is
+    D407 and carries what S406 owed. READ IN THE SEAT'S CONTAINER, at 23:32Z
+    on 2026-10-14 on a clone at 56636271: the token S407 counted zero in
+    every tracked file and in every commit message on every ref. Since then
+    the commits of this seat and the files they added carry the token, and
+    two of its codes are already public: FG-S407-E in the subject of
+    351c9020 and FG-S407-J in the files of the key guard on the host. Their
+    meanings below are those uses. Before this entry the document held no
+    S406 or S407 token, no anchor of either number and no code of either
+    family, and the instrument that appends this entry refuses unless that
+    is still so when it runs. S406 assigned no letter J.
+
+    D407-1  THE OBJECTS AND WHO CHOSE THEM. INHERITED: the unit of S406 was
+            the operator's, an Import feature for the IDE that turns pasted
+            Python, JavaScript or a description into NOUS, with the parser
+            gating the result, a provenance header, visible parse errors, no
+            new trust root and the existing buttons unchanged. OPERATOR,
+            23:31Z on 2026-10-14: the object of this seat is the letter B of
+            S406, the chat's cost. RULING, 11:43Z on 2026-10-15: the public
+            chat calls free tiers only, for every caller, with or without a
+            key. RULING, 12:42Z: then, in the order the seat proposed, the
+            replay paths, a guard on the provider key, R6 with this entry,
+            and the seal.
+
+    D407-2  THE OPENINGS. INHERITED, S406: paste one at 22:39:39Z and
+            G2_R0_S372 at 22:51:54Z on 2026-10-13, both green at 72a9584.
+            S407, the operator having said before each run that no other
+            lane held the tree: paste one at 02:51:42Z on 2026-10-14, RC 0,
+            HEAD 5663627 equal to origin/main with three commits above
+            v6.0.3, each named in the S406 seal, suite 3499 passed and 12
+            skipped; G2_R0_S372 at 03:03:29Z, RC 0 at 56636271, DOC_SHA
+            bd00e5cb41598d01 with blob 095b71d5 at HEAD and at origin, HEADS
+            69 and 55, STRICT 737, LABELLED 591, DUP 0, OTHER 8, L6 236 142
+            83 0 95, mirror CLEAN 500 with 4 orphans. The stop condition
+            held, and every value the S406 opener predicted was read as
+            predicted. GEN_SHAS printed 72671ea9 for mint_release_vsa, the
+            value S384 recorded (INHERITED).
+
+    D407-3  S406, GATE A. INHERITED: the IDE's default program began with
+            two slashes, which the grammar does not accept. Commit 56636271,
+            website/ide.html only, made the default program and the editor's
+            comment rule use the hash sign; it was deployed through
+            scripts/deploy_website.sh with claim lint 0 and served at
+            9f14775f. The served file went back to its old bytes for 173
+            seconds when an undo line printed in a copyable block was run,
+            and the deploy corrected it.
+
+    D407-4  S406, GATE K. INHERITED: cloudflared reaches nginx over ::1,
+            which uvicorn did not trust for forwarded headers, so the API's
+            per-IP limiter keyed every tunnel visitor as one address. The
+            drop-in 50-s406-forwarded-allow-ips.conf in
+            /etc/systemd/system/nous-api.service.d/, content 19ca852a and
+            untracked, sets FORWARDED_ALLOW_IPS=127.0.0.1,::1. After each
+            restart of nous-api in this seat the variable was in the new
+            process's environment.
+
+    D407-5  S406, THE IMPORT EXPERIMENT AND ITS END. INHERITED: kill
+            criteria K1 to K6 were pinned in S406_YIELD_REPORT.py, df035768,
+            and ruled before the first call. V1, the model writing NOUS,
+            failed K1 and K3. V2, the model writing a JSON IR under a strict
+            schema and a deterministic emitter writing NOUS, parsed 24 of 26
+            and was ended by K6: the operator judged 3 of 10 seeded items
+            fair against a threshold of 6 (RULING, 02:28Z on 2026-10-14).
+            The syntactic gap closed by construction and the semantic one
+            did not, as R2 of docs/REJECTED_IDEAS.md (S219) had said. R6,
+            landed with this entry, records the rejection. No code of the
+            unit reached the repository; its tools and outputs stay in /root
+            on Server A, listed in the S406 record.
+
+    D407-6  B, THE CHAT'S PAID FALLTHROUGH. READ IN THE SEAT'S CONTAINER at
+            56636271: /v1/chat, /v1/chat/stream and the webhook chat path
+            admitted a caller without a key and walked the runtime's tiers
+            skipping only those without a key, so a caller reached the third
+            tier, DeepSeek, a paid one, whenever the two free tiers failed,
+            and no spend check ran on any of the three. On the host the key
+            of that tier is in /opt/aetherlang_agents/.env, a file the
+            service user reads. Commit 062fb65e gives the server its tiers
+            through one helper that keeps those available and free; a
+            structural test fails if other code names the tier list, and
+            route tests with stubbed tiers were driven red on the parent, 6
+            of 9, and green after, 9 of 9 on the host with the suite at 3508
+            passed and 12 skipped. Pushed at 12:10:27Z on 2026-10-15;
+            nous-api restarted at 12:11:26Z. Through the public path at
+            12:36:45Z the chat answered from Nemotron-120B at a cost of
+            zero.
+
+    D407-7  THE KEY. At 12:13:47Z on 2026-10-15 the public chat answered
+            503: both free tiers met 401 from OpenRouter. At 12:32:06Z the
+            key then in the .env drew the provider's message that it had
+            expired; whether that was still the old key is not recorded.
+            OPERATOR: a new key with no expiry and a limit of 50 dollars
+            replaced the value in the .env at 12:35:06Z. The key endpoint
+            answered 200 with that limit, and after a restart of nous-api at
+            12:36:45Z the public chat answered again. Only the operator saw
+            the key; no command of this seat printed it.
+
+    D407-8  E, THE REPLAY PATHS. READ IN THE SEAT'S CONTAINER: five read
+            routes opened the log path a caller passed, and the chat passed
+            its replay_log to the event store, which in record mode creates
+            directories and appends; only the diff and list routes confined
+            names to NOUS_REPLAY_DIR. Commit 351c9020 resolves every such
+            name through the existing confinement or a new one for
+            recording, a .jsonl name with the directory never created, and a
+            chat replay mode needs a valid key. Its tests were driven red on
+            the parent, 40 of 40, and green after, 40 on the host with the
+            suite at 3548 passed and 12 skipped. Pushed at 13:04:14Z;
+            nous-api restarted at 13:06:15Z. On the live process an absolute
+            name answered 403 REP006, an unknown name 404 REP002 and a chat
+            record request without a key 401 AUTH003, and the chat still
+            answered from a free tier.
+
+    D407-9  THE KEY GUARD. Untracked host config written at 13:24:30Z on
+            2026-10-15 by S407_G_INSTALL.py, after Asklepios's own loader
+            read the candidate watchlist:
+            /usr/local/lib/nous-key-guard/keyguard.py, d85f8c2f; the unit
+            nous-key-guard.service, 9b7b9809; one block in
+            /etc/asklepios/watchlist.toml, 69847402. The guard runs as
+            aetherlang, reads the key from the .env at each check, never
+            prints it, and exits with a reason when the key is rejected,
+            expires within seven days or has under a tenth of its limit
+            left. Asklepios watches the unit as a systemd probe with heal
+            off. It ran at 13:25:05Z and logged a usable key. At 13:40:29Z
+            it was stopped on purpose; Asklepios marked it unhealthy at the
+            third failure and sent a notice, and after its start it read
+            healthy again. OPERATOR: both Telegram messages arrived.
+
+    D407-10 THE OPERATOR'S HOST MOVES DURING THIS SEAT. OPERATOR: at
+            23:07:15Z on 2026-10-14, from another chat, the drop-in
+            98-user.conf, bf89c31f, set the user of nous-api to aetherlang,
+            followed by a daemon-reload and a restart; the seat found it at
+            23:47:10Z, and the operator named it his at 00:02Z. OPERATOR: at
+            12:49:55Z on 2026-10-15 nous_api.py was edited in the live tree
+            so that load_dotenv reads NOUS_ENV_FILE when it is set. With the
+            operator's word the seat parked it by git stash at 12:57:39Z,
+            with a copy at /root/s407_park_nous_api.py, 0a37c55b, so that
+            351c9020 and its restart carried only the replay fix, and
+            restored it at 13:07:02Z. At 13:24:14Z commit 7b5b714, on top of
+            351c9020 and touching nous_api.py alone, recorded that edit
+            under the operator's name, outside this seat's gates; the seat
+            found it at 22:29:14Z, when the instrument that lands this entry
+            refused on an empty porcelain. It was not on origin when this
+            entry was written, and the push that carries this entry carries
+            it.
+
+    D407-11 WHAT THESE SESSIONS WROTE BEFORE THIS ENTRY. To the repository:
+            56636271 of S406, and 062fb65e and 351c9020 of S407, all on
+            origin; 7b5b714, the operator's edit, rides with this entry. To
+            Server A outside the repository: the drop-in of S406, the
+            operator's drop-in and key, the key guard and its watchlist
+            block, restarts of nous-api and one of asklepios-probe, and the
+            tools of both sessions in /root with /root/s406_yield/. Seat
+            network: that of S406 is listed in its handoff; this seat
+            declared before use a clone of the public repository and package
+            installs into a venv in the seat, and used nothing else. Before
+            the landing, the bytes of this entry and the instruments that
+            land it join the S406 and S407 files in /root.
+
+    D407-12 WHAT STAYS OPEN. Of S406: letters C, D, E, I, M and P, and H,
+            which letter G of this seat sharpens. Of this seat: letters B,
+            C, D, F, H and Q. The operator's: whether the drop-ins, the
+            guard's files and the watchlist block are tracked; whether
+            NOUS_ENV_FILE becomes a real separation of the service's keys;
+            whether the chat should record at all. Nothing on this board
+            presses with a date.
+
+    FINDINGS
+
+            FG-S406-A  WORLD. THE IDE'S DEFAULT PROGRAM DID NOT PARSE. It
+                       began with two slashes, an unexpected token at 1:1.
+                       Closed by 56636271 (D407-3). Two more samples
+                       embedded in the page, lines 836 and 837 at 72a9584,
+                       do not parse and were not touched.
+
+            FG-S406-B  WORLD. THE CHAT HAD NO COST CAP AND ITS TIERS REACHED
+                       A PAID ONE. Closed by 062fb65e and its restart
+                       (D407-6).
+
+            FG-S406-C  WORLD. THE TIER CALL HARDCODES max_tokens 300. Open.
+                       It bounds the length of one answer, not the number of
+                       calls.
+
+            FG-S406-D  WORLD. THE CHAT'S SYSTEM PROMPT IS FIXED SERVER-SIDE.
+                       Open; it matters only to a future route.
+
+            FG-S406-E  WORLD. A PARSE ERROR'S TYPE IS LOST OVER HTTP; only
+                       its text arrives. Open.
+
+            FG-S406-F  SEAT. A RELAYED ANALYSIS INVERTED A CONCLUSION, and
+                       the raw output decided. Read raw output.
+
+            FG-S406-G  SEAT. A LOCATE TOOL RAN sha256sum ON A DIRECTORY.
+                       Cosmetic.
+
+            FG-S406-H  WORLD. BUDGETGUARD'S READ, CHECK AND WRITE ARE NOT
+                       ATOMIC, AND IT FAILS OPEN. Open; letter G of this
+                       seat adds that the API's request path never calls it.
+
+            FG-S406-I  WORLD. EIGHT OF FIFTY-SIX TRACKED .nous FILES DO NOT
+                       PARSE at 72a9584. Whether letter M explains them is
+                       unmeasured.
+
+            FG-S406-K  WORLD. THE PER-IP LIMITER KEYED EVERY TUNNEL VISITOR
+                       AS ONE ADDRESS. Closed by the drop-in (D407-4).
+
+            FG-S406-L  SEAT. AN UNDO LINE PRINTED IN A COPYABLE BLOCK BESIDE
+                       A PAME REQUEST WAS RUN, and the served file went back
+                       to its old bytes for 173 seconds. An undo line is
+                       printed by a tool.
+
+            FG-S406-M  WORLD. NAMES THAT BEGIN WITH A PRIORITY KEYWORD, OR
+                       EQUAL A SAME-PRIORITY WORD, FAIL TO PARSE IN SOME
+                       PARSER STATES: 23 prefix patterns and 43 words.
+                       Grammar-level. Open.
+
+            FG-S406-N  SEAT. THE V2 RECORD LACKED THE HEADER'S CLOCK, and
+                       its replay needed the attempt log.
+
+            FG-S406-O  WORLD. THE MODEL INVENTED URLS AND HOSTS against an
+                       explicit instruction: 21 of 28 hosts were not in the
+                       source.
+
+            FG-S406-P  WORLD. SLEEP DROPS ITS UNIT: the number is a count of
+                       heartbeats, and the emitter of S406 mapped seconds to
+                       it. Open, language and docs.
+
+            FG-S406-Q  SEAT. R2 OF docs/REJECTED_IDEAS.md WAS NOT READ
+                       BEFORE THE UNIT. It had named the semantic wall that
+                       S406 measured again. Read the ledger before a unit
+                       spends a call, a write or a night.
+
+            FG-S406-R  SEAT. PROTOCOL DRIFT LATE IN S406: seat network used
+                       before it was declared, commands without the clock
+                       and the exit code, and a pinned report that prints no
+                       clock.
+
+            FG-S407-A  WORLD. THE PAID TIER IS DEEPSEEK ITSELF, AND ITS KEY
+                       IS THE PLATFORM'S. The third tier calls
+                       api.deepseek.com with a key the service reads from
+                       /opt/aetherlang_agents/.env, a file shared with the
+                       rest of the platform. No limit at OpenRouter ever
+                       bounded it. DERIVED from the journal of nous-api from
+                       2026-10-07: no request reached it, since none saw
+                       both free tiers fail before 062fb65e.
+
+            FG-S407-B  WORLD. A CALLER WITHOUT A KEY IS ADMITTED. The common
+                       key check returns anonymous when no key is sent and
+                       refuses only a wrong one, on every route that calls
+                       it. NOUS_API_KEYS is set on the host. Open.
+
+            FG-S407-C  WORLD. THE TELEGRAM WEBHOOK SKIPS THE KEY CHECK.
+                       Open.
+
+            FG-S407-D  WORLD. THE GENERIC WEBHOOK POSTS ITS RESULT TO A URL
+                       THE CALLER NAMES. Open.
+
+            FG-S407-E  WORLD. REPLAY LOG NAMES FROM A CALLER WERE NOT
+                       CONFINED. Closed by 351c9020 and its restart
+                       (D407-8).
+
+            FG-S407-F  WORLD. A DROP-IN'S VALUES ARE NOT HIDDEN BY ITS MODE.
+                       At each reload systemd warns that api-keys.conf is
+                       marked world-inaccessible and that its configuration
+                       is readable through its interfaces all the same.
+                       Open; beside HX-NOUS-API-PROC-ENVIRON-EXPOSURE.
+
+            FG-S407-G  WORLD. THE API'S REQUEST PATH NEVER CALLS
+                       BUDGETGUARD. It lives in the runtime class that the
+                       chat and webhook paths do not build. It sharpens
+                       letter H of S406.
+
+            FG-S407-H  WORLD. THE PER-IP LIMITER KEYS THE FULL CLIENT
+                       ADDRESS. DERIVED from the code: a client with many
+                       addresses gets as many buckets. Open. A per-IP limit
+                       never bounded cost, and after 062fb65e the public
+                       path cannot spend.
+
+            FG-S407-I  WORLD. A HOST MOVE MADE FROM ANOTHER CHAT WAS
+                       UNRECORDED UNTIL MEASURED: 98-user.conf and a restart
+                       of nous-api at 23:07Z on 2026-10-14 (D407-10). A host
+                       move is recorded where it is made.
+
+            FG-S407-J  WORLD. THE OPENROUTER KEY EXPIRED AND NOTHING
+                       ALERTED. The public chat went down without a sound;
+                       before 062fb65e that traffic would have reached the
+                       paid tier. Replaced by the operator (D407-7); the key
+                       guard now alerts (D407-9).
+
+            FG-S407-K  SEAT. A PRESENCE CHECK READ ONE OF TWO SOURCES. The
+                       first read the process environment, which the .env
+                       loaders never reach; a read of the .env followed.
+
+            FG-S407-L  SEAT. A CAP WAS PROPOSED FOR THE WRONG PROVIDER.
+                       Before the code was read, a credit limit at
+                       OpenRouter was offered as the bound on a paid tier
+                       that is DeepSeek's.
+
+            FG-S407-M  SEAT. AN OVERCLAIM, RETRACTED. The seat wrote that
+                       the paid tier was very likely spending on every
+                       request; the journal showed that none had reached it
+                       since 2026-10-07.
+
+            FG-S407-N  SEAT. REFUSAL ARMS RAN AGAINST AN ORIGIN ALREADY
+                       PUSHED TO. The first arms of the first commit tool
+                       met a fixture its own happy path had moved, and were
+                       run again on a fresh origin. A fixture is rebuilt for
+                       each arm.
+
+            FG-S407-O  SEAT. A LAND TOOL PRINTED THE PORCELAIN AND DID NOT
+                       CHECK IT. At 12:51:25Z on 2026-10-15 a third path,
+                       the operator's edit, passed it unrefused; the seat
+                       stopped on the printed line, and the commit tool's
+                       own check would have refused.
+
+            FG-S407-P  WORLD. ANOTHER CHAT WROTE TO THE LIVE TREE DURING A
+                       GATE: nous_api.py at 12:49:55Z, committed at
+                       13:24:14Z as 7b5b714 outside the gates (D407-10);
+                       this entry's landing refused on it. DERIVED from the
+                       code: NOUS_ENV_FILE alone does not separate the
+                       service's keys, because the runtime still reads the
+                       shared .env for any key not already set. A chat
+                       outside the lanes works in its own clone. Open, the
+                       operator's.
+
+            FG-S407-Q  WORLD. THE REPLAY DIRECTORY IS NOT WRITABLE BY THE
+                       SERVICE. /var/lib/nous/replays is root 755 and
+                       nous-api runs as aetherlang, so a chat record request
+                       with a valid key fails at the store. DERIVED from the
+                       code and two host reads. Open, the operator's:
+                       recording on or off.
+
+            FG-S407-R  SEAT. PREDICTIONS THAT MISSED: the service user,
+                       aetherlang through 98-user.conf where root was
+                       predicted twice; the owner of nous_api_server.py,
+                       root where aetherlang was predicted; the exposure
+                       score of the guard's unit, 3.1 where 1 to 2 was
+                       predicted; the exit code of a pipe that ended in cut.
+                       Each was read before the next step.

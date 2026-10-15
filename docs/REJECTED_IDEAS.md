@@ -193,3 +193,42 @@ One block per rejected idea:
   ranges), the tightest provable bound stops being an identity and a
   certificate for it would carry information the cap certificate does
   not.
+
+### R6 -- IDE Import through an LLM-written IR and an emitter (S406)
+
+- Idea: an Import button in the IDE. Paste Python, JavaScript or a
+  description; a free-tier LLM reached through the runtime's own tiers
+  returns a JSON IR under a strict response schema; a deterministic
+  emitter writes the NOUS text; the repo parser gates the final bytes;
+  a header marks the result as LLM output.
+- Searches run: in-session measurement under kill criteria ruled
+  before the first call (S406_YIELD_REPORT.py df035768), not a web
+  recon. OpenRouter documentation read 2026-10-14 (structured
+  outputs, reasoning tokens, key limits). Corpus s406_corpus_v1.jsonl
+  ff25253b: 26 items, 13 Python, 7 JavaScript, 6 descriptions.
+  V1, the LLM writes NOUS text: parse 2/10 answered, p90 46.8 s.
+  V2, IR under json_schema strict with reasoning off, on
+  nvidia/nemotron-3-super-120b-a12b:free: parse 24/26, p90 20.8 s,
+  2 outputs ran to the token limit on unbounded expression nesting,
+  validate 0/24, typecheck 18/24. The google/gemma-4-31b-it:free
+  endpoint refused the strict schema (404 under require_parameters).
+  Review of 10 seeded items, threshold 6 fair: operator 3/10; a
+  second opinion sealed before that review 1/10.
+- Rejection reason: violates the honest boundary / weak strategic
+  leverage. The wall R2 named is the wall measured here. Constrained
+  decoding closed the syntactic gap by construction and left the
+  semantic one: a guard written backwards so the program never acts,
+  a spend limit of the source dropped without a TODO, local functions
+  turned into HTTP calls to hosts the source never names (21 of 28
+  URLs), message fields that do not match. Two such programs passed a
+  careful human review; the compiled code showed them. A governance
+  tool that emits plausible, parse-valid, labelled programs that do
+  something else is worse than no import.
+- Revisit trigger: not yet, and only on R2's terms: a mechanism that
+  closes the semantic gap, judged by criteria that execute (compile
+  and run against fixtures), not by reading. Translating declarative
+  structure only (souls, messages, routes, numeric limits, URLs, each
+  anchored to a verbatim span of the source) and leaving all logic as
+  a TODO that quotes the source is a different design: it needs its
+  own Innovation Gate and its own kill criteria before any call.
+  Anchoring shows where an element came from, not that it is right.
