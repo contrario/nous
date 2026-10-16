@@ -13,11 +13,16 @@ from typing import Any, Optional, Literal
 
 from pydantic import BaseModel, Field
 
+# __nous_env_file_fail_closed_v1__
+_nous_env_file = os.environ.get("NOUS_ENV_FILE")
 try:
     from dotenv import load_dotenv
-    load_dotenv(os.environ.get("NOUS_ENV_FILE") or (Path(__file__).parent.parent / ".env"))
 except ImportError:
-    pass
+    if _nous_env_file:
+        raise SystemExit(f"NOUS_ENV_FILE is set but python-dotenv is not importable: {_nous_env_file}")
+else:
+    if not load_dotenv(_nous_env_file or (Path(__file__).parent.parent / ".env")) and _nous_env_file:
+        raise SystemExit(f"NOUS_ENV_FILE did not load (missing or empty): {_nous_env_file}")
 
 # === Version & Paths ===
 
