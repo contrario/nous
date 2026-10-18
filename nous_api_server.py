@@ -1114,7 +1114,7 @@ async def verify_dossier_endpoint(
 @limiter.limit("30/minute")
 async def run_source(request: Request, body: RunRequest, x_api_key: Optional[str] = Header(None)):
     require_api_key(x_api_key)
-    if body.mode != "dry-run" or body.apply_remedy or body.consult_memory or body.emit_trace:  # __run_write_key_gate_v1__
+    if body.mode != "dry-run" or body.apply_remedy or body.consult_memory:  # __run_write_key_gate_v2__
         require_write_api_key(x_api_key)
     logger.info(f"run request: {len(body.source)} chars, mode={body.mode}, cycles={body.max_cycles}")
 
