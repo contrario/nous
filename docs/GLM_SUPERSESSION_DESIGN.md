@@ -17677,3 +17677,244 @@ document itself.
                        prediction missed, and its fallback to systemctl cat
                        carried the check (D408-5). It is read through
                        DropInPaths and systemctl cat.
+
+  - S409 the seat that cut the run tail out of the host manifest and landed
+    the entry S408 owed, after a test file of the operator's stopped its
+    first dry run, and was numbered after its work; the seat after it wrote
+    this entry
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY WAS WRITTEN AFTER THE
+    SESSION IT DESCRIBES, BY THE SEAT THAT FOLLOWED IT. Every value is
+    INHERITED from the sealed handoff, opener and record of S409, whose
+    digests that seat checked against the kickoff at intake, unless a
+    sentence says otherwise. Within them, unless marked, a value was printed
+    on Server A by the opening rule, by instruments whose digest was printed
+    before they ran, or by read-only commands of version control, systemd
+    and the shell. READ IN THE SEAT'S CONTAINER: computed off host, from the
+    sealed files or from a clone of the public repository. DERIVED: computed
+    from printed values or read from code. OPERATOR: stated by the operator.
+    RULING: a decision the operator stated in words. WRITING SEAT: read by
+    the seat that writes this entry, on Server A or in its container. Every
+    time below is on 2026-10-19 and in UTC.
+
+    THE SESSION NUMBER. OPERATOR, 05:05Z: the seat was numbered S409, after
+    its work. INHERITED: four hundred and five stays reserved for the
+    release lane. READ IN THE SEAT'S CONTAINER at 05:06:03Z, on a clone
+    fetched at 9bed732: the tokens S409, D409 and FG-S409 counted zero in
+    the tree and in every commit message on every ref, and 409 stood four
+    times in this document, each inside a larger number. The release lane's
+    latest sealed opener was not in the project, so the number was checked
+    against the tree and the commit messages only. WRITING SEAT, at
+    12:11:48Z, on a fresh clone at 9bed732: the same three tokens counted
+    zero again, and the four numbers read 40966 once and 29409 three times.
+    RULING, 12:09Z: this entry, D409, as the writing seat had put it when no
+    test and patch for letter D of S407 was brought. The writing seat's
+    number is the operator's to allocate and is not stated here. Before this
+    entry the document held no S409 token, no anchor of that number and no
+    code of its family, and the instrument that appends this entry refuses
+    unless that is still so when it runs.
+
+    D409-1  THE OBJECTS AND WHO CHOSE THEM. RULING, 00:53Z: HM v1.2 first,
+            then D408, as the seat put it. RULING, 01:02Z: the entry stays
+            D408 and carries what S408 owed. OPERATOR, 04:54Z: one pame,
+            which the seat took as approval of the text of D408 and of its
+            apply, and said so. OPERATOR, 04:57Z and 04:58Z: a pame for the
+            commit and another for the push. OPERATOR, 05:05Z: the number.
+
+    D409-2  THE OPENING. OPERATOR, 00:25Z: no chat held the tree. Paste one
+            at 00:25:34Z, RC 0, SELF_SHA c027371e, rule0.sh 074e51af: HEAD
+            844a872 equal to origin/main, ten commits above v6.0.3, each
+            predicted; A at 6.0.3, its start DERIVED as 00:40:58Z on
+            2026-10-18; B at tag v6.0.3, its start DERIVED as 16:34:06Z on
+            2026-10-08; suite 3548 passed and 12 skipped; three nous rows
+            healthy in Asklepios at 00:27:37Z; no failed unit. HM v1.1 at
+            00:33:06Z printed one DRIFT line and RC 1 (D409-3). OPERATOR,
+            00:35Z: no chat held the tree. G2_R0_S372 at 00:36:11Z, RC 0 at
+            844a872, DOC_SHA 9af0e19a and blob b04457a1 at HEAD and at
+            origin, every leg equal to the S408 opener's. The stop condition
+            held. WRITING SEAT: OPERATOR at 05:36Z and 05:48Z, the tree
+            free; paste one at 05:37:15Z, HM v1.2 at 05:42:47Z and
+            G2_R0_S372 at 06:00:16Z, each RC 0 at 9bed732, with DOC_SHA
+            6a3ff471 and blob 30d1310d at HEAD and at origin, HM printing no
+            DRIFT line against bf1dba0b, and every value the S409 opener
+            states equal; of the pinned legs, the endpoints the S407 record
+            pins.
+
+    D409-3  HM v1.2, THE RUN TAIL. At 00:33:06Z HM v1.1, 3f7db34e, against
+            the S408 baseline bf1dba0b, printed one DRIFT line: the
+            ExecStart of nous-serve-integrity.service, whose last run moved
+            from 00:00:29Z, pid 2051055, to 00:31:23Z, pid 2182381, both
+            exited with status 0. At 00:34:49Z the unit's timer read
+            OnCalendar every 30 minutes and LastTriggerUSec 00:31:23Z, and
+            the journal showed that run's served-mirror check CLEAN, 500
+            tracked, 0 differ, 0 missing, 4 orphans: a timer run, not a host
+            move. systemctl show ends every Exec* value with the last run's
+            start_time, stop_time, pid, code and status, and v1.1 kept that
+            tail in its manifest. READ IN THE SEAT'S CONTAINER: hm_v12.py,
+            f6441f6c, cuts those five fields with one pattern, only as a
+            whole tail right before a block's closing brace, in the manifest
+            it emits and on both sides of a diff, so a v1.1 manifest stays a
+            valid prior and any other shape still drifts. Its driver,
+            5354b846, built from the bytes printed at 00:33:06Z, passed 26
+            of 26 checks and v1.1 18 of 26, and the S408 driver passed 17 of
+            17 on v1.2; three mutants of the cut failed at 22, 19 and 24 of
+            26. The driver's shapes for a running service and a failed run
+            were assumed, not read on A. On Server A at 01:01:39Z,
+            hm_v12.py, 6773 bytes, against the S408 baseline: no DRIFT line,
+            RC 0; Exec values with a run tail, 5 by v1.1 and 0 by v1.2. On
+            the fixtures a restart still drifts through MainPID, and a
+            failed run through ActiveState and the failed units. WRITING
+            SEAT: the three drivers, re-run in its container on the sealed
+            files, gave 26, 18 and 17 again; the mutants were not re-run.
+
+    D409-4  D408, WRITTEN. From the sealed S408 handoff, opener and record,
+            with two of their claims corrected (letter C of S409). READ IN
+            THE SEAT'S CONTAINER, on a clone at 844a872: the entry,
+            1fd62268, 273 lines, 17646 bytes, longest line 76, ASCII,
+            rendered from one content file; G2's own patterns read the old
+            document as G2 printed it at 00:36:11Z and predicted every count
+            of the new one, 6a3ff471, 17679 lines, 1059622 bytes; the claim
+            lint on a copy with the new document scanned 405 files with no
+            violation and caught one planted in the document; no test reads
+            the document. D408_LAND.py, 719a0b13, and D408_COMMIT.py,
+            31f3c21e, were rendered from two templates by one generator and
+            passed 33 of 33 arms on fixture repositories, each arm with its
+            own bare origin; the copies for the host differ from the driven
+            ones only in ROOT and PARENT. Not driven: land refusals 42, 47
+            and 48, the last two unreachable with these pins, and 49 to 52;
+            commit refusals 42 and 52 to 57. WRITING SEAT: the renderer gave
+            the entry again byte for byte, the generator gave 719a0b13 and
+            31f3c21e from the document at 844a872, and the driver passed 33
+            of 33.
+
+    D409-5  THE LANDING. At 04:50:25Z the land tool's dry run read HEAD and
+            origin at 844a872 and the old blob b04457a1, found one porcelain
+            line, the untracked file loan_approval.manifest.json, and
+            refused with 46, writing nothing. At 04:51:45Z that file read
+            994 bytes, mode 644, root, mtime 00:44:42Z, 98546c3b, with 17
+            top-level keys; no nous-api journal line named it. Files newer
+            than 00:36Z outside .git also included runtime_w_dry-run.json,
+            cost.farkas.json, noesis_lattice.json and one backup of the
+            last, none of them in the porcelain. OPERATOR, 04:52Z: the file
+            was his test. At 04:54:00Z, after a digest check, it moved to
+            /root/d408_park_loan_approval.manifest.json, porcelain 0, and
+            the dry run read green. OPERATOR, 04:54Z: pame. The apply at
+            04:54:43Z wrote the document and read back 6a3ff471, mode 644,
+            owner 0:0, nothing staged. The commit tool's dry run at
+            04:55:23Z: worktree blob 30d1310d, the pinned author, claim lint
+            436 files and 0 violations. After its pame, the commit at
+            04:57:56Z: origin still 844a872 after a fetch; new HEAD 9bed732,
+            parent 844a872, one file, blob 30d1310d, author and committer as
+            pinned, porcelain 0. After its pame, the push at 04:58:33Z:
+            origin still 844a872 after a fetch, and ls-remote read 9bed732.
+            OPERATOR, 05:01Z: no one held the tree. G2_R0_S372 at 05:01:17Z,
+            RC 0 at 9bed732, DOC_SHA 6a3ff471, every value as the seat had
+            predicted before the landing.
+
+    D409-6  WHAT S409 WROTE. To the repository, each step after its pame:
+            9bed732, the D408 entry appended to
+            docs/GLM_SUPERSESSION_DESIGN.md, pushed to main. To Server A
+            outside the repository through a pame: nothing. The operator's
+            test file moved out of the live tree to /root at 04:54:00Z, by a
+            line the seat wrote; reversible. To /root without a pame, files
+            the operator uploaded: hm_v12.py f6441f6c, D408_LAND.py 719a0b13
+            and D408_COMMIT.py 31f3c21e. Network from Server A: G2's fetches
+            at 00:36Z and 05:01Z, the commit tool's fetch at 04:57Z, and its
+            fetch, push and one ls-remote at 04:58Z. Seat network, declared
+            before use: one clone of the public repository at about 01:05Z
+            and one fetch into it at 05:06Z; not declared: one fetch of all
+            remotes at 01:05:37Z. No package install, web search or page
+            read.
+
+    D409-7  WHAT STAYS OPEN. Security, in the order S408 recommended and
+            S409 kept: letter D of S407; letter E of S408; letter C of S407;
+            letter C of S408; letter B of S407; letter D of S408; letter H
+            of S407; letter F of S408. Other: letters C, D, E, I, M and P of
+            S406, Q of S407, and E and I of S409. Closed: letter A of S409,
+            and D408 paid. Systemic: HM into paste one, and whether
+            hm_v12.py takes the name hm.py; one writer on the live tree and
+            host, measured again in S409; an end-to-end chat probe beside
+            the health check. The operator's: whether hm.py, hm_v12.py,
+            keyguard.py and the drop-ins are tracked; the release lane's
+            check of the numbers 408 and 409; a third free tier from a
+            second provider, whose terms are unread; the /root files of S406
+            to S409, the parked test file among them. Nothing on this board
+            presses with a date.
+
+    FINDINGS
+
+            FG-S409-A  SEAT. THE HOST MANIFEST KEPT THE LAST RUN AS IF IT
+                       WERE CONFIGURATION. HM v1.1 baselined the run tail
+                       systemctl appends to every Exec* value, so a unit its
+                       timer runs every 30 minutes drifted between the S408
+                       baseline and the S409 opening, and the S408 opener's
+                       prediction of no DRIFT line missed (D409-3). Closed
+                       by hm_v12.py at 01:01:39Z. A field a timer rewrites
+                       is state: it is cut on both sides of a diff, and
+                       every other shape stays whole so that it still
+                       drifts.
+
+            FG-S409-B  SEAT. THE LANE'S OWN PROSE USED THE RESERVED VERB FOR
+                       RUNS. The sealed S408 handoff does so on seven lines,
+                       its opener on one and its kickoff on one; the one use
+                       in the S408 record, a file name aside, quotes the
+                       operator. A run evidences; the verb belongs to Z3 and
+                       Farkas results alone. WRITING SEAT: the same counts,
+                       the noun counted with the verb, on the S408 files
+                       whose digests the S408 seal pins and on both copies
+                       of its kickoff.
+
+            FG-S409-C  SEAT. TWO SEALED S408 CLAIMS DID NOT HOLD WHEN READ
+                       AGAIN. The bare number 408 stood in this document
+                       once as a line number and once as an HTTP status, not
+                       twice as a line number; and the key guard's two and a
+                       half days on another key was not measured, the window
+                       DERIVED from the S408 record being between about 23
+                       hours and three days. Both were corrected in D408. A
+                       sealed claim is a prior until it is read again.
+                       WRITING SEAT: lines 1971 and 16408 of the document at
+                       844a872 read as S409 said.
+
+            FG-S409-D  WORLD. A SECOND WRITER IN THE LIVE TREE. A test of
+                       the operator's wrote loan_approval.manifest.json into
+                       the tree at 00:44:42Z, eight minutes after the
+                       opening G2, and the land tool's dry run refused on it
+                       (D409-5). It is parked in /root. A land tool reads
+                       the whole porcelain, untracked files included.
+
+            FG-S409-E  WORLD. AN UNNAMED PERIODIC WRITER PUTS IGNORED FILES
+                       INTO THE REPOSITORY ROOT: noesis_lattice.json and its
+                       backups, one at 04:40:01Z, none of them in the
+                       porcelain (D409-5). Which unit writes them is unread.
+                       Open.
+
+            FG-S409-F  WORLD. THE PROJECT HELD TWO DIFFERENT COPIES OF THE
+                       S408 KICKOFF. The root copy, 6c5d2568, lacks two
+                       lines that the copy under claude/, 868a8f85, and the
+                       pasted kickoff carry. A kickoff is not sealed; the
+                       pasted one governed. WRITING SEAT: both digests
+                       again, and the two copies of the S409 kickoff are
+                       byte-equal, 87d69953.
+
+            FG-S409-G  SEAT. PROJECT FILES REACH THE SEAT ONLY AS RETURNED
+                       TEXT. The seat hashed that text, recovered from its
+                       own session log, not the bytes the project stores.
+                       WRITING SEAT: the same, and the text is in view
+                       before its hash can run, so a seal is checked after
+                       its files are read, not before.
+
+            FG-S409-H  SEAT. THE SEAT'S OWN SLIPS. The reserved verb twice
+                       in chat, about a run in its container; a run line
+                       pasted over several lines, whose output came back
+                       interleaved with its echo; a lint filter that printed
+                       one more line than predicted; a prediction that
+                       asklepios-probe might drift, which missed; and a
+                       fetch of all remotes after the declared clone, not
+                       declared. A run line is one command, its lines joined
+                       by trailing backslashes.
+
+            FG-S409-I  WORLD. THE RELEASE LANE'S LATEST SEALED OPENER IS NOT
+                       IN THE PROJECT; the newest of its files there is the
+                       S391 opener of the S390 seal. The number 409 was
+                       checked against the tree and the commit messages
+                       only. WRITING SEAT: still so at its intake. Open.
