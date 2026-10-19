@@ -2114,9 +2114,6 @@ async def diff_source(request: Request, body: DiffRequest, x_api_key: Optional[s
 
 # ── Webhook Internals ──
 
-_tg_worlds: dict[int, str] = {}
-
-
 async def _webhook_chat(
     message: str,
     world: str = "customer_service",
@@ -2226,115 +2223,6 @@ async def _webhook_chat(
     }
 
 
-async def _handle_telegram(payload: dict) -> JSONResponse:
-    import httpx as _hx
-
-    msg = payload.get("message") or payload.get("edited_message") or {}
-    text = (msg.get("text") or "").strip()
-    chat_id = msg.get("chat", {}).get("id")
-    user_name = msg.get("from", {}).get("first_name", "User")
-
-    if not chat_id:
-        return JSONResponse({"ok": True})
-
-    bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-
-    async def _tg_reply(reply_text: str) -> None:
-        if not bot_token:
-            return
-        try:
-            async with _hx.AsyncClient(timeout=10.0) as client:
-                await client.post(
-                    f"https://api.telegram.org/bot{bot_token}/sendMessage",
-                    json={"chat_id": chat_id, "text": reply_text},
-                )
-        except Exception as e:
-            logger.error(f"telegram send failed: {e}")
-
-    if not text:
-        return JSONResponse({"ok": True})
-
-    session_key = f"tg_{chat_id}"
-
-    if text == "/start" or text == "/help":
-        worlds = []
-        if TEMPLATES_DIR.exists():
-            worlds = [f.stem for f in sorted(TEMPLATES_DIR.glob("*.nous"))]
-        help_lines = [
-            "NOUS Agent Bot",
-            "",
-            "/world <name> - Switch world",
-            "/worlds - List available worlds",
-            "/status - Session info",
-            "/clear - Reset session",
-            "",
-            "Available worlds: " + ", ".join(worlds) if worlds else "No worlds configured",
-            "",
-            "Just type to chat!",
-        ]
-        await _tg_reply("\n".join(help_lines))
-        return JSONResponse({"ok": True})
-
-    if text == "/worlds":
-        worlds = []
-        if TEMPLATES_DIR.exists():
-            worlds = [f.stem for f in sorted(TEMPLATES_DIR.glob("*.nous"))]
-        current = _tg_worlds.get(chat_id, "customer_service")
-        lines = ["Available worlds:"]
-        for w in worlds:
-            marker = " (active)" if w == current else ""
-            lines.append(f"  {w}{marker}")
-        await _tg_reply("\n".join(lines))
-        return JSONResponse({"ok": True})
-
-    if text.startswith("/world "):
-        world_name = text[7:].strip()
-        template_path = TEMPLATES_DIR / f"{world_name}.nous"
-        if template_path.exists():
-            _chat_sessions.pop(session_key, None)
-            _tg_worlds[chat_id] = world_name
-            await _tg_reply(f"Switched to world: {world_name}")
-        else:
-            worlds = [f.stem for f in sorted(TEMPLATES_DIR.glob("*.nous"))] if TEMPLATES_DIR.exists() else []
-            await _tg_reply(f"World '{world_name}' not found. Available: {', '.join(worlds)}")
-        return JSONResponse({"ok": True})
-
-    if text == "/clear":
-        _chat_sessions.pop(session_key, None)
-        await _tg_reply("Session cleared.")
-        return JSONResponse({"ok": True})
-
-    if text == "/status":
-        sess = _chat_sessions.get(session_key)
-        if sess:
-            turns = len([m for m in sess["history"] if m["role"] == "user"])
-            lines = [
-                f"World: {sess['world']}",
-                f"Turns: {turns}",
-                f"Cost: ${sess['total_cost']:.4f}",
-            ]
-            await _tg_reply("\n".join(lines))
-        else:
-            await _tg_reply("No active session. Send a message to start.")
-        return JSONResponse({"ok": True})
-
-    if text.startswith("/"):
-        await _tg_reply("Unknown command. Send /help for usage.")
-        return JSONResponse({"ok": True})
-
-    world = _tg_worlds.get(chat_id, "customer_service")
-    logger.info(f"telegram: chat_id={chat_id} user={user_name} world={world}")
-
-    result = await _webhook_chat(text, world=world, session_id=session_key)
-
-    if "error" in result:
-        await _tg_reply(f"Error: {result['error']}")
-    else:
-        await _tg_reply(result["reply"])
-
-    return JSONResponse({"ok": True})
-
-
 async def _handle_slack(payload: dict) -> dict[str, Any]:
     if payload.get("type") == "url_verification":
         return {"challenge": payload.get("challenge", "")}
@@ -2393,8 +2281,9 @@ async def _handle_generic(payload: dict) -> dict[str, Any]:
 @app.post("/v1/webhook/{channel}")
 @limiter.limit("100/minute")
 async def webhook(request: Request, channel: str, x_api_key: Optional[str] = Header(None)):
-    if channel not in ("telegram",):
-        require_api_key(x_api_key)
+    # __s407c_telegram_channel_retired_v1__: no channel skips the key
+    # check, and telegram answers as an unknown channel (S407-C).
+    require_api_key(x_api_key)
 
     try:
         raw = await request.body()
@@ -2408,9 +2297,7 @@ async def webhook(request: Request, channel: str, x_api_key: Optional[str] = Hea
     event_id = str(uuid.uuid4())
     logger.info(f"webhook: channel={channel}, event={event_id}, size={len(raw)}")
 
-    if channel == "telegram":
-        return await _handle_telegram(payload)
-    elif channel == "slack":
+    if channel == "slack":
         return await _handle_slack(payload)
     elif channel in ("n8n", "zapier", "generic", "make"):
         return await _handle_generic(payload)
@@ -2420,7 +2307,7 @@ async def webhook(request: Request, channel: str, x_api_key: Optional[str] = Hea
             "channel": channel,
             "event_id": event_id,
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "note": "Unknown channel. Supported: telegram, slack, n8n, zapier, generic, make.",
+            "note": "Unknown channel. Supported: slack, n8n, zapier, generic, make.",
         }
 
 
