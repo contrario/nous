@@ -17404,3 +17404,276 @@ document itself.
                        score of the guard's unit, 3.1 where 1 to 2 was
                        predicted; the exit code of a pipe that ended in cut.
                        Each was read before the next step.
+
+  - S408 the seat that met a second writer's commits and host moves, pointed
+    the key guard at the credential the API uses, built a read-only manifest
+    of the host, and confirmed the webhook callback; the seat after it wrote
+    this entry
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY WAS WRITTEN AFTER THE
+    SESSION IT DESCRIBES, BY THE SEAT THAT FOLLOWED IT. Every value is
+    INHERITED from the sealed handoff, opener and record of S408, whose
+    digests that seat checked against the kickoff at intake, unless a
+    sentence says otherwise. Within them, unless marked, a value was printed
+    on Server A between 2026-10-17 and 2026-10-19, by the opening rule, by
+    instruments whose digest was printed before they ran and whose refusal
+    arms were driven in the seat first, or by read-only commands of version
+    control, systemd and the shell, pasted whole. READ IN THE SEAT'S
+    CONTAINER: computed off host, from a clone at 844a872, the commit the
+    host's tree held with porcelain 0. DERIVED: computed from printed values
+    or read from code. TESTIMONY: said by a party and not measured here.
+    OPERATOR: stated by the operator. RULING: a decision the operator stated
+    in words. WRITING SEAT: read on 2026-10-19 by the seat that writes this
+    entry, on Server A or in its container.
+
+    THE SESSION NUMBERS. OPERATOR: the seat was numbered S408 at 23:08Z on
+    2026-10-18, and four hundred and five stays reserved for the release
+    lane. READ IN THE SEAT'S CONTAINER at 23:08:23Z, on the clone at
+    844a872: the tokens S408, D408 and FG-S408 counted zero in the tree and
+    in every commit message on every ref. WRITING SEAT, at 01:05:37Z on
+    2026-10-19, on a fresh clone at 844a872: the same three tokens counted
+    zero again, and the bare number 408 stands twice in this document, once
+    as a line number and once as an HTTP status, where the S408 record
+    called both line numbers. RULING, 01:02Z on 2026-10-19: the entry that
+    carries what S408 owed is D408. The writing seat's number is the
+    operator's to allocate and is not stated here. Before this entry the
+    document held no S408 token, no anchor of that number and no code of its
+    family, and the instrument that appends this entry refuses unless that
+    is still so when it runs.
+
+    D408-1  THE OBJECTS AND WHO CHOSE THEM. RULING, 22:55Z on 2026-10-18:
+            letter D of S407, then K, the key guard, then X, tests for the
+            operator's three commits. RULING, 23:12Z: D parked and K first,
+            after the client's classifier withheld the seat's turns while it
+            built the test for D; D to come with a test and patch made
+            outside the chat. OPERATOR, 23:41Z: the choice handed to the
+            seat, which chose HM, a manifest of the host, on measured
+            grounds. RULING, 00:04Z on 2026-10-19: HM with the mtime of
+            secret files, then the seal.
+
+    D408-2  THE OPENINGS. READ IN THE SEAT'S CONTAINER, about 22:54Z on
+            2026-10-15: the S407 seal hashed green against its kickoff; the
+            copies under claude/ were read as text and not hashed. OPERATOR,
+            11:35Z on 2026-10-17: no chat held the tree. Paste one at
+            11:35:21Z, RC 0: HEAD 2c6d57a in the live tree, one commit above
+            origin/main at df87313d, suite 3548 passed and 12 skipped, three
+            nous rows healthy in Asklepios, no failed unit. OPERATOR, about
+            11:44Z: another chat was active, and G2 waited. OPERATOR, 09:38Z
+            on 2026-10-18: done with it. Paste one at 09:40:08Z, RC 0, HEAD
+            844a872 equal to origin/main with ten commits above v6.0.3.
+            G2_R0_S372 refused at 09:43:41Z with T5_DIGEST_MISMATCH, RC 42,
+            before any read, because the seat passed the document's digest
+            as its argument; at 09:44:24Z, given its own digest, it ran
+            green at 844a872 with DOC_SHA 9af0e19a and blob b04457a1 at HEAD
+            and at origin, every other leg equal to the S407 opener's. The
+            stop condition held. WRITING SEAT: paste one at 00:25:34Z and
+            G2_R0_S372 at 00:36:11Z on 2026-10-19, both RC 0 at 844a872 with
+            DOC_SHA 9af0e19a, every leg as the S408 opener predicted; the
+            host manifest at 00:33:06Z printed one DRIFT line, a run of a
+            unit by its timer, which belongs to the writing seat's own
+            entry.
+
+    D408-3  THE OPERATOR'S COMMITS. Three commits made from another chat,
+            each with the trailer Claude-Session 01RtCW7o and through none
+            of the lanes' gates: 2c6d57a at 00:13:47Z on 2026-10-16,
+            nous_api.py, 7 lines added and 2 removed, so that the API fails
+            closed when NOUS_ENV_FILE is set and does not load; 36c21b0 at
+            00:03:43Z on 2026-10-18, nous_api_server.py, 2 added, RUN-GATE,
+            a write key for execute mode and non-default run flags on
+            /v1/run; 844a872 at 00:40:57Z, nous_api_server.py, 1 added and 1
+            removed, RUN-GATE v2. 2c6d57a was not on origin at 11:41:25Z on
+            2026-10-17; all three were by 09:44:24Z on 2026-10-18. OPERATOR,
+            11:41Z on 2026-10-17 and 09:44Z on 2026-10-18: the commits,
+            their push and the restarts of nous-api that went with them were
+            his. None added a tracked file or a collected test: TRACKED
+            stayed 1535, collect 3560 and 3698, and the suite 3548 passed
+            and 12 skipped, as at df87313d.
+
+    D408-4  THE HOST MOVES. Found by hand at the opening; the opening rule
+            showed none of them directly. In
+            /etc/systemd/system/nous-api.service.d/ the drop-in
+            97-env-file.conf, 103 bytes, e2c3a176, mtime 23:15:27Z on
+            2026-10-15, loads /etc/nous/nous-api.env as the credential
+            nous-api.env and points NOUS_ENV_FILE at it, and api-keys.conf
+            is gone. /etc/nous/nous-api.env is mode 600, root, 741 bytes,
+            last written at 00:07:29Z on 2026-10-18; the credential made
+            from it holds eleven variable names, GITHUB_TOKEN among them.
+            nous-api restarted at 23:15:28Z and 23:36:48Z on 2026-10-15 and
+            at 00:11:16Z and 00:36:05Z on 2026-10-16, and again at 00:40:57Z
+            on 2026-10-18 as MainPID 371978. Drop-ins appeared on
+            noosphere-health, gate-watchdog, alpha-bot and gate-cluster
+            between 11:34Z and 11:40Z on 2026-10-17, while paste one ran,
+            and on hermes-telemetry-alert@ and nous-serve-integrity at
+            00:29Z and noesis-dashboard at 11:41Z on 2026-10-16. OPERATOR,
+            pasted: the gate-cluster drop-in was the other chat's, the same
+            bytes as nous-api's 98-user.conf, bf89c31f. DERIVED from link
+            times: a link in multi-user.target.wants was removed at 11:54Z
+            on 2026-10-17; which unit it enabled is unidentified, and it is
+            none of nous-api, nous-bot, nous-key-guard,
+            nous-serve-integrity.timer and asklepios-probe, all enabled at
+            09:56:32Z on 2026-10-18.
+
+    D408-5  K, THE KEY GUARD. At 23:14:19Z on 2026-10-18 keyguard.py,
+            d85f8c2f, read a fixed path to the shared .env and nothing else,
+            and its unit loaded no credential; the journal logged a usable
+            key with a limit of 50 at every six-hour check from 13:43Z on
+            2026-10-17 to 19:43Z on 2026-10-18. At 09:51:38Z the OpenRouter
+            key in the API's credential was not the key in the .env, and at
+            09:53:36Z the key endpoint answered 200 for both: the API's key
+            expires on 2027-10-15 with a limit of 5, the .env key has no
+            expiry and a limit of 50. Since when the two differed is
+            unmeasured. DERIVED: the API has loaded its own credential since
+            23:15:28Z on 2026-10-15, and at its start at 00:40:57Z on
+            2026-10-18 it loaded the file as last written, so the guard
+            checked another key for between about 23 hours and three days;
+            the two and a half days of the S408 record lies in that range
+            and was not measured. The guard's user, aetherlang, could not
+            read /etc/nous/nous-api.env at 23:14:19Z, so the credential
+            reaches it the way it reaches nous-api, through LoadCredential.
+            READ IN THE SEAT'S CONTAINER: keyguard.py cfe204da reads the
+            credential from CREDENTIALS_DIRECTORY at each check and exits 1
+            with a reason when the directory, the file or the key is
+            missing, with no fallback; its driver passed 16 of 16 arms and
+            the old script 1 of 16. S408_K_INSTALL.py, 4f43bd01, passed 22
+            arms; refusals 42 and 50 were not driven. On Server A, each
+            after its pame: the dry run at 23:35:18Z; the apply at
+            23:37:17Z, which kept the old script at
+            /root/s408_keyguard_d85f8c2f.py, mode 600, wrote cfe204da and
+            the drop-in 50-s408-credential.conf, 8377f839, and ran one
+            daemon-reload; the restart at 23:38:56Z, MainPID 1960549. At
+            23:38:57Z the guard logged a usable key with a limit of 5, the
+            API's; the .env key would have shown 50. The alert path from the
+            unit through Asklepios to Telegram is the one S407 drove, not
+            driven again. Rollback: the same tool with --rollback, then a
+            restart.
+
+    D408-6  HM, THE HOST MANIFEST. Of seven host changes after the S407
+            close the opening rule showed one, the commits; the restarts
+            showed only by derivation from uptime. hm.py lists a fixed set
+            of NOUS host facts: six units, the drop-ins of three of them
+            with sha256, keyguard.py, the Asklepios watchlist, every link in
+            multi-user.target.wants, the failed units, and the secret files
+            by mode, owner and size, and from v1.1 by mtime, never opened.
+            Given a prior it prints a DRIFT line for every field that moved.
+            READ IN THE SEAT'S CONTAINER: v1, ef69c01d, passed its driver's
+            11 checks, and v1.1, 3f7db34e, its 17, of which v1 fails the two
+            that tell them apart. On Server A at 23:54:53Z, against a prior
+            rebuilt from the fields the S407 record pins, v1 printed 17
+            DRIFT lines: 97-env-file.conf 6, /etc/nous/nous-api.env 5,
+            api-keys.conf 4, the MainPID of nous-api 1, and keyguard.py 1,
+            the change K had made; it printed no secret value. The rebuilt
+            prior covers only the pinned fields, so the link removed at
+            11:54Z on 2026-10-17 could not show: the S407 record pins none.
+            At 00:08:50Z on 2026-10-19 v1.1 wrote its baseline,
+            /root/hm_manifest_s408_close.json, bf1dba0b, and a diff of the
+            host against it printed no DRIFT line.
+
+    D408-7  LETTER D OF S407, THE WEBHOOK CALLBACK, CONFIRMED AND PARKED.
+            READ IN THE SEAT'S CONTAINER at 844a872: the generic webhook
+            channels, generic, n8n, zapier and make, admit a caller without
+            a key and post the chat result to a callback_url the payload
+            names, with no check of scheme or host, and the error text of
+            that post returns to the caller. It is the only caller-named
+            outbound URL in nous_api_server.py; no doc, page or test names
+            callback_url, and the result already returns in the response.
+            RULING, 23:03Z on 2026-10-18: remove the callback. A request
+            that carries the key callback_url, even empty, answers 400 with
+            a code before any model call; tests on all four channels count
+            zero outbound requests and zero model calls, and a request
+            without it still answers 200 from a free tier. The client's
+            classifier withheld the seat's turns twice while it built that
+            test, and the code was not made in the chat. The same read found
+            letters E and F.
+
+    D408-8  WHAT S408 WROTE. To the repository: nothing. To Server A outside
+            the repository, each after a typed pame: keyguard.py from
+            d85f8c2f to cfe204da, the drop-in 8377f839, the backup, one
+            daemon-reload and one restart of nous-key-guard. To /root
+            without a pame, files the operator uploaded and files the
+            read-only instruments wrote: S408_K_INSTALL.py, hm.py as v1 and
+            then v1.1, the script that rebuilt the S407 prior, 84cb556c, the
+            manifest of v1 and the rebuilt prior, and the baseline bf1dba0b.
+            Network from Server A: G2's two fetches, one ls-remote, two
+            calls to the key endpoint and the guard's own check at its
+            restart. Seat network, declared before use: one clone at 844a872
+            and package installs into a venv; not declared beforehand: web
+            searches and page reads through the client's search tools, both
+            asked by the operator.
+
+    D408-9  WHAT STAYS OPEN. Security, in the order S408 recommends: letter
+            D of S407; letter E of S408; letter C of S407; letter C of S408;
+            letter B of S407, narrowed for /v1/run by RUN-GATE and untested;
+            letter D of S408; letter H of S407; letter F of S408. Other:
+            letters C, D, E, I, M and P of S406 and Q of S407; letter P of
+            S407 moved into letter D of S408. Closed: letter B of S408, and
+            letter F of S407, no secret being left in an Environment= line
+            of nous-api's drop-ins (DERIVED from their contents). Systemic:
+            one writer on the live tree and host, and an end-to-end chat
+            probe beside the health check. The operator's: whether hm.py,
+            keyguard.py and the drop-ins are tracked; the release lane's
+            check of the number 408; a third free tier from a second
+            provider, whose terms are unread; the /root files of S406 to
+            S408. Nothing on this board presses with a date.
+
+    FINDINGS
+
+            FG-S408-A  SEAT. THE CLIENT'S CLASSIFIER WITHHELD THE SEAT'S
+                       TURNS while it built the test and patch for letter D
+                       of S407, twice (D408-7). That code is made outside
+                       the chat, and a seat keeps the specification, the
+                       verification and the landing.
+
+            FG-S408-B  WORLD. THE KEY GUARD CHECKED A KEY THE API DID NOT
+                       USE, and stayed green, for between about 23 hours and
+                       three days (D408-5). Closed at 23:38:57Z on
+                       2026-10-18. Which input a monitor reads is shown by a
+                       field that tells the inputs apart, here the key's
+                       limit.
+
+            FG-S408-C  WORLD. THREE COMMITS CHANGED KEY LOADING AND THE
+                       WRITE-KEY GATE OF THE PUBLIC API WITH NO TEST.
+                       2c6d57a, 36c21b0 and 844a872 reached main through
+                       none of the lanes' gates, with no new tracked file
+                       and no new collected test (D408-3). Open.
+
+            FG-S408-D  WORLD. THE PUBLIC API PROCESS RECEIVES ELEVEN SECRETS
+                       through its credential, GITHUB_TOKEN among them;
+                       which of them the code reads is unread. Open.
+
+            FG-S408-E  WORLD. A SESSION ID IS NAMED BY THE CALLER, and one
+                       session store serves chat, stream and webhook, the
+                       Telegram and Slack sessions included, whose names are
+                       predictable. Whether Telegram traffic reaches the
+                       route is unread. Open.
+
+            FG-S408-F  WORLD. THE WORLD NAME IS NOT CONFINED TO THE
+                       TEMPLATES DIRECTORY; its reach is limited to .nous
+                       files. Open.
+
+            FG-S408-G  WORLD. SIX OF SEVEN HOST MOVES AFTER THE S407 CLOSE
+                       DID NOT SHOW AT THE OPENING, and each was found by
+                       hand (D408-4). A host move shows at the opening only
+                       when something reads the host; hm.py now does
+                       (D408-6).
+
+            FG-S408-H  SEAT. THE SEAT'S OWN ERRORS. It passed the document's
+                       digest to G2 as the instrument's argument, and the
+                       instrument refused before any read; a mask of 24
+                       characters hid a directive name and the guard's
+                       expiry field; and the intake called the copies under
+                       claude/ byte-identical without hashing them. An
+                       opener writes its run line with the digest inline,
+                       and a line a tool prints by design without a secret
+                       takes no mask.
+
+            FG-S408-I  WORLD. A SECOND WRITER HELD THE TREE AND THE HOST FOR
+                       ABOUT 22 HOURS and wrote host config while paste one
+                       ran, between 11:34Z and 11:40Z on 2026-10-17; the
+                       unit whose link was removed at 11:54Z that day is
+                       unidentified. Open, the operator's.
+
+            FG-S408-J  WORLD. systemctl show PRINTS LoadCredential AS
+                       [unprintable] ON SYSTEMD 255. The install tool's
+                       prediction missed, and its fallback to systemctl cat
+                       carried the check (D408-5). It is read through
+                       DropInPaths and systemctl cat.
