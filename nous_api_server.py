@@ -2253,6 +2253,14 @@ async def _handle_slack(payload: dict) -> dict[str, Any]:
 
 
 async def _handle_generic(payload: dict) -> dict[str, Any]:
+    # __s407d_webhook_callback_removed_v1__: a payload that names
+    # callback_url, even empty, is refused before any model call
+    # (S407-D).
+    if isinstance(payload, dict) and "callback_url" in payload:
+        raise HTTPException(status_code=400, detail={
+            "error": "callback_url is not supported; the reply is in the response",
+            "code": "WH002",
+        })
     message = payload.get("message", "")
     if not message:
         return {"error": "Missing 'message' field", "code": "WH001"}
@@ -2260,20 +2268,8 @@ async def _handle_generic(payload: dict) -> dict[str, Any]:
     world = payload.get("world", "customer_service")
     soul = payload.get("soul")
     session_id = payload.get("session_id")
-    callback_url = payload.get("callback_url")
 
     result = await _webhook_chat(message, world=world, soul=soul, session_id=session_id)
-
-    if callback_url and "reply" in result:
-        import httpx as _hx
-        try:
-            async with _hx.AsyncClient(timeout=10.0) as client:
-                await client.post(callback_url, json=result)
-            result["callback_sent"] = True
-        except Exception as e:
-            logger.warning(f"callback failed: {callback_url} -> {e}")
-            result["callback_sent"] = False
-            result["callback_error"] = str(e)
 
     return result
 
