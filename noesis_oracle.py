@@ -23,6 +23,7 @@ import os
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
+from noesis_paths import data_dir
 from typing import Any, Optional
 
 import httpx
@@ -259,7 +260,7 @@ class Oracle:
     ) -> None:
         self.tiers = tiers or TIERS
         self.budget_per_query = budget_per_query
-        self.log_path = log_path or Path("/opt/aetherlang_agents/nous/oracle_log.json")
+        self.log_path = log_path or (data_dir() / "oracle_log.json")
         self.history: list[OracleCall] = []
         self._stats = OracleStats()
 

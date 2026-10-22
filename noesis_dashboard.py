@@ -22,6 +22,7 @@ import secrets
 import time
 from collections import defaultdict
 from pathlib import Path
+from noesis_paths import data_dir
 from typing import Any, Optional
 
 from fastapi import FastAPI, Query, Request, Response, HTTPException
@@ -34,7 +35,7 @@ from noesis_domain_patch import classify_domain, domain_stats, _get_atom_domain
 
 log = logging.getLogger("nous.dashboard")
 
-LATTICE_PATH = Path("/opt/aetherlang_agents/nous/noesis_lattice.json")
+LATTICE_PATH = data_dir() / "noesis_lattice.json"
 ENV_PATH = Path("/opt/aetherlang_agents/.env")
 DASHBOARD_TOKEN = os.environ.get("NOESIS_DASHBOARD_TOKEN", "")
 SESSION_SECRET = secrets.token_hex(16)

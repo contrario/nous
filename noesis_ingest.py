@@ -33,6 +33,7 @@ import re
 import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from noesis_paths import data_dir
 from typing import Any, Optional
 
 import httpx
@@ -41,7 +42,7 @@ from noesis_engine import NoesisEngine
 
 log = logging.getLogger("nous.ingest")
 
-LATTICE_PATH = Path("/opt/aetherlang_agents/nous/noesis_lattice.json")
+LATTICE_PATH = data_dir() / "noesis_lattice.json"
 
 _ENV_PATH = Path("/opt/aetherlang_agents/.env")
 if _ENV_PATH.exists():

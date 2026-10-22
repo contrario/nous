@@ -17,6 +17,7 @@ import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
+from noesis_paths import data_dir
 from typing import Optional
 
 logger = logging.getLogger("noesis.pdf")
@@ -357,7 +358,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Noesis PDF Ingestion")
     parser.add_argument("path", help="PDF file or directory path")
-    parser.add_argument("--lattice", default="noesis_lattice.json", help="Lattice file path")
+    parser.add_argument("--lattice", default=str(data_dir(Path(".")) / "noesis_lattice.json"), help="Lattice file path")
     parser.add_argument("--force", action="store_true", help="Re-ingest already-seen PDFs")
     parser.add_argument("--scan", action="store_true", help="Scan only, don't ingest")
     parser.add_argument("--no-recursive", action="store_true", help="Don't recurse into subdirs")
@@ -372,7 +373,7 @@ def main() -> None:
         engine.load(lattice_path)
         logger.info(f"Loaded lattice: {len(engine.lattice.atoms)} atoms")
 
-    ingestor = PDFIngestor(engine, base_dir=str(Path(__file__).parent))
+    ingestor = PDFIngestor(engine, base_dir=str(data_dir(Path(__file__).parent)))
 
     target = Path(args.path)
 
