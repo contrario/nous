@@ -14,6 +14,13 @@ discharge against), a priced tool_call the cost MVP cannot model, an unknown
 event kind -- raises a typed precondition error (refuse over guess). Every
 evaluable outcome is a boolean.
 
+Tool surface (__s414_tool_surface_v1__): when the re-derived spec declares
+events, a tool_call whose action label is missing or not one of them is a
+run outside the declared surface and raises the same precondition error.
+When the spec declares no events this check is vacuous. It EVIDENCES that
+every recorded tool_call named a declared event; it sees recorded events
+only and proves nothing.
+
 Z3 is not required here: re-deriving the SMTSpec is pure parse + emit (pre
 solver); discharge and bound transfer are interval checks and a Decimal sum;
 signatures are cryptography. Re-running the ORIGINAL cost proof (Z3) remains
@@ -397,6 +404,7 @@ def verify_conformance(
     max_ticks: int = spec.max_ticks
     gated_actions = frozenset(spec.gated_actions)  # __s141_u5_gated_signed_source_v1__
     quorum_by_action = dict(spec.gated_quorums)  # __s153_u2_4_quorum_obligation_v1__
+    declared_events = frozenset(spec.declared_events)  # __s414_tool_surface_v1__
 
     # Structural preconditions (refuse over guess): a soul or gated action the
     # proof never declared, an unknown kind, or a priced tool_call -- none can
@@ -436,6 +444,20 @@ def verify_conformance(
                 f"'gated_action'); a gated action recorded under a "
                 f"non-gated kind is trace tampering"
             )
+        if ev.kind == "tool_call" and declared_events:  # __s414_tool_surface_v1__
+            if ev.action is None:
+                raise ConformancePreconditionError(
+                    f"event seq={ev.seq} is a tool_call with no action "
+                    f"label while the spec declares events "
+                    f"{sorted(declared_events)}; a tool_call outside the "
+                    f"declared tool surface cannot be checked"
+                )
+            if ev.action not in declared_events:
+                raise ConformancePreconditionError(
+                    f"event seq={ev.seq} tool_call action {ev.action!r} "
+                    f"not in declared events {sorted(declared_events)} "
+                    f"(run did something the spec never declared)"
+                )
 
     _ek = trace.evidence_kind  # __s144_u3_conformance_trust_precondition_v1__
     _cb = trace.cost_binding
