@@ -18210,3 +18210,335 @@ document itself.
                        and the log line after it would raise (DERIVED from
                        code). Not driven. Open. WRITING SEAT: it reads so at
                        decfbfc.
+
+  - S411 the seat that closed letter D of S407 on A, landed the entry S410
+    owed, attributed a change of the live tree's owner and a snap refresh,
+    and was numbered after its first object; the seat after it wrote this
+    entry
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY WAS WRITTEN AFTER THE
+    SESSION IT DESCRIBES, BY THE SEAT THAT FOLLOWED IT. Every value is
+    INHERITED from the sealed handoff, opener and record of S411, whose
+    digests that seat checked against the kickoff at intake, unless a
+    sentence says otherwise. Within them, unless marked, a value was printed
+    on Server A by the opening rule, by instruments whose digest was printed
+    before they ran, or by read-only commands of version control, systemd,
+    snapd and the shell. READ IN THE SEAT'S CONTAINER: computed off host by
+    S411, from sealed files or from a clone of the public repository.
+    DERIVED: computed from printed values or read from code. OPERATOR:
+    stated by the operator. RULING: a decision the operator stated in words.
+    WRITING SEAT: read by the seat that writes this entry, in its container,
+    from the sealed files and a clone of the public repository; it read
+    nothing on Server A for this entry. Every time below is in UTC and in
+    2026. A paragraph or item whose title names a day keeps its times on
+    that day unless a time carries its own date; elsewhere every time
+    carries its date, written as month and day.
+
+    THE SESSION NUMBER, ON 10-21. OPERATOR, 10:45Z: the seat was numbered
+    S411, after its first object. INHERITED: four hundred and five stays
+    reserved for the release lane. READ IN THE SEAT'S CONTAINER at
+    10:45:47Z, on a clone fetched at decfbfc: the tokens S411, D411 and
+    FG-S411 counted zero in the tree and in every commit message on every
+    ref, the control token named for letter D of S407 three in the tree and
+    one in the messages, and the bare number 411 stood once in this
+    document, a count of vectors. The release lane's latest sealed opener
+    was not in the project (letter I of S411), so the number was checked
+    against the tree and the commit messages only. WRITING SEAT, at
+    10:55:42Z on 10-22, on a clone at b817976: the same three tokens counted
+    zero again, and the control three and one. RULING, 10:54Z on 10-22: this
+    entry first, drafted off host from the sealed S411 files and a clone.
+    The writing seat's number is the operator's and is not stated here, so
+    that the namespace of the next entry stays empty. Before this entry the
+    document held no S411 token, no anchor of that number and no code of its
+    family, and the instrument that appends this entry refuses unless that
+    is still so when it runs.
+
+    D411-1  THE OBJECTS AND WHO CHOSE THEM. OPERATOR, 23:59Z on 10-19: what
+            is right to start with, and why. The seat read the code at
+            3ee4bae and proposed letter D of S407 first, with the design
+            ruled in S408, then D410, then the read of letter C of S410.
+            RULING, 00:03Z on 10-20: pame. RULING, 10:47Z on 10-21: D410
+            now, as the seat proposed. OPERATOR, 10:45Z on 10-21: the
+            number. Each apply, commit, push and restart followed its own
+            pame and was shipped in the message after it. Twice one answer
+            was taken for more than one question, and the seat said so
+            (letter H of S411).
+
+    D411-2  THE OPENING, ON 10-19. READ IN THE SEAT'S CONTAINER at about
+            23:39Z: the S410 seal green against its kickoff, sums 49a8a390
+            with 29 entries, handoff 51eefd7a, opener 4e08ffb4 and record
+            ddc83814, read through the project tool, which returns text; the
+            bytes hashed were that text, recovered from the seat's own
+            session log, and the text was in view before its hash could run
+            (letter G of S409). OPERATOR, 23:41Z: the tree free. Paste one
+            at 23:42:00Z, RC 0, SELF_SHA c027371e, rule0.sh 074e51af: HEAD
+            3ee4bae equal to origin/main, thirteen commits above v6.0.3,
+            each predicted; A at 6.0.3, its start DERIVED as 23:13:26Z; B at
+            tag v6.0.3, its start DERIVED as 16:34:06Z on 10-08; suite 3561
+            passed and 12 skipped, floor 3498; three nous rows healthy in
+            Asklepios at 23:43:42Z; no failed unit. HM v1.2 at 23:46:07Z
+            against c00f280a printed no DRIFT line. OPERATOR, 23:53Z: the
+            tree free. G2_R0_S372 at 23:54:54Z, RC 0 at 3ee4bae: TRACKED
+            1536, porcelain 0, DOC_SHA dc34a29e and blob cb7240dc at HEAD
+            and at origin, every leg the S410 opener states equal to it and,
+            of the pinned legs, the endpoints; 3573 and 3711 tests
+            collected, 3561 passed and 12 skipped, a clean claim lint over
+            436 files and the served mirror CLEAN with 4 orphans.
+
+    D411-3  LETTER D OF S407, THE CODE, ON 10-20. READ IN THE SEAT'S
+            CONTAINER, on a clone made at 00:00:19Z at 3ee4bae:
+            require_api_key returns anonymous for a caller with no key, and
+            the webhook route calls it; the generic, n8n, zapier and make
+            channels reach _handle_generic, which posted the result to the
+            payload's callback_url with no check of scheme or host and
+            returned the exception text as callback_error; the server's
+            other three POSTs go to fixed URLs. RULING, 00:03Z: pame, letter
+            D of S407 first with the S408 design. The patch makes three
+            edits to nous_api_server.py, d3271e73, blob 7665761b, to
+            4e4e0f15, blob e8e8e228, 8 lines in and 12 out: a payload that
+            carries the key callback_url, even empty or null, answers 400
+            with code WH002 before any model call, and the read of
+            callback_url and the outbound POST are gone. The test, 9df8920f,
+            blob 219a4a7b, 210 lines, holds 20 tests: 20 pass on the patch,
+            and on the parent 15 fail and 5 pass. Three mutants of the
+            guard, one that ignores the key, one that refuses only a truthy
+            value and one that refuses after the model call, fail 14, 8 and
+            14 of them. The suite in the container: 3542 passed and 31
+            skipped at 3ee4bae, and 3562 passed and 31 skipped with the
+            patch, 3593 collected. S407D_LAND.py, 2b86aaa7, and
+            S407D_COMMIT.py, 86809f2b, rendered by one generator from
+            templates derived from the sealed ones of letter C of S407 by
+            tokens only, passed 35 of 35 arms on full clones. A probe: a
+            POST of {"message":"","callback_url":""} answers 200 WH001 on
+            the parent and 400 WH002 on the patch, and {"message":""}
+            answers 200 WH001 on both. WRITING SEAT: decfbfc, whose parent
+            is 3ee4bae, changes those two files only, the server by 8 lines
+            in and 12 out to 4e4e0f15 and the test added as 9df8920f, 210
+            lines, and its message is the sealed one byte for byte.
+
+    D411-4  LETTER D OF S407 ON A, ON 10-20. The land tool's dry run at
+            12:25:33Z, RC 0: HEAD and origin at 3ee4bae, blob 7665761b,
+            porcelain 0, the test absent, the new server compiling, and the
+            server's owner 986:981 where the seat had predicted 0:0 (letter
+            B of S411). OPERATOR, 12:30Z: the change of owner was his, and
+            the tree free. After its pame, the apply at 12:32:37Z wrote the
+            test, then the server, and read back 4e4e0f15 and 9df8920f, mode
+            644, owner 986:981, nothing staged. The commit tool's dry run at
+            12:33:36Z read blobs e8e8e228 and 219a4a7b, the pinned identity,
+            a clean claim lint over 436 files and the whole suite, 3581
+            passed and 12 skipped. After its pame, which was taken also as
+            the tree free (letter H of S411), the commit at 12:41:08Z: new
+            HEAD decfbfc, the server modified and the test added. After its
+            pame, the push at 12:42:57Z, the remote read back as decfbfca.
+            After its pame, the restart of nous-api at 12:49:20Z: MainPID
+            3707313 to 2940180, health ok at 6.0.3 at 12:49:21Z; the payload
+            {"message":"","callback_url":""} answered 200 WH001 before the
+            restart and 400 WH002 after it, the control {"message":""} 200
+            WH001 after it, and the journal showed no failed callback. None
+            of the three POSTs reached a model. Letter D of S407 is closed
+            on A and stays open on B, at tag v6.0.3, until a release carries
+            decfbfc (letter G of S411).
+
+    D411-5  THE OWNER OF THE TREE, ATTRIBUTED, ON 10-20. S410 had read the
+            server 0:0 at 22:50:35Z on 10-19; the land tool printed it
+            986:981 at 12:25:33Z. At 12:27:41Z: all 1536 tracked files
+            986:981, aetherlang, the user nous-api runs as; the tree's root
+            directory and five files read one by one, the server, two S407
+            tests, this document and instruments/G2_R0_S372.sh, with a ctime
+            from 23:20:49.56Z to 23:20:49.84Z on 10-19 and none later, their
+            mtimes unchanged; HM v1.2 against c00f280a printed no DRIFT
+            line. Six ctimes were read, not 1536 (letter E of S411). At
+            12:30:29Z, the journal from 23:20:00Z to 23:22:00Z on 10-19: two
+            runuser sessions for aetherlang opened by root at 23:20:49.903Z
+            and 23:20:49.911Z on 10-19, and no chown line; the control
+            window, 23:13Z to 23:14Z on 10-19, printed 34 lines; no crontab
+            of root or aetherlang and no cron file names chown. OPERATOR,
+            12:30Z: the change was his. The API's user can rewrite the API's
+            own code; the S410 record does not name the change, and the HM
+            set does not cover the tree. Open, the operator's: leave the
+            tree aetherlang's, or give the code back to root and let the
+            API's user write only what it must (letter A of S411).
+
+    D411-6  THE MIDDLE, ON 10-21. OPERATOR, 10:39Z: the tree free.
+            G2_R0_S372 at 10:40:11Z, RC 0 at decfbfc: TRACKED 1537, fourteen
+            commits above v6.0.3 by both tag oracles, porcelain 0, DOC_SHA
+            dc34a29e and blob cb7240dc at HEAD and at origin, every leg of
+            this document equal to its read at 23:54:54Z on 10-19, 3593 and
+            3731 tests collected, 3581 passed and 12 skipped, a clean claim
+            lint over 436 files and the served mirror CLEAN with 4 orphans;
+            every value predicted. HM v1.2 at 10:45:24Z against c00f280a
+            printed one line, the MainPID of nous-api, 3707313 to 2940180,
+            the restart of 12:49:20Z on 10-20. At 10:47:19Z the HM baseline
+            /root/hm_manifest_s411_close.json, 88d55ae7, 22015 bytes, mode
+            600, printed no DRIFT line against itself.
+
+    D411-7  D410, LANDED, ON 10-22. Written from the sealed S410 handoff,
+            opener and record after the S410 claims it carries were read
+            again. READ IN THE SEAT'S CONTAINER: the D409 renderer,
+            generator and driver reproduced the D409 entry and both tools
+            and passed 33 of 33 arms; the document at 6516ac1 is the
+            document at 9bed732 with that entry appended; 3ee4bae changes
+            the server by 5 lines in and 118 out and adds a 226-line test,
+            which passes 13 of 13 there and fails 10 of 13 at 6516ac1; the
+            Noesis import chain, the two tier calls of the generic path and
+            the unbound name of letter J of S410 read as S410 said; the
+            sealed S410 handoff, opener and record carry no reserved verb.
+            Two claims were corrected in the entry: the S410 kickoff's
+            "keyed every channel" (letter F of S411), and the seat's own
+            first draft on ctimes (letter E of S411). The entry, 87b76735,
+            292 lines, 19306 bytes, longest line 76, ASCII, with no reserved
+            word and no token of the next namespace; D410_LAND.py, c2c44426,
+            and D410_COMMIT.py, 018fe8c2, derived from the sealed D409 kit
+            by tokens and pins only, passed 33 of 33 arms; G2's own patterns
+            predicted every count of the new document, a5bcfcc4, blob
+            83f252b0; a claim lint on a copy read 405 files clean and caught
+            a planted violation. On A the dry run at 08:18:27Z read green:
+            the document dc34a29e, mode 644, owner 986:981, the namespace
+            empty. OPERATOR, 08:19Z: pame and the tree free, taken as the
+            text accepted (letter H of S411). The apply at 08:19:30Z read
+            back a5bcfcc4, mode 644, owner 986:981; the commit tool's dry
+            run at 08:19:57Z read blob 83f252b0 and a clean claim lint over
+            436 files. After its pame, the commit at 08:21:07Z, new HEAD
+            b817976; after its pame, the push at 08:22:18Z, the remote read
+            back as b8179763. WRITING SEAT: the D410 renderer gave the entry
+            again byte for byte, the generator gave c2c44426 and 018fe8c2
+            from the document at decfbfc, the driver passed 33 of 33, and
+            b817976 changes that one file by 292 lines in, the document at
+            decfbfc with the entry appended, its message the sealed one byte
+            for byte.
+
+    D411-8  THE CLOSING, ON 10-22. OPERATOR, 08:23Z: the tree free.
+            G2_R0_S372 at 08:23:45Z, RC 0 at b817976: TRACKED 1537, fifteen
+            commits above v6.0.3 by both tag oracles, porcelain 0, DOC_SHA
+            a5bcfcc4 and blob 83f252b0 at HEAD and at origin, 18212 lines
+            and 1094710 bytes, 3593 and 3731 tests collected, 3581 passed
+            and 12 skipped, a clean claim lint over 436 files and the served
+            mirror CLEAN with 4 orphans; every value predicted. HM v1.2 at
+            08:28:51Z against 88d55ae7 printed 12 lines where the seat had
+            predicted none (D411-9); the key guard's MainPID had not moved.
+            At 08:32:28Z the HM baseline /root/hm_manifest_s411_seal.json,
+            28f999ac, 22015 bytes, mode 600: no DRIFT line against itself,
+            and 12 against 88d55ae7.
+
+    D411-9  THE SNAP REFRESH, ATTRIBUTED, ON 10-22. The 12 lines of
+            08:28:51Z are the six fields of snap-go-11295.mount, present to
+            absent, and of snap-go-11382.mount, absent to present, in
+            multi-user.target.wants. At 08:31:23Z: the go snap at 1.27.3,
+            revision 11382, latest/stable; snap change 15, Done,
+            "Auto-refresh snap go", spawned and ready at 12:30Z on 10-21;
+            /etc/systemd/system/snap-go-11382.mount and its wants link
+            root:root, mtime and ctime 12:30:08Z on 10-21;
+            snap-go-11327.mount also present, not in the wants; 8 snapd
+            lines since 10:47Z on 10-21, the later refresh checks finding no
+            update. HM v1.2 lists that directory by name, and a snap mount's
+            name carries its revision, so a refresh drifts (letter C of
+            S411).
+
+    D411-10 WHAT S411 WROTE. To the repository, each step after its pame:
+            decfbfc and b817976, both pushed to main. To Server A outside
+            the repository: one restart of nous-api at 12:49:20Z on 10-20,
+            after its pame, and three POSTs to the local /v1/webhook/generic
+            at that restart, none reaching a model. To /root without a pame:
+            the uploaded tools S407D_LAND.py 2b86aaa7, S407D_COMMIT.py
+            86809f2b, D410_LAND.py c2c44426 and D410_COMMIT.py 018fe8c2, and
+            the HM baselines 88d55ae7 and 28f999ac, each mode 600. Network
+            from Server A: G2's fetches at 23:54Z on 10-19, 10:40Z on 10-21
+            and 08:23Z on 10-22; the commit tool of letter D of S407, its
+            fetch at 12:41:08Z on 10-20 and its fetch, push and ls-remote at
+            12:42:57Z on 10-20; the D410 commit tool, the same at 08:21:07Z
+            on 10-22 and 08:22:18Z on 10-22. Seat network, each declared
+            before use: one clone of the public repository at 00:00:19Z on
+            10-20, package installs from PyPI into a venv at 00:03:56Z on
+            10-20, PyYAML added after the suite asked for it, and one fetch
+            into the clone at 10:45:47Z on 10-21. No web search and no page
+            read. The seal files and the kits are off host only, recoverable
+            only from the operator's saved copies.
+
+    D411-11 WHAT STAYS OPEN. Security, each its own gate, in the order S411
+            recommended: letter C of S410 with letter A of S411, the API's
+            user owning the shared .env of 76 names, which the Noesis import
+            copies into any process that loads Noesis, and since 23:20:49Z
+            on 10-19 every tracked file, the API's own code among them,
+            where the next read is which processes import Noesis and what
+            writes the tree as aetherlang, and then the operator chooses;
+            the live half of letter E of S408, a caller-named session_id
+            over one store on /v1/chat, /v1/chat/stream and the generic
+            webhook; letter C of S408, three commits outside the lanes,
+            2c6d57a, 36c21b0 and 844a872, with no test; letter B of S407, a
+            caller with no key admitted; letter D of S408, ten secrets in
+            the public API process; letter H of S407, the per-IP limiter
+            keying the full client address; letter F of S408, the world name
+            not confined to the templates directory. Closed: letter D of
+            S407 on A, open on B (letter G of S411); and D410 paid. Other:
+            letters C, D, E, I, M and P of S406, Q of S407, E of S409 as
+            narrowed by E of S410, I of S409, and D, I and J of S410.
+            Systemic: HM into paste one; HM v1.3, the snap mounts of the
+            wants directory cut to their name; whether hm_v12.py takes the
+            name hm.py; one writer on the live tree and host; an end-to-end
+            chat probe beside the health check. The operator's: the owner of
+            the tree; the key guard's restart, or leaving its copy of the
+            token; the backup of the old credential in /root, once no
+            rollback is wanted; whether Telegram holds a webhook for the
+            API's former token; the release lane's check of 408 to 411 and a
+            release that carries 3ee4bae and decfbfc to B; whether the host
+            instruments are tracked; a third free tier, whose terms are
+            unread; the /root files of S406 to S411. Nothing on this board
+            presses with a date; the security items press by exposure,
+            letter C of S410 with letter A of S411 first.
+
+    FINDINGS
+
+            FG-S411-A  WORLD. SINCE 23:20:49Z ON 10-19 EVERY TRACKED FILE OF
+                       A'S LIVE TREE IS OWNED BY aetherlang, the user
+                       nous-api runs as; the server read 0:0 at 22:50:35Z
+                       that day (D411-5). OPERATOR: the change was his. The
+                       API's user can rewrite the API's own code. The S410
+                       record does not name it, and HM does not cover the
+                       tree. Open: the operator's decision.
+
+            FG-S411-B  SEAT. A SEALED VALUE ABOUT HOST STATE IS A PRIOR. The
+                       seat predicted the server's owner as 0:0 from the
+                       S410 readback; the host had moved between the seats
+                       (D411-4), and a read attributed the move.
+
+            FG-S411-C  SEAT. AN ENUMERATED DIRECTORY CARRIES STATE. HM v1.2
+                       lists multi-user.target.wants by name, and a snap
+                       mount's name carries its revision: snapd's
+                       auto-refresh of go at 12:30Z on 10-21 printed 12
+                       DRIFT lines against 88d55ae7, and the seat's
+                       prediction of none missed (D411-9). Attributed by
+                       snap changes. Open: HM v1.3.
+
+            FG-S411-D  SEAT. DRIVE AN ENGINE ON THE PATCH, NOT ONLY ON ITS
+                       FIXTURE. The first structural engine of the test of
+                       letter D of S407 counted any get, a dict's included,
+                       as an outbound call and failed on the patch it
+                       guards. Narrowed to sending methods, HTTP clients and
+                       HTTP imports, it was driven positive on two shapes
+                       and negative on one.
+
+            FG-S411-E  SEAT. SAY ONLY WHAT WAS READ. The first draft of D410
+                       said every tracked file took a new ctime at 23:20:49Z
+                       on 10-19; six were read. Corrected before it was
+                       rendered.
+
+            FG-S411-F  WORLD. A KICKOFF IS NOT SEALED. The S410 kickoff said
+                       3ee4bae keyed every channel; the key check runs on
+                       every channel, and a caller with no key still passes
+                       it (letter B of S407). The sealed S410 files do not
+                       say it. Corrected in D410.
+
+            FG-S411-G  WORLD. LETTER D OF S407 STAYS OPEN ON B, at tag
+                       v6.0.3, until a release carries decfbfc (D411-4).
+                       Open.
+
+            FG-S411-H  SEAT. ONE QUESTION PER GATE. At 12:40Z on 10-20 the
+                       seat asked for the tree and the pame together, and at
+                       08:19Z on 10-22 for the text, the tree and the pame;
+                       each answer was taken as covering all, and the seat
+                       said so.
+
+            FG-S411-I  WORLD. THE RELEASE LANE'S LATEST SEALED OPENER IS
+                       STILL NOT IN THE PROJECT; 411 was checked against the
+                       tree and the commit messages only (letter I of S409).
+                       Open.
