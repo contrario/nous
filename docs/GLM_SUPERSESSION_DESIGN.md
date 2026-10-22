@@ -18542,3 +18542,234 @@ document itself.
                        STILL NOT IN THE PROJECT; 411 was checked against the
                        tree and the commit messages only (letter I of S409).
                        Open.
+
+  - S414 the seat of the LangChain adapter arc that wrote the arc's
+    Innovation Gate, had GAP-1 closed by refusal in place of a new
+    certificate obligation, measured that change in its container, and wrote
+    this entry before the change lands on A
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, BEFORE THE CHANGE IT DESCRIBES IS
+    APPLIED, so that the ledger lands before the code. READ IN THE SEAT'S
+    CONTAINER: computed off host by S414, from the project's files or from a
+    clone of the public repository. ON A: printed on Server A by a command
+    the operator ran and pasted back. INHERITED: from a sealed file of an
+    earlier seat, not measured again. DERIVED: computed from printed values
+    or read from code. OPERATOR: stated by the operator. RULING: a decision
+    the operator stated in words. Every time below is in UTC, on 10-22 of
+    2026. An operator's time is the time his message was sent; the tools of
+    this entry print no clock, so a value ON A carries the time of the
+    message that brought it.
+
+    THE NUMBER. OPERATOR, 13:37Z: 414. READ IN THE SEAT'S CONTAINER at
+    13:41:21Z, on a clone fetched at 5ca8778, HEAD equal to origin/main: the
+    tokens S414, D414 and FG-S414 counted zero in the tree and in every
+    commit message on every ref, and so did those of the number after it.
+    RULING, 13:34Z: this entry written by this seat. Before this entry the
+    document held no S414 token, no anchor of that number and no code of its
+    family, and the instrument that appends this entry refuses unless that
+    is still so when it runs.
+
+    D414-1  THE ARC AND WHO CHOSE IT. OPERATOR, 12:53Z: the LangChain
+            adapter arc and its Innovation Gate, NOUS beside a LangGraph
+            agent and not a translator; nothing on A and nothing in the
+            repository until he rules; the evidence of the seat before in
+            the project under claude/lc_g0/. RULING, 13:15Z: D2 of the Gate.
+            RULING, 13:24Z: D2 by refusal, the mechanism the seat proposed
+            in place of the one the Gate named (D414-5), with
+            principal-level engineering, the right architecture, security
+            and the evidence kept. RULING, 13:34Z: this entry here. D1, D3
+            and D4 of the Gate are not ruled.
+
+    D414-2  THE SEAT BEFORE, G0. READ IN THE SEAT'S CONTAINER:
+            claude/lc_g0/G0_SHA256SUMS.txt c305bdc4, 13 of 13 entries
+            matching; the bytes hashed were the text the project tool
+            returned, written to disk by the seat, the sums file first and
+            matching before the other twelve were written. INHERITED from
+            G0_RESULTS.md 65114a67, computed at decfbfc: pass, narrowed, for
+            the three LangGraph shapes with no grammar or checker change;
+            N1, a LangChain tool is a name in senses or a declared event,
+            never a sense block (S021); N2, a back edge is a feedback edge
+            (N003); GAP-1, a tool_call labelled DeleteAll and declared
+            nowhere gave ok True. The number of the seat that ran G0 is not
+            stated (D414-11).
+
+    D414-3  THE GATE. LC_INNOVATION_GATE.md 6191a812, 442 lines, sums
+            766e80ff, written on a clone at b817976 after R2 and R6 of
+            docs/REJECTED_IDEAS.md (0acdb182) and
+            docs/ENGINEERING_CONSTITUTION.md (ae543c49) were read in that
+            clone; langchain 1.4.7, langchain-core 1.6.13 and langgraph
+            1.2.16 read as source from their wheels, not run. Its verdict:
+            go on, narrowed. Its readings: the cost obligation reads no
+            topology; TraceEvent has no model field; declared events reach
+            the spec only through sequence laws; ModelCallLimitMiddleware
+            counts model-node executions, so a retry inside one can call the
+            provider more often than its limit; middleware may change the
+            tool set per request; usage input counts include cache tokens,
+            which conformance prices at the base input rate. Its decisions:
+            D1, no topology in the extractor; D2, GAP-1 closed in core and
+            first; D3, LangChain in a separate package that core never
+            imports; D4, the order G3, G1, G2, G4, with kill criteria pinned
+            for each before any code. Patent status unknown; the claims of
+            US20260017525A1 unread.
+
+    D414-4  THE DEFECT, MEASURED FIRST. READ IN THE SEAT'S CONTAINER, on a
+            clone at 5ca8778, Python 3.13.16, z3 4.16.0: G3_PREDICTIONS.md
+            dd4d1d87, hashed at 13:17:55Z before the run. On G0's program
+            A4, with at_most(3, SearchDocs): five tool_call events labelled
+            SearchDocs2 gave sequence True and ok True; the control, a
+            fourth SearchDocs, ok False; DeleteAll and an unlabelled
+            tool_call ok True; five of five predictions held. DERIVED from
+            code: no shipped runtime path records a tool_call (FG-S414-A).
+
+    D414-5  THE MECHANISM, CHANGED BEFORE CODE. READ IN THE SEAT'S
+            CONTAINER: the certificate's obligation tuple is copied into six
+            modules, two of them embedded offline verifiers and one served
+            under website/.well-known/nous/vsa-vectors/v1/, and each reads a
+            certificate as consistent when its verdict equals all the
+            booleans of its own schema; a fifth schema with a new boolean
+            false would read as tampered to every one of them (FG-S414-B).
+            RULING, 13:24Z: refusal over guess instead, on the precedent of
+            the undeclared soul and the undeclared gated action in the same
+            loop. No certificate field, no schema, no offline verifier and
+            no served byte changes.
+
+    D414-6  THE CHANGE. smt_emit.py a0d64bcd, blob 4832a77b, to b81b8cc8 by
+            5 insertions: the spec carries declared_events, sorted and
+            without repeats, and its canonical string one DE line per event
+            after the quorum lines, only when the world declares events.
+            conformance.py 515493ea, blob f7504226, to 2fdb00f4 by 3
+            insertions: when the spec declares events, a tool_call with no
+            label, or with a label outside them, raises the precondition
+            error; with no events declared the check is vacuous; the
+            tool_call kind only. tests/test_lc_g3_tool_surface.py, new,
+            407fd532, 10 tests. 31 lines in and none out, all ASCII, each of
+            the 8 insertions carrying the marker __s414_tool_surface_v1__.
+            The error class reaches the conformance command as PRECONDITION
+            ERROR with exit 2 (DERIVED from cli_conformance.py).
+
+    D414-7  THE CHANGE, MEASURED. READ IN THE SEAT'S CONTAINER: the 10
+            tests, 6 failing and 4 passing on the parent; the 4 that pass
+            there are guards by construction, and each failed under one
+            mutant of conformance.py, M1 to M4; 10 passing on the change.
+            The suite: 3563 passed and 30 skipped at 5ca8778, and 3573
+            passed and 30 skipped with the change; of the 3593 earlier cases
+            none moved. Spec hashes over the 56 tracked .nous files: 9 emit
+            and 47 are refused, alike before and after; no spec of a world
+            without events moved; the three that declare events moved,
+            templates/quorum_gated_demo.nous,
+            templates/sequence_law_demo.nous and the program of the v1
+            vector (FG-S414-C). G0's runner at PYTHONHASHSEED 10, on the
+            parent and on the change: one line differs, A4's undeclared
+            tool, from ok True to the precondition error. claim_lint on the
+            change: 406 files, 0 violations.
+
+    D414-8  THE LAND TOOL. LC_G3_LAND.py 8edba1ec, rendered from
+            lc_g3_land_template.py by render_lc_g3.py, which refuses unless
+            replaying the 8 anchored insertions on HEAD's bytes gives the
+            change's bytes. Its pins: 5ca8778 an ancestor of HEAD, HEAD
+            equal to origin/main, the blobs 4832a77b and f7504226, the test
+            untracked, and the old and new digests of each file and of the
+            test. On a fixture tree owned by uid 1001: dry run, apply, a
+            second apply skipped, rollback and a second rollback skipped,
+            mode and owner kept; refusals 40, 41, 42, 44 twice, 45 and 46,
+            each writing nothing; refusal 48 cannot fire once the old digest
+            has matched, and was driven through its function on a doubled
+            anchor. LC_G3_OUTCOMES.py 23c27ce7 reads two junit files and is
+            green only when no case moved or vanished and the 10 new cases
+            passed; driven green on the container's pair, and red on a
+            flipped case, a removed case and a pair with no new case.
+
+    D414-9  THE FIRST TOOL AND THE BASELINE ON A. ON A, 13:34Z: sha256sum of
+            the uploaded first tool, 884264cf, as rendered. ON A, 13:36Z: a
+            fetch, FETCH_OK. ON A, 13:37Z: its dry run, every value
+            predicted: HEAD and origin 5ca8778, both blobs pinned, porcelain
+            0, both files mode 644 and owner 986:981, STATE BEFORE, eight
+            anchors of count one, both files built and compiled,
+            DRY_RUN_GREEN. Its markers and a test docstring carried a name
+            chosen before the number (FG-S414-G); renamed to S414, the
+            change was measured again whole (D414-7) and rendered as
+            8edba1ec. The first tool wrote nothing and is not to be applied.
+            ON A, 13:51Z: the whole suite before any change, 3581 passed and
+            12 skipped, as predicted from D411-8, its junit file at
+            /root/lc_g3_junit_before.xml.
+
+    D414-10 WHAT S414 WROTE. To the repository: nothing; this entry and then
+            the change, each after its pame. To Server A:
+            /root/LC_G3_LAND.py, the first tool, uploaded by the operator at
+            13:34Z, and the junit file of the baseline suite (D414-9).
+            Network from Server A: one fetch at 13:36Z. To the project:
+            claude/lc_gate/ and claude/lc_g3/. Seat network, not declared
+            before use (FG-S414-J): two clones of the public repository,
+            package installs from PyPI into a venv, three wheels downloaded
+            and read, and the web searches and page reads named in the
+            Gate's sections on prior art and patents.
+
+    D414-11 WHAT STAYS OPEN. In order: this entry on A, then the change by
+            LC_G3_LAND.py 8edba1ec, the suite on A read against its baseline
+            by LC_G3_OUTCOMES.py, the commit and the push, each after its
+            pame; then G1 under D1, which is unruled, and D3 and D4. Not
+            measured: the relabel question for message and llm_call labels
+            under at_most. Unread: the claims of US20260017525A1. Not
+            stated: the number of the seat that ran G0. The operator's: the
+            stale state of the project instructions (FG-S414-I), whether the
+            v1 vector should re-derive (FG-S414-C), and the cycle message's
+            dependence on the hash seed (FG-S414-E).
+
+    FINDINGS
+
+            FG-S414-A  SEAT. A GATE SENTENCE OVERSTATED ITS REACH. D2(a) of
+                       the Gate called the relabel hole a defect of native
+                       NOUS too; no shipped runtime path records a
+                       tool_call, so the hole is the verifier's, for any
+                       trace handed to it, and no native verdict moves.
+                       Corrected in the record and here; the Gate stays as
+                       written.
+
+            FG-S414-B  WORLD. A NEW CERTIFICATE OBLIGATION IS NOT LOCAL. The
+                       obligation tuple lives in six modules, one of them
+                       served, and each existing verifier reads consistency
+                       over its own tuple. Found by following an earlier
+                       field before any code (D414-5).
+
+            FG-S414-C  WORLD. THE PUBLISHED v1 VECTOR DOES NOT RE-DERIVE AT
+                       HEAD. Its manifest pins spec 37ef241f; the parent
+                       derives 4c9d53a4 and the change 587fd2f3, the
+                       canonical string carrying NV:6.0.3, the installed
+                       version. Its test reads frozen bytes and passes.
+                       Open: whether that is intended.
+
+            FG-S414-D  WORLD. A RESEARCH NOTE WAS A PRIOR. LC_RESEARCH_NOTES
+                       gave the default recursion_limit as 1000; langgraph
+                       1.2.16 ships 10007, overridable by the environment.
+                       Not load-bearing.
+
+            FG-S414-E  WORLD. THE CYCLE MESSAGE DEPENDS ON THE HASH SEED.
+                       VD001 names Writer first at PYTHONHASHSEED 6 to 9 and
+                       12, and Reviewer at 0 to 5, 10, 11 and 13 to 15, on
+                       the change; the parent read at 1, 2, 6 and 10 alike.
+                       Not driven further. Open.
+
+            FG-S414-F  SEAT. A FILE MOVED UNDER A RUNNING SUITE. The seat
+                       stashed the two edited files while a suite ran in the
+                       background; that run was discarded and the suite run
+                       again with nothing touching the tree (D414-7).
+
+            FG-S414-G  SEAT. A NAME CHOSEN BEFORE THE NUMBER. The first
+                       markers and a test docstring named the gate, not the
+                       session; they were renamed before anything landed, at
+                       the cost of a second tool and a second upload
+                       (D414-9).
+
+            FG-S414-H  SEAT. AN ARM THAT PRINTS NOTHING IS NOT A
+                       MEASUREMENT. The not-root arm first ran from a path
+                       the user nobody could not read; rerun from a readable
+                       path, it refused 42.
+
+            FG-S414-I  WORLD. THE PROJECT INSTRUCTIONS CARRY STALE STATE:
+                       HEAD 5c98f33, version 5.76.0 and floor 2580, where
+                       the tree reads 6.0.3 and 3498. Open, the operator's.
+
+            FG-S414-J  SEAT. SEAT NETWORK WAS NOT DECLARED BEFORE USE, as
+                       earlier seats declared it. Listed after the fact
+                       (D414-10).
