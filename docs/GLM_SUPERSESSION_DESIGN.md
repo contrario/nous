@@ -17918,3 +17918,295 @@ document itself.
                        S391 opener of the S390 seal. The number 409 was
                        checked against the tree and the commit messages
                        only. WRITING SEAT: still so at its intake. Open.
+
+  - S410 the seat that landed the entry S409 owed, read that no Telegram
+    traffic reached the API's webhook route, retired that channel and took
+    its token out of the API's credential, and was numbered after its work;
+    the seat after it wrote this entry
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY WAS WRITTEN AFTER THE
+    SESSION IT DESCRIBES, BY THE SEAT THAT FOLLOWED IT. Every value is
+    INHERITED from the sealed handoff, opener and record of S410, whose
+    digests that seat checked against the kickoff at intake, unless a
+    sentence says otherwise. Within them, unless marked, a value was printed
+    on Server A by the opening rule, by instruments whose digest was printed
+    before they ran, or by read-only commands of version control, systemd
+    and the shell. READ IN THE SEAT'S CONTAINER: computed off host, from the
+    sealed files or from a clone of the public repository. DERIVED: computed
+    from printed values or read from code. OPERATOR: stated by the operator.
+    RULING: a decision the operator stated in words. WRITING SEAT: read by
+    the seat that writes this entry, on Server A or in its container. Every
+    time below is in UTC, and on 2026-10-19 unless a date is written.
+
+    THE SESSION NUMBER. OPERATOR, 23:20Z: the seat was numbered S410, after
+    its work. INHERITED: four hundred and five stays reserved for the
+    release lane. READ IN THE SEAT'S CONTAINER at 23:20:42Z, on a clone
+    fetched at 3ee4bae: the tokens S410, D410 and FG-S410 counted zero in
+    the tree and in every commit message on every ref, and the bare number
+    410 was not in this document. The release lane's latest sealed opener
+    was not in the project, so the number was checked against the tree and
+    the commit messages only. WRITING SEAT, at 10:45:47Z on 2026-10-21, on a
+    clone fetched at decfbfc: the same three tokens counted zero again.
+    RULING, 10:47Z on 2026-10-21: this entry, D410, as the writing seat
+    proposed it. The writing seat's number is the operator's and is not
+    stated here, so that the namespace of the next entry stays empty. Before
+    this entry the document held no S410 token, no anchor of that number and
+    no code of its family, and the instrument that appends this entry
+    refuses unless that is still so when it runs.
+
+    D410-1  THE OBJECTS AND WHO CHOSE THEM. RULING, 12:09Z, "go with your
+            proposal": the seat had proposed letter D of S407 if its test
+            and patch, made outside the chat, were brought, else D409 and
+            then the read of letter E of S408. None was brought; the seat
+            took D409, then the read, and said so. RULING, 12:42Z: letter C
+            of S407 as the seat proposed it after the read, to retire the
+            telegram channel of /v1/webhook and take TELEGRAM_BOT_TOKEN out
+            of the API's credential. OPERATOR, 23:20Z: the number. Each
+            apply, commit, push and restart followed its own pame, except
+            the first restart of nous-api (letter A of S410).
+
+    D410-2  THE OPENING. OPERATOR, 05:36Z: the tree free. Paste one at
+            05:37:15Z, RC 0, SELF_SHA c027371e, rule0.sh 074e51af: HEAD
+            9bed732 equal to origin/main, eleven commits above v6.0.3, each
+            predicted; A at 6.0.3, its start DERIVED as 00:40:58Z on
+            2026-10-18; B at tag v6.0.3, its start DERIVED as 16:34:06Z on
+            2026-10-08; suite 3548 passed and 12 skipped; three nous rows
+            healthy in Asklepios at 05:38:51Z; no failed unit. HM v1.2 at
+            05:42:47Z against bf1dba0b printed no DRIFT line. OPERATOR,
+            05:48Z: the tree free. G2_R0_S372 at 06:00:16Z, RC 0 at 9bed732,
+            DOC_SHA 6a3ff471 and blob 30d1310d at HEAD and at origin, every
+            leg the S409 opener states equal to it. The stop condition held.
+            WRITING SEAT: OPERATOR at about 23:41Z and 23:53Z, the tree
+            free; paste one at 23:42:00Z, HM v1.2 at 23:46:07Z against
+            c00f280a and G2_R0_S372 at 23:54:54Z, each RC 0 at 3ee4bae, with
+            DOC_SHA dc34a29e and blob cb7240dc at HEAD and at origin, HM
+            printing no DRIFT line, and every value the S410 opener states
+            equal; of the pinned legs, the endpoints the S407 record pins.
+            Its Asklepios read at 23:43:42Z, three nous rows healthy, was
+            the first after the restarts of S410.
+
+    D410-3  D409, LANDED. Written from the sealed S409 handoff, opener and
+            record after every S409 claim it carries was read again and
+            held: the two drivers of HM gave 26 of 26 and 18 of 26 and the
+            S408 driver 17 of 17; the D408 renderer and generator reproduced
+            the entry and both tools byte for byte, and the D408 driver
+            passed 33 of 33; the S408 files carry the reserved verb on 7, 1
+            and 1 lines; the two bare 408 lines of this document at 844a872
+            are a line number and an HTTP status. READ IN THE SEAT'S
+            CONTAINER: the entry, af26a98e, 241 lines, 15782 bytes, longest
+            line 76, ASCII; D409_LAND.py, 0549fa95, and D409_COMMIT.py,
+            8481a37b, derived from the sealed D408 kit by tokens and pins
+            only, passed 33 of 33 arms; G2's own patterns predicted every
+            count of the new document. On A the dry run at 12:20:44Z read
+            green. OPERATOR, 12:22Z: pame, the text accepted, the tree free.
+            The apply at 12:22:19Z read back dc34a29e, mode 644, owner 0:0;
+            the commit tool's dry run at 12:22:44Z read blob cb7240dc and a
+            clean claim lint over 436 files. After its pame, the commit at
+            12:29:09Z, new HEAD 6516ac1; after its pame, the push at
+            12:29:43Z, the remote read back as 6516ac17. G2_R0_S372 at
+            12:30:31Z, RC 0 at 6516ac1, DOC_SHA dc34a29e, every value
+            predicted. WRITING SEAT: the renderer gave the entry again byte
+            for byte, the generator gave 0549fa95 and 8481a37b from the
+            document at 9bed732, the driver passed 33 of 33, and 6516ac1
+            changes that one file by 241 lines in, the document at 9bed732
+            with the entry appended.
+
+    D410-4  THE READ OF LETTER E OF S408, ITS TELEGRAM HALF. READ IN THE
+            SEAT'S CONTAINER at 6516ac1: the webhook route skipped
+            require_api_key for telegram, and its handler kept tg_<chat id>
+            sessions in the one session store, called the model and replied
+            through the Bot API with TELEGRAM_BOT_TOKEN, after a log line
+            naming the channel. On A at 12:38:18Z: in the API journal from
+            2026-10-10T10:06:29Z no webhook line and no handler line; the
+            nginx site sends /v1/ and /api/ to port 8000; in its 15 access
+            files no POST to /v1/webhook. The controls at 12:39:05Z printed
+            nonzero: 778 journal lines, 3 of them chat requests; 31086 nginx
+            lines, 553 with /v1/. At 23:27:06Z, every access file, from
+            about 2026-10-05: /api/v1/webhook and /v1/webhook 0 as request
+            paths, and all 47 shapes of the 72 lines that name webhook
+            listed, none a NOUS route (letter F of S410). nous-bot,
+            5d27c7c7, calls deleteWebhook and polls getUpdates on
+            NOUS_BOT_TOKEN from its own credential file, unequal to the
+            API's token by a comparison in the shell that printed no value,
+            and posts to localhost:9977/agents/run. The Telegram half was
+            dormant; the live half is a caller-named session_id over one
+            store on /v1/chat, /v1/chat/stream and the generic webhook.
+
+    D410-5  LETTER C OF S407, THE CODE. READ IN THE SEAT'S CONTAINER: the
+            patch takes nous_api_server.py from 35e91c34, blob d7cca9d3, to
+            d3271e73, blob 7665761b, 118 lines out and 5 in: require_api_key
+            is called for every webhook channel, telegram answers as an
+            unknown channel, and the handler, its world map and the server's
+            only read of the token are gone. The test, b38e1008, blob
+            73572c7f, 226 lines, holds 13 tests: 13 pass on the patch and 10
+            fail on the parent. S407C_LAND.py, 67ca5db1, and
+            S407C_COMMIT.py, edea9217, rendered by one generator, passed 35
+            of 35 arms on full clones. On A the dry run at 22:49:40Z read
+            green. OPERATOR, 22:49Z: the tree free; 22:50Z: pame. The apply
+            at 22:50:35Z wrote the test, then the server. The commit tool's
+            dry run at 22:52:27Z ran the claim lint, 436 files clean, and
+            the whole suite, 3561 passed and 12 skipped. After its pame, the
+            commit at 22:57:10Z, new HEAD 3ee4bae, the server modified and
+            the test added. nous-api was restarted at 22:57:56Z without a
+            pame (letter A of S410): MainPID 371978 to 3642259, health ok at
+            6.0.3, a POST of chat id 1 to /v1/webhook/telegram answered as
+            an unknown channel, and the journal showed no handler line.
+            After its pame, the push at 22:59:59Z, the remote read back as
+            3ee4baec. WRITING SEAT: 3ee4bae changes those two files only, 5
+            lines in and 118 out of the server and 226 in for the test,
+            which passes 13 of 13 there and fails 10 of 13 at 6516ac1. The
+            key check now runs on every channel, and a caller with no key
+            still passes it (letter B of S407): the S410 kickoff's "keyed
+            every channel" says more than the code does, and the sealed
+            files do not say it.
+
+    D410-6  LETTER C OF S407, THE CREDENTIAL. At 23:02:19Z, names only:
+            nous-api runs as aetherlang; /etc/nous/nous-api.env, mode 600,
+            root, 741 bytes, 11 names, TELEGRAM_BOT_TOKEN once, named only
+            by 97-env-file.conf and the key guard's 50-s408-credential.conf;
+            /opt/aetherlang_agents/.env, mode 600, aetherlang:aetherlang,
+            5517 bytes, 76 names, readable by the API's user (letter C of
+            S410). READ IN THE SEAT'S CONTAINER: S407C_CRED.py, a0a8e178,
+            passed 19 of 19 arms, and no fixture value reached any output.
+            On A the dry run at 23:07:57Z would write 675 bytes and 10
+            names. After its pame, the apply at 23:10:38Z wrote the backup
+            /root/s407c_nous-api.env.bak, 741 bytes, mode 600, then the
+            file, 675 bytes, mode 600, and read back 10 names and no token.
+            After its pame, nous-api only, the restart at 23:13:25Z: MainPID
+            3642259 to 3707313, the loaded credential 10 names and no token,
+            health ok, the route answering as unknown. B stays at tag
+            v6.0.3, where the route is keyless, and the key guard's copy of
+            the credential holds the token until it next starts (letter I of
+            S410). WRITING SEAT: paste one at 23:42:00Z put the start of A
+            at 23:13:26Z, DERIVED from its uptime; HM v1.2 at 23:46:07Z,
+            which reads the size and mtime of that file, printed no DRIFT
+            line against the baseline taken after the apply; and at
+            10:45:24Z on 2026-10-21 HM still showed the key guard's MainPID
+            unmoved.
+
+    D410-7  THE CLOSING. OPERATOR, 23:15Z: the tree free. G2_R0_S372 at
+            23:15:33Z, RC 0 at 3ee4bae: TRACKED 1536, thirteen commits above
+            v6.0.3 by both tag oracles, porcelain 0, DOC_SHA dc34a29e, 3573
+            and 3711 tests collected, 3561 passed and 12 skipped, a clean
+            claim lint over 436 files and the served mirror CLEAN with 4
+            orphans; every value predicted. At 23:21:52Z the HM baseline
+            /root/hm_manifest_s410_close.json, c00f280a, mode 600: no DRIFT
+            line against itself, and against bf1dba0b three lines, the
+            credential's mtime and size and nous-api's MainPID, each caused
+            by the seat. WRITING SEAT, on 2026-10-20: all 1536 tracked files
+            read 986:981, the API's user, the server among them, 0:0 at
+            22:50:35Z; the five files read one by one and the tree's root
+            directory carry a ctime between 23:20:49.56Z and 23:20:49.84Z,
+            after that G2 and before that baseline, and no tracked file a
+            later one. OPERATOR, 12:30Z on 2026-10-20: that change of owner
+            was his. The S410 record does not name it and the HM set does
+            not cover the tree; the next entry carries it.
+
+    D410-8  WHAT S410 WROTE. To the repository, each step after its pame:
+            6516ac1 and 3ee4bae, both pushed to main. To Server A outside
+            the repository: nous-api restarted at 22:57:56Z without a pame
+            and at 23:13:25Z after one; /etc/nous/nous-api.env rewritten at
+            23:10:38Z after a pame, its backup written first; reversible by
+            the credential tool's rollback and a restart. To /root without a
+            pame: the uploaded tools D409_LAND.py 0549fa95, D409_COMMIT.py
+            8481a37b, S407C_LAND.py 67ca5db1, S407C_COMMIT.py edea9217 and
+            S407C_CRED.py a0a8e178, and the HM baseline c00f280a. Network
+            from Server A: G2's fetches at 06:00Z, 12:30Z and 23:15Z; each
+            commit tool's fetch at its commit and its fetch, push and
+            ls-remote at its push; two POSTs of the operator's to the local
+            route, chat id 1, at 22:58:00Z and 23:13:29Z. Seat network, each
+            declared before use: one clone of the public repository at
+            12:11Z, package installs into a venv from PyPI at 12:45Z, and
+            one fetch into the clone at 23:20Z. No web search and no page
+            read.
+
+    D410-9  WHAT STAYS OPEN. Security, in the order S410 recommended: letter
+            D of S407; letter C of S410; the live half of letter E of S408;
+            letter C of S408; letter B of S407; letter D of S408, ten
+            secrets from eleven; letter H of S407; letter F of S408. Closed:
+            letter C of S407 on A, open on B until a release and in the key
+            guard's copy (letter I of S410); and D409 paid. Other: letters
+            C, D, E, I, M and P of S406, Q of S407, E of S409 as narrowed by
+            E of S410, I of S409, and D, I and J of S410. Systemic: HM into
+            paste one, and whether hm_v12.py takes the name hm.py; one
+            writer on the live tree and host; an end-to-end chat probe
+            beside the health check. The operator's: the key guard's
+            restart; the backup of the old credential in /root; whether
+            Telegram holds a webhook for the former token; the release
+            lane's check of 408 to 410 and a release that carries 3ee4bae to
+            B; whether the host instruments are tracked; a third free tier,
+            whose terms are unread; the /root files of S406 to S410. Nothing
+            on this board presses with a date. WRITING SEAT: letter D of
+            S407 landed after this session as decfbfc and is live on A from
+            12:49:20Z on 2026-10-20; the next entry carries it.
+
+    FINDINGS
+
+            FG-S410-A  SEAT. A COMMAND SHIPPED BESIDE ITS PAME IS NOT GATED.
+                       The seat printed the restart of nous-api in the
+                       message that asked for its pame, and it ran at
+                       22:57:56Z without one (D410-5). It went green. An
+                       irreversible command is shipped after its pame, in
+                       the next message. WRITING SEAT: each of its own
+                       irreversible commands was shipped so.
+
+            FG-S410-B  WORLD. NO TELEGRAM TRAFFIC REACHED THE API'S WEBHOOK
+                       ROUTE in the windows read (D410-4); nous-bot polls on
+                       its own token and calls another service. The Telegram
+                       half of letter E of S408 was dormant. Whether
+                       Telegram holds a webhook for the API's former token
+                       is unread.
+
+            FG-S410-C  WORLD. THE API'S USER OWNS THE SHARED .env OF 76
+                       NAMES. The credential split bounds what the process
+                       loads, not what its user can read. noesis_telegram
+                       copies that file into the environment of any process
+                       that imports noesis_engine, setting each name not
+                       already set (DERIVED from code); in the API through a
+                       keyed execution of /v1/run. Whether that has run is
+                       unread. Open. WRITING SEAT: at decfbfc the lazy
+                       loader of nous_runtime imports noesis_engine, which
+                       imports noesis_superbrain, which imports
+                       noesis_telegram at import, which loads the file at
+                       import.
+
+            FG-S410-D  WORLD. ANOTHER SERVICE ANSWERS POST /webhook/ AND
+                       /webhook-test/ WITH 401 through nginx on A; which one
+                       is unread. Open.
+
+            FG-S410-E  WORLD. THE PERIODIC WRITER OF IGNORED FILES,
+                       NARROWED. noesis_lattice.json is aetherlang's, last
+                       written at 04:40:02Z; the candidates are
+                       noesis-dashboard.service and the noesis lines of the
+                       aetherlang and root crontabs, unread. Open.
+
+            FG-S410-F  SEAT. A ZERO WITHOUT A CONTROL. The first nginx
+                       pattern read POST /v1/webhook/ only and was blind to
+                       /api/v1/webhook/, which nginx also sends to the API;
+                       and the breakdown that followed was cut at 20 rows,
+                       leaving 27 lines unseen. Positive controls and a full
+                       listing at 23:27:06Z made the zeros a reading.
+
+            FG-S410-G  SEAT. A ROLLBACK BY ANCHOR CANNOT UNDO A DELETION.
+                       The first rollback of S407C_LAND reversed edits by
+                       anchor and could not reverse two deletions; the
+                       fixture driver failed two arms before any host saw
+                       it. It now restores the server from the parent's
+                       blob.
+
+            FG-S410-H  SEAT. THE FIRST GENERIC-CHANNEL TEST ASSERTED ONE
+                       TIER CALL; the webhook chat makes two, one to choose
+                       a soul and one to reply. Running it caught that.
+                       WRITING SEAT: two again in its container at decfbfc.
+
+            FG-S410-I  WORLD. LETTER C OF S407 STAYS OPEN ON B, at tag
+                       v6.0.3, until a release carries 3ee4bae, and in the
+                       key guard's credential copy until the guard next
+                       starts. Open. WRITING SEAT: the guard had not
+                       restarted by 10:45:24Z on 2026-10-21.
+
+            FG-S410-J  WORLD. AN UNBOUND NAME IN THE WEBHOOK ROUTE'S ERROR
+                       PATH. A failure of request.body() leaves raw unbound,
+                       and the log line after it would raise (DERIVED from
+                       code). Not driven. Open. WRITING SEAT: it reads so at
+                       decfbfc.
