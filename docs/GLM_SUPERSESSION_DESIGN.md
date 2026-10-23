@@ -19043,3 +19043,260 @@ document itself.
                        S414 record holds every time on. 2026-10-23 is the
                        date of those clocks in Athens (DERIVED). Whether the
                        input date moves any value was not measured.
+
+  - S416 the number the operator gave the second entry of the seat S415,
+    which carries D415's landing, D3 and the emitter's home ruled on
+    evidence, and G1 measured in the container
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D415, which is landed and
+    append-only. READ IN THE SEAT'S CONTAINER: computed off host by S415,
+    from the project's files, a clone of the public repository or venvs from
+    PyPI. ON A: printed on Server A by a command the operator ran and pasted
+    back. INHERITED: from a file of an earlier seat, checked by digest and
+    not measured again. DERIVED: computed from printed values or read from
+    code. OPERATOR: stated by the operator. RULING: a decision the operator
+    stated in words. Every time below is in UTC, on 10-23 of 2026 unless it
+    says 10-22. An operator's time is the time his message was sent; a value
+    ON A carries that time, and the clock its command printed where it
+    printed one.
+
+    THE NUMBER. OPERATOR, 00:49Z: 416, for this seat's second entry; four
+    hundred and five stays reserved for the release lane. READ IN THE SEAT'S
+    CONTAINER at 00:49:59Z, on a clone fetched then, HEAD equal to
+    origin/main at 71f3db0c: the tokens S416, D416 and FG-S416 counted zero
+    in the tree and in every commit message on every ref, and so did those
+    of the number after it. OPERATOR, 00:48Z: this entry first. Before this
+    entry the document held no S416 token, no anchor of that number and no
+    code of its family, and the instrument that appends this entry refuses
+    unless that is still so when it runs. The codes FG-S415-E to FG-S415-N
+    below are this seat's, found after D415, which holds A to D.
+
+    D416-1  THE LANDING OF D415. ON A, on 10-22 at 23:56Z, its clock
+            23:56:28Z: the uploads D415_LAND.py 96d86f21 and D415_COMMIT.py
+            11c880dd; the entry d11682a2, 17352 bytes; HEAD and origin
+            37b87837; the document 256bbca4, mode 644 and owner 986:981;
+            STATE BEFORE; NAMESPACE 0 0 0; DOC_NEW d899d963; DRY_RUN_GREEN.
+            After its pame, at 23:58Z on 10-22: WROTE and READBACK d899d963,
+            mode and owner kept, porcelain the one document, APPLY_GREEN. At
+            00:02Z: the commit tool's dry run, message 9bab05b2 of 721
+            bytes, worktree blob acc84c5d, the identity pinned, lint 437
+            files and 0 violations, DRY_RUN_GREEN. After its pame, at
+            00:03Z: a fetch, origin 37b87837, NEW_HEAD 71f3db0c,
+            CHECK_COMMIT OK. After its pame, at 00:04Z: REMOTE_MAIN
+            71f3db0c, PUSH_GREEN. READ IN THE SEAT'S CONTAINER at 00:04:58Z:
+            origin/main 71f3db0c, parent 37b87837, one path; the document
+            d899d963, blob acc84c5d, its first 1131190 bytes the old
+            document and its last 17352 the entry; G2's patterns as
+            predicted, heads 76 and 62, STRICT 831, LABELLED 685, DUP 0,
+            OTHER_INDENT 8, LOOSE 839, 836 and 57, ANCHOR4 684, codes
+            anywhere 1061 and 860.
+
+    D416-2  D3, ASKED FOR EVIDENCE. OPERATOR, 00:08Z: whether the seat's D3
+            proposal was correct, documented and with evidence. Before
+            measuring, the seat withdrew three of its sentences: that an
+            optional extra in core breaks K1.4; that nous-vscode/ is a
+            precedent for a second Python package; that the counted suite
+            would collect the package's tests, where scripts/rule0.sh,
+            scripts/release.py and CI run pytest on tests/ only (FG-S415-G).
+            READ IN THE SEAT'S CONTAINER, claude/lc_d3/D3_EVIDENCE.md
+            b4535680, sums fe606b98, its predictions 4e89adad hashed at
+            00:11:27Z before any run, at 71f3db0c, the builds isolated with
+            setuptools 84.2.1: a planted nous-langchain/ directory reached
+            neither the core wheel, 165 members, nor the sdist, 546, nor
+            METADATA, a control going red; tests/ collected 3603 with and
+            without it; a bare collect gained one collection error, removed
+            by --ignore or by one root conftest line; llm_guard_adapter.py
+            passed the K1.4 check with stub LangChain packages present, and
+            a probe turned it red; an optional extra left K1.4 green and put
+            Requires-Dist: langgraph>=1.2; extra == "langchain" into core's
+            METADATA. One prediction missed (FG-S415-E, FG-S415-F).
+
+    D416-3  THE REPOSITORY. RULING, 00:18Z: the package's source in a second
+            repository, nous-langchain; K1.9, the core wheel, sdist and
+            METADATA equal to the parent's; K1.10, core's CI collecting
+            nothing of the new repository; FG-S415-E and FG-S415-F to this
+            entry. The seat noted that nous-vscode/ lives in this
+            repository, so the ruling rests on isolation alone.
+
+    D416-4  THE EMITTER'S HOME. After the ruling the seat recommended the
+            emitter in core, on a reason it had not measured (FG-S415-H).
+            OPERATOR, 00:20Z: the principal move, with evidence. READ IN THE
+            SEAT'S CONTAINER, claude/lc_d3b/D3B_EVIDENCE.md 3335ca54, sums
+            0828ae4a, its predictions 205750a0 hashed at 00:22:17Z: in core,
+            G1 would change core by a module, its py-modules entry, a
+            wheel-gate entry by convention and tests that ship in the sdist,
+            which holds 340 members under tests/ and none under docs/, so
+            K1.9 as ruled could not hold; core's two Rule 9 tests hold the
+            gate inside py-modules and no more (FG-S415-I). In
+            nous-langchain, a stub package resolved 45 packages, 27 beyond
+            core's with the stub among them, seven of them LangChain's,
+            langchain-core at 1.7.0 (FG-S415-J), where core alone resolved
+            18 and none of them; installed with --no-deps the stub's emitter
+            ran, core parsed its output, and the K1.4 check stayed green
+            with a control red. Checking a trace needs the .nous, the
+            pricing, the manifest and the trace under either home;
+            re-deriving the .nous from the JSON is P's one measured cost.
+
+    D416-5  THE EMITTER IN nous-langchain. RULING, 00:27Z: P. The emitter as
+            nous_langchain/emit.py, importing no LangChain; K1.4 re-checked
+            in a --no-deps environment; K1.9 and K1.10 as ruled; K1.11, the
+            input checks the Gate's K4.3 put on core, in nous-langchain;
+            Rule 9 not applying. The Gate's D3 text changes with this
+            ruling.
+
+    D416-6  G1, PINNED. G1_PREDICTIONS.md 37739df5, hashed at 00:31:40Z
+            before any G1 code. Core installed from its wheel at 71f3db0c,
+            labelled 6.0.3, carrying 37b87837; langgraph 1.2.16, langchain
+            1.4.7, langchain-core 1.7.0, pytest 9.1.1, z3 4.16.0 and Python
+            3.13.17, from PyPI at 00:28:59Z; the pricing of 71f3db0c and the
+            date 2026-10-23. G0_KILL_CRITERIA.md 1edda053 and B_chain.nous
+            231b7967 written from the project tool's text and matched to
+            G0's sums.
+
+    D416-7  THE PACKAGE. nous-langchain 0.0.1, published nowhere:
+            pyproject.toml 565deeb3, depending on langgraph>=1.2.16,<1.3
+            only; src/nous_langchain/emit.py a0d1c457, standard library
+            only, which refuses input over 65536 bytes, non-ASCII bytes,
+            duplicate keys, a schema other than nous-langchain/decl/1, any
+            extra or missing key, any wrong type, a name that is not an
+            ASCII identifier or is one of the 168 ASCII word literals of
+            core's grammar or has the shape of a tier, a model outside the
+            grammar's model_name, a tier outside TIER and a cost outside
+            FLOAT or INT, and writes a header that says the file is a
+            declaration never run by NOUS, then the world and the souls,
+            sorted, each with an empty heal block;
+            src/nous_langchain/serialize.py 785eaf5e, which reads
+            builder.nodes and ToolNode.tools_by_name and refuses a langgraph
+            outside the range, a subgraph, an absent attribute and a
+            declared node the graph does not hold, and writes the JSON and
+            the .nous both or neither; 56 test functions, 248 cases.
+            claude/lc_g1/, sums d67ece72.
+
+    D416-8  RED, GREEN, AND RED AGAIN. READ IN THE SEAT'S CONTAINER: at
+            00:34:11Z against stubs, 230 failed, 12 errors and 6 passed, the
+            six by construction; at 00:37:09Z and at the close, 248 passed;
+            ten mutants, one or more per criterion, each turning its tests
+            red, the last run at 00:41:50Z. Two corrections the measurement
+            forced. Under FG-S415-K and FG-S415-L: the shape pinned in the
+            predictions wrote no heal block, and core's validator refused
+            the first output. Under FG-S415-M: the first serializer imported
+            langgraph inside a function, and the K1.4 control caught it.
+
+    D416-9  G1, WHAT HELD. All twelve predictions held, P1.5 and P1.6 after
+            the heal correction and P1.4 after the import correction:
+            byte-identical JSON and .nous under six hash seeds; refusals at
+            both ends, among them a node name and a tool name carrying NOUS
+            syntax that LangGraph itself accepts; the emitter loading no
+            LangChain and the serializer loading langgraph; the chain with
+            G0's B declarations giving every SMTSpec field but the source
+            hash equal to G0's B, Z3 accepting the bound at 0.20 USD and
+            refuting it at 0.0001 USD, and C5 as G0's criteria state;
+            create_agent with two tools giving declared_events get_weather
+            and search_docs, conformance ok on them and refusing delete_all;
+            no defaults; the header; no core import; the strict input; the
+            reserved set equal to core's grammar.
+
+    D416-10 THE AUDITOR'S PATH AND THE CORE. READ IN THE SEAT'S CONTAINER:
+            in a venv of core's wheel and nous-langchain installed with
+            --no-deps, no LangChain package installed, the .nous re-derived
+            from the serializer's JSON byte-equal to the serializer's own,
+            for create_agent, c3059c2d, and for the chain, c9581352; core
+            parsed, validated and verified both, Z3 accepted both bounds,
+            and no LangChain module was loaded. A fresh clone of the public
+            core at 00:39:00Z: HEAD and origin 71f3db0c, porcelain 0, no
+            tracked path naming nous_langchain, its wheel and sdist
+            byte-equal to the build before G1 and METADATA equal (K1.9),
+            tests/ collecting 3603 (K1.10).
+
+    D416-11 THE HEAL BLOCK, AND WHAT G1 DOES NOT SEE. RULING, 00:48Z: the
+            empty heal block confirmed, and the order: this entry, the gate
+            for the repository, then G2 under G4's custody rule. A node name
+            is checked when it is declared and so enters the .nous;
+            create_agent's middleware nodes never do. G1 is blind to tools
+            called inside a node function, to a subgraph invoked inside a
+            function and to tools a middleware swaps per request; a
+            tool_call outside the declared events is refused at conformance
+            (37b87837). Model names are checked by shape; whether the
+            pricing holds them is core's verify_program.
+
+    D416-12 WHAT S415 WROTE AFTER D415. To the repository: 71f3db0c, D415,
+            after its pames; this entry after its pames. To /root on A:
+            D415_LAND.py and D415_COMMIT.py, uploaded by the operator, and
+            this entry's two tools. Network from Server A: the D415 commit
+            tool's fetch at 00:03Z and its fetch, push and read of the
+            remote at 00:04Z. Seat network: fetches into the clone at
+            00:04:58Z and 00:49:59Z, each named first; a pull at about
+            00:09Z and the build package at about 00:38Z, not named first
+            (FG-S415-N); venvs from PyPI at 00:11:35Z, 00:23:17Z, 00:28:59Z
+            and 00:38:39Z and the isolated builds' setuptools, and a fresh
+            clone at 00:39:00Z, each named first; no web search. To the
+            project: claude/s415/, claude/lc_d3/, claude/lc_d3b/,
+            claude/lc_g1/ and this entry's kit, claude/s416/.
+
+    D416-13 WHAT STAYS OPEN. In order: this entry on A by D416_LAND.py and
+            D416_COMMIT.py, each step after its pame; the gate for creating
+            nous-langchain, which the seat proposes private until the claims
+            of US20260017525A1 are read (K4.5) and the wording lint runs
+            (K4.4); G2, K2.1 to K2.10, under K4.1's custody rule; G4. Not
+            measured: the relabel question for message and llm_call labels
+            under at_most. Open, of S414: FG-S414-C and FG-S414-E; of this
+            seat, FG-S415-E; a release carrying 37b87837 to B. The
+            operator's: the stale project instructions (FG-S414-I); the
+            /root files of S414 and S415; whether the two drop-ins of D415-6
+            get a copy in git, and whether the strace baseline of the
+            hardening design ran. Carried, untouched: the S411 opener's
+            board, section 3.
+
+    FINDINGS
+
+            FG-S415-E  WORLD. A BARE COLLECT READS THE HOST. Off host, a
+                       clean clone at 71f3db0c collects 3681 with 2 errors:
+                       noesis_oracle_test.py, whose import reaches
+                       noesis_quality_patch, imported by noesis_engine.py
+                       and not a tracked file, and test_runtime_v2.py, which
+                       reads /opt/aetherlang_agents/nous/gate_alpha.nous
+                       when imported. On A, G2 printed 3741 and no error.
+                       G2's COLLECT_BARE depends on host files.
+
+            FG-S415-F  SEAT. A COUNT CARRIED ACROSS HOSTS IS A PRIOR. D3's
+                       P2.2 took A's bare count for the container. Recorded
+                       as a miss.
+
+            FG-S415-G  SEAT. THE PROPOSAL OUTRAN ITS EVIDENCE. Three
+                       sentences of the D3 proposal were stated before they
+                       were measured, one of them wrong.
+
+            FG-S415-H  SEAT. A RECOMMENDATION RESTED ON AN UNMEASURED
+                       REASON. The emitter in core, because an auditor would
+                       need nous-lang alone; measured, that holds for
+                       re-deriving the .nous, not for checking a trace.
+                       Reversed.
+
+            FG-S415-I  WORLD. RULE 9 IS HELD BY TESTS IN ONE DIRECTION. A
+                       module in py-modules and missing from the wheel gate
+                       passes both tests; a gate entry outside py-modules
+                       fails them.
+
+            FG-S415-J  WORLD. LANGCHAIN-CORE MOVED. PyPI resolved
+                       langchain-core 1.7.0 on 10-23; the Gate read 1.6.13.
+
+            FG-S415-K  WORLD. S003 IS A PRESENCE CHECK. Its rule, that every
+                       soul must define error recovery, is checked as heal
+                       is None; an empty heal block parses to
+                       HealNode(rules=[]) and passes.
+
+            FG-S415-L  SEAT. THE SHAPE PINNED FOR G1 OMITTED THE HEAL BLOCK,
+                       though G0's programs and D1's E3 world carry one; the
+                       first green run failed C2 in K1.5 and K1.6.
+
+            FG-S415-M  SEAT. THE FIRST SERIALIZER IMPORTED LANGGRAPH LAZILY.
+                       The K1.4 control caught it before any other check
+                       depended on it.
+
+            FG-S415-N  SEAT. NETWORK NOT NAMED BEFORE IT RAN, A SECOND TIME.
+                       A pull into the seat's clone at about 00:09Z, no
+                       clock printed, and the build package installed into
+                       the LangChain venv at about 00:38Z ran before either
+                       was named, as two fetches had before D415
+                       (FG-S415-B).
