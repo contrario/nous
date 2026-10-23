@@ -18773,3 +18773,273 @@ document itself.
             FG-S414-J  SEAT. SEAT NETWORK WAS NOT DECLARED BEFORE USE, as
                        earlier seats declared it. Listed after the fact
                        (D414-10).
+
+  - S415 the seat of the LangChain arc after S414 that verified the S414
+    seal, had three host moves attributed to the operator at its opening,
+    and wrote the entry S414 owed after D414
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AND CARRIES WHAT S414 OWED after D414,
+    which is landed and append-only. READ IN THE SEAT'S CONTAINER: computed
+    off host by S415, from the project's files or from a clone of the public
+    repository. ON A: printed on Server A by a command the operator ran and
+    pasted back. INHERITED: from the sealed handoff, opener and record of
+    S414 or from a file its seal lists, each checked by digest at intake and
+    not measured again. DERIVED: computed from printed values or read from
+    code. OPERATOR: stated by the operator. RULING: a decision the operator
+    stated in words. Every time below is in UTC, on 10-22 of 2026. An
+    operator's time is the time his message was sent; a value ON A carries
+    that time, and the clock its command printed where it printed one.
+
+    THE NUMBER. OPERATOR, 23:32Z: 415; four hundred and five stays reserved
+    for the release lane. READ IN THE SEAT'S CONTAINER at 23:32:41Z, on a
+    clone fetched at 37b87837, HEAD equal to origin/main: the tokens S415,
+    D415 and FG-S415 counted zero in the tree and in every commit message on
+    every ref; at 23:49:43Z, origin unmoved, they still did, and so did
+    those of the number after it. OPERATOR, 23:21Z, the kickoff: this entry,
+    under this seat's number, naming S414. Before this entry the document
+    held no S415 token, no anchor of that number and no code of its family,
+    and the instrument that appends this entry refuses unless that is still
+    so when it runs. The codes FG-S414-K to FG-S414-Q below are S414's, from
+    its record, section 9, anchored here for the first time under the
+    headlines its handoff, section 8, gives them; SEAT in them means S414's
+    seat.
+
+    D415-1  THE SEAT AND WHO CHOSE ITS OBJECTS. OPERATOR, 23:21Z, the
+            kickoff: the next seat of the LangChain arc after S414; the seal
+            verified by its digests before any file is read; then the
+            question who holds the tree or the host on A, a fresh clone, the
+            opening rule if the seat writes to A, this entry, and D3 as one
+            question before G1 writes any LangChain code; the plateau named
+            if nothing is brought. OPERATOR, 23:24Z: the tree is free.
+            OPERATOR, 23:40Z: the tree is free, the second ask the opener
+            makes before G2's fetch, sent with G2's output (FG-S415-A). D3
+            is not ruled.
+
+    D415-2  THE SEAL OF S414. READ IN THE SEAT'S CONTAINER:
+            S414_SEAL_SHA256SUMS.txt beef660c, ten entries; the handoff
+            4b0815d6, the opener 6a78a3a6 and the record 991b85e9, each
+            equal to the digest the kickoff carried; the six kit sums files
+            equal to their entries in the seal; the S414 kit 12 of 12,
+            D1_EVIDENCE.md 1d0e1331 and g3_defect.py 4d4546df each equal to
+            its kit's sums. The bytes hashed were the text the project tool
+            returned, written to disk by the seat, each sums file before the
+            files it lists; the D414 entry, its message and the old document
+            were taken from git and matched. A control: gen_d414.py rendered
+            D414_LAND.py f29b2ebf, D414_COMMIT.py aa0b89f3 and the document
+            256bbca4 again, and render_d414.py the entry 5ab4f79c, byte for
+            byte. g2_counts_s414.sh, 551ab30d in the seal, was not read.
+
+    D415-3  THE CLONE. READ IN THE SEAT'S CONTAINER, on a fresh clone of the
+            public repository made at 23:25:05Z: HEAD and origin/main
+            37b87837, v6.0.3-19, porcelain 0, 1539 tracked files and 158
+            tags; the document 256bbca4, blob 11ab8e7d, 18775 lines and
+            1131190 bytes; its first 1094710 bytes equal to the document at
+            b817976; README.md 56582c04, 342 lines, untouched since b817976.
+
+    D415-4  PASTE ONE. ON A, 23:32Z, its clock 23:27:37Z, RC 0: its own
+            digest c027371e and rule0.sh 074e51af, as pinned; HEAD 37b87837
+            equal to origin/main, nineteen commits above v6.0.3, the four
+            newest d03ebdf, 5ca8778, f89c95b8 and 37b87837, the fifteen
+            below them counted and not compared again with the S411 opener;
+            A and pip at 6.0.3; B at the tag v6.0.3, its health at 6.0.3;
+            the suite 3591 passed and 12 skipped; the floor 3498; three nous
+            rows of Asklepios healthy; no failed unit; both timers active;
+            the served check discriminating and equal to disk. One value the
+            opener did not predict: nous-api up 45671 seconds, a start at
+            about 10:46:26Z on 10-22 (DERIVED), where the opener carried
+            12:49:20Z on 10-20 (D415-6).
+
+    D415-5  HM v1.2. ON A, 23:35Z, its clock 23:35:30Z, against the S411
+            baseline: hm_v12.py f6441f6c and the baseline 28f999ac, as
+            pinned; HM_RC 1 and 13 drift lines. One line: the MainPID of
+            nous-api, 2940180 to 1936940; NRestarts did not move. Twelve
+            lines: two drop-ins of nous-api.service.d that the baseline does
+            not hold, 94-syscall.conf, 445 bytes, sha256 ac9506bc, and
+            96-hardening-caps.conf, 612 bytes, sha256 d0677f8e, each mode
+            644 and owner root:root. No snap line. NeedDaemonReload did not
+            move, so systemd holds both drop-ins loaded (DERIVED). Whether
+            the running process started under them was not measured.
+
+    D415-6  THE MOVES, ATTRIBUTED. OPERATOR, 23:35Z: the restart was his.
+            OPERATOR, 23:37Z, asked whether he installed the two drop-ins
+            with that restart: yes. Each is a host move of the operator's
+            and none is a finding. No restart since: the uptime counts from
+            about 10:46:26Z (DERIVED, D415-4), before 37b87837 was written.
+            READ IN THE SEAT'S CONTAINER at 37b87837: neither drop-in's name
+            occurs in the tree or in any commit message;
+            docs/HX-NOUS-API-HARDENING-DESIGN.md lists SystemCallFilter= and
+            CapabilityBoundingSet= as deferred, the filter after a strace
+            baseline of ten or more /v1/run requests; infra/systemd/ holds a
+            copy of neither, where S75's drop-in was mirrored in 94d4e2f.
+            Whether that baseline ran is not stated.
+
+    D415-7  G2. ON A, 23:40Z, its clock 23:37:26Z, RC 0, its own digest
+            c11e3033 given and matched: the fetch RC 0; HEAD equal to origin
+            at 37b8783, ahead 0 and behind 0, the two tag oracles agreeing
+            on v6.0.3 and 19 above it; 1539 tracked and 158 tags; porcelain
+            0; the stop condition, DOC_SHA 256bbca4, the digest D414 left;
+            the guards 75 and 0, 820 and 0, 3 and 0; heads 75, 61 distinct,
+            ending S410, S411 and S414; STRICT 820 by all four engines;
+            LABELLED 674; DUP 0; OTHER_INDENT 8; LOOSE 828, 825 and 56;
+            ANCHOR4 671; codes anywhere 1037 and 849; L6 236, 142, 83, 0 and
+            95; collect 3603 and 3741; the suite 3591 passed and 12 skipped;
+            lint 437 files and 0 violations; the mirror CLEAN over 500 files
+            with 4 orphans. Every value as the S414 opener predicted; 3741
+            measured where the opener had DERIVED it.
+
+    D415-8  WHAT S414 DID ON A FROM 22:44Z. INHERITED from the S414 record,
+            section 6, each ON A: at 22:44Z the digests of the uploaded
+            tools, LC_G3_OUTCOMES.py not yet there (FG-S414-L); a fetch at
+            22:45Z, HEAD and origin 5ca8778; D414_LAND.py f29b2ebf, its dry
+            run and its apply at 22:46Z, the document from 85644b49 to
+            256bbca4 with mode 644 and owner 986:981 kept; D414_COMMIT.py
+            aa0b89f3, its dry run at 22:47Z with lint 437 files and 0
+            violations where 436 was predicted (FG-S414-K); D414 committed
+            as f89c95b8 at 22:48Z and pushed at 22:49Z. INHERITED, read in
+            S414's container at 22:49:17Z: origin/main f89c95b8, its
+            document 256bbca4, the last 14443 bytes equal to the entry, no
+            code blob moved.
+
+    D415-9  THE LAND OF 37b87837. INHERITED from the same section, each ON
+            A: LC_G3_LAND.py 8edba1ec, its dry run at 22:53Z on HEAD and
+            origin f89c95b8, and its apply at 22:54Z writing smt_emit.py
+            b81b8cc8, conformance.py 2fdb00f4 and the new test 407fd532,
+            read back equal; the whole suite at 22:57Z, 3591 passed and 12
+            skipped, its junit file 6581d703 at /root/lc_g3_junit_after.xml;
+            LC_G3_OUTCOMES.py 23c27ce7 against the baseline c3bde62e of
+            13:51Z: ten new cases, all passing, none moved and none gone;
+            LC_G3_COMMIT.py 63870184, its dry run at 22:58Z with lint 437
+            and 0; the commit 37b87837 at 22:59Z, parent f89c95b8 and three
+            paths, and its push. INHERITED, read in S414's container at
+            22:59:50Z: the pushed files equal to the measured ones; the five
+            defect cases of g3_defect.py, in its order, refused, the law
+            false, refused, refused and ok (FG-S415-C). From 22:46Z the
+            operator ran each write without a word, and the seat took each
+            run as the ruling (FG-S414-P).
+
+    D415-10 D1, RULED AND EVIDENCED. RULING, 23:01Z, to S414: D1 approved
+            only if it is documented correctly and with evidence. INHERITED
+            from claude/lc_d1/D1_EVIDENCE.md 1d0e1331, measured in S414's
+            container at 37b87837 after its predictions f91aa73c were hashed
+            at 23:02:36Z: E1, programs B and C of G0 with and without their
+            nervous_system give all 25 spec fields but the source hash
+            equal, the same Z3 verdicts, held at the declared cap and
+            refuted at 0.0001 USD, and the same conformance booleans in 6 of
+            6 cases, with a control of one token going red; the substring
+            nervous occurs in none of the five cost and conformance modules,
+            and 19 and 10 times in validator.py and verifier.py. E2,
+            LangGraph 1.2.16, run: an unannotated Command and a conditional
+            edge without path_map are drawn as a -> __end__ while the run
+            goes a -> c, and with a Literal annotation or a path_map as a ->
+            c; one prediction missed (FG-S414-M). E3: a world of declared
+            events with no messages passes parse, validate, verify and Z3,
+            and conformance accepts its declared labels and refuses
+            delete_all. D1 stands as the Gate wrote it, with K1.8 added.
+
+    D415-11 K1.8. INHERITED from D1_EVIDENCE.md, section 6: a program G1
+            emits holds several souls and no nervous_system, which draws
+            N001, so NOUS would run its souls independently (FG-S414-O).
+            K1.8 joins G1's kill criteria: the emitted file carries a header
+            saying it is a declaration for the cost obligation and for
+            conformance and never a program for NOUS to run, and the G1
+            tests show that it is never handed to a NOUS run path. What D1
+            gives up: the static checks of validator.py and verifier.py,
+            VD001, VL002, N003 and the like, do not run on a LangGraph
+            graph; none of them is a Z3 or Farkas leg.
+
+    D415-12 WHAT S414 AND S415 WROTE. INHERITED from the S414 handoff,
+            section 5: to the repository f89c95b8 and 37b87837, both pushed;
+            to /root on A without a pame, LC_G3_LAND.py v1 884264cf and then
+            v2 8edba1ec over it, D414_LAND.py f29b2ebf, D414_COMMIT.py
+            aa0b89f3, LC_G3_OUTCOMES.py 23c27ce7, LC_G3_COMMIT.py 63870184,
+            and the junit files c3bde62e and 6581d703; seat network declared
+            at 23:01Z, langgraph 1.2.16 and langchain-core 1.6.13 into a
+            separate venv; to the project its kits and its seal. S415: to
+            the repository, this entry after its pame; to /root on A,
+            D415_LAND.py and D415_COMMIT.py, uploaded by the operator;
+            network from Server A, G2's fetch at 23:37:27Z and the fetch,
+            push and read of the remote by the commit tool; seat network,
+            one clone of the public repository at 23:25Z, declared at
+            23:24Z, and two fetches into it, at 23:32:41Z and 23:49:43Z, not
+            named before they ran (FG-S415-B); no package install, no web
+            search and no page read; to the project, claude/s415/.
+
+    D415-13 WHAT STAYS OPEN. In order: this entry on A by D415_LAND.py and
+            D415_COMMIT.py, each step after its pame; D3, one question,
+            before G1 writes any LangChain code; G1 under D1 and K1.1 to
+            K1.8, in the container first; G2; G4. Not measured: the relabel
+            question for message and llm_call labels under at_most. Unread:
+            the claims of US20260017525A1, before any public release. Open,
+            of S414: FG-S414-C and FG-S414-E; a release carrying 37b87837 to
+            B. The operator's: the stale project instructions (FG-S414-I);
+            the /root files of S414; whether the two drop-ins of D415-6 get
+            a copy in git, and whether the strace baseline of the hardening
+            design ran. Carried, untouched: the S411 opener's board, section
+            3.
+
+    FINDINGS
+
+            FG-S414-K  SEAT. A COUNT CARRIED ACROSS A COMMIT IS A PRIOR. The
+                       lint count was predicted as 436 from D411-8; d03ebdf
+                       added noesis_paths.py after it, and A printed 437.
+
+            FG-S414-L  WORLD. AN UPLOAD GAP. LC_G3_OUTCOMES.py did not
+                       arrive at the first upload; the sha256sum line caught
+                       it.
+
+            FG-S414-M  SEAT. A DRAWING PREDICTED FROM ANOTHER CODE PATH. D1
+                       E2.3 predicted the drawing from the compile-time
+                       target set; the drawing differs. Recorded as a miss.
+
+            FG-S414-N  WORLD. A DRAWING IS NOT THE GRAPH. LangGraph 1.2.16
+                       draws a -> __end__ for an unannotated Command and for
+                       a conditional edge without path_map, while the run
+                       goes elsewhere. A topology read from the compiled
+                       graph can be wrong. Grounds D1.
+
+            FG-S414-O  WORLD. SEVERAL SOULS AND NO NERVOUS SYSTEM DRAW N001.
+                       A program with several souls and no nervous_system
+                       draws N001, "Souls will run independently." G1's
+                       output is a declaration, never run by NOUS (K1.8).
+
+            FG-S414-P  SEAT. RUNNING THE COMMAND IS THE OPERATOR'S RULING.
+                       From 22:46Z the operator ran each write the seat
+                       shipped without a word; the seat took the run as the
+                       ruling and said so once, at 22:46Z.
+
+            FG-S414-Q  SEAT. A WAIT THAT MATCHES ITS OWN COMMAND LINE NEVER
+                       ENDS. A background wait used pgrep -f, which matched
+                       its own command line, and ran to its time limit. No
+                       effect; the clean suite run stands.
+
+            FG-S415-A  SEAT. A GATE'S QUESTION SENT WITH ITS COMMAND IS
+                       ANSWERED AFTER IT RUNS. The opener asks again before
+                       G2's fetch; the seat sent that question and G2 in one
+                       message, G2 printed its clock at 23:37:26Z, and the
+                       answer came at 23:40Z with its output. The answer
+                       held; the order the opener sets did not. A question
+                       that gates a command goes in its own message, before
+                       the command.
+
+            FG-S415-B  SEAT. A FETCH NOT NAMED BEFORE IT RAN. The seat
+                       declared one clone of the public repository at
+                       23:24Z, then fetched into it at 23:32:41Z and
+                       23:49:43Z to read the namespace of the number, naming
+                       neither fetch first.
+
+            FG-S415-C  WORLD. THE SEAL GIVES ONE RESULT IN TWO ORDERS. The
+                       S414 record, section 6, lists the five defect cases
+                       at 37b87837 as refused, law False, refused, refused,
+                       ok, the order of P1 to P5 in g3_defect.py 4d4546df;
+                       the S414 handoff, section 3, lists them as refuse,
+                       refuse, refuse, fail the law, pass. The counts agree;
+                       the handoff's order is not the run's.
+
+            FG-S415-D  WORLD. A SEALED FILE CARRIES A LOCAL DATE.
+                       D1_EVIDENCE.md gives 2026-10-23 as its date, in its
+                       heading and among its pinned inputs; its clocks,
+                       23:01Z to 23:04:11Z, are UTC on 10-22, the day the
+                       S414 record holds every time on. 2026-10-23 is the
+                       date of those clocks in Athens (DERIVED). Whether the
+                       input date moves any value was not measured.
