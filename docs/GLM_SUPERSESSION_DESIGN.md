@@ -20240,3 +20240,220 @@ document itself.
                        declared soul, and conformance passed. The Gate's
                        3.4 says "with its declared model"; its 3.5 list
                        and the README do not name this.
+
+  - S421 the seat of the LangChain arc after S419 that verified the S419
+    seal as one tar, found the number 420 taken, and wrote the entry S419
+    owed after D420
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AND CARRIES WHAT S419 OWED after D420,
+    which is landed and append-only. READ IN THE SEAT'S CONTAINER: computed
+    off host by S421, from the kickoff's one attachment, a clone of the
+    public repository or the project's files. ON A: printed on Server A by a
+    command the operator ran and pasted back. INHERITED: from the sealed
+    handoff, opener and record of S419 or from a file its seal lists, each
+    checked by digest at intake and not measured again. DERIVED: computed
+    from printed values or read from code. OPERATOR: stated by the operator.
+    RULING: a decision the operator stated in words. Every time below is in
+    UTC, on 10-23 of 2026. An operator's time is the time his message was
+    sent; a value ON A carries that time, and the clock its command printed
+    where it printed one.
+
+    THE NUMBER. OPERATOR, 12:10Z: 420. READ IN THE SEAT'S CONTAINER: the
+    document at 0686d348 holds the head S420 at its line 20046 and the ten
+    anchors of D420, and the message of 0686d348 names D420; the seat said
+    so and took no number. OPERATOR, 12:20Z: 421; four hundred and five
+    stays reserved for the release lane. READ IN THE SEAT'S CONTAINER at
+    12:20:56Z, on the clone with refs/pull/1/head fetched then, the remote
+    holding 161 refs, main at 0686d348, 1010 commits: the tokens S421, D421
+    and FG-S421 counted zero in the tree of every ref and in every commit
+    message on every ref, and so did those of the number after it. OPERATOR,
+    11:53Z, the kickoff: this entry, under this seat's number, naming S419.
+    Before this entry the document held no S421 token, no anchor of that
+    number and no code of its family, and the instrument that appends this
+    entry refuses unless that is still so when it runs. Below, one code is
+    S419's, from its record, section 5, and is anchored here for the first
+    time, the code FG-S419-F; one is this seat's, the code FG-S421-A.
+
+    D421-1  THE LANDING OF D420. INHERITED, S419's record, section 4: ON A,
+            its clock 11:41:48Z: the uploads D420_LAND.py e432356b and
+            D420_COMMIT.py c0d79bd7; the entry 28e88257, 12466 bytes; HEAD
+            and origin 0e4abf00; blob 2cde730b; porcelain 0; the document
+            3c046729, mode 644 and owner 986:981; STATE BEFORE; NAMESPACE 0
+            0 0; DOC_NEW 0311399f; DRY_RUN_GREEN. After its pame, at
+            11:42:35Z: WROTE and READBACK 0311399f, mode and owner kept,
+            porcelain the one document, APPLY_GREEN. At 11:42:55Z: the
+            commit tool's dry run, message abcfa585 of 651 bytes, worktree
+            blob a9a9340b, the identity pinned, lint 437 files and 0
+            violations, DRY_RUN_GREEN. After its pame, at 11:43:34Z: a
+            fetch, origin 0e4abf00, NEW_HEAD 0686d348, CHECK_COMMIT OK.
+            After its pame, at 11:44:17Z: a fetch, origin 0e4abf00,
+            REMOTE_MAIN 0686d348, PUSH_GREEN. READ IN THE SEAT'S CONTAINER
+            at 11:55:10Z, on a clone named first: main 0686d348, its one
+            parent 0e4abf00, one path, author and committer the pinned
+            identity; the document 0311399f, blob a9a9340b, its last 12466
+            bytes the entry 28e88257; the raw commit body 651 bytes,
+            abcfa585, byte-equal to the sealed message.
+
+    D421-2  THE S420 KIT. INHERITED, S419's record, section 4:
+            D420_PREDICTIONS.md debb9e9d, hashed at 11:39:37Z before the
+            tools were built; the two tools differing from D419's in tokens
+            and pins only; on a fixture, 23 arms as predicted and the lint
+            406 files on the clean clone; G2's patterns on the new document
+            as predicted; the kit's sums d0e90b5b. Three faults of S419's
+            own instruments, each caught before use (FG-S419-F). READ IN THE
+            SEAT'S CONTAINER: the S420 kit's generator and templates, as
+            sealed, rebuilt from the landed commits the tools of D416 to
+            D418 at the digests D419-9 names and those of D419 and D420
+            byte-equal to the sealed 6a4f0e78, 82d0e9f7, e432356b and
+            c0d79bd7.
+
+    D421-3  THE SEAL OF S419. RULING, 11:47Z, INHERITED: seal. The project
+            refusing writes (FG-S415-P), the seal reached this seat as one
+            attachment, s419_seal_bundle.tar 76f8519e, as the kickoff pinned
+            it, by the rule of FG-S419-A. READ IN THE SEAT'S CONTAINER, from
+            11:53Z, before any file in it was read: the tar's digest; its
+            listing, 62 paths under seven directories, none absolute and
+            none through a parent; S419_SEAL_SHA256SUMS.txt 01d2a749 and its
+            eleven files, the handoff ac871689, the opener d6c29f60, the
+            record 9257d9ff, g2_counts_s420.sh 6bf573f6 and
+            g2_at_0686d348.txt fdbb941e among them; then the sums of the
+            S419 kit 1ed3f566, of the S420 kit d0e90b5b and of the G4 pack
+            d6540918, 40 files. Every digest matched. The bundle of
+            nous-langchain, 7154e0e1: a complete history, the one ref main
+            at a7d476b9, tree 5db92861, 3 commits and 38 files; it carries
+            no HEAD ref, so a clone of it checks out main by name.
+
+    D421-4  A DIGEST THAT NAMES NO FILE. READ IN THE SEAT'S CONTAINER:
+            D420-7, and S419's record, section 3, give the G4 pack's sums as
+            d654091d. The file lc_g4/G4_SHA256SUMS.txt is d6540918, as the
+            S419 seal's sums list it, and no file of the seal has the prefix
+            d654091d. Of the other prefixes D420 cites, ten name files of
+            the seal, and each matches its file. Whether a sums file of that
+            digest ever existed is not known to this seat. D420 is landed
+            and append-only; this entry carries the correction (FG-S421-A).
+
+    D421-5  THIS SEAT'S INTAKE. READ IN THE SEAT'S CONTAINER, each network
+            step named first: a clone of the public repository, 11:55:08Z to
+            11:55:10Z: HEAD and origin main 0686d348, v6.0.3-25, 1539
+            tracked files, 158 tags; the remote's ref list at 11:55:27Z, 161
+            refs, main, nous-trace 09109512, refs/pull/1/head 49b70920 and
+            the tags, as S419 counted them. A clone fetches no ref under
+            refs/pull/, so it held 1008 commits; with 49b70920 fetched at
+            12:20:56Z, two commits only on that ref, it held 1010, the 1009
+            of S419's count at 11:36:23Z and 0686d348 after it (DERIVED).
+            g2_counts_s420.sh on the document at 0686d348 printed
+            g2_at_0686d348.txt line for line. OPERATOR, 11:58Z: the tree and
+            the host are free.
+
+    D421-6  PASTE ONE AND HM v1.2. ON A, 12:02Z, its clock 11:58:46Z, RC 0:
+            its own digest c027371e and rule0.sh 074e51af, as pinned; HEAD
+            0686d348 equal to origin/main, twenty-five commits above v6.0.3,
+            the twenty-three D419-5 read, then 0e4abf00 and 0686d348; A and
+            pip at 6.0.3, nous-api up 10139 seconds, a start at about
+            09:09:47Z (DERIVED), the start D419-7 read; B at the tag v6.0.3,
+            its health 6.0.3; the suite 3591 passed and 12 skipped; the
+            floor 3498; three nous rows of Asklepios healthy; both timers
+            active; one failed unit; the served check discriminating and
+            equal to disk. ON A, 12:04Z, its clock 12:03:54Z: hm_v12.py
+            f6441f6c and the baseline 28f999ac, as pinned; HM_RC 1 and 20
+            drift lines: the 18 of the three drop-ins, at b5117d2c, ac9506bc
+            and d0677f8e, the MainPID of nous-api 2940180 to 3401417, and
+            failed_units, the unit of D419-7 not reset. Each is the
+            operator's, attributed in D419-7; none is new.
+
+    D421-7  G2. OPERATOR, 12:04Z, asked again before its fetch: everything
+            is free. ON A, 12:08Z, its clock 12:04:53Z, RC 0: T5_OK
+            c11e3033; the guards 81 and 0, 862 and 0, 3 and 0; FETCH_RC 0,
+            HEAD and ORIGIN 0686d348, ahead 0 and behind 0, v6.0.3-25, the
+            two tag oracles agreeing, 158 tags, porcelain 0; DOC_SHA
+            0311399f, the stop condition, blob a9a9340b at HEAD and origin,
+            20242 lines, 1225266 bytes, MAXLEN 79, NONASCII 0, TRAILWS 0;
+            heads 81 and 67 ending S418, S419 and S420, BLANK_BEFORE 81,
+            TEXT_BEFORE 0; the families of D420 10, of D419 11, of D418 10
+            and of D417 13; STRICT 862 on every engine, LABELLED 716, DUP 0,
+            OTHER_INDENT 8, LOOSE 870, 867 and 58, ANCHOR4 741, codes
+            anywhere 1164 and 891, the strict codes of S419 5, of S415 30
+            and of S414 17; README 56582c04 of 342 lines; L6 236 142 83 0
+            95; L7 collect 3603 and 3741, 3591 passed and 12 skipped, lint
+            437 files and 0 violations, the mirror CLEAN for 500 files with
+            4 orphans. Every value as the opener predicted.
+
+    D421-8  NOTES, NOT FINDINGS. The S419 opener marked L6 DERIVED, the seat
+            holding no copy of G2_R0_S372.sh; the script is tracked in core
+            as instruments/G2_R0_S372.sh since 063d2a84, at the digest
+            c11e3033 that G2's argument pins. READ IN THE SEAT'S CONTAINER:
+            its L6 patterns on the clone at 0686d348 printed 236 142 83 0
+            95, as A did. L6 counts four fixed phrases and one identifier in
+            tracked files; this entry holds none of them. The tools of this
+            entry are the S420 kit's generator and templates, unchanged,
+            with this entry's number and pins.
+
+    D421-9  THIS ENTRY'S PREFIXES. Before its tools were built, an
+            instrument of the seat matched every hexadecimal prefix of eight
+            or more digits in this entry and in its commit message against:
+            the files of the seal; the objects of the repository and of the
+            bundle; the sha256 of the document at every commit that changed
+            it and of every tracked file at 0686d348; the full digests and
+            object names A printed in this seat's three pastes. Every prefix
+            resolved but one, d654091d, which this entry cites as the one
+            that names nothing (FG-S421-A).
+
+    D421-10 WHAT S421 WROTE. To this repository: this entry, after its
+            pames. To nous-langchain: nothing. To /root on A: this entry's
+            two tools, when the operator uploads them. Network from A: G2's
+            fetch at 12:04:55Z, and this entry's commit tool's fetches, push
+            and read of the remote. Seat network: the clone at 11:55:08Z,
+            the remote's ref list at 11:55:27Z and the fetch of
+            refs/pull/1/head at 12:20:56Z, each named first; no web search.
+            The project: one search of its files, no write. To the operator:
+            this seat's files.
+
+    D421-11 WHAT STAYS OPEN. In order: this entry on A by D421_LAND.py and
+            D421_COMMIT.py, each step after its pame; then the object the
+            operator chooses: the fixes of the findings C and D of S419, and
+            of its E after the operator's choice between a boundary line and
+            a served-model check, a gate of their own in nous-langchain
+            (FG-S419-C to -E); K4.5, the claims of US20260017525A1 and a
+            decision on the family (FG-S415-AC), before any public release;
+            K4.6, publishing; the gate in core for a pinned trace or
+            certificate signer (FG-S415-X). Not measured: whether
+            /var/lib/nous-state/noesis exists; a bound on the user's
+            langchain; a real provider's model ids against the pricing
+            table's names; the packs lc_g2, lc_k41 and lc_seal; the two
+            commits only on refs/pull/1/head. The operator's: the failed
+            unit of D419-7 and its reset; whether 93-noesis-data.conf, with
+            the two drop-ins of D415-6, gets a copy in git; an account key
+            on A (FG-S415-O); room in the project (FG-S415-P); the stale
+            project instructions (FG-S414-I); the /root files of S414, S415,
+            S419 and S421; the Gate's K4.1 text; the strace baseline of
+            D415-6. Carried, untouched: pyproject.toml's description; the
+            relabel question under at_most; the findings C and E of S414 and
+            E of S415; a release carrying 37b87837 to B; the S411 opener's
+            board, section 3.
+
+    FINDINGS
+
+            FG-S419-F  SEAT. S419'S OWN INSTRUMENTS FAILED THREE TIMES, EACH
+                       CAUGHT BEFORE USE. Its generator refused any "416" in
+                       a rendered tool, the base64 payload included, and
+                       stopped the D420 build: that payload held "416" by
+                       chance, the one of D419 had not. The first
+                       g2_counts_s420.sh had a family line reordered by a
+                       chained rename; a diff against the S419 script showed
+                       it, and the two family lines were written out
+                       explicitly. The first S420 sums file listed itself,
+                       the shell having created it before ls ran; it was
+                       written again outside the directory. No output of a
+                       faulty instrument reached A. Guard the template, not
+                       the payload; write a sums file outside the directory
+                       it lists.
+
+            FG-S421-A  SEAT. A DIGEST IN A LANDED ENTRY NAMES NO FILE.
+                       D420-7 and S419's record give the G4 pack's sums as
+                       d654091d; the file is d6540918, one character apart.
+                       The bytes in the seal are right and the ledger's text
+                       is not, so a reader who checks the ledger against the
+                       files finds no match. A prefix in an entry is
+                       evidence only after an instrument resolves it to the
+                       bytes it names.
