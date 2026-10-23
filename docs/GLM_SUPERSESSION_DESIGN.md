@@ -20042,3 +20042,201 @@ document itself.
                        not the host, and S415 read the host only at its
                        opening, so its handoff carried an uptime already
                        moved, marked DERIVED and unless restarted.
+
+  - S420 the number the operator gave the second entry of the seat S419,
+    which carries D419's landing and G4, the review of G1 to G3 by a seat
+    that did not write them
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D419, which is landed and
+    append-only. READ IN THE SEAT'S CONTAINER: computed off host by S419,
+    from the kickoff's attachments, the project's files, a mirror of the
+    public repository, a bundle of nous-langchain or the seat's venv. ON
+    A: printed on Server A by a command the operator ran and pasted back.
+    INHERITED: from a file of an earlier seat, checked by digest and not
+    measured again. DERIVED: computed from printed values or read from
+    code. OPERATOR: stated by the operator. RULING: a decision the
+    operator stated in words. Every time below is in UTC, on 10-23 of
+    2026. An operator's time is the time his message was sent; a value ON
+    A carries that time, and the clock its command printed where it
+    printed one.
+
+    THE NUMBER. OPERATOR, 11:35Z: 420, for this seat's second entry; four
+    hundred and five stays reserved for the release lane. READ IN THE
+    SEAT'S CONTAINER at 11:36:23Z, on the mirror refreshed then, no ref
+    moved, main at 0e4abf00, 161 refs and 1009 commits: the tokens S420,
+    D420 and FG-S420 counted zero in the tree of every ref and in every
+    commit message on every ref, and so did those of the number after it.
+    Before this entry the document held no S420 token, no anchor of that
+    number and no code of its family, and the instrument that appends
+    this entry refuses unless that is still so when it runs. Below, the
+    codes FG-S419-C to FG-S419-E are this seat's, found after D419, which
+    holds A and B.
+
+    D420-1  THE LANDING OF D419. ON A, 10:55Z, its clock 10:55:00Z: the
+            uploads D419_LAND.py 6a4f0e78 and D419_COMMIT.py 82d0e9f7;
+            the entry c1bee0ea, 16398 bytes; HEAD and origin a64e1aae;
+            blob a0a7497d; porcelain 0; the document 66f0ee0d, mode 644
+            and owner 986:981; STATE BEFORE; NAMESPACE 0 0 0; DOC_NEW
+            3c046729; DRY_RUN_GREEN. After its pame, at 10:55:42Z: WROTE
+            and READBACK 3c046729, mode and owner kept, porcelain the one
+            document, APPLY_GREEN. At 10:56:45Z: the commit tool's dry
+            run, message ec2ea0af of 769 bytes, worktree blob 2cde730b,
+            the identity pinned, lint 437 files and 0 violations,
+            DRY_RUN_GREEN. After its pame, at 11:01:43Z: a fetch, origin
+            a64e1aae, NEW_HEAD 0e4abf00, CHECK_COMMIT OK. After its pame,
+            at 11:03:26Z: a fetch, origin a64e1aae, REMOTE_MAIN 0e4abf00,
+            PUSH_GREEN. READ IN THE SEAT'S CONTAINER at 11:03:52Z, on a
+            fetch named first: main 0e4abf00, parent a64e1aae, one path,
+            author and committer the pinned identity; the raw commit body
+            byte-equal to the message; the document 3c046729, blob
+            2cde730b, byte-equal to the one the seat built, its first
+            1196402 bytes the old document and its last 16398 the entry;
+            G2's patterns as predicted, heads 80 and 66, STRICT 859,
+            LABELLED 713, DUP 0, OTHER_INDENT 8, LOOSE 867, 864 and 58,
+            ANCHOR4 731, codes anywhere 1153 and 888.
+
+    D420-2  THE KIT'S ONE MISS. D419_PREDICTIONS.md 7fe6a8c2, hashed at
+            10:49:57Z before the tools were built: every prediction held
+            on the fixture, 23 arms, but one count. The fixture's claim
+            lint scanned 406 files, where the predictions carried A's
+            437; D414-7 had read 406 on a clean clone. A printed 437 at
+            10:56:45Z. A count carried across hosts is a prior
+            (FG-S415-F), a second time; recorded as a miss, no new code.
+
+    D420-3  THE OBJECT. OPERATOR, after 11:04Z, asked which object was
+            right and why. The seat recommended G4: next in the Gate's
+            D4 order; a seat that wrote none of G1 to G3; the only object
+            that looks for defects in code already landed; read-only. It
+            named the limit, a reviewer of the same model family as the
+            authors in a fresh context. OPERATOR, 11:07Z: G4. READ IN THE
+            SEAT'S CONTAINER: LC_INNOVATION_GATE.md written out from the
+            project's text and matched to its pin 6191a812;
+            G4_REVIEW_PLAN.md a402c52e, hashed at 11:10:05Z before any
+            line of code was read, pinning the inputs, a verdict per
+            criterion, seven probes and what counts as a finding, and
+            predicting no outcome.
+
+    D420-4  THE INPUTS. ON A, 11:08Z, its clock 11:07:51Z: in
+            /root/nous-langchain, HEAD a7d476b9, tree 5db92861, porcelain
+            0; /root/nlc_a7d476b9.bundle written, BUNDLE_RC 0, verified
+            with one ref and a complete history, sha256 7154e0e1. The
+            operator attached it; READ IN THE SEAT'S CONTAINER: the
+            digest matched, and its clone held main a7d476b9, tree
+            5db92861, the three commits and 38 files. G0's B_chain.nous
+            written out from the project's text and matched to G0's sums,
+            231b7967. The packs lc_g2, lc_k41 and lc_seal were not
+            attached and were not read; no measurement of S415's is
+            checked by G4. One venv, its network named first, from
+            11:15:50Z to 11:16:19Z: core built from a64e1aae with
+            z3-solver 4.16.0, langgraph 1.2.16, langchain 1.4.7,
+            langchain-core 1.7.0, pytest 9.1.1, Python 3.13.17.
+
+    D420-5  G3, MEASURED AGAIN. READ IN THE SEAT'S CONTAINER: the G3 test
+            and six conformance test files, 59 passed and 2 skipped;
+            core's whole suite was not run (its server extra was not
+            installed), and ON A at 10:02:45Z, a64e1aae, it printed 3591
+            passed and 12 skipped. Eight mutants of the check and of the
+            spec each turned the G3 tests red, the one that applies the
+            check to every kind 5 of them. The spec digest of every
+            tracked .nous at f89c95b8 and at 37b87837 in one venv: 56
+            files, 9 emitted and 47 refused on both; the three that moved
+            are the three that declare events; no event-free spec moved.
+
+    D420-6  G1, G2 AND THE SEAL, MEASURED AGAIN. READ IN THE SEAT'S
+            CONTAINER: nous-langchain's suite as published, 313 passed.
+            Twenty-six mutants of this seat's own: 23 turned the suite
+            red, among them one for each kill criterion of G1 and G2, a
+            seal that writes its key, a seal that overwrites its output,
+            a banned import and a claim word in the README; 3 stayed
+            green (D420-8 and FG-S419-D). K2.7 at core's default clock:
+            20 async runs of 8 nodes in one superstep, 0 with a lost or
+            reordered event. A tool's error text did not reach the
+            envelope. With every LangChain import refused by an import
+            hook, a recorded run was sealed with 0 LangChain modules
+            loaded, `nous verify --smt` printed PROVEN for its cost
+            bound, and `nous conformance verify` printed the six
+            obligations PASS and the verdict PASS, 0 LangChain modules
+            loaded.
+
+    D420-7  THE VERDICTS. No kill criterion fired. G3: K3.1, K3.3 and
+            K3.5 held; K3.2 held ON A; K3.4 held as ruled in D414-5. G1:
+            K1.1 to K1.7, K1.9 and K1.10 held; K1.11 not held in one case
+            (FG-S419-C). G2: K2.1 to K2.10 held, K2.2 for a substitution
+            LangChain sees as another model (FG-S419-E). K4.1 held as
+            ruled. K4.2: langchain-core held, langgraph 1.2.16 requiring
+            1.4.7 or later; langchain not measured, the package not
+            depending on it. K4.4 held. The arc's kill criteria in the
+            Gate's 3.8: none fired. G4_REVIEW.md d94ccacd and the pack's
+            sums d654091d went to the operator as files.
+
+    D420-8  NOTES, NOT FINDINGS. The per-node subgraph refusal in
+            serialize.py is reached by no test, because get_subgraphs()
+            refuses first; removing it changed no verdict. README.md,
+            step 1, gives json.dumps(persisted_dict(), indent=2) as the
+            form core's runner writes; the runner adds ensure_ascii=False,
+            equal bytes for ASCII content. The package states that the
+            declared numbers are the user's, not that the recorder runs
+            in the operator's process and is trusted to report; no
+            sentence claims otherwise. A call made outside LangChain's
+            callback manager is invisible and conformance passes over the
+            trace, as the Gate's 3.5 and the README state.
+
+    D420-9  WHAT S419 WROTE AFTER D419. To this repository: this entry,
+            after its pames. To /root on A: nlc_a7d476b9.bundle at
+            11:07:51Z and this entry's two tools. Network from A: the
+            D419 commit tool's fetch at 11:01:43Z and its fetch, push and
+            read of the remote at 11:03:26Z. Seat network: the mirror at
+            11:03:51Z and 11:36:22Z and the venv from PyPI at 11:15:50Z,
+            each named first; no web search. To the project: nothing;
+            the files went to the operator.
+
+    D420-10 WHAT STAYS OPEN. In order: this entry on A by D420_LAND.py and
+            D420_COMMIT.py, each step after its pame; the fixes of the
+            findings C, D and E below, a gate of their own in
+            nous-langchain; K4.5, the claims of US20260017525A1 and a
+            decision on the family (FG-S415-AC), before any public
+            release; K4.6, publishing; the gate in core for a pinned
+            trace or certificate signer (FG-S415-X). Not measured: a
+            bound on the user's langchain; a real provider's model ids
+            against the pricing table's names; whether
+            /var/lib/nous-state/noesis exists; the packs lc_g2, lc_k41
+            and lc_seal. The operator's, as in D419-11, and the bundle in
+            /root. Carried, untouched: pyproject.toml's description; the
+            relabel question under at_most; the findings C and E of S414
+            and E of S415; a release carrying 37b87837 to B; the strace
+            baseline of D415-6; the S411 opener's board, section 3. K2.7
+            with the default clock is no longer open (D420-6).
+
+    FINDINGS
+
+            FG-S419-C  SEAT. THE EMITTER'S DIGIT PATTERNS ARE UNICODE. In
+                       emit.py, _COST and _PART use \d, which matches any
+                       Unicode decimal digit. A declaration of ASCII bytes
+                       whose cost_cap or model name carries a JSON-escaped
+                       Arabic-Indic or fullwidth digit passes check(); the
+                       .nous write then raises UnicodeEncodeError, and the
+                       module's main() ends in that traceback, exit 1,
+                       where the module states 0, 2 or 64. Nothing is
+                       written. NousRecorder is built from the same
+                       declaration without a refusal.
+
+            FG-S419-D  SEAT. TWO TESTS PASS FOR ANOTHER REASON THAN THE
+                       ONE THEY NAME. K1.11's duplicate-key test repeats
+                       "schema" and holds no other key, so with the
+                       duplicate-key hook removed it is still refused, for
+                       missing keys. Every K1.3 payload holds a space or a
+                       newline, so a name pattern that admits braces and
+                       colons stays green; that mutant emitted "a}" and
+                       "x:y", which core failed to parse. The code holds
+                       both criteria; these tests do not evidence it.
+
+            FG-S419-E  SEAT. THE RECORDED MODEL IS THE REQUESTED ONE. The
+                       recorder names a call's model from ls_model_name
+                       and the invocation parameters and does not read the
+                       model the provider reports serving. A call
+                       requested as claude-haiku-4-5 and reported as
+                       served by gpt-5-mini was recorded under the
+                       declared soul, and conformance passed. The Gate's
+                       3.4 says "with its declared model"; its 3.5 list
+                       and the README do not name this.
