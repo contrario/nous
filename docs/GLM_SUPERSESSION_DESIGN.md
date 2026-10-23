@@ -19300,3 +19300,284 @@ document itself.
                        the LangChain venv at about 00:38Z ran before either
                        was named, as two fetches had before D415
                        (FG-S415-B).
+
+  - S417 the number the operator gave the third entry of the seat S415,
+    which carries D416's landing, the repository nous-langchain and its
+    first commit, and G2 measured in the container and landed there
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D416, which is landed and
+    append-only. READ IN THE SEAT'S CONTAINER: computed off host by S415,
+    from the project's files, a clone of the public repository or the seat's
+    venvs. ON A: printed on Server A by a command the operator ran and
+    pasted back. INHERITED: from a file of an earlier seat, checked by
+    digest and not measured again. DERIVED: computed from printed values or
+    read from code. OPERATOR: stated by the operator. RULING: a decision the
+    operator stated in words. Every time below is in UTC, on 10-23 of 2026.
+    An operator's time is the time his message was sent; a value ON A
+    carries that time, and the clock its command printed where it printed
+    one.
+
+    THE NUMBER. OPERATOR, 01:49Z: 417, for this seat's third entry; four
+    hundred and five stays reserved for the release lane. READ IN THE SEAT'S
+    CONTAINER at 01:50:16Z, on a mirror clone fetched then, main at 84179c14
+    and 161 refs: the tokens S417, D417 and FG-S417 counted zero in the tree
+    of every ref and in every commit message on every ref, 1006 commits, and
+    so did those of the number after it. Before this entry the document held
+    no S417 token, no anchor of that number and no code of its family, and
+    the instrument that appends this entry refuses unless that is still so
+    when it runs. The codes FG-S415-O to FG-S415-W below are this seat's,
+    found after D416, which holds E to N.
+
+    D417-1  THE LANDING OF D416. ON A, its clock 00:55:56Z: the uploads
+            D416_LAND.py 7142d2a8 and D416_COMMIT.py e4a616bd; the entry
+            2270e5b2, 16183 bytes; HEAD and origin 71f3db0c; the document
+            d899d963, mode 644 and owner 986:981; STATE BEFORE; NAMESPACE 0
+            0 0; DOC_NEW 70c86750; DRY_RUN_GREEN. After its pame, at
+            00:56:27Z: WROTE and READBACK 70c86750, mode and owner kept,
+            porcelain the one document, APPLY_GREEN. At 00:56:50Z: the
+            commit tool's dry run, message 9331d2b0 of 702 bytes, worktree
+            blob e11e6fb9, the identity pinned, lint 437 files and 0
+            violations, DRY_RUN_GREEN. After its pame, at 00:57:25Z: a
+            fetch, origin 71f3db0c, NEW_HEAD 84179c14, CHECK_COMMIT OK.
+            After its pame, at 00:57:58Z: REMOTE_MAIN 84179c14, PUSH_GREEN.
+            READ IN THE SEAT'S CONTAINER at 00:58:24Z, on a fetch named
+            first: origin/main 84179c14, parent 71f3db0c, one path, the
+            identity pinned; the document 70c86750, blob e11e6fb9, its first
+            1148542 bytes the old document and its last 16183 the entry;
+            G2's patterns as predicted, heads 77 and 63, STRICT 841,
+            LABELLED 695, DUP 0, OTHER_INDENT 8, LOOSE 849, 846 and 57,
+            ANCHOR4 697, codes anywhere 1090 and 870.
+
+    D417-2  THE REPOSITORY. The seat proposed it private: a public
+            repository is a release of the code, the claims of
+            US20260017525A1 are unread (K4.5), and the wording lint did not
+            yet exist (K4.4). OPERATOR, 01:01Z, by two screenshots:
+            contrario/nous-langchain created Private and empty, no README,
+            .gitignore or license made by GitHub, the description left
+            empty, its clone URL
+            https://github.com/contrario/nous-langchain.git.
+
+    D417-3  THE PUSH PATH. ON A, its clock 01:02:11Z: core's origin is
+            git@github.com:contrario/nous.git, so D414 to D416 went over
+            SSH; a store credential helper is configured, and an ls-remote
+            of the new repository over HTTPS stopped at the username prompt,
+            RC 128. The seat did not read the helper's file. At 01:03:06Z:
+            ssh -T answered Hi contrario!, and an ls-remote over SSH in
+            batch mode gave RC 0 and no ref. A's key is the account's own
+            key (FG-S415-O).
+
+    D417-4  THE FIRST COMMIT'S BYTES. READ IN THE SEAT'S CONTAINER: K4.4's
+            wording lint, tests/test_k44_wording.py 0abd8dc8, red at
+            01:04:27Z before README.md and LICENSE existed, 2 failed and 10
+            passed; then LICENSE byte-equal to core's, dc1cb1d0, and
+            README.md 54c4c7ca, and the package's suite 260 passed at
+            01:04:48Z; a word planted in README.md and one in emit.py each
+            turned the lint red. Twenty files, mode 644, git tree d2adfa07:
+            the 17 of the G1 pack at their G1 digests and those three. The
+            seat first said 18 of the pack, then counted 17. NLC_INIT.py
+            3d770f45, its kit sums 76799cda, its message 78e7f49b of 485
+            bytes: --dry, --init and --push, each its own gate; on a fixture
+            with a bare remote, 16 arms as designed, among them the refusals
+            40 to 49.
+
+    D417-5  THE FIRST COMMIT ON A. ON A, its clock 01:10:45Z: the upload
+            NLC_INIT.py 3d770f45, git 2.43.0, FILES 20 each matching its
+            pin, STATE ABSENT, REMOTE_REFS 0, WOULD_INIT, DRY_RUN_GREEN.
+            After its pame, at 01:12:28Z, no network: /root/nous-langchain
+            created, WROTE 20 files, HEAD 5bbd43f7, TREE_HEAD d2adfa07,
+            porcelain 0, INIT_GREEN. After its pame, at 01:13:06Z:
+            REMOTE_REFS 0, origin added, the push, REMOTE_REFS 2, HEAD and
+            main both 5bbd43f7, PUSH_GREEN.
+
+    D417-6  G2, PINNED AND PREDICTED. RULING, 00:48Z: G2 after the
+            repository, under G4's custody rule. G2_PREDICTIONS.md a30ead61,
+            hashed at 01:21:49Z before any G2 code: the shape of record.py,
+            P2.1 to P2.10, P4.1 for the half of K4.1 that G2 builds, and PG1
+            for the G1 suite. The venv of G1: Python 3.13.17, langgraph
+            1.2.16, langchain 1.4.7, langchain-core 1.7.0, pytest 9.1.1,
+            core from its wheel at 71f3db0c; the pricing of 71f3db0c,
+            PricingTable.sha256() d5d51912; fake chat models only. The
+            working copy remade from NLC_INIT's file list, its tree
+            d2adfa07. Read before the code, in core at 71f3db0c:
+            TraceRecorder, the conformance preconditions and pricing's
+            resolve; core holds no command that signs a trace (FG-S415-Q).
+
+    D417-7  THE RECORDER. src/nous_langchain/record.py 488662c8:
+            NousRecorder, a BaseCallbackHandler with raise_error False,
+            built from the G1 declaration, core's PricingTable and the three
+            spec digests. Each chat model call is one llm_call of its
+            langgraph_node, tick the soul's own call ordinal, tokens the
+            provider's; a model whose canonical name in the pricing table is
+            not the node's declared mind is soul <node>@<canonical>; an
+            errored attempt is an llm_call of 0 tokens; each tool call is a
+            tool_call labelled with the tool's name, under the soul and tick
+            of the call that asked for it; a lock guards every append. It
+            records no content, holds no key and returns core's envelope
+            unsigned, the trust triple witnessed_run, realized and
+            unattested. It refuses, typed, with codes 60 to 63 at
+            construction and 64 to 69 at finalize: Python below 3.11, the
+            declaration, a declared mind, the binding, a fault, a model not
+            identified or resolved, usage missing, a cache write, an open
+            call, a tool call nobody asked for. pyproject.toml gains the
+            extra record, nous-lang >=6.0.3 and langchain-core >=1.2.22;
+            K1.8's import test now covers emit.py and serialize.py, and
+            record.py imports trace_recorder and pricing of core and nothing
+            else of it. Tree f0fc8177, 35 files: 15 added, 3 modified.
+
+    D417-8  RED, GREEN AND THE MUTANTS. READ IN THE SEAT'S CONTAINER: at
+            01:30:44Z, against a stub with the API and no behaviour, 33
+            failed and 269 passed; the 7 new tests that passed were two
+            positive controls and five negative properties, each driven red
+            by a mutant. At 01:32:25Z and at 01:37:21Z on the final tree,
+            302 passed, and three repeats the same. Eighteen mutants, at
+            least one per prediction, each turned its tests red, at
+            01:33:20Z and again at 01:37:49Z: among them dropping every
+            second call, ignoring the model, skipping errored attempts,
+            charging every call to a declared node, ignoring cache_creation,
+            re-raising with raise_error True, swallowing a fault unmarked,
+            removing the lock, labelling a tool call with its arguments,
+            counting ticks globally, removing the version check, importing
+            sign_trace and giving finalize a key. Two additions came after
+            the hash (FG-S415-V).
+
+    D417-9  G2, WHAT HELD. All the predictions held. Shape A alone and with
+            ModelCallLimitMiddleware: as many llm_call events as the fake
+            counted calls, conformance ok. ModelFallbackMiddleware with a
+            failing primary: the fallback recorded as model@gpt-5-mini and
+            core's precondition error naming it; aliases resolving to the
+            declared model keep the soul; an unresolvable or absent model
+            name makes finalize refuse. ModelRetryMiddleware under
+            ModelCallLimitMiddleware(run_limit=2), the first attempt
+            failing: the run completed, the fake counted 3, the envelope
+            held 0, 100 and 100 input tokens at ticks 0 to 2, and
+            conformance with max_ticks 2 reported discharge False
+            (FG-S415-R). A model call inside a tool and
+            SummarizationMiddleware's call each under their own node, each
+            refused at conformance (FG-S415-S). No usage_metadata and a
+            cache write each refused at finalize. A fault injected at each
+            of three points left the run's messages equal to a run without
+            the recorder and made finalize refuse. Two and eight nodes in
+            one async superstep, ten times each: every event, seq contiguous
+            (FG-S415-W). Four sentinels in prompt, completion, tool
+            arguments and tool output: zero in the envelope's bytes. Shapes
+            B and C conform clean with signed traces, the test signing, and
+            one extra call fails each. Below 3.11 the recorder refuses to
+            start.
+
+    D417-10 THE AUDITOR'S PATH FOR A RECORDED RUN. READ IN THE SEAT'S
+            CONTAINER, at 01:37:41Z, no network: the recorder ran shape B in
+            the LangChain venv and wrote the declaration, its .nous and the
+            unsigned envelope; a copy of G1's venv of core's wheel, no
+            LangChain package installed, with the G2 wheel installed
+            --no-deps, re-derived each .nous byte-equal, loaded each
+            envelope with core's load_trace, signed it with a fresh key and
+            ran core's conformance: Z3 accepted the bound, ok True and
+            realized 0.000237 against 0.2 USD; with Router calling twice,
+            discharge False. No LangChain module was loaded; importing
+            record.py there fails on langchain_core. The first attempt, at
+            01:35:30Z, failed to build the wheel (FG-S415-U), and its other
+            lines came from G1's wheel and are void.
+
+    D417-11 THE SECOND COMMIT ON A. NLC_G2.py e2583e5b, its message 37e7a4a1
+            of 594 bytes, the 18 files over 5bbd43f7 as one commit of tree
+            f0fc8177: --dry, --commit, --push and --rollback, each its own
+            gate; on a fixture with a bare remote, 22 arms as designed,
+            among them a failed commit rolled back. The G2 pack, sums
+            8769ba6c, sent to the operator. ON A at 01:44Z: the upload
+            e2583e5b, HEAD 5bbd43f7, tree d2adfa07, branch main, porcelain
+            0, STATE BASE, remote main 5bbd43f7, PLAN 3 to modify and 15 to
+            add, DRY_RUN_GREEN. After its pame, at 01:47Z, no network: WROTE
+            18 files, HEAD 9c73b41c, TREE_HEAD f0fc8177, STATE COMMITTED,
+            COMMIT_GREEN. After its pame, at 01:48Z: the push, a
+            fast-forward, REMOTE_MAIN 9c73b41c, PUSH_GREEN. The repository
+            stays private.
+
+    D417-12 WHAT S415 WROTE AFTER D416. To this repository: this entry,
+            after its pames. To GitHub, from A: 5bbd43f7 and 9c73b41c to
+            contrario/nous-langchain, which the operator created. To /root
+            on A: the uploads NLC_INIT.py and NLC_G2.py, the working tree
+            /root/nous-langchain, and this entry's two tools. Network from
+            A: the D416 commit tool's fetch at 00:57:25Z and its fetch, push
+            and read of the remote at 00:57:58Z; the two read-only probes at
+            01:02:11Z and 01:03:06Z; NLC_INIT's read of the remote at
+            01:10:45Z and its reads and push at 01:13:06Z; NLC_G2's at
+            01:44Z and 01:48Z. Seat network: the fetch at 00:58:24Z and the
+            mirror clone at 01:50:16Z, each named first; G2 used none; no
+            web search. To the project: nothing (FG-S415-P); the NLC_INIT
+            kit and the G2 pack went to the operator as files.
+
+    D417-13 WHAT STAYS OPEN. In order: this entry on A by D417_LAND.py and
+            D417_COMMIT.py, each step after its pame; G4, K4.1 to K4.6,
+            which rules on FG-S415-Q; the claims of US20260017525A1, read
+            before the repository or a package goes public (K4.5);
+            pyproject.toml's description, which still names declarations
+            only. Not measured: a real provider's model ids against the
+            pricing table's names; K2.7 with the default clock. The
+            operator's: whether A keeps an account key (FG-S415-O); room in
+            the project (FG-S415-P). Carried from D416, untouched: of S414,
+            the findings C and E (FG-S414-C, FG-S414-E); of this seat, the
+            finding E (FG-S415-E); a release carrying 37b87837 to B; the
+            stale project instructions (FG-S414-I); the /root files of S414
+            and S415; the two drop-ins of D415-6 and the strace baseline;
+            the S411 opener's board, section 3.
+
+    FINDINGS
+
+            FG-S415-O  WORLD. A'S SSH KEY IS THE ACCOUNT'S. It answered Hi
+                       contrario! and reached a repository created after it.
+                       A compromise of A writes to every repository of the
+                       account, core included; a deploy key per repository
+                       would narrow that. The decision is the operator's.
+
+            FG-S415-P  WORLD. THE PROJECT IS FULL. Of the S416 kit it took
+                       six files, the sums, the two tools, the entry, the
+                       message and the content, and refused the rest, so
+                       claude/s416/ in D416's account of its writes names
+                       six files of the kit. It took nothing after them; a
+                       write of the G2 pack's sums was refused. The copies
+                       outside the container are the files sent to the
+                       operator.
+
+            FG-S415-Q  WORLD. CORE HAS NO COMMAND THAT SIGNS A TRACE. Read
+                       at 71f3db0c. K4.1 says the signature is made by the
+                       nous CLI in a separate process; as written it cannot
+                       be met. G4 rules between a command in core, behind
+                       its own gate, and an operator's procedure.
+
+            FG-S415-R  WORLD. ONE RUN, TWO COUNTS. Under retry, LangChain's
+                       ModelCallLimitMiddleware counts model node runs and
+                       the recorder counts attempts; max_ticks is spent by
+                       attempts, so a retry policy needs ticks for its
+                       retries.
+
+            FG-S415-S  WORLD. A RUN WITH A FALLBACK MODEL HAS NO VERDICT.
+                       Core's precondition error is a refusal, not ok False;
+                       the same holds for a call inside a tool or a
+                       middleware.
+
+            FG-S415-T  WORLD. LANGCHAIN'S TOKEN COUNTS ARE SUMS. Read in
+                       langchain-core 1.7.0: input_tokens sums every input
+                       type, cache reads among them, and output_tokens every
+                       output type, reasoning among them, before core
+                       applies reasoning_token_multiplier. Each overstates a
+                       realized total when it applies; not measured.
+
+            FG-S415-U  WORLD. THE BUILD'S SETUPTOOLS IS THE CONTAINER'S. The
+                       system's setuptools 68.1.2 fails under Python 3.13 on
+                       install_layout. The G2 wheel was built from a
+                       setuptools 84.0.0 wheel already in the container's uv
+                       cache, 51a52592, its origin not checked; two builds
+                       gave different wheel bytes, and nothing rests on
+                       them.
+
+            FG-S415-V  SEAT. TWO ADDITIONS CAME AFTER THE HASH. K4.2's
+                       source check and the tests of refusals 61 to 69 were
+                       written after G2's predictions were hashed; the
+                       evidence declares both, and mutants drive both red.
+
+            FG-S415-W  SEAT. K2.7'S RACE NEEDED A WIDER WINDOW. The test's
+                       clock sleeps 5 ms inside core's window between
+                       reading and advancing seq, and the mutant without the
+                       lock went red with duplicated seq; with the default
+                       clock that mutant was not run.
