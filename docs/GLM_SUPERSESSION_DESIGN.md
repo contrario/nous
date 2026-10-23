@@ -19581,3 +19581,216 @@ document itself.
                        reading and advancing seq, and the mutant without the
                        lock went red with duplicated seq; with the default
                        clock that mutant was not run.
+
+  - S418 the number the operator gave the fourth entry of the seat S415,
+    which carries D417's landing, K4.1 ruled on evidence, and the seal of a
+    recorded trace landed in nous-langchain
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D417, which is landed and
+    append-only. READ IN THE SEAT'S CONTAINER: computed off host by S415,
+    from the project's files, a clone of the public repository or the seat's
+    venvs. ON A: printed on Server A by a command the operator ran and
+    pasted back. INHERITED: from a file of an earlier seat, checked by
+    digest and not measured again. DERIVED: computed from printed values or
+    read from code. OPERATOR: stated by the operator. RULING: a decision the
+    operator stated in words. Every time below is in UTC, on 10-23 of 2026.
+    An operator's time is the time his message was sent; a value ON A
+    carries that time, and the clock its command printed where it printed
+    one.
+
+    THE NUMBER. OPERATOR, 09:08Z: 418, for this seat's fourth entry; four
+    hundred and five stays reserved for the release lane. READ IN THE SEAT'S
+    CONTAINER at 09:09:02Z, on the mirror clone fetched then, main at
+    de459e41, 161 refs and 1007 commits: the tokens S418, D418 and FG-S418
+    counted zero in the tree of every ref and in every commit message on
+    every ref, and so did those of the number after it. Before this entry
+    the document held no S418 token, no anchor of that number and no code of
+    its family, and the instrument that appends this entry refuses unless
+    that is still so when it runs. The codes FG-S415-X to FG-S415-AB below
+    are this seat's, found after D417, which holds O to W.
+
+    D418-1  THE LANDING OF D417. ON A, its clock 01:58:40Z: the uploads
+            D417_LAND.py 41eba3e6 and D417_COMMIT.py 102f03bf; the entry
+            e8b07c21, 17949 bytes; HEAD and origin 84179c14; the document
+            70c86750, mode 644 and owner 986:981; STATE BEFORE; NAMESPACE 0
+            0 0; DOC_NEW b0664dc2; DRY_RUN_GREEN. After its pame, at
+            02:00:46Z: WROTE and READBACK b0664dc2, mode and owner kept,
+            porcelain the one document, APPLY_GREEN. At 02:01:44Z: the
+            commit tool's dry run, message 7f89fea2 of 694 bytes, worktree
+            blob 148b7031, the identity pinned, lint 437 files and 0
+            violations, DRY_RUN_GREEN. After its pame, at 02:03:31Z: a
+            fetch, origin 84179c14, NEW_HEAD de459e41, CHECK_COMMIT OK.
+            After its pame, at 02:04:15Z: REMOTE_MAIN de459e41, PUSH_GREEN.
+            READ IN THE SEAT'S CONTAINER at 02:04:41Z, on a fetch named
+            first: main de459e41, parent 84179c14, one path, the identity
+            pinned, the raw commit body byte-equal to the message; the
+            document b0664dc2, blob 148b7031, its first 1164725 bytes the
+            old document and its last 17949 the entry; G2's patterns as
+            predicted, heads 78 and 64, STRICT 850, LABELLED 704, DUP 0,
+            OTHER_INDENT 8, LOOSE 858, 855 and 57, ANCHOR4 710, codes
+            anywhere 1116 and 879.
+
+    D418-2  K4.1, THE QUESTION. The seat put three options for K4.1's
+            signing half: A, the recorder's side met and a recorded trace
+            sealed in a separate process by a pinned script with core's
+            library, core unchanged; B, a signing command in core; C, the
+            Gate's words alone. It recommended A, saying that a trace's seal
+            names no one and that the conformance certificate carries
+            identity. OPERATOR, 02:07Z: A, only if correct, documented and
+            with evidence. Before any measurement the seat withdrew the
+            sentence on the certificate, having read that core checks a
+            certificate against the key it carries (FG-S415-AA).
+
+    D418-3  K4.1, WHAT WAS READ, at 71f3db0c. verify_trace_signature checks
+            an envelope against the public key inside it, and
+            verify_conformance takes no trace signer;
+            verify_certificate_signature and verify_certificate_from_json do
+            the same for a certificate, whose manifest binding compares
+            three digests and no key. Core pins a signer for GLM manifests
+            (glm_manifest.py), the release VSA (cli_verify_release.py) and
+            the APR trust root (attest_apr.py), and for no trace or
+            certificate. Core's runner seals each trace it emits with a key
+            made for that run, nous_ast_runner.py lines 378 to 379 and
+            compiled_trace.py lines 202 to 206 (FG-S415-Y). `nous
+            conformance certify` signs with load_or_create_keypair, the
+            operator's key path. Core persists a trace as
+            json.dumps(persisted_dict(), indent=2), nous_ast_runner.py lines
+            388 to 390, read after the first run below.
+
+    D418-4  K4.1, MEASURED. READ IN THE SEAT'S CONTAINER, no network:
+            K41_PREDICTIONS.md 3109b7ed, hashed at 02:09:39Z before any
+            measurement; the inputs G2's recorded runs at their G2 pins;
+            core's wheel 6.0.3 in a venv with no LangChain package; core's
+            CLI, each call its own process; nlc_seal.py written after the
+            predictions. Run 1, at 02:10:44Z: Q4 missed, because the first
+            seal script wrote absent fields as nulls, as the findings Z and
+            AB below record. Run 2, at 02:11:45Z, every prediction held:
+            Router's input_tokens edited from 100 to 1 and the trace sealed
+            again with a fresh key, `nous conformance verify` exits 0 with
+            every obligation PASS; with the first seal kept, exit 1 and
+            trace_signature FAIL; certificates of the original trace under
+            one key and of the edited trace under another both give verdict
+            PASS, and one byte changed in a certificate fails it
+            (FG-S415-X); the seal refuses a sealed input, a non-JSON input
+            and an existing output and writes nothing; the run with Router
+            calling twice fails discharge; no LangChain module in any seal
+            or CLI process; the recorder's custody test 3 passed at
+            f0fc8177. K41_EVIDENCE.md, the pack's sums 51a00787, sent to the
+            operator.
+
+    D418-5  K4.1, RULED. RULING, 08:54Z: A as stated. The recorder finalizes
+            unsigned and nous-langchain holds no key path; a recorded trace
+            is sealed in a separate process by nlc_seal.py, with a key made
+            for that run as core's runner does, and written in core's
+            persisted form; core is not changed; pinning a trace or
+            certificate signer is a gate of its own in core. The sentence on
+            the certificate stays withdrawn. RULING, 08:57Z: K4.1's holds no
+            key path means no private key stored on disk; a key made in
+            memory for one run is permitted. The Gate's K4.1 text, the
+            signature made by the nous CLI in a separate process, changes
+            with these two rulings.
+
+    D418-6  WHERE THE SEAL LIVES. READ IN THE SEAT'S CONTAINER at 08:55Z, a
+            probe with no predictions hashed: with the script at tools/ in a
+            copy of the G2 tree, the wheel held the four package modules and
+            nothing of tools/, and the custody, source, wording and K1.8
+            tests passed, scanning src/ alone. The options: nous-langchain
+            at tools/, outside the installed package; the operator's kit
+            alone, outside both repositories; core's scripts/, which the
+            ruling of 08:54Z excludes. RULING, 08:57Z: tools/nlc_seal.py in
+            nous-langchain, with the custody check and the K4.4 lint
+            extended to tools/, a test running the seal as a separate
+            process through core's conformance check, and a README section
+            on the flow; a pinned commit tool of NLC_G2.py's pattern; the
+            repository private.
+
+    D418-7  THE SEAL'S LANDING, MEASURED. READ IN THE SEAT'S CONTAINER, no
+            network: SEAL_PREDICTIONS.md d3bd77db, hashed at 08:58:37Z
+            before any test or file of the landing. At 08:59:46Z, before
+            tools/ and the README section existed, 11 failed and 12 passed.
+            At 09:00:06Z, with tools/nlc_seal.py byte-equal to the K4.1
+            pack's, e352874f, the whole suite 313 passed. The seal imports
+            the standard library, nous_trace and cryptography only, names no
+            key-loading or key-storing call, and only generates its key;
+            after a seal its directory holds the input and the output alone
+            and HOME stays empty; the lint covers tools/; for both forms of
+            a recorded envelope the flow record, seal, verify and certify
+            ends in a certificate the JSON verifier calls PASS; the extra
+            call fails; the README section names the steps in order. Six
+            mutants each turned their tests red at 09:00:47Z. The wheel
+            built at 09:01:28Z holds the four package modules and nothing of
+            tools/. Tree 5db92861, 38 files: 3 added, 2 modified, nothing in
+            src/ or pyproject.toml. SEAL_EVIDENCE.md, the pack's sums
+            a42ebfc7, sent to the operator.
+
+    D418-8  THE THIRD COMMIT ON A. NLC_C3.py 6ff53f49, derived from NLC_G2's
+            kit by tokens and pins only, its message 3e4a940b of 747 bytes;
+            on a fixture with a bare remote, 22 arms as designed. ON A, its
+            clock 09:06:04Z: the upload 6ff53f49, HEAD 9c73b41c, tree
+            f0fc8177, branch main, porcelain 0, STATE BASE, remote main
+            9c73b41c, PLAN 2 to modify and 3 to add, DRY_RUN_GREEN. After
+            its pame, at 09:07:45Z, no network: WROTE 5 files, HEAD
+            a7d476b9, TREE_HEAD 5db92861, STATE COMMITTED, COMMIT_GREEN.
+            After its pame, at 09:08:14Z: the push, a fast-forward,
+            REMOTE_MAIN a7d476b9, PUSH_GREEN. The repository stays private.
+
+    D418-9  WHAT S415 WROTE AFTER D417. To this repository: this entry,
+            after its pames. To GitHub, from A: a7d476b9 to
+            contrario/nous-langchain. To /root on A: the upload NLC_C3.py,
+            the working tree /root/nous-langchain moved to a7d476b9, and
+            this entry's two tools. Network from A: the D417 commit tool's
+            fetch at 02:03:31Z and its fetch, push and read of the remote at
+            02:04:15Z; NLC_C3's read of the remote at 09:06:04Z and its
+            reads and push at 09:08:14Z. Seat network: the fetches into the
+            mirror at 02:04:41Z and 09:09:02Z, each named first; K4.1's
+            measurement and the seal's used none; no web search. To the
+            project: nothing (FG-S415-P); the K4.1 pack and the seal pack
+            went to the operator as files.
+
+    D418-10 WHAT STAYS OPEN. In order: this entry on A by D418_LAND.py and
+            D418_COMMIT.py, each step after its pame; the rest of G4, the
+            claims of US20260017525A1 read before any public release (K4.5)
+            and the review of G1 to G3 that the Gate's D4 names; the gate in
+            core for a pinned trace or certificate signer, not opened
+            (FG-S415-X); pyproject.toml's description, which still names
+            declarations only. Not measured: a real provider's model ids
+            against the pricing table's names; K2.7 with the default clock.
+            The operator's: whether A keeps an account key (FG-S415-O); room
+            in the project (FG-S415-P). Carried from D417, untouched: of
+            S414, the findings C and E (FG-S414-C, FG-S414-E); of this seat,
+            the finding E (FG-S415-E); a release carrying 37b87837 to B; the
+            stale project instructions (FG-S414-I); the /root files of S414
+            and S415; the two drop-ins of the entry D415's sixth item and
+            the strace baseline; the S411 opener's board, section 3.
+
+    FINDINGS
+
+            FG-S415-X  WORLD. NEITHER A SEAL NOR A CERTIFICATE NAMES A PARTY
+                       IN CORE'S CHECKS. An edited trace sealed again with
+                       any key passes conformance, and a certificate under
+                       any key passes the JSON verifier. Core pins a signer
+                       for GLM manifests, the release VSA and the APR trust
+                       root, and for nothing in the conformance path.
+
+            FG-S415-Y  WORLD. CORE SEALS ITS OWN TRACES WITH A RUN KEY. Read
+                       at 71f3db0c: the trace signature is an integrity seal
+                       over the canonical body, by design, not a signature
+                       of a party.
+
+            FG-S415-Z  WORLD. ONE TRACE, TWO FORMS. The JSON of
+                       model_dump_json writes absent fields as nulls; core's
+                       typed loader drops them before hashing and its
+                       dict-level verifier does not, so that form passes
+                       `nous conformance verify` and fails the certificate's
+                       trace binding. Core writes persisted_dict(). G2's
+                       offline check used the typed path only.
+
+            FG-S415-AA  SEAT. A SENTENCE ON THE CERTIFICATE OUTRAN ITS
+                        READING. That the certificate carries identity was
+                        stated before the verifier was read; withdrawn
+                        before any measurement.
+
+            FG-S415-AB  SEAT. THE FIRST SEAL SCRIPT WROTE THE NULL-BEARING
+                        FORM. Run 1's Q4 missed on it; the fix was read from
+                        core, not guessed, and run 2 held.
