@@ -20457,3 +20457,208 @@ document itself.
                        files finds no match. A prefix in an entry is
                        evidence only after an instrument resolves it to the
                        bytes it names.
+
+  - S422 the number the operator gave the second entry of the seat S421,
+    which carries D421's landing and the fix of the findings C and D of
+    S419, with its E as a boundary line, landed in nous-langchain
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D421, which is landed and
+    append-only. READ IN THE SEAT'S CONTAINER: computed off host by S421,
+    from the kickoff's one attachment, a clone of the public repository, the
+    sealed bundle of nous-langchain or the seat's venv. ON A: printed on
+    Server A by a command the operator ran and pasted back. INHERITED: from
+    a file of an earlier seat, checked by digest and not measured again.
+    DERIVED: computed from printed values or read from code. OPERATOR:
+    stated by the operator. RULING: a decision the operator stated in words.
+    Every time below is in UTC, on 10-23 of 2026. An operator's time is the
+    time his message was sent; a value ON A carries that time, and the clock
+    its command printed where it printed one.
+
+    THE NUMBER. OPERATOR, 23:56Z: 422; four hundred and five stays reserved
+    for the release lane. READ IN THE SEAT'S CONTAINER at 23:56:18Z, on the
+    clone fetched then, the remote holding 161 refs, main at 60c8c133, 1011
+    commits: the tokens S422, D422 and FG-S422 counted zero in the tree of
+    every ref and in every commit message on every ref, and so did those of
+    the number after it; in nous-langchain they counted zero at a7d476b9, in
+    the fixed tree and in its commit message. Before this entry the document
+    held no S422 token, no anchor of that number and no code of its family,
+    and the instrument that appends this entry refuses unless that is still
+    so when it runs. Below, the codes of the family of S421 after its first
+    are this seat's.
+
+    D422-1  THE LANDING OF D421. ON A, 12:33Z, its clock 12:33:25Z: the
+            uploads D421_LAND.py a5e36b39 and D421_COMMIT.py 1646157e; the
+            entry 8cd4c204, 14255 bytes; HEAD and origin 0686d348; blob
+            a9a9340b; porcelain 0; the document 0311399f, mode 644 and owner
+            986:981; STATE BEFORE; NAMESPACE 0 0 0; DOC_NEW b0faa440;
+            DRY_RUN_GREEN. After its pame, at 12:34:55Z: WROTE and READBACK
+            b0faa440, mode and owner kept, porcelain the one document,
+            APPLY_GREEN. At 12:35:17Z: the commit tool's dry run, message
+            e8c89dc4 of 658 bytes, worktree blob 855447ec, the identity
+            pinned, lint 437 files and 0 violations, DRY_RUN_GREEN. After
+            its pame, at 12:45:12Z: a fetch, origin 0686d348, NEW_HEAD
+            60c8c133, CHECK_COMMIT OK. After its pame, at 12:46:00Z: a
+            fetch, origin 0686d348, REMOTE_MAIN 60c8c133, PUSH_GREEN. READ
+            IN THE SEAT'S CONTAINER at 12:46:34Z, on a fetch named first and
+            one read of the remote that was not (FG-S421-B): main 60c8c133,
+            its one parent 0686d348, one path, author and committer the
+            pinned identity; the raw commit body byte-equal to the message;
+            the document b0faa440, blob 855447ec, its first 1225266 bytes
+            the old document and its last 14255 the entry; G2's patterns
+            with every value as predicted.
+
+    D422-2  THE D421 KIT. D421_PREDICTIONS.md f6046963 and its predicted G2
+            output 633c08de, hashed at 12:30:14Z before the tools were
+            built: the two tools differing from D420's in tokens and pins
+            only; on a fixture, 23 arms and a repeat of L4 as predicted, the
+            lint 406 files on the clean clone; A's runs as predicted. One
+            miss, of form: the predicted G2 file lacks the space g2_counts
+            prints after its last three heads and its last three families;
+            every value is equal (FG-S421-C). L6's patterns on the fixture's
+            new tree: 236 142 83 0 95.
+
+    D422-3  THE OBJECT. OPERATOR, after 12:46Z, asked which object was right
+            and why. The seat recommended the fix: C a defect in code
+            already landed, D the rule that a test is evidence only after a
+            mutant of its own criterion turns it red, E a gap in the honest
+            boundary; E as a boundary line, since a check of the served
+            model rests on a real provider's model ids, not measured; K4.5
+            and the signer gate of core larger and blocking nothing now.
+            RULING, 12:50Z: the fix, with E as a boundary line.
+
+    D422-4  THE PREDICTIONS. FIX_PREDICTIONS.md b70cd1b2, hashed at
+            12:53:29Z before any test or code and before the venv: six
+            paths, the runs R0 to R3, the kill criteria KF1 to KF7. One
+            venv, its network named first, 12:53:49Z to 12:54:25Z: Python
+            3.13.17, nous-lang 6.0.3 built from 60c8c133 with z3-solver
+            4.16.0, langgraph 1.2.16, langchain 1.4.7, langchain-core 1.7.0,
+            pytest 9.1.1.
+
+    D422-5  RED, GREEN AND THE MUTANTS. READ IN THE SEAT'S CONTAINER: R0,
+            the suite at a7d476b9 as published, 313 passed. R1 at 12:55:48Z,
+            the new tests over the old code: 340 passed and 12 failed, the
+            twelve the predictions named. The seat's editor had written 13
+            escapes of non-ASCII characters as the characters, in two test
+            files (FG-S421-C); re-escaped, the same strings, R1 again at
+            12:56:20Z: 340 and 12. R2 at 12:56:52Z, the fix applied: 352
+            passed. R3, from 12:57:36Z to 12:59:31Z, each mutant on its own
+            copy of the fixed tree: the duplicate-key hook removed, 3
+            failed; braces and colons admitted in a name, 4; the Unicode
+            digit restored in both patterns, 11, in the cost pattern alone
+            7, in the part pattern alone 5; the recorder relabelling a call
+            by the response's model_name, 1; the README bullet removed, 1;
+            each failing the tests predicted. G4's probe P6 on the fixed
+            tree: the three cases of the finding C refused, 21, 21 and 19,
+            where a7d476b9 emitted them and the write raised. No kill
+            criterion fired; six paths changed, each ASCII.
+
+    D422-6  THE CHANGE. In emit.py, _PART and _COST match [0-9] where they
+            matched \d; the _PART line is now 81 columns, the file's longest
+            before 78. README.md gains one bullet: the recorder names a
+            model call's model from the request, LangChain's ls_model_name
+            and the call's invocation parameters, does not read the model
+            the provider reports serving, and a call served by another model
+            is recorded under the requested one. Four test files: the
+            duplicate-key test now three complete documents, code 13; four
+            tests of an escaped non-ASCII digit, codes 21 and 19;
+            twenty-four of every string field with an escaped non-ASCII
+            character; one of the command line, exit 2 and nothing written;
+            one that no Unicode class is in the emitter's patterns; four of
+            names that carry NOUS syntax with no space, code 17; one of
+            NousRecorder refusing that declaration, code 61; one that the
+            served model is not read; one that the README states it. Six
+            files, 140 insertions and 4 deletions. The Gate is tracked in no
+            repository: its revised copy LC_INNOVATION_GATE.md 20d4211d adds
+            one bullet to 3.5, after the token counts, and keeps every line
+            of 6191a812; it went to the operator as a file.
+
+    D422-7  THE NOUS-LANGCHAIN KIT. NLC_KIT_PREDICTIONS.md b4fbe382, hashed
+            at 13:01:17Z before the tools existed: two new instruments from
+            the templates of the D kits, for /root/nous-langchain, six
+            paths, the old bytes read from HEAD and checked against their
+            pins, and in place of core's claim lint three checks of the
+            standard library: compile() of the five changed Python files,
+            ASCII-only of the six, and the K4.4 patterns read by ast from
+            tests/test_k44_wording.py, 88195929, never imported.
+            NLC_FIX_LAND.py e35c764c, NLC_FIX_COMMIT.py 1c058fc9, the
+            message bb8cd9ac of 993 bytes. The fixture, 13:03:38Z to
+            13:03:41Z: 23 arms and a repeat of L4 as predicted, and three
+            tools built for the fixture alone, a README carrying a reserved
+            claim word, a test file carrying a non-ASCII byte, an emitter
+            that does not compile: each refused at the commit's dry run, 47.
+            The fixture's pushed tree 73702cc5: 352 passed. The kit's sums
+            07ddab47, its tar ec2de7d9.
+
+    D422-8  THE LANDING IN NOUS-LANGCHAIN. ON A, 23:49Z, its clock
+            23:49:40Z: the uploads of 56778 and 11498 bytes at e35c764c and
+            1c058fc9; HEAD and origin a7d476b9; the six blobs at HEAD and
+            the six files on disk at the old pins, mode 644 and owner root;
+            porcelain 0; STATE BEFORE; DRY_RUN_GREEN. After its pame, at
+            23:51:35Z: six WROTE and six READBACK at the new pins, mode and
+            owner kept, porcelain the six paths, APPLY_GREEN. At 23:52:06Z:
+            the commit tool's dry run, STATE APPLIED, the six worktree blobs
+            pinned, the identity pinned, COMPILE 5 OK, ASCII 6 OK, K44
+            88195929, WORDING 0 over 8 files and 9 patterns, DRY_RUN_GREEN.
+            After its pame, at 23:53:17Z: a fetch, origin a7d476b9, NEW_HEAD
+            e03e21f5, CHECK_COMMIT OK. After its pame, at 23:54:19Z: a
+            fetch, origin a7d476b9, REMOTE_MAIN e03e21f5, PUSH_GREEN. At
+            23:54:56Z: HEAD and origin e03e21f5, tree 73702cc5, the raw body
+            bb8cd9ac, porcelain 0. The seat holds no clone of the private
+            repository; the tree on A is the fixture's tree, so the 352 of
+            D422-7 are of these bytes (DERIVED). The suite was not run on A.
+
+    D422-9  NOTES, NOT FINDINGS. The seat's prefixes in this entry were
+            resolved as D421-9 describes, with this seat's kits, the lines A
+            printed in its landings, the tracked files of nous-langchain at
+            a7d476b9 and the fixture's objects added: 25 prefixes, all
+            resolved. A message of the seat's before the dry run on A gave a
+            wrong digest for NLC_FIX_COMMIT.py and corrected it in the same
+            line; the tool's own check reads its digest, and A printed the
+            pinned one. The served-model check is not built: it waits on a
+            real provider's model ids measured against the pricing table's
+            names.
+
+    D422-10 WHAT S421 WROTE AFTER D421. To core: this entry, after its
+            pames. To nous-langchain: e03e21f5, after its pames. To /root on
+            A: NLC_FIX_LAND.py and NLC_FIX_COMMIT.py, and this entry's two
+            tools. Network from A: D421's commit tool at 12:45:12Z and
+            12:46:00Z; the commit tool of nous-langchain at 23:53:17Z and
+            23:54:19Z, with its push and its read of the private remote.
+            Seat network: the fetch at 12:46:34Z with the read of FG-S421-B,
+            the venv at 12:53:49Z and the fetch at 23:56:18Z, each named
+            first but that read; no web search. The project: one search, no
+            write. To the operator: the D421 kit, the fix's kit and the
+            Gate's revised copy.
+
+    D422-11 WHAT STAYS OPEN. In order: this entry on A by its two tools,
+            each step after its pame; the seal. In the arc: a check of the
+            served model, after a real provider's model ids are measured
+            against the pricing table's names; K4.5, the claims of
+            US20260017525A1 and a decision on the family (FG-S415-AC),
+            before any public release; K4.6, publishing; the gate in core
+            for a pinned trace or certificate signer (FG-S415-X); the Gate's
+            revised copy into the project when it has room (FG-S415-P). Not
+            measured: nous-langchain's suite on A; a bound on the user's
+            langchain; whether /var/lib/nous-state/noesis exists; the packs
+            lc_g2, lc_k41 and lc_seal. The operator's, as in D421-11.
+            Carried, as in D421-11.
+
+    FINDINGS
+
+            FG-S421-B  SEAT. ONE NETWORK CALL RAN UNNAMED. At 12:46:34Z the
+                       seat named one fetch for D421's read-back, and the
+                       same command also read the public remote's refs with
+                       git ls-remote. Read-only; the rule was broken all the
+                       same. Every network call of a command is named, one
+                       by one, before the command runs.
+
+            FG-S421-C  SEAT. THE SEAT'S FILE TOOLS ALTER BYTES. An escape
+                       written as backslash, u and four digits lands as the
+                       character it names, 13 times in two test files;
+                       trailing spaces are dropped, twice in the predicted
+                       G2 file. The first was caught by an ASCII count
+                       before the change landed, the second by a diff; no
+                       altered byte reached A. Bytes that matter are written
+                       by a script, and every written file is checked
+                       against what was meant before it is used.
