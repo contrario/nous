@@ -20662,3 +20662,225 @@ document itself.
                        altered byte reached A. Bytes that matter are written
                        by a script, and every written file is checked
                        against what was meant before it is used.
+
+  - S423 the seat of the LangChain arc after S421 that verified the S421
+    seal as one tar and wrote the entry S421 owed after D422
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AND CARRIES WHAT S421 OWED after D422,
+    which is landed and append-only. READ IN THE SEAT'S CONTAINER: computed
+    off host by S423, from the kickoff's one attachment, a mirror clone of
+    the public repository, or the sealed bundle of nous-langchain. ON A:
+    printed on Server A by a command the operator ran and pasted back.
+    INHERITED: from the sealed handoff, opener and record of S421 or from a
+    file its seal lists, each checked by digest at intake and not measured
+    again. DERIVED: computed from printed values or read from code.
+    OPERATOR: stated by the operator. RULING: a decision the operator stated
+    in words. Every time below is in UTC, on 10-24 of 2026 unless it says
+    10-23. An operator's time is the time his message was sent; a value ON A
+    carries that time, and the clock its command printed where it printed
+    one.
+
+    THE NUMBER. OPERATOR, 00:47Z: 423; the kickoff, 00:25Z: four hundred and
+    five stays reserved for the release lane. READ IN THE SEAT'S CONTAINER
+    at 00:48:16Z, on the mirror clone of 00:27:20Z, the remote holding 161
+    refs, main at 936e79e2, 1012 commits: the tokens S423, D423 and FG-S423,
+    matched as words, counted zero in the tree of every ref and in every
+    commit message on every ref, and so did those of the number after it; in
+    nous-langchain they counted zero in every commit of the bundle to
+    a7d476b9, in the rebuilt tree 73702cc5 and in the fix's message
+    bb8cd9ac. Matched as bare strings, S423 counted 15 in the trees: one
+    line of one file, the same in main and fourteen tags, four characters
+    inside an ASCII85 stream of the tracked PDF
+    website/docs/GLM_formation_layer_type_rationale.pdf, added in 00aa9380;
+    encoded bytes, not a use of the number. Before this entry the document
+    held no S423 token, no anchor of that number and no code of its family,
+    and the instrument that appends this entry refuses unless that is still
+    so when it runs. Below, one code is S421's, from its record, section 5,
+    and is anchored here for the first time, the code FG-S421-D.
+
+    D423-1  THE LANDING OF D422. INHERITED, S421's record, section 4: ON A,
+            its clock 00:07:22Z: the uploads D422_LAND.py be6874ad and
+            D422_COMMIT.py cf6ecd61, 26274 and 8517 bytes; HEAD and origin
+            60c8c133; blob 855447ec; porcelain 0; the document b0faa440,
+            mode 644 and owner 986:981; STATE BEFORE; NAMESPACE 0 0 0;
+            DOC_NEW b3fd908f; DRY_RUN_GREEN. After its pame, at 00:12:56Z:
+            WROTE and READBACK b3fd908f, mode and owner kept, porcelain the
+            one document, APPLY_GREEN. At 00:13:36Z: the commit tool's dry
+            run, message 7c545c62 of 700 bytes, worktree blob 640b2f32, the
+            identity pinned, lint 437 files and 0 violations, DRY_RUN_GREEN.
+            After its pame, at 00:14:11Z: a fetch, origin 60c8c133, NEW_HEAD
+            936e79e2, CHECK_COMMIT OK. After its pame, at 00:14:43Z: a
+            fetch, origin 60c8c133, REMOTE_MAIN 936e79e2, PUSH_GREEN; the
+            command's echo in the operator's paste garbled by the terminal,
+            the tool's own T5 check passed. S421 read it back at 00:15:42Z
+            on one fetch named first. READ IN THE SEAT'S CONTAINER, on the
+            mirror clone: main 936e79e2, its one parent 60c8c133, one path,
+            author and committer the pinned identity; the raw commit body
+            700 bytes, 7c545c62, byte-equal to the sealed message; the
+            document b3fd908f, blob 640b2f32, its first 1239521 bytes the
+            document b0faa440 and its last 13440 the entry 33be4170.
+
+    D423-2  THE D422 KIT. INHERITED, S421's record, section 4: the entry and
+            message fixed first, their 25 digest prefixes resolved by an
+            instrument; D422_PREDICTIONS.md 07198d1c and the predicted G2
+            output 1eed5d49, hashed at 00:02:43Z before the tools were
+            built, the predicted file written by printf so that its two
+            trailing spaces survive; the two tools differing from D421's in
+            tokens and pins only. The fixture's first run, 00:02:59Z, ran on
+            the wrong base: every arm refused, 40, 41, 44 or 45, and wrote
+            nothing (FG-S421-D). Its second run, 00:03:20Z, on 60c8c133: 23
+            arms and a repeat of L4 as predicted, the lint 406 files on the
+            clean clone, L6 236 142 83 0 95 on the new tree. The kit's sums
+            b2bb6de8. READ IN THE SEAT'S CONTAINER: the kit's generator and
+            templates, as sealed, rebuilt from the landed commits the tools
+            of D416 to D422; those of D419 to D422 byte-equal to 6a4f0e78,
+            82d0e9f7, e432356b, c0d79bd7, a5e36b39, 1646157e, be6874ad and
+            cf6ecd61.
+
+    D423-3  THE SEAL OF S421. RULING, 00:19Z, INHERITED: seal, and a text
+            for the new chat. The project refusing writes (FG-S415-P), the
+            seal reached this seat as one attachment, s421_seal_bundle.tar
+            e7aa1e33, as the kickoff pinned it, by the rule of FG-S419-A.
+            READ IN THE SEAT'S CONTAINER, from 00:25Z, before any file in it
+            was read: the tar's digest; its listing, 111 paths, 91 files and
+            20 directories under nine top directories, none absolute, none
+            through a parent, no link; extracted into an empty directory;
+            S421_SEAL_SHA256SUMS.txt 382613f6 and its 17 files, the handoff
+            c07a56e4, the opener 3a7daa14, the record d94eae78,
+            g2_counts_s422.sh fa31b462 and g2_at_936e79e2.txt 1eed5d49 among
+            them; then the sums of the S421 kit 14724048, of the S422 kit
+            b2bb6de8, of the fix's kit 07ddab47 and of the G4 pack d6540918,
+            73 files. Every digest matched, and every file of the tar is
+            listed in one of the five sums files. The bundle of
+            nous-langchain, 7154e0e1: a complete history, the one ref main
+            at a7d476b9, tree 5db92861, 3 commits and 38 files. The seal
+            holds the Gate twice: 6191a812, as sealed by S419, and its
+            revised copy 20d4211d.
+
+    D423-4  THIS SEAT'S INTAKE. READ IN THE SEAT'S CONTAINER, its one
+            network step named first: a mirror clone of the public
+            repository, 00:27:16Z to 00:27:20Z, every ref: 161 refs, main
+            936e79e2, nous-trace 09109512 of 07-22, refs/pull/1/head
+            49b70920 of 04-14 and 158 tags, the newest v6.0.3; v6.0.3-27,
+            1539 tracked files; two commits above 0686d348, 60c8c133 and
+            936e79e2. It holds 1012 commits over every ref and 1011 over
+            main and refs/pull/1/head; the 1012 of S421's handoff counts all
+            three refs (DERIVED). g2_counts_s422.sh on the document at
+            936e79e2 printed g2_at_936e79e2.txt byte for byte. The bundle
+            cloned, main checked out by name, the six payloads of the fix
+            copied over their six paths, each already tracked, git add -A,
+            git write-tree: 73702cc5, the tree A printed for e03e21f5; 6
+            files, 140 insertions and 4 deletions. OPERATOR, 00:29Z:
+            everything is free.
+
+    D423-5  PASTE ONE AND HM v1.2. The seat wrote its predictions by script
+            and hashed them before each run: 781e79f0 for paste one,
+            b81ee663 for HM, built from S421's paste of 10-23. ON A, 00:36Z,
+            its clock 00:31:59Z, RC 0, the paste 6a6a59a6: its own digest
+            c027371e and rule0.sh 074e51af, as pinned; HEAD 936e79e2 equal
+            to origin/main, twenty-seven commits above v6.0.3, the
+            twenty-five of D421-6, then 60c8c133 and 936e79e2; A and pip at
+            6.0.3, nous-api up 55332 seconds, a start at about 09:09:47Z on
+            10-23 (DERIVED), the start D421-6 read; B at the tag v6.0.3, its
+            health 6.0.3, up 1324675 seconds, no restart since 10-23
+            (DERIVED); the suite 3591 passed and 12 skipped; the floor 3498;
+            three nous rows of Asklepios healthy; both timers active; one
+            failed unit; the served check discriminating and equal to disk.
+            ON A, 00:38Z, its clock 00:38:38Z: hm_v12.py f6441f6c and the
+            baseline 28f999ac, as pinned; HM_RC 1 and the 20 drift lines of
+            D421-6, line for line the prediction, compared with the seat's
+            transcription of a paste that came as chat text and was not
+            hashed; the unit of D419-7 not reset. Each move is the
+            operator's, attributed in D419-7; none is new.
+
+    D423-6  G2. OPERATOR, 00:41Z, asked again before its fetch: everything
+            is free. The prediction d3c276cc, 334 lines, written by script
+            before the run: L0 to L6 from instruments/G2_R0_S372.sh at
+            936e79e2 cut before L7 and run in the seat on a clone whose
+            origin is the local mirror, no network, with the lines of host,
+            clock, root and FETCH_HEAD size taken from A; L7 and L8 from
+            S421's run on 10-23. Its comparator cac7edec masks the clock and
+            timing fields only; S421's paste against it, 92 diff lines; the
+            prediction with times filled in, 0. ON A, 00:47Z, its clock
+            00:42:34Z, RC 0, the output e60c2b83: equal to the prediction,
+            334 lines and 0 diff lines. T5_OK c11e3033; the guards 83 and 0,
+            866 and 0, 3 and 0; FETCH_RC 0, HEAD and ORIGIN 936e79e2, ahead
+            0 and behind 0, v6.0.3-27, the two tag oracles agreeing, 158
+            tags, porcelain 0; DOC_SHA b3fd908f, the stop condition, blob
+            640b2f32 at HEAD and origin, 20664 lines, 1252961 bytes, MAXLEN
+            79, NONASCII 0, TRAILWS 0; heads 83 and 69 ending S420, S421 and
+            S422, BLANK_BEFORE 83, TEXT_BEFORE 0; the families of D422 11,
+            of D421 11, of D420 10 and of D419 11; STRICT 866 on every
+            engine, LABELLED 720, DUP 0, OTHER_INDENT 8, LOOSE 874, 871 and
+            59, ANCHOR4 763, codes anywhere 1188 and 895; README 56582c04 of
+            342 lines; L6 236 142 83 0 95; L7 collect 3603 and 3741, 3591
+            passed and 12 skipped, lint 437 files and 0 violations, the
+            mirror CLEAN for 500 files with 4 orphans. The command's echo in
+            the paste is garbled by the terminal, as at D422's push; T5_OK
+            carries the pinned digest.
+
+    D423-7  NOTES, NOT FINDINGS. A count of a number's tokens depends on its
+            matcher: as bare strings it reaches encoded bytes in tracked
+            binary files, as THE NUMBER shows; D421 and D422 name no
+            matcher. This seat counts words and states the strings. The G2
+            prediction took every leg but L7 from the tracked script run in
+            the seat; L7 needs A's suite and served tree. The tools of this
+            entry are the S422 kit's generator and templates, unchanged,
+            with this entry's number and pins.
+
+    D423-8  THIS ENTRY'S PREFIXES. Before its tools were built, an
+            instrument of the seat matched every hexadecimal prefix of eight
+            or more digits in this entry and in its commit message against:
+            the files of the seal and the seal tar; the objects of the
+            repository, of the bundle and of the rebuilt tree; the sha256 of
+            the document at every commit that changed it and of every
+            tracked file at 936e79e2; the seat's predictions, comparator and
+            the two pastes it holds as files; the full digests and object
+            names A printed in S421's pastes and in this seat's. Every
+            prefix resolved.
+
+    D423-9  WHAT S423 WROTE. To this repository: this entry, after its
+            pames. To nous-langchain: nothing. To /root on A: this entry's
+            two tools, when the operator uploads them. Network from A: paste
+            one's reads of B's tag and health, G2's fetch at 00:42:35Z, and
+            this entry's commit tool's fetches, push and read of the remote.
+            Seat network: the mirror clone at 00:27:16Z, named first; no web
+            search. The project: no read, no write. To the operator: this
+            seat's files.
+
+    D423-10 WHAT STAYS OPEN. In order: this entry on A by D423_LAND.py and
+            D423_COMMIT.py, each step after its pame; then the object the
+            operator chooses: E2, a check of the served model in the
+            recorder, after a real provider's model ids are measured against
+            the pricing table's names; K4.5, the claims of US20260017525A1
+            and a decision on the family (FG-S415-AC), before any public
+            release; the gate in core for a pinned trace or certificate
+            signer (FG-S415-X); K4.6, publishing, its own gate. In the arc:
+            the Gate's revised copy 20d4211d into the project when it has
+            room (FG-S415-P); pyproject.toml's description, which names
+            declarations only; emit.py's _PART line of 81 columns; the
+            relabel question under at_most. Not measured: nous-langchain's
+            suite on A; a bound on the user's langchain; whether
+            /var/lib/nous-state/noesis exists; the packs lc_g2, lc_k41 and
+            lc_seal; the two commits only on refs/pull/1/head. The
+            operator's: the failed unit of D419-7, not reset; whether the
+            three drop-ins of D419-6 get a copy in git; an account key on
+            Server A (FG-S415-O); room in the project (FG-S415-P); the stale
+            project instructions (FG-S414-I); the /root files of S414, S415,
+            S419, S421 and S423; the Gate's K4.1 text; the strace baseline
+            of D415-6. Carried, untouched: the findings C and E of S414 and
+            E of S415; a release carrying 37b87837 to B; the S411 opener's
+            board, section 3.
+
+    FINDINGS
+
+            FG-S421-D  SEAT. A FETCH MOVES origin/main, NOT main. The D422
+                       fixture clones the seat clone's local main as its
+                       remote; the seat's fetches had moved origin/main to
+                       60c8c133 and left main at 0686d348. The first run
+                       tested the wrong base: every tool refused, as it
+                       should, and nothing was written; the diff against
+                       D421's fixture showed it. Main was fast-forwarded and
+                       the fixture run again. A fixture's base is checked
+                       against the pinned parent before any arm runs.
