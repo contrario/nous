@@ -104,7 +104,7 @@ With `--anchor rekor_v2` the certificate's own canonical body bytes are
 submitted to the tile-backed Sigstore Rekor v2 log, and the returned inclusion
 proof is stapled into the certificate as a `transparency_log` sibling. The
 sibling lives outside the signed body (the SCITT protected/unprotected split),
-so the author signature stays valid whether or not the certificate is later
+so the certificate's signature stays valid whether or not the certificate is later
 anchored, and the anchor is never computed over bytes that contain itself. The
 anchor reuses the same artifact-agnostic Rekor v2 write path and read-path
 verifier the dossier uses; no new cryptography is introduced.
@@ -157,13 +157,21 @@ certificate-to-manifest bindings, the trace's own Ed25519 signature, the
 internal consistency of the recorded verdict, and -- when the certificate is
 anchored -- the full Rekor v2 inclusion proof over the certificate body.
 
+<!-- __x_g4_wording_v1__ -->
 **Scope, stated honestly.** The offline verifier checks, by Ed25519 signature
-and sha256 binding, that the signed verdict is authentic and bound to these
-exact artifacts. It does **not** re-derive the SMT
-bounds offline; that requires the toolchain and is the online
-`nous conformance verify` path. The offline guarantee is the SCITT
-signed-statement guarantee: the issuer's signed claim, verifiably about these
-artifacts and untampered, with a transparency-log inclusion proof when anchored.
+and sha256 binding, that the signed verdict verifies under the key the
+certificate carries and is bound to these exact artifacts. That key names no
+signer on its own: without `--expect-signer`, any key that signed these bytes
+verifies. Run `python3 verify_conformance_offline.py --expect-signer BASE64`
+with the signer's raw Ed25519 public key in base64, obtained out of band, and
+a certificate signed by any other key fails; who holds that key is still
+established out of band. The public `/v1/verify-conformance` and
+`/v1/verify-dossier` endpoints take the same optional `expected_signer_b64`
+request field; absent, their responses are unchanged. It does **not**
+re-derive the SMT bounds offline; that requires the toolchain and is the
+online `nous conformance verify` path. RFC 9943 (SCITT) asks a relying party
+to trust the issuer's verification key and identity; `--expect-signer` is
+where the relying party supplies that key, and a run without it does not.
 
 ---
 

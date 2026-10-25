@@ -188,3 +188,31 @@ high_severity_modules = ["nous_api_server.py", "nous_api.py"]
 # word = "proves"
 # reason = "Z3/Farkas cost-cap leg; the object is the cost bound, not a static check."
 # region_sha256 = "..."
+
+# __x_g4_wording_v1__ [signer] -- FG-S415-X, S423 X-G4 (X_INNOVATION_GATE.md 3.5,
+# XD4). A signature-strength term says who signed. NOUS verifies a signature
+# under the key the artifact carries unless an expected signer key is supplied,
+# so on this leg's files a sentence with such a term must carry its scope in the
+# same sentence. A quoted mention or a negated term is not a claim. BLIND TO
+# prose inside a template's own string literals (read as quoted mentions) and to
+# a negator that negates something else nearby; tests hold those surfaces.
+# website/blog/index.html is a multi-leg file and is NOT in paths; its
+# remaining signer-wording sites are a board item. offline_verifier_builder.py
+# is NOT in paths either: it also holds the dossier verifier builder (board);
+# its conformance header is held by tests/test_x_g4_wording.py W7. No
+# [[allow]] entry is used: an entry in this shared file reports stale in every
+# temp-tree lint test that loads it (S423 X-G4, killed).
+[signer]
+terms = [
+    "authentic", "authenticity", "authenticated", "author signature",
+    "verified identity",
+]
+scope_markers = [
+    "embedded key", "embedded public key", "key it carries", "expected key",
+    "expected signer", "expect signer", "expected_signer_b64", "holder of",
+    "out of band", "operator asserted", "pinned key",
+]
+paths = [
+    "conformance.py", "conformance_verifier.py", "nous_api_server.py",
+    "docs/RUNTIME_CONFORMANCE.md",
+]

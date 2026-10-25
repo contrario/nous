@@ -34,6 +34,7 @@ OVERCLAIMS: tuple[tuple[str, str, str], ...] = (
     ('o0500', 'docs/RUNTIME_CONFORMANCE.md', 'the program **cannot** exceed its declared cost envelope'),
     ('o0501', 'docs/RUNTIME_CONFORMANCE.md', 'rather than counted as proven'),
     ('o0502', 'docs/RUNTIME_CONFORMANCE.md', 'The offline verifier proves the signed verdict'),
+    ('X423-o0502', 'docs/RUNTIME_CONFORMANCE.md', 'that the signed verdict is authentic'),  # __x_g4b_s377_pin_v1__ FG-S415-X
     ('o0503', 'docs/RUNTIME_CONFORMANCE.md', 'The certificate proves the **trace** conforms'),
     ('o0504', 'docs/RUNTIME_CONFORMANCE.md', '**What obligation #5 now proves**'),
     ('o0506', 'docs/RUNTIME_CONFORMANCE.md', 'The verifier proves that SOME key'),
@@ -115,7 +116,7 @@ CORRECTED: tuple[tuple[str, str, str], ...] = (
     ('o0367', 'docs/GATED_ACTIONS.md', 'Obligation #5 verifies, by Ed25519 signature, that SOME key bound to the'),
     ('o0500', 'docs/RUNTIME_CONFORMANCE.md', 'a run can exceed what it declared, and the proof says nothing about any particular run'),
     ('o0501', 'docs/RUNTIME_CONFORMANCE.md', 'rather than counted as passing, so an auditor'),
-    ('o0502', 'docs/RUNTIME_CONFORMANCE.md', 'The offline verifier checks, by Ed25519 signature and sha256 binding, that the signed verdict is authentic'),
+    ('o0502', 'docs/RUNTIME_CONFORMANCE.md', 'The offline verifier checks, by Ed25519 signature and sha256 binding, that the signed verdict verifies under the key the certificate carries'),  # __x_g4b_s377_pin_v1__
     ('o0503', 'docs/RUNTIME_CONFORMANCE.md', 'The certificate checks that the **trace** conforms'),
     ('o0504', 'docs/RUNTIME_CONFORMANCE.md', '**What obligation #5 now verifies**'),
     ('o0506', 'docs/RUNTIME_CONFORMANCE.md', 'The verifier checks, by Ed25519 signature, that SOME key bound to the'),

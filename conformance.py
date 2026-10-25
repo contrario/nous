@@ -2,10 +2,11 @@
 
 verify_conformance recomputes -- never trusts -- what a signed execution
 trace realized, against the bounds the static SMT proof assumed. Those bounds
-are taken from a RE-DERIVED SMTSpec (re-emitted from the signed source +
-pricing by the caller) and authenticated by matching spec.sha256() to the
-manifest's signed smt_spec_sha256 -- NOT read from the unsigned
-proof_assumptions sibling, which is tamperable and therefore advisory only.
+are taken from a RE-DERIVED SMTSpec (re-emitted from the source + pricing
+by the caller) and bound by matching spec.sha256() to the manifest's
+smt_spec_sha256 -- NOT read from the unsigned proof_assumptions sibling,
+which is tamperable and therefore advisory only. This path does not verify
+the manifest's signature (FG-S415-X); the binding is sha equality.
 
 Six independent per-obligation booleans, no early exit; the overall verdict is
 DERIVED (ConformanceDetail.ok), so an auditor sees exactly which obligation
@@ -503,8 +504,9 @@ def verify_conformance(
             )
     errors: list[str] = []
 
-    # 1. binding: re-derived spec + supplied pricing match the signed shas,
-    #    and the trace claims those same shas.
+    # 1. binding: re-derived spec + supplied pricing match the manifest's
+    #    shas (its signature is not verified here), and the trace claims
+    #    those same shas.  # __x_g4_wording_v1__
     binding_ok = True
     if spec.source_sha256 != manifest.source_sha256:
         binding_ok = False
@@ -874,8 +876,32 @@ def sign_certificate(  # __nous_conformance_certificate_v1__
     )
 
 
+_X_SIGNER_MISMATCH = "certificate signer is not the expected key"  # __x_g1_pinned_signer_v1__
+_X_SIGNER_BADKEY = (  # __x_g1_pinned_signer_v1__
+    "expected signer key is not a base64 raw 32-byte Ed25519 public key"
+)
+
+
+def _x_pinned_raw(expected_b64: str) -> Optional[bytes]:  # __x_g1_pinned_signer_v1__
+    """Decode an auditor-pinned Ed25519 public key: strict base64, 32 raw bytes.
+
+    Returns None when the value is not a usable key. The pinned key is the
+    trust anchor; the key a certificate carries is a hint that must equal it
+    (the closure_attestation.verify_signature shape). EVIDENCES that the
+    certificate was signed by the holder of the pinned key; who holds that
+    key is established out of band and is not claimed here.
+    """
+    try:
+        raw = base64.b64decode(expected_b64, validate=True)
+    except (ValueError, TypeError):
+        return None
+    return raw if len(raw) == 32 else None
+
+
 def verify_certificate_signature(  # __nous_conformance_certificate_v1__
     cert: ConformanceCertificate,
+    *,
+    expected_public_key_b64: Optional[str] = None,  # __x_g1_pinned_signer_v1__
 ) -> bool:
     if cert.signature is None:
         return False
@@ -885,6 +911,11 @@ def verify_certificate_signature(  # __nous_conformance_certificate_v1__
         pub_raw: bytes = base64.b64decode(
             cert.signature.public_key_b64, validate=True
         )
+        if expected_public_key_b64 is not None:  # __x_g1_pinned_signer_v1__
+            pinned_raw = _x_pinned_raw(expected_public_key_b64)
+            if pinned_raw is None or pinned_raw != pub_raw:
+                return False
+            pub_raw = pinned_raw
         raw_sig: bytes = base64.b64decode(
             cert.signature.signature_b64, validate=True
         )
@@ -1055,6 +1086,8 @@ def verify_certificate_from_json(
     cert_json: str,
     trace_json: Optional[str] = None,
     manifest_json: Optional[str] = None,
+    *,
+    expected_signer_b64: Optional[str] = None,  # __x_g1_pinned_signer_v1__
 ) -> CertificateVerificationResult:
     """Verify a runtime conformance certificate from JSON strings.
 
@@ -1100,18 +1133,36 @@ def verify_certificate_from_json(
     if not cpub_b64 or not csig_b64:
         return _malformed("certificate signature block incomplete")
 
+    _x_pin_raw: Optional[bytes] = None  # __x_g1_pinned_signer_v1__
+    if expected_signer_b64 is not None:
+        _x_pin_raw = _x_pinned_raw(expected_signer_b64)
+        if _x_pin_raw is None:
+            return _malformed(_X_SIGNER_BADKEY)
+    _x_mismatch = False
+    if _x_pin_raw is not None:
+        try:
+            _x_mismatch = _b64.b64decode(cpub_b64, validate=True) != _x_pin_raw
+        except (ValueError, TypeError):
+            _x_mismatch = True
+
     body_bytes = _cert_canonical_body_bytes_dict(cert_doc)  # __nous_s98_stage1_cert_canon_hotfix_v1__
-    try:
-        cpub = Ed25519PublicKey.from_public_bytes(
-            _b64.b64decode(cpub_b64, validate=True)
-        )
-        cpub.verify(_b64.b64decode(csig_b64, validate=True), body_bytes)
-        signature_check = CertificateCheck(ok=True)
-    except Exception as exc:
-        signature_check = CertificateCheck(
-            ok=False, detail=f"ed25519 verify failed: {type(exc).__name__}"
-        )
-        errors.append("certificate Ed25519 signature does not verify")
+    if _x_mismatch:  # __x_g1_pinned_signer_v1__
+        signature_check = CertificateCheck(ok=False, detail=_X_SIGNER_MISMATCH)
+        errors.append(_X_SIGNER_MISMATCH)
+    else:
+        try:
+            cpub = Ed25519PublicKey.from_public_bytes(
+                _x_pin_raw
+                if _x_pin_raw is not None
+                else _b64.b64decode(cpub_b64, validate=True)
+            )
+            cpub.verify(_b64.b64decode(csig_b64, validate=True), body_bytes)
+            signature_check = CertificateCheck(ok=True)
+        except Exception as exc:
+            signature_check = CertificateCheck(
+                ok=False, detail=f"ed25519 verify failed: {type(exc).__name__}"
+            )
+            errors.append("certificate Ed25519 signature does not verify")
 
     schema_v = int(cert_doc.get("certificate_schema_version", 1))  # __phase2_stage5b_cert_v1__
     obligation_fields = _obligation_fields_for(schema_v)

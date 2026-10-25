@@ -599,9 +599,31 @@ class VerifyDossierEndpointResponseV2(BaseModel):
     human_readable: V2HumanReadable
 
 
+def _x_dossier_pin_error(pub, expected_signer_b64):  # __x_g3_endpoint_pin_v1__
+    """None when no expected signer is given or the manifest key equals it;
+    otherwise the refusal text. The expected key is the relying party's
+    trust anchor; the key the manifest carries is a hint that must equal
+    it. EVIDENCES signed by the holder of that key only; who holds it is
+    established out of band and is not claimed here."""
+    if expected_signer_b64 is None:
+        return None
+    from conformance import _X_SIGNER_BADKEY, _x_pinned_raw
+    from cryptography.hazmat.primitives.serialization import (
+        Encoding as _XEnc,
+        PublicFormat as _XPF,
+    )
+    pinned = _x_pinned_raw(expected_signer_b64)
+    if pinned is None:
+        return _X_SIGNER_BADKEY
+    if pub.public_bytes(_XEnc.Raw, _XPF.Raw) != pinned:
+        return "manifest signer is not the expected key"
+    return None
+
+
 def _run_verification_checks(
     manifest_json_text: str,
     policy: Optional[VerifyDossierPolicy],
+    expected_signer_b64: Optional[str] = None,  # __x_g3_endpoint_pin_v1__
 ) -> "tuple[V2Checks, V2Evidence, str]":
     """Pure function: runs every check on a manifest_json and returns
     (checks, evidence, trust_level). Does NOT compute verdict
@@ -690,6 +712,10 @@ def _run_verification_checks(
                 f"signature_check_error: {type(exc).__name__}: {exc}"
             ],
         )
+    _x_pin_err = _x_dossier_pin_error(pub, expected_signer_b64)  # __x_g3_endpoint_pin_v1__
+    if _x_pin_err is not None:
+        _x_prior = [] if signature_check.ok is True else list(signature_check.errors)
+        signature_check = CheckResult(ok=False, errors=_x_prior + [_x_pin_err])
 
     src_sha = m.source_sha256 or ""
     if (
@@ -849,17 +875,20 @@ def _v2_human_readable(
                 "Dossier accepted: full Sigstore Rekor anchor verified."
             )
             expl = (
-                "The manifest's Ed25519 author signature verifies, "
+                "The manifest's Ed25519 signature verifies under the key it "
+                "carries, "
                 "the Rekor signed entry timestamp verifies under the "
                 "pinned Sigstore public key, and the Rekor leaf body "
                 "binds to the manifest's canonical bytes via "
-                "ECDSA-P-256 (Path-beta dual signing)."
+                "ECDSA-P-256 (Path-beta dual signing). The name-to-key "
+                "binding is operator-asserted; who holds that key is "
+                "established out of band."  # __x_g4_wording_v1__
             )
             next_steps: list[str] = []
         else:
             summary = (
-                "Dossier accepted: Ed25519 author signature verified "
-                "(no public anchor)."
+                "Dossier accepted: Ed25519 signature verified under the "
+                "embedded key (no public anchor)."  # __x_g4_wording_v1__
             )
             expl = (
                 "The dossier carries no transparency_log block. The Ed25519 "
@@ -908,9 +937,9 @@ def _v2_human_readable(
                 "anchor, none present."
             )
             expl = (
-                "The Ed25519 author signature is valid, but the "
-                "dossier has no transparency_log block. Audit policy "
-                "(require_anchor=true) requires public-log inclusion."
+                "The Ed25519 signature is valid under the key it carries, "
+                "but the dossier has no transparency_log block. Audit policy "
+                "(require_anchor=true) requires public-log inclusion."  # __x_g4_wording_v1__
             )
             next_steps = [
                 "Either accept with require_anchor=false (Ed25519 "
@@ -955,9 +984,10 @@ def _v2_human_readable(
 def _render_v2_response(
     manifest_json_text: str,
     policy: VerifyDossierPolicy,
+    expected_signer_b64: Optional[str] = None,  # __x_g3_endpoint_pin_v1__
 ) -> VerifyDossierEndpointResponseV2:
     checks, evidence, trust_level = _run_verification_checks(
-        manifest_json_text, policy
+        manifest_json_text, policy, expected_signer_b64
     )
     verdict = _compute_v2_verdict(checks, trust_level, policy)
     hr = _v2_human_readable(verdict, trust_level, checks, policy)
@@ -976,6 +1006,9 @@ class VerifyDossierEndpointRequest(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     manifest_json: str = Field(min_length=1, max_length=262144)
     policy: Optional[VerifyDossierPolicy] = None
+    expected_signer_b64: Optional[str] = Field(  # __x_g3_endpoint_pin_v1__
+        default=None, min_length=1, max_length=128
+    )
 
 
 class VerifyDossierEndpointResponse(BaseModel):
@@ -1001,7 +1034,8 @@ async def verify_dossier_endpoint(
     # __session82_verify_dossier_v2_v1__ dispatch:
     if body.policy is not None:
         return _render_v2_response(
-            body.manifest_json, body.policy
+            body.manifest_json, body.policy,
+            body.expected_signer_b64,  # __x_g3_endpoint_pin_v1__
         )
     import base64 as _b64
     from datetime import datetime as _dt, timezone as _tz
@@ -1062,6 +1096,10 @@ async def verify_dossier_endpoint(
         errors.append(
             f"signature_check_error: {type(exc).__name__}: {exc}"
         )
+    _x_pin_err = _x_dossier_pin_error(pub, body.expected_signer_b64)  # __x_g3_endpoint_pin_v1__
+    if _x_pin_err is not None:
+        signature_ok = False
+        errors.append(_x_pin_err)
 
     if anchor is not None:
         try:
@@ -3161,6 +3199,9 @@ class VerifyConformanceEndpointRequest(BaseModel):
     manifest_json: Optional[str] = Field(
         default=None, max_length=262144
     )
+    expected_signer_b64: Optional[str] = Field(  # __x_g3_endpoint_pin_v1__
+        default=None, min_length=1, max_length=128
+    )
 
 
 @app.post("/v1/verify-conformance", response_model=None)
@@ -3176,6 +3217,7 @@ async def verify_conformance_endpoint(
             cert_json=body.certificate_json,
             trace_json=body.trace_json,
             manifest_json=body.manifest_json,
+            expected_signer_b64=body.expected_signer_b64,  # __x_g3_endpoint_pin_v1__
         )
         return result
     except Exception as exc:  # last-resort: lib promises no raise on bad input

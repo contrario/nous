@@ -24,6 +24,7 @@ OVERCLAIMS: tuple[tuple[str, str, str], ...] = (
     ('o0104', 'cli_dossier.py', 'it proves presence + authenticity +'),
     ('o0137', 'cli_verify_release.py', 'the digest the log proves inclusion of'),
     ('o0155', 'conformance_verifier.py', 'SCOPE: this proves the signed verdict'),
+    ('X423-o0155', 'conformance_verifier.py', 'verdict is AUTHENTIC'),  # __x_g4b_s377_pin_v1__ FG-S415-X
     ('o0661', 'envelope.py', 'NOUS PROVES (set ops over root-committed canon fields)'),
     ('o0662+o0663', 'envelope.py', '(verified separately by the dossier) proves current descends'),
     ('o0732', 'rekor_anchor.py', 'the Rekor anchor proves only'),
@@ -48,7 +49,7 @@ CORRECTED: tuple[tuple[str, str, str], ...] = (
     ('o0103', 'cli_conformance.py', 'Runtime conformance: check a signed execution trace against the " "envelope the static cost proof assumed (interval checks, a " "Decimal sum and Ed25519; no Z3)'),
     ('o0104', 'cli_dossier.py', 'it checks presence + authenticity + " "indexing (sha256 and Ed25519) of declared Annex IV'),
     ('o0137', 'cli_verify_release.py', 'the digest whose log inclusion ROOT 2 verified equals sha256(the exact VSA payload ROOT 1 verified).'),
-    ('o0155', 'conformance_verifier.py', 'SCOPE: this checks, by Ed25519 signatures and sha256 equality, that the signed\\nverdict is AUTHENTIC'),
+    ('o0155', 'conformance_verifier.py', 'SCOPE: this checks, by Ed25519 signatures and sha256 equality, that the signed\\nverdict verifies under the key the certificate carries'),  # __x_g4b_s377_pin_v1__
     ('o0661', 'envelope.py', 'NOUS CHECKS (set ops over root-committed canon fields) that the delta is within the declared envelope.'),
     ('o0662+o0663', 'envelope.py', '(verified separately by the dossier) evidences that current descends from # the baseline-committing build. Checked by set ops and an integer drift bound;'),
     ('o0732', 'rekor_anchor.py', 'the Rekor anchor evidences only "this SHA-256 was anchored at integrated_time T".'),

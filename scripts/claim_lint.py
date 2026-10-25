@@ -60,7 +60,7 @@ from pathlib import Path
 from typing import Any, Iterable, Iterator, Optional
 
 TOOL_NAME = "nous-claim-lint"
-TOOL_VERSION = "1.2.0"
+TOOL_VERSION = "1.3.0"  # __x_g4_signer_predicate_v1__
 
 TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 SENT_SPLIT_RE = re.compile(r"(?<!\d)[.!?;](?!\d)|\n")
@@ -133,6 +133,9 @@ class Config:
     exclude_globs: tuple[str, ...]
     high_severity_modules: frozenset[str]
     allowlist: tuple[dict[str, Any], ...]
+    signer_terms: tuple[tuple[str, ...], ...] = ()  # __x_g4_signer_predicate_v1__
+    signer_markers: tuple[tuple[str, ...], ...] = ()
+    signer_paths: tuple[str, ...] = ()
 
 
 def _phrases(items: Iterable[str]) -> tuple[tuple[str, ...], ...]:
@@ -192,6 +195,9 @@ def load_config(path: Path) -> Config:
         exclude_globs=tuple(surf["exclude_globs"]),
         high_severity_modules=frozenset(surf["high_severity_modules"]),
         allowlist=tuple(raw.get("allow", [])),
+        signer_terms=_phrases(raw.get("signer", {}).get("terms", [])),  # __x_g4_signer_predicate_v1__
+        signer_markers=_phrases(raw.get("signer", {}).get("scope_markers", [])),
+        signer_paths=tuple(raw.get("signer", {}).get("paths", [])),
     )
 
 
@@ -542,6 +548,42 @@ def predicate_list_binding(
     return out
 
 
+def predicate_signer(  # __x_g4_signer_predicate_v1__
+    path: str,
+    toks: list[tuple[str, int, int]],
+    sent: str,
+    cfg: Config,
+) -> list[tuple[int, str, str]]:
+    """claims.toml [signer]: on [signer].paths only, a sentence carrying a
+    signature-strength term must also carry a scope marker. A quoted mention
+    or a negated term is not a claim. BLIND TO prose inside a template's own
+    string literals (read as quoted mentions) and to a negator in the window
+    that negates something else; tests hold those surfaces."""
+    from fnmatch import fnmatch as _x_fnmatch
+    if not cfg.signer_terms:
+        return []
+    if not any(_x_fnmatch(path, pat) for pat in cfg.signer_paths):
+        return []
+    spans = find_phrase_spans(toks, cfg.signer_terms)
+    if not spans or find_phrase_spans(toks, cfg.signer_markers):
+        return []
+    hits: list[tuple[int, str, str]] = []
+    for lo, hi, phrase in spans:
+        if is_mention(sent, toks[lo][1], toks[hi][2]):
+            continue
+        if negated(toks, lo, cfg):
+            continue
+        hits.append((
+            lo,
+            "signer",
+            "signature-strength term '%s' without its scope in the same "
+            "sentence: name the key (the key it carries, the expected key, "
+            "--expect-signer) or state that who holds it is established out "
+            "of band (claims.toml [signer]; FG-S415-X)" % " ".join(phrase),
+        ))
+    return hits
+
+
 def scan_unit(
     path: str, unit: TextUnit, cfg: Config, high: bool
 ) -> list[Violation]:
@@ -558,6 +600,7 @@ def scan_unit(
         hits: list[tuple[int, str, str]] = []
         hits.extend(predicate_object(toks, sent, cfg, claims))
         hits.extend(predicate_axis(unit, toks, sent, cfg, claims))
+        hits.extend(predicate_signer(path, toks, sent, cfg))  # __x_g4_signer_predicate_v1__
         seen: set[tuple[int, str]] = set()
         for idx, predicate, reason in hits:
             key = (idx, predicate)

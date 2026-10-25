@@ -564,6 +564,25 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "        return False",
     "",
     "",
+    "# __x_g2_expect_signer_v1__ the expected signer is an auditor argument,",
+    "# never a constant in this script, which ships with the evidence.",
+    "_PIN_BADKEY = (",
+    "    'ERROR: --expect-signer is not a base64 raw 32-byte Ed25519 public key'",
+    ")",
+    "_SIGNER_SCOPE = (",
+    "    'SIGNER: pinned to the auditor-supplied --expect-signer key; who holds '",
+    "    'that key is established out of band.'",
+    ")",
+    "",
+    "",
+    "def _pin_raw(b64):",
+    "    try:",
+    "        raw = base64.b64decode(b64, validate=True)",
+    "    except (ValueError, TypeError):",
+    "        return None",
+    "    return raw if len(raw) == 32 else None",
+    "",
+    "",
     "def main(argv=None):",
     "    parser = argparse.ArgumentParser(",
     "        description=(",
@@ -572,7 +591,14 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "        )",
     "    )",
     "    parser.add_argument('--allow-unanchored', action='store_true')",
+    "    parser.add_argument('--expect-signer', default=None)",
     "    args = parser.parse_args(argv)",
+    "    pin = None",
+    "    if args.expect_signer is not None:",
+    "        pin = _pin_raw(args.expect_signer)",
+    "        if pin is None:",
+    "            print(_PIN_BADKEY, file=sys.stderr)",
+    "            return 2",
     "",
     "    cert_p = ROOT / 'conformance.json'",
     "    trace_p = ROOT / 'trace.json'",
@@ -595,13 +621,23 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "    if not isinstance(csig, dict):",
     "        return _cfail('certificate has no signature block')",
     "    cert_body = _canon(cert, ('signature', 'transparency_log'))",
+    "    cpub = csig.get('public_key_b64', '')",
+    "    if pin is not None:",
+    "        try:",
+    "            if base64.b64decode(cpub, validate=True) != pin:",
+    "                return _cfail('certificate signer is not the expected key')",
+    "        except (ValueError, TypeError):",
+    "            return _cfail('certificate signer is not the expected key')",
+    "        cpub = base64.b64encode(pin).decode('ascii')",
     "    if not _ed25519_ok(",
-    "        csig.get('public_key_b64', ''),",
+    "        cpub,",
     "        csig.get('signature_b64', ''),",
     "        cert_body,",
     "    ):",
     "        return _cfail('certificate Ed25519 signature does NOT verify')",
     "    print('OK   certificate Ed25519 signature verified')",
+    "    if pin is not None:",
+    "        print('OK   certificate signer is the expected key (--expect-signer)')",
     "",
     "    trace_sha = hashlib.sha256(",
     "        _canon(trace, ('signature',))",
@@ -661,6 +697,8 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "        print()",
     "        print('VERDICT: ' + ('PASS' if recorded else 'FAIL')",
     "              + ' (signed certificate, unanchored)')",
+    "        if pin is not None:",
+    "            print(_SIGNER_SCOPE)",
     "        return 0 if recorded else 1",
     "",
     "    if not isinstance(tlog, dict):",
@@ -706,6 +744,8 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "        print('    entries:      ' + str(_mc.get('consulted_seq_count', '?')))",
     "    print('  rekor_log_id:   ' + str(tlog.get('log_id')))",
     "    print('  rekor_index:    ' + str(tlog.get('log_index')))",
+    "    if pin is not None:",
+    "        print(_SIGNER_SCOPE)",
     "    return 0 if recorded else 1",
     "",
     "",
@@ -745,11 +785,14 @@ def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
         "Verifies, offline: certificate Ed25519 signature, cert<->trace and\n"
         "cert<->manifest binding, trace Ed25519 signature, recorded-verdict\n"
         "consistency, and the Rekor v2 anchor over the certificate body bytes.\n"
-        "SCOPE: authenticity + binding (including the codegen leg by\n"
+        "SCOPE: signatures + binding (including the codegen leg by\n"
         "sha-equality) + anchor inclusion; NOT SMT bound or program\n"
-        "re-derivation (those are the online toolchain path).\n"
+        "re-derivation (those are the online toolchain path). Without\n"
+        "--expect-signer the certificate key is not checked against any\n"
+        "expected signer.\n"  # __x_g4_wording_v1__
         "\n"
         "Usage: python3 verify_conformance_offline.py [--allow-unanchored]\n"
+        "       [--expect-signer BASE64]  # __x_g2_expect_signer_v1__\n"
         "Exit:  0 = PASS, 1 = FAIL, 2 = environment error.\n"
         '"""\n'
     )
