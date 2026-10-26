@@ -2423,3 +2423,145 @@ or regression baseline moves. The suite rises by 24 cases.
 Kill criterion: a stored copy whose sha256 differs from this section, or
 a re-asserted line that is no longer in it, stops the data patch before
 it writes.
+
+## 26. S405 decisions (D405-1 to D405-6: the 7.0.0 re-read of eight prices and the gpt-5-mini shutdown), written before the data change
+
+<!-- __s405_doc_d8_reread_v1__ -->
+
+Read on Server A on 2026-10-26, 00:04:52Z to 00:04:56Z, by
+/tmp/s405_read.py (sha256 6e34716e..., derived from s388_d8_read.py by
+named edits), and at 00:26:17Z by /tmp/s405_read2.py (sha256
+a72d8c55...) for the DeepSeek page. Both checked that
+pricing/defaults.toml was 92915e91, stored each page under /root with
+mode 0644 taken from /root/oai_pricing_s359.md, hashed it, and printed
+its rows. Nothing in the repository was written.
+
+Stored copies, all fetched on A on 2026-10-26:
+
+- /root/anthropic_pricing_s405.html, 1327721 bytes, sha256
+  f600adb0254ce08f0dfd821b381b61d20bc8ef325007b039ab24016991ae6faf
+- /root/anthropic_deprecations_s405.html, 511701 bytes, sha256
+  5e08937b2d73abcfdfe9bf2d632a04d7f9ed79b9e361dc64c63d04a955ff5b8f
+- /root/deepseek_pricing_s405b.html, 26043 bytes, sha256
+  b856a6e93fa4793ecc8f3fd03a01bb7d8f7572f78a4739da8ce6dbdb09328d66,
+  fetched from https://api-docs.deepseek.com/quick_start/pricing/
+- /root/oai_pricing_s405.md, 22449 bytes, sha256
+  606acc6693f882253e203e30da2fbfd23f28b02540a98f26fce93c5cdc04e9dd
+- /root/oai_deprecations_s405.md, 42211 bytes, sha256
+  b5d1cafefc8a491f2c095d77359a6ca185498baa5f65a66bac1cb722e188855f
+- /root/gemini_pricing_s405.html, 253705 bytes, sha256
+  51f4314aa6d4c39c14bd4ebab3c54c283158784fe46db07ba0195e4e78c329f5
+
+The same run stored the three OpenAI model pages in markdown
+(oai_model_gpt-5-2_s405.md 4f0a82d8..., oai_model_gpt-5-mini_s405.md
+a4836237..., oai_model_gpt-4o-mini_s405.md 93e14f84...). Each gives the
+same input, cached input and output as the pricing page; the gpt-5-mini
+and gpt-4o-mini pages say "Status: Deprecated". They corroborate; the
+entries cite the pricing page.
+
+The first DeepSeek fetch, of the address without its trailing slash,
+answered 200 with the documentation's root page
+(/root/deepseek_pricing_s405.html, 49316 bytes, sha256 50490e85...; its
+canonical link is https://api-docs.deepseek.com/). On 2026-09-28 the
+same address redirected to .../quick_start/pricing/. That copy is kept as
+the record of what the address served and is not a source.
+s405_read2.py refuses a DeepSeek page whose canonical link is not the
+pricing page.
+
+- D405-1 Scope. The eight entries of D388-1, by the operator's ruling of
+  2026-10-25 (the 7.0.0 brief, ruling 4): claude-opus-4-7,
+  claude-sonnet-4-6, claude-haiku-4-5, deepseek-flash, gpt-5-2,
+  gpt-5-mini, gpt-4o-mini and gemini-3-1-pro. deepseek-r1 (D9),
+  deepseek-chat (removed_after) and the two free entries are not
+  re-read. The Anthropic and OpenAI deprecation pages were read in the
+  same run for lifecycle. The ruling's fallback (drop the refresh if any
+  entry cannot be confirmed from a first-party page read on A that day,
+  or if a changed price needs a code change) did not fire: every row is
+  present and equal, and no price changed.
+- D405-2 Rule. D388-2 unchanged: an entry moves to verified_date
+  2026-10-26 only when its row on the stored page is present and equal
+  on every rate the entry records. All eight are:
+  - claude-opus-4-7, claude-sonnet-4-6, claude-haiku-4-5: input, output,
+    5-minute cache write and cache hit, and the Batch API row at half,
+    read by the script with the table header checked in order;
+  - deepseek-flash: peak cache-miss input 0.3 and output 1.2 in the
+    deepseek-flash column, model version DeepSeek-V4.1-Flash-1017, read
+    by s405_read2.py; off-peak is half of peak;
+  - gemini-3-1-pro: 2.00, 12.00 and 0.20 for prompts up to 200K, and the
+    4.00, 18.00 and 0.40 band above 200K that its notes name, published
+    for gemini-3.1-pro-preview, read by the script;
+  - gpt-5-2, gpt-5-mini, gpt-4o-mini: lines 54, 58 and 66 of the stored
+    md, in the second table under "### Standard pricing data" (line 34;
+    the Batch section starts at line 83), whose header is now Model,
+    Input, Output, Cached input, give 1.75/14.00/0.175,
+    0.25/2.00/0.025 and 0.15/0.60/0.075, read by the script's column
+    parser.
+  Lifecycle, same run: claude-opus-4-7 is Active, not retired before
+  April 16, 2027; claude-sonnet-4-6 is Active, not before February 17,
+  2027; claude-haiku-4-5-20251001 is Active, "Not sooner than October
+  15, 2026", with no retirement scheduled; claude-opus-4-20250514 was
+  retired on 2026-06-15.
+- D405-3 Notes and source. As D388-3: each moved entry's notes name the
+  page, the read day and the stored sha256; the claude notes keep the
+  sentence that a later fetch need not match the stored copy byte for
+  byte; the costs the --smt bound does not cover stay named (claude
+  cache writes and, for the 4.6-and-later models, inference_geo; gemini
+  prompts above 200K, cache storage and the Priority tier; OpenAI Fast
+  mode). deepseek-flash's source_url becomes
+  https://api-docs.deepseek.com/quick_start/pricing/, with the trailing
+  slash, the address that serves the pricing page; its notes name
+  DeepSeek-V4.1-Flash-1017 and say that the published cache-hit rates
+  are not recorded. One header comment records the re-read; earlier
+  comments stay as history; _last_verified stays 2026-06-29 and no rate
+  changes. verified_date, source_url, removed_after and notes are inside
+  canonical_bytes, so the canonical pricing digest written into
+  manifests moves from d5d51912; the CHANGELOG states the new value.
+- D405-4 gpt-5-mini lifecycle. The stored deprecations page, changed
+  since S388 (dfdfac83 then, b5d1cafe now), lists under "2026-06-11:
+  GPT-5 and o3 model deprecations" (line 103) the row "Dec 11, 2026 |
+  `gpt-5-mini` \| `gpt-5-mini-2025-08-07` | `gpt-5.6-terra`" (line
+  110). S388 read only the dated snapshot there and recorded no
+  lifecycle; the alias is now named. gpt-5-mini gets removed_after =
+  "2026-12-11". From 2026-12-12 get_price_for_smt refuses it ("model
+  'gpt-5-mini' cannot be used: removed on 2026-12-11"), as it refuses
+  deepseek-chat. No renamed_to is written: gpt-5.6-terra has no entry,
+  and adding one needs its own stored read (K2). No shipped module or
+  template names gpt-5-mini; examples/demos/cert-4679350/pricing.toml
+  carries its own vendored copy of the table and does not change. Ruled
+  by the operator on 2026-10-26.
+- D405-5 Notes only. gpt-4o-mini: line 46 of the same page gives only
+  the snapshot gpt-4o-mini-2024-07-18 for shutdown on January 14, 2027
+  (notice of 2026-10-14). FG-S360-I forbids lifecycle on the alias from
+  a snapshot row, so its notes name the row and no lifecycle field is
+  written. claude-opus-4 stays an alias of claude-opus-4-7 at 5 and 25
+  while the stored pricing page lists Claude Opus 4 at 15 and 75
+  (D388-4); the CHANGELOG keeps it under Known limits.
+- D405-6 Tests. tests/test_s405_d8_reread.py reads the shipped table
+  with fixed dates (D1, as D388-5). For each entry except gpt-5-mini it
+  prices under --smt on 2027-01-24 and refuses on 2027-01-25 with
+  "verified 91 days ago", which pins the date to 2026-10-26; gpt-5-mini
+  refuses on 2026-12-12 with "removed on 2026-12-11", and an invariant
+  case prices it on 2026-12-11; every entry's notes name its stored
+  sha256 and the read day; and deepseek-flash's source_url ends with
+  its trailing slash. The 24 other cases are read red on fd840e63 with
+  their reasons; the invariant is turned red by a mutant (removed_after
+  2026-12-10). tests/test_s388_d8_reread.py is deleted in the same
+  commit: it pins READ_DAY 2026-09-28 and the S388 sha256 values, so 17
+  of its 24 cases fail by design once the dates and the gpt-5-mini
+  lifecycle move; section 25 and git keep it. The suite rises by one
+  case (24 cases out, 25 in). Before the data patch is
+  applied, the suite runs in the container at the real date and under a
+  faked clock at 2026-10-29, 2026-12-12, 2026-12-28, 2027-01-25 and
+  2027-06-30 (Server A has no libfaketime).
+
+Scope: pricing/defaults.toml (eight entries, one source_url, one
+removed_after and one header comment), the new test, the deleted test
+and a CHANGELOG [Unreleased] entry. No module, codegen, template or
+regression baseline moves. After the change RULE 0's S388 leg prints 8
+fresh on 2026-12-27 and 0 refused on 2026-12-28, and its PINS leg does
+not list the _s405 copies; the next opener's table records both.
+
+Kill criterion: a stored copy whose sha256 differs from this section, a
+re-asserted line or phrase that is no longer in it, or a date leg that
+fails in a way only a code change would fix, stops the data patch before
+it writes.
