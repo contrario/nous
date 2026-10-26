@@ -36,8 +36,10 @@ a more compact layout for the tab context.
 
 ### Path 2: Offline reproducible
 
-Download `https://nous-lang.org/verify_offline.py`. Place it anywhere;
-the script reads `manifest.json` and `source.nous` from its current
+Run the `verify_offline.py` inside the dossier directory:
+`cd <dossier> && python3 verify_offline.py`. The standalone download
+is withdrawn (`docs/adr/ADR-0009-standalone-verifier-withdrawal.md`).
+The script reads `manifest.json` and `source.nous` from its current
 working directory and prints a structured verdict.
 
 The verifier runs in two modes:
@@ -59,16 +61,24 @@ Coverage-bearing dossiers (emitted with `nous verify --smt --coverage-threshold 
 
 ### Path 3: Toolchain (full)
 
-For organizations that already have NOUS installed:
+For organizations that already have NOUS installed. Install the
+version the manifest records, then run in the dossier directory:
 
 ```
-pip install nous-lang
-nous dossier verify path/to/dossier/
+pip install nous-lang==<nous_version>
+nous dossier source.nous --manifest manifest.json --prices pricing.toml --output <dir>
+nous verify-cost cost.farkas.json --manifest manifest.json
 ```
 
-Runs the offline verifier plus the SMT re-check against
-`pricing/defaults.toml`. Identical guarantees to Path 2 plus the
-re-execution of the cost-cap proof.
+`nous dossier` checks the manifest's Ed25519 signature under the key
+the manifest carries and the source sha, re-derives the SMT spec from
+source, and refuses on any mismatch; it writes a new dossier
+directory; `--anchor` defaults to none. `nous verify-cost` re-checks
+the cost-cap Farkas certificate by exact arithmetic and, with
+`--manifest`, that it is the certificate the manifest names (a sha
+match only; the manifest signature is checked by `verify_offline.py`
+and by `nous dossier`). Who holds the signing key is established out
+of band.
 
 ## V2 API surface (since v5.5.0)
 

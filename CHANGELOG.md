@@ -4,6 +4,93 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+
+## [7.0.0]  <!-- __s405_changelog_v7_0_0__ -->
+
+### Removed  <!-- __s405_changelog_removed_v1__ -->
+
+- The `telegram` channel of `POST /v1/webhook/{channel}` (3ee4bae,
+  S407-C). It answers as an unknown channel. Its handler, its world map
+  and the server's only read of `TELEGRAM_BOT_TOKEN` are removed.
+  Telegram updates go to nous-bot, which polls on its own token and
+  calls no NOUS route.
+- `callback_url` on the `generic`, `n8n`, `zapier` and `make` channels
+  of `POST /v1/webhook/{channel}` (decfbfc, S407-D). A payload that
+  carries the field, even empty or null, is answered 400 with code
+  `WH002` before any model call; without it the channel answers as
+  before and the reply stays in the response. Before, the server posted
+  the chat result to the URL the caller named, with no check of scheme
+  or host, and returned the error text of that post to the caller.
+
+### Security  <!-- __s405_changelog_security_v1__ -->
+
+- `POST /v1/chat`, `POST /v1/chat/stream` and the chat path of
+  `POST /v1/webhook/{channel}` call only runtime tiers that are
+  available and free, with or without a key (062fb65, FG-S406-B).
+  Before, when the free tiers failed, these loops went on to a paid
+  tier, and no spend check ran on that path. A tier whose price does
+  not resolve to free is skipped, so a pricing failure fails closed.
+- Replay logs are names inside `NOUS_REPLAY_DIR` (351c902, FG-S407-E).
+  `/v1/replay/summary`, `/v1/replay/events`, `/v1/replay/verify`,
+  `/v1/governance/interventions` and `/v1/governance/stats` resolve the
+  log a caller names inside that directory, as `/v1/replay/diff`
+  already did; before, they opened the path the caller passed. A name
+  with a path separator, a leading dot, a NUL byte or more than 255
+  characters is refused. `POST /v1/chat` with a `replay_mode` other
+  than `off` needs a valid API key (401 without one); in record mode it
+  writes only a `.jsonl` name inside the directory and never creates
+  the directory. Before, the chat passed its `replay_log` to the event
+  store, which in record mode created parent directories and appended.
+- `POST /v1/run` needs a valid API key for any mode other than
+  `dry-run` and for `consult_memory` and `apply_remedy` (36c21b0,
+  844a872). A caller without a key keeps dry-run with the default flags
+  and `emit_trace`.
+- Every channel of `POST /v1/webhook/{channel}` runs the key check of
+  the other routes (3ee4bae): a wrong key is answered 401, a request
+  without a key is admitted as before. Before, the telegram channel
+  skipped the check.
+- `nous_api.py` loads its environment from the file named by
+  `NOUS_ENV_FILE` when that variable is set, else from the shared
+  `.env` as before (7b5b714). With `NOUS_ENV_FILE` set, start-up stops
+  with SystemExit when python-dotenv is not importable or the file does
+  not load, missing or empty (2c6d57a). Without the variable nothing
+  changes.
+
+### Added  <!-- __s405_changelog_expect_signer_v1__ -->
+
+- `--expect-signer BASE64` on both offline conformance verifiers: the
+  unanchored `verify_conformance_offline.py` that
+  `nous conformance certify` emits, and the anchored one that
+  offline_verifier_builder.py emits. With it, the certificate's
+  embedded public key must equal the given raw 32-byte Ed25519 key, or
+  the verifier prints "FAIL: certificate signer is not the expected
+  key" and exits 1. A value that is not base64 of 32 bytes exits 2. The
+  key is an argument the auditor supplies, never a constant in the
+  emitted script, which ships with the evidence under review (fd840e6,
+  FG-S415-X).
+- `expected_signer_b64`, an optional request field on
+  `/v1/verify-conformance` and on `/v1/verify-dossier` (V1 and V2).
+  Absent or null, the response is unchanged. Equal to the embedded key,
+  the response equals the default one. Another key: conformance verdict
+  FAIL with signature detail "certificate signer is not the expected
+  key"; dossier V2 REJECT and V1 signature_ok false, each with
+  "manifest signer is not the expected key". A malformed key:
+  conformance MALFORMED, dossier REJECT, with "expected signer key is
+  not a base64 raw 32-byte Ed25519 public key".
+- Library: `verify_certificate_signature(cert, *,
+  expected_public_key_b64=None)` and `verify_certificate_from_json(...,
+  *, expected_signer_b64=None)` in conformance.py.
+- claim_lint 1.3.0: a `[signer]` predicate. On the paths listed in
+  claims.toml `[signer]`, the terms "authentic", "authenticity",
+  "authenticated", "author signature" and "verified identity" must name
+  their scope in the same sentence.
+
+  A pinned-signer pass evidences that the artifact was signed by the
+  holder of the expected key; who holds that key is established out of
+  band. Without the option or field, the embedded key is not checked
+  against any expected signer. No signing, certificate, manifest or
+  schema field changes. Docs: docs/RUNTIME_CONFORMANCE.md.
+
 ### Changed  <!-- __s405_changelog_d8_reread_v1__ -->
 
 - `pricing/defaults.toml`: eight entries re-verified on 2026-10-26 against
@@ -25,12 +112,76 @@
   replacement has no entry in the table (D405-4).
 - `tests/test_s388_d8_reread.py`, which pinned the 2026-09-28 read, is
   replaced by `tests/test_s405_d8_reread.py` (D405-6).
+- Wording only, machine fields unchanged: the offline verifiers' SCOPE
+  line, the `/v1/verify-dossier` V2 human_readable texts for an
+  ed25519_only ACCEPT or REJECT and for rekor_anchored,
+  docs/RUNTIME_CONFORMANCE.md, and three blog sentences (two dated
+  errata) no longer call a signature "authentic" or an "author
+  signature"; they say it verifies under the key the artifact carries.
+  A consumer that compared the human_readable text must change
+  (fd840e6).
+- When a world declares `events`, `verify_conformance` (the library and
+  `nous conformance verify`) refuses, with ConformancePreconditionError,
+  a trace tool_call whose action label is missing or not a declared
+  event (37b8783, S414). Before, such a call passed: five calls
+  labelled SearchDocs2 against at_most(3, SearchDocs) gave ok True.
+  With no events declared, nothing changes.
+- The SMT spec canonical form carries one `DE:<event>` line per
+  declared event, so for a program that declares `events` the spec
+  digest differs from the one 6.0.3 computes for the same source and
+  pricing table (d5d51912: templates/sequence_law_demo.nous d54bd18c to
+  69c3298e, templates/quorum_gated_demo.nous a5da9a14 to 53503c57,
+  vsa_conformance_vector_v1.nous 4c9d53a4 to 587fd2f3; a program with
+  no events is unchanged, examples/demos/cert-4679350 bb93270f). Online
+  re-derivation (`nous conformance verify`, `nous dossier`) was
+  already bound to the minting version, because the canonical form
+  carries the NOUS version: re-derive a manifest with the version it
+  records. The offline verifiers do not re-derive the spec (37b8783).
+- Docs: README.md, docs/VERIFY_DOSSIER.md and website/verify.html named
+  a `nous dossier verify` command the CLI does not have and a
+  standalone download of `verify_offline.py` that is withdrawn
+  (docs/adr/ADR-0009-standalone-verifier-withdrawal.md). They now give
+  the `verify_offline.py` inside the dossier directory, and
+  `nous dossier <source> --manifest <manifest> --prices <prices>` run
+  with the NOUS version the manifest records, with
+  `nous verify-cost cost.farkas.json --manifest manifest.json` for the
+  cost-cap certificate.
+- Server side, not in the package: the NOESIS modules read their
+  data-file locations through `noesis_paths.data_dir()`. With
+  `NOESIS_DATA_DIR` unset every path is as before; when set it must be
+  an existing directory, or the process stops at start (d03ebdf).
+  <!-- __s405_changelog_s423_s414_v1__ -->
+
+### Fixed  <!-- __s405_changelog_ide_v1__ -->
+
+- The web IDE's default program began with a `//` comment, which the
+  grammar does not accept, so the shipped default failed to parse at
+  1:1. It now begins with `#`, the grammar's only comment form, and the
+  editor highlights `#` comments instead of `//` and `/* */` (5663627,
+  FG-S406-A).
 
 ### Known limits  <!-- __s405_changelog_opus4_alias_v1__ -->
 
 - `claude-opus-4` is still an alias of `claude-opus-4-7`, priced at 5 and
   25 USD per 1M input and output tokens, while Anthropic's pricing page
   lists Claude Opus 4 at 15 and 75 (D388-4, D405-5).
+- website/replay.html and website/governance.html still ask for a "Log
+  path" and show absolute paths as placeholders; the routes now take a
+  name inside `NOUS_REPLAY_DIR` and refuse a path (351c902).
+- `nous verify-cost --manifest` compares the certificate's sha256 with
+  the manifest's `cost_farkas_sha256` and does not check the manifest
+  signature; its help and output still say "the signed manifest", and
+  it exits 0 with one signature bit flipped. The signature is checked
+  by `verify_offline.py` and by `nous dossier`.
+
+### Notes  <!-- __s405_changelog_why_major_v1__ -->
+
+- 7.0.0 is a major version because it refuses or removes behaviour
+  6.0.3 accepted: the telegram channel of the webhook, `callback_url`,
+  a paid tier reached from the chat routes, `/v1/run` modes other than
+  dry-run without a key, and chat replay without a key; and
+  `verify_conformance` refuses traces with an undeclared action label
+  that passed before (37b8783).
 
 
 ## [6.0.3]  <!-- __s402_changelog_v6_0_3__ -->

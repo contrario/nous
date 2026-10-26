@@ -10,7 +10,7 @@ An agentic programming language with end-to-end formal cost-bound verification, 
  | \ | |/ _ \| | | / ___|
  |  \| | | | | | | \___ \
  | |\  | |_| | |_| |___) |
- |_| \_|\___/ \___/|____/   v6.0.3
+ |_| \_|\___/ \___/|____/   v7.0.0
 ```
 
 Author: Hlias Staurou (Hlia) | Project: Noosphere | GitHub: contrario/nous | Website: nous-lang.org
@@ -23,7 +23,7 @@ NOUS is a programming language for agentic AI systems where every program is:
 - **Auditable** -- every verified program emits an Ed25519-signed manifest with full provenance (source SHA-256, AST SHA-256, pricing SHA-256, SMT obligations SHA-256, solver name+version, verdict, timestamp).
 - **Annex IV-ready** -- `nous dossier` emits an EU AI Act Annex IV-aligned compliance bundle directly from the AST plus the signed manifest plus the pricing table.
 - **Rekor-anchored** -- since v5.3.0, optional `--anchor rekor` anchors emitted manifests into the public Sigstore Rekor transparency log via Path-beta dual signing (per-submission ECDSA-P-256 leaf, long-lived Ed25519 manifest signature preserved). Since v5.10.0 a Rekor v2 path (`--anchor rekor_v2`) targets the tile-backed Sigstore log with an RFC 3161 trusted timestamp over the leaf signature, all re-verifiable offline. External, third-party-auditable durability, with no NOUS-side trust assumption on the offline verification path. See `docs/REKOR_ANCHOR.md` and `docs/REKOR_V2_MIGRATION.md`.
-- **Publicly verifiable** -- since v5.4.0, any signed dossier can be verified by anyone via three independent paths: `POST /api/v1/verify-dossier` (browser convenience, no API key, rate-limited), `verify_offline.py` (canonical, single `cryptography` dependency), or `nous dossier verify` (full toolchain with SMT cost-cap re-check). See `docs/VERIFY_DOSSIER.md`.
+- **Publicly verifiable** -- since v5.4.0, any signed dossier can be verified by anyone via three independent paths: `POST /api/v1/verify-dossier` (browser convenience, no API key, rate-limited), `verify_offline.py` (canonical, single `cryptography` dependency), or the toolchain (`nous dossier <source> --manifest <manifest>` checks the manifest's Ed25519 signature under the key it carries and re-derives the SMT spec from source; the digest matches only when run with the NOUS version recorded in the manifest, `pip install nous-lang==<nous_version>`). See `docs/VERIFY_DOSSIER.md`.
 - **Governable** -- first-class `policy { on ... signal ... action ... }` declarations, statically lintable (13 rule codes) and live-simulatable.
 - **Deterministically replayable** -- every agent run produces a SHA-256-chained JSONL event log. `nous replay verify` validates chain integrity offline.
 - **Self-evolving (opt-in)** -- `nous evolve` mutates a program's declared DNA genes within their declared ranges on a shadow copy of the AST, re-validates each candidate against the constitutional law checker, and keeps a mutation only if a measured fitness score improves -- otherwise it rolls back atomically. Optimization within declared bounds; it records each mutation and proves nothing. <!-- __s224_selfevolve_v2__ -->
@@ -108,7 +108,8 @@ nous emit-smt file.nous         # SMT-LIB 2.6 source (re-usable across solvers)
 nous dossier file.nous          # EU AI Act Annex IV compliance bundle
 nous dossier file.nous --anchor rekor
                                 # also anchor manifest into Sigstore Rekor
-nous dossier verify <path>      # offline re-verification of a dossier
+nous dossier source.nous --manifest manifest.json --prices pricing.toml
+                                # check a dossier's signature, re-derive its spec (run the version the manifest records)
 
 nous prices show                # active layered pricing table + SHA-256
 nous prices init                # write nous_prices.toml in cwd
@@ -218,8 +219,8 @@ The verifier signing key lives at `$XDG_DATA_HOME/nous/keys/signing.key` (mode `
 Three independent paths for third parties to verify a NOUS dossier without installing the NOUS toolchain:
 
 1. **Browser convenience**: drag-drop the manifest into `https://nous-lang.org/verify`. Behind the scenes calls the public `POST /v1/verify-dossier` endpoint (no API key, rate-limited 30 req/min, 256 KiB body cap). Useful for compliance officers and journalists.
-2. **Offline canonical**: download `https://nous-lang.org/verify_offline.py` (or extract from any anchored dossier). Runs locally; only dependency is `cryptography>=42`. No NOUS install, no internet required for non-Rekor checks, no network round-trip to NOUS infrastructure. This is the canonical trust path.
-3. **Full CLI**: `pip install nous-lang && nous dossier verify <path>`. Re-runs SMT cost-cap verification in addition to signature and anchor checks.
+2. **Offline canonical**: run the `verify_offline.py` inside the dossier directory, `cd <dossier> && python3 verify_offline.py`. The standalone download is withdrawn (`docs/adr/ADR-0009-standalone-verifier-withdrawal.md`). Runs locally; only dependency is `cryptography>=42`. No NOUS install, no internet required for non-Rekor checks, no network round-trip to NOUS infrastructure. This is the canonical trust path.
+3. **Full CLI**: `pip install nous-lang==<nous_version>` (the version the manifest records), then in the dossier directory: `nous dossier source.nous --manifest manifest.json --prices pricing.toml --output <dir>` checks the manifest's Ed25519 signature under the key the manifest carries and the source sha, re-derives the SMT spec from source, and refuses on any mismatch; it writes a new dossier directory; `--anchor` defaults to none. `nous verify-cost cost.farkas.json --manifest manifest.json` re-checks the cost-cap Farkas certificate by exact arithmetic and, with `--manifest`, that it is the certificate the manifest names (a sha match only; the manifest signature is checked by `verify_offline.py` and by `nous dossier`). Who holds the signing key is established out of band.
 
 Verification returns granular per-check results:
 
@@ -309,11 +310,11 @@ NOUS is developed under a non-standard model: single maintainer, chat-driven, id
 
 Security issues should be reported via GitHub Security Advisories, not public issues.
 
-## Stats (v6.0.3)  <!-- __s323_readme_version_current_v1__ -->
+## Stats (v7.0.0)  <!-- __s323_readme_version_current_v1__ -->
 
 | Metric | Value |
 |---|---|
-| Tests | 3499 passing, floor 3498 (PYTEST_FLOOR enforced) |
+| Tests | 3634 passing, floor 3633 (PYTEST_FLOOR enforced) |
 | Regression | byte-identical harness, 0 baseline drift |
 | Shipped templates | 12 (`nous templates list`) |
 | Grammar | Lark LALR, bilingual EN+GR |
@@ -337,6 +338,6 @@ The MIT License covers the source code. Trademark rights over "NOUS", "Noosphere
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md). Latest release: [v6.0.3](https://github.com/contrario/nous/releases/tag/v6.0.3).  <!-- __s323_readme_version_current_v1__ -->
+See [CHANGELOG.md](CHANGELOG.md). Latest release: [v7.0.0](https://github.com/contrario/nous/releases/tag/v7.0.0).  <!-- __s323_readme_version_current_v1__ -->
 <!-- __session89_readme_freshen_v1__ -->
 <!-- __s94_readme_v5_11_0_sync_v1__ -->
