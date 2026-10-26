@@ -4,6 +4,34 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+### Changed  <!-- __s405_changelog_d8_reread_v1__ -->
+
+- `pricing/defaults.toml`: eight entries re-verified on 2026-10-26 against
+  first-party pages fetched and hashed on the release host:
+  `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5`,
+  `deepseek-flash`, `gpt-5-2`, `gpt-5-mini`, `gpt-4o-mini` and
+  `gemini-3-1-pro`. Every rate equals the page; `verified_date` and
+  `notes` change, and each entry's notes name the page and its sha256.
+  `deepseek-flash`'s `source_url` gains its trailing slash, the address
+  that serves the pricing page. Under `--smt` these entries, except
+  `gpt-5-mini` (next item), are refused from 2027-01-25 instead of from
+  2026-12-28. The canonical pricing digest written into manifests moves
+  from d5d51912 to b87b1836. Design: docs/ONE_PRICE_SOURCE_DESIGN.md
+  section 26 (D405-1 to D405-6).
+- `gpt-5-mini` carries `removed_after = "2026-12-11"`. OpenAI's
+  deprecations page now lists the alias with the snapshot
+  `gpt-5-mini-2025-08-07` for shutdown on that day. From 2026-12-12
+  `--smt` refuses it ("removed on 2026-12-11"); its recommended
+  replacement has no entry in the table (D405-4).
+- `tests/test_s388_d8_reread.py`, which pinned the 2026-09-28 read, is
+  replaced by `tests/test_s405_d8_reread.py` (D405-6).
+
+### Known limits  <!-- __s405_changelog_opus4_alias_v1__ -->
+
+- `claude-opus-4` is still an alias of `claude-opus-4-7`, priced at 5 and
+  25 USD per 1M input and output tokens, while Anthropic's pricing page
+  lists Claude Opus 4 at 15 and 75 (D388-4, D405-5).
+
 
 ## [6.0.3]  <!-- __s402_changelog_v6_0_3__ -->
 

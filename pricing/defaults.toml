@@ -51,6 +51,12 @@ _source_url     = "https://www.digitalapplied.com/blog/llm-api-pricing-index-q2-
 # name the page and its sha256 (docs/ONE_PRICE_SOURCE_DESIGN.md section
 # 25). _last_verified stays at 2026-06-29 because four entries still
 # carry that date.  __s388_pricing_d8_reread_v1__
+# On 2026-10-26 the same eight entries were re-verified against
+# first-party pages fetched and hashed on Server A; each entry's notes
+# name the page and its sha256, and gpt-5-mini carries removed_after
+# 2026-12-11 (docs/ONE_PRICE_SOURCE_DESIGN.md section 26).
+# _last_verified stays at 2026-06-29 because four entries still carry
+# that date.  __s405_pricing_d8_reread_v1__
 _last_verified  = "2026-06-29"
 _currency       = "USD"
 
@@ -79,10 +85,10 @@ batch_discount_pct = 50
 # Increase for o3-class / R1-class models that emit invisible CoT.
 reasoning_token_multiplier = "1.0"
 
-verified_date = "2026-09-28"
+verified_date = "2026-10-26"
 source_url    = "https://platform.claude.com/docs/en/about-claude/pricing"
 verified_by   = "manual"
-notes         = "Verified from platform.claude.com/docs/en/about-claude/pricing fetched on Server A 2026-09-28, sha256 d493a95c63a4cb3ec7d86073e53b40fca8658efcf562872daf751ac871e470a2: input, output, 5-minute cache write, cache hit and the Batch API row equal this entry. The sha256 identifies the stored copy; a later fetch of the page need not match it byte for byte. The --smt bound prices input and output tokens at these rates; cache writes (1.25x the input rate for 5 minutes, 2x for 1 hour) and US-only inference (inference_geo, 1.1x on every token price) cost more and are not bounded."
+notes         = "Verified from platform.claude.com/docs/en/about-claude/pricing fetched on Server A 2026-10-26, sha256 f600adb0254ce08f0dfd821b381b61d20bc8ef325007b039ab24016991ae6faf: input, output, 5-minute cache write, cache hit and the Batch API row equal this entry. The sha256 identifies the stored copy; a later fetch of the page need not match it byte for byte. The --smt bound prices input and output tokens at these rates; cache writes (1.25x the input rate for 5 minutes, 2x for 1 hour) and US-only inference (inference_geo, 1.1x on every token price) cost more and are not bounded."
 
 
 [models."claude-opus-4"]
@@ -99,10 +105,10 @@ input_cached_per_1m      = "0.30"
 input_cache_write_per_1m = "3.75"
 batch_discount_pct = 50
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-09-28"
+verified_date = "2026-10-26"
 source_url    = "https://platform.claude.com/docs/en/about-claude/pricing"
 verified_by   = "manual"
-notes         = "Verified from platform.claude.com/docs/en/about-claude/pricing fetched on Server A 2026-09-28, sha256 d493a95c63a4cb3ec7d86073e53b40fca8658efcf562872daf751ac871e470a2: input, output, 5-minute cache write, cache hit and the Batch API row equal this entry. The sha256 identifies the stored copy; a later fetch of the page need not match it byte for byte. The --smt bound prices input and output tokens at these rates; cache writes (1.25x the input rate for 5 minutes, 2x for 1 hour) and US-only inference (inference_geo, 1.1x on every token price) cost more and are not bounded."
+notes         = "Verified from platform.claude.com/docs/en/about-claude/pricing fetched on Server A 2026-10-26, sha256 f600adb0254ce08f0dfd821b381b61d20bc8ef325007b039ab24016991ae6faf: input, output, 5-minute cache write, cache hit and the Batch API row equal this entry. The sha256 identifies the stored copy; a later fetch of the page need not match it byte for byte. The --smt bound prices input and output tokens at these rates; cache writes (1.25x the input rate for 5 minutes, 2x for 1 hour) and US-only inference (inference_geo, 1.1x on every token price) cost more and are not bounded."
 
 
 [models."claude-haiku-4-5"]
@@ -115,10 +121,10 @@ input_cached_per_1m      = "0.10"
 input_cache_write_per_1m = "1.25"
 batch_discount_pct = 50
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-09-28"
+verified_date = "2026-10-26"
 source_url    = "https://platform.claude.com/docs/en/about-claude/pricing"
 verified_by   = "manual"
-notes         = "Verified from platform.claude.com/docs/en/about-claude/pricing fetched on Server A 2026-09-28, sha256 d493a95c63a4cb3ec7d86073e53b40fca8658efcf562872daf751ac871e470a2: input, output, 5-minute cache write, cache hit and the Batch API row equal this entry. The sha256 identifies the stored copy; a later fetch of the page need not match it byte for byte. The --smt bound prices input and output tokens at these rates; cache writes (1.25x the input rate for 5 minutes, 2x for 1 hour) cost more and are not bounded."
+notes         = "Verified from platform.claude.com/docs/en/about-claude/pricing fetched on Server A 2026-10-26, sha256 f600adb0254ce08f0dfd821b381b61d20bc8ef325007b039ab24016991ae6faf: input, output, 5-minute cache write, cache hit and the Batch API row equal this entry. The sha256 identifies the stored copy; a later fetch of the page need not match it byte for byte. The --smt bound prices input and output tokens at these rates; cache writes (1.25x the input rate for 5 minutes, 2x for 1 hour) cost more and are not bounded."
 
 
 # ---------------------------------------------------------------------
@@ -139,10 +145,10 @@ prompt_caching_supported = true
 input_cached_per_1m      = "0.175"
 batch_discount_pct = 50
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-09-28"
+verified_date = "2026-10-26"
 source_url    = "https://developers.openai.com/api/docs/pricing"
 verified_by   = "manual"
-notes         = "Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-09-28, sha256 0de899a93b1d9a8c7cf7b3a01ed3553337636c7ff374153821f218a203a203c8. Fast mode (formerly Priority) bills at a higher published rate and is not bounded by this entry."
+notes         = "Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-10-26, sha256 606acc6693f882253e203e30da2fbfd23f28b02540a98f26fce93c5cdc04e9dd. Fast mode (formerly Priority) bills at a higher published rate and is not bounded by this entry."
 
 
 [models."gpt-5-mini"]
@@ -154,10 +160,11 @@ prompt_caching_supported = true
 input_cached_per_1m      = "0.025"
 batch_discount_pct = 50
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-09-28"
+verified_date = "2026-10-26"
 source_url    = "https://developers.openai.com/api/docs/pricing"
 verified_by   = "manual"
-notes         = "Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-09-28, sha256 0de899a93b1d9a8c7cf7b3a01ed3553337636c7ff374153821f218a203a203c8. Fast mode bills at a higher published rate and is not bounded by this entry. developers.openai.com/api/docs/deprecations.md (fetched on Server A 2026-09-18 and again 2026-09-28, byte-identical, sha256 dfdfac83f084aceebe8dfef1697fee36263eb6fb2ffe9f2069ae61e546aa663f) retires the dated snapshot gpt-5-mini-2025-08-07 on 2026-12-11 and does not list the alias gpt-5-mini, so no lifecycle is recorded here."
+removed_after = "2026-12-11"
+notes         = "Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-10-26, sha256 606acc6693f882253e203e30da2fbfd23f28b02540a98f26fce93c5cdc04e9dd. Fast mode bills at a higher published rate and is not bounded by this entry. developers.openai.com/api/docs/deprecations.md (fetched on Server A 2026-10-26, sha256 b5d1cafefc8a491f2c095d77359a6ca185498baa5f65a66bac1cb722e188855f) lists the alias gpt-5-mini with the snapshot gpt-5-mini-2025-08-07 for shutdown on 2026-12-11 (notice of 2026-06-11), so removed_after is 2026-12-11. Its recommended replacement, gpt-5.6-terra, has no entry in this table."
 
 
 # ---------------------------------------------------------------------
@@ -173,10 +180,10 @@ prompt_caching_supported = true
 input_cached_per_1m      = "0.20"
 batch_discount_pct = 50
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-09-28"
+verified_date = "2026-10-26"
 source_url    = "https://ai.google.dev/gemini-api/docs/pricing"
 verified_by   = "manual"
-notes         = "Standard tier, prompts <=200K tokens, published for gemini-3.1-pro-preview. Verified from ai.google.dev/gemini-api/docs/pricing fetched on Server A 2026-09-28, sha256 97df41eff4012519abb73d7907eb9fbeaa914e13dce2d9c6eef5da3d134db87f. Not bounded by this entry: prompts >200K (4.00 input, 18.00 output, 0.40 cached), cache storage (4.50 per 1M tokens per hour), and the Priority tier. Tiered pricing is a v2.x schema feature (deferred). No cache-write rate is published, so none is recorded."
+notes         = "Standard tier, prompts <=200K tokens, published for gemini-3.1-pro-preview. Verified from ai.google.dev/gemini-api/docs/pricing fetched on Server A 2026-10-26, sha256 51f4314aa6d4c39c14bd4ebab3c54c283158784fe46db07ba0195e4e78c329f5. Not bounded by this entry: prompts >200K (4.00 input, 18.00 output, 0.40 cached), cache storage (4.50 per 1M tokens per hour), and the Priority tier. Tiered pricing is a v2.x schema feature (deferred). No cache-write rate is published, so none is recorded."
 
 
 # ---------------------------------------------------------------------
@@ -219,10 +226,10 @@ output_per_1m = "1.20"
 prompt_caching_supported = true
 batch_discount_pct = 0
 reasoning_token_multiplier = "1.0"
-verified_date = "2026-09-28"
-source_url    = "https://api-docs.deepseek.com/quick_start/pricing"
+verified_date = "2026-10-26"
+source_url    = "https://api-docs.deepseek.com/quick_start/pricing/"
 verified_by   = "manual"
-notes         = "Verified from api-docs.deepseek.com/quick_start/pricing fetched on Server A 2026-09-28, sha256 210f102275ccf1a6542f08a3bc9e4b4c7c83278cb74b35217bffa112df6363b2: the peak cache-miss input and output rates of DeepSeek-V4.1-Flash equal this entry. Off-peak rates are half of peak; the bound uses peak."
+notes         = "Verified from api-docs.deepseek.com/quick_start/pricing/ fetched on Server A 2026-10-26, sha256 b856a6e93fa4793ecc8f3fd03a01bb7d8f7572f78a4739da8ce6dbdb09328d66: the peak cache-miss input and output rates in the deepseek-flash column (model version DeepSeek-V4.1-Flash-1017) equal this entry. Off-peak rates are half of peak; the bound uses peak. The page also publishes cache-hit rates, which this entry does not record."
 
 
 [models."deepseek-v4-flash"]  # __s361_deepseek_v4flash_alias_v1__
@@ -282,10 +289,10 @@ pricing_model  = "per_token"
 input_per_1m  = "0.15"
 output_per_1m = "0.60"
 input_cached_per_1m = "0.075"
-verified_date = "2026-09-28"
+verified_date = "2026-10-26"
 source_url    = "https://developers.openai.com/api/docs/pricing"
 verified_by   = "manual"
-notes         = "Inference (standard API) rates, NOT fine-tuning rates. Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-09-28, sha256 0de899a93b1d9a8c7cf7b3a01ed3553337636c7ff374153821f218a203a203c8. Fast mode bills at a higher published rate and is not bounded by this entry."
+notes         = "Inference (standard API) rates, NOT fine-tuning rates. Standard tier. Verified from developers.openai.com/api/docs/pricing.md fetched on Server A 2026-10-26, sha256 606acc6693f882253e203e30da2fbfd23f28b02540a98f26fce93c5cdc04e9dd. Fast mode bills at a higher published rate and is not bounded by this entry. developers.openai.com/api/docs/deprecations.md (fetched on Server A 2026-10-26, sha256 b5d1cafefc8a491f2c095d77359a6ca185498baa5f65a66bac1cb722e188855f) gives only the dated snapshot gpt-4o-mini-2024-07-18 for shutdown on 2027-01-14 (notice of 2026-10-14), so no lifecycle is recorded on this alias."
 
 # ---------------------------------------------------------------------
 # OpenRouter -- free variants dispatched by nous_runtime.RUNTIME_TIERS
