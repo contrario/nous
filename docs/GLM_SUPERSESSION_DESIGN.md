@@ -21174,3 +21174,448 @@ document itself.
                        read of 11:18:05Z and the two runs of G2, whose
                        repository legs the writing seat reproduced (D413-6,
                        D413-10).
+
+  - S425 the seat after S423 that verified the S423 seal as one tar, waited
+    for the 7.0.0 VSA, attributed the release and D413, and wrote the entry
+    S423 owed
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AND CARRIES WHAT S423 OWED, which waited
+    for the 7.0.0 VSA. READ IN THE SEAT'S CONTAINER: computed off host by
+    S425, from the kickoff's one attachment, the release lane's three
+    attachments, mirror clones of the public repository, or the bundle of
+    nous-langchain made on A. ON A: printed on Server A by a command the
+    operator ran and pasted back, as a file unless it says chat text.
+    INHERITED: from the sealed handoff, opener and record of S423 or a file
+    its seal lists, each checked by digest at intake and not measured
+    again. TESTIMONY: stated by another lane, in the S405 handoff or in
+    D413 as landed, and not measured here. DERIVED: computed from printed
+    values or read from code. OPERATOR: stated by the operator. RULING: a
+    decision the operator stated in words. Every time below is in UTC, in
+    2026, on 10-26 unless it says 10-24 or 10-25. An operator's time is the
+    time his message was sent; a value ON A carries the clock its command
+    printed.
+
+    THE NUMBER. OPERATOR, 11:11Z: 425; the kickoff: four hundred and five
+    stays reserved for the release lane. TESTIMONY, the S405 handoff: that
+    lane's first message said 425 before its START file allocated 405. READ
+    IN THE SEAT'S CONTAINER at 11:12:33Z, on the mirror fetched at
+    11:08:35Z, 162 refs, main at ab15431b, 1019 commits: the tokens S425,
+    D425 and FG-S425 and the marker __s425_, matched as words and as bare
+    strings, counted zero in the text files of the tree of every ref, in
+    every commit message on every ref and in every file of main, binary
+    included; so did those of the number after it. Again at 15:43:20Z, main
+    at ba8b26f9, 1020 commits, D413 included: zero. In nous-langchain, at
+    15:58:14Z, on the bundle 82d8e4eb: zero in its 4 commits and in the
+    tree 73702cc5. Before this entry the document held no S425 token, no
+    anchor of that number and no code of its family, and the instrument
+    that appends this entry refuses unless that is still so when it runs.
+    Below, the seven codes of S423, from its handoff, section 8, are
+    anchored here for the first time, FG-S423-A to FG-S423-G; one code is
+    this seat's, FG-S425-A.
+
+    D425-1  THE LANDING OF D423. INHERITED, S423's record, section 2: the
+            entry 7245a8d4, 14809 bytes, and the message b3d7ac49, 565
+            bytes; D423_PREDICTIONS.md ecca86d0, at 01:00:03Z on 10-24,
+            before the tools; D423_LAND.py c25bd786 and D423_COMMIT.py
+            592f0958 from the D-kit templates. ON A, on 10-24, each step
+            after its pame: the dry run 10:03:44Z, HEAD and origin
+            936e79e2, DRY_RUN_GREEN; the apply 10:08:12Z, WROTE and
+            READBACK 9b49bc52, 1267770 bytes; the commit tool's dry run
+            10:09:56Z, blob 3f9111ef, lint 437 files and 0 violations; the
+            commit 10:11:55Z, NEW_HEAD 79aa5b9c, CHECK_COMMIT OK; the push
+            10:14:02Z, REMOTE_MAIN 79aa5b9c. READ IN THE SEAT'S CONTAINER,
+            on the mirror clone of 09:04:14Z on 10-25: 79aa5b9c, its one
+            parent 936e79e2, one path, author and committer the pinned
+            identity, committed at 10:11:56Z on 10-24, one second after the
+            tool's print that S423's handoff lists; the document 9b49bc52,
+            blob 3f9111ef, its first 1252961 bytes the document b3fd908f
+            and its last 14809 the entry 7245a8d4; the raw commit body
+            byte-equal to the sealed message.
+
+    D425-2  THE OPERATOR'S HOST MOVE OF 10-24. INHERITED, S423's record,
+            section 2: at 10:05:44Z on 10-24, pasted at 10:07Z, the
+            operator's tc8/alysis lane applied five commits in
+            /root/alysis-nous on the branch
+            prototype/verification-input-v2, copied tools to
+            /home/claude/tc8 and ran 658 tests, all passed; the two object
+            names that paste printed are in S423's chat only. Outside NOUS.
+            ON A, this seat's HM v1.2 (D425-11) printed no line this seat
+            attributes to it; whether HM reads those paths is not measured
+            here.
+
+    D425-3  THE GATE OF FG-S415-X. INHERITED, S423's record, section 3, and
+            its handoff, section 1: OPERATOR, 10:15Z on 10-24, asked which
+            object was right and why; 10:23Z: FG-S415-X, measurement and
+            Gate first. X_INNOVATION_GATE.md 454e53ed, written at 10:41:23Z
+            after an independent agent, given the code and not the
+            conclusion, confirmed every file and line it cites and
+            corrected two, X-F7b and X-F6a; a first version was overwritten
+            and not kept. Its findings: X-F1 to X-F4, the certificate,
+            trace and dossier signatures verified only under the key each
+            artifact carries; X-F5, verify_conformance never checks the
+            manifest signature; X-F6, core already pins a signer in four
+            places. The design XD1 to XD5 and the kill criteria XK1 to XK5.
+            One response of S423 was stopped by a safety classifier: a
+            reproduction built from altered and re-signed artifacts; it was
+            dropped, and none was made. RULING, 10:45Z: BUILD, narrowed to
+            XD1 to XD5, the default byte-identical, the lint with the code,
+            red before green, the GLM docstring to the board. READ IN THE
+            SEAT'S CONTAINER: the Gate in the seal, 454e53ed, as its pack's
+            sums list it.
+
+    D425-4  THE SLICES, THEIR MISSES AND THE KILL. INHERITED, S423's
+            record, section 4: each slice's predictions hashed before code,
+            red before green, its patch checked on APPLY, SKIP and REFUSE
+            fixtures, its mutants run on copies; the seat's suite carried 3
+            environment failures and 30 environment skips throughout. X-G1,
+            conformance.py, predictions 2fb41df5 at 10:52:15Z on 10-24: R3
+            3581 passed; one miss, the mutant M2 predicted to turn 4 tests
+            red turned 3. RULING, 00:09Z on 10-25: XK4 amended, the
+            expected signer an auditor-supplied argument, never a constant
+            in a bundled verifier. X-G2, the conformance verifier and the
+            offline verifier builder, f3217005 at 00:12:01Z: as predicted.
+            X-G3, nous_api_server.py, a1e2c81b at 00:18:45Z: as predicted,
+            twelve default responses equal but for
+            rekor_anchor_age_seconds. RULING, 00:31Z: wording on the
+            touched surfaces only, machine fields byte-identical. X-G4, the
+            wording and the lint, e8b91c66 at 00:36:31Z: W7 a miss, and R3
+            killed by its own criterion, 11 existing tests changing
+            outcome, two S377 wording pins and nine claim_lint tests made
+            stale by a shared allow entry (FG-S423-A). RULING, 00:46Z:
+            re-run as X-G4b from the G3 tree, no allowlist, the S377 pins
+            updated. X-G4b, e7143728 at 00:48:02Z, after every test that
+            pins changed text was measured: as predicted; R3 3613 passed;
+            the lint 406 files and 0 violations, version 1.3.0; every
+            mutant turned its tests red; XK3, XK4 and XK3e held. The arc:
+            arc_full.diff 33408fdf, 14 paths, 854 insertions and 43
+            deletions.
+
+    D425-5  THE KIT, ITS AMENDMENT AND fd840e63. INHERITED, S423's record,
+            section 5: RULING, 01:00Z on 10-25: a landing kit that
+            reproduces the seat tree, A's dry run green before any pame,
+            the ledger entry and the blog deploy separate gates.
+            X423_KIT_PREDICTIONS.md 82c40291 at 01:03:48Z, before the
+            templates; the seat tree f9e41de1; the amendment, git
+            check-ignore on each new path before any write, arm
+            L12 (FG-S423-E); one miss, P1 calling its list of differences
+            complete and missing three (FG-S423-B). X423_LAND.py 4cb25b9e,
+            1263560 bytes, X423_COMMIT.py fcf70c23, X423_KIT_EVIDENCE.md
+            4af7ae0b, X423_KIT_SOURCES.tar 2a4d8259, the sums 28314b06. ON
+            A, on 10-25, each write after its question and pame: the land
+            tool's dry run 01:21Z, HEAD and origin 79aa5b9c, DRY_RUN_GREEN;
+            the apply 01:22Z, 14 paths WROTE and READBACK, APPLY_GREEN; the
+            suite 01:28Z, 3633 passed and 12 skipped; the commit tool's dry
+            run 01:34Z, lint 437 files and 0 violations; the commit 01:39Z,
+            NEW_HEAD fd840e63; the push 01:52Z, PUSH_GREEN. READ IN THE
+            SEAT'S CONTAINER, on the mirror: fd840e63, its one parent
+            79aa5b9c, tree f9e41de1, 14 files, 854 insertions and 43
+            deletions, committed at 01:39:32Z, its body sha256 7d724a5b.
+
+    D425-6  THE DEPLOY, THE RESTART AND THE PROBE. INHERITED, S423's
+            record, section 6, on 10-25: OPERATOR, 01:58Z: the blog, the
+            restart, the release lane. ON A: the deploy's dry run 02:00Z,
+            one line for blog/index.html; the apply 02:01Z after its claim
+            gate, 437 files and 0 violations, the served file and the
+            repository's both 23e72798. Two WebFetch reads of the page
+            found neither the errata nor the retired phrases:
+            inconclusive (FG-S423-F). ON A, 02:02Z, a GET through
+            Cloudflare: the line "Erratum (25 Oct 2026)" twice, the retired
+            phrases none. RULING, 02:08Z: restart nous-api. ON A,
+            02:10:52Z: RESTART_RC 0, MainPID 1169703, User aetherlang,
+            health 6.0.3. X423_PROBE_PREDICTIONS.md 06464d0c at 02:32:13Z,
+            before X423_PROBE.py b90f7012; ON A, 02:42Z: PROBE_GREEN, P1 to
+            P6 each as predicted. READ IN THE SEAT'S CONTAINER:
+            website/blog/index.html at fd840e63 is 23e72798 and holds the
+            erratum line twice. ON A, this seat's read of the manager's
+            journal (D425-11): nous-api stopped and started at 02:10:52Z on
+            10-25.
+
+    D425-7  THE S414 DIGEST AND ITS CORRECTION. INHERITED, S423's record,
+            section 7: S423 first sent the release lane a finding that the
+            DE lines of 37b8783 change smt_spec_sha256 for a program that
+            declares events, a new cross-release break, and proposed
+            dropping them, option (c). RULING, 02:42Z on 10-25: (c) if
+            correct and evidenced. C_MEASURE_PREDICTIONS.md d387dc78 at
+            02:44:22Z; every prediction held. Then, unpredicted: the
+            canonical form also carries NV, the running NOUS version
+            (smt_emit.py:193); cert-4679350, minted by 5.13.1, re-derives
+            at 6.0.3 to a digest other than its manifest's, and to the
+            manifest's with NV set to 5.13.1: every release already changes
+            every spec digest. (c) was withdrawn; C_MEASURE_EVIDENCE.md
+            50a627cb, with its command corrected (FG-S423-D); the
+            overstatement is FG-S423-C. RULING, 08:47Z: 37b8783 ships as
+            is.
+
+    D425-8  THE RELEASE RULINGS AND THE HOLD. INHERITED, S423's handoff,
+            sections 1 to 3, on 10-25: RULING, 08:37Z: version 7.0.0;
+            08:41Z: the doc corrections, if correct and evidenced; 08:47Z:
+            37b8783 ships as is, the bump base fd840e63; the prices asked,
+            not ruled; 08:49Z: seal. TESTIMONY, the release lane, from
+            08:45:36Z on 10-25: nothing from S423 lands on core's main
+            until the 7.0.0 VSA is published. OPERATOR, 09:03Z on 10-25:
+            the tree free, the publish of 7.0.0 not begun; the hold
+            applied. TESTIMONY, the S405 handoff: PyPI 7.0.0 at 10:39:13Z
+            and 10:39:15Z; the VSA minted at 10:48:29Z and anchored at
+            10:49:12Z, Rekor v2 logIndex 170072514; served and audited; the
+            eight prices re-read and equal. READ IN THE SEAT'S CONTAINER,
+            on the mirror fetched at 11:08:35Z: five commits above
+            fd840e63, d75517b0, 572ba4bc, c4493d80, cd27b35a and ab15431b,
+            each touching the paths that handoff states, and every file
+            digest it cites for them, 13 of 13, matched; the tag v7.0.0,
+            object 0dbec574, tagged at 02:13:36Z, on cd27b35a; ab15431b
+            adds the 12 files of
+            website/.well-known/nous/release-vsa/7.0.0/, its index
+            f92b4ca1; c4493d80 removed `nous dossier verify` from
+            README.md, docs/VERIFY_DOSSIER.md and website/verify.html, and
+            the blog's line 1777 still holds it. The hold ended with
+            ab15431b on origin main. ON A, paste one (D425-11): A and B
+            serve 7.0.0, pip 7.0.0, the floor 3633.
+
+    D425-9  THE SEAL OF S423 AND THIS SEAT'S INTAKE. The project full, the
+            seal reached this seat as one attachment, s423_seal_bundle.tar
+            394a9269, as the kickoff pinned it, by the rule of FG-S419-A.
+            READ IN THE SEAT'S CONTAINER, from 09:01Z on 10-25, before any
+            file in it was read: the tar's digest; its listing, 137
+            members, 121 files and 16 directories under eight top
+            directories, none absolute, none through a parent, no link;
+            extracted into an empty directory; S423_SEAL_SHA256SUMS.txt
+            e685f5ec and its 16 files, the handoff 35df0d2c, the opener
+            f8682fdc and the record 0d321d1f among them; then, from inside
+            each pack, the sums of kit423 38e7e847, gatex 9bb585bd, xarc
+            11a85f8d, kx 16df3988, kp c117d59b and xd 9f93c5a9. Every
+            digest matched, and every file of the tar is listed in one of
+            the seven sums files. The tar arrived at 09:01:26Z on 10-25 by
+            the seat's clock; the handoff's end of S423, about 09:10Z, is
+            later: an estimate written before the seal. The seat's first
+            network step, named first: a mirror clone of the public
+            repository, 09:04:10Z to 09:04:14Z on 10-25, every ref: 161
+            refs, main fd840e63, tree f9e41de1, 158 tags, v6.0.3-29, 1543
+            tracked files, no commit above fd840e63 on any ref, the
+            document 9b49bc52, blob 3f9111ef: as S423's opener predicted. A
+            clone of nous-langchain at 09:04:32Z, named first, was refused
+            by GitHub for a login.
+
+    D425-10 THE RELEASE LANE'S FILES, AND D413. OPERATOR, 11:07Z: he did
+            the release, with three attachments: S405_SEAL_SHA256SUMS.txt
+            3cbcb32d, whose digest no message pinned,
+            NOUS_SESSION_405_HANDOFF.md e3d48093 and s405_kit.tar.gz
+            47e10456, each equal to its line in those sums; the handoff's
+            text reached the chat before it could be hashed (FG-S419-A);
+            the kit listed, 46 members, none absolute or through a parent,
+            not extracted. One correction to that handoff, section 8: git
+            describe gives v7.0.0 at cd27b35a only; at ab15431b it gives
+            v7.0.0-1-gab15431. Paste one at 15:39:19Z (D425-11) printed
+            HEAD ba8b26f, a commit above ab15431b. READ IN THE SEAT'S
+            CONTAINER, on a fetch from 15:42:33Z to 15:42:36Z, named first:
+            ba8b26f9, its one parent ab15431b, one path, the document, 290
+            lines added, committed at 15:13:24Z by the pinned identity with
+            the trailer of another Claude session, the ledger lane's D413;
+            the document grew by append only, its first 1267770 bytes the
+            document 9b49bc52 and its last 19360 bytes an entry 161afeb1,
+            the document now 04ae9c19, blob d90baa4c. TESTIMONY, D413: its
+            writing seat took the number 413 at 13:58Z and read nothing on
+            A for that entry. It landed between this seat's question at
+            about 14:24Z and the operator's answer at 15:37Z, the class
+            of FG-S413-A; paste one found it.
+
+    D425-11 PASTE ONE AND HM v1.2. The seat wrote its predictions by script
+            and hashed them before each run: S425_OPEN_PREDICTIONS.md
+            8d3ad2dc at 14:24:01Z, its G2 legs from
+            instruments/G2_R0_S372.sh run in the seat on a clone of
+            ab15431b whose origin is the seat's mirror, no network; after
+            paste one, S425_OPEN_PREDICTIONS_2.md c1a73eae at 15:44:37Z,
+            the same run on a clone of ba8b26f9, for HM and G2. OPERATOR,
+            15:37Z: everything is free. ON A, 15:41Z, its clock 15:39:19Z,
+            RC 0, the paste f7a18dff: its own digest c027371e and rule0.sh
+            074e51af, as pinned; HEAD ba8b26f equal to origin/main, two
+            commits above v7.0.0, the miss of D425-10; A, B and pip at
+            7.0.0; nous-api up 5144 seconds, a start near 14:13:35Z
+            (DERIVED), not predicted; B up 17690 seconds, a start at about
+            10:44:30Z (DERIVED), the release lane's step BS-1 (TESTIMONY);
+            the suite 3634 passed and 12 skipped; the floor 3633 at line
+            70; three nous rows of Asklepios healthy; both timers active;
+            one failed unit; the served check discriminating and equal to
+            disk, the fallback 95030 bytes, DERIVED before the run from
+            S423's 95011 and the 19 bytes c4493d80 added to index.html. ON
+            A, 15:45Z, its clock 15:45:24Z, a paste that came as chat text
+            and was not hashed: hm_v12.py f6441f6c and the baseline
+            28f999ac, as pinned; HM_RC 1 and 26 drift lines: the 20
+            of D423-5 with the MainPID now 1875708, and six for a drop-in
+            92-nous-trace-dir.conf, 64 bytes, mode 644, uid and gid 0,
+            sha256 95712840. OPERATOR, 15:45Z: the restart near 14:13:35Z
+            was the ledger lane's. ON A, 15:47Z, its clock 15:46:50Z, RO_RC
+            0, the paste 505f9cc0, read only, the drop-in's content not
+            read: the drop-in's mtime 14:13:33.474Z; the manager's journal
+            since 00:38Z on 10-24: nous-api stopped and started at
+            02:10:52Z on 10-25, at 10:42:59Z, and at 14:13:33.851Z and
+            14:13:34.037Z after a reload at 14:13:33.480Z requested by
+            systemctl from session-50804; two reloads more from that
+            session at 14:15:20.600Z and 14:15:20.959Z, no restart; MainPID
+            1875708, NRestarts 0. OPERATOR, 15:47Z: the drop-in is the
+            ledger lane's too. Each move is attributed; none is called a
+            finding.
+
+    D425-12 G2. OPERATOR, 15:47Z, asked again before its fetch: everything
+            is free now. ON A, 15:52Z, its clock 15:49:15Z, RC 0, the
+            output 201c4884: T5_OK c11e3033; the guards 85 and 0, 871 and
+            0, 3 and 0; FETCH_RC 0, FETCH_HEAD 189 bytes, HEAD and ORIGIN
+            ba8b26f, ahead 0 and behind 0, v7.0.0-2, the two tag oracles
+            agreeing, 159 tags, porcelain 0; the 221 lines from DOC_SHA to
+            GEN_SHAS equal line for line to the seat's run once trailing
+            spaces are set aside, the paste carrying none: DOC_SHA
+            04ae9c19, blob d90baa4c at HEAD and origin, 21176 lines,
+            1287130 bytes, MAXLEN 79, NONASCII 0, TRAILWS 0, heads 85 and
+            71, the family of D413 12, STRICT 871, LABELLED 725, DUP 0,
+            OTHER_INDENT 8, LOOSE 879, 876 and 60, ANCHOR4 785, codes
+            anywhere 1203 and 900, README d231eff3 of 343 lines; L6 240 142
+            87 3 95; L7 collect 3646 and 3784, 3634 passed and 12 skipped,
+            lint 437 files and 0 violations, the mirror CLEAN for 512 files
+            with 4 orphans. The stop condition did not hold: DOC_SHA
+            9b49bc52 to 04ae9c19, which is D413.
+
+    D425-13 THE BUNDLE OF NOUS-LANGCHAIN. After the refused clone
+            of D425-9, a request to attach the repository to this session
+            was refused, its GitHub access not covering it, and a listing
+            of the repositories it can reach, asked for langchain, was
+            empty. OPERATOR, 14:18Z: a bundle made on A, its digest in the
+            message. The command 74fb93ff, driven first in the seat on
+            fixtures differing in the root only: an apply, a rerun refused,
+            a clone failing with a token in its URL, the token absent from
+            the output and from the error file, and a missing source; a
+            first draft printed the hash algorithm where the verdict
+            belonged and was discarded. ON A, 15:54Z, its clock 15:54:39Z,
+            run on the condition that nothing had moved: CLONE_RC 0, one
+            ref, main e03e21f5, BUNDLE_RC 0, the bundle okay, "2 refs" with
+            one printed (FG-S425-A), sha256 82d8e4eb. OPERATOR, 15:57Z: the
+            bundle attached. READ IN THE SEAT'S CONTAINER, 15:58Z: its
+            digest 82d8e4eb, 47180 bytes; its header refs/heads/main and
+            HEAD, both e03e21f5; cloned, fsck clean, 4 commits, tree
+            73702cc5, 38 files, as S421 left it (INHERITED); no ref under
+            refs/pull/.
+
+    D425-14 NOTES, NOT FINDINGS. The opener's predictions of 10-25 were
+            written before the release and D413; the seat wrote new ones
+            before each run and scored each run against the one in force. A
+            paste can lose trailing spaces: G2 prints six lines ending in
+            one, and the paste of 15:49:15Z, like S423's, carries none. The
+            HM paste came as chat text. The seat's lint counts 406 files
+            where A counts 437, at every commit from 936e79e2 to ab15431b;
+            the difference is A's own files, not measured. The tools of
+            this entry are D423's, with this entry's number and pins.
+
+    D425-15 THIS ENTRY'S PREFIXES. Before its tools were built, an
+            instrument of the seat matched every hexadecimal prefix of
+            eight or more digits in this entry and in its commit message
+            against: the files of the S423 seal and its tar; the release
+            lane's three files; the objects of core and of nous-langchain;
+            the sha256 of the document at every commit that changed it, of
+            every tracked file at fd840e63, ab15431b and ba8b26f9, and of
+            every commit body since 10-24; the seat's predictions, its
+            command and the pastes it holds as files; the full digests and
+            object names printed in those pastes and in the seal's files.
+            Every prefix resolved.
+
+    D425-16 WHAT S425 WROTE. To this repository: this entry, after its
+            pames. To nous-langchain: nothing. To /root on A:
+            /root/s425_nlc, a mirror clone of nous-langchain whose config
+            holds the remote's URL, its error file and the bundle; and this
+            entry's two tools, when the operator uploads them. Network from
+            A: paste one's two GETs of nous-lang.org and two ssh reads of
+            B; G2's fetch at 15:49:17Z; the mirror clone of nous-langchain
+            at 15:54:39Z; this entry's commit tool's fetches, push and read
+            of the remote. Seat network, each step named first: the mirror
+            clone at 09:04:10Z on 10-25 and the refused clone of
+            nous-langchain at 09:04:32Z; on 10-26, fetches of the mirror at
+            11:08:33Z and 15:42:33Z, and at about 11:13Z the refused
+            request to attach nous-langchain and the empty listing. No web
+            search. The project: no read, no write. To the operator: this
+            seat's files.
+
+    D425-17 WHAT STAYS OPEN. In order: this entry on A by D425_LAND.py and
+            D425_COMMIT.py, each step after its pame; then the object the
+            operator chooses. S423's board, its handoff, section 7: trace
+            pinning, which needs an out-of-process signer; X-F5; the signer
+            wording of dossier.py's five verifiers, of
+            offline_verifier_builder.py:269 and of the GLM docstring at
+            glm_manifest.py:190; verify-cost's "signed manifest" without a
+            signature check, among the known limits of 7.0.0 in
+            CHANGELOG.md at ba8b26f9; the lint's blind spots; the committed
+            demo verifier without --expect-signer; online re-derivation
+            bound to the minting version, whether the docs say so not
+            checked; A's /v1/health reporting _version.py; nous evolve and
+            nous migrate importing modules outside py-modules (TESTIMONY);
+            served: the blog's remaining signer sites, line 1555 first, and
+            line 1777 as dated errata. The release lane's board, the S405
+            handoff, section 7 (TESTIMONY): the IaC token (FG-S405-A);
+            gpt-5-mini after 2026-12-11; the prices' cliff of 2027-01-25;
+            the claude-opus-4 alias; replay.html and governance.html; the
+            conformance offline verifier with no registry pin; the pyflakes
+            warning on verifier_registry.py; section 23 of
+            ONE_PRICE_SOURCE_DESIGN. The operator's: the failed unit; the
+            tc8/alysis files on A; four drop-ins of nous-api.service.d
+            outside the baseline 28f999ac, whether they get a copy in git,
+            and a new HM baseline; the /root files of S414 to S425; room in
+            the project. Carried from S421, untouched: E2, K4.5 and K4.6 of
+            the LangChain arc; FG-S415-P, FG-S415-O and FG-S414-I;
+            pyproject.toml's description; emit.py's _PART line; the S411
+            opener's section 3.
+
+    FINDINGS
+
+            FG-S423-A  SEAT. MEASURE EVERY TEST THAT PINS TEXT A SLICE
+                       CHANGES BEFORE ITS PREDICTIONS. X-G4 was killed by
+                       two S377 wording pins and nine claim_lint tests that
+                       a shared allow entry made stale; X-G4b measured them
+                       first and held.
+
+            FG-S423-B  SEAT. A LIST IS WHAT WAS MEASURED, NOT ALL THERE IS.
+                       The kit's P1 called its differences from the S421
+                       templates complete and missed three; the seat's list
+                       of the sites of `nous dossier verify` missed
+                       website/verify.html:110.
+
+            FG-S423-C  SEAT. A DIGEST-COMPATIBILITY CLAIM NEEDS THE WHOLE
+                       CANONICAL FORM READ AND A REAL ARTIFACT OF AN OLDER
+                       VERSION RUN before it reaches a recommendation. The
+                       seat sent the release lane the DE lines of 37b8783
+                       as a new cross-release break; the canonical form
+                       also carries NV, and every release already changes
+                       every spec digest (D425-7).
+
+            FG-S423-D  WORLD. `nous dossier verify` IS NOT A COMMAND.
+                       README.md, docs/VERIFY_DOSSIER.md,
+                       website/verify.html and the blog used it, and S423
+                       wrote it too before checking the parser. A command
+                       is checked against its parser before it is written,
+                       even when the repository's own docs use it. c4493d80
+                       corrected the three repository files; the blog's
+                       line 1777 stays (D425-8).
+
+            FG-S423-E  SEAT. A LANDING TOOL THAT CREATES PATHS ASKS git
+                       check-ignore BEFORE ANY WRITE. An ignored new path
+                       passes the dry run and fails after writing, in a
+                       state the rollback refuses. The X423 kit's
+                       amendment, arm L12.
+
+            FG-S423-F  WORLD. A WebFetch READ CAN DROP A PAGE'S SECTIONS.
+                       Two reads found neither the errata nor the retired
+                       phrases that a GET on A counted. Phrases are counted
+                       in the served bytes or through a GET on A, never by
+                       a sha through Cloudflare (FG-S261-A).
+
+            FG-S423-G  SEAT. A COMPACTION LOSES THE SEAT'S OWN RECORD.
+                       S423's context was compacted once, at about 01:05Z
+                       on 10-25, and its list of network calls before that
+                       was not recovered. A running file of every network
+                       call and operator time is kept, written as each
+                       happens; this seat kept one.
+
+            FG-S425-A  SEAT. A FILTER CAN HIDE WHAT IT WAS MEANT TO SHOW.
+                       The bundle command kept only verify lines naming
+                       refs, so A printed "2 refs" and one ref; the second
+                       was HEAD, read from the bundle's header in the seat.
+                       The fixture's remote had no HEAD, so the drive could
+                       not show it. A fixture carries the shape of the real
+                       input, HEAD included, or the filter prints every
+                       line.
