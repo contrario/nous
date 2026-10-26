@@ -20884,3 +20884,293 @@ document itself.
                        D421's fixture showed it. Main was fast-forwarded and
                        the fixture run again. A fixture's base is checked
                        against the pinned parent before any arm runs.
+
+  - S413 the seat that drafted and landed D411, pushed the operator's commit
+    d03ebdf before it, and attributed his host moves of 10-22 at its
+    opening; a later seat wrote this entry
+
+    R24 GOVERNS EVERY VALUE BELOW, AND THIS ENTRY WAS WRITTEN AFTER THE
+    SESSION IT DESCRIBES, BY A LATER SEAT OF THE LEDGER LANE. The seat it
+    describes left no seal that this entry reads, and the operator's text
+    file of his outputs of 10-22 did not arrive (letter D of S413). ON A:
+    printed on Server A by a command the operator ran and pasted into that
+    seat's chat as text. OPERATOR: stated by the operator in that chat, or
+    in the writing seat's where a time carries 10-26. RULING: a decision the
+    operator stated in words. An operator's time is the time his message was
+    sent; a value ON A carries the clock its command printed. TESTIMONY:
+    stated by that seat in its chat, about its own container or about an
+    output that reached the chat as a file the chat does not show; not
+    sealed and not measured again. The chat was read as text and not hashed.
+    INHERITED: from a sealed file of an earlier seat, checked by digest.
+    DERIVED: computed from printed values or read from code. WRITING SEAT:
+    read by the seat that writes this entry, in its container on 10-26, from
+    the D411 kit and the S411 seal as uploaded and checked by digest, from
+    the first D411 kit's sums, message and generator in the project's root,
+    hashed as read, and from a clone of the public repository; it read
+    nothing on Server A for this entry. Every time below is in UTC and in
+    2026, on 10-22 unless it carries its own date.
+
+    THE NUMBER. OPERATOR, 13:58Z on 10-26: 413, for the seat that opened on
+    A at 11:12Z on 10-22; four hundred and five stays reserved for the
+    release lane. WRITING SEAT, at 14:00:42Z on 10-26, on a clone at ab15431
+    equal to origin/main: the strings S413, D413 and FG-S413, each counted
+    as a fixed string anywhere in a line, stood zero times in the tree and
+    in every commit message on every ref. Before this entry the document
+    held no S413 token, no anchor of that number and no code of its family,
+    and the instrument that appends this entry refuses unless that is still
+    so when it runs.
+
+    D413-1  THE OBJECTS AND WHO SET THEM. OPERATOR, 10:54Z: the kickoff,
+            D411 first, drafted off host from the sealed S411 handoff,
+            opener and record and a clone, every security item at the level
+            the sealed handoff states it and no host read of an earlier chat
+            carried in; the number the operator's. OPERATOR, 11:07Z: the
+            tree free. RULING, 12:57Z: the operator's d03ebdf pushed from
+            this seat, and the work continued. Pames: 13:00Z for that push;
+            13:04Z, given with the text of D411 accepted, taken for the
+            apply only; 13:12Z for the commit; 13:14Z for the push. Each
+            irreversible command was shipped in the message after its pame.
+            This entry covers the seat from its kickoff to its G2 at
+            13:16:42Z; what it did after that is not read here.
+
+    D413-2  THE DRAFTING OF D411, BEFORE 11:07Z. TESTIMONY: the uploads of
+            the S411 seal hashed and equal to the kickoff, sums 887f7345 of
+            27 entries, handoff 3fc8fed5, opener bb846804 and record
+            be269522, and 15 kit files recovered from the seat's session log
+            equal to the sums; one clone of the public repository at
+            10:55:42Z, declared, at b817976 equal to origin/main; S411, D411
+            and FG-S411 zero in the tree and in every commit message; the
+            D410 renderer, generator and driver gave the D410 entry again,
+            c2c44426 and 018fe8c2, and 33 of 33 arms; the entry 28cf9a7f,
+            332 lines, 22037 bytes, longest line 76, ASCII, with no reserved
+            word; the first tools D411_LAND.py badae880 and D411_COMMIT.py
+            079720f0 and the message 99e66f0b of 501 bytes, derived from the
+            sealed D410 kit by tokens and pins only and driven 33 of 33; a
+            claim lint on a copy clean over 405 files and red on a planted
+            violation. After 11:07Z the message took its session line and
+            the commit tool became e848218d; the land tool and the entry did
+            not change.
+
+    D413-3  THE KIT AS LANDED, READ AGAIN. WRITING SEAT: the twelve files
+            that D411_KIT_SHA256SUMS.txt names, each equal to it;
+            derive_d411.py on the sealed D410 kit, six files from the S411
+            seal checked by digest, gave its six files byte for byte;
+            render_d411.py gave d411_entry.txt byte for byte; gen_d411.py on
+            the document at d03ebdf, a5bcfcc4, which is the document at
+            b817976, gave D411_LAND.py 761480e2 and D411_COMMIT.py 182997cc,
+            DOC_NEW 85644b49 and blob 5238d69d; drive_d411.py passed 33 of
+            33 arms on a clone at ab15431; the message d411_message.txt is
+            5d3f028a, 573 bytes. The project's root holds the first kit: its
+            sums name D411_LAND.py badae880, D411_COMMIT.py 079720f0 and the
+            message 99e66f0b, and it differs from the landed kit in five
+            files, the two tools, the message, derive_d411.py and
+            gen_d411.py; its gen_d411.py, c2d734e6 as its sums name it, pins
+            the parent b817976, and its message has no session line; that
+            generator, with the templates and entry both kits share and that
+            message, gives badae880 and 079720f0 again. OPERATOR, 13:58Z on
+            10-26: it did not land (letter C of S413).
+
+    D413-4  THE OPENING. OPERATOR, 11:07Z: the tree free. TESTIMONY, the
+            output having reached the chat as a file: paste one at
+            11:12:05Z, green, SELF_SHA c027371e and rule0.sh 074e51af; HEAD
+            b817976 equal to origin/main, fifteen commits above v6.0.3, the
+            thirteen of the S410 opener and then decfbfc and b817976; A up
+            1538 seconds, a start at about 10:46:27Z, where the S411 opener
+            carried 12:49:20Z on 10-20; B at v6.0.3, up 1190280 seconds, a
+            start at 16:34:06Z on 10-08; the suite 3581 passed and 12
+            skipped, the floor 3498, pip 6.0.3; three nous rows of Asklepios
+            healthy at 11:13:31Z; no failed unit; the served CTRL 95011 and
+            assets 655 of 655. ON A, HM v1.2, its clock 11:16:55Z: hm_v12.py
+            f6441f6c and the baseline 28f999ac, as pinned; HM_RC 1 and 13
+            drift lines, where the opener predicted none if the host had not
+            moved: the MainPID of nous-api, 2940180 to 1936940, and six
+            fields each of two drop-ins of nous-api.service.d that the
+            baseline does not hold, 94-syscall.conf, 445 bytes, sha256
+            ac9506bc, and 96-hardening-caps.conf, 612 bytes, sha256
+            d0677f8e, each mode 644, uid 0 and gid 0; no snap line
+            (DERIVED).
+
+    D413-5  THE HOST MOVES, ATTRIBUTED. OPERATOR, 11:17Z, asked about a
+            restart of nous-api at about 10:46Z: it was his. OPERATOR,
+            11:18Z: he wrote both drop-ins. TESTIMONY, the output having
+            reached the chat as a file: one read-only command at 11:18:05Z,
+            stat of the two files, systemctl show of nous-api and the
+            manager's journal from 08:30Z to 11:12Z cut to nous-api and
+            reloads: 96-hardening-caps.conf written at 10:07:48.869Z and
+            94-syscall.conf at 10:46:25.822Z, mtime equal to ctime for each;
+            four reloads, at 10:07:48.877Z, 10:33:07.30Z, 10:46:25.83Z and
+            10:46:31.44Z, each requested by systemctl from one login
+            session; three restarts of nous-api, at 10:07:49.4Z,
+            10:33:07.84Z and 10:46:26.343Z; MainPID 1936940, NRestarts 0,
+            ExecMainStartTimestamp 10:46:26Z. The content of the two files
+            was not read. TESTIMONY: all of them from one login session, and
+            the restart of 10:33Z and the reload of 10:46:31Z left
+            attributed to that session and to his statement; none called a
+            finding. The questions the seat put to him named only the
+            restart of about 10:46Z and the drop-ins. The seat took no new
+            HM baseline. WRITING SEAT: D415-5 and D415-6, landed later in
+            this document, read the same two drop-ins and the same MainPID.
+
+    D413-6  G2, AND A SECOND WRITER. OPERATOR, 12:42Z: the tree free.
+            TESTIMONY, the output having reached the chat as a file:
+            G2_R0_S372 at 12:49:51Z, green; the stop condition held, DOC_SHA
+            a5bcfcc4 and blob 83f252b0 at HEAD and at origin; HEAD d03ebdf,
+            one ahead of origin b817976 and none behind, FETCH_HEAD main
+            b8179763; TRACKED 1538, sixteen commits above v6.0.3, and a
+            claim lint over 437 files, where the seat had predicted 1537,
+            fifteen and 436; every other value as predicted, among them
+            collect 3593 and 3731, 3581 passed and 12 skipped, and the
+            mirror CLEAN for 500 files with 4 orphans. WRITING SEAT: G2's
+            legs L0 to L6, cut before L7 and run on a local mirror with HEAD
+            d03ebdf over origin b817976 and the tag of 10-26 removed, give
+            each value of those legs the seat states: the guards 73 and 0,
+            801 and 0, 3 and 0, TRACKED 1538, v6.0.3-16 by both tag oracles,
+            158 tags, DOC_SHA a5bcfcc4, 18212 lines, STRICT 801 by all five
+            engines, LABELLED 655, LOOSE 809, 806 and 54, codes anywhere
+            1010 and 830, L6 236 142 83 0 95. ON A, its clock 12:55:15Z:
+            d03ebdf authored and committed by Hlias Staurou at 12:30:09Z,
+            its session line naming another session; five files, 31 lines in
+            and 5 out; the reflog's newest line that commit, on b817976;
+            main ahead 1 of origin/main. OPERATOR, 12:55Z: he made it.
+            WRITING SEAT: it adds noesis_paths.py and changes four files.
+            TESTIMONY: it carries no test of its own; the running nous-api
+            started before it; HM does not cover the tree. With HEAD off
+            their pinned parent b817976, the land tool would have refused 44
+            and the commit tool 45, each writing nothing (DERIVED, from the
+            templates both kits share) (letter A of S413).
+
+    D413-7  d03ebdf PUSHED, AFTER ITS PAME. The seat proposed the push from
+            the commit's own chat; RULING, 12:57Z: the push here. The seat
+            shipped one guarded command, not a pinned tool: a fetch, then a
+            push of HEAD to main without force only if origin was b8179763,
+            HEAD d03ebdf1, HEAD's parent the origin and the porcelain empty,
+            then ls-remote; otherwise REFUSE_PUSH and nothing sent.
+            OPERATOR, 13:00Z: pame. ON A, its clock 13:01:17Z: FETCH_RC 0,
+            origin b8179763, HEAD d03ebdf1, its parent b8179763, porcelain
+            0, PUSH_RC 0, the remote main read back as d03ebdf1. ON A, its
+            clock 13:02:53Z, the same command pasted again where the land
+            tool's dry run had been asked: FETCH_RC 0, origin d03ebdf1, HEAD
+            d03ebdf1, porcelain 0, REFUSE_PUSH nothing pushed; what that
+            fetch wrote was not read (letter B of S413). WRITING SEAT:
+            d03ebdf's parent is b817976; it changes five files and not the
+            document, whose blob stays 83f252b0.
+
+    D413-8  THE TOOLS PINNED AGAIN, ON d03ebdf. TESTIMONY: derive_d411.py's
+            new parent moved from b817976 to d03ebdf, and gen_d411.py gave
+            D411_LAND.py 761480e2 and D411_COMMIT.py 182997cc, which differ
+            from the tools before them only in PARENT; the driver passed 33
+            of 33; the entry 28cf9a7f, the message 5d3f028a and DOC_OLD
+            a5bcfcc4, blob 83f252b0, did not change. WRITING SEAT: as
+            D413-3.
+
+    D413-9  D411 LANDED. ON A, its clock 13:03:23Z, the land tool's dry run:
+            the uploads 761480e2 and 182997cc; ENTRY 28cf9a7f, 22037 bytes;
+            HEAD and origin d03ebdf; BLOB_HEAD 83f252b0; porcelain 0; the
+            document a5bcfcc4, 1094710 bytes, mode 644, owner 986:981; STATE
+            BEFORE; NAMESPACE 0 0 0; DOC_NEW 85644b49, 1116747 bytes;
+            DRY_RUN_GREEN, RC 0. The seat asked whether the text was
+            accepted; OPERATOR, 13:04Z: accepted, and pame; taken as the
+            text accepted and the pame for the apply only, the tree answer
+            of 12:42Z kept, and the seat said so. ON A, its clock 13:05:07Z,
+            the apply: WROTE and READBACK 85644b49, mode 644, owner 986:981,
+            porcelain the one document, NOT_STAGED, APPLY_GREEN. ON A, its
+            clock 13:05:31Z, the commit tool's dry run: MESSAGE 5d3f028a,
+            573 bytes; BLOB_WORKTREE 5238d69d; STATE APPLIED; IDENTITY as
+            pinned; a claim lint over 437 files and 0 violations;
+            DRY_RUN_GREEN. After its pame, ON A, its clock 13:12:21Z, the
+            commit: FETCH_RC 0, origin d03ebdf; NEW_HEAD 5ca8778409d6;
+            parent d03ebdf, the one document modified, blob 5238d69d;
+            CHECK_COMMIT OK; porcelain 0; COMMIT_GREEN. After its pame, ON
+            A, its clock 13:15:08Z, the push: STATE COMMITTED, origin
+            d03ebdf, REMOTE_MAIN 5ca87784, PUSH_GREEN. WRITING SEAT:
+            5ca8778's parent is d03ebdf; it changes that document only, to
+            85644b49, blob 5238d69d, the document at d03ebdf with
+            d411_entry.txt appended; its message is d411_message.txt byte
+            for byte.
+
+    D413-10 THE CLOSING. OPERATOR, 13:16Z: everything free. TESTIMONY, the
+            output having reached the chat as a file: G2_R0_S372 at
+            13:16:42Z, green at 5ca8778, DOC_SHA 85644b49 and blob 5238d69d
+            at HEAD and at origin, every value as the seat predicted after
+            the push, among them collect 3593 and 3731, 3581 passed and 12
+            skipped, lint 437 files and 0 violations, and the mirror CLEAN
+            for 500 files with 4 orphans. WRITING SEAT: G2's legs L0 to L6,
+            run as at D413-6 on a mirror at 5ca8778, give each value of
+            those legs the seat states: HEAD equal to origin, seventeen
+            commits above v6.0.3 by both tag oracles, TRACKED 1538, 158
+            tags; the guards 74 and 0, 810 and 0, 3 and 0; 18544 lines and
+            1116747 bytes, MAXLEN 79; heads 74 and 60 ending S409, S410 and
+            S411; D411- 11; FG-S411- 9; STRICT 810 by all five engines,
+            LABELLED 664, LOOSE 818, 815 and 55, ANCHOR4 660, codes anywhere
+            1019 and 839; the pinned legs, L5 and L6 as at d03ebdf.
+
+    D413-11 WHAT THE SEAT WROTE, TO 13:16:42Z. To the repository, each after
+            its pame: the push of the operator's d03ebdf, and 5ca8778,
+            committed and pushed to main. To Server A outside the
+            repository: no file named by a command of the seat; the suite
+            runs of paste one and of both G2 runs write what the suite
+            writes, which G2 declares not bounded. In /root, without a pame:
+            after 11:07Z the seat asked for the first land tool badae880 and
+            the commit tool e848218d to be uploaded there, and whether they
+            were was not read; D411_LAND.py 761480e2 and D411_COMMIT.py
+            182997cc, read by digest at 13:03:23Z. Network from Server A:
+            G2's fetches at 12:49Z and 13:16Z; the guarded command's fetch,
+            push and ls-remote at 13:01:17Z and its fetch at 13:02:53Z; the
+            commit tool's fetch at 13:12:21Z and its fetch, push and
+            ls-remote at 13:15:08Z. Seat network, TESTIMONY: one clone at
+            10:55:42Z. The seat took no HM baseline by 13:16:42Z.
+
+    D413-12 WHAT STAYS OPEN. The board as the S411 handoff left it, less
+            D411, paid: first letter C of S410 with letter A of S411, at the
+            level that handoff states them, then the other security items in
+            its order. Beside it: SW, one writer on the live tree, now with
+            a second writer seen inside one seat (letter A of S413);
+            d03ebdf, with no test of its own; the HM baseline 28f999ac,
+            which holds neither the operator's two drop-ins nor his restart
+            of 10:46:26Z, and a new baseline owed; the first D411 kit in the
+            project's root (letter C of S413). Beyond the pointer of D413-5
+            to D415-5 and D415-6, and beyond using the clone at ab15431 as
+            its measuring base, with the tag of 10-26 removed for D413-6 and
+            D413-10, this entry reads nothing of what later seats or the
+            release lane did after 13:16:42Z on 10-22.
+
+    FINDINGS
+
+            FG-S413-A  WORLD. A SECOND WRITER INSIDE ONE SEAT. Between paste
+                       one at 11:12:05Z and G2 at 12:49:51Z the operator
+                       committed d03ebdf to A's live tree from another chat;
+                       G2 printed HEAD one ahead of origin and three counts
+                       off the prediction, TRACKED, the tag distance and the
+                       lint (D413-6). The tools were pinned again on d03ebdf
+                       and the push made from this seat after its pame.
+                       Open: SW.
+
+            FG-S413-B  WORLD. A PASTE CAN REPEAT. The guarded push of
+                       d03ebdf was pasted again at 13:02:53Z where the land
+                       tool's dry run was asked; its guard held, printed
+                       REFUSE_PUSH and sent nothing, because origin already
+                       equalled HEAD (D413-7).
+
+            FG-S413-C  WORLD. THE PROJECT'S ROOT HOLDS A KIT THAT DID NOT
+                       LAND. Its D411_LAND.py badae880 and D411_COMMIT.py
+                       079720f0 are pinned on b817976 and its message lacks
+                       the session line; the landed kit differs in five
+                       files (D413-3). Its land tool refuses 44 unless HEAD
+                       and origin are b817976, and its commit tool 45 at any
+                       head that is neither b817976 nor its own pinned
+                       commit (DERIVED, from the templates both kits share).
+                       Open: the operator's.
+
+            FG-S413-D  WORLD. A CHAT IS NOT A SEAL, AND THE FILE OF 10-22
+                       DID NOT ARRIVE. The text file of the operator's
+                       outputs of 10-22 that the kickoff of 13:58Z on 10-26
+                       named was not among the uploads (WRITING SEAT);
+                       OPERATOR, 14:16Z on 10-26: he could not find the
+                       files needed. The seat described here left no seal
+                       that this entry reads. Values ON A stand as pasted
+                       into its chat, read as text and not hashed; four
+                       outputs reached the chat as files it does not show
+                       and stand as the seat's TESTIMONY, paste one, the
+                       read of 11:18:05Z and the two runs of G2, whose
+                       repository legs the writing seat reproduced (D413-6,
+                       D413-10).
