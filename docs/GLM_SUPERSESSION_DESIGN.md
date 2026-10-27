@@ -21619,3 +21619,290 @@ document itself.
                        not show it. A fixture carries the shape of the real
                        input, HEAD included, or the filter prints every
                        line.
+
+  - S426 the seat after S425 that verified the S425 seal as one tar, ran
+    the opening rule on A, attributed the security lane's host moves, and
+    wrote the entry S425 owed
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AND CARRIES WHAT S425 OWED. READ IN THE
+    SEAT'S CONTAINER: computed off host by S426, from the kickoff's one
+    attachment or a mirror clone of the public repository. ON A: printed on
+    Server A by a command the operator ran and pasted back, as a file
+    unless it says chat text. INHERITED: from the sealed handoff, opener
+    and record of S425 or a file its seal lists, each checked by digest at
+    intake and not measured again. TESTIMONY: stated by another lane, in
+    the S405 handoff, and not measured here. DERIVED: computed from printed
+    values or read from code. OPERATOR: stated by the operator. RULING: a
+    decision the operator stated in words. Every time below is in UTC, in
+    2026, on 10-27 unless it says 10-26. An operator's time is the time his
+    message was sent; a value ON A carries the clock its command printed.
+
+    THE NUMBER. OPERATOR, 06:34Z: 426, in answer to S425's question which
+    object came next. INHERITED, S425's record, section 8: at 06:35:27Z, on
+    its mirror at ac096861, 162 refs and 1021 commits, the tokens S426,
+    D426 and FG-S426 and the marker __s426_, matched as words and as bare
+    strings, counted zero in the tree of every ref, in every commit message
+    and in main's binary files. READ IN THE SEAT'S CONTAINER at 07:14:38Z,
+    on the mirror cloned at 07:14:27Z, the same 162 refs and 1021 commits:
+    zero again, and zero for the number after it; a pass blind to case
+    found the letters and digits only inside hexadecimal digests. In
+    nous-langchain at 08:01:10Z, on the bundle made on A at
+    08:00:48Z (D426-8): zero in its 4 commits and in its tree. Before this
+    entry the document held no S426 token, no anchor of that number and no
+    code of its family, and the instrument that appends this entry refuses
+    unless that is still so when it runs. Two codes below are this
+    seat's, FG-S426-A and FG-S426-B; the one code of S425, FG-S425-A, is
+    anchored in D425.
+
+    D426-1  THE LANDING OF D425. INHERITED, S425's record, section 7, on
+            10-26, each write after its question and pame, each paste chat
+            text: the land tool's dry run 16:53:47Z, HEAD and origin
+            ba8b26f9, the document 04ae9c19, STATE BEFORE, NAMESPACE S425
+            0, DRY_RUN_GREEN; the apply 16:55:33Z, WROTE and READBACK
+            ab740a4d, APPLY_GREEN; the commit tool's dry run 16:57:20Z, its
+            echo garbled by the terminal, blob 221298ca, the lint 437 files
+            and 0 violations, DRY_RUN_GREEN; the commit 16:58:41Z, NEW_HEAD
+            ac096861, CHECK_COMMIT OK, COMMIT_GREEN; the push 17:00:05Z,
+            REMOTE_MAIN ac096861, PUSH_GREEN. OPERATOR, 16:59Z on 10-26:
+            the pame of the push; the half of that question asking whether
+            anything had moved was not answered in words, and the tool's
+            own guards checked HEAD, porcelain and origin before it pushed.
+            S425's read-back at 17:20:39Z on 10-26: the document byte-equal
+            to its kit's, the body to its message. READ IN THE SEAT'S
+            CONTAINER, on the mirror of 07:14:27Z: ac096861, its one parent
+            ba8b26f9, tree 8ec24c57, one path, 445 lines added, author and
+            committer the pinned identity at 16:58:42Z on 10-26; the
+            document ab740a4d, blob 221298ca, 1316192 bytes and 21621
+            lines, its first 1287130 bytes the document 04ae9c19 and its
+            last 29062 the entry 6774f670; the raw body byte-equal to the
+            sealed message 7b6305d9; nothing above ac096861 on any ref, and
+            no commit on any ref since 17:00Z on 10-26.
+
+    D426-2  426 AND THE SEAL OF S425. INHERITED, S425's record, section 8:
+            its fetch from 06:35:26Z to 06:35:27Z, main ac096861, 162 refs;
+            RULING, 06:37Z: seal now, an opener naming 426, the files for
+            the new chat and a text for it. The seal holds the seat's G2
+            run at ac096861, g2_seat_ac096861.txt 4adc7fac; the bundle
+            command for this seat, cmd_s426_A.txt 02a99de1, its verify
+            lines unfiltered, and its driver drive_cmd_s426.sh 35b9115c,
+            run on a fixture whose remote has HEAD (FG-S425-A); and the
+            handoff, written at 06:43:51Z.
+
+    D426-3  THE INTAKE. The project full, the seal reached this seat as one
+            attachment, s425_seal_bundle.tar b710e027, as the kickoff of
+            07:12Z pinned it, by the rule of FG-S419-A. READ IN THE SEAT'S
+            CONTAINER, before any file in it was read: the tar's digest;
+            its listing, 58 members, 50 files and 8 directories, none
+            absolute, none through a parent, no link; extracted into an
+            empty directory; S425_SEAL_SHA256SUMS.txt 64123711 and its 9
+            files, the handoff 0f5e4b6a, the opener fe651aa5 and the record
+            fd9baca1 among them; then, from inside each pack, the sums of
+            kit425 f029fd85, open425 5dfacefc, ona425 6024f1e1, nlc425
+            3ebbe67a, nlc426 cd3219d2 and log 2301c23a. Every digest
+            matched, and every file of the tar is listed in one of the
+            seven sums files. The seat's first network step, named first: a
+            mirror clone of the public repository, 07:14:23Z to 07:14:27Z,
+            every ref: 162 refs, main ac096861, tree 8ec24c57, 159 tags,
+            v7.0.0-3, 1555 tracked files, the document ab740a4d: as S425's
+            opener predicted.
+
+    D426-4  THE PREDICTIONS AND PASTE ONE. OPERATOR, 07:21Z: nothing holds
+            the tree or the host on A. The seat wrote its predictions by
+            script and hashed them before each run on A:
+            S426_OPEN_PREDICTIONS.md 008e8a64 at 07:19:38Z, its G2 legs
+            from instruments/G2_R0_S372.sh run in the seat on a clone of
+            ac096861 whose origin is the seat's mirror, no network, equal
+            to S425's run but for the clock, the root and FETCH_HEAD; the
+            uptimes DERIVED from S425's paste one. ON A, 07:25Z, its clock
+            07:23:00Z, RC 0, the paste 92004c74: its own digest c027371e
+            and rule0.sh 074e51af; HEAD ac09686 equal to origin/main, three
+            commits above v7.0.0; A, B and pip at 7.0.0; nous-api up 61766
+            seconds and B up 74312, each equal to its DERIVED value to the
+            second, so neither restarted since 14:13:35Z and 10:44:30Z on
+            10-26; the suite 3634 passed and 12 skipped; the floor 3633 at
+            line 70; three nous rows of Asklepios healthy; both timers
+            active; the served check discriminating and equal to disk, the
+            fallback 95030 bytes. One miss: two failed units where one was
+            predicted. ON A, 07:27Z, its clock 07:26:51Z, chat text, read
+            only: the second is noosphere-health.service, started by its
+            timer at 07:20:01Z, exit status 2, its unit file unchanged
+            since 2026-07-10.
+
+    D426-5  HM v1.2 AND THE SECURITY LANE. S426_OPEN_PREDICTIONS_2.md
+            49f119c1 at 07:27:47Z, before HM. ON A, 07:28Z, its clock
+            07:28:15Z, the paste f80aa9d7: hm_v12.py f6441f6c and the
+            baseline 28f999ac, as pinned; HM_RC 1 and 35 drift lines: the
+            25 of S425's paste predicted unchanged, byte for byte; the
+            failed_units line naming both units, as predicted; and nine not
+            predicted, none in S425's HM of 15:45:24Z on 10-26:
+            /etc/asklepios/watchlist.toml changed, cbc19100 to cd54ea3d and
+            12246 bytes to 12072; the MainPID of asklepios-probe.service,
+            2236224 to 2316140; and the link of aether-engine.service in
+            multi-user.target.wants absent, six lines. ON A, 07:30Z, its
+            clock 07:30:19Z, read only, the paste a19c7f40: the watchlist
+            written at 15:55:51.816Z on 10-26 and the probe started in the
+            same second; aether-engine.service disabled and inactive, its
+            directory of links written at 16:01:12.624Z. OPERATOR, 07:34Z:
+            all three are writes of the security lane, a lane of NOUS run
+            by the operator as root from his own terminal, whose writes on
+            A on 10-26 were: noesis-telegram.service masked at 14:15:20Z;
+            two copies of a health check's configuration edited at
+            15:46:22Z; the watchlist edited and the probe restarted at
+            15:55:51Z; aether-engine disabled and stopped at 16:01:11Z; a
+            monitoring script pointed at a new environment file at
+            16:06:58Z; each with a backup in /root. ON A, 07:50Z, its clock
+            07:50:09Z, read only, the paste ce9c371d: every digest the
+            operator gave for those files and their backups matched;
+            noesis-telegram.service a link to /dev/null written at
+            14:15:20.958566Z on 10-26; the health check's timer firing
+            every ten minutes, its runs at 07:30Z, 07:40Z and 07:50Z each
+            reporting one critical check, service:aether-engine, and
+            exiting 2. The second failed unit follows from the disable
+            (DERIVED): the monitoring entries removed before it did not
+            cover that check. Every line of HM is attributed; none is a
+            finding of core.
+
+    D426-6  THE CORRECTION OF D425-11. D425-11 recorded two reloads of the
+            manager at 14:15:20.600Z and 14:15:20.959Z on 10-26, requested
+            from session-50804, the session of the ledger lane's reload at
+            14:13:33.480Z, and called each move attributed. ON A,
+            07:50:09Z (D426-5): the second reload was requested 0.9
+            milliseconds after the mask's link was written; it is the
+            security lane's mask (DERIVED). The first, 359 milliseconds
+            earlier in the same second, is tied to no object written; the
+            operator's list names only the security lane's mask at that
+            second. D425-11's attribution of both reloads to the ledger
+            lane by their session is withdrawn: one login session carried
+            two lanes (FG-S426-A). The ledger document D425 wrote is
+            unaffected.
+
+    D426-7  THE SECURITY LANE AGAINST S425'S CLOCK. INHERITED, S425's
+            record: its HM at 15:45:24Z, the operator's answer that
+            everything was free at 15:47Z, its G2 at 15:49:15Z, its bundle
+            command at 15:54:39Z, and the answers that nothing had moved at
+            16:54Z and 16:58Z, all on 10-26. The security lane wrote at
+            15:46:22Z, between that HM and that answer, and from 15:55:51Z
+            to 16:06:58Z, between that G2 and the landing. S425 ran HM
+            once, at its opening, and its seal states the host as that HM
+            found it, before four of those writes (FG-S426-B). D425 wrote
+            only the ledger document, and its tools guarded the
+            repository's HEAD, origin and porcelain; none of the security
+            lane's writes touched the repository. This seat ran HM again
+            before its first write on A.
+
+    D426-8  G2, HM AGAIN, AND THE BUNDLE OF NOUS-LANGCHAIN. OPERATOR,
+            07:53Z, asked again before its fetch: everything free, nothing
+            moved, both halves answered in words. ON A, 07:57Z, its clock
+            07:54:08Z, RC 0, the paste 90b8e3de: T5_OK c11e3033; the guards
+            86 and 0, 879 and 0, 3 and 0; FETCH_RC 0, FETCH_HEAD 189 bytes,
+            HEAD and ORIGIN ac09686, ahead 0 and behind 0, v7.0.0-3, the
+            two tag oracles agreeing, 159 tags, porcelain 0; the 224 lines
+            from DOC_SHA to GEN_SHAS equal line for line to the seat's run
+            once trailing spaces are set aside: DOC_SHA ab740a4d, blob
+            221298ca, 21621 lines, 1316192 bytes, heads 86 and 72, STRICT
+            879, LABELLED 733, ANCHOR4 802, codes anywhere 1231 and 910; L6
+            240 142 87 3 95; L7 collect 3646 and 3784, 3634 passed and 12
+            skipped, lint 437 files and 0 violations, the mirror CLEAN for
+            512 files with 4 orphans. The stop condition held: DOC_SHA
+            ab740a4d unchanged from the seal. S426_PREDICTIONS_3.md
+            8bb55dac at 07:58:51Z, before what follows. ON A, 07:59Z, its
+            clock 07:59:33Z, the paste 95c0ae12: the 35 lines of HM again,
+            unchanged. OPERATOR, 07:59Z: nothing moved. ON A, 08:00Z, its
+            clock 08:00:48Z, chat text: the opener's command
+            cmd_s426_A.txt, driven again in the seat first: CLONE_RC 0, one
+            ref, main e03e21f5, BUNDLE_RC 0, okay, two refs, main and HEAD,
+            both e03e21f5, sha256 82d8e4eb, equal to the digest of S425's
+            bundle of 15:54:39Z on 10-26 (DERIVED: the same bytes), so no
+            attachment was needed. READ IN THE SEAT'S CONTAINER, on that
+            bundle from the seal: fsck clean, 4 commits, tree 73702cc5.
+
+    D426-9  NOTES, NOT FINDINGS. The seat's G2 run prints 3 lines of that
+            block ending in a space and the paste none. The seat's
+            FETCH_HEAD differs in length from A's because its origin is a
+            local path. Two read-only commands of this seat were too blunt:
+            a count of links named aether matched every unit of that
+            family, and a journal tail of 25 lines ended before the moves
+            it was meant to show, the class of FG-S425-A. One call of the
+            seat to the operator's notes service, a read at about 07:51Z,
+            was not named before it ran; it wrote nothing. The tools of
+            this entry are D425's, with this entry's number and pins.
+
+    D426-10 THIS ENTRY'S PREFIXES. Before its tools were built, an
+            instrument of the seat matched every hexadecimal prefix of
+            eight or more digits in this entry and in its commit message
+            against: the files of the S425 seal and its tar; the objects of
+            core and of nous-langchain; the sha256 of the document at every
+            commit that changed it, of every tracked file at ac096861, and
+            of every commit body since 10-24; the seat's predictions and
+            the pastes it holds as files; the full digests and object names
+            printed in those pastes and in the seal's files. Every prefix
+            resolved.
+
+    D426-11 WHAT S425 AND THIS SEAT WROTE. INHERITED, S425's handoff,
+            section 5: to core, ac096861; to /root on A, /root/s425_nlc,
+            whose config holds the remote's URL, and D425's two tools; to
+            nous-langchain, nothing. This seat: to this repository, this
+            entry, after its pames; to nous-langchain, nothing; to /root on
+            A, /root/s426_nlc, a mirror clone whose config holds the
+            remote's URL, its empty error file and the bundle, and this
+            entry's two tools when the operator uploads them. Network from
+            A: paste one's two GETs of nous-lang.org and two ssh reads of
+            B; G2's fetch at 07:54:09Z; the mirror clone of nous-langchain
+            at 08:00:48Z; this entry's commit tool's fetches, push and read
+            of the remote. Seat network before this entry was fixed: the
+            mirror clone at 07:14:23Z, named first, and the read of D426-9,
+            not. No web search. The project: no read, no write. To the
+            operator: this seat's files.
+
+    D426-12 WHAT STAYS OPEN. In order: this entry on A by D426_LAND.py and
+            D426_COMMIT.py, each step after its pame; then the object the
+            operator chooses. S425's board, its handoff, section 7: trace
+            pinning, which needs an out-of-process signer; X-F5; the signer
+            wording of dossier.py's five verifiers, of
+            offline_verifier_builder.py:269 and of the GLM docstring at
+            glm_manifest.py:190; verify-cost's "signed manifest" without a
+            signature check, among the known limits of 7.0.0 in
+            CHANGELOG.md; the lint's blind spots; the committed demo
+            verifier without --expect-signer; online re-derivation bound to
+            the minting version, whether the docs say so not checked; A's
+            /v1/health reporting _version.py; nous evolve and nous migrate
+            importing modules outside py-modules (TESTIMONY); served: the
+            blog's remaining signer sites, line 1555 first, and line 1777
+            as dated errata. The release lane's board, the S405 handoff,
+            section 7 (TESTIMONY): the IaC token (FG-S405-A); gpt-5-mini
+            after 2026-12-11; the prices' cliff of 2027-01-25; the
+            claude-opus-4 alias; replay.html and governance.html; the
+            conformance offline verifier with no registry pin; the pyflakes
+            warning on verifier_registry.py; section 23 of
+            ONE_PRICE_SOURCE_DESIGN. The operator's: /root/s425_nlc and
+            /root/s426_nlc, whose configs hold the remote's URL; the four
+            drop-ins of nous-api.service.d outside the baseline 28f999ac,
+            whether they get a copy in git, and a new HM baseline, against
+            which A now drifts by 35 lines; the failed dry-run unit; the
+            health check that still checks aether-engine; the tc8/alysis
+            files on A; the /root files of S414 to S426; room in the
+            project. Carried from S421, untouched: E2, K4.5 and K4.6 of the
+            LangChain arc; FG-S415-P, FG-S415-O and FG-S414-I;
+            pyproject.toml's description; emit.py's _PART line; the S411
+            opener's section 3.
+
+    FINDINGS
+
+            FG-S426-A  SEAT. A LOGIN SESSION IS NOT A LANE. D425-11
+                       attributed two reloads to the ledger lane because
+                       the session that requested them had requested that
+                       lane's reload; the security lane ran in the same
+                       session, and one of the two is its mask (D426-6). A
+                       move is attributed by the operator's word for that
+                       move or by an object it wrote, never by its session
+                       alone.
+
+            FG-S426-B  SEAT. ONE HM AT THE OPENING LEAVES THE HOST UNREAD
+                       UNTIL THE NEXT SEAT. S425 ran HM before 15:46Z on
+                       10-26; the security lane then wrote four times on A
+                       before S425 landed D425, and S425's seal stated the
+                       host as its HM found it (D426-7). HM runs again
+                       immediately before the first write on A, and every
+                       line it prints is attributed before that write; this
+                       seat did so (D426-8).
