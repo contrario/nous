@@ -21906,3 +21906,286 @@ document itself.
                        immediately before the first write on A, and every
                        line it prints is attributed before that write; this
                        seat did so (D426-8).
+
+  - S430 the number the operator gave the first entry of the seat S431,
+    the seat of NT-GATE-1: nous-trace rejected as a package, N6 found in
+    every offline cost grader, V1 built in the container and not landed,
+    vector v1 frozen as published, and the clock
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, BEFORE ANY OF ITS CODE LANDS (D5). READ
+    IN THE SEAT'S CONTAINER: computed off host by S431, on clones of the
+    public repository at ba8b26f9 and ac096861 or a mirror clone of it,
+    in a venv from PyPI. ON A: nothing; no command of this seat has run
+    on Server A. DERIVED: computed from printed values or read from code.
+    OPERATOR: stated by the operator. RULING: a decision the operator
+    stated in words. Every time below is in UTC, in 2026, on 10-27 unless
+    it says 10-26. An operator's time is the time his message was sent.
+
+    THE NUMBER. OPERATOR, 08:26Z: 430 431, in answer to the seat's
+    question which numbers the entry and the seat take; read as the entry
+    430 and the seat 431, in the order asked. READ IN THE SEAT'S CONTAINER
+    at 08:35:24Z, on the mirror cloned at 08:34:45Z, 162 refs and 1022
+    commits, main at c73d1ea5: the tokens S430, D430 and FG-S430 and the
+    marker __s430_, and those of 431, matched as words and as bare
+    strings, counted zero in the text files of the tree of every ref, in
+    every commit message on every ref and in every file of main, binary
+    included; so did those of 432. A pass blind to case found the letters
+    and digits only inside hexadecimal digests. A control, 426, counted
+    32 in the trees and 4 in the messages. nous-langchain was not
+    readable from the container (git ls-remote asked for credentials) and
+    was not checked. Before this entry the document held no S430 or S431
+    token, no anchor of either number and no code of their families, and
+    the instrument that appends this entry refuses unless that is still
+    so when it runs. The codes below are this seat's, FG-S431-A to
+    FG-S431-H.
+
+    D430-1  THE GATE AND ITS RULINGS. OPERATOR, 15:39Z on 10-26: design
+            nous-trace (Envelope, Trace, Seal, Verifier) as an open
+            package over nous-langchain; the Innovation Gate and its kill
+            criteria first, no code. NT-GATE-1 r2, 9c0463c4, rejected it
+            as a project, package, format and name (D1: it duplicates
+            shipped work; NOUS-TRACE and core conformance hold all four of
+            its objects) and kept a verifier delta: V1 re-derive the cost
+            system offline, V2 recompute the realized checks, V3 exit
+            classes, a mandatory pin and the manifest signature. An
+            independent reviewer checked r1 and reported 15
+            discrepancies; the seat re-measured all 15 and r2 carries
+            them. RULING, 17:32Z on 10-26: D1; D2, V1 then V2 then V3; D3,
+            (i) obligations_canon for the VSA texts and (ii) spec.canon
+            for the dossier texts; D4, the 0/1/2 exit convention; D5, this
+            entry before any code; D6, V2's scope (i); the Gate frozen.
+            RULINGS ON 10-27: 06:33Z, V1 green under eight constraints;
+            07:05Z, certify emits obligations_canon whenever a cost proof
+            is present, the VSA texts not wired before the re-mint, this
+            entry first, N11 a release gate, the misses to this entry;
+            07:16Z, vsa emit refuses before the wiring, test_s170's
+            fixture fixed now; 07:25Z, disclosure A (D430-6); 08:00Z, v1
+            frozen, v2 after the wiring; 08:06Z, (i) (D430-4); 08:17Z, the
+            cause in the remint note and the landing constraint in this
+            entry (D430-5); 08:26Z, the draft of this entry accepted with
+            three additions (D430-4, D430-8, D430-9). r3 of the Gate,
+            4b8a21eb, adds one DISCLOSED line to 5.5 (D430-6). The
+            rejected-ideas entry for nous-trace is owed.
+
+    D430-2  N6. Every shipped offline cost-Farkas grader graded the
+            system it was handed. READ IN THE SEAT'S CONTAINER, at
+            ac096861, by fold of the module constants and by build: the 7
+            VERIFY_OFFLINE_PY* templates of dossier.py,
+            build_chain_net_verifier() (40bb2d49, missed by the Gate's
+            count of 9), VSA_VERIFY_OFFLINE_PY and the served copy of
+            vector v1: 10 texts, all printing "PROVEN offline". Driven by
+            the seat's probe, the grader of each template and of both VSA
+            texts returned True for the one-row system {"":"1"} and for an
+            unrelated two-row system, False for a feasible one; the
+            chain-net verifier carries the dossier grader byte-equal
+            (f9cffcba) and was not driven on its own. End to end, a
+            dossier whose manifest was re-signed by its own key over a
+            one-row cost.farkas.json printed PROVEN offline and VERDICT:
+            PASS (V1 red record, P4). DERIVED, read from code: the online
+            check_serialized_cost re-derives; offline, the second tier was
+            the operator's signature alone.
+
+    D430-3  THE CLOCK. The mint harness pins keys, timestamps and the
+            program, not the date NOUS reads to decide whether a price is
+            too old for --smt (90 days). READ IN THE SEAT'S CONTAINER:
+            published vector v1 reproduces 9 of 9 byte-equal only from a
+            tree of c2d9680 with _version.py at 5.73.0 (c2d9680 itself
+            bumped it to 5.73.1) and the date pinned on or before
+            2026-09-27: measured at 06-28, 06-29, 07-10 and 09-27, each
+            9/9; refused at 09-28, "verified 91 days ago". At c2d9680 as
+            committed, clock pinned: 4 files differ (smt_spec_sha256 and
+            what covers it). At ac096861: 6 differ (codegen, pricing and
+            spec digests). The command index.json prints, run from the
+            vector directory, and the one pin_clock.py prints, run from
+            the tree's root, each gave 9/9 verbatim, the second at
+            08:37:28Z. The published claim "any NOUS version; the bundle
+            is version-independent" was false because the digests depend
+            on the version, the price table, the code generator and the
+            clock; measured false at 5.73.1 and 7.0.0. DERIVED: every
+            vector minted without a pinned date stops reproducing 90 days
+            after its price's verified_date.
+
+    D430-4  RULING (i), 08:06Z: v1 stays the bytes published at c2d9680.
+            The arc touches its index.json only: the remint note replaced
+            by the measured terms of D430-3 and their cause;
+            reproduce.pinClock, reproduce.harness and reproduce.scope (the
+            bundle is the nine artifacts; the program, the harness and
+            pin_clock.py are reproduction inputs outside it, each pinned
+            by sha256); the boundary's FROZEN sentence (the verifier is
+            frozen, is not the current template, grades without
+            re-deriving, use v2). WHY: the alternative (ii), the re-minted
+            bytes as v1, would publish from this arc a verifier that
+            prints PROVEN offline over a system it does not re-derive,
+            which is NT-GATE-1 5.8's kill line, and would change v1's
+            bytes once under the same URL. A re-mint with
+            obligations_canon was built (V1-B) and reverted (V1-E); after
+            the revert the v1 directory and test_s223 were byte-equal to
+            HEAD and test_s223 passed, 7. V1-B is kept, and it is not v2:
+            its diff, its installer and its logs are in kit v1b,
+            1ac2ada2, in the container and with the operator. Its bytes
+            cannot be v2's: one of the nine artifacts is the verifier, and
+            V1-B's was the unwired template; v2 is minted at its own
+            version with the date pinned. What passes to v2 is V1-B's one
+            change to the harness, the certificate built with
+            obligations_canon_for, which minted.
+
+    D430-5  LANDING CONSTRAINT. RULING, 08:17Z, recorded here: v1 is
+            frozen but NOT DEPLOYABLE until v2 exists; its new index.json
+            names v2. v2 carries the re-mint with obligations_canon, the
+            wired VSA verifier, a harness that pins the date, and a test
+            that reproduction does not depend on the clock (RULING,
+            08:06Z). The VSA template stays unwired until then; its four
+            V1 tests stay red by ruling, not by defect.
+
+    D430-6  DISCLOSURE, RULING A, 07:25Z. A certificate whose manifest
+            declares a cost proof carries the full spec canon, signed:
+            per-soul rates and token estimates, currency, NV, GA, GQ,
+            SA/SD, DE. Accepted for v1 because a dossier already ships
+            source.nous, which holds all of it. Stated in certify --help,
+            in docs/RUNTIME_CONFORMANCE.md and in the Gate's 5.5. The
+            alternative B (a certificate without its policy) needs a new
+            signed commitment over the cost lines alone, a new manifest
+            field and its own ceremony, irreversible for manifests already
+            issued, and new emit and verifier changes: its own gate, not
+            built.
+
+    D430-7  WHAT THE CONTAINER HOLDS, NOT LANDED. cost_farkas.py: one
+            marked region (_cost_rederive_grade, _cost_rederive_parse,
+            _cost_rederive_leg), carried byte-equal by the 7 dossier
+            templates and so by the chain-net and gap-witness verifiers;
+            the leg binds the canon to smt_spec_sha256, parses closed
+            shapes, compares cap, ticks and margin with the manifest,
+            re-derives, requires equality, then grades, and refuses a
+            dossier without spec.canon. dossier.py and dossier_spec.py
+            carry spec.canon with cost.farkas.json.
+            conformance.obligations_canon_for: certify embeds the canon
+            when the manifest declares a cost proof. vsa emit refuses a
+            cost leg the leg rejects. test_s170's fixture on a real
+            canon. v1's index.json and pin_clock.py. Base ac096861; main
+            has since moved to c73d1ea5, D426, which changes this document
+            only. Full suite at ac096861, frozen copy: 3615 passed, 31
+            skipped. With the changes, 08:20:38Z to 08:22:12Z, kit v1f
+            437ed683: 3666 passed, 4 failed (the VSA template's P2, P3,
+            P9, P10), 31 skipped, pytest exit 1; no existing test moved.
+            Mutants: X1..X6 on the leg and producer, C-X1 on the certify
+            rule, E-X1 on the emit refusal, each red where predicted (X1
+            only after c8, FG-S431-C).
+
+    D430-8  OPEN. N10: `nous verify --smt` and the dossier README print
+            "PROVEN ... across all execution paths" without the
+            declared-estimates condition, and so does vector v1's
+            index.json boundary: "The two Farkas legs PROVE ... that no
+            admissible execution exceeds the declared cost cap" (V1-B
+            record, finding 3); this arc edits that file and not that
+            sentence. N11: the 7 dossier template shas moved; the next
+            release needs a registry signature and its anchoring. D4:
+            0/1/2 gives three codes, V3 asks four classes. The rekor_v2
+            dossier verifier carries no cost check and its scope line does
+            not say so. The rejected-ideas entry for nous-trace. Three
+            test names say eight files: test_dossier_coverage's asserts
+            nine at HEAD and ten with spec.canon; test_dossier_spec_cli's
+            and test_s95's assert the nine their own markers name. Noted
+            and left. None of them is test_s223, which is byte-equal to
+            HEAD and passes, 7 (D430-4).
+
+    D430-9  NEXT QUESTION, NOT A DECISION: NV. smt_emit.canonical_str
+            starts with NV:<installed version>, so every release moves
+            every spec digest and every vector minted through the real
+            producers, and every release already stops existing manifests
+            binding on the checks that re-derive the spec. READ IN THE
+            SEAT'S CONTAINER at 08:37:26Z and 08:37:27Z, in a tree of
+            c2d9680 with the price table and the date pinned, the canon's
+            first line its one difference: v1's manifest bound at 5.73.0,
+            and at 5.73.1 failed "binding: spec.sha256() !=
+            manifest.smt_spec_sha256". DERIVED, read from code at
+            c73d1ea5: dossier.py:733 refuses to build on the same digest
+            and the --source check at cli.py:1495 refuses on it. Moving
+            NV out of the canon would stop that after one more move, so
+            invalidating manifests is not why it waits. It waits because
+            NV is what ties the signed spec digest to the version that
+            emitted it: without NV the digest names no version unless a
+            new signed field does, which changes what every manifest
+            signature commits to and needs its own ceremony, outside
+            NT-GATE-1's scope (D2). Not touched here; if decided, its own
+            gate with its own migration. D426-12 carries the same question
+            from S425's board: online re-derivation bound to the minting
+            version.
+
+    D430-10 WHAT THIS SEAT WROTE AND READ. To this repository: this entry,
+            after its pames, and nothing else. To Server A: nothing; this
+            entry's two tools when the operator uploads them. To the
+            operator: the Gate, the V1 red and green kits, the kits of V1-B
+            to V1-F, the draft of this entry and this entry's kit. The
+            project: read at 08:29Z, claude/s416/D416_LAND.py and
+            D416_COMMIT.py, the templates of this entry's tools; no write
+            since 08:22Z. Seat network, as the seat's records hold it:
+            clones of the public repository at 15:41:16Z, 17:21:26Z and
+            17:33:19Z on 10-26; the venv from PyPI on 10-26; web searches
+            and page fetches for the Gate on 10-26; fetches at 06:3xZ and
+            07:06:32Z, one of them not named before it ran (FG-S431-G); the
+            mirror clone at 08:34:45Z and the ls-remote of nous-langchain
+            at 08:34:49Z, both named first. The seat's transcript before
+            08:22Z was compacted: this list is what its records hold, not
+            a recount.
+
+    D430-11 WHAT STAYS OPEN. In order: this entry on A by D430_LAND.py and
+            D430_COMMIT.py, each step after its pame; then V1's code from
+            the container to the repository, its own kit and gates. V1's
+            file holds four tests red by ruling and the suite exits 1 with
+            them (D430-7), so V1 lands either with the wiring and v2
+            (D430-5) or with those four marked: the operator's choice, not
+            made. Then N11 at the next release; V2; V3; NV, its own gate
+            (D430-9); and the items of D430-8.
+
+    FINDINGS
+
+            FG-S431-A  SEAT. ONE PRODUCER MEASURED, THREE EXIST.
+                       cost.farkas.json is written by dossier.py,
+                       dossier_spec.py and cli_vsa.py; the seat measured
+                       the first and predicted from it (V1 Miss 1).
+
+            FG-S431-B  SEAT. A CENSUS OF TEXTS THAT GRADE MISSED A TEXT
+                       THAT CARRIES THE GRADER. build_gap_witness_verifier
+                       carried the old grader as dead code and moved in
+                       the snapshot (V1 Miss 2).
+
+            FG-S431-C  SEAT. A CASE THE MANIFEST ALSO SEES CANNOT TEST A
+                       BIND. c4 changed MT, which the max_ticks compare
+                       refuses with or without the sha bind; mutant X1
+                       survived until c8 changed a line only the bind can
+                       see.
+
+            FG-S431-D  WORLD. THE SUITE ASSERTED N6 AS CORRECT.
+                       test_s170's fixture graded an unrelated two-row
+                       system under smt_spec_sha256 "b"*64 and asserted
+                       PROVEN offline.
+
+            FG-S431-E  WORLD. v1 DID NOT REPRODUCE AT THE COMMIT THAT
+                       PUBLISHED IT, and its index said any version would
+                       (D430-3).
+
+            FG-S431-F  WORLD. THE MINT HARNESS DOES NOT PIN THE CLOCK
+                       (D430-3).
+
+            FG-S431-G  SEAT. ERRORS OF THIS SEAT, CAUGHT. A git fetch not
+                       named before it ran. Probe imports left ignored
+                       bytecode in the first clone. A scratch script
+                       truncated its own input (copy only). A -k filter
+                       deselected test_s223 in a check. Two index
+                       sentences overclaimed before sending ("every later
+                       version"; "run from the checkout root" beside a
+                       command whose names exist only in the vector
+                       directory). A prediction's arithmetic counted gone
+                       failing tests as passed. The draft of this entry,
+                       accepted at 08:26Z, dropped two findings of the
+                       seat's own records (FG-S431-H and the N10 sentence
+                       of D430-8) and counted two of the three stale test
+                       names; corrected here. This entry's two tools were
+                       built and pre-validated before a predictions file
+                       was hashed; the predictions for the run on A were
+                       hashed after that, before any command on A.
+
+            FG-S431-H  WORLD. THE SUITE WRITES INTO ITS OWN TREE. After a
+                       full run the frozen copy at ac096861 held an
+                       ignored __pycache__/ and runtime_w_dry-run.json.
