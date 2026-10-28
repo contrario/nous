@@ -55,10 +55,21 @@
       "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v1/expected_exit.txt"
     }
   ],
-  "boundary": "Publishing EVIDENCES that the NOUS VSA evidence format is implementation-independent: any conforming verifier, in any language, that consumes these frozen bytes reproduces the canonical manifest body, the Ed25519 signature outcomes, and the cost- and coverage-Farkas verdicts byte-for-byte. The two Farkas legs PROVE (rational arithmetic, no solver, no NOUS install -- re-checkable with the Python standard library and cryptography alone) that no admissible execution exceeds the declared cost cap and that the declared policy coverage has no gap. Everything else EVIDENCES (Ed25519 authenticity and sha-equality identity). This is FORMAT conformance, not CONTENT conformance: it says nothing about whether any obligation is substantively correct or whether the governed action was appropriate. The signing keys are fixed, PUBLISHED vector keys (deterministic seeds), not operator keys -- their only purpose is reproducibility. NOUS is a monitor, not a guard.",
+  "boundary": "Publishing EVIDENCES that the NOUS VSA evidence format is implementation-independent: any conforming verifier, in any language, that consumes these frozen bytes reproduces the canonical manifest body, the Ed25519 signature outcomes, and the cost- and coverage-Farkas verdicts byte-for-byte. The two Farkas legs PROVE (rational arithmetic, no solver, no NOUS install -- re-checkable with the Python standard library and cryptography alone) that no admissible execution exceeds the declared cost cap and that the declared policy coverage has no gap. Everything else EVIDENCES (Ed25519 authenticity and sha-equality identity). This is FORMAT conformance, not CONTENT conformance: it says nothing about whether any obligation is substantively correct or whether the governed action was appropriate. The signing keys are fixed, PUBLISHED vector keys (deterministic seeds), not operator keys -- their only purpose is reproducibility. NOUS is a monitor, not a guard. FROZEN: this vector predates the offline re-derivation of the cost system. Its verify_vsa_offline.py is frozen at these bytes, does not match the current verifier template, and grades the cost certificate it is handed without re-deriving it from the program's spec: it would print PROVEN offline for any cost certificate whose multipliers collapse, whether or not it belongs to this program. The v2 vector carries a verifier that re-derives; use v2 for that check.",
   "reproduce": {
-    "remint": "python3 mint_vsa_vector.py vsa_conformance_vector_v1.nous <out>  (any NOUS version; the bundle is version-independent and reproduces these exact digests)",
+    "harness": {
+      "name": "mint_vsa_vector.py",
+      "note": "the mint harness the remint terms were measured with",
+      "sha256": "10323046d974d2e892f4892c96862b78178057112c03f55c6d993bf51a06110c"
+    },
+    "pinClock": {
+      "name": "pin_clock.py",
+      "note": "pins the date NOUS reads for price staleness, then runs the mint harness unchanged",
+      "sha256": "ac12742eff6ae0ddbc789a6f9bfc3e085aeed8821f4b46812f9511fd86dc78c8"
+    },
+    "remint": "python3 pin_clock.py 2026-07-10 mint_vsa_vector.py vsa_conformance_vector_v1.nous <out>  (measured 2026-10-27: gives all nine digests above from a checkout of c2d9680 with _version.py set to 5.73.0, the version that minted this vector, run in this directory of that checkout (pin_clock.py copied in from here) with PYTHONPATH set to the checkout root and a HOME without a NOUS price layer; any pinned date on or before 2026-09-27 does, 2026-09-28 is refused because the price is then 91 days old. This note replaces an earlier one that said any NOUS version reproduces these digests and that the bundle is version-independent. That was false because the digests depend on the NOUS version (the spec digest the manifest signs covers it), the price table, the code generator and the clock; it was measured false at c2d9680 itself (5.73.1) and at 7.0.0.)",
     "requires": "cryptography + Python standard library only; no NOUS install, no z3 for the offline re-proof",
+    "scope": "The bundle is the nine artifacts listed above, and only those. vsa_conformance_vector_v1.nous (vectorSource), mint_vsa_vector.py (harness) and pin_clock.py (pinClock) sit beside it as reproduction inputs: outside the bundle, each pinned here by sha256 so that the remint terms name the exact bytes they were measured with.",
     "verify": "python3 verify_vsa_offline.py  (in a dir holding manifest.json, trace.json, conformance.json, coverage.farkas.json, cost.farkas.json, vsa.intoto.json); expect exit 0 and the bytes in expected_stdout.txt"
   },
   "schema": "nous.vsa.vectors.index.v1",

@@ -147,7 +147,15 @@ def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
         help=(
             "embed the governing spec canonical preimage (obligations_canon) "
             "as a root-committed cert field for governance-change "
-            "attestation; off by default to keep certificates byte-identical"
+            "attestation; always embedded when the manifest declares a cost "
+            "proof (cost_farkas_sha256), so the offline verifier can "
+            "re-derive the cost system; this flag forces it otherwise. "
+            "DISCLOSURE: the canon is part of the signed certificate and "
+            "carries, per soul, the model rates and the token estimates "
+            "(input and output tokens, reasoning multiplier), the "
+            "currency, the NOUS version (NV), and the governance lines: "
+            "gated actions (GA), quorums (GQ), sequence laws (SA/SD) and "
+            "declared events (DE)"  # __nt_v1d_disclosure_help_v1__
         ),
     )
 
@@ -266,8 +274,11 @@ def _cmd_certify(args: argparse.Namespace) -> int:  # __nous_cli_conformance_cer
     priv, _pub, _key_path = load_or_create_keypair(
         Path(args.key_path) if args.key_path else None
     )
-    _ob_canon = (_spec.canonical_str()  # __s187b_1a_cli_pass_canon_v1__
-                 if getattr(args, "emit_obligations_canon", False) else None)
+    from conformance import obligations_canon_for  # __nt_v1b_certify_canon_rule_v1__
+    _ob_canon = obligations_canon_for(  # __s187b_1a_cli_pass_canon_v1__
+        manifest, _spec,
+        emit=bool(getattr(args, "emit_obligations_canon", False)),
+    )
     cert = build_certificate(
         detail, trace, manifest,
         nous_version=_NOUS_VERSION, issued_utc=issued,

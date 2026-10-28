@@ -175,6 +175,39 @@ where the relying party supplies that key, and a run without it does not.
 
 ---
 
+## What a cost-bearing certificate discloses
+
+<!-- __nt_v1d_disclosure_doc_v1__ -->
+When the manifest declares a cost proof (`cost_farkas_sha256`),
+`nous conformance certify` embeds the governing spec canon as
+`obligations_canon`, and the canon is part of the signed certificate. An
+offline verifier needs it to re-derive the cost system before it grades
+`cost.farkas.json`, and `nous vsa emit` refuses a cost leg whose
+certificate does not carry it.
+
+The canon carries, per soul, the model rates and the token estimates (input
+and output tokens, reasoning multiplier), the currency, the NOUS version
+(`NV`), and the governance lines: gated actions (`GA`), quorums (`GQ`),
+sequence laws (`SA`/`SD`) and declared events (`DE`). Without it, a
+certificate bundle showed each soul's per-call cost as one rational (in
+`cost.farkas.json`), the cap and `max_ticks`, but not the rate and token
+decomposition and not the governance lines.
+
+Decision (operator, 2026-10-27): accepted for v1. A dossier already ships
+the whole `source.nous`, which holds every one of these lines, so the canon
+adds no disclosure beyond the primary artifact. It makes the same content
+available in the certificate bundle, where the auditor needs it to check
+the cost proof; withholding it would give the auditor less than the check
+requires.
+
+When the alternative would apply: a deployment that must hand over a
+certificate without its policy. That needs a new signed commitment over the
+cost lines alone (a new manifest field), its own signing ceremony,
+irreversible for manifests already issued, and changes to `vsa emit` and to
+the offline verifiers. It is not built and needs its own Innovation Gate.
+
+---
+
 ## Honest limitations
 
 - The certificate checks that the **trace** conforms, not that the trace faithfully

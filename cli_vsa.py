@@ -319,6 +319,21 @@ def _cmd_emit(args: argparse.Namespace) -> int:
                 file=sys.stderr,
             )
             return 2
+        # __nt_v1c_emit_refusal_v1__ the same re-derivation the offline
+        # verifier runs: a cost leg is emitted only when the certificate's
+        # obligations_canon re-derives exactly this certificate.
+        from cost_farkas import _cost_rederive_leg
+        _ok, _why = _cost_rederive_leg(
+            manifest_doc, cost_doc, cert_doc.get("obligations_canon")
+        )
+        if not _ok:
+            print(
+                "PRECONDITION ERROR: cost leg refused: " + _why
+                + " (certify embeds obligations_canon when the manifest "
+                "declares a cost proof)",
+                file=sys.stderr,
+            )
+            return 2
 
     nous_version = cert_doc.get("nous_version")
     if not nous_version:

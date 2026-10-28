@@ -346,6 +346,10 @@ def build_dossier_spec(
     if cost_farkas_bytes is not None:  # __s175_g2_cost_emit_v1__
         (output / "cost.farkas.json").write_bytes(cost_farkas_bytes)
         files.append("cost.farkas.json")
+        (output / "spec.canon").write_bytes(  # __nt_v1_spec_canon_carry_v1__
+            spec.canonical_str().encode("utf-8")
+        )
+        files.append("spec.canon")
 
     (output / "SKILL.md").write_bytes(skill_md_bytes)
     files.append("SKILL.md")

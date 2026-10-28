@@ -1,0 +1,85 @@
+{
+  "artifacts": [
+    {
+      "kind": "signed_manifest",
+      "name": "manifest.json",
+      "sha256": "533160ec1f4554b2daf98d51cdb360376be28264e303d4fe28d249be57040549",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/manifest.json"
+    },
+    {
+      "kind": "signed_trace",
+      "name": "trace.json",
+      "sha256": "dd94a703545e3b892f572b01dba4d4dd905d73bbaef1964a54eb459fb8b2c398",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/trace.json"
+    },
+    {
+      "kind": "signed_certificate",
+      "name": "conformance.json",
+      "sha256": "d630029589420e0ed20ae3e2d6f76d1c73bd5c3645b9c644e9a2b0b967744706",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/conformance.json"
+    },
+    {
+      "kind": "coverage_farkas_certificate",
+      "name": "coverage.farkas.json",
+      "sha256": "6f75675f870a1569cb5791d1d6434261aa08240d725dde5bd90820361c09f7f7",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/coverage.farkas.json"
+    },
+    {
+      "kind": "cost_cap_farkas_certificate",
+      "name": "cost.farkas.json",
+      "sha256": "ae5dc446cd5e24f766da60b69788e7c6c19b45a89d3701fc084bd0f61f59e583",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/cost.farkas.json"
+    },
+    {
+      "kind": "vsa_dsse",
+      "name": "vsa.intoto.json",
+      "sha256": "b955a637bc9d2006922390243f0ca63f7b237f232e99dd09c703b3ed354606ef",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/vsa.intoto.json"
+    },
+    {
+      "kind": "offline_verifier",
+      "name": "verify_vsa_offline.py",
+      "sha256": "15ec5194c466f86aae89b9bc3e6a6e2fdfe3bd763e0ac574e5453d021d57c1e8",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/verify_vsa_offline.py"
+    },
+    {
+      "kind": "expected_verifier_stdout",
+      "name": "expected_stdout.txt",
+      "sha256": "312e1da5250f88f09c63d4fe2360ec143660aa3e417294314cd677b7af2eea79",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/expected_stdout.txt"
+    },
+    {
+      "kind": "expected_verifier_exit",
+      "name": "expected_exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "url": "https://nous-lang.org/.well-known/nous/vsa-vectors/v2/expected_exit.txt"
+    }
+  ],
+  "boundary": "Publishing EVIDENCES that the NOUS VSA evidence format is implementation-independent: any conforming verifier, in any language, that consumes these frozen bytes reproduces the canonical manifest body, the Ed25519 signature outcomes, and the cost- and coverage-Farkas verdicts byte-for-byte. The cost leg is re-derived before it is graded: the verifier rebuilds the cost system from the certificate's obligations_canon, whose sha256 must equal the manifest's signed smt_spec_sha256, and refuses a cost certificate whose constraints differ from it. The two Farkas legs PROVE (rational arithmetic, no solver, no NOUS install -- re-checkable with the Python standard library and cryptography alone) that, under the declared per-call token/tick estimates, no admissible execution exceeds the declared cost cap, and that the declared policy coverage has no gap. Runtime adherence to those estimates stays EVIDENCES via the signed trace. Everything else EVIDENCES (Ed25519 authenticity and sha-equality identity). This is FORMAT conformance, not CONTENT conformance: it says nothing about whether any obligation is substantively correct or whether the governed action was appropriate. The signing keys are fixed, PUBLISHED vector keys (deterministic seeds), not operator keys -- their only purpose is reproducibility; anyone can sign with them, so their signatures identify no party. NOUS is a monitor, not a guard.",
+  "reproduce": {
+    "harness": {
+      "name": "mint_vsa_vector.py",
+      "note": "the mint harness the remint terms were measured with",
+      "sha256": "88e81c05cf4c7cf7d9c9cc3d1742e41d12e29e3b687ecf1969b23f4d7d8ebb8a"
+    },
+    "remint": "python3 mint_vsa_vector.py vsa_conformance_vector_v2.nous <out>  (measured 2026-10-27: gives all nine digests above, run in this directory of the tree it was committed from, at NOUS 7.0.0 (_version.py), with PYTHONPATH set to the tree's root. The harness pins the date NOUS reads to judge a price's age to 2026-10-27 and loads the shipped pricing/defaults.toml by path, so neither the wall clock nor a price layer (~/.config/nous/prices.toml, ./nous_prices.toml) changes the bytes; the suite checks that by minting under two wall clocks and with both layers present. The bytes do depend on the NOUS version (NV, the first line of the signed spec canon), the shipped price table and the code generator: at another version or price table the remint differs, and these digests stay the record of this one.)",
+    "requires": "cryptography + Python standard library only; no NOUS install, no z3 for the offline re-proof",
+    "scope": "The bundle is the nine artifacts listed above, and only those. vsa_conformance_vector_v2.nous (vectorSource) and mint_vsa_vector.py (harness) sit beside it as reproduction inputs: outside the bundle, each pinned here by sha256 so that the remint terms name the exact bytes they were measured with.",
+    "verify": "python3 verify_vsa_offline.py  (in a dir holding manifest.json, trace.json, conformance.json, coverage.farkas.json, cost.farkas.json, vsa.intoto.json); expect exit 0 and the bytes in expected_stdout.txt"
+  },
+  "schema": "nous.vsa.vectors.index.v1",
+  "vectorKeys": {
+    "certificatePubkeyB64": "JUO5L/EJVRFHatyDadtt3JM2ZaEZeN2hQE7hBmypVZ0=",
+    "manifestPubkeyB64": "A6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=",
+    "note": "fixed PUBLISHED vector keys (deterministic seeds), not operator keys; only purpose is reproducibility",
+    "tracePubkeyB64": "Kay64UG8yvCyLhqU000LxzYeUm0L/hLIl5S8kyKWbdc=",
+    "vsaKeyid": "68894d58f18f2c34d49eb2f4b110e042cd0f3150a4dc39243d7f63bd598c0783"
+  },
+  "vectorSource": {
+    "name": "vsa_conformance_vector_v2.nous",
+    "note": "the frozen .nous program the bundle is minted from; drives one cost-cap and one coverage Farkas contradiction through the real producers",
+    "sha256": "7dd0129759b11127d979cb466eeac7557d8ca2bf5320d4fd7ad56544e8eca341"
+  },
+  "verifierId": "https://nous-lang.org/vsa/verifier/v1",
+  "version": "v2"
+}

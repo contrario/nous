@@ -27,32 +27,42 @@ from cryptography.hazmat.primitives.serialization import (
     PublicFormat,
 )
 
+import cost_farkas
 import vsa
 import vsa_verifier
 
-_COST_FARKAS = {
-    "fragment": "linear-real-cost-cap",
-    "cost_cap": "1/2",
-    "max_ticks": 5,
-    "constraints": [
-        {"coeffs": {"": "1", "x": "1"}, "strict": False},
-        {"coeffs": {"": "1", "x": "-1"}, "strict": False},
-    ],
-    "multipliers": ["1", "1"],
-    "contradiction": "2 < 0",
-}
-
-_COST_FARKAS_FORGED = {
-    "fragment": "linear-real-cost-cap",
-    "cost_cap": "1/2",
-    "max_ticks": 5,
-    "constraints": [
-        {"coeffs": {"": "-1", "x": "1"}, "strict": False},
-        {"coeffs": {"": "-1", "x": "-1"}, "strict": False},
-    ],
-    "multipliers": ["1", "1"],
-    "contradiction": "claimed but does not hold",
-}
+# __nt_v1c_s170_real_canon_v1__ The fixture was a two-row toy system under a
+# fake smt_spec_sha256: an unrelated infeasible system graded as PROVEN (the
+# N6 class). It is now the certificate cost_farkas derives from one closed-
+# shape spec canon, bound to the manifest by sha256, carried by the cert.
+_CANON = "\n".join((
+    "NV:test",
+    "EV:1.0",
+    "SS:" + "a" * 64,
+    "PS:" + "c" * 64,
+    "W:alpha",
+    "CC:0.5|USD",
+    "MT:5",
+    "D:cost_S_per_call:Real",
+    "D:cost_S_total:Real",
+    "D:total_cost:Real",
+    "A:(assert (= cost_S_per_call (/ (+ (* 1 100) (* 2 50)) 1000000)))",
+    "A:(assert (= cost_S_total (* cost_S_per_call 5)))",
+    "A:(assert (= total_cost cost_S_total))",
+    "O:(assert (not (<= total_cost (/ 1 2))))",
+))
+_SMT = hashlib.sha256(_CANON.encode("utf-8")).hexdigest()
+_PER_CALL, _MT, _CAP, _MARGIN = cost_farkas._cost_rederive_parse(_CANON)
+_COST_FARKAS = cost_farkas.extract_cost_certificate(
+    souls=[cost_farkas.SoulCost(name=k, per_call=v)
+           for k, v in _PER_CALL.items()],
+    max_ticks=_MT, cost_cap=_CAP, margin_pct=_MARGIN,
+)
+_COST_FARKAS_FORGED = dict(
+    _COST_FARKAS,
+    multipliers=["1"] * len(_COST_FARKAS["multipliers"]),
+    contradiction="claimed but does not hold",
+)
 
 
 def _pub_b64(priv: Ed25519PrivateKey) -> str:
@@ -109,7 +119,7 @@ def _cost_bundle(dirp, *, with_cost: bool = True, cost_doc: dict | None = None):
     tk = Ed25519PrivateKey.generate()
     ck = Ed25519PrivateKey.generate()
     vk = Ed25519PrivateKey.generate()
-    src, smt, pri, cg = "a" * 64, "b" * 64, "c" * 64, "d" * 64
+    src, smt, pri, cg = "a" * 64, _SMT, "c" * 64, "d" * 64
 
     doc = cost_doc if cost_doc is not None else _COST_FARKAS
     cost_bytes = json.dumps(doc, sort_keys=True, separators=(",", ":")).encode()
@@ -118,7 +128,7 @@ def _cost_bundle(dirp, *, with_cost: bool = True, cost_doc: dict | None = None):
     manifest = {
         "world_name": "alpha", "source_sha256": src,
         "smt_spec_sha256": smt, "pricing_sha256": pri,
-        "codegen_sha256": cg,
+        "codegen_sha256": cg, "cost_cap_usd": "0.5", "max_ticks": 5,
     }
     if with_cost:
         manifest["cost_farkas_sha256"] = cost_sha
@@ -137,6 +147,8 @@ def _cost_bundle(dirp, *, with_cost: bool = True, cost_doc: dict | None = None):
         "codegen_sha256": cg,
     }
     cert.update(bools)
+    if with_cost:
+        cert["obligations_canon"] = _CANON
     cert = _sign(cert, ck, _cert_canon)
 
     man_sha = hashlib.sha256(_manifest_canon(manifest)).hexdigest()

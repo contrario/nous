@@ -11,7 +11,25 @@ verifier, and confirm byte-for-byte that the canonical manifest body, the
 Ed25519 signatures, and the cost- and coverage-Farkas verdicts are exactly what
 NOUS produces.
 
-Served at: `https://nous-lang.org/.well-known/nous/vsa-vectors/v1/`
+Served at: `https://nous-lang.org/.well-known/nous/vsa-vectors/v2/` (the
+current vector) and `https://nous-lang.org/.well-known/nous/vsa-vectors/v1/`
+(frozen).
+
+<!-- __nt_w_docs_v2_v1__ -->
+## v2, and why v1 is frozen
+
+v2's verifier re-derives the cost system before it grades the cost-cap
+certificate. The conformance certificate carries the spec canon
+(`obligations_canon`); its sha256 must equal the manifest's signed
+`smt_spec_sha256`, its cap, ticks and margin must equal the manifest's, and
+a cost certificate whose constraints differ from the system rebuilt from it
+is refused before its multipliers are graded.
+
+v1 is frozen: its bytes are the ones published at c2d9680. Its verifier
+grades the cost certificate it is handed without re-deriving it, so it
+accepts a one-row certificate re-signed with the published vector keys
+(measured 2026-10-27; v2's verifier refuses the same bundle). Use v2 for the
+cost check.
 
 ## What is in the bundle
 
@@ -20,7 +38,7 @@ Served at: `https://nous-lang.org/.well-known/nous/vsa-vectors/v1/`
 | `vsa.intoto.json` | the DSSE-wrapped in-toto VSA (the summary attestation) |
 | `manifest.json` | the signed static-proof manifest (input attestation) |
 | `trace.json` | the signed execution trace (input attestation) |
-| `conformance.json` | the signed conformance certificate (input attestation) |
+| `conformance.json` | the signed conformance certificate (input attestation; in v2 it carries `obligations_canon`) |
 | `coverage.farkas.json` | the coverage Farkas certificate (a PROVES leg) |
 | `cost.farkas.json` | the cost-cap Farkas certificate (a PROVES leg) |
 | `verify_vsa_offline.py` | the self-contained offline verifier (cryptography + stdlib) |
@@ -40,22 +58,35 @@ Expect exit `0`, `VERDICT: PASS`, and stdout byte-identical to
 `expected_stdout.txt`. The verifier needs `cryptography` and the standard
 library only. It does not import NOUS and does not call a solver.
 
-To regenerate the bundle from its source program (any NOUS version -- the
-bundle is version-independent):
+To regenerate the bundle from its source program, the digests reproduce only
+at the NOUS version, shipped price table and code generator it was minted with
+(the signed spec canon and the program digest carry them, so the digests move
+with any of the three), and only with the date pinned inside the price table's
+90-day window. For v1 the measured terms are in `index.json` (`reproduce`):
+a checkout of c2d9680 with `_version.py` at 5.73.0, and
 
-    python3 mint_vsa_vector.py vsa_conformance_vector_v1.nous <out_dir>
+    python3 pin_clock.py 2026-07-10 mint_vsa_vector.py \
+        vsa_conformance_vector_v1.nous <out_dir>
 
-The mint harness pins every non-deterministic input (four fixed Ed25519 seeds,
-fixed timestamps, the frozen source program) and runs the whole mint twice,
-asserting the bundle bytes, the verifier stdout, and the exit code are
-byte-identical across runs. The published digests are what any conforming
-reproduction yields.
+The mint harness pins four fixed Ed25519 seeds, fixed timestamps and the
+frozen source program, and runs the whole mint twice, asserting the bundle
+bytes, the verifier stdout, and the exit code are byte-identical across runs.
+v1's harness does not pin the date NOUS reads to decide whether a price is
+too old for `--smt`; `pin_clock.py` does. v2's harness pins that date
+(2026-10-27) itself and loads the shipped `pricing/defaults.toml` by path, so
+neither the wall clock nor a price layer changes its bytes. Its terms are in
+v2's `index.json`: in the v2 directory of the tree it was committed from, at
+NOUS 7.0.0,
+
+    python3 mint_vsa_vector.py vsa_conformance_vector_v2.nous <out_dir>
 
 ## The source program
 
-`vsa_conformance_vector_v1.nous` is the frozen input the bundle is minted from.
-It is owned by the vector alone -- no test or module references it -- so it
-cannot move out from under a third party's reproduction. It is minimal and
+`vsa_conformance_vector_v1.nous` and `vsa_conformance_vector_v2.nous` (the
+same program, its header naming v2) are the frozen inputs the bundles are
+minted from. Each is owned by its vector alone -- no test or module
+references it -- so it cannot move out from under a third party's
+reproduction. It is minimal and
 drives two contradictions through the real NOUS producers:
 
 - a cost-cap Farkas contradiction: the declared `cost_cap`, `tokens`, and
@@ -73,7 +104,9 @@ PROVES (rational arithmetic, no solver, no NOUS install). The two Farkas
 certificates re-prove offline, by exact rational arithmetic over `fractions`
 in the standard library, that:
 
-- no admissible execution exceeds the declared cost cap (cost-cap Farkas), and
+- under the declared per-call token/tick estimates, no admissible execution
+  exceeds the declared cost cap (cost-cap Farkas); runtime adherence to those
+  estimates stays EVIDENCES via the signed trace, and
 - the declared policy coverage has no gap (coverage Farkas).
 
 "Proves" is reserved for these Farkas legs. They are re-checkable with the

@@ -54,6 +54,7 @@ def test_dossier_with_coverage_has_eight_files(tmp_path):  # __s116_dossier_fark
         "public_key.b64", "README.md", "verify_offline.py",
         "coverage.smt2", "coverage.farkas.json",
         "cost.farkas.json",  # __s170_leg2b_dossier_goldens_v1__
+        "spec.canon",  # __nt_v1_spec_canon_carry_v1__
     }
     assert set(result.files) == expected
     for f in expected:

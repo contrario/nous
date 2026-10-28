@@ -337,3 +337,256 @@ def cost_certificate_from_smtspec(spec: object) -> Optional[dict]:
         cost_cap=spec.cost_cap_amount,
         margin_pct=int(getattr(spec, "cost_cap_margin_pct", 0) or 0),
     )
+
+
+# --- cost rederive embed (shared text; canonical copy: cost_farkas.py) ---
+# Every offline verifier that grades cost.farkas.json carries this region
+# byte-for-byte; tests/test_nt_v1_cost_rederive.py names any copy that
+# drifts. Standard library only. __nt_v1_cost_rederive_v1__
+def _cost_rederive_grade(doc):
+    from fractions import Fraction
+    constraints = doc.get("constraints")
+    multipliers = doc.get("multipliers")
+    if not isinstance(constraints, list) or not isinstance(
+        multipliers, list
+    ):
+        return False
+    if len(constraints) != len(multipliers):
+        return False
+    lam = []
+    for m in multipliers:
+        try:
+            lam.append(Fraction(m))
+        except (ValueError, TypeError, ZeroDivisionError):
+            return False
+    if any(x < 0 for x in lam):
+        return False
+    if not any(x > 0 for x in lam):
+        return False
+    combined = {}
+    strict = False
+    for x, c in zip(lam, constraints):
+        if x == 0:
+            continue
+        if not isinstance(c, dict):
+            return False
+        coeffs = c.get("coeffs")
+        if not isinstance(coeffs, dict):
+            return False
+        for k, v in coeffs.items():
+            try:
+                fv = Fraction(v)
+            except (ValueError, TypeError, ZeroDivisionError):
+                return False
+            combined[k] = combined.get(k, Fraction(0)) + x * fv
+        if c.get("strict"):
+            strict = True
+    for k, v in combined.items():
+        if k != "" and v != 0:
+            return False
+    const = combined.get("", Fraction(0))
+    if const > 0:
+        return True
+    if const == 0 and strict:
+        return True
+    return False
+
+
+def _cost_rederive_parse(canon_text):
+    # The closed shapes smt_emit.canonical_str writes for the cost leg:
+    # CC, MT, MARGIN, and four A: shapes. Any other A: line refuses.
+    # Returns (per_call_by_soul, max_ticks, cap, margin) or a reason.
+    import re
+    from fractions import Fraction
+    nm = r"[^\s()]+"
+    rt = r"[0-9]+|\(/ [0-9]+ [0-9]+\)"
+    re_cc = re.compile(r"CC:([0-9]+(?:\.[0-9]+)?)\|([A-Z]{3})")
+    re_mt = re.compile(r"MT:([0-9]+)")
+    re_mg = re.compile(r"MARGIN:([0-9]+)")
+    re_pc = re.compile(
+        r"A:\(assert \(= cost_(" + nm + r")_per_call \(/ \(\+ \(\* ("
+        + rt + r") ([0-9]+)\) \(\* (" + rt + r") ([0-9]+)(?: ("
+        + rt + r"))?\)\) 1000000\)\)\)"
+    )
+    re_tt = re.compile(
+        r"A:\(assert \(= cost_(" + nm + r")_total \(\* cost_(" + nm
+        + r")_per_call ([0-9]+)\)\)\)"
+    )
+    re_s1 = re.compile(
+        r"A:\(assert \(= total_cost cost_(" + nm + r")_total\)\)"
+    )
+    re_sn = re.compile(
+        r"A:\(assert \(= total_cost \(\+ ((?:cost_" + nm
+        + r"_total)(?: cost_" + nm + r"_total)+)\)\)\)"
+    )
+    re_tok = re.compile(r"cost_(" + nm + r")_total")
+
+    def rate(s):
+        if s.startswith("(/ "):
+            n, d = s[3:-1].split(" ")
+            if int(d) == 0:
+                return None
+            return Fraction(int(n), int(d))
+        return Fraction(int(s))
+
+    head = {}
+    per_call = {}
+    totals = {}
+    sums = []
+    for line in canon_text.split("\n"):
+        for tag, rx in (("CC", re_cc), ("MT", re_mt), ("MARGIN", re_mg)):
+            if line.startswith(tag + ":"):
+                if tag in head:
+                    return "duplicate " + tag + " line"
+                m = rx.fullmatch(line)
+                if m is None:
+                    return tag + " line outside the closed shape"
+                head[tag] = m.group(1)
+                break
+        if not line.startswith("A:"):
+            continue
+        m = re_pc.fullmatch(line)
+        if m is not None:
+            soul = m.group(1)
+            r_in, r_out = rate(m.group(2)), rate(m.group(4))
+            mult = rate(m.group(6)) if m.group(6) else Fraction(1)
+            if r_in is None or r_out is None or mult is None:
+                return "zero denominator in a rate"
+            if soul in per_call:
+                return "duplicate per-call line for soul " + soul
+            per_call[soul] = (
+                r_in * int(m.group(3)) + r_out * int(m.group(5)) * mult
+            ) / 1000000
+            continue
+        m = re_tt.fullmatch(line)
+        if m is not None:
+            if m.group(1) != m.group(2):
+                return "total line names two souls"
+            if m.group(1) in totals:
+                return "duplicate total line for soul " + m.group(1)
+            totals[m.group(1)] = int(m.group(3))
+            continue
+        m = re_s1.fullmatch(line)
+        if m is not None:
+            sums.append([m.group(1)])
+            continue
+        m = re_sn.fullmatch(line)
+        if m is not None:
+            sums.append([re_tok.fullmatch(t).group(1)
+                         for t in m.group(1).split(" ")])
+            continue
+        return "A: line outside the closed shapes"
+    if "CC" not in head or "MT" not in head:
+        return "CC or MT line missing"
+    max_ticks = int(head["MT"])
+    margin = int(head.get("MARGIN", "0"))
+    if max_ticks <= 0:
+        return "max_ticks is not positive"
+    if not 0 <= margin <= 99:
+        return "margin out of range"
+    if not per_call:
+        return "no per-call cost line"
+    if set(per_call) != set(totals):
+        return "a soul lacks its per-call or its total line"
+    if any(k != max_ticks for k in totals.values()):
+        return "a total line multiplies by other than MT"
+    if len(sums) != 1:
+        return "expected exactly one total_cost line"
+    if len(sums[0]) != len(set(sums[0])) or set(sums[0]) != set(per_call):
+        return "total_cost does not sum each soul's total once"
+    return per_call, max_ticks, Fraction(head["CC"]), margin
+
+
+def _cost_rederive_leg(manifest, cost_doc, canon_text):
+    # Re-derive the cost system from the spec canon the signed manifest
+    # names (smt_spec_sha256), require the certificate's constraints to
+    # equal it, then grade the multipliers. Pure; returns (bool, reason).
+    import hashlib
+    import json
+    from fractions import Fraction
+    if not isinstance(manifest, dict):
+        return False, "manifest is not a JSON object"
+    if not isinstance(canon_text, str):
+        return False, (
+            "no spec canon: the cost system cannot be re-derived, so the "
+            "cost-cap Farkas certificate is not accepted"
+        )
+    want = manifest.get("smt_spec_sha256")
+    got = hashlib.sha256(canon_text.encode("utf-8")).hexdigest()
+    if not isinstance(want, str) or got != want:
+        return False, (
+            "spec canon sha256 != manifest smt_spec_sha256 (spec canon "
+            "tampered or substituted)"
+        )
+    parsed = _cost_rederive_parse(canon_text)
+    if isinstance(parsed, str):
+        return False, "spec canon refused: " + parsed
+    per_call, max_ticks, cap, margin = parsed
+    try:
+        man_cap = Fraction(str(manifest.get("cost_cap_usd")))
+    except (ValueError, ZeroDivisionError):
+        return False, "manifest cost_cap_usd is not a rational"
+    if man_cap != cap:
+        return False, "spec canon cap != manifest cost_cap_usd"
+    man_mt = manifest.get("max_ticks")
+    if type(man_mt) is not int or man_mt != max_ticks:
+        return False, "spec canon max_ticks != manifest max_ticks"
+    man_mg = manifest.get("safety_margin_pct")
+    if man_mg is None:
+        man_mg = 0
+    if type(man_mg) is not int or man_mg != margin:
+        return False, "spec canon margin != manifest safety_margin_pct"
+    eff = cap if margin == 0 else cap * Fraction(100 - margin, 100)
+    mt = Fraction(max_ticks)
+    rows = []
+    for soul in sorted(per_call):
+        pc = "cost_" + soul + "_per_call"
+        tt = "cost_" + soul + "_total"
+        rows.append(({pc: Fraction(1), "": -per_call[soul]}, False))
+        rows.append(({tt: Fraction(1), pc: -mt, "": Fraction(0)}, False))
+    total = {"total_cost": Fraction(1), "": Fraction(0)}
+    for soul in sorted(per_call):
+        total["cost_" + soul + "_total"] = Fraction(-1)
+    rows.append((total, False))
+    rows.append(({"total_cost": Fraction(-1), "": eff}, True))
+
+    def canon_rows(constraints):
+        if not isinstance(constraints, list):
+            return None
+        out = []
+        for c in constraints:
+            if not isinstance(c, dict):
+                return None
+            coeffs = c.get("coeffs")
+            if not isinstance(coeffs, dict):
+                return None
+            try:
+                norm = {
+                    str(k): str(Fraction(v))
+                    for k, v in sorted(coeffs.items())
+                }
+            except (ValueError, TypeError, ZeroDivisionError):
+                return None
+            out.append(json.dumps(
+                {"coeffs": norm, "strict": bool(c.get("strict"))},
+                sort_keys=True, separators=(",", ":"),
+            ))
+        return sorted(out)
+
+    if not isinstance(cost_doc, dict):
+        return False, "cost certificate is not a JSON object"
+    want_rows = canon_rows([{"coeffs": r, "strict": s} for r, s in rows])
+    got_rows = canon_rows(cost_doc.get("constraints"))
+    if got_rows is None or got_rows != want_rows:
+        return False, (
+            "cost certificate constraints != the cost system re-derived "
+            "from the spec canon (substituted or forged certificate)"
+        )
+    if not _cost_rederive_grade(cost_doc):
+        return False, (
+            "cost-cap Farkas certificate does NOT prove the bound: the "
+            "declared multipliers do not collapse the linear system to a "
+            "numeric contradiction (cost overrun or forged certificate)"
+        )
+    return True, "re-derived from the spec canon, equal, and graded"
+# --- end cost rederive embed ---

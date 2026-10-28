@@ -788,6 +788,21 @@ def _cert_public_key_raw_b64(public_key: Ed25519PublicKey) -> str:  # __nous_con
     return base64.b64encode(raw).decode("ascii")
 
 
+def obligations_canon_for(  # __nt_v1b_certify_canon_rule_v1__
+    manifest: Manifest,
+    spec: "SMTSpec",
+    emit: bool = False,
+) -> Optional[str]:
+    """The one rule for carrying the governing spec canon in a
+    certificate: always when the manifest declares a cost proof
+    (cost_farkas_sha256), so an offline verifier can re-derive the cost
+    system it grades; otherwise only on request. The canon is what the
+    signed manifest names by smt_spec_sha256."""
+    if emit or manifest.cost_farkas_sha256 is not None:
+        return spec.canonical_str()
+    return None
+
+
 def build_certificate(  # __nous_conformance_certificate_v1__
     detail: ConformanceDetail,
     trace: TraceEnvelope,
