@@ -22400,3 +22400,267 @@ document itself.
             FG-S431-N  SEAT. THE CONTAINER CANNOT READ CI OR THE SERVED
                        SITE. Both were refused (D431-9); the served read
                        was made on A, and CI stays unread.
+
+  - S432 the number the operator gave the third entry of the seat S431,
+    which carries D431's landing, V2 red and green in the container, V2
+    landed as 798c6cfd and served, and what that step found
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D431, which is landed and
+    append-only. READ IN THE SEAT'S CONTAINER: computed off host by S431,
+    on its clones of the public repository or a mirror clone of it, in a
+    venv from PyPI. ON A: printed on Server A by a command the operator
+    ran and pasted back, chat text. DERIVED: computed from printed values
+    or read from code. OPERATOR: stated by the operator. RULING: a
+    decision the operator stated in words. Every time below is in UTC, on
+    10-28 of 2026. An operator's time is the time his message was sent; a
+    value ON A carries the clock its command printed where it printed
+    one. The seat's working context before 01:35Z survives only as its
+    own summary; values from that part are taken from its records, named
+    by file and digest, not from memory.
+
+    THE NUMBER. OPERATOR, 09:44Z: 432, in answer to the seat's question
+    which number the V2 entry takes; read as the number of the seat's
+    third entry, as S417 was the third of S415. READ IN THE SEAT'S
+    CONTAINER from 09:44:58Z to 09:49:26Z, on the mirror fetched at
+    09:44:58Z, 162 refs and 1026 commits, main at 798c6cfd: the header
+    "  - S432 ", the anchor D432-, the marker __s432_, the token FG-S432
+    and the codes FG-S431-O to FG-S431-Y counted zero in the text files
+    of the tree of every ref and in every commit message on every ref.
+    FG-S431-Z counted 1, in main, in D431's words "FG-S431-I to
+    FG-S431-Z": the end of a range it checked, not a code. Controls on
+    the same instrument, in main: the header "  - S431 " 2 (the header
+    and D431's quotation of it), the anchor D431- 14, FG-S431-I 3. The
+    instrument that appends this entry refuses unless the header, the
+    anchor, the marker, the token and the codes below still count zero
+    in the document when it runs. The codes below are this seat's,
+    FG-S431-O to FG-S431-X.
+
+    D432-1  THE LANDING OF D431. ON A, each write after its pame:
+            D431_LAND and D431_COMMIT, each green by the operator's
+            pastes; the pastes are not in the seat's records, the
+            readback is. READ IN THE SEAT'S CONTAINER at 09:50:38Z on
+            the mirror of 09:44:58Z: 0d1eb344, parent 8c29ea03, author
+            date 01:02:40Z, one path, M docs/GLM_SUPERSESSION_DESIGN.md,
+            blob 4fcdecfe; the message equal to d431_message.txt.
+
+    D432-2  WHAT THE OPERATOR SAID. After D431's push: a screenshot of
+            the repository's Actions page, and look at this first, then
+            continue in the seat's order (FG-S431-V). Before 01:14:28Z:
+            proceed to V2. 01:20Z: is the proposal to keep the VSA texts
+            out of V2 correct, and why; the principal engineering move,
+            with evidence; research online (V2_PREDICTIONS_ADDENDUM.md).
+            After 01:23:00Z: proceed. 09:35Z to 09:42Z: pame before each
+            write on A (D432-8, D432-9). 09:44Z: 432.
+
+    D432-3  V2, RED, IN THE CONTAINER. Base: a fresh clone at 0d1eb344,
+            porcelain 0. V2_PREDICTIONS.md d4a8ec92 at 01:14:28Z, before
+            any V2 test: the recomputation reads the rates from the
+            certificate's spec canon, lives in one region of
+            conformance.py carried by both offline conformance texts,
+            and covers binding, surface, assumption discharge and bound
+            transfer, D6 (i). Red (V2_RED_RECORD.md ee710548): 24 cases,
+            22 failed by assertion, 2 passed; the suite 01:17:41Z to
+            01:19:12Z, 3683 passed, 22 failed, 31 skipped. At red, a
+            certificate re-signed by a fresh key, every boolean true,
+            over a re-signed trace of six calls at 10^7 input and 10^6
+            output tokens, passed both shipped conformance texts with
+            exit 0. A defect of the test's own, exec into a plain dict,
+            was fixed before any V2 code.
+
+    D432-4  ADDENDUM 1: WHY THE VSA TEXTS STAYED OUT. Measured at
+            01:22:22Z (forge_v2_expensive_out.txt a78aa6cf): the
+            published v2 bundle, its trace replaced by four calls at
+            about 180 USD against a cap of 0.1 USD and re-signed with
+            the published vector seeds, passed the served v2 VSA
+            verifier, exit 0 and VERDICT: PASS, and the shipped
+            conformance verifier on the same three files.
+            V2_PREDICTIONS_ADDENDUM.md 40a37d07 at 01:23:00Z: the
+            recomputation stays in the two conformance texts; the VSA
+            texts get no second copy now, since V3 changes them and one
+            v3 vector carries both changes; v2's index.json discloses
+            the boundary and names the composition with
+            verify_conformance_offline.py over the same three files.
+            Red with Q11 and Q12 at 01:23:18Z: 27 cases, 25 failed, 2
+            passed; the addendum had said 28, 24 and 4, a MISS of its
+            arithmetic. The suite 01:23:29Z to 01:24:59Z, 3683 passed,
+            25 failed, 31 skipped.
+
+    D432-5  V2, GREEN. The region, marker __nt_v2_recompute_v1__: a
+            strict trace loader, a closed-shape parser of the canon, the
+            four obligations, and their comparison with the recorded
+            booleans and realized_total; a disagreement exits 1;
+            authorization_ok and sequence_ok are printed NOT RECOMPUTED.
+            Q5 compares the region with the online verify_conformance
+            over variants. At first green Q5 failed on a partial trust
+            triple, which the online envelope refuses and the region
+            accepted; the region now refuses it and a full triple joined
+            the variants. The suite 01:31:15Z to 01:32:46Z, 3708 passed,
+            31 skipped (full_v2_green.txt); claim_lint 406 files and 0
+            violations; sidecar_lint rc 0. Mutants 01:33:31Z to
+            01:34:24Z: VX3 to VX6 red where predicted, VX1 red on the
+            standalone text; VX2 survived (FG-S431-Q).
+
+    D432-6  ADDENDUM 2, AFTER GREEN. READ IN THE SEAT'S CONTAINER
+            between 01:36Z and 01:38:53Z: nous.lark's NAME admits
+            U+0370 to U+03FF, and nous_ast_runner.py writes trace.json
+            with ensure_ascii=False. A Greek-named soul gave a canon and
+            a trace that the first green region refused while the
+            online check passed (greek_probe.py). A full run at
+            01:36:53Z printed rc 0 with its summary line cut by tail;
+            superseded. V2_PREDICTIONS_ADDENDUM_2.md f5ec3b8c at
+            01:38:53Z, before Q13. Red at 01:39:17Z: 5 failed, 1
+            passed, as predicted. D8: souls named by the grammar's NAME
+            class; the trace read as strict UTF-8, non-ASCII only inside
+            strings. a16_at_cap and VX1b added. Final, 01:40:27Z to
+            01:41:54Z: 3714 passed, 31 skipped, rc 0, 33 V2 cases;
+            claim_lint 406 files and 0 violations; sidecar_lint rc 0;
+            VX1, VX1b and VX2 to VX6 each red where named
+            (v2_mutants_final.txt). V2_GREEN_RECORD.md 01b95579.
+
+    D432-7  TWO CANON PARSERS, MEASURED. V1's _cost_rederive_parse, in
+            the dossier and VSA texts, and V2's _conf_rc_parse_canon. On
+            13 canons and 1218 line mutations of them: 821 both accept
+            with equal per-call costs, MT and cap; 345 both refuse; 65
+            only V2 refuses (SS or PS dropped or doubled, an unknown
+            tag); none only V1 refuses; no value differs
+            (xparse_fuzz_out.txt). This EVIDENCES agreement on that
+            corpus and nothing beyond it; 47 of the repository's .nous
+            files do not emit with the shipped prices.
+
+    D432-8  THE LANDING OF V2. V2_LAND.py c771c88e, V2_COMMIT.py
+            2dba6577, V2_PAYLOAD.tar b7fa4058 holding 8 files, 7
+            modified and 1 new, manifest 61aa0fb4, message 8d40a023;
+            pre-validated on a fixture clone of 0d1eb344, 25 paths. No
+            predictions file was hashed for the run on A (FG-S431-U).
+            ON A: --dry 09:35Z, HEAD and origin 0d1eb344, FILES_OLD 8,
+            STATE BEFORE, ROOT_OWNER 986 981; --apply 09:36Z, READBACK 8
+            of 8, PORCELAIN_LINES 8; the suite 09:37:28Z to 09:39:54Z,
+            3733 passed, 12 skipped, rc 0, porcelain 8 after it, the
+            number stated in chat before the run; V2_COMMIT --dry 09:40Z,
+            lint 437 files and 0 violations; --commit 09:41Z, NEW_HEAD
+            798c6cfd, 8 files and 8 blobs as pinned; --push 09:41Z,
+            REMOTE_MAIN 798c6cfd. READ IN THE SEAT'S CONTAINER at
+            09:44:58Z: origin/main 798c6cfd, parent 0d1eb344, 1 added
+            and 7 modified, 8 blobs as pinned, the message equal to the
+            pinned one, author and committer the pinned identity at
+            09:40:59Z.
+
+    D432-9  THE DEPLOY, AND WHAT A THIRD PARTY SEES. ON A: the dry run
+            09:42Z, v2's index.json and its sidecar, nothing else;
+            --apply 09:43Z, the claim gate 437 files and 0 violations,
+            the same two files; served_mirror_check 09:43Z, 535
+            compared, 0 differ, 0 missing, 4 orphans, CLEAN, rc 0; the
+            served sidecar checks; v2's index.json fetched from
+            https://nous-lang.org through Cloudflare, 4b92913a, equal to
+            the committed bytes. The served v2 VSA verifier is
+            unchanged: it still passes the forged bundle of D432-4, and
+            its index now says what it does not recompute and names the
+            verifier that refuses that bundle.
+
+    D432-10 RESEARCH, READ ONLY, between 01:20Z and 01:23Z, for the
+            operator's question. SLSA VSA v1.2: a VSA delegates
+            verification to a trusted (signer, verifier) pair and does
+            not protect against a compromised verifier, so a passing VSA
+            is no stronger than the checks its verifier runs. LangSec on
+            parser differentials, CVE-2013-4787, two ZIP parsers that
+            disagreed on duplicate names: two copies of one check drift
+            apart, which is why one region is carried byte-equal by
+            every text that runs it, and why D432-7 measures the two
+            canon parsers that now exist.
+
+    D432-11 WHAT THIS SEAT WROTE AND READ SINCE D431 WAS DRAFTED. To this
+            repository: 0d1eb344 (D431), 798c6cfd, and this entry after
+            its pames. To /var/www on A: 2 files by the deploy. To /root
+            on A, uploaded by the operator: D431_LAND.py,
+            D431_COMMIT.py, V2_LAND.py, V2_COMMIT.py, V2_PAYLOAD.tar and
+            its sums file, and this entry's two tools. Network from A:
+            the commit tools' fetches, pushes and reads of the remote;
+            the GET of v2's index.json at 09:43Z. Seat network: a fetch
+            into the mirror at 01:03:35Z (the time its FETCH_HEAD held
+            when read at 09:44Z); web searches and page fetches between
+            01:20Z and 01:23Z; the fetch into the mirror at 09:44:58Z,
+            named before it ran. The
+            project: no write. The seat's harness asked five times, from
+            09:41Z to 09:44Z, to commit and push the container clone
+            (FG-S431-X).
+
+    D432-12 WHAT STAYS OPEN. In order: this entry on A by D432_LAND.py
+            and D432_COMMIT.py, each step after its pame. N11: the seven
+            dossier template digests (D431-10) and now the conformance
+            verifier text, 291b6a2e to 1e6e7254, need a registry
+            signature and its anchoring at the next release. V3: the VSA
+            texts, their recomputation or the composition, the
+            duplicate keys json.loads keeps in the VSA verifiers where
+            V2 refuses them, and a v3 vector. NV, its own gate. From
+            D431-10: N10; D4's three codes against four classes; the
+            rekor_v2 verifier's scope line; the rejected-ideas entry for
+            nous-trace; the three stale test names. DERIVED: nous-api on
+            A runs the modules it loaded at its start until it restarts;
+            a CLI call on A runs 798c6cfd now. D431-10's CI item is
+            closed by FG-S431-V.
+
+    FINDINGS
+
+            FG-S431-O  WORLD. N5 ON THE SHIPPED CONFORMANCE VERIFIERS. A
+                       certificate re-signed by any key, every boolean
+                       true, over a trace far above its cap, passed both
+                       with exit 0; the published v2 bundle forged with
+                       the published seeds passed them and the served v2
+                       VSA verifier. At 798c6cfd both conformance texts
+                       recompute and refuse it; the served v2 VSA
+                       verifier still passes it, as its index now says.
+
+            FG-S431-P  WORLD. GREEK NAMES. The grammar admits Greek
+                       letters in names and the runner writes trace.json
+                       unescaped; V2's first green refused genuine
+                       certificates of such worlds. Found by reading the
+                       grammar after green, fixed before landing (D8).
+                       No shipped verifier was affected.
+
+            FG-S431-Q  SEAT. A MUTANT SURVIVED. VX2, the cap compared
+                       with "<", passed every test: no variant sat on
+                       the cap. a16_at_cap, realized 0.50 against a cap
+                       of 0.50, turned it red.
+
+            FG-S431-R  SEAT. A MUTANT TOUCHED ONE TEXT OF TWO. VX1
+                       mutated the standalone text only; VX1b, on the
+                       anchored builder, turned the same tests red there.
+
+            FG-S431-S  SEAT. THE ASCII CHECK MISSED A NEW FILE.
+                       Backslash-u escapes in the seat's writes reached
+                       disk as raw characters, four lines of the new
+                       test file; the check had run on git diff, which
+                       omits untracked files. Found before packing and
+                       re-escaped by program; the kit's files were then
+                       checked whole.
+
+            FG-S431-T  SEAT. AN EXPECTATION FROM THE WRONG INSTRUMENT.
+                       Before V2_COMMIT --dry the seat said 406 lint
+                       files, the container's count; A scans 437, as
+                       D431's predictions already said.
+
+            FG-S431-U  SEAT. NO HASHED PREDICTIONS FOR THE RUN ON A. V1W
+                       had V1W_PREDICTIONS.md hashed before A; V2's
+                       expectations were stated in chat before each
+                       command, each met, none hashed.
+
+            FG-S431-V  SEAT. A FALSE PREMISE IN D431-10. It left "the CI
+                       run of 8c29ea03" open. READ IN THE SEAT'S
+                       CONTAINER at 09:50:38Z, the workflows at
+                       798c6cfd: release.yml runs on tags v*.*.*,
+                       nous-diff.yml on pull requests touching .nous
+                       files; no workflow runs on a push to main, so
+                       there was no such run to read.
+
+            FG-S431-W  SEAT. A WORD OUTSIDE THE BOUNDARY. Addendum 1's
+                       D6' says the composition was "proved on the
+                       served bytes"; a run evidenced it. The file is
+                       hashed and stays as written; nothing landed
+                       carries the word.
+
+            FG-S431-X  SEAT. THE HARNESS ASKED TO COMMIT. A stop hook of
+                       the seat's harness asked five times to commit and
+                       push the container clone. Declined each time: the
+                       clone's changes were A's 798c6cfd, its remote a
+                       scratch mirror, and commits are the operator's.
