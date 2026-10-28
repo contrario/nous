@@ -22189,3 +22189,214 @@ document itself.
             FG-S431-H  WORLD. THE SUITE WRITES INTO ITS OWN TREE. After a
                        full run the frozen copy at ac096861 held an
                        ignored __pycache__/ and runtime_w_dry-run.json.
+
+  - S431 the seat of NT-GATE-1, whose first entry is D430: D430 landed,
+    the VSA wiring and vector v2 built under ruling (a), V1 and W landed
+    as 8c29ea03 and served, and what that step found
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION. READ IN THE SEAT'S CONTAINER: computed
+    off host by S431, on its clones of the public repository or a mirror
+    clone of it, in a venv from PyPI. ON A: printed on Server A by a
+    command the operator ran and pasted back, chat text. DERIVED:
+    computed from printed values or read from code. OPERATOR: stated by
+    the operator. RULING: a decision the operator stated in words. Every
+    time below is in UTC, in 2026, on 10-28 unless it says 10-27. An
+    operator's time is the time his message was sent; a value ON A
+    carries the clock its command printed where it printed one.
+
+    THE NUMBER. OPERATOR, 00:51Z: 431, in answer to the seat's question
+    which numbers the entry and the seat take; read as the seat's own
+    number for its second entry, D430 being its first. The token S431
+    and the codes FG-S431-A to FG-S431-H are already in this document,
+    in D430. READ IN THE SEAT'S CONTAINER at 00:52:34Z, on the mirror
+    fetched then, 162 refs and 1024 commits, main at 8c29ea03: the
+    header "  - S431 ", the anchor D431-, the codes FG-S431-I to
+    FG-S431-Z and the marker __s431_ counted zero in the text files of
+    the tree of every ref and in every commit message on every ref; so
+    did the tokens of 432. Controls on the same instrument: the header
+    "  - S430 " 1 in main, the anchor D430- 11, FG-S431-A to FG-S431-H 13
+    in main and 1 in the messages. Before this entry the document held
+    none of the first four, and the instrument that appends this entry
+    refuses unless that is still so when it runs. The codes below are
+    this seat's, FG-S431-I to FG-S431-N.
+
+    D431-1  THE LANDING OF D430, ON 10-27. ON A, each write after its
+            pame: D430_LAND --dry 11:57Z, HEAD and origin c73d1ea5, the
+            document d70ce2d7, mode 644 and owner 986:981, NAMESPACE
+            eight zeros, DRY_RUN_GREEN; HM at 11:59:22Z, 35 drift lines,
+            each attributed in D426-5 and D426-8; OPERATOR, 11:59Z: all
+            free, the only chat at work; --apply 12:01Z, WROTE 6c0a9f18,
+            READBACK with mode and owner kept, APPLY_GREEN; D430_COMMIT
+            --dry 12:02Z, lint 437 files and 0 violations; --commit
+            12:02Z, NEW_HEAD cc55aead, CHECK_COMMIT OK; --push 12:03Z,
+            REMOTE_MAIN cc55aead, PUSH_GREEN. Each line as predicted in
+            D430_PREDICTIONS.md 77a24fa8. READ IN THE SEAT'S CONTAINER at
+            12:03:34Z on 10-27: origin/main cc55aead, parent c73d1ea5, one
+            path; the document 6c0a9f18, blob b378e9d3, its first 1335179
+            bytes the old document and its last 17913 the entry; the
+            message equal to the pinned one.
+
+    D431-2  RULINGS AFTER D430. 12:09Z on 10-27, (a): V1 lands together
+            with the VSA wiring and v2, in one landing, no test marked,
+            v1's index in git only when v2 exists. 12:26Z on 10-27: D4 of
+            the W predictions accepted as is, the clock test comparing
+            mints to each other and not to the published bytes. 00:17Z:
+            go with the proposed order if it is correct and evidenced,
+            and research online.
+
+    D431-3  W, RED AND GREEN, IN THE CONTAINER, ON 10-27. Base: V1-F
+            fast-forwarded to cc55aead from the local mirror, tracked
+            diff 8dda94ae unchanged, full suite 3666 passed, 4 failed,
+            31 skipped. W_PREDICTIONS.md 86224f3c at 12:15:31Z, before
+            any W test. Red: the V1 file 49 cases, 9 failing; the W file
+            7, failing by assertion; the suite 3665 passed, 16 failed, 31
+            skipped; a harness without the pins refused at a wall clock
+            of 2031-01-01 and moved 6 of 9 files under price layers.
+            Green: 102 targeted tests passed; the suite 3681 passed, 0
+            failed, 31 skipped; claim_lint 406 files and 0 violations;
+            sidecar_lint rc 0; v2's 10 sidecars OK. Mutants WX1 to WX5
+            each red where predicted, W1 red as well under the four that
+            touch the harness or a served file, s170 under none. Kits
+            w_red 1850a807 and w_green f64d3255.
+
+    D431-4  WHAT W CHANGED. vsa_verifier.py: the VSA template carries the
+            cost_farkas region byte-equal and its cost branch calls
+            _cost_rederive_leg on the certificate's obligations_canon,
+            failing closed. vsa-vectors/v2/: v1's program renamed; a
+            harness that builds the certificate with
+            obligations_canon_for, pins the date NOUS reads for price age
+            to 2026-10-27 in pricing and smt_emit for the whole mint, and
+            loads the shipped pricing/defaults.toml by path; nine
+            artifacts minted at 7.0.0; an index stating the bundle, the
+            remint command with no shim, the dependence on NV, the price
+            table and the code generator, the independence from the wall
+            clock and price layers, and a boundary that carries the
+            declared-estimates condition and says that anyone can sign
+            with the published vector keys. docs/VSA_CONFORMANCE_VECTORS
+            names v2 and says v1 is frozen. v2's cost.farkas.json and
+            coverage.farkas.json are byte-equal to v1's.
+
+    D431-5  THE ORDER, CORRECTED ON EVIDENCE. Proposed on 10-27: code,
+            then this entry, then the deploy. Kept: the code before the
+            entry, as fd840e6 before D425. Changed: the deploy at once
+            after the push and this entry after the deploy. DERIVED, read
+            from code at cc55aead: deploy_website.sh refuses while
+            website/ is dirty; served_mirror_check.py compares the
+            working tree's website/ with /var/www, so from the apply to
+            the deploy it reports DRIFT; nous-serve-integrity.timer runs
+            at minutes 0 and 30 with up to 120 s of random delay. The
+            apply was made at 00:33Z and the deploy finished at 00:47Z.
+
+    D431-6  THE LANDING OF V1 AND W. V1W_PREDICTIONS.md da80687d at
+            00:27:15Z, before any command on A; V1W_LAND.py a65acdf6,
+            V1W_COMMIT.py 158db00e, V1W_PAYLOAD.tar b2444f95 holding the
+            44 files, manifest 42f183a9; pre-validated on a fixture clone
+            of cc55aead. ON A, each write after its pame: --dry 00:31Z,
+            HEAD and origin cc55aead, FILES_OLD 44, STATE BEFORE,
+            ROOT_OWNER 986 981, read on A for the first time; HM at
+            00:31:35Z, its 37 lines byte-equal to those of 11:59:22Z on
+            10-27 (READ IN THE SEAT'S CONTAINER, by diff of the two
+            pastes); OPERATOR, 00:31Z: all free; --apply 00:33Z, MKDIR
+            vsa-vectors/v2, READBACK 44 of 44, PORCELAIN_LINES 44; the
+            suite 00:34:10Z to 00:36:33Z, 3700 passed, 12 skipped, exit 0,
+            porcelain 44 after it; V1W_COMMIT --dry 00:41Z, lint 437
+            files and 0 violations; --commit 00:44Z, NEW_HEAD 8c29ea03,
+            44 files and 44 blobs as pinned; --push 00:45Z, REMOTE_MAIN
+            8c29ea03. Each line as predicted, P1 to P7. READ IN THE
+            SEAT'S CONTAINER at 00:45:38Z: origin/main 8c29ea03, parent
+            cc55aead, 27 added and 17 modified, 44 blobs as pinned.
+
+    D431-7  THE DEPLOY, AND WHAT A THIRD PARTY SEES. ON A: the deploy's
+            dry run 00:46Z, v1's index.json and its sidecar changed,
+            v1/pin_clock.py, the directory v2/ and its 22 files new,
+            nothing else; --apply after its pame, 00:47Z, the claim gate
+            437 files and 0 violations, the same 25 files written;
+            served_mirror_check 00:48Z, 535 compared, 0 differ, 0
+            missing, 4 orphans, CLEAN, rc 0. ON A, 00:49Z: v2 fetched
+            from https://nous-lang.org through Cloudflare into a fresh
+            directory, index.json e9b48cf5 and verify_vsa_offline.py
+            15ec5194 as committed, the verifier exit 0, its stdout equal
+            to expected_stdout.txt. The one-row forgery was run in the
+            container on these same bytes (D431-3), not on the served
+            copy.
+
+    D431-8  RESEARCH, READ ONLY, 00:18Z TO 00:19Z. Felty, An Introduction
+            to Proof-Carrying Code (2002): the consumer checks the proof
+            against a safety predicate computed from the code it
+            received; V1 is that shape. Cheung, Gleixner, Steffy,
+            arXiv 1611.08832: the certificate lists the original
+            constraints itself; binding them to the user's own problem
+            is not described in the part read. SOURCE_DATE_EPOCH r1.1:
+            tools use it in place of the current time; v2's pin gates a
+            run and puts no date in the bytes. SLSA VSA v1.2: consumers
+            accept only specific (signer, verifier) pairs, and a VSA does
+            not protect against a compromised verifier; published vector
+            keys can be no such pair. Wikipedia's certifying-algorithm
+            page shows the input in its gcd check but states no general
+            rule. Appel's foundational PCC paper was off the allowlist.
+
+    D431-9  WHAT THIS SEAT WROTE AND READ SINCE D430 WAS DRAFTED. To this
+            repository: cc55aead (D430), 8c29ea03, and this entry after
+            its pames. To /var/www on A: 25 files by the deploy. To /root
+            on A, uploaded by the operator: D430_LAND.py, D430_COMMIT.py,
+            V1W_LAND.py, V1W_COMMIT.py, V1W_PAYLOAD.tar, and this entry's
+            two tools. Network from A: the two commit tools' fetches,
+            pushes and reads of the remote; the GET of v2 at 00:49Z. Seat
+            network, each named before it ran: fetches into the mirror
+            at 12:03:34Z on 10-27, 00:18:22Z, 00:45:38Z and 00:52:34Z;
+            web searches and page fetches from 00:18:23Z to 00:19:10Z,
+            one refused by the allowlist; gh run list at 00:45:38Z,
+            refused (HTTP 403, no API access in this session); curl of
+            nous-lang.org at 00:48:10Z, refused (CONNECT 403). The
+            project: read 11:58:10Z on 10-27, a search for hm_v12; no
+            write.
+
+    D431-10 WHAT STAYS OPEN. In order: this entry on A by D431_LAND.py and
+            D431_COMMIT.py, each step after its pame. The CI run of
+            8c29ea03, not read by the seat. N11: the seven dossier
+            template digests moved; the next release needs a registry
+            signature and its anchoring. V2, then V3. NV, its own
+            gate (D430-9). From D430-8: N10, which still holds for `nous
+            verify --smt`, the dossier README and v1's frozen boundary;
+            D4's three codes against four classes; the rekor_v2 verifier's
+            scope line; the rejected-ideas entry for nous-trace; the three
+            stale test names. DERIVED: nous-api on A runs the modules it
+            loaded at its start until it restarts; a CLI call on A runs
+            8c29ea03 now.
+
+    FINDINGS
+
+            FG-S431-I  WORLD. v1'S HARNESS NO LONGER MINTS ON THE CURRENT
+                       TREE. vsa emit refuses its certificate, which
+                       carries no obligations_canon ("cost leg refused:
+                       no spec canon"); v1 reproduces from a c2d9680
+                       checkout only, as its index says.
+
+            FG-S431-J  WORLD. N6 ON THE PUBLISHED v1. A one-row cost
+                       certificate, with the manifest and the VSA
+                       re-signed by the published vector seeds, passes
+                       v1's frozen verifier: exit 0, "PROVEN offline",
+                       "VERDICT: PASS". v2's verifier and the current
+                       template refuse the same bundle.
+
+            FG-S431-K  WORLD. THE DOCS OVERCLAIMED THE COST LEG. The
+                       honest-boundary bullet of VSA_CONFORMANCE_VECTORS
+                       said the cost-cap leg proves no admissible
+                       execution exceeds the cap, without the declared-
+                       estimates condition. 8c29ea03 carries the
+                       condition.
+
+            FG-S431-L  SEAT. THE PROPOSED ORDER PUT THIS ENTRY BEFORE THE
+                       DEPLOY. Read against the deploy script and the
+                       integrity check, the deploy follows the push at
+                       once (D431-5). Corrected before any command on A.
+
+            FG-S431-M  SEAT. A PREDICTION LEFT AN EFFECT UNNAMED. W1 pins
+                       the harness and every artifact, so each mutant of
+                       the harness or of a served file also turned W1
+                       red; the predictions named the other tests alone.
+
+            FG-S431-N  SEAT. THE CONTAINER CANNOT READ CI OR THE SERVED
+                       SITE. Both were refused (D431-9); the served read
+                       was made on A, and CI stays unread.
