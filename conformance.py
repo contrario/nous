@@ -1381,3 +1381,386 @@ def verify_certificate_from_json(
         verdict=verdict,  # type: ignore[arg-type]
         errors=errors,
     )
+
+
+# --- conformance recompute embed (shared text; canonical copy: conformance.py) ---
+# Every offline conformance verifier carries this region byte-for-byte;
+# tests/test_nt_v2_recompute.py names any copy that drifts. Standard
+# library only. It recomputes the cost obligations (NT-GATE-1 D6 (i))
+# from trace.json and the spec canon the certificate carries, bound by
+# sha256 to the manifest's smt_spec_sha256. __nt_v2_recompute_v1__
+_CONF_RC_MAX_BYTES = 16 * 1024 * 1024
+_CONF_RC_MAX_DEPTH = 32
+_CONF_RC_MAX_DIGITS = 64
+_CONF_RC_KINDS = ("llm_call", "tool_call", "message", "gated_action")
+_CONF_RC_SCOPE = (
+    "binding_ok", "surface_ok", "assumption_discharge_ok",
+    "bound_transfer_ok",
+)
+
+
+def _conf_rc_load(raw):
+    # Strict JSON: UTF-8, non-ASCII only inside strings, bounded size
+    # and nesting, no duplicate key, no NaN or Infinity, no float.
+    # Returns (doc, "") or (None, why).
+    import json
+    if not isinstance(raw, (bytes, bytearray)):
+        return None, "input is not bytes"
+    if len(raw) > _CONF_RC_MAX_BYTES:
+        return None, "larger than %d bytes" % _CONF_RC_MAX_BYTES
+    try:
+        text = bytes(raw).decode("utf-8")
+    except UnicodeDecodeError:
+        return None, "not UTF-8"
+    depth = 0
+    in_str = False
+    esc = False
+    for ch in text:
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+        elif ch == '"':
+            in_str = True
+        elif ord(ch) > 127:
+            return None, "non-ASCII outside a string"
+        elif ch in "[{":
+            depth += 1
+            if depth > _CONF_RC_MAX_DEPTH:
+                return None, "nested deeper than %d" % _CONF_RC_MAX_DEPTH
+        elif ch in "]}":
+            depth -= 1
+
+    def pairs(items):
+        out = {}
+        for k, v in items:
+            if k in out:
+                raise ValueError("duplicate key " + repr(k))
+            out[k] = v
+        return out
+
+    def no_constant(name):
+        raise ValueError("non-finite number " + name)
+
+    def no_float(s):
+        raise ValueError("non-integer number " + s)
+
+    try:
+        doc = json.loads(text, object_pairs_hook=pairs,
+                         parse_constant=no_constant, parse_float=no_float)
+    except (ValueError, RecursionError) as exc:
+        return None, str(exc)
+    return doc, ""
+
+
+def _conf_rc_rational(s):
+    # "123" or "(/ 1 2)" -> Fraction; None outside the closed shape.
+    import re
+    from fractions import Fraction
+    m = re.fullmatch(r"([0-9]+)|\(/ ([0-9]+) ([0-9]+)\)", s)
+    if m is None:
+        return None
+    parts = [g for g in m.groups() if g is not None]
+    if any(len(p) > _CONF_RC_MAX_DIGITS for p in parts):
+        return None
+    if m.group(1) is not None:
+        return Fraction(int(m.group(1)))
+    if int(m.group(3)) == 0:
+        return None
+    return Fraction(int(m.group(2)), int(m.group(3)))
+
+
+def _conf_rc_decimal(s):
+    # A decimal string, as Decimal prints one ("0.00105", "1E-7") ->
+    # Fraction; None otherwise.
+    import re
+    from fractions import Fraction
+    if not isinstance(s, str):
+        return None
+    m = re.fullmatch(r"(-?)([0-9]+)(?:\.([0-9]+))?(?:E([-+]?[0-9]{1,3}))?", s)
+    if m is None or len(m.group(2)) + len(m.group(3) or "") > \
+            _CONF_RC_MAX_DIGITS:
+        return None
+    frac = m.group(3) or ""
+    v = Fraction(int(m.group(2) + frac), 10 ** len(frac))
+    if m.group(4) is not None:
+        v *= Fraction(10) ** int(m.group(4))
+    return -v if m.group(1) else v
+
+
+def _conf_rc_text(fr):
+    # Exact decimal text of a Fraction whose denominator is 2^a 5^b.
+    sign = "-" if fr < 0 else ""
+    x = abs(fr)
+    k = 0
+    while x.denominator != 1 and k < 4 * _CONF_RC_MAX_DIGITS:
+        x *= 10
+        k += 1
+    if x.denominator != 1:
+        return sign + str(abs(fr))
+    digits = str(x.numerator).rjust(k + 1, "0")
+    if k == 0:
+        return sign + digits
+    head, tail = digits[:-k], digits[-k:].rstrip("0")
+    return sign + head + ("." + tail if tail else "")
+
+
+def _conf_rc_parse_canon(canon_text):
+    # Closed shapes of smt_emit.canonical_str. Returns a dict, or a str
+    # naming the first line outside the shapes.
+    import re
+    from fractions import Fraction
+    if not isinstance(canon_text, str):
+        return "spec canon is not text"
+    # The grammar's NAME class (nous.lark): Latin and U+0370..U+03FF.
+    gr = r"\u0370-\u03FF"
+    nb = r"[A-Za-z_" + gr + r"][A-Za-z0-9_" + gr + r"]*"
+    nm = "(" + nb + ")"
+    rt = r"([0-9]+|\(/ [0-9]+ [0-9]+\))"
+    re_pc = re.compile(
+        r"A:\(assert \(= cost_" + nm + r"_per_call \(/ \(\+ \(\* " + rt
+        + r" ([0-9]+)\) \(\* " + rt + r" ([0-9]+)(?: " + rt
+        + r")?\)\) 1000000\)\)\)")
+    re_tt = re.compile(
+        r"A:\(assert \(= cost_" + nm + r"_total \(\* cost_" + nm
+        + r"_per_call ([0-9]+)\)\)\)")
+    re_t1 = re.compile(r"A:\(assert \(= total_cost cost_" + nm
+                       + r"_total\)\)")
+    re_tn = re.compile(r"A:\(assert \(= total_cost \(\+ ((?:cost_"
+                       + nb + r"_total ?)+)\)\)\)")
+    out = {"souls": {}, "ga": set(), "de": set()}
+    seen = set()
+    totals = {}
+    sum_line = None
+    for line in canon_text.split("\n"):
+        tag, sep, rest = line.partition(":")
+        if not sep:
+            return "a line without a tag"
+        if tag in ("CC", "MT", "MARGIN", "SS", "PS"):
+            if tag in seen:
+                return "duplicate " + tag + " line"
+            seen.add(tag)
+        if tag == "CC":
+            m = re.fullmatch(r"([0-9]+)(?:\.([0-9]+))?\|([A-Z]{3})", rest)
+            if m is None or len(m.group(1) + (m.group(2) or "")) > \
+                    _CONF_RC_MAX_DIGITS:
+                return "CC line outside the closed shape"
+            out["cap"] = _conf_rc_decimal(
+                m.group(1) + ("." + m.group(2) if m.group(2) else ""))
+            out["currency"] = m.group(3)
+        elif tag == "MT":
+            if not re.fullmatch(r"[0-9]{1,9}", rest):
+                return "MT line outside the closed shape"
+            out["mt"] = int(rest)
+        elif tag == "MARGIN":
+            if not re.fullmatch(r"[0-9]{1,2}", rest):
+                return "MARGIN line outside the closed shape"
+        elif tag in ("SS", "PS"):
+            if not re.fullmatch(r"[0-9a-f]{64}", rest):
+                return tag + " line outside the closed shape"
+            out[tag.lower()] = rest
+        elif tag == "GA":
+            out["ga"].add(rest)
+        elif tag == "DE":
+            out["de"].add(rest)
+        elif tag == "A":
+            m = re_pc.fullmatch(line)
+            if m is not None:
+                soul = m.group(1)
+                if soul in out["souls"]:
+                    return "duplicate per-call line for " + soul
+                rin, rout = _conf_rc_rational(m.group(2)), \
+                    _conf_rc_rational(m.group(4))
+                mult = Fraction(1) if m.group(6) is None else \
+                    _conf_rc_rational(m.group(6))
+                if rin is None or rout is None or mult is None or \
+                        len(m.group(3)) > 18 or len(m.group(5)) > 18:
+                    return "per-call line outside the closed shape"
+                out["souls"][soul] = (rin, int(m.group(3)), rout,
+                                      int(m.group(5)), mult)
+                continue
+            m = re_tt.fullmatch(line)
+            if m is not None:
+                if m.group(1) != m.group(2) or m.group(1) in totals:
+                    return "total line outside the closed shape"
+                totals[m.group(1)] = int(m.group(3))
+                continue
+            m = re_t1.fullmatch(line) or re_tn.fullmatch(line)
+            if m is not None:
+                if sum_line is not None:
+                    return "duplicate total_cost line"
+                sum_line = sorted(re.findall(
+                    r"cost_(" + nb + r")_total", m.group(1)
+                    if m.re is re_tn else "cost_" + m.group(1) + "_total"))
+                continue
+            return "A: line outside the closed shapes"
+        elif tag not in ("NV", "EV", "W", "D", "R", "O", "SD", "SA", "GQ"):
+            return "unknown tag " + tag
+    for need in ("cap", "mt", "ss", "ps"):
+        if need not in out:
+            return "spec canon lacks " + need.upper()
+    if sorted(totals) != sorted(out["souls"]) or (
+            out["souls"] and sum_line != sorted(out["souls"])):
+        return "per-call, total and total_cost lines do not match"
+    if any(t != out["mt"] for t in totals.values()):
+        return "a total line multiplies by other than MT"
+    return out
+
+
+def _conf_rc_obligations(manifest, trace, canon_text):
+    # The four obligations in scope, recomputed. ("refused", why) where
+    # the online path raises a precondition, else
+    # ("ok", {name: bool}, realized_total Fraction, [errors]).
+    import hashlib
+    from fractions import Fraction
+    c = _conf_rc_parse_canon(canon_text)
+    if isinstance(c, str):
+        return ("refused", "spec canon refused: " + c)
+    if not c["souls"]:
+        return ("refused", "spec canon declares no costed soul")
+    if not isinstance(manifest, dict) or not isinstance(trace, dict):
+        return ("refused", "manifest or trace is not a JSON object")
+    events = trace.get("events")
+    if not isinstance(events, list):
+        return ("refused", "trace has no event list")
+    norm = []
+    for i, ev in enumerate(events):
+        if not isinstance(ev, dict):
+            return ("refused", "event %d is not an object" % i)
+        e = {}
+        for key, dflt in (("seq", None), ("tick", None),
+                          ("input_tokens", 0), ("output_tokens", 0)):
+            v = ev.get(key, dflt)
+            if type(v) is not int or v < 0:
+                return ("refused", "event %d %s is not a non-negative "
+                        "integer" % (i, key))
+            e[key] = v
+        for key in ("soul", "kind"):
+            v = ev.get(key)
+            if not isinstance(v, str) or not v:
+                return ("refused", "event %d %s is not text" % (i, key))
+            e[key] = v
+        tc = _conf_rc_decimal(ev.get("tool_cost", "0"))
+        if tc is None:
+            return ("refused", "event %d tool_cost is not a decimal" % i)
+        e["tool_cost"] = tc
+        a = ev.get("action")
+        if a is not None and not isinstance(a, str):
+            return ("refused", "event %d action is not text" % i)
+        e["action"] = a
+        norm.append(e)
+    souls, ga, de = c["souls"], c["ga"], c["de"]
+    for e in norm:
+        s = "event seq=%d " % e["seq"]
+        if e["kind"] not in _CONF_RC_KINDS:
+            return ("refused", s + "has an unknown kind")
+        if e["soul"] not in souls:
+            return ("refused", s + "names a soul the spec never declared")
+        if e["kind"] == "tool_call" and e["tool_cost"] != 0:
+            return ("refused", s + "is a priced tool_call")
+        if e["kind"] == "gated_action" and e["action"] is not None and \
+                e["action"] not in ga:
+            return ("refused", s + "gated action is not declared")
+        if e["action"] is not None and e["action"] in ga and \
+                e["kind"] != "gated_action":
+            return ("refused", s + "is a declared gated action recorded "
+                    "under another kind")
+        if e["kind"] == "tool_call" and de:
+            if e["action"] is None or e["action"] not in de:
+                return ("refused", s + "tool_call is outside the "
+                        "declared events")
+    ek = trace.get("evidence_kind")
+    cb = trace.get("cost_binding")
+    pti = trace.get("provider_token_integrity")
+    if ek not in (None, "envelope", "witnessed_run") or cb not in (
+            None, "envelope", "realized") or pti not in (
+            None, "unattested", "tee_attested", "unverifiable"):
+        return ("refused", "trust field outside its vocabulary")
+    if sum(1 for v in (ek, cb, pti) if v is not None) not in (0, 3):
+        return ("refused", "trust triple is partial (all three or none)")
+    if (cb == "realized") != (ek == "witnessed_run"):
+        return ("refused", "cost_binding and evidence_kind disagree")
+    errors = []
+    sha = hashlib.sha256(canon_text.encode("utf-8")).hexdigest()
+    binding = (
+        sha == manifest.get("smt_spec_sha256")
+        and c["ss"] == manifest.get("source_sha256")
+        and c["ps"] == manifest.get("pricing_sha256")
+        and trace.get("source_sha256") == manifest.get("source_sha256")
+        and trace.get("smt_spec_sha256") == manifest.get("smt_spec_sha256")
+        and trace.get("pricing_sha256") == manifest.get("pricing_sha256")
+    )
+    if not binding:
+        errors.append("binding: canon, manifest and trace shas disagree")
+    discharge = True
+    calls = {name: 0 for name in souls}
+    max_tick = -1
+    realized = Fraction(0)
+    for e in norm:
+        rin, max_in, rout, max_out, mult = souls[e["soul"]]
+        max_tick = max(max_tick, e["tick"])
+        if e["input_tokens"] > max_in or e["output_tokens"] > max_out:
+            discharge = False
+            errors.append("discharge: seq=%d tokens over the declared "
+                          "bound" % e["seq"])
+        if e["kind"] == "llm_call":
+            calls[e["soul"]] += 1
+            realized += (rin * e["input_tokens"]
+                         + rout * e["output_tokens"] * mult) / 1000000
+    for name, n in sorted(calls.items()):
+        if n > c["mt"]:
+            discharge = False
+            errors.append("discharge: soul %s made %d llm_calls > %d"
+                          % (name, n, c["mt"]))
+    if max_tick >= c["mt"]:
+        discharge = False
+        errors.append("discharge: max tick %d >= %d" % (max_tick, c["mt"]))
+    bound = realized <= c["cap"]
+    if not bound:
+        errors.append("bound_transfer: realized_total %s > cost_cap %s"
+                      % (_conf_rc_text(realized), _conf_rc_text(c["cap"])))
+    return ("ok", {"binding_ok": binding, "surface_ok": True,
+                   "assumption_discharge_ok": discharge,
+                   "bound_transfer_ok": bound}, realized, errors)
+
+
+def _conf_recompute(manifest, cert, trace, canon_text):
+    # ("absent", {}) without a canon; ("refused", {"reason"}); or
+    # ("recomputed", {"line", "disagree", ...}). Reads no recorded
+    # boolean to decide an obligation; compares them after.
+    if canon_text is None:
+        return ("absent", {})
+    if not isinstance(cert, dict):
+        return ("refused", {"reason": "certificate is not a JSON object"})
+    r = _conf_rc_obligations(manifest, trace, canon_text)
+    if r[0] == "refused":
+        return ("refused", {"reason": r[1]})
+    _ok, ob, realized, errors = r
+    cap = _conf_rc_parse_canon(canon_text)["cap"]
+    disagree = []
+    for name in _CONF_RC_SCOPE:
+        if name in cert and bool(cert[name]) != ob[name]:
+            disagree.append(
+                "certificate records %s=%s but recomputed from trace.json "
+                "and the spec canon it is %s (recorded verdict disagrees "
+                "with recomputation)" % (name, bool(cert[name]), ob[name]))
+    rec = _conf_rc_decimal(cert.get("realized_total"))
+    if rec != realized:
+        disagree.append(
+            "certificate records realized_total=%s but recomputed from "
+            "trace.json and the spec canon it is %s (recorded verdict "
+            "disagrees with recomputation)"
+            % (cert.get("realized_total"), _conf_rc_text(realized)))
+    line = (
+        "RECOMPUTED (cost obligations, D6 (i)) from trace.json and the "
+        "certificate's spec canon, equal to the recorded booleans: "
+        + ", ".join("%s=%s" % (n, ob[n]) for n in _CONF_RC_SCOPE)
+        + "; realized_total %s, cost_cap %s"
+        % (_conf_rc_text(realized), _conf_rc_text(cap)))
+    return ("recomputed", {"line": line, "disagree": disagree,
+                           "obligations": ob, "realized_total": realized,
+                           "errors": errors})
+# --- end conformance recompute embed ---

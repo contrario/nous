@@ -612,10 +612,19 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "            return _cfail(label + ' not found in ' + str(ROOT))",
     "    try:",
     "        cert = json.loads(cert_p.read_text(encoding='utf-8'))",
-    "        trace = json.loads(trace_p.read_text(encoding='utf-8'))",
     "        manifest = json.loads(man_p.read_text(encoding='utf-8'))",
     "    except json.JSONDecodeError as e:",
     "        return _cfail('JSON parse error: ' + str(e))",
+    "    # __nt_v2_recompute_wire_v1__ strict trace when a canon is carried",
+    "    if isinstance(cert, dict) and cert.get('obligations_canon') is not None:",
+    "        trace, _why = _conf_rc_load(trace_p.read_bytes())",
+    "        if trace is None:",
+    "            return _cfail('trace.json refused: ' + _why)",
+    "    else:",
+    "        try:",
+    "            trace = json.loads(trace_p.read_text(encoding='utf-8'))",
+    "        except json.JSONDecodeError as e:",
+    "            return _cfail('JSON parse error: ' + str(e))",
     "",
     "    csig = cert.get('signature')",
     "    if not isinstance(csig, dict):",
@@ -685,6 +694,20 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "            'the ' + str(len(bools)) + ' obligations (' + str(derived) + ')'",
     "        )",
     "    print('OK   recorded verdict consistent with ' + str(len(bools)) + ' obligations (schema v' + str(schema_v) + ')')",
+    "    _rc_status, _rc = _conf_recompute(  # __nt_v2_recompute_wire_v1__",
+    "        manifest, cert, trace, cert.get('obligations_canon')",
+    "    )",
+    "    if _rc_status == 'refused':",
+    "        return _cfail('recomputation refused: ' + _rc['reason'])",
+    "    if _rc_status == 'recomputed':",
+    "        if _rc['disagree']:",
+    "            return _cfail(_rc['disagree'][0])",
+    "        print('OK   ' + _rc['line'])",
+    "        print('NOT RECOMPUTED: authorization_ok, sequence_ok (the '",
+    "              \"certificate's recorded booleans)\")",
+    "    else:",
+    "        print('NOT RECOMPUTED: no spec canon in the certificate; the '",
+    "              \"obligations are the certificate's recorded booleans\")",
     "",
     "    tlog = cert.get('transparency_log')",
     "    if tlog is None:",
@@ -755,6 +778,20 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
 )  # __nous_conformance_anchored_verifier_v1__
 
 
+def _conformance_recompute_region() -> str:  # __nt_v2_recompute_wire_v1__
+    """The conformance recompute region, read from its canonical copy
+    in conformance.py so that both offline conformance texts carry one
+    text byte for byte."""
+    text = (_PKG_DIR / "conformance.py").read_text(encoding="utf-8")
+    start = ("# --- conformance recompute embed (shared text; "
+             "canonical copy: conformance.py) ---")
+    end = "# --- end conformance recompute embed ---"
+    if text.count(start) != 1 or text.count(end) != 1:
+        raise RuntimeError("conformance recompute region not found once")
+    i = text.index(start)
+    return text[i:text.index(end, i) + len(end)]
+
+
 def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
     """Assemble a standalone conformance verifier with Rekor v2 anchor check.
 
@@ -787,7 +824,9 @@ def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
         "consistency, and the Rekor v2 anchor over the certificate body bytes.\n"
         "SCOPE: signatures + binding (including the codegen leg by\n"
         "sha-equality) + anchor inclusion; NOT SMT bound or program\n"
-        "re-derivation (those are the online toolchain path). Without\n"
+        "re-derivation (those are the online toolchain path). With a\n"
+        "spec canon in the certificate, the cost obligations are\n"
+        "recomputed from trace.json. Without\n"
         "--expect-signer the certificate key is not checked against any\n"
         "expected signer.\n"  # __x_g4_wording_v1__
         "\n"
@@ -801,6 +840,7 @@ def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
     )
     anchor_shim = "\n".join(_ANCHOR_SHIM_LINES)
     dispatch_main = "\n".join(_CONFORMANCE_DISPATCH_MAIN_LINES)
+    recompute = "\n\n" + _conformance_recompute_region() + "\n"  # __nt_v2_recompute_wire_v1__
     parts = [
         header,
         _HOISTED_IMPORTS,
@@ -810,6 +850,7 @@ def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
         "\n\n" + tsa_body + "\n",
         "\n\n" + v2_body + "\n",
         anchor_shim,
+        recompute,
         dispatch_main,
     ]
     return "".join(parts)

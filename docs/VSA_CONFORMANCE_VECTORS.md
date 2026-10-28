@@ -25,6 +25,13 @@ certificate. The conformance certificate carries the spec canon
 a cost certificate whose constraints differ from the system rebuilt from it
 is refused before its multipliers are graded.
 
+The VSA verifier checks that the certificate's recorded obligations
+are consistent with its verdict; it does not recompute them from
+`trace.json`. `verify_conformance_offline.py`, run on `manifest.json`,
+`trace.json` and `conformance.json` of the v2 directory, recomputes the
+cost obligations from the trace and the certificate's spec canon
+(NT-GATE-1 V2).
+
 v1 is frozen: its bytes are the ones published at c2d9680. Its verifier
 grades the cost certificate it is handed without re-deriving it, so it
 accepts a one-row certificate re-signed with the published vector keys

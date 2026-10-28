@@ -157,6 +157,17 @@ certificate-to-manifest bindings, the trace's own Ed25519 signature, the
 internal consistency of the recorded verdict, and -- when the certificate is
 anchored -- the full Rekor v2 inclusion proof over the certificate body.
 
+<!-- __nt_v2_recompute_wire_v1__ -->
+When the certificate carries the spec canon (`obligations_canon`, whose
+sha256 equals the manifest's `smt_spec_sha256`), the offline verifier also
+recomputes the cost obligations from `trace.json`: binding by sha-equality
+through the canon, the tool and soul surface, assumption discharge
+(per-event tokens, per-soul call count, max tick) and bound transfer
+(`realized_total`, exactly). It reads `trace.json` strictly (ASCII, no
+duplicate key, no float) and fails when a recomputed value disagrees with
+the recorded one. `authorization_ok` and `sequence_ok` remain the recorded
+booleans. A certificate without the canon prints NOT RECOMPUTED.
+
 <!-- __x_g4_wording_v1__ -->
 **Scope, stated honestly.** The offline verifier checks, by Ed25519 signature
 and sha256 binding, that the signed verdict verifies under the key the
