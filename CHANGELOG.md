@@ -5,6 +5,108 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [8.0.0]  <!-- __s431_changelog_v8_0_0__ -->
+
+### Changed  <!-- __s431_changelog_exit_classes_v1__ -->
+
+- Every offline verifier NOUS emits takes the signer's key from the
+  auditor and gives no PASS without it: the seven dossier
+  `verify_offline.py` templates, the chain-net and gap-witness
+  verifiers, the anchored dossier and conformance verifiers that
+  offline_verifier_builder.py emits, the unanchored
+  `verify_conformance_offline.py`, the VSA verifier
+  `verify_vsa_offline.py`, and the `verify_ndec.py` a .ndec carries.
+  `--expect-signer BASE64`, the raw Ed25519 public key taken out of
+  band, is required; without it the verifier exits 2. The signature
+  under review must verify under that key, or the verifier exits 1.
+  The conformance verifiers take `--expect-manifest-signer` for a
+  manifest signed by a second key (7263d72, NT-GATE-1 V3).
+- Exit classes, the same in each of these verifiers: 0 PASS, 1
+  INTEGRITY, 2 ENVIRONMENT, 3 OUTSIDE, and the last line on stdout is
+  `CLASS: <name>`. OUTSIDE is signed evidence whose verdict is not
+  proven, or a certificate that is not conformant. 7.0.0 passed a
+  dossier whose signed manifest says refuted with exit 0, and gave a
+  non-conformant certificate the same exit 1 as tampered bytes.
+  Integrity is decided before OUTSIDE, checks spliced in at build time
+  included. A missing or broken dependency is 2 (7263d72).
+- The documented commands run the verifiers isolated, for example
+  `python3 -I verify_offline.py --expect-signer <key>`. Without `-I`,
+  a module placed beside the verifier runs in place of the standard
+  library (7263d72).
+- `nous ndec verify` takes `--expect-signer` and exits 2 without it.
+  The predicate's signer and keyid must match the key, both digests
+  must be 64 hex characters, the carried verifier runs with
+  `python -I -B`, and a manifest whose verdict is not proven exits 3.
+  Before, it checked the envelope under the key the predicate names
+  and passed a .ndec with no key from the auditor (7263d72).
+- `nous vsa verify` passes its pin to the VSA verifier and runs it
+  isolated. The VSA verifier checks the DSSE envelope under the
+  auditor's key, requires a shipped key to equal it, exits 1 when a
+  registry does not resolve, and recomputes the cost obligations from
+  trace.json (7263d72).
+- Every offline verifier that grades `cost.farkas.json` re-derives the
+  cost system before it grades: it binds the spec canon to the
+  manifest's signed `smt_spec_sha256`, compares cap, ticks and margin
+  with the manifest, requires the certificate's constraints to equal
+  the re-derived system, and only then checks the multipliers. A
+  missing canon is refused. Dossiers ship `spec.canon`;
+  `nous conformance certify` embeds `obligations_canon` when the
+  manifest declares a cost proof; `nous vsa emit` refuses a cost leg
+  that the leg rejects (8c29ea0, NT-GATE-1 V1).
+- Both offline conformance verifiers recompute binding, surface,
+  assumption discharge and bound transfer from trace.json and the
+  certificate's spec canon, and compare them with the recorded values;
+  a disagreement exits 1. Where they recompute, trace.json is read
+  strictly: UTF-8, size and depth caps, and duplicate keys, NaN and
+  floats refused. `authorization_ok` and `sequence_ok` remain the
+  certificate's recorded values and are printed as NOT RECOMPUTED, as
+  are the obligations of a certificate without a canon (798c6cf,
+  NT-GATE-1 V2).
+- `nous verify --smt` prints a proven cost bound with its condition:
+  the line ends "for every admissible execution, at the declared token
+  estimates and prices." where it ended "across all execution paths.".
+  The Farkas certificate holds at the declared token estimates and
+  prices; it does not show that a run keeps to them, which the signed
+  trace evidences (71dece6, N10).
+- Server side, not in the package: scripts/deploy_website.sh and
+  scripts/served_mirror_check.py skip `__pycache__/` and `*.pyc`
+  (7263d72).
+
+### Added  <!-- __s431_changelog_vectors_v1__ -->
+
+- VSA conformance vectors v2 (8c29ea0) and v3 (7263d72) under
+  `https://nous-lang.org/.well-known/nous/vsa-vectors/`. v3's verifier
+  takes `--expect-signer` with the key its index names; v1 is frozen
+  as published, and the v1 and v2 verifiers read no arguments.
+
+### Known limits  <!-- __s431_changelog_known_limits_v1__ -->
+
+- A verifier prints its VERDICT lines before the checks spliced in at
+  build time run; the `CLASS:` line is the result.
+- An ENVIRONMENT exit stops the run: a coverage dossier verified
+  without z3 exits 2 before its later checks run.
+- The anchored Rekor v2 dossier verifier cannot take a spliced check.
+- The envelope payload, the manifest, the certificate and the Farkas
+  files are read with `json.loads`, which keeps the last of duplicate
+  keys; only trace.json, where obligations are recomputed, is read
+  strictly.
+- The demo zips on website/lending.html carry dossier verifiers
+  emitted before 8.0.0.
+
+### Notes  <!-- __s431_changelog_why_major_v1__ -->
+
+- 8.0.0 is a major version because it refuses or changes behaviour
+  7.0.0 accepted: no offline verifier gives PASS without
+  `--expect-signer`, where 7.0.0's dossier and VSA verifiers passed
+  without a key from the auditor; a refuted dossier or a
+  non-conformant certificate exits 3; `nous ndec verify` needs the
+  key; a cost certificate whose constraints differ from the system the
+  spec canon gives is refused; a conformance certificate whose
+  recorded obligations disagree with trace.json exits 1; and the
+  proven line of `nous verify --smt` changes text. A script that reads
+  these exit codes or that line must change.
+
+
 ## [7.0.0]  <!-- __s405_changelog_v7_0_0__ -->
 
 ### Removed  <!-- __s405_changelog_removed_v1__ -->
