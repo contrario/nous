@@ -22956,3 +22956,208 @@ document itself.
                        clone, once at least since the seat's context was
                        summarized; the count before that is not kept.
                        Declined: commits are the operator's.
+
+  - S434 the number the operator gave the fifth entry of the seat S431,
+    which carries D433's landing, the open items after V3 red and green
+    in the container, their landing as 71dece6f and the deploy, and
+    what that step found
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D433, which is landed and
+    append-only. The labels are D433's: READ IN THE SEAT'S CONTAINER,
+    ON A, DERIVED, OPERATOR, RULING. Every time below is in UTC, on
+    10-29 of 2026. An operator's time is the time his message was sent.
+    A seat time written "hashed by" is the clock the seat read right
+    after the hash printed. The seat's working context before the
+    operator's message of 10:08Z survives only as its own summary;
+    values from that part are taken from its records, named by file and
+    digest, or are marked SUMMARY.
+
+    THE NUMBER. OPERATOR, 10:27Z: 434, in answer to the seat's question
+    which number the entry for the open items takes; read as the number
+    of the seat's fifth entry. READ IN THE SEAT'S CONTAINER from
+    10:28:51Z to 10:29:06Z by ns_count.py (81886f31), on the mirror
+    fetched at 10:28:36Z, 162 refs and 1030 commits, main at 71dece6f:
+    the header "  - S434 ", the anchor D434-, the marker __s434_, the
+    token FG-S434 and the codes FG-S431-AK to FG-S431-AS counted zero
+    in the 3080 distinct blobs of the trees of every ref, each read
+    once whichever trees hold it (3042 of them text), and in every
+    commit message on every ref. FG-S431-AJ counted 1, in a blob:
+    D433's "FG-S431-AA to FG-S431-AJ counted zero", the end of a range,
+    not a code; this seat skips it and takes FG-S431-AK onward.
+    Controls on the same instrument: the header "  - S433 " 1, the
+    anchor D433- 10, FG-S431-AI 3 in blobs and 1 in messages. The shape
+    differs from D433's, which counted per tree; a zero is a zero in
+    both. The instrument that appends this entry refuses unless the
+    header, the anchor, the marker, the token and the codes below still
+    count zero in the document when it runs. The codes below are this
+    seat's, FG-S431-AK to FG-S431-AM.
+
+    D434-1  THE LANDING OF D433. ON A, by D433_LAND and D433_COMMIT;
+            --apply on a command the seat gave before any pame
+            (FG-S431-AK), --commit and --push each after the operator's
+            pame. READ IN THE SEAT'S CONTAINER at 10:28:36Z: c9d63c7a,
+            parent 7263d725, author date 02:35:27Z, one path, M
+            docs/GLM_SUPERSESSION_DESIGN.md, blob 5b4eb60a to d006d66c;
+            the message body b9800dc9, the pinned bytes; the document
+            46ff3aeb, 1400412 B, at c9d63c7a and unchanged at 71dece6f.
+            SUMMARY: the seat read the same from GitHub at 02:36:14Z.
+
+    D434-2  WHAT THE OPERATOR SAID. SUMMARY: 02:34Z, with the output of
+            D433_LAND --apply: "pali to idio kaneis prota dineis thn
+            entolh kai meta rotas gia to pame" (again the same: you give
+            the command first and ask for the pame after). RULING, read
+            from it: for every write on A the seat describes it and asks
+            for the pame, and gives the command only after the pame; a
+            read-only command it may give at once. Then "pame" for
+            D433's --commit and for its --push; their times are not in
+            the summary. 10:13Z, 10:23Z, 10:23Z, 10:25Z: "pame" for F3,
+            F6, F7 and F9 of D434-4. 10:27Z: 434.
+
+    D434-3  THE OPEN ITEMS, IN THE CONTAINER. The items D433-10 named
+            before the release: N10, the rejected-ideas entry for
+            nous-trace, the three stale test names. NV (D430-9) is a
+            question for the operator, not an item. Base: a clone of the
+            mirror at c9d63c7a, porcelain 0. OI_PREDICTIONS.md
+            40d4d882, hashed by 02:37:43Z, before any OI test. Red: six
+            cases of tests/test_oi_open_items.py, six failed by
+            assertion. The changes: on a proven result nous verify --smt
+            prints "PROVEN: total_cost <= $X CUR for every admissible
+            execution, at the declared token estimates and prices." in
+            place of "across all execution paths." (both lines, with
+            and without a margin; U+2264 kept), the scope
+            cost_farkas.py states; smt_emit.py's docstring says the same
+            and that a run's keeping to the estimates is not proved;
+            five user-facing places say it (ANNEX_IV_MAPPING.md,
+            COST_VERIFICATION_GUIDE.md, COVERAGE_PROOF.md,
+            SMT_VERIFICATION_DESIGN.md, website/coverage.html); the
+            seven s400 goldens take the new line and nothing else in
+            them moves; R7 in docs/REJECTED_IDEAS.md, nous-trace as a
+            new package, format and name, rejected as duplicating
+            shipped work, revisit never; three tests renamed for what
+            they hold, without a count. Left as written, records of what
+            was printed or said: COST_BOUND_DISPLAY_DESIGN.md, the
+            ledger, CHANGELOG.md, the blog. With N10 alone, 23 failed,
+            in s400 and the new file, each s400 failure a golden's text.
+            Green, 02:39:38Z to 02:41:57Z, the nous command on PATH:
+            3911 passed, 14 skipped, rc 0; claim_lint 406 files, 0
+            violations; sidecar_lint rc 0. Two mutants (oi_mutants.sh
+            0bd93cb2), the old CLI wording and one doc phrase back, each
+            red where named. The kit, 13 files, pre-validated on a
+            fixture at c9d63c7a. OI_GREEN_RECORD.md holds the rest.
+
+    D434-4  THE LANDING ON A. Kit: OI_LAND.py 7e568adb, OI_COMMIT.py
+            3c572366, OI_PAYLOAD.tar 2d88a36a, manifest 17db318d, 13
+            files, 12 modified and 1 new, message 491ef8e3;
+            OI_A_PREDICTIONS.md 5b7b48e4, hashed before the first OI
+            command ran on A. ON A: 10:08Z, the three sums OK, and
+            --dry, HEAD and origin c9d63c7a, HEAD_TREE_CHECKED 13,
+            PORCELAIN_LINES 0, FILES_OLD 13, STATE BEFORE, ROOT_OWNER
+            986 981; 10:13Z, --apply, READBACK 13 of 13; 10:17Z, the
+            first suite command, D434-5; 10:22Z, the suite under tests/,
+            3913 passed, 12 skipped, rc 0, as predicted; 10:23Z,
+            OI_COMMIT --dry, lint 437 files and 0 violations; 10:23Z,
+            --commit, NEW_HEAD 71dece6f, 13 files and 13 blobs as
+            pinned; 10:24Z, --push, REMOTE_MAIN 71dece6f. READ IN THE
+            SEAT'S CONTAINER at 10:24:13Z from GitHub: main 71dece6f,
+            parent c9d63c7a, author and committer the pinned identity at
+            10:23:26Z, 1 added and 12 modified, 13 blobs as pinned, the
+            message body 491ef8e3. ON A: 10:25Z, the deploy dry run,
+            coverage.html only; 10:25Z, --apply, the claim gate 437
+            files and 0 violations, coverage.html; 10:26Z,
+            served_mirror_check, 557 tracked and compared, 0 differ, 0
+            missing, 4 orphans, CLEAN; the served coverage.html
+            4498acee, the blob at 71dece6f. OI_A_RECORD.md d53d5f57
+            holds each step against its prediction.
+
+    D434-5  WHAT THE FIRST SUITE COMMAND MEASURED. ON A, 10:17Z: pytest
+            run at the repository root without tests/ (FG-S431-AL): 8
+            failed, 4040 passed, 12 skipped, 3 errors, rc 1. 10:18Z, the
+            list: four in tests/test_inject_message.py, 08, 11, 12 and
+            13, the line truncated at "Run..."; seven in
+            noesis_hardening_test.py, noesis_phase9_test.py and
+            noesis_sources_test.py: FileNotFoundError in one test,
+            "pymupdf required" in three, and an error at an item named
+            test in each of the three files. READ IN THE SEAT'S
+            CONTAINER: those three files are not in the tree of
+            71dece6f, and .gitignore there holds "noesis_*_test.py"; the
+            four failing tests are the four that call
+            asyncio.get_event_loop(). Alone, the file gives 13 passed;
+            after a one-test file that calls asyncio.run(), the same
+            four fail with "RuntimeError: There is no current event loop
+            in thread 'MainThread'", under Python 3.13.17
+            (FG-S431-AM). Which root file did it on A is not measured.
+
+    D434-6  WHAT MOVED THAT A RELEASE MUST SIGN. READ IN THE SEAT'S
+            CONTAINER by texts15.py (72dd5b49) on archives of c9d63c7a
+            and 71dece6f: the fifteen text digests of D433-8 are equal
+            at both, and equal D433-8's values at 7263d725. The open
+            items move none of them. DERIVED, read from code:
+            format_verdict, whose line N10 changes, is called outside
+            tests by cli_verify.py alone. N10 changes what nous verify
+            --smt prints on a proven result; a caller that parses that
+            line sees new text. The version step is the operator's.
+
+    D434-7  WHAT THIS SEAT WROTE AND READ SINCE D433 WAS DRAFTED. To
+            this repository: c9d63c7a (D433), 71dece6f, and this entry
+            after its pames. To /var/www on A: coverage.html, by the
+            deploy. To /root on A, uploaded by the operator: D433's two
+            tools and the OI kit; the two suite commands wrote
+            /root/oi_suite.txt and /root/oi_suite_tests.txt. Network
+            from A: the commit tools' fetches, pushes and ls-remotes.
+            Seat network: SUMMARY, the fetch from GitHub at 02:36:14Z,
+            and whether it was named before it ran is not in the
+            summary, which names no other; the fetch of 10:24:13Z and
+            the fetch of 10:28:36Z, each named before it ran. The
+            project: no write. The seat's harness asked again to commit
+            and push the container clone, twice in the part the summary
+            keeps and five times since 10:08Z; declined each time
+            (FG-S431-AI).
+
+    D434-8  WHAT STAYS OPEN. In order: this entry on A by D434_LAND.py
+            and D434_COMMIT.py, each write after its pame. Then the
+            release (N11): the version, the operator's (at 71dece6f
+            _version.py says 7.0.0; the exit contract of D433-8 and the
+            line of N10 both changed); PYTEST_FLOOR in step; the
+            registry signature for the fifteen digests and its anchor;
+            the release VSA; PyPI verified in a clean venv; each
+            irreversible step its own gate. NV, its own gate. DERIVED:
+            nous-api on A runs the modules it loaded at its start until
+            it restarts; a CLI call on A runs 71dece6f now; the restart
+            is the operator's. D432-12's duplicate-key item stays open
+            in part, as D433-10 says. FG-S431-AM is not changed by this
+            seat.
+
+    FINDINGS
+
+            FG-S431-AK SEAT. WRITE COMMANDS GIVEN BEFORE THE PAME. From
+                       the first V3 kit to D433_LAND the seat printed
+                       each write command with its prediction and the
+                       operator ran it: V3_LAND --apply twice,
+                       V3_COMMIT --commit and --push, the deploy
+                       --apply, D433_LAND --apply; D433-2 records that
+                       no message from 01:52Z to 02:22Z said "pame". A
+                       condition printed beside a command is not a
+                       gate. The operator named it at 02:34Z (D434-2).
+                       Since then each write was described, the pame
+                       asked for, and the command given after it.
+
+            FG-S431-AL SEAT. THE SUITE COMMAND WITHOUT ITS PATH. The
+                       prediction of 3913 was derived from runs under
+                       tests/; the command the seat gave named no path,
+                       and pytest collected the repository root as
+                       well. The seat did not hold the command V3's
+                       suite used on A and did not check the one it
+                       wrote against the number it predicted. The run
+                       measured a different set; the second command,
+                       under tests/, measured the predicted one.
+
+            FG-S431-AM WORLD. FOUR TESTS DEPEND ON WHAT RAN BEFORE
+                       THEM. tests/test_inject_message.py 08, 11, 12
+                       and 13 call asyncio.get_event_loop(); after an
+                       asyncio.run() in the same process the thread has
+                       no current loop, and the call raises. Under
+                       tests/ nothing before them does that. On A a run
+                       over the repository root put files that git
+                       ignores before them, and the four failed; which
+                       file left no loop is not measured.
