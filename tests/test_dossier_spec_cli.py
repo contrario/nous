@@ -97,7 +97,7 @@ def test_build_dossier_spec_minimal_returns_result(
     assert result.world_name == "minimal"
 
 
-def test_build_dossier_spec_emits_eight_files(tmp_path: Path) -> None:
+def test_build_dossier_spec_emits_its_files(tmp_path: Path) -> None:
     result = build_dossier_spec(
         FIXTURES / "basic",
         cap_override="0.50USD",

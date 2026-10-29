@@ -232,3 +232,44 @@ One block per rejected idea:
   a TODO that quotes the source is a different design: it needs its
   own Innovation Gate and its own kill criteria before any call.
   Anchoring shows where an element came from, not that it is right.
+
+### R7 -- nous-trace: a new package, format and name for signed agent traces over nous-langchain (S431)
+
+<!-- __oi_r7_nous_trace_v1__ -->
+- Idea: an open package, nous-trace, extending nous-langchain with four
+  objects: an Envelope (cost_cap, allowed_tools, max_ticks, signed by
+  the operator before the run), a Trace (a callback shim writing a
+  hash-chained log), a Seal (a manifest binding both hashes and a
+  Farkas cost proof) and a Verifier (verify_trace_offline.py, PASS or
+  FAIL with a reason), so an auditor could check a run "without
+  trusting the operator".
+- Searches run: NT-GATE-1 r2 (9c0463c4), section 5.2, read
+  2026-10-26: IETF draft-emirdag-scitt-ai-agent-execution-01
+  (COSE-signed, hash-chained per-agent records; no cost bound; it says
+  its tamper evidence is void when operator and custodian are one);
+  AgentSystems Notary; Model Witness 0.5.3; TraceSeal; titles only:
+  draft-sahu-agent-action-receipts-00, agentproofs, AgentGuard, an
+  Apify "Governed Agent Run"; inherited from LC-GATE-1 3.2. Internal:
+  trace/SPEC.md ("NOUS-TRACE Specification"), nous_trace.py,
+  trace_bridge, core conformance. The read set is bounded, not a
+  census; PyPI name availability was not checked.
+- Rejection reason: duplicates shipped work. NOUS-TRACE and core
+  conformance already hold all four objects: the signed manifest and
+  NOUS-TRACE's obligation manifest (Envelope), the recorder and
+  NOUS-TRACE's chain and signer (Trace), the conformance certificate
+  binding the trace and the manifest's digests (Seal), the offline
+  conformance, dossier and VSA verifiers and NOUS-TRACE's reference
+  verifier (Verifier). A package of that name would be a third trace
+  system under a name that collides with both. Its goal sentence also
+  fails the honest boundary: the operator holds every key, runs the
+  recorder and declares the numbers, so no design of this shape
+  verifies "without trusting the operator"; a hash chain under one
+  end-of-run seal adds nothing a signature over the body does not. A
+  rejection with the same reason and "never" was drafted on
+  2026-08-16 and did not land; this entry is it.
+- Revisit trigger: never, for a new trace format, package or name.
+  The verifier delta the Gate kept is outside this entry and shipped
+  in core: V1 re-derives the cost system offline (8c29ea03), V2
+  recomputes the cost obligations from the trace (798c6cfd), V3 gives
+  exit classes, a mandatory auditor key and the manifest's signature
+  under it (7263d725).

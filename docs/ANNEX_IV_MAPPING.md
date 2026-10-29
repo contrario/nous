@@ -231,8 +231,10 @@ metrics for assessing its performance."
 - Declared cost cap (`cost_cap: <amount> <USD|EUR>`) inside the world
   block of the source.
 - SMT proof under `nous verify --smt`: Z3 4.16.0 proves
-  `total_cost <= cap` across all execution paths bounded by
-  `max_ticks` and soul count.
+  `total_cost <= cap` for every admissible execution bounded by
+  `max_ticks` and soul count, at the declared token estimates and
+  prices; a run's adherence to those estimates is evidenced by the
+  signed trace, not proved.
 - Manifest fields: `cost_cap_usd`, `verdict`, `solver_name`,
   `solver_version`, `elapsed_ms`, `smt_spec_sha256`,
   `smt_emit_version`.
@@ -578,13 +580,18 @@ Solver:       z3 4.16.0
 Elapsed:      30ms
 Spec sha256:  29f24beda5419c38...
 ------------------------------------------------------------
-PROVEN: total_cost <= $0.2 USD across all execution paths.
+PROVEN: total_cost <= $0.2 USD for every admissible execution, at the declared token estimates and prices.
   bounded by: 2 soul(s) x 3 ticks
 
 Manifest signed: cost_cap_emit_demo.manifest.json
   key:    /root/.local/share/nous/keys/signing.key
   sha256 spec: 29f24beda5419c3881a2e0642297ed15834a4d60701a7a65073e465878748044
 ```
+
+<!-- __oi_n10_docs_v1__ -->
+The PROVEN line shows the current CLI's wording, which states the
+condition the proof carries; the run recorded above printed an older
+wording that left the condition out.
 
 ### Step 3: emit the Annex IV dossier
 

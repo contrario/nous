@@ -89,7 +89,7 @@ pre.code{background:var(--bg2);border:1px solid var(--gold-b);border-radius:6px;
   <p>For a threshold <code>T</code> and blocking signals <code>s1 ... sk</code>, coverage is the unsatisfiability of <code>T AND NOT(s1 OR ... OR sk)</code> over the reals &mdash; "an input that crosses the threshold but trips no blocking policy". If that is unsatisfiable, no such input exists. If it is satisfiable, the solver returns a concrete counterexample &mdash; a gap &mdash; and NOUS <b>refuses to sign</b>:</p>
   <pre class="code"><span class="c">$</span> nous verify --smt aml_transaction_governance.nous \
     --coverage-threshold "amount &gt; 10000" --manifest-out out/m.json
-<span class="ok">PROVEN</span>: total_cost &lt;= $0.50 across all execution paths
+<span class="ok">PROVEN</span>: total_cost &lt;= $0.50 for every admissible execution, at the declared token estimates and prices
 <span class="ok">Coverage PROVEN</span>: no gap over threshold 'amount &gt; 10000'
 
 <span class="c">$</span> nous verify --smt aml_transaction_governance.nous \

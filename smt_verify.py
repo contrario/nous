@@ -707,7 +707,8 @@ def format_verdict(
                    / Decimal(100))
             lines.append(
                 f"PROVEN: total_cost ≤ ${eff} "
-                f"{spec.cost_cap_currency} across all execution paths."
+                f"{spec.cost_cap_currency} for every admissible execution, "
+                f"at the declared token estimates and prices."  # __oi_n10_v1__
             )
             lines.append(
                 f"  Declared cap: ${spec.cost_cap_amount} "
@@ -717,7 +718,8 @@ def format_verdict(
         else:
             lines.append(
                 f"PROVEN: total_cost ≤ ${spec.cost_cap_amount} "
-                f"{spec.cost_cap_currency} across all execution paths."
+                f"{spec.cost_cap_currency} for every admissible execution, "
+                f"at the declared token estimates and prices."  # __oi_n10_v1__
             )
         lines.append(
             f"  bounded by: {len(spec.soul_costs)} soul(s) × "

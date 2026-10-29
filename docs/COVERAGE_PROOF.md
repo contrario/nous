@@ -238,7 +238,8 @@ PROVEN over the rules' own threshold:
 
     nous verify --smt aml_transaction_governance.nous \
       --coverage-threshold "amount > 10000" --manifest-out out/m.json
-    # PROVEN: total_cost <= $0.50 across all execution paths
+    # PROVEN: total_cost <= $0.50 for every admissible execution,
+    #   at the declared token estimates and prices
     # Coverage PROVEN: no gap over threshold 'amount > 10000'
     # Farkas certificate extracted: contradiction '0 < 0'
 

@@ -52,7 +52,7 @@ def _fake_v2_anchor() -> RekorAnchorV2:
     )
 
 
-def test_spec_rekor_v2_emit_writes_eight_files(tmp_path: Path) -> None:
+def test_spec_rekor_v2_emit_writes_its_files(tmp_path: Path) -> None:
     result = build_dossier_spec(
         FIXTURES / "basic",
         cap_override="0.50USD",

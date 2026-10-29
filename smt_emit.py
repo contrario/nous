@@ -18,8 +18,10 @@ upper bound is computed"):
         / 1_000_000
 
 The negated obligation `(not (<= total_cost cap))` is asserted; an
-SMT solver that returns `unsat` proves the cap holds across all
-execution paths. `sat` produces a counterexample (Phase 4 work).
+SMT solver that returns `unsat` proves the cap holds for every
+admissible execution, at the declared token estimates and prices; it
+does not prove that a run keeps to those estimates (that is evidenced
+by the signed trace). `sat` produces a counterexample (Phase 4 work).
 
 Public API:
   SMTSpec          dataclass (declarations, assertions, obligation, meta)

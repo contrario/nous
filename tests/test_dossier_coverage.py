@@ -43,7 +43,7 @@ def _proven_coverage_run(tmp_path: Path):
     return src, mout
 
 
-def test_dossier_with_coverage_has_eight_files(tmp_path):  # __s116_dossier_farkas_v1__
+def test_dossier_with_coverage_has_its_files(tmp_path):  # __s116_dossier_farkas_v1__
     if not TEMPLATE.is_file():
         pytest.skip("aml demo source not present")
     src, manifest_out = _proven_coverage_run(tmp_path)

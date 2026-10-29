@@ -36,7 +36,9 @@ deterministic replay, SMT-proven constraints -- in one stack.
 ### In scope
 
 - Compile-time mathematical proof that declared **cost bounds** hold
-  across all execution paths.
+  for every admissible execution, at the declared token estimates and
+  prices (a run's adherence to those estimates is evidenced, not
+  proved).
 - Compile-time mathematical proof that declared **forbidden actions**
   cannot fire under any sense input.
 - Compile-time mathematical proof that **rate limits** cannot be

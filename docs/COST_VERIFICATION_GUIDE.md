@@ -496,7 +496,7 @@ Loading pricing: /opt/.../pricing/defaults.toml (sha256 d23f54...)
 Emitting SMT-LIB constraints... 8 assertions, 1 obligation
 Running Z3 (timeout=30s)... unsat in 0.02s
 
-PROVEN: total_cost <= 0.50 USD across all execution paths.
+PROVEN: total_cost <= 0.50 USD for every admissible execution, at the declared token estimates and prices.
 Manifest: my_agent.manifest.json (Ed25519, signed).
 ```
 
