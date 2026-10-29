@@ -23161,3 +23161,265 @@ document itself.
                        over the repository root put files that git
                        ignores before them, and the four failed; which
                        file left no loop is not measured.
+
+  - S435 the number the operator gave the sixth entry of the seat S431,
+    which carries D434's landing and the release of NOUS 8.0.0: the
+    bump, the verifier-digest registry, the tag, PyPI, Servers A and B,
+    and the release VSA, each checked by a third party
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D434, which is landed and
+    append-only. The labels are D433's: READ IN THE SEAT'S CONTAINER,
+    ON A, DERIVED, OPERATOR, RULING. Every time below is in UTC, on
+    10-29 of 2026. An operator's time is the time his message was sent;
+    a time printed by a tool on A is A's clock and is written so. A
+    seat time written "hashed by" is the clock the seat read right
+    after the hash printed.
+
+    THE NUMBER. OPERATOR, 12:29Z: 435, in answer to the seat's question
+    which number the entry for the release takes; read as the number of
+    the seat's sixth entry. READ IN THE SEAT'S CONTAINER from 12:30:12Z
+    to 12:30:24Z by ns_count435.py (702257c0), on the mirror fetched at
+    12:29:51Z (named before it ran), 163 refs and 1034 commits, main at
+    b7cd60df: the header "  - S435 ", the anchor D435-, the marker
+    __s435_, the token FG-S435 and the codes FG-S431-AN to FG-S431-AR
+    and FG-S431-AT to FG-S431-AZ counted zero in the 3094 distinct
+    blobs of the trees of every ref, each read once, and in every
+    commit message on every ref. FG-S431-AS counted 1, in a blob:
+    D434's "FG-S431-AK to FG-S431-AS counted zero", the end of a range,
+    not a code. Controls on the same instrument: the header "  - S434 "
+    1, the anchor D434- 8, FG-S431-AL 2. The instrument that appends
+    this entry refuses unless the header, the anchor, the marker, the
+    token and the codes below still count zero in the document when it
+    runs. The codes below are this seat's, FG-S431-AN to FG-S431-AR.
+
+    D435-1  THE LANDING OF D434. ON A, by D434_LAND and D434_COMMIT,
+            each write after the operator's pame (10:36Z, 10:36Z,
+            10:37Z): the document 46ff3aeb to 34988739, 1413201 B, mode
+            644, owner 986 981; NEW_HEAD 37f23ef4, REMOTE_MAIN 37f23ef4.
+            READ IN THE SEAT'S CONTAINER at 10:37:56Z from GitHub:
+            37f23ef4, parent 71dece6f, author date 10:37:07Z, one path,
+            blob d006d66c to 885d28e1; the message body 3fef628b; the
+            last 12789 B of the document are the entry (126bc885).
+
+    D435-2  WHAT THE OPERATOR SAID. 10:39Z: "pma me 8.0.0", the version
+            (RULING). 10:49Z, 10:49Z, 10:56Z, 10:56Z: pame for the bump's
+            apply, the editable reinstall, the commit and the push.
+            11:08Z, 11:08Z, 11:09Z, 11:10Z, 11:32Z, 11:36Z: pame for the
+            registry's build, anchor, install, commit, deploy and push.
+            11:42Z, 11:45Z: pame for the tag and its push. 11:52Z: pame
+            for the approval of the pypi environment, given in the
+            browser after it. 11:57Z, 12:00Z, 12:01Z: pame for the
+            restart on A, the checkout on B and the restart on B.
+            12:14Z, 12:16Z, 12:18Z, 12:25Z, 12:26Z, 12:28Z: pame for the
+            release VSA's mint, anchor, install, commit, deploy and
+            push. 12:29Z: 435. Every write, signature, anchor, deploy,
+            push, approval and restart in this entry ran after its pame.
+
+    D435-3  THE BUMP, IN THE CONTAINER. BUMP_PREDICTIONS.md 0f30254e,
+            hashed by 10:42:18Z, before any edit. Base: a clone of the
+            mirror at 37f23ef4. Six files, by apply_bump.py, each edit
+            anchored on bytes that occur once: _version.py 8.0.0 and
+            (8, 0, 0); scripts/release.py PYTEST_FLOOR 3912, A's 3913 at
+            71dece6f minus one, the CI-portable rule 7.0.0 followed
+            (3634 passing, floor 3633); website/index.html the hero
+            3912; website/docs/index.html 3913 tests, floor 3912;
+            README.md the three marked version sites and the Tests row;
+            CHANGELOG.md a [8.0.0] section (Changed, Added, Known
+            limits, Notes) for 8c29ea0, 798c6cf, 7263d72 and 71dece6,
+            major by the rule the 7.0.0 notes state, behaviour the
+            previous version accepted is refused or removed. The bump's
+            commit message and the 8.0.0 notes say "refuses or changes";
+            the 7.0.0 notes say "refuses or removes". The suite
+            10:43:50Z to 10:46:20Z, the nous command on PATH: 3911
+            passed, 14 skipped, rc 0; claim_lint 406 files, 0
+            violations; sidecar_lint 259, 0; the seven dossier template
+            digests unchanged. Two mutants, the hero one below the floor and
+            one README site back at v7.0.0, each red.
+
+    D435-4  THE BUMP ON A. Kit: BUMP_LAND.py 70316c03, BUMP_COMMIT.py
+            9ad74469, BUMP_PAYLOAD.tar 3fbc9ce6, manifest da9fd9f3, 6
+            files, message d26cf9b6; BUMP_A_PREDICTIONS.md 00b1517c,
+            hashed by 10:47:54Z. ON A: 10:49Z the sums and --dry, STATE
+            BEFORE; --apply, READBACK 6 of 6; the editable reinstall,
+            nous-lang 8.0.0, metadata 8.0.0 and source 8.0.0 read from
+            /tmp; 10:55Z the suite under tests/, 3913 passed, 12
+            skipped, rc 0; 10:56Z --dry, lint 437 files and 0
+            violations; --commit, NEW_HEAD 768c2bb2; 10:57Z --push,
+            REMOTE_MAIN 768c2bb2. READ IN THE SEAT'S CONTAINER at
+            10:57:16Z from GitHub: 768c2bb2, parent 37f23ef4, six paths
+            each equal to the container's bytes, the message d26cf9b6.
+            ON A, 11:07Z: release.py --check rc 2, phases 0 to 5b OK
+            (3913 >= 3912), 5c seven MISSING for 8.0.0, as predicted.
+
+    D435-5  THE REGISTRY. READ IN THE SEAT'S CONTAINER before the build:
+            publish_verifier_registry.py build unions this install's
+            ndec.canonical_verifier_digests(), the seven VERIFY_OFFLINE
+            _PY* templates, into the published registry (FG-S431-AN);
+            the predicted canonical body f80c0e10, 23933 B, 154 entries.
+            Kit: REG_800.py 323585b9; REG_A_PREDICTIONS.md 8783bbff,
+            hashed by 11:01:26Z; pre-validated on a fixture with test
+            keys and a stubbed Rekor. ON A, A's clock: 11:08:17Z build,
+            the keys 119 B and 32 B mode 600 uid 0, signed.json
+            213b73ae, body f80c0e10, 154 entries, prior 147, lost 0,
+            changed 0, added 7 as pinned, signer cDpi1vlq pinned, tier
+            signed; 11:08:49Z anchor, marker first, Rekor v2 log2025-1
+            log_index 174366343, anchored.json 7e6ef662, 26502 B, tier
+            logged, signature unchanged; 11:09:36Z install, the
+            registry and its sidecar with mode 644, owner 986 981;
+            11:10:18Z commit, NEW_HEAD 580c28f4. 11:32Z: release.py
+            --check rc 0, 5c "all 7 verifier digests covered for 8.0.0",
+            5d 259 sidecars. 11:33Z the deploy, claim gate 437 files and
+            0 violations: index.html, docs/index.html, the registry and
+            its sidecar. 11:36Z: the public registry 200, equal to the
+            repo's, logged, 154 entries, 0 errors; the mirror CLEAN, 557
+            tracked. 11:36:53Z push, REMOTE_MAIN 580c28f4. READ IN THE
+            SEAT'S CONTAINER at 11:37:25Z from GitHub: 580c28f4, parent
+            768c2bb2, two paths; the registry 7e6ef662 equals its
+            sidecar and verifies logged offline, 154 entries, 0 errors;
+            the seven 8.0.0 entries are the live digests.
+
+    D435-6  THE TAG, CI AND PYPI. Kit: TAG_800.py 86e32d24;
+            TAG_A_PREDICTIONS.md 189035bd, hashed by 11:38:28Z. ON A:
+            11:42Z dry, v8.0.0 absent locally and on origin; 11:44Z the
+            annotated tag 2e03d71f, "NOUS 8.0.0", tagger Hlias Staurou,
+            peeling to 580c28f4; 11:47Z its push, REMOTE_TAG 2e03d71f.
+            11:51Z, the CI poll from A: run 40868019484, created
+            11:46:52Z, build completed success, publish waiting. DERIVED:
+            the build job runs release.py --build, phase 2 included, so
+            the runner's suite passed at least 3912; its count was not
+            read. 11:55:40Z (A's clock): publish completed success. READ
+            IN THE SEAT'S CONTAINER at 11:56:04Z from PyPI: the wheel
+            f627ff99, 886986 B, uploaded 11:53:00Z, and the sdist
+            b7d7fd7d, 1385898 B, 11:53:02Z; both downloads equal those
+            digests; in a fresh venv nous-lang 8.0.0 gives metadata and
+            _version 8.0.0, the seven template digests of the registry
+            and the N10 line. ON A, 11:57Z: the same digests and the same
+            venv result.
+
+    D435-7  THE SERVERS. ON A, 11:57:55Z: nous-api restarted, MainPID
+            1875708 to 2608862, /v1/health 8.0.0. ON B through A,
+            11:59Z: HEAD cd27b35a (v7.0.0), porcelain "?? .venv/",
+            health 7.0.0, the .venv's pip metadata 5.80.0 (FG-S431-AO);
+            12:01Z: the guards (the tag peels to 580c28f4, the porcelain
+            is the one allowed line) and the checkout of v8.0.0; 12:01:50Z
+            the restart, MainPID 2380624 to 3078825, health 8.0.0.
+
+    D435-8  THE RELEASE VSA. READ IN THE SEAT'S CONTAINER: build_vsa.py,
+            mint_release_vsa.py, cli_verify_release.py,
+            rekor_anchor_v2.py, tsa_client.py, cold_audit.py and
+            rekor_v2_offline.py have no commit since v7.0.0, so the
+            verifier 2d24b70d and the key document e9cd1a34 were
+            predicted equal to 7.0.0's. Kit: VSA_800.py 7a87dadb;
+            VSA_A_PREDICTIONS.md 177a5acd, hashed by 12:07:33Z;
+            pre-validated on a fixture holding the real 7.0.0 bundle,
+            whose bare verifier passed with the PyPI 7.0.0 files and
+            whose commit gave 12 files and 505 insertions, as ab15431.
+            ON A, A's clock: 12:13:52Z recon, the release key 32 B mode
+            600 uid 0, the build provenance verified with sigstore,
+            payload fd0fcc04, source 580c28f4, builder
+            release.yml@refs/tags/v8.0.0; the PEP 740 publish payloads
+            96169a1d (wheel) and 68326774 (sdist); a TSA probe at
+            12:13:55Z verified against the pinned chain and its negative
+            control refused; 12:14:36Z mint, verifier 2d24b70d, key
+            document e9cd1a34, subjects the PyPI digests, source
+            580c28f4, ref refs/tags/v8.0.0, no backfill, federation as
+            rehearsed, the tool's ROOT-1 self-verify PASS,
+            vsaPayloadSha256 5b8d9744; 12:16:52Z anchor, journal first,
+            Rekor v2 log2025-1 log_index 174399694, tree_size 174399697,
+            RFC 3161 genTime 12:16:56Z, convergence PASS, journal LOGGED;
+            12:18:06Z bare verify PASS and the flipped-byte control rc
+            1; 12:18:59Z install, 12 files, mode 755 and 644, owner 986
+            981; 12:24Z the suite, 3913 passed, 12 skipped; 12:25:02Z
+            265 sidecars, 0 violations; 12:25:56Z commit, NEW_HEAD
+            b7cd60df; 12:27Z the deploy, 13 lines; 12:28Z the public
+            index 3a3bab3f equal to the repo's, cold_audit.py 8.0.0 from
+            /tmp rc 0, "4/4 classes verified cold", the mirror CLEAN at
+            569 tracked; 12:28:33Z push, REMOTE_MAIN b7cd60df.
+
+    D435-9  WHAT A THIRD PARTY SEES. READ IN THE SEAT'S CONTAINER at
+            12:29:02Z from GitHub: main b7cd60df, parent 580c28f4, 12
+            paths; v8.0.0 is tag object 2e03d71f peeling to 580c28f4.
+            With the bundle from GitHub and the wheel and sdist from
+            PyPI: verify_build_vsa_offline.py rc 0, "2 of 2 named
+            subject(s) re-derived", VERDICT: PASS; the offline
+            dual-root convergence with the repo's fixture pins PASS on
+            its five legs (operator Ed25519, Rekor inclusion, checkpoint
+            signature, RFC 3161 timestamp, log-to-VSA binding),
+            log_index 174399694, anchored digest 5b8d9744.
+
+    D435-10 WHAT THIS SEAT WROTE AND READ SINCE D434 WAS DRAFTED. To
+            this repository: 37f23ef4 (D434), 768c2bb2, 580c28f4, the
+            tag v8.0.0, b7cd60df, and this entry after its pames. To
+            PyPI, by the release workflow: nous-lang 8.0.0. To Rekor
+            log2025-1: entries 174366343 (the registry) and 174399694
+            (the release VSA). To /var/www on A: index.html,
+            docs/index.html, the registry and its sidecar, and the
+            8.0.0 release-VSA directory. On A outside the tree: the
+            system install of nous-lang 8.0.0 (editable), /root/reg800,
+            /root/vsa800 with its anchor journal, /tmp/p800, /tmp/v800,
+            and the kits in /root. On B: the checkout of v8.0.0. Seat
+            network: the fetches of 10:37:56Z, 10:57:16Z, 11:37:25Z,
+            12:29:02Z and 12:29:51Z, a gh call to the GitHub API
+            refused with 403 (this session has no API access), the PyPI
+            reads and a venv install at 11:56Z, and the PyPI reads of
+            the 7.0.0 files for the fixture, each named before it ran;
+            one fetch from GitHub was not (FG-S431-AR). The project: no
+            write. The harness asked twice more to commit the container
+            clone; declined (FG-S431-AI).
+
+    D435-11 WHAT STAYS OPEN. This entry on A by D435_LAND.py and
+            D435_COMMIT.py, each write after its pame. Then, for the
+            operator: NV (D430-9); whether the eight verifier texts
+            outside the registry (FG-S431-AN) get a signed digest list;
+            B's stale metadata (FG-S431-AO); the four order-dependent
+            tests (FG-S431-AM); D432-12's duplicate-key item, open in
+            part. The anchor journal /root/vsa800/out.anchor-journal.json
+            and /root/reg800 are operator state and stay as they are.
+
+    FINDINGS
+
+            FG-S431-AN SEAT. FIFTEEN WAS NOT WHAT THE REGISTRY SIGNS.
+                       D433-8 named fifteen verifier text digests "the
+                       release must sign", D434-6 and D434-8 repeated
+                       it, and the seat's messages said the registry
+                       signature covers them. The registry tool reads
+                       ndec.canonical_verifier_digests(): the seven
+                       VERIFY_OFFLINE_PY* templates, one entry per
+                       version. The other eight (chain-net,
+                       gap-witness, the two texts
+                       offline_verifier_builder.py emits, the
+                       standalone conformance text, the VSA text,
+                       VERIFY_NDEC_PY and README_NDEC_TXT) have no
+                       registry entry and no other signed digest list.
+                       The seat read the tool only when the build was
+                       next.
+
+            FG-S431-AO WORLD. B'S INSTALLED METADATA IS 5.80.0. The
+                       .venv on B holds an editable nous-lang whose pip
+                       metadata says 5.80.0 while its _version.py said
+                       7.0.0 and now 8.0.0; /v1/health reads _version.
+                       A metadata check on B reads a stale version.
+                       Not changed.
+
+            FG-S431-AP WORLD. A FETCH BRINGS A FOREIGN TAG HOME. In the
+                       tag tool's fixture, git fetch with the default
+                       refspec took a v8.0.0 another clone had pushed
+                       into the local repository, and it stayed there
+                       after the remote tag was deleted. TAG_800
+                       refuses a local tag that is not the pinned one;
+                       a hand-made tag step would have pushed nothing
+                       or the wrong tag.
+
+            FG-S431-AQ SEAT. A PREDICTED LINE THE TOOL DOES NOT PRINT.
+                       VSA_A_PREDICTIONS M5 predicted "2 of 2 subjects"
+                       in VSA_800 verify's output; its filter prints
+                       only the VERDICT line. The count was measured in
+                       the container (D435-9), not on A.
+
+            FG-S431-AR SEAT. A NETWORK CALL NOT NAMED BEFORE IT RAN.
+                       While reading the release-VSA tools, after
+                       12:01:50Z and before 12:07:33Z, the seat fetched
+                       main and the tags from GitHub into its mirror in
+                       the same command as a read of the tree, unnamed.
+                       Its time was not recorded.
