@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 from pathlib import Path
 
@@ -94,12 +95,13 @@ def test_gap_witness_dossier_verifies_offline(tmp_path: Path) -> None:
     assert "REFUTATION" in vtext
 
     proc = subprocess.run(
-        [sys.executable, str(out / "verify_offline.py")],
+        [sys.executable, str(out / "verify_offline.py")]
+        + manifest_signer_args(out),
         capture_output=True,
         text=True,
         cwd=str(out),
     )
-    assert proc.returncode == 0, (
+    assert proc.returncode == 3, (  # D4: a verified refutation is OUTSIDE
         "stdout=" + proc.stdout + " stderr=" + proc.stderr
     )
     assert "VERDICT: REFUTATION" in proc.stdout
@@ -122,7 +124,8 @@ def test_gap_witness_verifier_rejects_tampered_witness(
     gw.write_text(json.dumps(doc, sort_keys=True, indent=2) + "\n",
                   encoding="utf-8")
     proc = subprocess.run(
-        [sys.executable, str(out / "verify_offline.py")],
+        [sys.executable, str(out / "verify_offline.py")]
+        + manifest_signer_args(out),
         capture_output=True,
         text=True,
         cwd=str(out),

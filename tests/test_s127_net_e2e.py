@@ -12,6 +12,7 @@ and a forged net multiplier fails offline arithmetic.
 # __s127_net_e2e_test_v1__
 """
 from __future__ import annotations
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 
 import json
 import shutil
@@ -130,7 +131,8 @@ def test_full_chain_admits(tmp_path: Path) -> None:
     d2 = _build_full_chain(nous, tmp_path)
     assert (d2 / "chain" / "000_source.nous").is_file()
     assert (d2 / "chain" / "000_net.farkas.json").is_file()
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "blocking-net containment verified" in r.stdout
     assert "VERDICT: PASS" in r.stdout
@@ -141,7 +143,8 @@ def test_forged_carried_source_fails_offline(tmp_path: Path) -> None:
     d2 = _build_full_chain(nous, tmp_path)
     src_path = d2 / "chain" / "000_source.nous"
     src_path.write_bytes(src_path.read_bytes() + b"\n# tamper\n")
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode != 0
     assert "does not match the signed source_sha256" in (
         r.stdout + r.stderr
@@ -152,7 +155,8 @@ def test_deleted_net_bundle_fails_offline(tmp_path: Path) -> None:
     nous = _nous_cli()
     d2 = _build_full_chain(nous, tmp_path)
     (d2 / "chain" / "000_net.farkas.json").unlink()
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode != 0
     assert "containment bundle missing" in (r.stdout + r.stderr)
 
@@ -164,7 +168,8 @@ def test_forged_net_multiplier_fails_offline(tmp_path: Path) -> None:
     doc = json.loads(net_path.read_text(encoding="utf-8"))
     doc["certs"][0]["multipliers"][0] = "-1"
     net_path.write_text(json.dumps(doc), encoding="utf-8")
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode != 0
     assert "BLOCKING-NET REGRESSION" in (r.stdout + r.stderr)
 
@@ -207,6 +212,7 @@ def test_threshold_only_chain_carries_no_net_files(tmp_path: Path) -> None:
     assert _dossier(nous, s2, m2, d2, d1).returncode == 0
     assert not (d2 / "chain" / "000_net.farkas.json").exists()
     assert not (d2 / "chain" / "000_source.nous").exists()
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "blocking-net containment" not in r.stdout

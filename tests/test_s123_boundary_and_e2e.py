@@ -20,6 +20,7 @@ serialize_system itself still refuses boolean structure by design.
 # __s123_boundary_pin_test_v1__
 """
 from __future__ import annotations
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 
 import shutil
 import subprocess
@@ -221,7 +222,8 @@ def test_multivar_dossier_e2e_single_link(tmp_path: Path) -> None:
     assert (dossier / "coverage.smt2").is_file()
     assert (dossier / "coverage.farkas.json").is_file()
 
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(dossier))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(dossier), cwd=str(dossier))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "Farkas certificate verified by rational arithmetic" in r.stdout
     assert "VERDICT: PASS" in r.stdout
@@ -265,7 +267,8 @@ def test_multivar_dossier_e2e_chain_monotonicity(tmp_path: Path) -> None:
     assert r.returncode == 0, r.stderr
     assert (dossier2 / "chain").is_dir()
 
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(dossier2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(dossier2), cwd=str(dossier2))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "coverage-region monotonicity verified across 1 hop" in r.stdout
     assert "VERDICT: PASS" in r.stdout

@@ -91,21 +91,33 @@ temporary directory, emits a fresh `verify_vsa_offline.py` pinned to
 the local VSA key, and runs it. This executes the exact artifact a
 consumer runs (single source, zero drift) without mutating the bundle.
 
-Third parties verify with the shipped `verify_vsa_offline.py` directly:
+Third parties verify with the shipped `verify_vsa_offline.py` directly,
+with the VSA signer's raw Ed25519 public key in base64, taken out of
+band:
 
 ```
-python3 verify_vsa_offline.py
+python3 -I verify_vsa_offline.py --expect-signer BASE64
 ```
 
-It requires only `cryptography` and the standard library.
+<!-- __nt_v3_classes_docs_v1__ -->
+`-I` keeps Python from importing modules from the bundle's
+directory, which its sender controls: without it, a module planted
+there runs in place of the standard library's.
+It requires only `cryptography` and the standard library. It gives no
+PASS without `--expect-signer` (exit 2); a key the verifier was
+shipped with, inline or by registry, must equal it (else exit 1).
+Exit codes: 0 PASS, 1 INTEGRITY, 2 ENVIRONMENT, 3 OUTSIDE (authentic,
+the certificate's verdict is non-conformant and the VSA says so); the
+last line of stdout names the class. `nous vsa verify` passes the key
+it pins.
 
 ## 5. What the offline verifier checks
 
 The verifier is zero-trust by construction:
 
-1. It verifies the DSSE envelope signature against the pinned public
-   key using the exact PAE preimage, and parses only the verified
-   payload bytes (never the unverified envelope).
+1. It verifies the DSSE envelope signature against the
+   `--expect-signer` key using the exact PAE preimage, and parses only
+   the verified payload bytes (never the unverified envelope).
 2. It recomputes each input digest canonically and checks it against
    the VSA subject and `inputAttestations`.
 3. It verifies the manifest, trace, and certificate Ed25519 signatures
@@ -118,6 +130,10 @@ The verifier is zero-trust by construction:
 6. If a coverage Farkas certificate is carried, it re-checks the
    infeasibility certificate with `Fraction`; a forged sha-match that
    does not actually prove unsat is rejected.
+7. When the certificate carries the spec canon (`obligations_canon`),
+   it recomputes binding, surface, assumption discharge and bound
+   transfer from `trace.json` and refuses a recorded value that
+   disagrees; authorization and sequence are not recomputed.
 
 The output banner names each leg as PROVES or EVIDENCES so a reader can
 never mistake an EVIDENCES leg for a mathematical proof.

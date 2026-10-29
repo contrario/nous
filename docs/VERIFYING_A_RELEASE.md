@@ -173,10 +173,18 @@ The full file table, the reproduction procedure, and the boundary are in
 [VSA Conformance Vectors](VSA_CONFORMANCE_VECTORS.md). In short: fetch the
 bundle into one directory and run
 
-    python3 verify_vsa_offline.py
+    python3 -I verify_vsa_offline.py
 
 Expect exit `0`, `VERDICT: PASS`, and stdout byte-identical to the published
 `expected_stdout.txt` (`diff` them; the published `expected_exit.txt` is `0`).
+
+<!-- __nt_v3_vector_docs_v1__ -->
+v1 is frozen and its verifier reads no arguments, so it passes under any
+signer of its bytes. The v3 vector, served at `.../vsa-vectors/v3/`, gives no
+PASS without the VSA signer's key: run it as
+`python3 -I verify_vsa_offline.py --expect-signer <vectorKeys.vsaPubkeyB64>`
+with the key from v3's `index.json`; exit codes 0 PASS, 1 INTEGRITY,
+2 ENVIRONMENT, 3 OUTSIDE, the last line naming the class.
 
 This is the only published class whose verifier re-proves anything: the cost-cap
 and coverage Farkas certificates are re-checked offline by exact rational

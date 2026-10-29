@@ -20,6 +20,7 @@ import base64
 import hashlib
 import json
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 from pathlib import Path
 from typing import Any
@@ -95,7 +96,8 @@ def _write(tmp: Path, manifest_text: str, sidecar: bytes | None) -> None:
 
 def _run(tmp: Path) -> subprocess.CompletedProcess:
     return subprocess.run(
-        [sys.executable, "verify_offline.py"],
+        [sys.executable, "verify_offline.py"]
+        + manifest_signer_args(tmp),
         cwd=str(tmp), capture_output=True, text=True)
 
 
@@ -105,7 +107,7 @@ def test_gap_witness_verifies(tmp_path: Path) -> None:
     _write(tmp_path, _signed_text(m), gwb)
     r = _run(tmp_path)
     out = r.stdout + r.stderr
-    assert r.returncode == 0, out
+    assert r.returncode == 3, out  # D4: a verified refutation is OUTSIDE
     assert "VERDICT: REFUTATION" in out
     assert "result: gap-demonstrated" in out
 

@@ -8,6 +8,7 @@ import base64
 import hashlib
 import json
 import subprocess
+from _v3pin import vsa_pin_args  # __nt_v3_classes_tests_v1__
 import sys
 from pathlib import Path
 
@@ -171,7 +172,8 @@ def test_emit_bundle_verifies_offline(tmp_path):
     ])
     assert cli_vsa.cmd_vsa(args) == 0
     r = subprocess.run(
-        [sys.executable, str(out / "verify_vsa_offline.py")],
+        [sys.executable, str(out / "verify_vsa_offline.py")]
+        + vsa_pin_args(out),
         capture_output=True, text=True, cwd=str(out),
     )
     assert r.returncode == 0, r.stderr
@@ -213,7 +215,8 @@ def test_emit_without_coverage(tmp_path):
     assert cli_vsa.cmd_vsa(args) == 0
     assert not (out / "coverage.farkas.json").is_file()
     r = subprocess.run(
-        [sys.executable, str(out / "verify_vsa_offline.py")],
+        [sys.executable, str(out / "verify_vsa_offline.py")]
+        + vsa_pin_args(out),
         capture_output=True, text=True, cwd=str(out),
     )
     assert r.returncode == 0

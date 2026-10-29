@@ -1,0 +1,32 @@
+{
+  "assumption_discharge_ok": true,
+  "authorization_ok": true,
+  "binding_ok": true,
+  "bound_transfer_ok": true,
+  "certificate_schema_version": 4,
+  "codegen_binding_ok": true,
+  "codegen_sha256": "646aa027f8cbd7674c9bb2fddc8885669623f61435a499b1d8acea2c8fbd47da",
+  "conformant": true,
+  "cost_binding": null,
+  "cost_cap": "0.1",
+  "cost_currency": "USD",
+  "errors": [],
+  "issued_utc": "2000-01-01T00:00:00Z",
+  "nous_version": "vector",
+  "obligations_canon": "NV:7.0.0\nEV:1.0\nSS:f32489ca0e1d9b9899d172efabea7da1288a16bd73732b14e41c2c4a8c77645e\nPS:b87b183641aadad73a85d45ddaec9d0401bb3665d7d79642c56bbf3e5ccb08e3\nW:VectorWorld\nCC:0.1|USD\nMT:4\nD:cost_Probe_per_call:Real\nD:cost_Probe_total:Real\nD:total_cost:Real\nR:(assert (>= cost_Probe_per_call 0))\nR:(assert (>= cost_Probe_total 0))\nR:(assert (>= total_cost 0))\nA:(assert (= cost_Probe_per_call (/ (+ (* 3 100) (* 15 50)) 1000000)))\nA:(assert (= cost_Probe_total (* cost_Probe_per_call 4)))\nA:(assert (= total_cost cost_Probe_total))\nO:(assert (not (<= total_cost (/ 1 10))))\nDE:Tick",
+  "pricing_sha256": "b87b183641aadad73a85d45ddaec9d0401bb3665d7d79642c56bbf3e5ccb08e3",
+  "provider_token_integrity": null,
+  "realized_total": "0.00105",
+  "sequence_ok": true,
+  "signature": {
+    "algorithm": "ed25519",
+    "public_key_b64": "JUO5L/EJVRFHatyDadtt3JM2ZaEZeN2hQE7hBmypVZ0=",
+    "signature_b64": "MaP7sTk4TRl/bO5Kq4NSKeAX77NFABQ1UToyLTLRyOOclasfnuIQw5irpNMJ7nAvoI9/knJUVaMDr1wmuVNaCg=="
+  },
+  "smt_spec_sha256": "cb40b16c3cb13ae1fb9f664255c68758a9313ac4e098bea58e0b07825ee849b8",
+  "source_sha256": "f32489ca0e1d9b9899d172efabea7da1288a16bd73732b14e41c2c4a8c77645e",
+  "surface_ok": true,
+  "trace_sha256": "c146f7d66c50d6afd3da31134c98fe58785bd6320b51aee7ddb57f69e2f2ca2e",
+  "trace_signature_ok": true,
+  "world_name": "VectorWorld"
+}

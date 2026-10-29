@@ -466,7 +466,9 @@ def _cmd_verify(args: argparse.Namespace) -> int:
                 (tdir / name).write_bytes(src.read_bytes())
         vsa_verifier.emit_vsa_verifier(str(tdir), pinned)
         result = subprocess.run(
-            [sys.executable, str(tdir / "verify_vsa_offline.py")],
+            [sys.executable, "-I", "-B",  # __nt_v3_review_v1__
+             str(tdir / "verify_vsa_offline.py"),
+             "--expect-signer", pinned],  # __nt_v3_classes_wire_v1__
             capture_output=True, text=True, cwd=str(tdir),
         )
     sys.stdout.write(result.stdout)

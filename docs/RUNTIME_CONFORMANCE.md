@@ -172,17 +172,36 @@ booleans. A certificate without the canon prints NOT RECOMPUTED.
 **Scope, stated honestly.** The offline verifier checks, by Ed25519 signature
 and sha256 binding, that the signed verdict verifies under the key the
 certificate carries and is bound to these exact artifacts. That key names no
-signer on its own: without `--expect-signer`, any key that signed these bytes
-verifies. Run `python3 verify_conformance_offline.py --expect-signer BASE64`
-with the signer's raw Ed25519 public key in base64, obtained out of band, and
-a certificate signed by any other key fails; who holds that key is still
-established out of band. The public `/v1/verify-conformance` and
+signer on its own, so the verifier gives no PASS without a key the auditor
+supplies (NT-GATE-1 V3):
+
+    python3 -I verify_conformance_offline.py --expect-signer BASE64 \
+        [--expect-manifest-signer BASE64]
+
+`--expect-signer` is the certificate signer's raw Ed25519 public key in
+base64, obtained out of band. `manifest.json` must be signed by the
+`--expect-manifest-signer` key when it is given, else by the same key; its
+signature is checked over its body without `signature` and
+`transparency_log`. A run without `--expect-signer` exits 2; a certificate
+or manifest signed by any other key exits 1. Who holds each key is still
+established out of band. `-I` keeps Python from importing modules from the bundle's
+directory, which its sender controls: without it, a module planted
+there runs in place of the standard library's.
+
+<!-- __nt_v3_classes_docs_v1__ -->
+Exit codes: 0 PASS, 1 INTEGRITY (a signature, a binding or a recomputation
+fails), 2 ENVIRONMENT (no key, a malformed or unexpected argument, a missing
+dependency), 3 OUTSIDE (signed by the expected key or keys, and the
+certificate records a non-conformant run). The last line of stdout names
+the class (`CLASS: PASS`), and the output ends with a NOT CLAIMED list:
+what a PASS does not establish. The public `/v1/verify-conformance` and
 `/v1/verify-dossier` endpoints take the same optional `expected_signer_b64`
 request field; absent, their responses are unchanged. It does **not**
 re-derive the SMT bounds offline; that requires the toolchain and is the
 online `nous conformance verify` path. RFC 9943 (SCITT) asks a relying party
 to trust the issuer's verification key and identity; `--expect-signer` is
-where the relying party supplies that key, and a run without it does not.
+where the relying party supplies that key, and the verifier gives no PASS
+without it.
 
 ---
 

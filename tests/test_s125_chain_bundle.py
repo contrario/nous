@@ -15,6 +15,7 @@ threshold (proven); a secondary AND/band block forces the bundle structure.
 # __s125_chain_bundle_test_v1__
 """
 from __future__ import annotations
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 
 import hashlib
 import json
@@ -140,7 +141,8 @@ def test_chain_bundle_scalar_threshold_e2e_pass(tmp_path: Path) -> None:
     assert "__s125_chain_bundle_walk_v1__" in vtext
     assert (d2 / "chain").is_dir()
 
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "independently re-derived from the signed source" in r.stdout
     assert "bijection holds" in r.stdout
@@ -186,7 +188,8 @@ def test_chain_over_boolean_threshold_prior_e2e_pass(tmp_path: Path) -> None:
     ])
     assert r.returncode == 0, r.stderr
     assert (d2 / "chain" / "000_hop.farkas.json").is_file()
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "hop containment verified" in r.stdout
     assert "VERDICT: PASS" in r.stdout

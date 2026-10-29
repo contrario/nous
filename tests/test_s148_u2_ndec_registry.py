@@ -13,6 +13,7 @@ The registry-key pin and the log-key loader are monkeypatched to the synthetic
 keys; nothing is hardcoded.
 """
 from __future__ import annotations
+from _v3pin import key_public  # __nt_v3_classes_tests_v1__
 
 import base64
 import hashlib
@@ -241,7 +242,8 @@ def test_logged_registry_confirms_strict_passes(
     reg_path.write_text(json.dumps(reg), encoding="utf-8")
     _install_pins(monkeypatch, reg_key, log_allow)
     rc = ndec.verify_ndec_file(
-        out, strict_canonical=True, registry_path=str(reg_path)
+        out, strict_canonical=True, registry_path=str(reg_path),
+        public_key=key_public(tmp_path / "k.key"),
     )
     captured = capsys.readouterr().out
     assert rc == 0, captured
@@ -260,7 +262,8 @@ def test_logged_registry_non_strict_reports_footer(
     reg_path = tmp_path / "reg.json"
     reg_path.write_text(json.dumps(reg), encoding="utf-8")
     _install_pins(monkeypatch, reg_key, log_allow)
-    rc = ndec.verify_ndec_file(out, registry_path=str(reg_path))
+    rc = ndec.verify_ndec_file(out, registry_path=str(reg_path),
+                               public_key=key_public(tmp_path / "k.key"))
     captured = capsys.readouterr().out
     assert rc == 0
     assert "registry:logged:" in captured
@@ -313,7 +316,9 @@ def test_no_registry_is_s147_identical(tmp_path) -> None:
     can = ndec.build_ndec(
         d, key_path=tmp_path / "k2.key", output=tmp_path / "c.ndec"
     ).path
-    assert ndec.verify_ndec_file(can, strict_canonical=True) == 0
+    assert ndec.verify_ndec_file(
+        can, strict_canonical=True,
+        public_key=key_public(tmp_path / "k2.key")) == 0
 
 
 def test_broken_registry_file_degrades(tmp_path, capsys) -> None:
@@ -326,7 +331,8 @@ def test_broken_registry_file_degrades(tmp_path, capsys) -> None:
         )
         == 1
     )
-    rc = ndec.verify_ndec_file(out, registry_path=str(reg_path))
+    rc = ndec.verify_ndec_file(out, registry_path=str(reg_path),
+                               public_key=key_public(tmp_path / "k.key"))
     captured = capsys.readouterr()
     assert rc == 0
     assert "could not be read" in captured.err

@@ -15,7 +15,7 @@ import continuity_ledger as L
 FIELDS = dict(
     schema_version="1", nous_version="5.66.0", smt_emit_version="1",
     source_sha256="a" * 64, pricing_sha256="b" * 64, smt_spec_sha256="c" * 64,
-    world_name="w", cost_cap_usd="1.00", max_ticks=10, verdict="SAFE",
+    world_name="w", cost_cap_usd="1.00", max_ticks=10, verdict="proven",
     solver_name="z3", solver_version="4.16.0", elapsed_ms=5,
     timestamp_utc="2026-06-26T00:00:00Z",
 )
@@ -124,6 +124,7 @@ def test_circularity_run_digest_stable_with_attribution_present():
 # ============================================================
 import os
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 import tempfile
 
@@ -166,7 +167,7 @@ def _emit_and_run(tmp, m, op_sk, *, extra_files=None):
     vp = d / "verify_offline.py"
     vp.write_text(verify_text, encoding="utf-8")
     proc = subprocess.run(
-        [sys.executable, str(vp)], cwd=str(d),
+        [sys.executable, str(vp)] + manifest_signer_args(d), cwd=str(d),
         capture_output=True, text=True,
     )
     return proc, verify_text, m
@@ -222,7 +223,7 @@ def test_attested_verifier_fails_closed_on_tampered_and_replayed():
         vp = d / "verify_offline.py"
         vp.write_text(_emit_verifier_text(parsed), encoding="utf-8")
         proc = subprocess.run(
-            [sys.executable, str(vp)], cwd=str(d),
+            [sys.executable, str(vp)] + manifest_signer_args(d), cwd=str(d),
             capture_output=True, text=True)
         assert proc.returncode == 1, proc.stdout
         assert "OK   Ed25519 signature verified" in proc.stdout
@@ -248,7 +249,7 @@ def test_attested_verifier_fails_closed_on_tampered_and_replayed():
         vp = d / "verify_offline.py"
         vp.write_text(_emit_verifier_text(parsed), encoding="utf-8")
         proc = subprocess.run(
-            [sys.executable, str(vp)], cwd=str(d),
+            [sys.executable, str(vp)] + manifest_signer_args(d), cwd=str(d),
             capture_output=True, text=True)
         assert proc.returncode == 1, proc.stdout
         assert "OK   Ed25519 signature verified" in proc.stdout

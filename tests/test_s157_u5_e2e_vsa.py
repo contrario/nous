@@ -21,6 +21,7 @@ import argparse
 import base64
 import json
 import subprocess
+from _v3pin import vsa_pin_args  # __nt_v3_classes_tests_v1__
 import sys
 from pathlib import Path
 
@@ -136,7 +137,8 @@ def _emit_args(inputs, out, key):
 
 def _run_offline(bundle):
     return subprocess.run(
-        [sys.executable, str(bundle / "verify_vsa_offline.py")],
+        [sys.executable, str(bundle / "verify_vsa_offline.py")]
+        + vsa_pin_args(bundle),
         capture_output=True, text=True, cwd=str(bundle),
     )
 

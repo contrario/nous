@@ -14,6 +14,7 @@ from __future__ import annotations
 import ast
 import json
 import subprocess
+from _v3pin import cert_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 import tempfile
 import tomllib
@@ -255,6 +256,9 @@ def test_non_conformant_is_certifiable(pricing: _PricingTable) -> None:
     assert signed.errors
 
 
+_OP_KEY = Ed25519PrivateKey.from_private_bytes(bytes(range(32)))  # __nt_v3_classes_tests_v1__
+
+
 def test_offline_verifier_passes_conforming(pricing: _PricingTable) -> None:
     _spec_, man, tr, detail = _conforming(pricing)
     from manifest import manifest_json, sign_manifest, load_or_create_keypair
@@ -262,7 +266,7 @@ def test_offline_verifier_passes_conforming(pricing: _PricingTable) -> None:
         build_certificate(
             detail, tr, man, nous_version="5.13.0", issued_utc="t"
         ),
-        Ed25519PrivateKey.generate(),
+        _OP_KEY,
     )
     with tempfile.TemporaryDirectory() as d:
         dp = Path(d)
@@ -271,13 +275,14 @@ def test_offline_verifier_passes_conforming(pricing: _PricingTable) -> None:
             certificate_json(signed), encoding="utf-8"
         )
         (dp / "trace.json").write_text(_trace_json(tr), encoding="utf-8")
-        priv, pub, _ = load_or_create_keypair(dp / "k.key")
+        priv, pub = _OP_KEY, _OP_KEY.public_key()
         sig = sign_manifest(man, priv)
         (dp / "manifest.json").write_text(
             manifest_json(man, sig, pub), encoding="utf-8"
         )
         r = subprocess.run(
-            [sys.executable, str(dp / "verify_conformance_offline.py")],
+            [sys.executable, str(dp / "verify_conformance_offline.py")]
+            + cert_signer_args(dp),
             capture_output=True, text=True,
         )
     assert r.returncode == 0, r.stdout + r.stderr
@@ -292,7 +297,7 @@ def test_offline_verifier_detects_trace_tamper(
         build_certificate(
             detail, tr, man, nous_version="5.13.0", issued_utc="t"
         ),
-        Ed25519PrivateKey.generate(),
+        _OP_KEY,
     )
     with tempfile.TemporaryDirectory() as d:
         dp = Path(d)
@@ -303,13 +308,14 @@ def test_offline_verifier_detects_trace_tamper(
         doc = json.loads(_trace_json(tr))
         doc["events"][0]["input_tokens"] = 99999
         (dp / "trace.json").write_text(json.dumps(doc), encoding="utf-8")
-        priv, pub, _ = load_or_create_keypair(dp / "k.key")
+        priv, pub = _OP_KEY, _OP_KEY.public_key()
         sig = sign_manifest(man, priv)
         (dp / "manifest.json").write_text(
             manifest_json(man, sig, pub), encoding="utf-8"
         )
         r = subprocess.run(
-            [sys.executable, str(dp / "verify_conformance_offline.py")],
+            [sys.executable, str(dp / "verify_conformance_offline.py")]
+            + cert_signer_args(dp),
             capture_output=True, text=True,
         )
     assert r.returncode == 1

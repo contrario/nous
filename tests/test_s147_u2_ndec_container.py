@@ -16,6 +16,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 import ndec
+from _v3pin import key_public_b64  # __nt_v3_classes_tests_v1__
 
 _MINI_VERIFY_OFFLINE = (
     "#!/usr/bin/env python3\n"
@@ -152,7 +153,8 @@ def test_carried_verifier_passes(tmp_path) -> None:
     result = ndec.build_ndec(d, key_path=tmp_path / "k.key")
     out = _extract(result.path, tmp_path / "out")
     proc = subprocess.run(
-        [sys.executable, str(out / "verify_ndec.py")],
+        [sys.executable, str(out / "verify_ndec.py"), "--expect-signer",
+         key_public_b64(tmp_path / "k.key")],
         capture_output=True,
         text=True,
         timeout=120,
@@ -167,12 +169,13 @@ def test_carried_verifier_detects_tampered_artifact(tmp_path) -> None:
     out = _extract(result.path, tmp_path / "out")
     (out / "dossier" / "source.nous").write_bytes(b"swapped\n")
     proc = subprocess.run(
-        [sys.executable, str(out / "verify_ndec.py")],
+        [sys.executable, str(out / "verify_ndec.py"), "--expect-signer",
+         key_public_b64(tmp_path / "k.key")],
         capture_output=True,
         text=True,
         timeout=120,
     )
-    assert proc.returncode != 0
+    assert proc.returncode == 1, proc.stdout + proc.stderr
 
 
 def test_carried_verifier_detects_doctored_verifier(tmp_path) -> None:
@@ -184,9 +187,10 @@ def test_carried_verifier_detects_doctored_verifier(tmp_path) -> None:
         encoding="utf-8",
     )
     proc = subprocess.run(
-        [sys.executable, str(out / "verify_ndec.py")],
+        [sys.executable, str(out / "verify_ndec.py"), "--expect-signer",
+         key_public_b64(tmp_path / "k.key")],
         capture_output=True,
         text=True,
         timeout=120,
     )
-    assert proc.returncode != 0
+    assert proc.returncode == 1, proc.stdout + proc.stderr

@@ -14,6 +14,7 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 from pathlib import Path
 
@@ -66,7 +67,10 @@ def proven_run(tmp_path):
 
 def _run(script: str, cwd: Path) -> int:
     proc = subprocess.run(
-        [sys.executable, script], cwd=str(cwd), capture_output=True
+        [sys.executable, script]
+        + (manifest_signer_args(cwd) if script == "verify_offline.py"
+           else []),
+        cwd=str(cwd), capture_output=True
     )
     return proc.returncode
 

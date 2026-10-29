@@ -20,7 +20,9 @@ The deploy is ADDITIVE (rsync without --delete, excluding *.bak*), so served-onl
 files are expected. Orphans are reported, never condemned: a served orphan is not an
 overclaim by default -- read the bytes before assigning a class. The same *.bak*
 exclude is applied to the mirror walk so excluded files are not miscounted as
-MISSING_SERVED.
+MISSING_SERVED. The deploy also excludes __pycache__/ and *.pyc (bytecode a test run
+writes beside a vector's mint harness); the mirror walk drops them too, the served
+walk does not, so a served bytecode file is still reported as an orphan.
 
 Positive control: if zero tracked files are compared and none are missing, the run
 is a FAILED MEASUREMENT (rc 2), never a silent pass. An unreadable tree or file pair
@@ -59,12 +61,16 @@ def _sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def _walk_files(root: Path) -> list[str]:
+def _walk_files(root: Path, mirror: bool = False) -> list[str]:
     out: list[str] = []
-    for dirpath, _dirnames, filenames in os.walk(root):
+    for dirpath, dirnames, filenames in os.walk(root):
+        if mirror:  # __nt_v3_deploy_bytecode_v1__ the deploy skips these
+            dirnames[:] = [d for d in dirnames if d != "__pycache__"]
         for name in filenames:
             rel = os.path.relpath(Path(dirpath) / name, root)
             if _excluded(rel):
+                continue
+            if mirror and name.endswith(".pyc"):
                 continue
             out.append(rel)
     return out
@@ -78,7 +84,7 @@ def main() -> int:
         sys.stderr.write("FAILED MEASUREMENT: served tree not a directory: %s\n" % DST)
         return 2
 
-    src_files = sorted(_walk_files(SRC))
+    src_files = sorted(_walk_files(SRC, mirror=True))
     dst_files = set(_walk_files(DST))
 
     differ: list[str] = []

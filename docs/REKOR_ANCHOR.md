@@ -23,11 +23,20 @@ nous dossier-spec ./my_skill --anchor rekor --output ./dossier
 # Anchor a skill-export bundle to Rekor
 nous skill-export ./my_skill --anchor rekor --output ./bundle.zip
 
-# Offline verification, no NOUS install needed
+# Offline verification, no NOUS install needed; the key is the
+# publisher's Ed25519 public key in base64, taken out of band
 cd ./dossier
-python3 verify_offline.py
+python3 -I verify_offline.py --expect-signer <publisher key, base64>
 # VERDICT: PASS (Ed25519 manifest + Sigstore Rekor anchor via Path-beta dual signing)
+# ...
+# CLASS: PASS
 ```
+
+<!-- __nt_v3_classes_docs_v1__ -->
+The verifier gives no PASS without `--expect-signer` (exit 2), and a
+manifest signed by any other key exits 1. Exit codes: 0 PASS,
+1 INTEGRITY, 2 ENVIRONMENT, 3 OUTSIDE; the last line names the class.
+See `docs/VERIFY_DOSSIER.md`.
 
 Without the `--anchor rekor` flag, dossiers remain byte-identical to v5.2.0 output. Existing customers who do not opt in to Rekor anchoring see no change in their generated artefacts.
 

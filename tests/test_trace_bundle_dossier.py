@@ -28,6 +28,7 @@ import hashlib
 import importlib.util
 import json
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 import tempfile
 from pathlib import Path
@@ -106,7 +107,7 @@ def _assemble(dossier_dir: Path, pack: Path, template: str,
     dossier_dir.mkdir(parents=True, exist_ok=True)
     (dossier_dir / "source.nous").write_text("world W {}\n", encoding="utf-8")
     src_sha = hashlib.sha256(b"world W {}\n").hexdigest()
-    man = {"source_sha256": src_sha}
+    man = {"source_sha256": src_sha, "verdict": "proven"}  # __nt_v3_classes_tests_v1__
     if with_field:
         import shutil
         shutil.copytree(pack, dossier_dir / "trace_bundle")
@@ -122,7 +123,8 @@ def _assemble(dossier_dir: Path, pack: Path, template: str,
 
 
 def _run(dossier_dir: Path):
-    r = subprocess.run([sys.executable, str(dossier_dir / "verify_offline.py")],
+    r = subprocess.run([sys.executable, str(dossier_dir / "verify_offline.py")]
+                       + manifest_signer_args(dossier_dir),
                        capture_output=True, text=True)
     return r.returncode, r.stdout, r.stderr
 

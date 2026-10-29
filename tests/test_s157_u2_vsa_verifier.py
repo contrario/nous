@@ -7,6 +7,7 @@ import base64
 import hashlib
 import json
 import subprocess
+from _v3pin import vsa_pin_args  # __nt_v3_classes_tests_v1__
 import sys
 
 import pytest
@@ -75,7 +76,8 @@ def _sign(doc, priv, canon, algorithm=True):
 
 def _run(dirp):
     r = subprocess.run(
-        [sys.executable, str(dirp / "verify_vsa_offline.py")],
+        [sys.executable, str(dirp / "verify_vsa_offline.py")]
+        + vsa_pin_args(dirp),
         capture_output=True, text=True, cwd=str(dirp),
     )
     return r.returncode, r.stdout, r.stderr
@@ -334,8 +336,8 @@ def test_failed_but_consistent_returns_one(tmp_path):
         str(tmp_path), vsa.public_key_raw_b64(vk.public_key())
     )
     rc, out, err = _run(tmp_path)
-    assert rc == 1
-    assert "VERDICT: FAIL" in out
+    assert rc == 3  # D4: authentic, the bound was not held  # __nt_v3_classes_tests_v1__
+    assert "VERDICT: OUTSIDE" in out
 
 
 def test_emit_refuses_sentinel_and_empty():

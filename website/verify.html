@@ -140,7 +140,17 @@ pre.code{background:var(--bg2);border:1px solid var(--gold-b);border-radius:6px;
       <code style="font-family:var(--mono);color:var(--gold)">source.nous</code>:
     </p>
 <pre class="code">cd path/to/dossier/
-python3 verify_offline.py</pre>
+python3 -I verify_offline.py --expect-signer &lt;publisher key, base64&gt;</pre>
+    <p style="color:var(--td);font-size:12px;margin-top:14px;line-height:1.6">
+      <!-- __nt_v3_classes_docs_v1__ -->
+      The key is the publisher's raw Ed25519 public key in base64, taken out of band,
+      not from the dossier. Without it the verifier gives no PASS (exit 2); a manifest
+      signed by any other key exits 1. Exit codes: 0 PASS, 1 INTEGRITY, 2 ENVIRONMENT,
+      3 OUTSIDE (the manifest is authentic and its solver verdict is not proven). The
+      last line of output names the class. <code>-I</code> keeps Python from importing
+      modules from the dossier directory, which its sender controls. Dossiers emitted by
+      earlier releases carry a verifier that reads no key and does not check who signed.
+    </p>
     <p style="color:var(--t3);font-size:11px;margin-top:12px;font-family:var(--mono);letter-spacing:0.04em">
       DEPENDENCIES: cryptography &gt;= 42 · Python &gt;= 3.11 · NO NOUS INSTALL REQUIRED
     </p>

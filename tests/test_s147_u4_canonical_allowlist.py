@@ -2,6 +2,7 @@
 # __s147_u4_canonical_tests_v1__
 """
 from __future__ import annotations
+from _v3pin import key_public  # __nt_v3_classes_tests_v1__
 
 import base64
 import hashlib
@@ -98,7 +99,8 @@ def test_plain_template_is_canonical(tmp_path, capsys) -> None:
     out = ndec.build_ndec(
         d, key_path=tmp_path / "k.key", output=tmp_path / "c.ndec"
     ).path
-    rc = ndec.verify_ndec_file(out)
+    rc = ndec.verify_ndec_file(
+        out, public_key=key_public(tmp_path / "k.key"))
     captured = capsys.readouterr().out
     assert rc == 0
     assert "trusting-trust closed" in captured
@@ -110,7 +112,8 @@ def test_noncanonical_degrades(tmp_path, capsys) -> None:
     out = ndec.build_ndec(
         d, key_path=tmp_path / "k.key", output=tmp_path / "n.ndec"
     ).path
-    rc = ndec.verify_ndec_file(out)
+    rc = ndec.verify_ndec_file(
+        out, public_key=key_public(tmp_path / "k.key"))
     captured = capsys.readouterr().out
     assert rc == 0
     assert "not confirmed canonical" in captured
@@ -130,7 +133,9 @@ def test_strict_canonical_allows_canonical(tmp_path) -> None:
     out = ndec.build_ndec(
         d, key_path=tmp_path / "k.key", output=tmp_path / "sc.ndec"
     ).path
-    assert ndec.verify_ndec_file(out, strict_canonical=True) == 0
+    assert ndec.verify_ndec_file(
+        out, strict_canonical=True,
+        public_key=key_public(tmp_path / "k.key")) == 0
 
 
 def test_malicious_signer_doctored_verifier_degrades_not_closed(
@@ -145,7 +150,8 @@ def test_malicious_signer_doctored_verifier_degrades_not_closed(
     out = ndec.build_ndec(
         d, key_path=tmp_path / "k.key", output=tmp_path / "m.ndec"
     ).path
-    rc = ndec.verify_ndec_file(out)
+    rc = ndec.verify_ndec_file(
+        out, public_key=key_public(tmp_path / "k.key"))
     captured = capsys.readouterr().out
     assert rc == 0
     assert "trusting-trust closed" not in captured

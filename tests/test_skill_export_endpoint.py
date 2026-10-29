@@ -9,6 +9,7 @@ signing, since these are local libraries and run in milliseconds.
 # __session77_B09_fix_auth_test_applied_v1__
 """
 from __future__ import annotations
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 
 import io
 import os
@@ -189,7 +190,8 @@ def test_endpoint_dossier_verifies_offline(
     dossier = tmp_path / "market-monitor" / "dossier"
     assert (dossier / "verify_offline.py").is_file()
     result = subprocess.run(
-        [sys.executable, "verify_offline.py"],
+        [sys.executable, "verify_offline.py"]
+        + manifest_signer_args(dossier),
         cwd=str(dossier),
         capture_output=True,
         text=True,

@@ -19,6 +19,7 @@ import importlib.util
 import json
 import shutil
 import subprocess
+from _v3pin import conformance_pin_args  # __nt_v3_classes_tests_v1__
 import sys
 from pathlib import Path
 
@@ -29,7 +30,7 @@ REPO = Path(__file__).resolve().parent.parent
 LINT = REPO / "scripts" / "claim_lint.py"
 CLAIMS = REPO / "claims.toml"
 _VEC = REPO / "examples" / "demos" / "cert-4679350"
-_NEW_SCOPE = "not checked against any expected signer"
+_NEW_SCOPE = "signed by the --expect-signer key"  # __nt_v3_classes_tests_v1__
 
 
 def _lint_module():
@@ -115,7 +116,8 @@ def _emit(tmp_path: Path, anchored: bool) -> Path:
 def test_w6_unanchored_default_stdout_scoped(tmp_path: Path) -> None:
     script = _emit(tmp_path, False)
     r = subprocess.run(
-        [sys.executable, "-I", script.name], cwd=str(script.parent),
+        [sys.executable, "-I", script.name]
+        + conformance_pin_args(script.parent), cwd=str(script.parent),
         capture_output=True, text=True,
     )
     assert r.returncode == 0

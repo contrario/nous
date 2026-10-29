@@ -1,0 +1,25 @@
+{
+  "constraints": [
+    {
+      "coeffs": {
+        "": "10000",
+        "amount": "-1"
+      },
+      "strict": true
+    },
+    {
+      "coeffs": {
+        "": "-10000",
+        "amount": "1"
+      },
+      "strict": false
+    }
+  ],
+  "contradiction": "0 < 0",
+  "fragment": "linear-real-single-comparison",
+  "multipliers": [
+    "1",
+    "1"
+  ],
+  "threshold_expr": "amount > 10000"
+}

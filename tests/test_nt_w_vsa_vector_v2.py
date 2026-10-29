@@ -69,11 +69,11 @@ def _index() -> dict:
     return json.loads(p.read_text(encoding="utf-8"))
 
 
-def _run_verifier(d: Path, verifier: Path | None = None):
+def _run_verifier(d: Path, verifier: Path | None = None, args=()):
     if verifier is not None:
         shutil.copy2(verifier, d / "verify_vsa_offline.py")
     p = subprocess.run(
-        [sys.executable, "-B", "verify_vsa_offline.py"],
+        [sys.executable, "-B", "verify_vsa_offline.py"] + list(args),
         capture_output=True, text=True, cwd=str(d),
     )
     return p.returncode, p.stdout, p.stderr
@@ -197,7 +197,8 @@ def test_w4_one_row_forgery_v1_proves_v2_and_template_refuse(tmp_path):
                 Ed25519PrivateKey.from_private_bytes(SEED_VSA)
                 .public_key().public_bytes_raw()).decode()
             vsa_verifier.emit_vsa_verifier(str(d), pub)
-            runs[label] = _run_verifier(d)
+            runs[label] = _run_verifier(
+                d, args=["--expect-signer", pub])  # __nt_v3_classes_tests_v1__
     rc, out, err = runs["v1"]
     assert rc == 0, err
     assert "PROVEN offline" in out and "VERDICT: PASS" in out
@@ -281,25 +282,25 @@ def early(tmp_path_factory):
                 tmp_path_factory.mktemp("w5") / "early")
 
 
-def test_w5_harness_does_not_depend_on_the_wall_clock(early, tmp_path):
-    assert early is not None, "v2 harness absent"
-    rc1, err1, d1 = early
-    rc2, err2, d2 = mint(HARNESS_V2, SOURCE_V2, "2031-01-01",
-                         tmp_path / "late")
-    assert rc1 == 0, err1
-    assert rc2 == 0, err2
-    assert sorted(d1) == sorted(NAMES)
-    assert d1 == d2
+def test_w5_v2_harness_stops_on_the_current_tree(early, tmp_path):
+    # NT-GATE-1 V3: the template v2's harness emits now needs
+    # --expect-signer, which that harness does not pass, so its PASS
+    # gate stops the mint on this tree. v2 reproduces from the tree it
+    # was committed from, as its index says. Clock and price-layer
+    # independence is checked on v3's harness (test_nt_v3_vector.py).
+    assert early is not None, "v2 harness absent"  # __nt_v3_classes_tests_v1__
+    rc1, err1, _d1 = early
+    assert rc1 == 1, err1
+    assert "PASS GATE FAILED" in err1, err1
+    assert "the tree it was committed from" in _index()["reproduce"]["remint"]
 
 
-def test_w6_harness_does_not_depend_on_a_price_layer(early, tmp_path):
-    assert early is not None, "v2 harness absent"
-    rc1, err1, d1 = early
-    rc2, err2, d2 = mint(HARNESS_V2, SOURCE_V2, "2026-01-01",
-                         tmp_path / "layers", layers=True)
-    assert rc1 == 0, err1
-    assert rc2 == 0, err2
-    assert d1 == d2
+def test_w6_v2_index_pins_the_harness_it_was_measured_with():
+    # NT-GATE-1 V3: see W5. The record of v2's reproduction stays its
+    # index: the harness bytes it was measured with, pinned by sha256.  # __nt_v3_classes_tests_v1__
+    h = _index()["reproduce"]["harness"]
+    assert h["name"] == HARNESS_V2.name
+    assert h["sha256"] == _sha(HARNESS_V2.read_bytes())
 
 
 # ------------------------------------------------------------------ W7

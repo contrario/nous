@@ -26,6 +26,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 
 import pytest
 
@@ -81,7 +82,8 @@ def _build_pack(where):
 
 
 def _run_emitted(out):
-    r = subprocess.run(["python3", str(out / "verify_offline.py")],
+    r = subprocess.run(["python3", str(out / "verify_offline.py")]
+                       + manifest_signer_args(out),
                        capture_output=True, text=True)
     return r.returncode, r.stdout, r.stderr
 

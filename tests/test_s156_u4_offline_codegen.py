@@ -13,6 +13,7 @@ from __future__ import annotations
 import base64
 import json
 import subprocess
+from _v3pin import cert_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 import tempfile
 from datetime import datetime, timezone
@@ -116,21 +117,25 @@ def _signed_cert(detail, tr, man):
         build_certificate(
             detail, tr, man, nous_version="5.54.0", issued_utc="t"
         ),
-        Ed25519PrivateKey.generate(),
+        _OP_KEY,
     )
 
 
 def _write_manifest(dp, man):
-    priv, pub, _ = load_or_create_keypair(dp / "k.key")
+    priv, pub = _OP_KEY, _OP_KEY.public_key()
     sig = sign_manifest(man, priv)
     (dp / "manifest.json").write_text(
         manifest_json(man, sig, pub), encoding="utf-8"
     )
 
 
+_OP_KEY = Ed25519PrivateKey.from_private_bytes(bytes(range(32)))  # __nt_v3_classes_tests_v1__
+
+
 def _run(dp):
     return subprocess.run(
-        [sys.executable, str(dp / "verify_conformance_offline.py")],
+        [sys.executable, str(dp / "verify_conformance_offline.py")]
+        + cert_signer_args(dp),
         capture_output=True, text=True,
     )
 
@@ -176,7 +181,7 @@ def test_offline_verifier_rejects_codegen_lie() -> None:
     canon = json.dumps(
         body, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")
-    key = Ed25519PrivateKey.generate()
+    key = _OP_KEY  # the operator itself signs a lying certificate  # __nt_v3_classes_tests_v1__
     pub = key.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)
     doc["signature"] = {
         "algorithm": "ed25519",

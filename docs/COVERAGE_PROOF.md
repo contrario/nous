@@ -258,12 +258,21 @@ REFUTED over a stricter declared threshold (fail-closed):
 
 Offline replay of the proven dossier (z3 absent):
 
-    cd out/dossier && PYTHONPATH=<dir-with-stub-z3> python3 verify_offline.py
+    cd out/dossier && PYTHONPATH=<dir-with-stub-z3> \
+        python3 -I verify_offline.py --expect-signer <publisher key, base64>
     # OK Ed25519 signature verified
     # OK source.sha256 / coverage.smt2 sha256 / coverage.farkas.json sha256
     # OK Farkas certificate verified by rational arithmetic, no solver (0 < 0)
     # NOTE z3 not installed; the Farkas arithmetic proof above is sufficient
     # VERDICT: PASS
+    # ...
+    # CLASS: PASS
+
+  <!-- __nt_v3_classes_docs_v1__ -->
+  The key is the publisher's Ed25519 public key in base64, taken out of
+  band; without `--expect-signer` the verifier gives no PASS (exit 2).
+  Exit codes: 0 PASS, 1 INTEGRITY, 2 ENVIRONMENT, 3 OUTSIDE; the last
+  line names the class.
 
 ================================================================
 8. Trust model summary

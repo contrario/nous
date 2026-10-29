@@ -16,6 +16,7 @@ from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 import ndec
 import cli_ndec
+from _v3pin import key_public, key_public_b64  # __nt_v3_classes_tests_v1__
 
 _MINI_VERIFY_OFFLINE = (
     "#!/usr/bin/env python3\n"
@@ -105,7 +106,8 @@ def test_parser_and_build(tmp_path, capsys) -> None:
 
 def test_verify_file_passes(tmp_path) -> None:
     ndec_path = _build(tmp_path)
-    assert ndec.verify_ndec_file(ndec_path) == 0
+    assert ndec.verify_ndec_file(
+        ndec_path, public_key=key_public(tmp_path / "k.key")) == 0
 
 
 def test_verify_file_detects_tampered_artifact(tmp_path) -> None:
@@ -144,5 +146,7 @@ def test_verify_cmd_via_parser(tmp_path) -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="command", required=True)
     cli_ndec.build_ndec_parser(sub)
-    args = ap.parse_args(["ndec", "verify", str(ndec_path)])
+    args = ap.parse_args(["ndec", "verify", str(ndec_path),
+                          "--expect-signer",
+                          key_public_b64(tmp_path / "k.key")])
     assert cli_ndec.cmd_ndec(args) == 0

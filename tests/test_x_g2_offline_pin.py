@@ -38,11 +38,17 @@ _MISMATCH = "FAIL: certificate signer is not the expected key"
 _BADKEY = (
     "ERROR: --expect-signer is not a base64 raw 32-byte Ed25519 public key"
 )
-_USAGE = "usage: python3 verify_conformance_offline.py [--expect-signer BASE64]"
+_USAGE = ("usage: python3 -I verify_conformance_offline.py --expect-signer "  # __nt_v3_classes_tests_v1__
+          "BASE64 [--expect-manifest-signer BASE64]")
 
 
 def _own_key_b64() -> str:
     doc = json.loads((_VEC / "conformance.json").read_text(encoding="utf-8"))
+    return doc["signature"]["public_key_b64"]
+
+
+def _manifest_key_b64() -> str:  # __nt_v3_classes_tests_v1__
+    doc = json.loads((_VEC / "manifest.json").read_text(encoding="utf-8"))
     return doc["signature"]["public_key_b64"]
 
 
@@ -69,12 +75,14 @@ def _run(tmp_path: Path, anchored: bool, argv: list[str]):
 
 def test_o1_unanchored_default(tmp_path: Path) -> None:
     r = _run(tmp_path, False, [])
-    assert r.returncode == 0
+    assert r.returncode == 2  # K3.2: no PASS without --expect-signer  # __nt_v3_classes_tests_v1__
+    assert r.stdout.splitlines()[-1] == "CLASS: ENVIRONMENT"
     assert _OK_LINE not in r.stdout and "SIGNER:" not in r.stdout
 
 
 def test_o2_unanchored_own_key(tmp_path: Path) -> None:
-    r = _run(tmp_path, False, ["--expect-signer", _own_key_b64()])
+    r = _run(tmp_path, False, ["--expect-signer", _own_key_b64(),
+             "--expect-manifest-signer", _manifest_key_b64()])  # __nt_v3_classes_tests_v1__
     assert r.returncode == 0
     assert _OK_LINE in r.stdout and _SCOPE_LINE in r.stdout
 
@@ -99,12 +107,14 @@ def test_o5_unanchored_unknown_argument(tmp_path: Path) -> None:
 
 def test_o6_anchored_default(tmp_path: Path) -> None:
     r = _run(tmp_path, True, [])
-    assert r.returncode == 0
+    assert r.returncode == 2  # K3.2: no PASS without --expect-signer  # __nt_v3_classes_tests_v1__
+    assert r.stdout.splitlines()[-1] == "CLASS: ENVIRONMENT"
     assert _OK_LINE not in r.stdout and "SIGNER:" not in r.stdout
 
 
 def test_o7_anchored_own_key(tmp_path: Path) -> None:
-    r = _run(tmp_path, True, ["--expect-signer", _own_key_b64()])
+    r = _run(tmp_path, True, ["--expect-signer", _own_key_b64(),
+             "--expect-manifest-signer", _manifest_key_b64()])  # __nt_v3_classes_tests_v1__
     assert r.returncode == 0
     assert _OK_LINE in r.stdout and _SCOPE_LINE in r.stdout
 

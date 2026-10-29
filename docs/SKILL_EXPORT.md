@@ -290,10 +290,13 @@ bundle is verifiable offline using only the standard
 
 ```
 cd <skill-name>/dossier/
-python3 verify_offline.py
+python3 -I verify_offline.py --expect-signer <publisher key, base64>
 ```
 
-A passing verification produces:
+<!-- __nt_v3_classes_docs_v1__ -->
+The key is the publisher's raw Ed25519 public key, taken out of band,
+not from the bundle; without it the verifier gives no PASS (exit 2).
+A passing verification produces (abridged):
 
 ```
 OK   Ed25519 signature verified
@@ -305,12 +308,20 @@ VERDICT: PASS
   verdict:    proven
   solver:     z3 <version>
   timestamp:  <iso-8601>
+
+NOT CLAIMED (NT-GATE-1 5.5):
+  - declared estimates: ...
+  ...
+CLASS: PASS
 ```
 
-The verifier checks two things: (a) the Ed25519 signature on
-`manifest.json` verifies under `public_key.b64`, and (b) the SHA-256
-of `source.nous` matches the value in the manifest. That is the
-entire chain of custody.
+The verifier checks that (a) the manifest's signer is the key given
+as `--expect-signer` and the Ed25519 signature on `manifest.json`
+verifies under it, and (b) the SHA-256 of `source.nous` matches the
+value in the manifest, plus any proof leg the dossier carries. Exit
+codes: 0 PASS, 1 INTEGRITY, 2 ENVIRONMENT, 3 OUTSIDE (authentic, and
+the solver verdict is not `proven`); the last line names the class.
+Who holds the key is established out of band.
 
 ## 10. What this is and is not
 

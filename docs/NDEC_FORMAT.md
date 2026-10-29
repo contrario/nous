@@ -69,21 +69,30 @@ own Ed25519 manifest signature; both reuse the same Ed25519 key family.
 
 A conforming verifier performs, in order, refusing on the first failure:
 
-1. DSSE envelope: Ed25519 verify over `PAE(payloadType, payload)`; payloadType
-   and predicateType are the NOUS decision types; `keyid == sha256(pubkey)`.
+1. DSSE envelope: Ed25519 verify over `PAE(payloadType, payload)` under the
+   key the auditor supplies (`--expect-signer`, out of band); the
+   predicate's signer key must equal it; payloadType and predicateType are
+   the NOUS decision types; `keyid == sha256(pubkey)`.
 2. Parse the verified payload exactly once; never re-parse after verification.
 3. Subject binding: recompute the canonical manifest sha256 from
    `dossier/manifest.json` and require it to equal the subject digest.
 4. Artifact binding: recompute the sha256 of every carried artifact named in
    the predicate -- including `verify_offline.py` -- and require each to match.
-5. Inner proof: run the dossier's `verify_offline.py` (or re-derive with the
-   installed verifier), which checks the Ed25519 manifest signature, the
-   source sha, and the cost/coverage proof (Z3 or stdlib Farkas).
+   The predicate must declare `verify_offline_sha256` and `manifest_sha256`
+   (the whole `manifest.json`, signature block included).
+5. Inner proof: run the dossier's `verify_offline.py` isolated
+   (`python -I -B`) with `--expect-signer` set to the manifest's own key,
+   which step 4 binds to the auditor-pinned envelope; it checks the Ed25519
+   manifest signature, the source sha, and the proof legs the dossier
+   carries (Z3 or stdlib Farkas). A manifest verdict other than `proven`
+   is OUTSIDE (exit 3).
 6. Honest degradation: a coverage step that needs Z3 in an environment without
    it reports environment-limited (exit 2) rather than passing or failing.
 7. Verdict and scope are printed, including the machine-readable honest
    boundary (proves / evidences / not-claimed).
-8. Exit 0 PASS, 1 FAIL, 2 environment-limited.
+8. Exit 0 PASS, 1 INTEGRITY, 2 ENVIRONMENT (no key, or environment-
+   limited), 3 OUTSIDE (authentic, the solver verdict is not `proven`); the
+   last line of stdout names the class (NT-GATE-1 V3).
 
 ## Trust model
 
@@ -92,9 +101,11 @@ Two verification paths exist, by design at different trust levels:
 - The carried `verify_ndec.py` is a no-install convenience: it checks the
   envelope and bindings in `cryptography` + stdlib, then runs the
   signature-pinned carried dossier verifier as a subprocess. Its guarantee
-  reduces to the signer key plus the predicate pin.
-- The installed `nous verify <file>.ndec` is the trusted path: the envelope
-  and binding logic are the installed NOUS code, not carried bytes. It
+  reduces to the signer key the auditor pins plus the predicate pin.
+- The installed `nous ndec verify <file>.ndec --expect-signer BASE64` is the
+  trusted path: the envelope
+  and binding logic are the installed NOUS code, not carried bytes; the
+  carried dossier verifier still runs, isolated (`python -I -B`). It
   additionally confirms the carried `verify_offline.py` is an unmodified
   official NOUS verifier by exact-sha membership in the installed canonical
   template set (`canonical_verifier_digests`). A match closes the
@@ -113,13 +124,22 @@ proposed but not yet shipped.
 ## CLI
 
     nous ndec build <dossier-dir> [--key-path PATH] [-o OUT.ndec]
-    nous ndec verify <file>.ndec [--strict-canonical]
+    nous ndec verify <file>.ndec --expect-signer BASE64 [--strict-canonical]
     nous verify <file>.ndec
 
 `build` wraps an existing dossier directory; it does not rebuild the dossier,
 and it refuses to wrap a dossier whose manifest signature or declared shas do
 not verify. `verify` and `nous verify <file>.ndec` use the installed trusted
-path.
+path. `--expect-signer` is the `.ndec` signer's raw Ed25519 public key in
+base64, taken out of band; without it there is no PASS (exit 2), and
+`nous verify <file>.ndec`, which takes no key, exits 2 with a note naming
+`nous ndec verify ... --expect-signer`. The carried verifier takes the same
+key: `python3 -I verify_ndec.py --expect-signer BASE64`. `-I` keeps Python from importing modules from the bundle's
+directory, which its sender controls: without it, a module planted
+there runs in place of the standard library's.
+Both run the carried dossier verifier isolated (`python -I -B`).
+
+<!-- __nt_v3_ndec_carried_v1__ -->
 
 ## Determinism
 

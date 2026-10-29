@@ -11,9 +11,28 @@ verifier, and confirm byte-for-byte that the canonical manifest body, the
 Ed25519 signatures, and the cost- and coverage-Farkas verdicts are exactly what
 NOUS produces.
 
-Served at: `https://nous-lang.org/.well-known/nous/vsa-vectors/v2/` (the
-current vector) and `https://nous-lang.org/.well-known/nous/vsa-vectors/v1/`
-(frozen).
+Served at: `https://nous-lang.org/.well-known/nous/vsa-vectors/v3/` (the
+current vector), `https://nous-lang.org/.well-known/nous/vsa-vectors/v2/`
+and `https://nous-lang.org/.well-known/nous/vsa-vectors/v1/` (both frozen).
+
+<!-- __nt_v3_vector_docs_v1__ -->
+## v3: no PASS without the auditor's key
+
+v3 is minted with the NT-GATE-1 V3 verifier. It gives no PASS without
+`--expect-signer`, the VSA signer's raw Ed25519 public key in base64,
+supplied by whoever runs it; a run without it exits 2 (ENVIRONMENT). For
+this vector that key is `vectorKeys.vsaPubkeyB64` in v3's `index.json`, a
+published key that identifies no party. The verifier's exit codes are
+0 PASS, 1 INTEGRITY, 2 ENVIRONMENT and 3 OUTSIDE, and the last line of its
+stdout names the class (`CLASS: PASS`). It ends with a NOT CLAIMED list:
+what a PASS does not establish. With the certificate's spec canon it also
+recomputes binding, surface, assumption discharge and bound transfer from
+`trace.json`; authorization and sequence are not recomputed.
+
+v1 and v2 are frozen. Their verifiers read no arguments: a key passed to
+them is ignored (measured 2026-10-29: `--expect-signer AAAA` exits 0 on
+both), so they PASS under any signer of their bytes. Use v3 where the
+signer matters.
 
 <!-- __nt_w_docs_v2_v1__ -->
 ## v2, and why v1 is frozen
@@ -45,7 +64,7 @@ cost check.
 | `vsa.intoto.json` | the DSSE-wrapped in-toto VSA (the summary attestation) |
 | `manifest.json` | the signed static-proof manifest (input attestation) |
 | `trace.json` | the signed execution trace (input attestation) |
-| `conformance.json` | the signed conformance certificate (input attestation; in v2 it carries `obligations_canon`) |
+| `conformance.json` | the signed conformance certificate (input attestation; in v2 and v3 it carries `obligations_canon`) |
 | `coverage.farkas.json` | the coverage Farkas certificate (a PROVES leg) |
 | `cost.farkas.json` | the cost-cap Farkas certificate (a PROVES leg) |
 | `verify_vsa_offline.py` | the self-contained offline verifier (cryptography + stdlib) |
@@ -57,13 +76,23 @@ Each file has a `<name>.sha256` sidecar.
 
 ## How to reproduce (offline, third party)
 
-Fetch the bundle into one directory and run the verifier:
+Fetch the bundle into one directory and run the verifier. For v3, with
+the key from `vectorKeys.vsaPubkeyB64`:
 
-    python3 verify_vsa_offline.py
+    python3 -I verify_vsa_offline.py --expect-signer <vectorKeys.vsaPubkeyB64>
+
+For v1 and v2, which take no key:
+
+    python3 -I verify_vsa_offline.py
+
+`-I` keeps Python from importing modules from the bundle's
+directory, which its sender controls: without it, a module planted
+there runs in place of the standard library's.
 
 Expect exit `0`, `VERDICT: PASS`, and stdout byte-identical to
-`expected_stdout.txt`. The verifier needs `cryptography` and the standard
-library only. It does not import NOUS and does not call a solver.
+`expected_stdout.txt` (for v3, `CLASS: PASS` is its last line). The
+verifier needs `cryptography` and the standard library only. It does not
+import NOUS and does not call a solver.
 
 To regenerate the bundle from its source program, the digests reproduce only
 at the NOUS version, shipped price table and code generator it was minted with
@@ -87,13 +116,18 @@ NOUS 7.0.0,
 
     python3 mint_vsa_vector.py vsa_conformance_vector_v2.nous <out_dir>
 
+v3's harness is v2's, with the V3 verifier and the pin; its terms are in
+v3's `index.json`, measured the same way:
+
+    python3 mint_vsa_vector.py vsa_conformance_vector_v3.nous <out_dir>
+
 ## The source program
 
-`vsa_conformance_vector_v1.nous` and `vsa_conformance_vector_v2.nous` (the
-same program, its header naming v2) are the frozen inputs the bundles are
-minted from. Each is owned by its vector alone -- no test or module
-references it -- so it cannot move out from under a third party's
-reproduction. It is minimal and
+`vsa_conformance_vector_v1.nous`, `vsa_conformance_vector_v2.nous` and
+`vsa_conformance_vector_v3.nous` (the same program, its header naming its
+vector) are the frozen inputs the bundles are minted from. Each is owned
+by its vector alone -- no test or module references it -- so it cannot
+move out from under a third party's reproduction. It is minimal and
 drives two contradictions through the real NOUS producers:
 
 - a cost-cap Farkas contradiction: the declared `cost_cap`, `tokens`, and

@@ -126,10 +126,14 @@ pip install 'nous-lang[smt]'
 
 <span class="c"># auditor (verifies offline) -- cryptography only, no solver, no NOUS</span>
 pip install 'cryptography&gt;=42'
-cd dossier &amp;&amp; python3 verify_offline.py
+cd dossier &amp;&amp; python3 -I verify_offline.py --expect-signer &lt;publisher key, base64&gt;
 <span class="ok">OK</span>   Ed25519 signature verified
 <span class="ok">OK</span>   Farkas certificate verified by rational arithmetic, no solver (0 &lt; 0)
-VERDICT: PASS</pre>
+VERDICT: PASS
+NOT CLAIMED (NT-GATE-1 5.5): ...
+CLASS: PASS</pre>
+  <!-- __nt_v3_classes_docs_v1__ -->
+  <p>The key is the publisher's Ed25519 public key, taken out of band; without it the verifier gives no PASS (exit 2). The last line names the class: PASS, INTEGRITY, ENVIRONMENT or OUTSIDE.</p>
   <p>The offline verifier checks, fail-closed: the Ed25519 signature, the source and proof file hashes (an O(1) provenance gate before any proof check), then the Farkas certificate by arithmetic. z3, if installed, runs only as an optional second opinion &mdash; the verdict does not depend on it. The human-inspectable <code>coverage.smt2</code> stays in the dossier as a cross-check.</p>
 
   <h2>Read more</h2>

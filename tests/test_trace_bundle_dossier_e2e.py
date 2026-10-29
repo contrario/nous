@@ -24,6 +24,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 import tempfile
 
@@ -98,7 +99,8 @@ def _attach_bundle_and_resign(tmp_path, manifest_path):
 
 def _run(output_dir):
     r = subprocess.run(
-        [sys.executable, str(output_dir / "verify_offline.py")],
+        [sys.executable, str(output_dir / "verify_offline.py")]
+        + manifest_signer_args(output_dir),
         capture_output=True, text=True)
     return r.returncode, r.stdout, r.stderr
 

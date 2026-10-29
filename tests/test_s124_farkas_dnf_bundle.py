@@ -21,6 +21,7 @@ Two-sided pins for the disjunctive-linear bundle path:
 # __s124_bundle_test_v1__
 """
 from __future__ import annotations
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 
 import copy
 import json
@@ -322,7 +323,8 @@ def test_bool_dossier_e2e_offline_bundle_pass(tmp_path: Path) -> None:
     )
     assert doc["fragment"] == BUNDLE_FRAGMENT
 
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(dossier))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(dossier), cwd=str(dossier))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "independently re-derived from the signed source" in r.stdout
     assert "bijection holds" in r.stdout
@@ -365,7 +367,8 @@ def test_bool_chain_plus_bundle_e2e_pass(tmp_path: Path) -> None:  # __s126_real
     ])
     assert r.returncode == 0, r.stderr
     assert (dossier2 / "chain" / "000_hop.farkas.json").is_file()
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(dossier2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(dossier2), cwd=str(dossier2))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "hop containment verified" in r.stdout
     assert "VERDICT: PASS" in r.stdout

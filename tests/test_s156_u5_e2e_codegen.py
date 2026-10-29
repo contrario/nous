@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
+from _v3pin import cert_signer_args, default_operator_key  # __nt_v3_classes_tests_v1__
 import sys
 import tempfile
 from pathlib import Path
@@ -106,7 +107,8 @@ def _conforming_trace(spec, *, codegen):
 
 def _run(dp):
     return subprocess.run(
-        [sys.executable, str(dp / "verify_conformance_offline.py")],
+        [sys.executable, str(dp / "verify_conformance_offline.py")]
+        + cert_signer_args(dp),
         capture_output=True, text=True,
     )
 
@@ -133,7 +135,7 @@ def test_e2e_real_producers_codegen_leg_agrees_and_passes(tmp_path) -> None:
         build_certificate(
             detail, tr, manifest, nous_version="5.54.0", issued_utc="t"
         ),
-        Ed25519PrivateKey.generate(),
+        default_operator_key(),
     )
     assert cert.codegen_sha256 == cg
     assert manifest.codegen_sha256 == tr.codegen_sha256 == cert.codegen_sha256
@@ -173,7 +175,7 @@ def test_e2e_producer_codegen_mismatch_rejected_offline(tmp_path) -> None:
         build_certificate(
             detail, tr, manifest, nous_version="5.54.0", issued_utc="t"
         ),
-        Ed25519PrivateKey.generate(),
+        default_operator_key(),
     )
     assert cert.codegen_sha256 == cg
 

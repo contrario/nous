@@ -15,6 +15,7 @@ import base64
 import hashlib
 import json
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 import time
 from pathlib import Path
@@ -110,7 +111,8 @@ def _run_verifier(out: Path, env=None):
     if env:
         e.update(env)
     proc = subprocess.run(
-        [sys.executable, "verify_offline.py"],
+        [sys.executable, "verify_offline.py"]
+        + manifest_signer_args(out),
         cwd=str(out), capture_output=True, text=True, env=e,
     )
     verdict = None

@@ -36,26 +36,49 @@ a more compact layout for the tab context.
 
 ### Path 2: Offline reproducible
 
-Run the `verify_offline.py` inside the dossier directory:
-`cd <dossier> && python3 verify_offline.py`. The standalone download
-is withdrawn (`docs/adr/ADR-0009-standalone-verifier-withdrawal.md`).
-The script reads `manifest.json` and `source.nous` from its current
-working directory and prints a structured verdict.
+Run the `verify_offline.py` inside the dossier directory, with the
+publisher's raw Ed25519 public key in base64:
+`cd <dossier> && python3 -I verify_offline.py --expect-signer BASE64`.
+The standalone download is withdrawn
+(`docs/adr/ADR-0009-standalone-verifier-withdrawal.md`). The script
+reads `manifest.json` and `source.nous` from its current working
+directory and prints a structured verdict.
 
-The verifier runs in two modes:
+<!-- __nt_v3_classes_docs_v1__ -->
+The key comes from the publisher, out of band, not from the dossier:
+`public_key.b64` inside it is the key the manifest carries, and any
+key can sign. Without `--expect-signer` the verifier gives no PASS
+(exit 2); a manifest signed by any other key exits 1 (NT-GATE-1 V3).
+`-I` keeps Python from importing modules from the bundle's
+directory, which its sender controls: without it, a module planted
+there runs in place of the standard library's.
 
-- For Rekor-anchored dossiers (NOUS v5.3.0 and later, with
-  `--anchor rekor`), run with no flags. Default is strict: requires
-  a valid `transparency_log` block, refuses to accept dossiers
+The dossier ships the verifier that matches how it was emitted:
+
+- Rekor-anchored (`--anchor rekor`, NOUS v5.3.0 and later): strict,
+  requires a valid `transparency_log` block and refuses a dossier
   without one.
-- For unanchored dossiers (legacy releases, or `--anchor none`
-  emission), add `--allow-unanchored`. The verifier still checks the
-  Ed25519 author signature and source SHA, but explicitly downgrades
-  the trust level to `ed25519_only`.
+- Rekor v2-anchored (`--anchor rekor_v2`): strict by default; add
+  `--allow-unanchored` to accept a dossier with no `transparency_log`
+  block, on the Ed25519 author signature and the source sha alone.
+  It carries no cost-cap check.
+- Unanchored (`--anchor none`): checks the Ed25519 author signature
+  and the source sha, plus the legs the dossier carries. It takes no
+  option other than `--expect-signer`.
 
-The verifier is byte-identical to the string embedded in `dossier.py`
-as `VERIFY_OFFLINE_PY_HYBRID`. This is the canonical trust path.
-Exit code 0 is PASS, 1 is FAIL, 2 is environment error.
+The verifier is the text `build_dossier` writes: one of the templates
+in `dossier.py`, or, for `rekor_v2`, the text
+`offline_verifier_builder.build_offline_verifier_v2` assembles. This
+is the canonical trust path. Exit codes: 0 PASS, 1 INTEGRITY (a
+signature, a digest or a proof check fails), 2 ENVIRONMENT (no key, a
+malformed or unexpected argument, a missing dependency), 3 OUTSIDE
+(the manifest is authentic under the expected key and its solver
+verdict is not `proven`). The last line of stdout names the class,
+and the output ends with a NOT CLAIMED list. Lines printed before the
+last checks are progress, not the verdict: the CLASS line is. An
+ENVIRONMENT exit means the run stopped before its remaining checks: a
+dossier whose coverage proof needs z3 exits 2 on a host without z3
+before the checks that follow it run; rerun where z3 is present.
 
 Coverage-bearing dossiers (emitted with `nous verify --smt --coverage-threshold ...` then `nous dossier ... --anchor none`) ship a different embedded verifier. When a Farkas certificate is present the dossier carries `VERIFY_OFFLINE_PY_FARKAS`, whose coverage trust path is standard-library rational arithmetic with no solver; when only `coverage.smt2` is present it carries `VERIFY_OFFLINE_PY_COVERAGE`, which re-checks unsat with z3 if available. Both add an O(1) sha256 file-provenance gate before any proof check, and both require only the `cryptography` library for the signature. See `docs/COVERAGE_PROOF.md`. <!-- __s116_verify_dossier_coverage_v1__ -->
 
@@ -293,6 +316,7 @@ the cap exists to prevent abuse, not to constrain legitimate use.
   verifiers shipped in coverage-bearing dossiers.
 - Source: `nous_api_server.py::verify_dossier_endpoint`,
   `rekor_anchor.py::verify_rekor_anchor_offline_detail`,
-  `dossier.py::VERIFY_OFFLINE_PY_HYBRID`.
+  `dossier.py` (the `VERIFY_OFFLINE_PY*` templates),
+  `offline_verifier_builder.py::build_offline_verifier_v2`.
 
 <!-- __session82_docs_verify_dossier_v2_v1__ -->

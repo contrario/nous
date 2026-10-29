@@ -13,6 +13,8 @@
 #   - refuses if the working tree is dirty (website/ must be committed)
 #   - prints an rsync dry-run diff and, without --apply, stops there
 #   - excludes *.bak* from the copy (history is git, not .bak files)
+#   - excludes __pycache__/ and *.pyc: a test run writes bytecode beside
+#     a vector's mint harness; it is not site content (NT-GATE-1 V3 F10)
 #   - normalizes modes: dirs 0755, files 0644
 #
 # Usage:
@@ -55,11 +57,12 @@ if [ ! -d "${DST}" ]; then
     exit 2
 fi
 
-RSYNC_OPTS=(-rc --exclude='*.bak*' --chmod=D0755,F0644)
+# __nt_v3_deploy_bytecode_v1__
+RSYNC_OPTS=(-rc --exclude='*.bak*' --exclude='__pycache__/' --exclude='*.pyc' --chmod=D0755,F0644)
 
 if [ "${APPLY}" -eq 0 ]; then
     echo "=== DRY RUN (no changes). Re-run with --apply to deploy. ==="
-    echo "    ${SRC} -> ${DST} (additive, no --delete, excludes *.bak*)"
+    echo "    ${SRC} -> ${DST} (additive, no --delete, excludes *.bak*, __pycache__/, *.pyc)"
     echo "--- files that WOULD change ---"
     rsync "${RSYNC_OPTS[@]}" -n -i "${SRC}" "${DST}" || true
     echo "--- end dry run ---"

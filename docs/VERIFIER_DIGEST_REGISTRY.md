@@ -109,7 +109,8 @@ name and NOUS version.
 
 ## 5. Using it with .ndec
 
-    nous ndec verify decision.ndec --strict-canonical --registry registry.json
+    nous ndec verify decision.ndec --expect-signer BASE64 \
+        --strict-canonical --registry registry.json
 
 On a local canonical miss, a logged-tier registry confirmation prints
 

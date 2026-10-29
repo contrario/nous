@@ -5,6 +5,7 @@ the user's XDG keystore.
 # __session77_skill_md_tests_v1__
 """
 from __future__ import annotations
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 
 from pathlib import Path
 
@@ -52,7 +53,8 @@ def test_build_dossier_spec_proven_emits_cost_leg_and_reproves(  # __s175_g2_cos
         _hashlib.sha256(cost_path.read_bytes()).hexdigest() == cost_sha
     )
     proc = subprocess.run(
-        [_sys.executable, str(out / "verify_offline.py")],
+        [_sys.executable, str(out / "verify_offline.py")]
+        + manifest_signer_args(out),
         capture_output=True,
         text=True,
         cwd=str(out),

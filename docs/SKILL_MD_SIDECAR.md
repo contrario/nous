@@ -192,13 +192,18 @@ The dossier bundle is then assembled and written atomically.
 
 ```sh
 cd <dossier_dir>
-python3 verify_offline.py
+python3 -I verify_offline.py --expect-signer <publisher key, base64>
 ```
 
-The verifier confirms (a) the Ed25519 signature on `manifest.json`
-verifies under `public_key.b64`, and (b) the SHA-256 of `source.nous`
-matches `manifest.source_sha256`. It requires only the
-`cryptography` Python library; no NOUS install needed.
+<!-- __nt_v3_classes_docs_v1__ -->
+The verifier confirms (a) the manifest's signer is the key given as
+`--expect-signer`, taken from the publisher out of band, and the
+Ed25519 signature on `manifest.json` verifies under it, and (b) the
+SHA-256 of `source.nous` matches `manifest.source_sha256`. Without
+`--expect-signer` it gives no PASS (exit 2). Exit codes: 0 PASS,
+1 INTEGRITY, 2 ENVIRONMENT, 3 OUTSIDE; the last line names the class.
+It requires only the `cryptography` Python library; no NOUS install
+needed.
 
 ## 10. Forward compatibility
 

@@ -17,6 +17,7 @@ import base64
 import hashlib
 import json
 import subprocess
+from _v3pin import vsa_pin_args  # __nt_v3_classes_tests_v1__
 import sys
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (
@@ -108,7 +109,8 @@ def _sign(doc: dict, priv: Ed25519PrivateKey, canon, algorithm: bool = True) -> 
 
 def _run(dirp) -> tuple[int, str, str]:
     r = subprocess.run(
-        [sys.executable, str(dirp / "verify_vsa_offline.py")],
+        [sys.executable, str(dirp / "verify_vsa_offline.py")]
+        + vsa_pin_args(dirp),
         capture_output=True, text=True, cwd=str(dirp),
     )
     return r.returncode, r.stdout, r.stderr
@@ -134,7 +136,9 @@ def _cost_bundle(dirp, *, with_cost: bool = True, cost_doc: dict | None = None):
         manifest["cost_farkas_sha256"] = cost_sha
     manifest = _sign(manifest, mk, _manifest_canon, algorithm=False)
 
-    trace = {"world_name": "alpha", "codegen_sha256": cg}
+    trace = {"world_name": "alpha", "codegen_sha256": cg,
+             "source_sha256": src, "smt_spec_sha256": smt,
+             "pricing_sha256": pri, "events": []}  # __nt_v3_classes_tests_v1__
     trace = _sign(trace, tk, _trace_canon)
     trace_sha = hashlib.sha256(_trace_canon(trace)).hexdigest()
 
@@ -144,6 +148,7 @@ def _cost_bundle(dirp, *, with_cost: bool = True, cost_doc: dict | None = None):
         "world_name": "alpha", "issued_utc": "2026-06-19T11:00:00Z",
         "source_sha256": src, "smt_spec_sha256": smt, "pricing_sha256": pri,
         "trace_sha256": trace_sha, "conformant": True, "errors": [],
+        "realized_total": "0",  # __nt_v3_classes_tests_v1__
         "codegen_sha256": cg,
     }
     cert.update(bools)

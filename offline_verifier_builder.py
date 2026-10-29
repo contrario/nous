@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import re
 from pathlib import Path
 
 _PKG_DIR = Path(__file__).resolve().parent
@@ -107,21 +108,26 @@ _HOISTED_IMPORTS = (
     "from pathlib import Path\n"
     "from datetime import datetime, timezone\n"
     "\n"
-    "from cryptography.exceptions import InvalidSignature\n"
-    "from cryptography import x509\n"
-    "from cryptography.hazmat.primitives import hashes\n"
-    "from cryptography.hazmat.primitives.asymmetric import "
-    "ec, padding\n"
-    "from cryptography.hazmat.primitives.asymmetric.ec import "
-    "ECDSA\n"
-    "from cryptography.hazmat.primitives.asymmetric.ed25519 import "
+    "try:  # __nt_v3_classes_wire_v1__ __nt_v3_review_v1__\n"
+    "    from cryptography.exceptions import InvalidSignature\n"
+    "    from cryptography import x509\n"
+    "    from cryptography.hazmat.primitives import hashes\n"
+    "    from cryptography.hazmat.primitives.asymmetric import ec, padding\n"
+    "    from cryptography.hazmat.primitives.asymmetric.ec import ECDSA\n"
+    "    from cryptography.hazmat.primitives.asymmetric.ed25519 import "
     "Ed25519PublicKey\n"
-    "from cryptography.x509.oid import ExtendedKeyUsageOID\n"
-    "from cryptography.hazmat.primitives.serialization import (\n"
-    "    Encoding,\n"
-    "    PublicFormat,\n"
-    "    load_der_public_key,\n"
-    ")\n"
+    "    from cryptography.x509.oid import ExtendedKeyUsageOID\n"
+    "    from cryptography.hazmat.primitives.serialization import (\n"
+    "        Encoding,\n"
+    "        PublicFormat,\n"
+    "        load_der_public_key,\n"
+    "    )\n"
+    "except ImportError as _v3_exc:\n"
+    "    print(\"ERROR: a module this verifier needs is missing (\"\n"
+    "          + str(_v3_exc) + \"); install: pip install \"\n"
+    "          \"'cryptography>=42'\", file=sys.stderr)\n"
+    "    print(\"CLASS: ENVIRONMENT\")\n"
+    "    sys.exit(2)\n"
 )
 
 
@@ -223,6 +229,10 @@ _DISPATCH_MAIN_LINES = (
     "    sig_b64 = sig_block.get('signature_b64', '')",
     "    if not pub_b64 or not sig_b64:",
     "        return _fail('manifest signature block incomplete')",
+    "    if not _v3_is_pinned(pub_b64):  # __nt_v3_classes_wire_v1__",
+    "        return _fail(",
+    "            'manifest signer is not the expected key (--expect-signer)'",
+    "        )",
     "    try:",
     "        pub_key = Ed25519PublicKey.from_public_bytes(",
     "            base64.b64decode(pub_b64)",
@@ -270,6 +280,7 @@ _DISPATCH_MAIN_LINES = (
     "verified'",
     "        ),",
     "    )",
+    "    parser.add_argument('--expect-signer', default=None)  # __nt_v3_classes_wire_v1__",
     "    args = parser.parse_args(argv)",
     "",
     "    manifest_path = ROOT / 'manifest.json'",
@@ -290,6 +301,8 @@ _DISPATCH_MAIN_LINES = (
     "    if rc != 0:",
     "        return rc",
     "",
+    "    print('SCOPE: this verifier carries no cost-cap check (NT-GATE-1 K1.3); '  # __nt_v3_classes_wire_v1__",
+    "          'a cost.farkas.json in this dossier is not graded here')",
     "    tlog = manifest.get('transparency_log')",
     "    if tlog is None:",
     "        if not args.allow_unanchored:",
@@ -299,6 +312,10 @@ _DISPATCH_MAIN_LINES = (
     "accept '",
     "                'Ed25519-only verification.'",
     "            )",
+    "        if manifest.get('verdict') != 'proven':  # __nt_v3_classes_wire_v1__",
+    "            _v3_outside_manifest(manifest)",
+    "            _v3_not_claimed('dossier')",
+    "            return 0",
     "        print()",
     "        print(",
     "            'VERDICT: PASS (Ed25519 manifest only -- "
@@ -313,6 +330,7 @@ _DISPATCH_MAIN_LINES = (
     "        )",
     "        print('  verdict:      ' + "
     "str(manifest.get('verdict', '?')))",
+    "        _v3_not_claimed('dossier')",
     "        return 0",
     "",
     "    if not isinstance(tlog, dict):",
@@ -365,6 +383,10 @@ _DISPATCH_MAIN_LINES = (
     "            + str(detail.trusted_time) + ')'",
     "        )",
     "",
+    "    if manifest.get('verdict') != 'proven':  # __nt_v3_classes_wire_v1__",
+    "        _v3_outside_manifest(manifest)",
+    "        _v3_not_claimed('dossier')",
+    "        return 0",
     "    print()",
     "    print(",
     "        'VERDICT: PASS (Ed25519 manifest + Sigstore Rekor v2 "
@@ -394,11 +416,12 @@ _DISPATCH_MAIN_LINES = (
     "str(manifest.get('timestamp_utc', '?')))",
     "    print('  rekor_log_id: ' + str(tlog.get('log_id')))",
     "    print('  rekor_index:  ' + str(tlog.get('log_index')))",
+    "    _v3_not_claimed('dossier')",
     "    return 0",
     "",
     "",
     "if __name__ == '__main__':",
-    "    sys.exit(main())",
+    "    sys.exit(_v3_run(main, ('--allow-unanchored',), True))",
     "",
 )
 
@@ -498,8 +521,13 @@ def build_offline_verifier_v2(allowlist_literal: str = "{}") -> str:
         "read-path modules. Runs with cryptography + stdlib only; no NOUS\n"
         "install and no pydantic required.\n"
         "\n"
-        "Usage: python3 verify_offline.py [--allow-unanchored]\n"
-        "Exit:  0 = PASS, 1 = FAIL, 2 = environment error.\n"
+        "Usage: python3 -I verify_offline.py [--allow-unanchored]"
+        " --expect-signer BASE64\n"
+        "Exit:  0 = PASS, 1 = INTEGRITY, 2 = ENVIRONMENT, 3 = OUTSIDE (NT-GATE-1\n"
+        "       D4). The last line on stdout names the class. No PASS\n"
+        "       without --expect-signer. This verifier carries no\n"
+        "       cost-cap check: a cost.farkas.json in the dossier is\n"
+        "       not graded here (NT-GATE-1 K1.3).\n"  # __nt_v3_classes_wire_v1__
         '"""\n'
     )
 
@@ -518,6 +546,7 @@ def build_offline_verifier_v2(allowlist_literal: str = "{}") -> str:
         "\n\n" + tsa_body + "\n",
         "\n\n" + v2_body + "\n",
         anchor_shim,
+        "\n\n" + _v3_classes_region() + "\n",  # __nt_v3_classes_wire_v1__
         dispatch_main,
     ]
     return "".join(parts)
@@ -592,6 +621,7 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "    )",
     "    parser.add_argument('--allow-unanchored', action='store_true')",
     "    parser.add_argument('--expect-signer', default=None)",
+    "    parser.add_argument('--expect-manifest-signer', default=None)  # __nt_v3_classes_wire_v1__",
     "    args = parser.parse_args(argv)",
     "    pin = None",
     "    if args.expect_signer is not None:",
@@ -647,6 +677,21 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "    print('OK   certificate Ed25519 signature verified')",
     "    if pin is not None:",
     "        print('OK   certificate signer is the expected key (--expect-signer)')",
+    "    msig = manifest.get('signature')  # __nt_v3_classes_wire_v1__",
+    "    if not isinstance(msig, dict) or not _v3_is_pinned(",
+    "        msig.get('public_key_b64', ''), '--expect-manifest-signer'",
+    "    ):",
+    "        return _cfail('manifest signer is not the expected key '",
+    "                      '(--expect-manifest-signer, else '",
+    "                      '--expect-signer)')",
+    "    if not _ed25519_ok(",
+    "        _v3_pin_b64('--expect-manifest-signer'),",
+    "        msig.get('signature_b64', ''),",
+    "        _v3_manifest_body(manifest),",
+    "    ):",
+    "        return _cfail('manifest Ed25519 signature does NOT verify under '",
+    "                      'the expected key')",
+    "    print('OK   manifest signed by the expected key')",
     "",
     "    trace_sha = hashlib.sha256(",
     "        _canon(trace, ('signature',))",
@@ -718,11 +763,13 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "                'Ed25519 + binding verification only.'",
     "            )",
     "        print()",
-    "        print('VERDICT: ' + ('PASS' if recorded else 'FAIL')",
-    "              + ' (signed certificate, unanchored)')",
-    "        if pin is not None:",
-    "            print(_SIGNER_SCOPE)",
-    "        return 0 if recorded else 1",
+    "        print('VERDICT: ' + ('PASS' if recorded else 'OUTSIDE')  # __nt_v3_classes_wire_v1__",
+    "              + ' (signed certificate, unanchored'",
+    "              + ('' if recorded else '; authentic under the expected '",
+    "                 'key, the bound was not held') + ')')",
+    "        print(_SIGNER_SCOPE)",
+    "        _v3_not_claimed('runtime')",
+    "        return 0 if recorded else 3",
     "",
     "    if not isinstance(tlog, dict):",
     "        return _cfail('transparency_log is not an object')",
@@ -751,8 +798,10 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "    )",
     "",
     "    print()",
-    "    print('VERDICT: ' + ('PASS' if recorded else 'FAIL')",
-    "          + ' (signed certificate + Sigstore Rekor v2 anchor)')",
+    "    print('VERDICT: ' + ('PASS' if recorded else 'OUTSIDE')  # __nt_v3_classes_wire_v1__",
+    "          + ' (signed certificate + Sigstore Rekor v2 anchor'",
+    "          + ('' if recorded else '; authentic under the expected '",
+    "             'key, the bound was not held') + ')')",
     "    print('  world:          ' + str(cert.get('world_name', '?')))",
     "    print('  realized_total: ' + str(cert.get('realized_total', '?'))",
     "          + ' ' + str(cert.get('cost_currency', '')))",
@@ -767,13 +816,14 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "        print('    entries:      ' + str(_mc.get('consulted_seq_count', '?')))",
     "    print('  rekor_log_id:   ' + str(tlog.get('log_id')))",
     "    print('  rekor_index:    ' + str(tlog.get('log_index')))",
-    "    if pin is not None:",
-    "        print(_SIGNER_SCOPE)",
-    "    return 0 if recorded else 1",
+    "    print(_SIGNER_SCOPE)",
+    "    _v3_not_claimed('runtime')",
+    "    return 0 if recorded else 3",
     "",
     "",
     "if __name__ == '__main__':",
-    "    sys.exit(main())",
+    "    sys.exit(_v3_run(main, ('--allow-unanchored',), True,",
+    "                     keyed=('--expect-manifest-signer',)))",
     "",
 )  # __nous_conformance_anchored_verifier_v1__
 
@@ -790,6 +840,21 @@ def _conformance_recompute_region() -> str:  # __nt_v2_recompute_wire_v1__
         raise RuntimeError("conformance recompute region not found once")
     i = text.index(start)
     return text[i:text.index(end, i) + len(end)]
+
+
+def _v3_classes_region() -> str:  # __nt_v3_classes_wire_v1__
+    """The v3 verdict classes region, read from its canonical copy
+    in conformance_verifier.py so that every text in scope carries
+    one text byte for byte."""
+    text = (_PKG_DIR / "conformance_verifier.py").read_text(encoding="utf-8")
+    start = ("# --- v3 verdict classes embed (shared text; "
+             "canonical copy: conformance_verifier.py) ---")
+    end = "# --- end v3 verdict classes embed ---"
+    m = re.search("(?ms)^" + re.escape(start) + "$.*?^"
+                  + re.escape(end) + "$", text)
+    if m is None:
+        raise RuntimeError("v3 verdict classes region not found")
+    return m.group(0)
 
 
 def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
@@ -826,13 +891,15 @@ def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
         "sha-equality) + anchor inclusion; NOT SMT bound or program\n"
         "re-derivation (those are the online toolchain path). With a\n"
         "spec canon in the certificate, the cost obligations are\n"
-        "recomputed from trace.json. Without\n"
-        "--expect-signer the certificate key is not checked against any\n"
-        "expected signer.\n"  # __x_g4_wording_v1__
+        "recomputed from trace.json. The certificate must be signed\n"
+        "by the --expect-signer key, the manifest by\n"
+        "--expect-manifest-signer or else the same key.\n"  # __x_g4_wording_v1__
         "\n"
-        "Usage: python3 verify_conformance_offline.py [--allow-unanchored]\n"
-        "       [--expect-signer BASE64]  # __x_g2_expect_signer_v1__\n"
-        "Exit:  0 = PASS, 1 = FAIL, 2 = environment error.\n"
+        "Usage: python3 -I verify_conformance_offline.py [--allow-unanchored]\n"
+        "       --expect-signer BASE64 [--expect-manifest-signer "
+        "BASE64]  # __x_g2_expect_signer_v1__\n"
+        "Exit:  0 = PASS, 1 = INTEGRITY, 2 = ENVIRONMENT, 3 = OUTSIDE (NT-GATE-1\n"
+        "       D4). The last line on stdout names the class.\n"  # __nt_v3_classes_wire_v1__
         '"""\n'
     )
     allowlist_block = (
@@ -851,6 +918,7 @@ def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
         "\n\n" + v2_body + "\n",
         anchor_shim,
         recompute,
+        "\n\n" + _v3_classes_region() + "\n",  # __nt_v3_classes_wire_v1__
         dispatch_main,
     ]
     return "".join(parts)

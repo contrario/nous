@@ -12,6 +12,7 @@ authority -- the positive control of the trust model).
 # __s126_hop_e2e_test_v1__
 """
 from __future__ import annotations
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 
 import json
 import shutil
@@ -154,7 +155,8 @@ def test_hop_file_deleted_fails_offline(tmp_path: Path) -> None:
     nous = _nous_cli()
     d2 = _build_pass_chain(nous, tmp_path)
     (d2 / "chain" / "000_hop.farkas.json").unlink()
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode != 0
     assert "hop containment bundle missing" in (r.stdout + r.stderr)
 
@@ -166,7 +168,8 @@ def test_hop_multiplier_forged_fails_offline(tmp_path: Path) -> None:
     doc = json.loads(hop_path.read_text(encoding="utf-8"))
     doc["certs"][0]["multipliers"][0] = "-1"
     hop_path.write_text(json.dumps(doc), encoding="utf-8")
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode != 0
     assert "REGION REGRESSION or invalid hop proof" in (
         r.stdout + r.stderr
@@ -182,7 +185,8 @@ def test_unexpected_hop_file_fails_offline(tmp_path: Path) -> None:
     hop_path = d2 / "chain" / "000_hop.farkas.json"
     assert not hop_path.is_file()
     hop_path.write_text("{}", encoding="utf-8")
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode != 0
     assert "unexpected hop bundle" in (r.stdout + r.stderr)
 
@@ -195,7 +199,8 @@ def test_hop_doc_expr_fields_carry_no_authority(tmp_path: Path) -> None:
     doc["prev_threshold_expr"] = "amount > 999999"
     doc["cur_threshold_expr"] = "risk_score < 1"
     hop_path.write_text(json.dumps(doc), encoding="utf-8")
-    r = _run([sys.executable, "verify_offline.py"], cwd=str(d2))
+    r = _run([sys.executable, "verify_offline.py"]
+             + manifest_signer_args(d2), cwd=str(d2))
     assert r.returncode == 0, r.stdout + r.stderr
     assert "hop containment verified" in r.stdout
     assert "VERDICT: PASS" in r.stdout

@@ -43,12 +43,31 @@ def build_ndec_parser(sub: argparse._SubParsersAction) -> None:
         help="Refuse unless the carried dossier verifier is a "
              "confirmed canonical NOUS template",
     )
+    v.add_argument(  # __nt_v3_ndec_carried_v1__
+        "--expect-signer", default=None, metavar="BASE64",
+        help="the .ndec signer's raw Ed25519 public key in base64, "
+             "taken out of band; no PASS without it",
+    )
     v.add_argument(  # __s148_u2_registry_flag_v1__
         "--registry", default=None,
         help="Path to a signed verifier-digest registry; on a local "
              "canonical miss, a logged-tier registry confirmation closes "
              "trusting-trust across NOUS versions",
     )
+
+
+def _auditor_key(b64):  # __nt_v3_ndec_carried_v1__
+    import base64
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+        Ed25519PublicKey,
+    )
+    try:
+        raw = base64.b64decode(b64, validate=True)
+    except (ValueError, TypeError):
+        return None
+    if len(raw) != 32:
+        return None
+    return Ed25519PublicKey.from_public_bytes(raw)
 
 
 def cmd_ndec(args: argparse.Namespace) -> int:
@@ -69,8 +88,17 @@ def cmd_ndec(args: argparse.Namespace) -> int:
         print("  pins verify_offline_sha256: " + ("yes" if pinned else "no"))
         return 0
     if action == "verify":
+        public_key = None
+        pin = getattr(args, "expect_signer", None)  # __nt_v3_ndec_carried_v1__
+        if pin is not None:
+            public_key = _auditor_key(pin)
+            if public_key is None:
+                print("ndec verify: --expect-signer is not a base64 "
+                      "raw 32-byte Ed25519 public key", file=sys.stderr)
+                return 2
         return ndec.verify_ndec_file(  # __s147_u4_strict_dispatch_v1__
             args.file,
+            public_key=public_key,
             strict_canonical=getattr(args, "strict_canonical", False),
             registry_path=getattr(args, "registry", None),  # __s148_u2_registry_dispatch_v1__
         )

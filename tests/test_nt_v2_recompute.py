@@ -13,6 +13,7 @@ import dataclasses
 import hashlib
 import json
 import subprocess
+from _v3pin import conformance_pin_args  # __nt_v3_classes_tests_v1__
 import sys
 from datetime import date
 from decimal import Decimal
@@ -44,6 +45,7 @@ DEMO = "examples/demos/cert-4679350/verify_conformance_offline.py"
 DEMO_SHA = "14239550160971edff712f9a2a818f4443f28e0303dbede4d65832068520d7b8"
 SERVED_V1 = "website/.well-known/nous/vsa-vectors/v1/verify_vsa_offline.py"
 SERVED_V2 = "website/.well-known/nous/vsa-vectors/v2/verify_vsa_offline.py"
+SERVED_V3 = "website/.well-known/nous/vsa-vectors/v3/verify_vsa_offline.py"  # __nt_v3_classes_tests_v1__
 FN = "_conf_recompute"
 REGION_START = (
     "# --- conformance recompute embed (shared text; canonical copy: "
@@ -90,7 +92,7 @@ def test_q1_census_of_texts_judging_recorded_obligations():
     assert found == {
         "cli_conformance.py", "conformance.py", "conformance_verifier.py",
         "continuity_ledger.py", DEMO, "offline_verifier_builder.py",
-        "vsa.py", "vsa_verifier.py", SERVED_V1, SERVED_V2,
+        "vsa.py", "vsa_verifier.py", SERVED_V1, SERVED_V2, SERVED_V3,
     }
 
 
@@ -184,7 +186,8 @@ def _rewrite(b: Path, trace: dict | None = None, cert_edit=None,
 def _run(b: Path, name: str):
     v = b / "verify_conformance_offline.py"
     v.write_text(_texts()[name], encoding="utf-8")
-    p = subprocess.run([sys.executable, "-B", str(v)] + ARGS[name],
+    p = subprocess.run([sys.executable, "-B", str(v)] + ARGS[name]
+                       + conformance_pin_args(b),
                        capture_output=True, text=True, cwd=str(b))
     return p.returncode, p.stdout, p.stderr
 
@@ -454,7 +457,8 @@ def test_q8_no_banned_module_after_a_recomputing_run(pricing, tmp_path,
     probe = tmp_path / "probe.py"
     probe.write_text(PROBE, encoding="utf-8")
     p = subprocess.run([sys.executable, "-B", str(probe), str(v)]
-                       + ARGS[name], capture_output=True, text=True,
+                       + ARGS[name] + conformance_pin_args(b),
+                       capture_output=True, text=True,
                        cwd=str(b))
     assert "RECOMPUTED (" in p.stdout, (p.stdout, p.stderr)
     assert "BANNED_MODULES []" in p.stdout, p.stdout

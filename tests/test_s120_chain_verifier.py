@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 from pathlib import Path
 
@@ -77,7 +78,8 @@ def _child(
 
 def _run_verifier(dossier_dir: Path) -> "subprocess.CompletedProcess[str]":
     return subprocess.run(
-        [sys.executable, str(dossier_dir / "verify_offline.py")],
+        [sys.executable, str(dossier_dir / "verify_offline.py")]
+        + manifest_signer_args(dossier_dir),
         capture_output=True,
         text=True,
         cwd=str(dossier_dir),

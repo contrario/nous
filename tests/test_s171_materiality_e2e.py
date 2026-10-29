@@ -31,6 +31,7 @@ import dataclasses
 import hashlib
 import json
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 from pathlib import Path
 
@@ -144,7 +145,8 @@ def _gap_witness_manifest(tmp_path: Path) -> tuple[Path, Path, Path]:
 
 def _run_verifier(out: Path) -> subprocess.CompletedProcess:
     return subprocess.run(
-        [sys.executable, str(out / "verify_offline.py")],
+        [sys.executable, str(out / "verify_offline.py")]
+        + manifest_signer_args(out),
         capture_output=True,
         text=True,
     )

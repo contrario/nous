@@ -324,11 +324,10 @@ system through its lifecycle."
 <dossier>/manifest.json                # source_sha256, pricing_sha256,
                                        # smt_spec_sha256, signature,
                                        # rekor inclusion proof (optional)
-<dossier>/verify_offline.py            # offline HYBRID verifier:
-                                       # validates Ed25519 + Rekor
-                                       # inclusion (anchored) or
-                                       # falls through with
-                                       # --allow-unanchored
+<dossier>/verify_offline.py            # offline verifier selected at
+                                       # emit: Ed25519 under the
+                                       # --expect-signer key, plus
+                                       # Rekor inclusion (anchored)
 ```
 
 **Determinism boundary:** Content addressing is fully deterministic.
@@ -336,8 +335,9 @@ Rekor anchoring adds a non-deterministic timestamp (the `log_index`
 and inclusion proof are assigned by the log), but the Ed25519
 signature over the canonical manifest body is reproducible.
 
-**Code reference:** `manifest.py`, `dossier.py`
-(`VERIFY_OFFLINE_PY_HYBRID` constant), `rekor_anchor.py`.
+**Code reference:** `manifest.py`, `dossier.py` (the
+`VERIFY_OFFLINE_PY*` templates), `offline_verifier_builder.py`,
+`rekor_anchor.py`.
 
 See [REKOR_ANCHOR.md](REKOR_ANCHOR.md) for the full anchoring design.
 
@@ -442,7 +442,7 @@ referred to in Article 72(3)."
 ```
 /var/lib/nous/replays/                 # append-only JSONL event logs
 <replay>.jsonl                         # chained event log
-<dossier>/verify_offline.py            # HYBRID verifier validates
+<dossier>/verify_offline.py            # verifier validates
                                        # historical dossiers offline
 ```
 
@@ -450,7 +450,7 @@ referred to in Article 72(3)."
 SHA-256 chain. The chain is independently re-verifiable; tampering
 with any historical event invalidates all subsequent events.
 
-**Code reference:** `replay_runtime.py`, `dossier.py` HYBRID body.
+**Code reference:** `replay_runtime.py`, `dossier.py` (the `VERIFY_OFFLINE_PY*` templates).
 
 ---
 
@@ -631,7 +631,7 @@ $ cat <dossier>/manifest.json | python3 -c "import sys, json; \
 ### Step 4: offline verification
 
 ```
-$ cd <dossier> && python3 verify_offline.py manifest.json --allow-unanchored
+$ cd <dossier> && python3 -I verify_offline.py --expect-signer <publisher key, base64>
 
 OK   Ed25519 signature verified
 OK   source.sha256 matches manifest (23ec3894eb31d396...)
@@ -642,11 +642,21 @@ VERDICT: PASS
   verdict:    proven
   solver:     z3 4.16.0
   timestamp:  2026-05-19T17:01:12+00:00
+
+NOT CLAIMED (NT-GATE-1 5.5):
+  ...
+CLASS: PASS
 ```
 
+<!-- __nt_v3_classes_docs_v1__ -->
 The verifier requires only the `cryptography` library (no NOUS
-install needed). Two checks are run: Ed25519 signature validation and
-source SHA-256 match.
+install needed). It checks that the manifest's signer is the key
+given as `--expect-signer` (the publisher's, taken out of band; no
+PASS without it, exit 2), the Ed25519 signature under it, and the
+source SHA-256 match. The output lines above the NOT CLAIMED list
+were recorded 2026-05-19, before NT-GATE-1 V3, from a run whose
+command named `manifest.json --allow-unanchored`; that verifier read
+no arguments, and the V3 verifier refuses both (exit 2).
 
 ### Step 5: (optional) Rekor anchoring
 
@@ -764,7 +774,8 @@ Boundary. A passing `verify_annex_iv_map.py` checks presence, authenticity,
 and indexing of the declared evidence (sha256 digests and an Ed25519 signature). It does NOT prove legal sufficiency,
 does NOT prove that a referenced artifact actually satisfies its Annex IV
 item, and does NOT prove anything about execution conformance. The sidecar
-is orthogonal to `verify_offline.py` (which proves the cost-cap / coverage
-claim) and is never folded into it. It is refused on a coverage-gap-witness
+is orthogonal to `verify_offline.py` (which re-checks the cost-cap and
+coverage legs the dossier carries; a Farkas leg is proved by exact
+arithmetic) and is never folded into it. It is refused on a coverage-gap-witness
 (refutation) dossier, since an evidence index over a refutation artifact is
 incoherent.

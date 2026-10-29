@@ -15,6 +15,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
 import sys
 from datetime import date
 from fractions import Fraction
@@ -42,6 +43,10 @@ SERVED_VSA = (
 SERVED_VSA_V2 = (
     "website/.well-known/nous/vsa-vectors/v2/verify_vsa_offline.py"
 )
+# NT-GATE-1 V3: v3 carries the V3 template, which re-derives.  # __nt_v3_classes_tests_v1__
+SERVED_VSA_V3 = (
+    "website/.well-known/nous/vsa-vectors/v3/verify_vsa_offline.py"
+)
 LEG = "_cost_rederive_leg"
 
 EXPECTED_TEXTS = (
@@ -55,6 +60,7 @@ EXPECTED_TEXTS = (
     "dossier.build_chain_net_verifier()",
     "vsa_verifier.VSA_VERIFY_OFFLINE_PY",
     "served:" + SERVED_VSA_V2,
+    "served:" + SERVED_VSA_V3,
 )
 # Ruling (i), 2026-10-27: the published v1 vector is frozen as published.
 # Its verifier predates re-derivation and stays so; index.json says so and
@@ -64,7 +70,7 @@ FROZEN_TEXTS = {
         "aaa8ee347717def035d7c7fc4248fc09e0be1db8c5f627b8e7bd8e0a5795ecba",
 }
 EXPECTED_PROVEN_FILES = {"dossier.py", "vsa_verifier.py", SERVED_VSA,
-                         SERVED_VSA_V2}
+                         SERVED_VSA_V2, SERVED_VSA_V3}
 
 
 def _fold(node, env):
@@ -107,7 +113,7 @@ def _texts() -> dict:
     texts["vsa_verifier.VSA_VERIFY_OFFLINE_PY"] = (
         vsa_verifier.VSA_VERIFY_OFFLINE_PY
     )
-    for served in (SERVED_VSA, SERVED_VSA_V2):
+    for served in (SERVED_VSA, SERVED_VSA_V2, SERVED_VSA_V3):
         p = REPO / served
         texts["served:" + served] = (
             p.read_text(encoding="utf-8") if p.is_file() else None
@@ -311,10 +317,11 @@ def _run(out: Path, hide_z3: bool = False):
     if hide_z3:
         cmd = [sys.executable, "-I", "-B", "-c",
                "import sys, runpy; sys.modules['z3'] = None; "
-               "sys.argv = [sys.argv[1]]; "
+               "sys.argv = sys.argv[1:]; "
                "runpy.run_path(sys.argv[0], run_name='__main__')", v]
     else:
         cmd = [sys.executable, "-I", "-B", v]
+    cmd += manifest_signer_args(out)  # __nt_v3_classes_tests_v1__
     return subprocess.run(cmd, cwd=str(out), capture_output=True,
                           text=True, timeout=120)
 
