@@ -28,6 +28,7 @@ def check(name, condition, detail=""):
     else:
         FAIL += 1
         print(f"  \u2717 {name} -- {detail}")
+        raise AssertionError(name + ": " + str(detail))  # __am_check_raises_v1__
 
 
 def _make_event(seq_id, soul, cycle, kind, data, prev_hash="0" * 64):

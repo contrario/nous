@@ -48,6 +48,7 @@ def _check(label: str, cond: bool, detail: str = "") -> None:
         PASSED.append(label)
     else:
         FAILED.append((label, detail))
+        raise AssertionError(label + ": " + str(detail))  # __am_check_raises_v1__
 
 
 def test_empty_file_warns() -> None:

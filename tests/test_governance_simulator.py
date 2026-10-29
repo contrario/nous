@@ -24,6 +24,7 @@ def _check(name: str, condition: bool, detail: str) -> None:
         PASSED.append(name)
     else:
         FAILED.append((name, detail))
+        raise AssertionError(name + ": " + str(detail))  # __am_check_raises_v1__
 
 
 SOUL_SUFFIX = '''

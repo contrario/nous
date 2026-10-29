@@ -20,6 +20,18 @@ def check(name, condition, detail=""):
     else:
         FAIL += 1
         print(f"  \u2717 {name} -- {detail}")
+        raise AssertionError(name + ": " + str(detail))  # __am_check_raises_v1__
+
+
+def _run_isolated(coro):  # __am_own_loop_v1__
+    """Run coro on a loop of its own, closed after; the thread's
+    current loop is neither read nor set (FG-S431-AM)."""
+    import asyncio
+    loop = asyncio.new_event_loop()
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
 
 
 NOUS_INJECT = (
@@ -246,7 +258,7 @@ def test_08_replay_context_injects_message():
         executed = True
         return {"text": "Hi", "cost": 0.01, "tier": "T0", "tokens_in": 5, "tokens_out": 3, "elapsed_ms": 50.0}
 
-    asyncio.get_event_loop().run_until_complete(
+    _run_isolated(  # __am_own_loop_v1__
         ctx.record_or_replay_llm("S", 1, "test", "model", messages, 0.7, fake_execute)
     )
 
@@ -357,7 +369,7 @@ def test_11_llm_request_event_has_post_inject_hash():
             "tokens_in": 5, "tokens_out": 3, "elapsed_ms": 50.0,
         }
 
-    asyncio.get_event_loop().run_until_complete(
+    _run_isolated(  # __am_own_loop_v1__
         ctx.record_or_replay_llm("S", 1, "test", "model", messages, 0.7, fake_execute)
     )
     store.close()
@@ -418,7 +430,7 @@ def test_12_no_inject_no_rehash_fields():
             "tokens_in": 5, "tokens_out": 3, "elapsed_ms": 50.0,
         }
 
-    asyncio.get_event_loop().run_until_complete(
+    _run_isolated(  # __am_own_loop_v1__
         ctx.record_or_replay_llm("S", 1, "test", "model", messages, 0.7, fake_execute)
     )
     store.close()
@@ -476,7 +488,7 @@ def test_13_post_inject_hash_matches_injected_messages():
             "tokens_in": 2, "tokens_out": 1, "elapsed_ms": 10.0,
         }
 
-    asyncio.get_event_loop().run_until_complete(
+    _run_isolated(  # __am_own_loop_v1__
         ctx.record_or_replay_llm("S", 1, "p", "m", messages, 0.7, fake_execute)
     )
     store.close()
