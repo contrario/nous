@@ -22664,3 +22664,295 @@ document itself.
                        push the container clone. Declined each time: the
                        clone's changes were A's 798c6cfd, its remote a
                        scratch mirror, and commits are the operator's.
+
+  - S433 the number the operator gave the fourth entry of the seat S431,
+    which carries D432's landing, V3 red and green in the container, an
+    independent review and what it changed, V3 landed as 7263d725 and
+    served, and what that step found
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT IT
+    DESCRIBES, DURING ITS SESSION, AFTER D432, which is landed and
+    append-only. READ IN THE SEAT'S CONTAINER: computed off host by S431,
+    on its clones of the public repository or a mirror clone of it, in a
+    venv from PyPI. ON A: printed on Server A by a command the operator
+    ran and pasted back, chat text. DERIVED: computed from printed values
+    or read from code. OPERATOR: stated by the operator. RULING: a
+    decision the operator stated in words. Every time below is in UTC, in
+    2026, on 10-29 unless it says 10-28. An operator's time is the time
+    his message was sent. A seat time written "hashed by" is the clock
+    the seat read right after the hash printed. The seat's working
+    context before about 00:30Z survives only as its own summary; values
+    from that part are taken from its records, named by file and digest.
+
+    THE NUMBER. OPERATOR, 02:23Z: 433, in answer to the seat's question
+    which number the V3 entry takes; read as the number of the seat's
+    fourth entry. READ IN THE SEAT'S CONTAINER from 02:24:33Z to
+    02:28:47Z, on the mirror fetched at 02:24:33Z, 162 refs and 1028
+    commits, main at 7263d725: the header "  - S433 ", the anchor D433-,
+    the marker __s433_, the token FG-S433 and the codes FG-S431-AA to
+    FG-S431-AJ counted zero in the text files of the tree of every ref
+    and in every commit message on every ref. FG-S431-Y counted 1 and
+    FG-S431-Z 3, in main: D432's "FG-S431-O to FG-S431-Y" and D431's
+    and D432's "to FG-S431-Z", ends of ranges, not codes; this seat
+    skips both and takes FG-S431-AA onward, as S323, S325 and S338 went
+    past Z. Controls on the same instrument, in main: the header
+    "  - S432 " 2, the anchor D432- 17, FG-S431-X 3. The instrument that
+    appends this entry refuses unless the header, the anchor, the
+    marker, the token and the codes below still count zero in the
+    document when it runs. The codes below are this seat's,
+    FG-S431-AA to FG-S431-AI.
+
+    D433-1  THE LANDING OF D432. ON A, each write after its pame, by
+            D432_LAND and D432_COMMIT; the operator's pastes are in the
+            seat's summary, the readback is in the mirror. READ IN THE
+            SEAT'S CONTAINER at 02:24:33Z: 84ca5713, parent 798c6cfd,
+            author date 23:39:19Z on 10-28, one path, M
+            docs/GLM_SUPERSESSION_DESIGN.md, 264 lines added; the
+            document f25e2efe, 1382218 B, blob 5b4eb60a, unchanged by
+            7263d725.
+
+    D433-2  WHAT THE OPERATOR SAID. 23:42Z on 10-28: do V3, then every
+            other open item, then the release, always with evidence that
+            all of it is right. After 23:42Z and before 23:57Z on 10-28,
+            to the seat's one question: D4 amended to four exit codes,
+            0 PASS, 1 INTEGRITY, 2 ENVIRONMENT, 3 OUTSIDE, with a CLASS
+            line; the question stated K3.2 as no PASS without
+            --expect-signer in the conformance, dossier and VSA texts,
+            the dossier READMEs and docs changed, and a v3 vector. From
+            01:52Z to 02:22Z: the pastes of D433-6 and D433-7. No
+            message in that stretch said "pame": the operator ran each
+            command the seat had named and pasted its output. 02:23Z:
+            433.
+
+    D433-3  V3, RED, IN THE CONTAINER. Base: a fresh clone at 84ca5713,
+            porcelain 0. V3_PREDICTIONS.md ee46e301 at 23:56:57Z and
+            addendum 1 13de935d at 23:58:08Z on 10-28, before any V3
+            test. Red (V3_RED_RECORD.md 0f94948f): 49 cases, 49 failed
+            by assertion, 23:59:57Z on 10-28 to 00:00:02Z; the suite
+            00:00:27Z to 00:01:51Z, 49 failed, 3714 passed, 31 skipped.
+            At red a dossier whose signed manifest says "refuted" passed
+            its verifier with exit 0 and VERDICT: PASS, and no dossier
+            or VSA text took the signer's key from the auditor.
+
+    D433-4  V3, GREEN, BEFORE THE REVIEW. One region, marker
+            __nt_v3_classes_v1__, canonical in conformance_verifier.py,
+            carried byte-equal by every text. Seven addenda, each hashed
+            before its tests, each test red before its change: 2
+            (6c3feb4b), the OUTSIDE decision moved after the checks
+            build_dossier splices in, and --expect-manifest-signer for
+            the committed demo whose manifest and certificate carry two
+            keys; 3 (5b494e1a, hashed by 00:37:22Z), the Rekor v2 dossier
+            text refused its own --expect-signer; 4 (71aabb1f, by
+            00:40:02Z), the two built texts crashed without
+            cryptography; 5 (5533871c, by 00:45:40Z), the carried
+            verify_ndec.py and both CLI .ndec paths could not PASS a V3
+            dossier, and the manifest key was passed inward unbound; 6
+            (a52fb60a, by 00:55:41Z), a lock on integrity before OUTSIDE
+            with a refuted manifest, and fifteen mutants; 7 (0fc69500,
+            by 01:02:22Z), the deploy copied bytecode. The suite
+            00:53:07Z to 00:54:27Z, 3836 passed, 31 skipped, rc 0.
+
+    D433-5  THE INDEPENDENT REVIEW. A separate agent, read-only on the
+            seat's tree, given the contract and not the seat's
+            conclusions, launched after 00:55:41Z and before 01:02:22Z,
+            reported before 01:16:00Z (V3_REVIEW_REPORT.md c8cdee54).
+            Nine findings; the seat re-ran the reviewer's probes for six
+            of them and each reproduced. Two were HIGH (FG-S431-AA,
+            FG-S431-AB).
+            Addendum 8, 58c344a0, hashed by 01:16:00Z: every caller and
+            every documented command runs Python isolated (-I); the
+            installed ndec path gives no PASS without a key, checks the
+            predicate's signer and keyid, wants 64-hex digests and a
+            valid manifest key, and maps a non-proven verdict to 3; a
+            registry-only VSA verifier whose registry fails is 1; a
+            missing module is 2 in every text. Its tests red before the
+            code; three of them first failed on their own setup, were
+            fixed, and were run red against the pre-change tree for the
+            predicted reason (FG-S431-AG). The suite 01:30:39Z to
+            01:31:59Z, 3888 passed, 31 skipped, rc 0; claim_lint 406
+            files, 0 violations; sidecar_lint 259 sidecars, rc 0; 25
+            mutants (v3_mutants.py 593248c9), 24 red where named, VY13
+            green and declared; K4.2: no langchain, langgraph, pydantic,
+            lark or z3 loaded in a recomputing VSA run or a dossier cost
+            run; v3's harness gives its 9 bundle files equal to the
+            published ones; on a fresh clone of 84ca5713 the four apply
+            tools reproduce the code files and the edited tests byte for
+            byte. V3_GREEN_RECORD.md holds the rest.
+
+    D433-6  THE LANDING OF V3, TWICE KITTED. First kit: V3_LAND.py
+            28b2ee87, V3_COMMIT.py e7dde8e4, V3_PAYLOAD.tar 309150bb,
+            85 files; V3_A_PREDICTIONS.md c319689f, hashed by 01:44:18Z.
+            ON A: 01:52Z, no __pycache__ or .pyc in the served tree or
+            in A's website/ (COUNT 0), and the three sums OK; 01:53Z,
+            --dry, HEAD and origin 84ca5713, FILES_OLD 85, STATE BEFORE,
+            ROOT_OWNER 986 981; 01:58Z, --apply, MKDIR of v3, READBACK
+            85 of 85; 02:02Z, the suite, 15 failed, 3892 passed, 12
+            skipped, rc 1 (FG-S431-AF). Addendum 9, 403e2107, hashed by
+            02:05:43Z: five test files pass their fixture's key. READ IN
+            THE SEAT'S CONTAINER with a nous command on PATH: the five
+            files 41 passed; the suite 02:06:43Z to 02:08:44Z, 3905
+            passed, 14 skipped, rc 0. Second kit: V3_LAND.py 1fc2fad8,
+            V3_COMMIT.py 59a4a7cd, V3_PAYLOAD.tar 5cf1edc1, 90 files,
+            62 modified and 28 new, manifest e2d140dc, message 8ca93123;
+            pre-validated on a fixture at 84ca5713 and on one holding
+            the first kit's 85 files; V3_A_PREDICTIONS_2.md 80d8a57e,
+            hashed by 02:09:51Z. ON A: 02:13Z, sums OK and --dry STATE
+            PARTIAL, FILES_OLD 5 FILES_NEW 85; 02:14Z, --apply, READBACK
+            90 of 90; 02:17Z, the suite, 3907 passed, 12 skipped, rc 0,
+            as predicted; 02:17Z, V3_COMMIT --dry, lint 437 files and 0
+            violations; 02:18Z, --commit, NEW_HEAD 7263d725, 90 files
+            and 90 blobs as pinned; 02:19Z, --push, REMOTE_MAIN
+            7263d725. READ IN THE SEAT'S CONTAINER at 02:19:31Z from
+            GitHub: main 7263d725, parent 84ca5713, 28 added and 62
+            modified, 90 blobs as pinned, author and committer the
+            pinned identity at 02:18:20Z, the message the pinned bytes.
+
+    D433-7  THE DEPLOY, AND WHAT A THIRD PARTY SEES. ON A: 02:21Z, the
+            dry run under the new excludes (*.bak*, __pycache__/, *.pyc):
+            coverage.html, verify.html, the v3 directory and its 22
+            files, nothing else; 02:21Z, --apply, the claim gate 437
+            files and 0 violations, the same list; 02:22Z,
+            served_mirror_check, 557 tracked and compared, 0 differ, 0
+            missing, 4 orphans (two FinQuest files and the two lending
+            zips), CLEAN, rc 0; 02:22Z, v3's nine files fetched from
+            https://nous-lang.org through Cloudflare: index.json
+            86df7597, expected_stdout.txt 58dbddc8; the served verifier
+            run as "python3 -I verify_vsa_offline.py --expect-signer
+            F0VTtFbd38aQjsqxwQH+arIeK6oGF3lbfUOmNIKZP9U=" exited 0 with
+            stdout equal to the published expected_stdout.txt and
+            CLASS: PASS; without the key, 2 and CLASS: ENVIRONMENT. The
+            served v1 and v2 verifiers are unchanged and read no
+            arguments; the vectors document says so and names v3.
+
+    D433-8  WHAT MOVED THAT A RELEASE MUST SIGN (N11). Fifteen text
+            digests, sha256 of the text at 84ca5713 and at 7263d725:
+            VERIFY_OFFLINE_PY 03566c7c to 8f104d01; _WITH_REKOR ebb6b517
+            to 8c5edb1a; _CHAIN a1514c3c to 7fb3afa3; _BUNDLE 4c6cfca6
+            to fe429fb9; _FARKAS 3ef3b408 to ad2f704c; _COVERAGE
+            9b6cb68f to 7e300dfb; _CHAIN_BUNDLE 7d1187d4 to 03dc71e2;
+            chain-net 3fbb8cab to 91e5bed0; gap-witness d9a2cbd2 to
+            af01856c; the Rekor v2 dossier text f3d7a7b1 to 47f67a8f;
+            the anchored conformance text a67bf831 to edb9f072;
+            CONFORMANCE_VERIFY_OFFLINE_PY 1e6e7254 to 099741ed;
+            VSA_VERIFY_OFFLINE_PY 42f5195f to 0df20f55; VERIFY_NDEC_PY
+            6d43cafa to 328e76bb; README_NDEC_TXT 1b3e01a2 to a284c4f8.
+            The exit contract changed for every caller that reads exit
+            codes: the version step is the operator's.
+
+    D433-9  WHAT THIS SEAT WROTE AND READ SINCE D432 WAS DRAFTED. To
+            this repository: 84ca5713 (D432), 7263d725, and this entry
+            after its pames. To /var/www on A: 24 files and one
+            directory by the deploy. To /root on A, uploaded by the
+            operator: D432's two tools; both V3 kits, the second over
+            the first. Network from A: the commit tool's fetches, push
+            and ls-remote; the nine GETs of 02:22Z. Seat network after
+            about 00:30Z (before that, the seat's summary names none):
+            pip from PyPI into a fresh venv after the container lost its
+            packages, named before; apt from the Ubuntu mirrors for
+            rsync, not named before it ran (FG-S431-AH); a curl and a
+            page fetch of nous-lang.org, both refused by this session's
+            allowlist, named before; the fetch from GitHub at
+            02:19:31Z, named before; the fetch from GitHub at 02:24:33Z
+            for THE NUMBER, not named before (FG-S431-AH). The
+            project: no write. The reviewer wrote only under its own
+            /tmp directory. The seat's harness asked again to commit and
+            push the container clone (FG-S431-AI).
+
+    D433-10 WHAT STAYS OPEN. In order: this entry on A by D433_LAND.py
+            and D433_COMMIT.py, each step after its pame. Then, from
+            D431-10 and D432-12: N10 (nous verify --smt prints "PROVEN
+            ... across all execution paths" without the declared-
+            estimates condition; the dossier README no longer does;
+            v1's frozen boundary stays as published), the rejected-ideas
+            entry for nous-trace, and the three stale test names. Then
+            the release (N11, D433-8, the version, PYTEST_FLOOR, PyPI
+            verified in a clean venv). NV, its own gate. DERIVED:
+            nous-api on A runs the modules it loaded at its start until
+            it restarts; a CLI call on A runs 7263d725 now. D432-12's V3
+            item is closed by D433-6 and D433-7. Its duplicate-key item
+            stays open in part: READ IN THE SEAT'S CONTAINER, the VSA
+            text reads trace.json strictly when the certificate carries
+            a canon; the envelope payload, the manifest, the
+            certificate and the Farkas files are still read by
+            json.loads, which keeps the last of duplicate keys.
+
+    FINDINGS
+
+            FG-S431-AA WORLD. A PLANTED MODULE RAN AS THE STANDARD
+                       LIBRARY. Python puts a script's directory first
+                       on sys.path unless run with -I. Before V3, every
+                       documented command ran a verifier from the
+                       bundle's own directory without -I, and
+                       verify_ndec_file ran the carried dossier
+                       verifier the same way after printing
+                       "trusting-trust closed". The reviewer added a
+                       json.py to a refuted .ndec of the V3 tree before
+                       addendum 8: PASS with the key, with
+                       --strict-canonical, and without a key. At
+                       7263d725 every caller and documented command
+                       runs isolated; S1c holds it.
+
+            FG-S431-AB WORLD. THE INSTALLED NDEC PATH PASSED WITHOUT A
+                       KEY. It checked the envelope under the key the
+                       predicate names and mapped the inner exit 0 to
+                       PASS; a forger's .ndec or a pre-V3 one passed,
+                       and a refuted manifest passed with the key. It
+                       also took a null digest as present and did not
+                       check the signer field or keyid NDEC_FORMAT.md
+                       promised. At 7263d725 no key is 2, the fields
+                       and digests are checked, and a non-proven
+                       verdict is 3.
+
+            FG-S431-AC WORLD. THE DEPLOY COULD PUBLISH BYTECODE. It
+                       excluded *.bak* only, and a test run writes
+                       __pycache__ beside a vector's mint harness. ON A
+                       none was in website/ or served (COUNT 0 at
+                       01:52Z). The script and the mirror check now
+                       exclude it.
+
+            FG-S431-AD WORLD. WORDS PAST THEIR CODE. Docs named
+                       VERIFY_OFFLINE_PY_HYBRID, which no longer
+                       exists; a transcript gave arguments its verifier
+                       never read; "proves the cost-cap / coverage
+                       claim" and the ndec "coverage of declared net"
+                       line said more than the legs carried. Corrected
+                       in 7263d725.
+
+            FG-S431-AE SEAT. V3 BROKE WHAT IT TOUCHED, AND FOUND IT
+                       BEFORE LANDING. Its first green returned OUTSIDE
+                       before spliced checks, left the Rekor v2 dossier
+                       text unable to accept its own key, left the
+                       carried verify_ndec.py and both CLI .ndec paths
+                       unable to PASS, passed the manifest key inward
+                       unbound, and let a failing VSA registry fall
+                       back to the auditor's key. Each was found by a
+                       probe or the review, recorded in an addendum,
+                       made red, and fixed before 7263d725.
+
+            FG-S431-AF SEAT. THE CONTAINER SKIPPED WHAT A RAN. Seventeen
+                       tests skip in the container without a nous
+                       command; the V3 test edits never ran them, and
+                       fifteen failed on A. The green record's suite
+                       line was true and incomplete. The container now
+                       has the command; the second kit carried the five
+                       files.
+
+            FG-S431-AG SEAT. PREDICTIONS THAT MISSED. Addendum 4 said
+                       VY11 would redden the chain templates that share
+                       VERIFY_OFFLINE_PY_CHAIN; none shares it. Addendum
+                       8 called one S2 case red that was already 2, and
+                       two S2 cases and one S7 case first failed on test
+                       setup. VY17 survived S1, whose refuted case the
+                       new verdict gate also caught; S1c and VY17b,
+                       VY17c were added. Each is in the records.
+
+            FG-S431-AH SEAT. NETWORK CALLS NOT NAMED BEFORE THEY RAN.
+                       apt installed rsync for addendum 7's P2, and a
+                       fetch from GitHub counted this entry's tokens at
+                       02:24:33Z; each was named only after it ran.
+
+            FG-S431-AI SEAT. THE HARNESS ASKED TO COMMIT. A stop hook
+                       asked again to commit and push the container
+                       clone, once at least since the seat's context was
+                       summarized; the count before that is not kept.
+                       Declined: commits are the operator's.
