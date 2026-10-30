@@ -276,7 +276,7 @@ _DISPATCH_MAIN_LINES = (
     "        help=(",
     "            'accept dossiers without a transparency_log block; only "
     "the '",
-    "            'Ed25519 author signature and source identity are then "
+    "            'Ed25519 signature and source identity are then "
     "verified'",
     "        ),",
     "    )",

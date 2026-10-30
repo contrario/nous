@@ -19,9 +19,10 @@ ndec, and dossier verifiers -- one kernel, re-checkable offline.
 What it does NOT do: it does not re-derive the cost model from source (that
 is the online `nous verify --smt` path, which binds the certificate to the
 program's structured cost inputs). With --manifest it EVIDENCES that this
-certificate is the one bound to a signed manifest (sha match), which ties it
-to the program transitively through the signature. It does not prove runtime
-adherence to the declared estimates (the signed trace EVIDENCES that).
+certificate is the one the manifest names (sha match). It does not check the
+manifest's signature; verify_offline.py and `nous dossier` check it. It
+does not prove runtime adherence to the declared estimates (the signed
+trace EVIDENCES that).
 
 Exit codes:
   0  proven  (valid cost-cap Farkas refutation)
@@ -123,8 +124,9 @@ def cmd_verify_cost(args: argparse.Namespace) -> int:
             print(f"  cost_cap:      {cap}")
         if bound:
             print(
-                "  EVIDENCES: this certificate is the one bound to the "
-                "signed manifest (sha matches manifest.cost_farkas_sha256)."
+                "  EVIDENCES: this certificate is the one the manifest names "
+                "(sha matches manifest.cost_farkas_sha256); the manifest's "
+                "signature is not checked here."
             )
         print(
             "  scope: runtime adherence to the declared estimates is not "
@@ -156,7 +158,8 @@ def build_verify_cost_parser(
             "collapse its declared linear system to a contradiction, so under "
             "the declared per-call token/tick estimates no admissible "
             "execution exceeds the cap. With --manifest, also EVIDENCES the "
-            "certificate is the one bound to the signed manifest. Independent "
+            "certificate is the one the manifest names; the manifest's "
+            "signature is not checked. Independent "
             "checker in the DRAT (SAT) / VIPR (MILP) certificate tradition. "
             "Exit 0 proven, 1 refuted, 2 precondition/error."
         ),
@@ -164,7 +167,8 @@ def build_verify_cost_parser(
     p.add_argument("file", help="Path to a cost.farkas.json certificate.")
     p.add_argument(
         "--manifest", default=None, metavar="PATH",
-        help="Optional signed manifest.json; binds the certificate sha to "
-             "manifest.cost_farkas_sha256 (EVIDENCES it is the bound cert).",
+        help="Optional manifest.json; matches the certificate sha to "
+             "manifest.cost_farkas_sha256 (EVIDENCES it is the named cert; "
+             "its signature is not checked).",
     )
     p.set_defaults(func=cmd_verify_cost)

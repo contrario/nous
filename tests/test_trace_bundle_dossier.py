@@ -183,7 +183,7 @@ def test_emitted_verifier_valid_is_pass(tmp_path):
     d = _assemble(tmp_path / "d_ok", pack, dossier.VERIFY_OFFLINE_PY)
     rc, out, err = _run(d)
     assert rc == 0, (out, err)
-    assert "NOUS-TRACE evidence bundle authenticated" in out
+    assert "NOUS-TRACE evidence bundle bound to the dossier manifest" in out
     assert "verdict: VALID" in out
 
 

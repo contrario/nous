@@ -101,7 +101,7 @@ def test_producer_minor_emits_and_dossier_routes_article_12(tmp_path):
     build_dossier(src, manifest=mout, output=out)
     proc = _run_verifier(out)
     assert proc.returncode == 0, proc.stdout + proc.stderr
-    assert "materiality classification authenticated" in proc.stdout
+    assert "materiality classification bound to the manifest" in proc.stdout
     assert "Article 12" in proc.stdout
 
 

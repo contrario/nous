@@ -174,7 +174,7 @@ def test_material_dossier_verifier_authenticates_and_routes(tmp_path):
 
     proc = _run_verifier(out)
     assert proc.returncode == 0, proc.stdout + proc.stderr
-    assert "materiality classification authenticated" in proc.stdout
+    assert "materiality classification bound to the manifest" in proc.stdout
     assert "MATERIAL change" in proc.stdout
     # non-chain dossier: no envelope-binding proof leg is carried
     assert "supersedes" in proc.stdout

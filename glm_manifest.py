@@ -186,9 +186,10 @@ def verify_glm_manifest(
     against pinned Sigstore log keys.
 
     Raises GlmManifestError only on a structurally invalid manifest. All
-    cryptographic outcomes are reported as per-step booleans. With the default
-    empty pinned allowlist (no signing ceremony has run) signature verification
-    fails closed: no trusted key matches.
+    cryptographic outcomes are reported as per-step booleans. The default
+    allowlist is KNOWN_GLM_MANIFEST_PUBLIC_KEYS_B64, one key pinned in S150; a
+    signature under any other key, or with an empty allowlist, fails closed:
+    no trusted key matches.
     """
     try:
         manifest = json.loads(served_text)

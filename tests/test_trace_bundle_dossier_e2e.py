@@ -122,7 +122,7 @@ def test_build_dossier_carries_trace_bundle_valid(tmp_path):
 
     rc, out, err = _run(output)
     assert rc == 0, (out, err)
-    assert "NOUS-TRACE evidence bundle authenticated" in out
+    assert "NOUS-TRACE evidence bundle bound to the dossier manifest" in out
     assert "verdict: VALID" in out
 
 

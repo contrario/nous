@@ -1432,7 +1432,7 @@ def _check_trace_bundle(manifest, ROOT):
         return 1
 
     rc = report.get("recomputed", {})
-    print("OK   NOUS-TRACE evidence bundle authenticated "
+    print("OK   NOUS-TRACE evidence bundle bound to the dossier manifest "
           "(trace_bundle/manifest.json sha-gated by the signed dossier "
           "manifest; per-event chain verified)")
     print("     RECOMPUTED: %d policy verdict(s) re-computed from signed "
