@@ -23583,3 +23583,413 @@ document itself.
                        one namespace; 432, the seat after S431 by count, is
                        the header of D432. The operator gave 438 after the
                        seat said so.
+
+  - S427 the number the operator gave the seat after S426, whose first
+    entry carries what S426 owed: D426 landed and read back, the
+    signer-wording slice killed in the seat as X-G5 and landed as X-G5b,
+    19828fe5, two findings of S426, and the opening of the seat 427
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT AFTER
+    S426, NUMBERED 427 BY THE OPERATOR, DURING ITS SESSION, AND CARRIES
+    WHAT S426 OWED. READ IN THE SEAT'S CONTAINER: computed off host by the
+    seat 427, from the kickoff's one attachment or a mirror clone of the
+    public repository. ON A: printed on Server A by a command the operator
+    ran and pasted back, as a file unless it says chat text. INHERITED:
+    from the sealed handoff, opener and record of S426, its running log or
+    a file its seal lists, each checked by digest at intake and not
+    measured again. TESTIMONY: stated by another lane, in S431's handoff as
+    S426's seal holds it, and not measured here. DERIVED: computed from
+    printed values or read from code. OPERATOR: stated by the operator.
+    RULING: a decision the operator stated in words. Every time below is in
+    UTC, in 2026, on the date its paragraph names last. An operator's time
+    is the time his message was sent; a value ON A carries the clock its
+    command printed.
+
+    THE NUMBER. OPERATOR, 12:54Z on 10-30: 427, for the seat after S426.
+    INHERITED, S426's record, section 9: at 12:54:55Z, on its mirror after
+    its last fetch, 163 refs and 1038 commits, main 19828fe5, the tokens
+    S427, D427 and FG-S427 and the marker __s427_, matched as words and as
+    bare strings, counted zero in the tree of every ref, in every commit
+    message and in main's binary files; so for 428. READ IN THE SEAT'S
+    CONTAINER at 13:20:36Z on 10-30, by the same instrument on the mirror
+    cloned at 13:20:04Z, the same 163 refs and 1038 commits: zero again,
+    and zero for 428; a pass blind to case and bounded as the instrument's
+    words are found none, and unbounded it found the digits only inside
+    hexadecimal digests. In nous-langchain: the bundle made on A at
+    02:14:32Z on 10-31 (D427-12) has the digest of the bundle in which
+    S426's seat counted zero, 82d8e4eb, so the same bytes (DERIVED); not
+    counted again. Before this entry the document held no S427 token, no
+    anchor of that number and no code of its family, and the instrument
+    that appends this entry refuses unless that is still so when it runs.
+    The two codes below are S426's, FG-S426-C and FG-S426-D; its first two
+    are anchored in D426. This seat adds no code.
+
+    D427-1  THE LANDING OF D426. INHERITED, S426's record, section 3, on
+            10-27, each write after its question and pame, each paste chat
+            text: the land tool's dry run 08:12:52Z, HEAD and origin
+            ac096861, the document ab740a4d, STATE BEFORE, the namespace of
+            426 empty, DRY_RUN_GREEN; the apply 08:13:46Z, WROTE and
+            READBACK d70ce2d7, NOT_STAGED, APPLY_GREEN; the commit tool's
+            dry run 08:18:01Z, the blob fc2e695f, the lint 437 files and 0
+            violations, WOULD_COMMIT; the commit 08:19:36Z, NEW_HEAD
+            c73d1ea5, CHECK_COMMIT OK, COMMIT_GREEN; the push 08:21:03Z,
+            REMOTE_MAIN c73d1ea5, PUSH_GREEN. OPERATOR, 08:13Z, 08:19Z and
+            08:20Z: the pames of the apply, the commit and the push; the
+            half of each question asking whether anything had moved was not
+            answered in words, and the tools' guards checked HEAD, origin
+            and porcelain before each write. S426's read-back at 08:21:38Z:
+            the document byte-equal to its kit's, the body to its message.
+            READ IN THE SEAT'S CONTAINER, on the mirror of 13:20:04Z on
+            10-30: c73d1ea5, its one parent ac096861, tree bb8cb80e, one
+            path, 287 lines added, author and committer the pinned identity
+            at 08:19:38Z on 10-27; the document d70ce2d7, blob fc2e695f;
+            the raw body 751 bytes, byte-equal to the sealed message
+            8b5d107e.
+
+    D427-2  THE OBJECT AND X-G5, KILLED. OPERATOR, after 08:21Z on 10-27,
+            from choices the seat offered: the signer wording of
+            dossier.py's five verifiers, of offline_verifier_builder.py:269
+            and of the GLM docstring at glm_manifest.py:190, and the
+            "signed manifest" of verify-cost; at 08:28Z, scope B: that, and
+            the seven printed "authenticated" lines scoped. INHERITED,
+            S426's record, section 4, on a clone of c73d1ea5:
+            inventory_signer426.txt 4b40c8cb, by inventory_signer426.py
+            88c95df0; X_G5_MEASUREMENT.md 0f8b6862 at 08:27:35Z; the seat's
+            second network step, pip from PyPI into its venv, 08:28:53Z to
+            08:29:06Z; the base suite in the seat, 3615 passed and 31
+            skipped of 3646, where A runs 3634 and 12; the seven files that
+            pin the changed text, 47 tests, 47 passed. X_G5_PREDICTIONS.md
+            1aff3d24 at 08:34:43Z, before the patch and the test. The new
+            test, test_x_g5_wording.py 7053ab42, on the base: 6 failed and
+            1 passed, as predicted. The source edits, x_g5_patch.py
+            62c48011, at 08:36Z: seven tests turned red where five were
+            predicted; the two more, test_embed_matches_tracked_source in
+            tests/test_trace_bundle_dossier.py and
+            test_embed_carries_the_rekor_leg in
+            tests/test_c4_rekor_embed.py, hold
+            dossier._TRACE_BUNDLE_CHECK_EMBED byte-equal to tb_check.py,
+            which the slice did not edit. Its kill criterion XG5-K1 fired,
+            and the slice was killed in the seat. Nothing landed; nothing
+            reached A (FG-S426-C).
+
+    D427-3  THE RULING OF 10-28, D430 AND X-G5b-1. RULING, 00:18Z on 10-28:
+            re-run as X-G5b, this time with documented evidence, read by
+            the seat as every result kept as a hashed file. INHERITED,
+            S426's record, section 5: its fetch 00:19:03Z to 00:19:07Z,
+            main cc55aead, D430 of the S431 lane, docs only, whose entry
+            names dossier.py and the s130 baseline among its next code.
+            READ IN THE SEAT'S CONTAINER: cc55aead, parent c73d1ea5, one
+            path, 283 lines added, committed 12:02:38Z on 10-27. RULING,
+            about 00:24Z: split, X-G5b-1 now on cli_verify_cost.py,
+            glm_manifest.py and offline_verifier_builder.py, X-G5b-2 after
+            S431's V1 lands. On a clone of cc55aead: a census of the three
+            files, no test reading their text, source, digest or output;
+            the base 3615 and 31; X_G5B1_PREDICTIONS.md 31c7d330 at
+            00:28:57Z, before the patch; its evidence run: red 4 and 1; the
+            slice 3620 passed and 31 skipped of 3651, only the five new
+            tests new; the lint 406 files and 0 violations; the s130
+            baseline byte-equal; mutants M1 to M7, each its one red.
+            X_G5B1_EVIDENCE.md de4b6a3d, its sums b59e20a9 over 27 files.
+            The X426 kit: X426_KIT_PREDICTIONS.md 879c29f3 at 00:37:05Z,
+            before the tools; X426_LAND.py df2383a3 and X426_COMMIT.py
+            d6d1723a; the fixture at 00:38:28Z, 359 lines, 0 diff lines;
+            s426_x426_kit.tar a44233b8 to the operator. A miss of its
+            prose: 27 arms for 28. The question whether A was free stayed
+            open until 11:56Z on 10-30.
+
+    D427-4  S431'S HANDOFF, THE SECOND BASE AND THE WHOLE SLICE. OPERATOR,
+            11:56Z on 10-30: S431's handoff, NOUS_SESSION_431_HANDOFF.md
+            234c6d3f, attached for information; the tree and the host on A
+            free. RULING: continue this seat's work, not what that handoff
+            says. INHERITED, S426's record, section 6: its fetch 11:57:56Z
+            to 11:57:59Z, main a58ed216, v8.0.0-4; above cc55aead, thirteen
+            commits of the S431 lane as its handoff lists them (TESTIMONY
+            for their purpose) and a58ed216, D437 of the seat S438, docs
+            only. S426's running log said sixteen at 12:00Z and corrects
+            itself. READ IN THE SEAT'S CONTAINER: 14 commits from cc55aead
+            to a58ed216, 15 from c73d1ea5. Moved since cc55aead among the
+            slice's files: dossier.py, offline_verifier_builder.py and the
+            s130 baseline; cli_verify_cost.py, glm_manifest.py and
+            tb_check.py unchanged. The X426 tools refuse at any parent but
+            cc55aead; the kit was superseded, not rebased. RULING, about
+            12:00Z: 1 and 2 together, X-G5b whole, eleven paths, on
+            a58ed216.
+
+    D427-5  X-G5b AND THE X426B KIT. INHERITED, S426's record, section 7,
+            on a clone of a58ed216, on 10-30: the census, the old
+            substrings at their counts, the four tests that pin the text,
+            one file held byte-equal by an embed, tb_check.py, in two
+            tests, the s130 baseline's nine entries, six holding "author
+            signature"; the base 3901 passed and 32 skipped of 3933, the
+            lint 406 and 0, L6 254 144 99 3 98. X_G5B_PREDICTIONS.md
+            9921a40a at 12:03:28Z, before the patch and the test.
+            run_evidence_b.sh at 12:04:28Z: red 6 and 1; the source edits
+            alone, exactly the five predicted reds; the whole slice 3908
+            passed and 32 skipped of 3940, only the seven new tests new;
+            the baseline re-blessed, six of nine entries changed; the lint
+            406 and 0; L6 equal; mutants M1 to M10, each its predicted set.
+            One flaw of the instrument: the last row of E8_pins.txt
+            malformed, replaced by E8b_newfile.txt. X_G5B_EVIDENCE.md
+            07f47595, its sums e32a93d1 over 34 files. The kit: pins.json
+            7e4bfd1a; x426b_message.txt 87bdbd6e, 1257 bytes;
+            drive_x426b_predicted.txt, 534 lines, 28 arms;
+            X426B_KIT_PREDICTIONS.md e30e8d94 at 12:12:15Z, before the
+            tools; X426B_LAND.py 5b7bd7d7 and X426B_COMMIT.py 4f08bcca; the
+            fixture at 12:12:54Z, its remote with 163 refs and HEAD: 0 diff
+            lines, its commit's diff equal to E8_slice.diff; the kit's sums
+            8095f772; s426_x426b_kit.tar 195c4128 to the operator.
+            S426_PREDICTIONS_4.md ffa7eed0 at 12:14:15Z, before paste one
+            and HM.
+
+    D427-6  PASTE ONE AND HM OF 10-30. INHERITED, S426's record, section 8.
+            ON A, 12:17:25Z on 10-30, RC 0, the paste dfb51c01: HEAD
+            a58ed21, four commits above v8.0.0; A, B and pip at 8.0.0; the
+            suite 3921 passed and 12 skipped; A up 87575 seconds and B
+            87341, 4.2 seconds more than S431's handoff gave (TESTIMONY):
+            the processes started at 11:57:50.8Z and 12:01:45.8Z on 10-29
+            (DERIVED), no restart since; two failed units. ON A, 12:27:49Z,
+            the paste 6c336689: HM_RC 1, 35 lines, those of 07:59:33Z on
+            10-27 with the MainPID of nous-api 2940180 to 2608862, S431's
+            restart (TESTIMONY), as predicted. On 10-30 the opening on A
+            was paste one and HM, not G2; the tools' guards, the suite and
+            the lint ran in its place.
+
+    D427-7  THE LANDING OF X-G5b. OPERATOR, on 10-30: 12:29Z, nothing
+            moved, pame for the upload of the tools; 12:30Z, nothing moved,
+            pame for the apply; 12:45Z, pame for the commit, the half
+            asking whether anything had moved not answered in words;
+            12:48Z, nothing moved, pame for the push. ON A: the land tool's
+            dry run 12:29:44Z, RC 0, chat text: HEAD and origin a58ed216,
+            ten blobs at HEAD as pinned, the new path absent and not
+            ignored, porcelain 0, ten files 644 and 986:981, STATE BEFORE,
+            DRY_RUN_GREEN; the apply 12:34:15Z, the paste 335623e8: eleven
+            WROTE and READBACK as pinned, porcelain 11, NOT_STAGED,
+            APPLY_GREEN; the suite 12:36:28Z, chat text, 3928 passed and 12
+            skipped, SUITE_RC 0; the commit tool's dry run 12:44:38Z, chat
+            text: eleven worktree blobs as pinned, the lint 437 files and 0
+            violations, WOULD_COMMIT; the commit 12:46:30Z, the paste
+            ad2bf7ce: FETCH_RC 0, origin a58ed216, NEW_HEAD 19828fe5,
+            CHECK_COMMIT OK, COMMIT_GREEN; the push 12:50:45Z, the paste
+            3197ee41: REMOTE_MAIN 19828fe5, PUSH_GREEN. S426's read-back,
+            12:51:43Z to 12:51:45Z: one ref moved, main a58ed216 to
+            19828fe5, 163 refs. A first compare there set the diff of
+            eleven paths against E8_slice.diff, which is by its instrument
+            the ten tracked paths; corrected to that scope. READ IN THE
+            SEAT'S CONTAINER, on the mirror of 13:20:04Z: 19828fe5, one
+            parent a58ed216, tree 6c4717a2, author and committer the pinned
+            identity at 12:46:31Z on 10-30; ten paths modified and one
+            added, each blob and sha256 as pins.json holds them; the raw
+            body 1257 bytes, byte-equal to x426b_message.txt; the diff over
+            the ten modified paths byte-equal to E8_slice.diff fe1a232b;
+            the new test file 1666cad8.
+
+    D427-8  WHAT MOVED WITH IT. INHERITED, S426's record, section 9, and
+            template_digests_427.txt of its seal: four of the seven
+            VERIFY_OFFLINE_PY* template digests moved, those of the bundle,
+            chain, chain-bundle and Farkas verifiers; the s130 baseline
+            holds the new four and
+            website/.well-known/nous/verifier-registry.json the old four,
+            in its 8.0.0 entries. READ IN THE SEAT'S CONTAINER: ndec.py and
+            dossier.py unchanged from v8.0.0 to a58ed216. A's install is
+            editable (INHERITED): a dossier the CLI builds on A now, from
+            one of the four, carries a verify_offline.py that
+            verify_ndec_file under 8.0.0 does not confirm, a note that
+            trusting-trust is not closed, and with --strict-canonical a
+            refusal, rc 1 (DERIVED by S426 from ndec.py, not run). Under
+            main it is canonical. The window closes at the next release
+            (FG-S426-D). nous-api, up since 11:57:50.8Z on 10-29, runs the
+            code it imported then: the old wording until it restarts.
+            S426's kit named the mint and the restart, not this window; its
+            first message on the window called the checks unchanged,
+            corrected within minutes.
+
+    D427-9  THE SEAL OF S426. RULING, 12:53Z on 10-30: seal now. OPERATOR,
+            12:54Z: 427. INHERITED, S426's record, section 9: the seat's G2
+            at 19828fe5, g2_seat427_19828fe5.txt 59827bb2, its block of 236
+            lines 18d8b927 with trailing spaces stripped; STRICT_DUP_ROWS 3
+            at 19828fe5 and 0 at ac096861: three references wrapped to a
+            finding-row indent, in D433 and D437, not duplicate rows; the
+            bundle command for 427, cmd_s427_A.txt 9c5d4ae8, its driver
+            drive_cmd_s427.sh ad42d2c0 and its output 9e995625; the seal's
+            three documents written by generator, the handoff 4566bb5b, the
+            opener b8bfec79 and the record b675d45d, every token resolved;
+            the seal's sums e8c62740.
+
+    D427-10 THE INTAKE OF 427. OPERATOR, 13:18Z on 10-30: the kickoff, its
+            order 1 to 7 and its rules, with one attachment,
+            s426_seal_bundle.tar 0f340e2e, and the digest of its sums file.
+            READ IN THE SEAT'S CONTAINER, before any file in it was read:
+            the tar's digest; its listing, 221 members, 198 files and 23
+            directories, none absolute, none through a parent, no link;
+            extracted into an empty directory; S426_SEAL_SHA256SUMS.txt
+            e8c62740 and its 13 lines, the handoff, the opener and the
+            record among them; then, from inside each pack, the sums of
+            kit426 5371c9d3, xg5 fb2a2b2e, xg5b1 7f1ecf88, kitx 013532b4,
+            xg5b 8a2e94bc, kitxb 6704a971, open426 117d08c3, ona426
+            0a265f08, nlc427 b4705c06 and log 404315f6. Every digest
+            matched, and every file of the tar but the seal's sums file,
+            which the kickoff pinned, is listed in one of the eleven sums
+            files. The seat's first network step, named first: a mirror
+            clone of the public repository, 13:19:59Z to 13:20:04Z, every
+            ref: 163 refs, main 19828fe5, tree 6c4717a2, 160 tags,
+            v8.0.0-5, 1626 tracked files, the document 7b87df2f: as S426's
+            opener predicted. Nothing above 19828fe5; three commits on refs
+            but on no path to it, all of April 2026: 6e4e854c of the tag
+            v4.8.0, 49b70920 and fe6e0605 of refs/pull/1/head.
+
+    D427-11 THE PREDICTIONS AND PASTE ONE. OPERATOR, 13:51Z on 10-30:
+            nothing holds the tree or the host on A. The seat wrote its
+            predictions by script and hashed them before each run on A:
+            S427_OPEN_PREDICTIONS.md f1f83617 at 13:25:13Z, its G2 legs
+            from instruments/G2_R0_S372.sh run in the seat on a clone of
+            19828fe5 whose origin is the seat's mirror, no network, the
+            block equal line for line to S426's run. A first file, bcab57cf
+            at 13:24:44Z, cited the HM paste of 10-30 by the digest of its
+            bytes with each CRLF read as LF; the check of the written file
+            caught it before any use, and it was superseded. ON A, its
+            clock 14:01:50Z on 10-30, RC 0, the paste d5bf8896, every line
+            as predicted: its own digest c027371e and rule0.sh 074e51af;
+            HEAD 19828fe equal to origin/main, five commits above v8.0.0;
+            A, B and pip at 8.0.0; A up 93841 seconds and B 93606, the
+            processes started at 11:57:49.95Z and 12:01:46.00Z on 10-29,
+            each within a second of the start derived on 10-30, so neither
+            restarted; the suite 3928 passed and 12 skipped; the floor 3912
+            at line 70, the line byte-equal to that of 10-30; three nous
+            rows of Asklepios healthy; both timers active; two failed
+            units; the served check discriminating and equal to disk, the
+            fallback 95049 bytes.
+
+    D427-12 HM, G2, HM AGAIN AND THE BUNDLE OF NOUS-LANGCHAIN. ON A, its
+            clock 02:07:18Z on 10-31, the paste d072ecc0: hm_v12.py
+            f6441f6c and the baseline 28f999ac, as pinned; HM_RC 1 and the
+            35 lines of 6c336689, unchanged. OPERATOR, 02:08Z, asked again
+            before G2's fetch whether anything held A or had moved since
+            paste one: no, everything free; the words name the first half.
+            ON A, its clock 02:08:45Z, RC 0, the paste c4a54a4c: T5_OK
+            c11e3033; 31 keyed values as predicted, the guards 94 and 0,
+            930 and 0, 3 and 0, FETCH_RC 0, FETCH_HEAD 189 bytes, HEAD and
+            ORIGIN 19828fe, ahead 0 and behind 0, v8.0.0-5, the two tag
+            oracles agreeing, 160 tags, porcelain 0, L6 254 144 99 3 98;
+            the 236 lines from DOC_SHA to GEN_SHAS equal line for line to
+            the seat's run once trailing spaces are set aside: DOC_SHA
+            7b87df2f, blob da1e3c67, 23585 lines, 1439978 bytes; L7 collect
+            3940, 3928 passed and 12 skipped, lint 437 files and 0
+            violations, the mirror CLEAN for 569 files with 4 orphans. The
+            stop condition held: DOC_SHA 7b87df2f unchanged from the seal.
+            Not predicted: COLLECT_BARE 4078, the seat's 4018 and 60, the
+            gap of ac096861, where A printed 3784 and the seat 3724. ON A,
+            its clock 02:13:08Z, the paste 3140bb04: HM again, unchanged.
+            OPERATOR, 02:14Z: nothing moved, everything free, both halves
+            in words. S427_NLC_PREDICTIONS.md 26e28692, before what
+            follows. ON A, its clock 02:14:32Z, chat text: the opener's
+            command cmd_s427_A.txt, driven again in the seat first, its
+            output equal to S426's with times, names and digests masked:
+            CLONE_RC 0, one ref, main e03e21f5, BUNDLE_RC 0, okay, two
+            refs, main and HEAD, sha256 82d8e4eb, equal to the digest of
+            S426's bundle of 08:00:48Z on 10-27 (DERIVED: the same bytes),
+            so no attachment was needed.
+
+    D427-13 NOTES, NOT FINDINGS. S426's, INHERITED: a compare runs at the
+            instrument's own scope (D427-7); counts in prose are taken by
+            the generator, and D426's predictions P1 and P4, X426's P3 and
+            the running log's line on S426's fetch of 10-30 missed; a kit
+            built on a base another lane then moves is superseded, not
+            rebased (D427-4); an uptime in TESTIMONY is rounded to its
+            writer's clock, here by 4.2 seconds (D427-6); S426's context
+            was compacted, and its log records one read of the operator's
+            notes service (D426-9) and no write; whether any other call to
+            that service ran is not recorded. This seat's: a digest taken
+            after a text read changed the bytes (D427-11); the paste of G2
+            drops the three trailing spaces of the seat's run; the seat's
+            FETCH_HEAD differs in length from A's because its origin is a
+            local path. The tools of this entry are D426's, with this
+            entry's number and pins.
+
+    D427-14 THIS ENTRY'S PREFIXES. Before its tools were built, an
+            instrument of the seat matched every hexadecimal prefix of
+            eight or more digits in this entry and in its commit message
+            against: the files of the S426 seal and its tar; the seat's own
+            files, predictions and copies of the pastes; the objects of
+            core; the sha256 of the document at every commit that changed
+            it, of every tracked file at 19828fe5, and of every commit body
+            since 10-27; the full digests and object names printed in the
+            seal's files and in the pastes. A prefix found only as written
+            in the seal's handoff, record or log is INHERITED as written,
+            and the instrument lists it as such. Every prefix resolved.
+
+    D427-15 WHAT S426 AND THIS SEAT WROTE. INHERITED, S426's handoff,
+            section 5: to core, c73d1ea5 and 19828fe5, each by its two
+            tools after its pames; to /root on A, /root/s426_nlc, whose
+            config holds the remote's URL, and the four tools; no restart,
+            no unit change; to nous-langchain, nothing; network from A on
+            10-27, paste one, G2's fetch, the mirror clone of
+            nous-langchain and the commit and push tools' fetches, push and
+            read of the remote, and on 10-30, paste one and the same of the
+            commit and push tools; the seat's own network, six steps, each
+            named first, and one read of the notes service, not; to the
+            operator, s426_kit426.tar ff42d581, s426_x426_kit.tar a44233b8,
+            s426_x426b_kit.tar 195c4128 and the seal. This seat: to this
+            repository, this entry, after its pames; to nous-langchain,
+            nothing; to /root on A, /root/s427_nlc, a mirror clone whose
+            config holds the remote's URL, its empty error file and the
+            bundle, and this entry's two tools when the operator uploads
+            them. Network from A: paste one's two GETs of nous-lang.org and
+            two ssh reads of B (INHERITED), at 14:01:50Z on 10-30; G2's
+            fetch at 02:08:46Z on 10-31; the mirror clone of nous-langchain
+            at 02:14:32Z; this entry's commit tool's fetches, push and read
+            of the remote. Seat network before this entry was fixed: the
+            mirror clone at 13:19:59Z on 10-30, named first. No web search.
+            The project: no read, no write. To the operator: this seat's
+            files.
+
+    D427-16 WHAT STAYS OPEN. In order: this entry on A by D427_LAND.py and
+            D427_COMMIT.py, each step after its pame; then the object the
+            operator chooses. S426's board, its handoff, section 7. The
+            operator's: a restart of nous-api, if its API is to print
+            X-G5b's wording; whether dossiers are built on A before the
+            next release (FG-S426-D); the health check's critical line on
+            aether-engine and the two failed units; /root/s426_nlc and
+            /root/s427_nlc, whose configs hold the remote's URL; the /root
+            files of S414 to 427; HM's 35 attributed lines against
+            28f999ac, whether HM takes a new baseline, and the four
+            drop-ins outside it, whether they get a copy in git. The core
+            lane's: the next release mints the four moved template digests,
+            and with it S431's FG-S431-AN, eight verifier texts with no
+            signed digest list; X-F5, `nous conformance verify` never
+            checks the manifest signature, no CLI verifies a certificate,
+            and the remedy gate admits self-signed certificates; the docs
+            and served pages that still carry the old signer words, listed
+            in X_G5_MEASUREMENT.md; trace pinning, which needs an
+            out-of-process signer; the lint's blind spots; the committed
+            demo verifier without --expect-signer; NV; A's /v1/health
+            reporting _version.py, not the running code; nous evolve and
+            nous migrate importing modules outside py-modules (TESTIMONY).
+            Served: the blog's remaining signer sites, line 1555 first, and
+            line 1777 as dated errata. The ledger lane's: STRICT_DUP_ROWS 3
+            (D427-9). The S431 lane's and the release lane's boards are
+            their own. Carried from S425, untouched: E2, K4.5 and K4.6 of
+            the LangChain arc; FG-S415-P, FG-S415-O and FG-S414-I;
+            pyproject.toml's description; emit.py's _PART line; the S411
+            opener's section 3.
+
+    FINDINGS
+
+            FG-S426-C  SEAT. AN EMBED HELD BYTE-EQUAL TO A TRACKED FILE IS
+                       A PIN. X-G5's census read the tests that hold
+                       strings; two tests hold
+                       dossier._TRACE_BUNDLE_CHECK_EMBED equal to
+                       tb_check.py, and its kill criterion fired (D427-2).
+                       A census measures every test that holds an embed, a
+                       copy or a digest of a file the slice changes.
+                       X-G5b's did: one such file, tb_check.py, edited with
+                       dossier.py (D427-5).
+
+            FG-S426-D  WORLD. A TEMPLATE CHANGE BETWEEN RELEASES LEAVES THE
+                       RELEASE BEHIND MAIN. 19828fe5 moved four
+                       VERIFY_OFFLINE_PY* digests; the 8.0.0 entries of the
+                       registry hold the old four, and so does the 8.0.0
+                       release's canonical set. A's install is editable,
+                       and a dossier built there now from one of the four
+                       carries a verifier that 8.0.0 does not confirm
+                       (D427-8). A slice that moves such a template names
+                       the window until the next release, which closes it.
