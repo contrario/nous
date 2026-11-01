@@ -533,6 +533,7 @@ def parse_manifest_json(text: str) -> tuple[Manifest, bytes,
         counterexample_total_usd=doc.get(
             "counterexample_total_usd"
         ),
+        safety_margin_pct=doc.get("safety_margin_pct"),  # __xf5_xd1_margin_parse_v1__
         proof_assumptions=doc.get("proof_assumptions"),  # __session96_parse_manifest_json_sibling_v1__
         policy_coverage_sha256=doc.get("policy_coverage_sha256"),  # __s115_policy_coverage_sha256_v1__
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
@@ -594,6 +595,7 @@ def parse_manifest_json_with_anchor(
         counterexample_total_usd=doc.get(
             "counterexample_total_usd"
         ),
+        safety_margin_pct=doc.get("safety_margin_pct"),  # __xf5_xd1_margin_parse_v1__
         proof_assumptions=doc.get("proof_assumptions"),  # __session96_parse_with_anchor_sibling_v1__
         policy_coverage_sha256=doc.get("policy_coverage_sha256"),  # __s115_policy_coverage_sha256_v1__
         coverage_smt2_sha256=doc.get("coverage_smt2_sha256"),  # __s115_coverage_smt2_sha256_v1__
