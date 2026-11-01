@@ -1443,7 +1443,10 @@ def _conf_rc_load(raw):
         return out
 
     def no_constant(name):
-        raise ValueError("non-finite number " + name)
+        raise ValueError(
+            "non-finite number " + name + " (a NOUS writer can write "
+            "this token, so this refusal is not by itself evidence "
+            "of tampering)")  # __an_js_strict_v1__
 
     def no_float(s):
         raise ValueError("non-integer number " + s)

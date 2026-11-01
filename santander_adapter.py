@@ -550,6 +550,59 @@ def _cb(obj):
     return json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
+# --- strict json embed (shared text; canonical copy: conformance_verifier.py) ---
+# Every offline verifier text carries this region byte for byte, and the
+# installed paths import it from conformance_verifier; the tests in
+# tests/test_an_js_strict.py name any copy that drifts (AN-GATE-1 D4).
+# Standard library only; it uses nothing of the v3 region. A JSON input
+# with a duplicate member name at any depth, or with a NaN, Infinity or
+# -Infinity token, is refused; so are bytes that are not UTF-8 and a
+# UTF-8 byte order mark (RFC 8259 8.1, RFC 7493 2.1). Any other
+# malformed JSON still raises the json module's own error. Decoding
+# (base64, an ndjson line, a sha check) stays with the caller.
+# __an_js_strict_v1__ __an_js_r4_v1__
+class StrictJsonError(Exception):
+    # A strict JSON refusal; str() is the whole message.
+    an_js_refusal = True
+
+
+def loads(raw, label):
+    import json as _json
+
+    def _pairs(pairs):
+        seen = set()
+        for k, _v in pairs:
+            if k in seen:
+                raise StrictJsonError(
+                    label + " refused: duplicate key " + repr(k))
+            seen.add(k)
+        return dict(pairs)
+
+    def _token(tok):
+        raise StrictJsonError(
+            label + " refused: non-finite number " + tok + " (a NOUS "
+            "writer can write this token, so this refusal is not by "
+            "itself evidence of tampering)")
+    if not isinstance(raw, (bytes, bytearray)):
+        raise TypeError(label + ": strict loads takes bytes")
+    raw = bytes(raw)
+    if raw[:3] == bytes((0xEF, 0xBB, 0xBF)):
+        raise StrictJsonError(
+            label + " refused: UTF-8 BOM (RFC 8259 8.1; a signer "
+            "can sign these bytes, so this refusal is not by "
+            "itself evidence of tampering)")
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        raise StrictJsonError(
+            label + " refused: not UTF-8 (RFC 8259 8.1, RFC 7493 "
+            "2.1; a signer can sign these bytes, so this refusal "
+            "is not by itself evidence of tampering)") from None
+    return _json.loads(text, object_pairs_hook=_pairs,
+                       parse_constant=_token)
+# --- end strict json embed ---
+
+
 def _fail(msg):
     print("FAIL " + msg, file=sys.stderr)
     return 1
@@ -663,7 +716,7 @@ def _verify_rekor_anchor(tlog, nonce, e3_nonce_hash):
     nonce_bytes = nonce.encode("ascii")
     body_b64 = tlog["body_b64"]
     body_bytes = base64.b64decode(body_b64, validate=True)
-    leaf = json.loads(body_bytes)
+    leaf = loads(body_bytes, "manifest.json transparency_log leaf [js:snt.1]")
     digest_hex, pk_der, sig_der = _parse_v2_leaf(leaf)
 
     want = hashlib.sha256(nonce_bytes).hexdigest()
@@ -744,8 +797,8 @@ def main():
     ppath = ROOT / "payload.json"
     if not mpath.is_file() or not ppath.is_file():
         return _fail("manifest.json and payload.json required in " + str(ROOT))
-    doc = json.loads(mpath.read_text(encoding="utf-8"))
-    payload = json.loads(ppath.read_text(encoding="utf-8"))
+    doc = loads(mpath.read_bytes(), "manifest.json [js:snt.2]")
+    payload = loads(ppath.read_bytes(), "payload.json [js:snt.3]")
 
     sig_block = doc.get("signature") or {}
     pub_b64 = sig_block.get("public_key_b64", "")
@@ -817,7 +870,12 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        _rc = main()
+    except StrictJsonError as _exc:  # __an_js_strict_v1__
+        print("FAIL: " + str(_exc), file=sys.stderr)
+        _rc = 1
+    sys.exit(_rc)
 '''
 
 

@@ -55,7 +55,8 @@ def _load_embed():
     assert isinstance(src, str) and "_check_pce_anchor" in src, (
         "dossier._PCE_ANCHOR_CHECK_EMBED missing"
     )
-    ns: dict = {}
+    import conformance_verifier as _cv
+    ns: dict = {"loads": _cv.loads}  # __an_js_r2_v1__ the stand-in base gets the region's loads
     exec(compile(src, "<embed>", "exec"), ns)
     return ns
 

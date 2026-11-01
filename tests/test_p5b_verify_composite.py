@@ -55,6 +55,8 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 
 import rekor_anchor_v2
 import tb_check
+import conformance_verifier as _cv
+tb_check.loads = _cv.loads  # __an_js_r2_v1__ the stand-in base gets the region's loads, as a base text gives it
 import tsa_client
 from rekor_verify_v2 import RekorAnchorV2
 from trace_bridge import TraceBridge

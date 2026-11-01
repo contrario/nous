@@ -81,6 +81,59 @@ DSSE_PAYLOAD_TYPE = "application/vnd.in-toto+json"
 SLSA_BUILD_LEVEL = 1
 
 
+# --- strict json embed (shared text; canonical copy: conformance_verifier.py) ---
+# Every offline verifier text carries this region byte for byte, and the
+# installed paths import it from conformance_verifier; the tests in
+# tests/test_an_js_strict.py name any copy that drifts (AN-GATE-1 D4).
+# Standard library only; it uses nothing of the v3 region. A JSON input
+# with a duplicate member name at any depth, or with a NaN, Infinity or
+# -Infinity token, is refused; so are bytes that are not UTF-8 and a
+# UTF-8 byte order mark (RFC 8259 8.1, RFC 7493 2.1). Any other
+# malformed JSON still raises the json module's own error. Decoding
+# (base64, an ndjson line, a sha check) stays with the caller.
+# __an_js_strict_v1__ __an_js_r4_v1__
+class StrictJsonError(Exception):
+    # A strict JSON refusal; str() is the whole message.
+    an_js_refusal = True
+
+
+def loads(raw, label):
+    import json as _json
+
+    def _pairs(pairs):
+        seen = set()
+        for k, _v in pairs:
+            if k in seen:
+                raise StrictJsonError(
+                    label + " refused: duplicate key " + repr(k))
+            seen.add(k)
+        return dict(pairs)
+
+    def _token(tok):
+        raise StrictJsonError(
+            label + " refused: non-finite number " + tok + " (a NOUS "
+            "writer can write this token, so this refusal is not by "
+            "itself evidence of tampering)")
+    if not isinstance(raw, (bytes, bytearray)):
+        raise TypeError(label + ": strict loads takes bytes")
+    raw = bytes(raw)
+    if raw[:3] == bytes((0xEF, 0xBB, 0xBF)):
+        raise StrictJsonError(
+            label + " refused: UTF-8 BOM (RFC 8259 8.1; a signer "
+            "can sign these bytes, so this refusal is not by "
+            "itself evidence of tampering)")
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        raise StrictJsonError(
+            label + " refused: not UTF-8 (RFC 8259 8.1, RFC 7493 "
+            "2.1; a signer can sign these bytes, so this refusal "
+            "is not by itself evidence of tampering)") from None
+    return _json.loads(text, object_pairs_hook=_pairs,
+                       parse_constant=_token)
+# --- end strict json embed ---
+
+
 def _fail(msg):
     print("FAIL: " + msg, file=sys.stderr)
     return 1
@@ -149,7 +202,7 @@ def _verify_dsse(envelope):
             "DSSE signature does NOT verify against the pinned NOUS builder key"
         )
     try:
-        statement = json.loads(payload.decode("utf-8"))
+        statement = loads(payload, "provenance envelope payload [js:prv.1]")
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         return None, "verified provenance payload is not valid JSON: " + str(exc)
     if not isinstance(statement, dict):
@@ -196,7 +249,7 @@ def main():
         return 2
 
     try:
-        envelope = json.loads(env_path.read_text(encoding="utf-8"))
+        envelope = loads(env_path.read_bytes(), env_path.name + " [js:prv.2]")
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         return _fail("provenance envelope parse error: " + str(exc))
 
@@ -309,7 +362,12 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        _rc = main()
+    except StrictJsonError as _exc:  # __an_js_strict_v1__
+        print("FAIL: " + str(_exc), file=sys.stderr)
+        _rc = 1
+    sys.exit(_rc)
 """
 
 

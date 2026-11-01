@@ -28,6 +28,9 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+
+from conformance_verifier import (  # __an_js_strict_v1__
+    StrictJsonError, loads as _strict_loads)
 from collections.abc import Mapping
 from typing import Optional
 
@@ -645,7 +648,8 @@ def verify_link(
                 raise ContinuityLedgerError(
                     "receipt missing JWS field: " + fld
                 )
-        protected = json.loads(_b64url_decode(receipt["protected"]))
+        protected = _strict_loads(_b64url_decode(receipt["protected"]),
+                                  "receipt.jws protected [js:cled.1]")
         if protected.get("alg") != RECEIPT_ALG:
             raise ContinuityLedgerError("receipt alg is not EdDSA")
         if protected.get("typ") != RECEIPT_TYP:
@@ -659,7 +663,8 @@ def verify_link(
             raise ContinuityLedgerError(
                 "receipt JWS signature does not verify against counterparty key"
             )
-        claims = json.loads(_b64url_decode(receipt["payload"]))
+        claims = _strict_loads(_b64url_decode(receipt["payload"]),
+                               "receipt.jws payload [js:cled.2]")
         if expected_issuer is not None and claims.get("iss") != expected_issuer:
             raise ContinuityLedgerError(
                 "receipt iss does not match the resolved key owner"
@@ -826,7 +831,7 @@ def _peek_receipt_issuer(receipt: Mapping[str, str]) -> str:
     payload = receipt.get("payload")
     if not isinstance(payload, str) or not payload:
         raise ContinuityLedgerError("receipt has no payload to read iss from")
-    claims = json.loads(_b64url_decode(payload))
+    claims = _strict_loads(_b64url_decode(payload), "receipt.jws payload [js:cled.3]")
     iss = claims.get("iss")
     if not isinstance(iss, str) or not iss:
         raise ContinuityLedgerError("receipt payload has no string iss claim")

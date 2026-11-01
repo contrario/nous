@@ -71,7 +71,7 @@ def _signed_source(tmp_path):
         timeout_ms = 30000
         no_manifest = False
         manifest_out = None
-        key_path = None
+        key_path = str(tmp_path / "op.key")  # __an_js_tmp_keys_v1__
         smt_margin = 0
         no_lint = True
         lint_strict = False
@@ -89,7 +89,8 @@ def _attach_bundle_and_resign(tmp_path, manifest_path):
     parsed, _sig, _pub = manifest_mod.parse_manifest_json(
         manifest_path.read_text(encoding="utf-8"))
     parsed = dataclasses.replace(parsed, trace_bundle_sha256=tb_sha)
-    priv, pub, _kp = manifest_mod.load_or_create_keypair(None)
+    priv, pub, _kp = manifest_mod.load_or_create_keypair(
+        tmp_path / "op.key")  # __an_js_tmp_keys_v1__
     manifest_path.write_text(
         manifest_mod.manifest_json(
             parsed, manifest_mod.sign_manifest(parsed, priv), pub),
@@ -141,3 +142,17 @@ def test_build_dossier_trace_bundle_tamper_fails(tmp_path):
 
     rc, out, err = _run(output)
     assert rc == 1 and "SIG_INVALID" in err, (rc, out, err)
+
+
+def test_builders_use_only_tmp_keys(tmp_path, monkeypatch):
+    # __an_js_tmp_keys_v1__ a test uses only keys it makes under
+    # tmp_path; never the default key path, which prefers XDG_DATA_HOME
+    # over the HOME the dated-prices fixture isolates.
+    xdg = tmp_path / "xdg"
+    xdg.mkdir()
+    monkeypatch.setenv("XDG_DATA_HOME", str(xdg))
+    _src, manifest_path = _signed_source(tmp_path)
+    _attach_bundle_and_resign(tmp_path, manifest_path)
+    made = sorted(p.relative_to(xdg).as_posix()
+                  for p in xdg.rglob("*") if p.is_file())
+    assert made == [], made

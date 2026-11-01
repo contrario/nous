@@ -45,6 +45,9 @@ import argparse
 import base64
 import hashlib
 import json
+
+from conformance_verifier import (  # __an_js_strict_v1__
+    StrictJsonError, loads as _strict_loads)
 import re
 import sys
 from pathlib import Path
@@ -87,7 +90,7 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
     if not path.is_file():
         raise ConvergenceInputError(label + " not found: " + str(path))
     try:
-        obj = json.loads(path.read_text(encoding="utf-8"))
+        obj = _strict_loads(path.read_bytes(), path.name + " [js:crel.1]")
     except json.JSONDecodeError as exc:
         raise ConvergenceInputError(
             label + " is not valid JSON: " + str(exc)
@@ -160,7 +163,7 @@ def _verify_operator_root(
         )
 
     try:
-        statement = json.loads(payload.decode("utf-8"))
+        statement = _strict_loads(payload, "build-vsa.intoto.json payload [js:crel.2]")
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
         return False, "verified VSA payload is not valid JSON: " + str(exc), None
     if not isinstance(statement, dict):
@@ -221,7 +224,8 @@ def _extract_anchored_digest(rekor_bundle: dict[str, Any]) -> bytes:
     if not isinstance(cb_b64, str) or not cb_b64:
         raise ConvergenceInputError("canonicalized_body missing or not a string")
     try:
-        body = json.loads(base64.b64decode(cb_b64, validate=True))
+        body = _strict_loads(base64.b64decode(cb_b64, validate=True),
+                             "rekor-v2-bundle.json canonicalized_body [js:crel.3]")
     except (ValueError, TypeError, json.JSONDecodeError) as exc:
         raise ConvergenceInputError(
             "canonicalized_body is not base64 JSON: " + str(exc)
@@ -279,7 +283,9 @@ def verify_convergence(
     """Offline dual-root convergence over a local release bundle directory.
 
     Returns a clinical result dict (the matrix + evidence). Raises
-    ConvergenceInputError on missing/malformed inputs; a verification FAIL is a
+    ConvergenceInputError on missing/malformed inputs, and
+    StrictJsonError (conformance_verifier) when the strict JSON
+    region refuses an input (AN-GATE-1 D4); a verification FAIL is a
     legitimate result recorded in the dict, never an exception. Pure and
     offline: no network, cryptography + stdlib only (rekor_v2_offline is
     cryptography+stdlib; build_vsa is stdlib+cryptography).
@@ -497,6 +503,9 @@ def cmd_verify_release(args: argparse.Namespace) -> int:
     except ConvergenceInputError as exc:
         print("ERROR: " + str(exc), file=sys.stderr)
         return 2
+    except StrictJsonError as exc:  # __an_js_r2_v1__
+        print("FAIL: " + str(exc), file=sys.stderr)
+        return 1
     if getattr(args, "json", False):
         print(json.dumps(result, indent=2, sort_keys=True))
     else:

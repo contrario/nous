@@ -24,6 +24,9 @@ import base64
 import datetime as _dt
 import hashlib
 import json
+
+from conformance_verifier import (  # __an_js_strict_v1__
+    StrictJsonError, loads as _strict_loads)
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -478,7 +481,8 @@ class Pins:
 
 
 def load_pins(pins_dir: Path) -> Pins:
-    tr = json.loads((pins_dir / "trusted_root.json").read_text())
+    tr = _strict_loads((pins_dir / "trusted_root.json").read_bytes(),
+                       "trusted_root.json [js:rvo.1]")
     v2 = None
     for tlog in tr.get("tlogs", []):
         if tlog.get("publicKey", {}).get("keyDetails") == "PKIX_ED25519":

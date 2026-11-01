@@ -96,11 +96,15 @@ def cmd_ndec(args: argparse.Namespace) -> int:
                 print("ndec verify: --expect-signer is not a base64 "
                       "raw 32-byte Ed25519 public key", file=sys.stderr)
                 return 2
-        return ndec.verify_ndec_file(  # __s147_u4_strict_dispatch_v1__
-            args.file,
-            public_key=public_key,
-            strict_canonical=getattr(args, "strict_canonical", False),
-            registry_path=getattr(args, "registry", None),  # __s148_u2_registry_dispatch_v1__
-        )
+        try:  # __an_js_strict_v1__
+            return ndec.verify_ndec_file(  # __s147_u4_strict_dispatch_v1__
+                args.file,
+                public_key=public_key,
+                strict_canonical=getattr(args, "strict_canonical", False),
+                registry_path=getattr(args, "registry", None),  # __s148_u2_registry_dispatch_v1__
+            )
+        except ndec.StrictJsonError as exc:
+            print("verify: " + str(exc), file=sys.stderr)
+            return 1
     print("ndec: unknown action", file=sys.stderr)
     return 2

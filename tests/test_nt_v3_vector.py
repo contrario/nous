@@ -106,10 +106,20 @@ def test_x3_no_pin_is_environment(tmp_path):
     assert out.splitlines()[-1] == "CLASS: ENVIRONMENT"
 
 
-def test_x4_served_verifier_is_the_current_template(tmp_path):
+# __an_js_served_frozen_v1__ AN-GATE-1 D4 changed the VSA template (the
+# strict JSON region, D5's two lines); the served v3 verifier is frozen
+# as the 8.0.0 template emitted on the vector key (M8, RULING A4), so it
+# is pinned by digest instead of compared with the current template.
+SERVED_V3_VERIFIER_SHA256 = (
+    "6098045d11058924066a4dc33b2a9ce7c9f0e5f7ddbac8ce830c1cc23c4160f2")
+
+
+def test_x4_served_verifier_is_frozen(tmp_path):
+    import hashlib
+    served = (V3 / "verify_vsa_offline.py").read_bytes()
+    assert hashlib.sha256(served).hexdigest() == SERVED_V3_VERIFIER_SHA256
     vsa_verifier.emit_vsa_verifier(str(tmp_path), _vsa_pub())
-    assert (tmp_path / "verify_vsa_offline.py").read_bytes() == \
-        (V3 / "verify_vsa_offline.py").read_bytes()
+    assert (tmp_path / "verify_vsa_offline.py").read_bytes() != served
 
 
 def test_x5_expensive_forgery_is_refused(tmp_path, monkeypatch):

@@ -12,6 +12,9 @@ from __future__ import annotations
 
 import argparse
 import json
+
+from conformance_verifier import (  # __an_js_strict_v1__
+    StrictJsonError, loads as _strict_loads)
 import shutil
 import subprocess
 import sys
@@ -178,6 +181,11 @@ def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _read_json_strict(path: Path) -> dict:  # __an_js_strict_v1__
+    return _strict_loads(path.read_bytes(),
+                         path.parent.name + "/" + path.name + " [js:ccont.1]")
+
+
 def _cmd_link(args: argparse.Namespace) -> int:
     d = Path(args.dir)
     try:
@@ -307,17 +315,21 @@ def _cmd_verify(args: argparse.Namespace) -> int:
     try:
         for sub_d in link_dirs:
             b: dict = {
-                "cert": _read_json(sub_d / "conformance.json"),
-                "trace": _read_json(sub_d / "trace.json"),
-                "manifest": _read_json(sub_d / "manifest.json"),
-                "link": _read_json(sub_d / "link.json"),
+                "cert": _read_json_strict(sub_d / "conformance.json"),
+                "trace": _read_json_strict(sub_d / "trace.json"),
+                "manifest": _read_json_strict(sub_d / "manifest.json"),
+                "link": _read_json_strict(sub_d / "link.json"),
             }
             rp = sub_d / "receipt.jws"
             if rp.is_file():
-                b["receipt"] = _read_json(rp)
+                b["receipt"] = _read_json_strict(rp)
             bundles.append(b)
-    except (OSError, json.JSONDecodeError) as e:
-        print("verify: malformed ledger: " + str(e), file=sys.stderr)
+    except (OSError, json.JSONDecodeError, StrictJsonError) as e:
+        if args.json:  # __an_js_r3_v1__
+            print(json.dumps({"verdict": "FAIL", "error": str(e)}))
+        what = ("refused" if isinstance(e, StrictJsonError)
+                else "malformed ledger")
+        print("verify: " + what + ": " + str(e), file=sys.stderr)
         return 1
 
     keys = None
@@ -334,7 +346,7 @@ def _cmd_verify(args: argparse.Namespace) -> int:
         rep = cl.walk_continuity_ledger(
             bundles, counterparty_keys=keys, expected_audience=args.aud
         )
-    except cl.ContinuityLedgerError as e:
+    except (cl.ContinuityLedgerError, StrictJsonError) as e:
         if args.json:
             print(json.dumps({"verdict": "FAIL", "error": str(e)}))
         else:

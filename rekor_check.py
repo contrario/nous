@@ -154,10 +154,14 @@ def _rk_verify_inclusion(leaf_hash, log_index, tree_size, proof, root_hash):
 
 def _rk_parse_leaf(canonicalized_body):
     import binascii as _bx
-    import json as _js
     try:
-        leaf = _js.loads(canonicalized_body)
+        raw = canonicalized_body
+        if isinstance(raw, str):
+            raw = raw.encode("utf-8")
+        leaf = loads(bytes(raw), "rekor leaf canonicalized_body [js:rk.1]")  # __an_js_r2_v1__
     except Exception as exc:
+        if getattr(exc, "an_js_refusal", False):
+            raise
         raise _RkMalformed("leaf body is not JSON: " + str(exc))
     if not isinstance(leaf, dict):
         raise _RkMalformed("leaf body is not an object")
@@ -210,7 +214,6 @@ def _rk_resolve_log_keys(env_path, pack_keys_path, carried):
     report. A carried key that contradicts a built-in pin for the same origin
     fails closed -- it is a substitution attempt, not a supplement.
     """
-    import json as _js
     import os as _os
 
     def _decode(mapping, what):
@@ -227,9 +230,11 @@ def _rk_resolve_log_keys(env_path, pack_keys_path, carried):
     if not path and pack_keys_path and _os.path.isfile(pack_keys_path):
         path = pack_keys_path
     if path and _os.path.isfile(path):
-        with open(path, "r", encoding="ascii") as handle:
-            return _decode(_js.load(handle), "auditor-pinned log keys"), \
-                "auditor-pinned"
+        with open(path, "rb") as handle:
+            raw = handle.read()
+        raw.decode("ascii")
+        return _decode(loads(raw, _os.path.basename(path) + " auditor-pinned log keys" + " [js:rk.2]"),  # __an_js_r2_v1__
+                       "auditor-pinned log keys"), "auditor-pinned"
 
     builtin = _decode(_RK_KNOWN_LOG_KEYS, "built-in log keys")
     if not isinstance(carried, dict) or not carried:

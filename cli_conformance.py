@@ -17,6 +17,9 @@ from __future__ import annotations
 
 import argparse
 import json
+
+from conformance_verifier import (  # __an_js_strict_v1__
+    StrictJsonError, loads as _strict_loads)
 from pathlib import Path
 
 from conformance import (
@@ -27,7 +30,7 @@ from manifest import parse_manifest_json
 from pricing import load_pricing
 from parser import parse_nous
 from smt_emit import emit_smt
-from nous_trace import load_trace
+from nous_trace import TraceEnvelope  # __an_js_r2_v1__
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (  # __s145_u4b_cli_attest_import_v1__
     Ed25519PublicKey,
 )
@@ -170,11 +173,11 @@ def _load_aprs(  # __s145_u4b_loader_v1__
         pth = Path(raw)
         if not pth.is_file():
             raise ConformancePreconditionError(f"APR file not found: {pth}")
+        raw = pth.read_bytes()
+        _strict_loads(raw, pth.name + " [js:cconf.1]")  # __an_js_r2_v1__
         try:
             records.append(
-                AttestationPinningRecord.model_validate_json(
-                    pth.read_text(encoding="utf-8")
-                )
+                AttestationPinningRecord.model_validate_json(raw)
             )
         except Exception as exc:
             raise ConformancePreconditionError(
@@ -208,7 +211,9 @@ def _derive_inputs(args: argparse.Namespace):  # __nous_cli_conformance_certify_
         if not pth.is_file():
             raise ConformancePreconditionError(f"{label} file not found: {pth}")
 
-    manifest_text = manifest_path.read_text(encoding="utf-8")
+    manifest_raw = manifest_path.read_bytes()  # __an_js_r2_v1__
+    _strict_loads(manifest_raw, "manifest.json [js:cconf.2]")
+    manifest_text = manifest_raw.decode("utf-8")
     manifest, _sig, _pub = parse_manifest_json(manifest_text)
     source_text = source_path.read_text(encoding="utf-8")
     program = parse_nous(source_text)
@@ -217,7 +222,8 @@ def _derive_inputs(args: argparse.Namespace):  # __nous_cli_conformance_certify_
     spec = emit_smt(
         program, pricing, source_text=source_text, margin_pct=margin
     )
-    trace = load_trace(str(trace_path))
+    trace = TraceEnvelope(**_strict_loads(  # __an_js_r2_v1__
+        trace_path.read_bytes(), "trace.json [js:cconf.3]"))
     _aprs = _load_aprs(getattr(args, "apr", None))  # __s145_u4b_derive_wire_v1__
     _attest_root = _load_attest_root(getattr(args, "attest_root", None))
     from run_shas import compute_codegen_sha256  # __s155_u5_cli_codegen_wire_v1__
@@ -255,6 +261,10 @@ def _print_detail(detail: "ConformanceDetail") -> None:  # __nous_cli_conformanc
 def _cmd_certify(args: argparse.Namespace) -> int:  # __nous_cli_conformance_certify_v1__
     try:
         manifest, _spec, _pricing, trace, detail = _derive_inputs(args)
+    except StrictJsonError as e:  # __an_js_strict_v1__
+        import sys
+        print("FAIL: " + str(e), file=sys.stderr)
+        return 1
     except ConformancePreconditionError as e:
         print(f"PRECONDITION ERROR: {e}")
         return 2
@@ -328,6 +338,10 @@ def cmd_conformance(args: argparse.Namespace) -> int:
 
     try:
         manifest, _spec, _pricing, trace, detail = _derive_inputs(args)
+    except StrictJsonError as e:  # __an_js_strict_v1__
+        import sys
+        print("FAIL: " + str(e), file=sys.stderr)
+        return 1
     except ConformancePreconditionError as e:
         print(f"PRECONDITION ERROR: {e}")
         return 2

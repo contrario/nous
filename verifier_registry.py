@@ -43,6 +43,8 @@ import base64
 import binascii
 import hashlib
 import json
+
+from conformance_verifier import StrictJsonError  # __an_js_r2_v1__
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 
@@ -357,6 +359,8 @@ def verify_registry(
                     )
             except (RekorV2AnchorMalformed, RekorV2Error) as exc:
                 errors.append(f"anchor malformed: {exc}")
+            except StrictJsonError:  # __an_js_r3_v1__ fail closed, as
+                raise  # a refusal at the registry's top level
 
     if signature_ok and anchor_present and anchor_ok:
         tier: str | None = "logged"

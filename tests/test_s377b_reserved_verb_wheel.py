@@ -88,8 +88,10 @@ def test_continuity_payload_json_key_is_holds() -> None:
 
 
 def test_continuity_payload_reports_schema_version_2() -> None:
+    # __an_js_r2_v1__ three: the PASS and FAIL reports, and the JSON FAIL
+    # the entry point prints for a strict JSON refusal (AN-GATE-1 D4).
     n: int = _payload().count('"report_schema_version": 2')
-    assert n == 2, f"report_schema_version fields in the continuity verifier: {n}"
+    assert n == 3, f"report_schema_version fields in the continuity verifier: {n}"
 
 
 def test_continuity_payload_notes_say_does_not_hold() -> None:

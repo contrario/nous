@@ -53,6 +53,8 @@ def _load_embed():
     spec = importlib.util.spec_from_file_location("_tb_embed_extracted", p)
     m = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(m)
+    import conformance_verifier as _cv
+    m.loads = _cv.loads  # __an_js_r2_v1__ the stand-in base gets the region's loads, as a base text gives it
     return m
 
 

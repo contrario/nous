@@ -35,6 +35,8 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 
 import rekor_check as rk
+import conformance_verifier as _cv
+rk.loads = _cv.loads  # __an_js_r2_v1__ the stand-in base gets the region's loads, as a base text gives it
 
 _ORIGIN = "test-log.example"
 _PINNED_ORIGIN = "log2025-1.rekor.sigstore.dev"

@@ -3,6 +3,9 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+
+from conformance_verifier import (  # __an_js_r2_v1__
+    StrictJsonError, loads as _strict_loads)
 import os
 from datetime import datetime
 from pathlib import Path
@@ -227,6 +230,17 @@ def _enclave_ed25519_public_key(
     return Ed25519PublicKey.from_public_bytes(raw)
 
 
+def _vendor_refusal(exc):  # __an_js_r3_v1__
+    # RULING 11:58Z Q3: strict everywhere; the vendor signed the
+    # bytes, so the region's NOUS-writer phrase does not apply.
+    msg = str(exc).replace(' (a NOUS writer can write this token, so this refusal is not by itself evidence of tampering)', "")
+    if "not by itself evidence of tampering" in msg:  # __an_js_r4_v1__
+        return StrictJsonError(msg)  # an encoding refusal says it
+    return StrictJsonError(
+        msg + "; the vendor signed these bytes and they have two "
+        "readings; not by itself evidence of tampering")
+
+
 def _parse_vendor_usage(body: str) -> Optional[tuple[int, int]]:
     def _extract(obj: object) -> Optional[tuple[int, int]]:
         if not isinstance(obj, dict):
@@ -241,7 +255,11 @@ def _parse_vendor_usage(body: str) -> Optional[tuple[int, int]]:
         return None
 
     try:
-        parsed = json.loads(body)
+        parsed = _strict_loads(  # __an_js_r2_v1__
+            body.encode("utf-8") if isinstance(body, str)
+            else bytes(body), "trace receipt vendor_response_body [js:apr.1]")
+    except StrictJsonError as exc:  # __an_js_r3_v1__
+        raise _vendor_refusal(exc)
     except Exception:
         parsed = None
     direct = _extract(parsed) if parsed is not None else None
@@ -256,7 +274,10 @@ def _parse_vendor_usage(body: str) -> Optional[tuple[int, int]]:
         if payload in ("", "[DONE]"):
             continue
         try:
-            chunk = json.loads(payload)
+            chunk = _strict_loads(payload.encode("utf-8"),  # __an_js_r2_v1__
+                                  "trace receipt vendor_response_body chunk [js:apr.2]")
+        except StrictJsonError as exc:  # __an_js_r3_v1__
+            raise _vendor_refusal(exc)
         except Exception:
             continue
         candidate = _extract(chunk)

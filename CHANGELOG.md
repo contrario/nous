@@ -4,6 +4,75 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+### Changed  <!-- __an_gate1_d4_changelog_v1__ -->
+
+- The verifier texts and the five named installed paths refuse a JSON
+  input with a duplicate member name at any depth, a NaN, Infinity or
+  -Infinity token, bytes that are not UTF-8, or a UTF-8 byte order
+  mark (RFC 8259 8.1, RFC 7493 2.1). The texts: the seven dossier
+  `verify_offline.py` templates, the chain-net and gap-witness
+  verifiers, the two verifiers offline_verifier_builder.py emits,
+  `verify_conformance_offline.py`, `verify_vsa_offline.py`, the
+  `verify_ndec.py` a .ndec carries, and the build-VSA, provenance,
+  continuity, Annex IV and three adapter verifiers. The installed
+  paths: `nous ndec verify` (and `nous verify` on an .ndec),
+  `nous conformance verify`, `nous continuity verify`,
+  `nous verify-cost` and `nous build-attest-verify`. A refusal names
+  the file and exits 1 (`CLASS: INTEGRITY` where the text prints a
+  class); a refused token or encoding is said to be not by itself
+  evidence of tampering. This is not all verification:
+  `conformance.verify_certificate_from_json` (POST
+  /v1/verify-conformance) parses the certificate leniently (its Rekor
+  v2 leaf is strict), and
+  `continuity_ledger.verify_authorization_receipt` and
+  `annex_iv_map.verify_annex_iv_map` parse leniently. [8.0.0]'s Known
+  limit that these files are read with `json.loads` no longer holds
+  for these texts and paths; it holds for the frozen served verifiers.
+- `nous verify-cost`, `nous conformance verify` and
+  `nous build-attest-verify` exited 2, or ended in a traceback, on
+  some files that did not decode or parse; a refused file now exits 1.
+- `nous ndec verify --registry`: a registry file or registry Rekor
+  leaf that the strict parse refuses exits 1, with or without
+  `--strict-canonical`. 8.0.0 read such a file leniently or, if it did
+  not decode, printed a NOTE and did not consult it.
+- `nous conformance verify` on a tee_attested trace: the vendor
+  response body and each stream chunk are parsed strictly, and a
+  refused chunk fails the verify; 8.0.0 skipped a chunk that did not
+  parse.
+- trace/reference/verifier.py, the NOUS-TRACE reference verifier,
+  refuses such input in its Rekor leaf and pinned log keys and reports
+  `INVALID(STRICT_JSON)`, exit 20; its other reads are not strict.
+- `verify_vsa_offline.py` says the input attestations bind the
+  canonical bodies of manifest, trace and certificate; the ndec
+  docstring says the registry evidences, not proves.
+
+### Known limits  <!-- __an_gate1_d4_known_limits_v1__ -->
+
+- An .ndec built before this release is refused under
+  `--strict-canonical` without the verifier-digest registry; with the
+  served registry it is confirmed at the logged tier.
+- An honest vendor response body with a duplicate member, a
+  non-finite token, a byte order mark or bytes that are not UTF-8
+  fails `nous conformance verify`, exit 1. None has been observed.
+- A signed input in UTF-16, UTF-32 or with a byte order mark, which
+  8.0.0 read, now fails; a counterparty receipt is one such input.
+- A number too large for a double (1e400) reads as infinity and is not
+  refused.
+- Some files are decoded by their reader before the strict parse (the
+  trace bundle's files, read in text mode, and a pinned Rekor log keys
+  file): one that is not UTF-8 fails with the reader's own error, not
+  the named refusal.
+- `nous verify-cost --manifest M` checks that M names the
+  certificate's sha256; it checks no signature on M (stated in
+  [7.0.0], not in [8.0.0]; still so).
+- `nous build-attest-verify` without `--pins-dir` reads
+  trusted_root.json and tsa_chain.pem from the bundle under
+  verification, so the log key and the TSA roots of ROOT 2 come from
+  that bundle.
+- An .ndec whose zip carries a member name twice passes
+  `nous ndec verify`; the last member of that name is the one
+  verified.
+
 
 ## [8.0.0]  <!-- __s431_changelog_v8_0_0__ -->
 

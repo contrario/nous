@@ -287,8 +287,8 @@ _DISPATCH_MAIN_LINES = (
     "    if not manifest_path.is_file():",
     "        return _fail('manifest.json not found in ' + str(ROOT))",
     "    try:",
-    "        manifest = json.loads("
-    "manifest_path.read_text(encoding='utf-8'))",
+    "        manifest = loads("
+    "manifest_path.read_bytes(), 'manifest.json [js:obd.1]')",
     "    except json.JSONDecodeError as e:",
     "        return _fail('manifest.json parse error: ' + str(e))",
     "",
@@ -546,6 +546,7 @@ def build_offline_verifier_v2(allowlist_literal: str = "{}") -> str:
         "\n\n" + tsa_body + "\n",
         "\n\n" + v2_body + "\n",
         anchor_shim,
+        "\n\n" + _strict_json_region() + "\n",  # __an_js_strict_v1__
         "\n\n" + _v3_classes_region() + "\n",  # __nt_v3_classes_wire_v1__
         dispatch_main,
     ]
@@ -641,8 +642,8 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "        if not pth.is_file():",
     "            return _cfail(label + ' not found in ' + str(ROOT))",
     "    try:",
-    "        cert = json.loads(cert_p.read_text(encoding='utf-8'))",
-    "        manifest = json.loads(man_p.read_text(encoding='utf-8'))",
+    "        cert = loads(cert_p.read_bytes(), 'conformance.json [js:obc.1]')",
+    "        manifest = loads(man_p.read_bytes(), 'manifest.json [js:obc.2]')",
     "    except json.JSONDecodeError as e:",
     "        return _cfail('JSON parse error: ' + str(e))",
     "    # __nt_v2_recompute_wire_v1__ strict trace when a canon is carried",
@@ -652,7 +653,7 @@ _CONFORMANCE_DISPATCH_MAIN_LINES = (
     "            return _cfail('trace.json refused: ' + _why)",
     "    else:",
     "        try:",
-    "            trace = json.loads(trace_p.read_text(encoding='utf-8'))",
+    "            trace = loads(trace_p.read_bytes(), 'trace.json [js:obc.3]')",
     "        except json.JSONDecodeError as e:",
     "            return _cfail('JSON parse error: ' + str(e))",
     "",
@@ -842,6 +843,21 @@ def _conformance_recompute_region() -> str:  # __nt_v2_recompute_wire_v1__
     return text[i:text.index(end, i) + len(end)]
 
 
+def _strict_json_region() -> str:  # __an_js_strict_v1__
+    """The strict JSON region, read from its canonical copy in
+    conformance_verifier.py so that every text carries one text
+    byte for byte (AN-GATE-1 D4)."""
+    text = (_PKG_DIR / "conformance_verifier.py").read_text(encoding="utf-8")
+    start = ("# --- strict json embed (shared text; "
+             "canonical copy: conformance_verifier.py) ---")
+    end = "# --- end strict json embed ---"
+    m = re.search("(?ms)^" + re.escape(start) + "$.*?^"
+                  + re.escape(end) + "$", text)
+    if m is None:
+        raise RuntimeError("strict json region not found")
+    return m.group(0)
+
+
 def _v3_classes_region() -> str:  # __nt_v3_classes_wire_v1__
     """The v3 verdict classes region, read from its canonical copy
     in conformance_verifier.py so that every text in scope carries
@@ -918,6 +934,7 @@ def build_conformance_verifier_v2(allowlist_literal: str = "{}") -> str:
         "\n\n" + v2_body + "\n",
         anchor_shim,
         recompute,
+        "\n\n" + _strict_json_region() + "\n",  # __an_js_strict_v1__
         "\n\n" + _v3_classes_region() + "\n",  # __nt_v3_classes_wire_v1__
         dispatch_main,
     ]

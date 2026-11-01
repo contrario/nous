@@ -25,6 +25,8 @@ import base64
 import binascii
 import hashlib
 import json
+
+from conformance_verifier import loads  # __an_js_strict_v1__
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -173,7 +175,9 @@ def verify_rekor_v2_anchor(
     """Verify a Rekor v2 anchor block against the signed manifest body bytes.
 
     Raises RekorV2AnchorMalformed only if the block is not a structurally
-    valid v2 anchor (a precondition / dispatch failure). All cryptographic
+    valid v2 anchor (a precondition / dispatch failure), and StrictJsonError
+    (conformance_verifier) when the strict JSON region refuses the leaf
+    (AN-GATE-1 D4). All cryptographic
     outcomes are reported as per-step booleans in the returned detail.
     """
     anchor = RekorAnchorV2.from_manifest_block(block)
@@ -183,7 +187,7 @@ def verify_rekor_v2_anchor(
     leaf = None
     try:
         leaf_raw = base64.b64decode(anchor.body_b64, validate=True)
-        leaf = parse_rekor_leaf(json.loads(leaf_raw))
+        leaf = parse_rekor_leaf(loads(leaf_raw, "transparency_log leaf [js:rv2.1]"))  # __an_js_strict_v1__
         if leaf.api_version != "0.0.2":
             errors.append(
                 f"leaf is hashedrekord {leaf.api_version}, expected 0.0.2"

@@ -31,6 +31,8 @@ pytest.importorskip("trace_bridge")
 
 import dossier
 import tb_check
+import conformance_verifier as _cv
+tb_check.loads = _cv.loads  # __an_js_r2_v1__ the stand-in base gets the region's loads, as a base text gives it
 
 _SOURCE_PATH = _REPO / "rekor_check.py"
 _TB_PATH = _REPO / "tb_check.py"

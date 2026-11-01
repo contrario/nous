@@ -139,6 +139,18 @@ def test_s190_pce_embed_parity_with_envelope_oracle():
         assert ebk == obk, name + ": embed breakouts != oracle breakouts"
 
 
+def _strict_region():
+    import re
+    src = (Path(__file__).resolve().parent.parent
+           / "conformance_verifier.py").read_text(encoding="utf-8")
+    start = ("# --- strict json embed (shared text; canonical copy: "
+             "conformance_verifier.py) ---")
+    end = "# --- end strict json embed ---"
+    m = re.search("(?ms)^" + re.escape(start) + "$.*?^" + re.escape(end)
+                  + "$", src)
+    return m.group(0)
+
+
 def _emit_verifier():
     base = (
         "#!/usr/bin/env python3\n"
@@ -147,6 +159,9 @@ def _emit_verifier():
         "from pathlib import Path\n"
         "\n"
         "ROOT = Path(__file__).parent\n"
+        "\n"
+        "\n"
+        + _strict_region() + "\n"  # __an_js_r2_v1__ every base carries it
         "\n"
         "\n"
         "def main():\n"

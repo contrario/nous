@@ -344,7 +344,8 @@ def test_realistic_priced_manifest_run_digest_paths_agree():
     assert doc["cost_cap_usd"] == 12.55
 
     # and the embed verifies the receipt for this realistic run_digest
-    ns = {}
+    import conformance_verifier as _cv
+    ns = {"loads": _cv.loads}  # __an_js_r2_v1__ the stand-in base gets the region's loads
     exec(D._ATTRIBUTION_CHECK_EMBED, ns)
     with tempfile.TemporaryDirectory() as tmp:
         from pathlib import Path

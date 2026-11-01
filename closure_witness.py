@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+
+from conformance_verifier import StrictJsonError  # __an_js_r2_v1__
 from dataclasses import dataclass
 from typing import Mapping, Optional, Sequence
 
@@ -183,7 +185,7 @@ def verify_closure_witnessed(
                 trusted_log_keys=trusted_log_keys or {},
             )
             anchor_ok = bool(detail.ok)
-        except rv2.RekorV2Error:
+        except (rv2.RekorV2Error, StrictJsonError):  # __an_js_r2_v1__
             anchor_ok = False
 
     return ClosureWitnessVerdict(

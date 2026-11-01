@@ -47,6 +47,8 @@ import trace_bridge
 from trace_bridge import TraceBridge
 
 import tb_check
+import conformance_verifier as _cv
+tb_check.loads = _cv.loads  # __an_js_r2_v1__ the stand-in base gets the region's loads, as a base text gives it
 
 _DIVERGENCE = "anchoring policy"
 _STRUCTURAL = "no run_end"

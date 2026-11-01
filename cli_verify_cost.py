@@ -27,6 +27,9 @@ trace EVIDENCES that).
 Exit codes:
   0  proven  (valid cost-cap Farkas refutation)
   1  refuted (multipliers do not collapse the system; cost not proven)
+  1  also: an input the strict JSON region refuses (a duplicate
+     member name, NaN, Infinity or -Infinity), with FAIL: on
+     stderr (AN-GATE-1 D4)
   2  precondition/error (file missing, parse error, not a cost-cap
      certificate, or --manifest binding failure)
 
@@ -41,6 +44,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+
+from conformance_verifier import (  # __an_js_strict_v1__
+    StrictJsonError, loads as _strict_loads)
 import sys
 from pathlib import Path
 from typing import Any
@@ -59,7 +65,10 @@ def cmd_verify_cost(args: argparse.Namespace) -> int:
 
     raw = cert_path.read_bytes()
     try:
-        doc: Any = json.loads(raw.decode("utf-8"))
+        doc: Any = _strict_loads(raw, "cost.farkas.json [js:ccost.1]")
+    except StrictJsonError as e:  # __an_js_strict_v1__
+        print("FAIL: " + str(e), file=sys.stderr)
+        return 1
     except (UnicodeDecodeError, json.JSONDecodeError) as e:
         print(f"ERROR: cannot parse {cert_path}: {e}", file=sys.stderr)
         return 2
@@ -81,7 +90,10 @@ def cmd_verify_cost(args: argparse.Namespace) -> int:
             print(f"ERROR: manifest not found: {man_path}", file=sys.stderr)
             return 2
         try:
-            manifest = json.loads(man_path.read_text(encoding="utf-8"))
+            manifest = _strict_loads(man_path.read_bytes(), "manifest.json [js:ccost.2]")
+        except StrictJsonError as e:  # __an_js_strict_v1__
+            print("FAIL: " + str(e), file=sys.stderr)
+            return 1
         except (UnicodeDecodeError, json.JSONDecodeError) as e:
             print(f"ERROR: cannot parse {man_path}: {e}", file=sys.stderr)
             return 2

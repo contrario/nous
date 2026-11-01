@@ -321,6 +321,59 @@ def _rv_resolve_tsa_roots(pack, man):
 # test_splice_matches_the_tracked_source will fail. The reference verifier is
 # standalone (stdlib + cryptography, no sibling imports), so the leg cannot be
 # imported and must travel as bytes.
+# --- strict json embed (shared text; canonical copy: conformance_verifier.py) ---
+# Every offline verifier text carries this region byte for byte, and the
+# installed paths import it from conformance_verifier; the tests in
+# tests/test_an_js_strict.py name any copy that drifts (AN-GATE-1 D4).
+# Standard library only; it uses nothing of the v3 region. A JSON input
+# with a duplicate member name at any depth, or with a NaN, Infinity or
+# -Infinity token, is refused; so are bytes that are not UTF-8 and a
+# UTF-8 byte order mark (RFC 8259 8.1, RFC 7493 2.1). Any other
+# malformed JSON still raises the json module's own error. Decoding
+# (base64, an ndjson line, a sha check) stays with the caller.
+# __an_js_strict_v1__ __an_js_r4_v1__
+class StrictJsonError(Exception):
+    # A strict JSON refusal; str() is the whole message.
+    an_js_refusal = True
+
+
+def loads(raw, label):
+    import json as _json
+
+    def _pairs(pairs):
+        seen = set()
+        for k, _v in pairs:
+            if k in seen:
+                raise StrictJsonError(
+                    label + " refused: duplicate key " + repr(k))
+            seen.add(k)
+        return dict(pairs)
+
+    def _token(tok):
+        raise StrictJsonError(
+            label + " refused: non-finite number " + tok + " (a NOUS "
+            "writer can write this token, so this refusal is not by "
+            "itself evidence of tampering)")
+    if not isinstance(raw, (bytes, bytearray)):
+        raise TypeError(label + ": strict loads takes bytes")
+    raw = bytes(raw)
+    if raw[:3] == bytes((0xEF, 0xBB, 0xBF)):
+        raise StrictJsonError(
+            label + " refused: UTF-8 BOM (RFC 8259 8.1; a signer "
+            "can sign these bytes, so this refusal is not by "
+            "itself evidence of tampering)")
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        raise StrictJsonError(
+            label + " refused: not UTF-8 (RFC 8259 8.1, RFC 7493 "
+            "2.1; a signer can sign these bytes, so this refusal "
+            "is not by itself evidence of tampering)") from None
+    return _json.loads(text, object_pairs_hook=_pairs,
+                       parse_constant=_token)
+# --- end strict json embed ---
+
+
 # __rk_splice_begin_v1__
 _RK_SIG_PREFIX = "\u2014 "
 _RK_LEAF_PREFIX = b"\x00"
@@ -478,10 +531,14 @@ def _rk_verify_inclusion(leaf_hash, log_index, tree_size, proof, root_hash):
 
 def _rk_parse_leaf(canonicalized_body):
     import binascii as _bx
-    import json as _js
     try:
-        leaf = _js.loads(canonicalized_body)
+        raw = canonicalized_body
+        if isinstance(raw, str):
+            raw = raw.encode("utf-8")
+        leaf = loads(bytes(raw), "rekor leaf canonicalized_body [js:rk.1]")  # __an_js_r2_v1__
     except Exception as exc:
+        if getattr(exc, "an_js_refusal", False):
+            raise
         raise _RkMalformed("leaf body is not JSON: " + str(exc))
     if not isinstance(leaf, dict):
         raise _RkMalformed("leaf body is not an object")
@@ -534,7 +591,6 @@ def _rk_resolve_log_keys(env_path, pack_keys_path, carried):
     report. A carried key that contradicts a built-in pin for the same origin
     fails closed -- it is a substitution attempt, not a supplement.
     """
-    import json as _js
     import os as _os
 
     def _decode(mapping, what):
@@ -551,9 +607,11 @@ def _rk_resolve_log_keys(env_path, pack_keys_path, carried):
     if not path and pack_keys_path and _os.path.isfile(pack_keys_path):
         path = pack_keys_path
     if path and _os.path.isfile(path):
-        with open(path, "r", encoding="ascii") as handle:
-            return _decode(_js.load(handle), "auditor-pinned log keys"), \
-                "auditor-pinned"
+        with open(path, "rb") as handle:
+            raw = handle.read()
+        raw.decode("ascii")
+        return _decode(loads(raw, _os.path.basename(path) + " auditor-pinned log keys" + " [js:rk.2]"),  # __an_js_r2_v1__
+                       "auditor-pinned log keys"), "auditor-pinned"
 
     builtin = _decode(_RK_KNOWN_LOG_KEYS, "built-in log keys")
     if not isinstance(carried, dict) or not carried:
@@ -1390,6 +1448,10 @@ def main():
         code = 20
     except FloatFound:
         report = {"pack": pack, "verdict": "INVALID(FLOAT_IN_SIGNED)"}
+        code = 20
+    except StrictJsonError as e:  # __an_js_r3_v1__
+        report = {"pack": pack, "verdict": "INVALID(STRICT_JSON)",
+                  "detail": str(e)}
         code = 20
     print(json.dumps(report, indent=2))
     sys.exit(code)

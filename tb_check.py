@@ -456,10 +456,14 @@ def _rk_verify_inclusion(leaf_hash, log_index, tree_size, proof, root_hash):
 
 def _rk_parse_leaf(canonicalized_body):
     import binascii as _bx
-    import json as _js
     try:
-        leaf = _js.loads(canonicalized_body)
+        raw = canonicalized_body
+        if isinstance(raw, str):
+            raw = raw.encode("utf-8")
+        leaf = loads(bytes(raw), "rekor leaf canonicalized_body [js:rk.1]")  # __an_js_r2_v1__
     except Exception as exc:
+        if getattr(exc, "an_js_refusal", False):
+            raise
         raise _RkMalformed("leaf body is not JSON: " + str(exc))
     if not isinstance(leaf, dict):
         raise _RkMalformed("leaf body is not an object")
@@ -512,7 +516,6 @@ def _rk_resolve_log_keys(env_path, pack_keys_path, carried):
     report. A carried key that contradicts a built-in pin for the same origin
     fails closed -- it is a substitution attempt, not a supplement.
     """
-    import json as _js
     import os as _os
 
     def _decode(mapping, what):
@@ -529,9 +532,11 @@ def _rk_resolve_log_keys(env_path, pack_keys_path, carried):
     if not path and pack_keys_path and _os.path.isfile(pack_keys_path):
         path = pack_keys_path
     if path and _os.path.isfile(path):
-        with open(path, "r", encoding="ascii") as handle:
-            return _decode(_js.load(handle), "auditor-pinned log keys"), \
-                "auditor-pinned"
+        with open(path, "rb") as handle:
+            raw = handle.read()
+        raw.decode("ascii")
+        return _decode(loads(raw, _os.path.basename(path) + " auditor-pinned log keys" + " [js:rk.2]"),  # __an_js_r2_v1__
+                       "auditor-pinned log keys"), "auditor-pinned"
 
     builtin = _decode(_RK_KNOWN_LOG_KEYS, "built-in log keys")
     if not isinstance(carried, dict) or not carried:
@@ -697,8 +702,9 @@ def _tb_reject_float(_s):
     raise _TbFloatFound()
 
 
-def _tb_jloads(s):
+def _tb_jloads(s, label):
     import json as _json
+    loads(s.encode("utf-8") if isinstance(s, str) else s, label)
     return _json.loads(s, parse_float=_tb_reject_float)
 
 
@@ -886,7 +892,7 @@ def _tb_load_payload(pack, cls, h):
     if not _os.path.exists(p):
         return None
     with open(p) as f:
-        entry = _tb_jloads(f.read())
+        entry = _tb_jloads(f.read(), "trace_bundle/payloads/" + cls + "/" + h + " [js:tb.1]")
     salt = bytes.fromhex(entry["salt"])
     data = _b64.b64decode(entry["data"])
     if _tb_sha256(salt + data).hex() != h:
@@ -899,7 +905,7 @@ def _tb_verify_pack(pack):
     report = {"flags": [], "erased": [], "policy_checks": [], "anchors": []}
 
     with open(_os.path.join(pack, "manifest.json")) as f:
-        man = _tb_jloads(f.read())
+        man = _tb_jloads(f.read(), "trace_bundle/manifest.json [js:tb.2]")
     if man["spec_version"] != _TB_SPEC:
         raise _TbVErr("SPEC_VERSION", detail=man["spec_version"])
     dep_pub = bytes.fromhex(man["trust_anchors"]["deployment_pub"])
@@ -914,7 +920,7 @@ def _tb_verify_pack(pack):
                 raise _TbVErr("MANIFEST_FILE_HASH", detail=fn)
 
     with open(_os.path.join(pack, "keys.json")) as f:
-        keysdoc = _tb_jloads(f.read())
+        keysdoc = _tb_jloads(f.read(), "trace_bundle/keys.json [js:tb.3]")
     keys_core = {"keys": keysdoc["keys"]}
     keys_hash = _tb_jcs_hash(keys_core)
     if not _tb_verify_sig(dep_pub, _TB_TAG_KEYS, keys_hash, keysdoc["sig"]):
@@ -929,7 +935,7 @@ def _tb_verify_pack(pack):
                              "na": _tb_parse_ts(k["not_after"])}
 
     with open(_os.path.join(pack, "obligations.json")) as f:
-        obldoc = _tb_jloads(f.read())
+        obldoc = _tb_jloads(f.read(), "trace_bundle/obligations.json [js:tb.4]")
     obl_core = {"obligations": obldoc["obligations"]}
     obl_hash = _tb_jcs_hash(obl_core)
     if not _tb_verify_sig(dep_pub, _TB_TAG_OBL, obl_hash, obldoc["sig"]):
@@ -956,7 +962,7 @@ def _tb_verify_pack(pack):
             if not line:
                 continue
             try:
-                e = _tb_jloads(line)
+                e = _tb_jloads(line, "trace_bundle/trace.ndjson line %d" % (i + 1) + " [js:tb.5]")
             except _TbFloatFound:
                 raise _TbVErr("FLOAT_IN_SIGNED", seq=i)
             events.append(e)
@@ -1324,7 +1330,7 @@ def _tb_verify_pack(pack):
             raise _TbVErr("ASSIGNMENT_MISSING", seq=i)
         _, data = loaded
         try:
-            env = _tb_jloads(data.decode('utf-8'))
+            env = _tb_jloads(data.decode('utf-8'), 'trace_bundle/payloads/evidence/' + ah + ' assignment' + " [js:tb.6]")
         except (_TbFloatFound, ValueError):
             raise _TbVErr("ASSIGNMENT_PARSE", seq=i)
         declared_vars = {v["name"]: v["type"] for v in o["variables"]}
