@@ -23993,3 +23993,260 @@ document itself.
                        carries a verifier that 8.0.0 does not confirm
                        (D427-8). A slice that moves such a template names
                        the window until the next release, which closes it.
+
+  - S439 the number the operator gave the second entry of the seat S438,
+    which carries D437 read back, AN-GATE-1 from its Gate to D4 and D5
+    landed as 9f3f48fe, three review rounds, the region's encoding
+    refusal, the moved parent, and the seat's findings
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S438,
+    DURING ITS SESSION. It describes the seat's work after D437, which is
+    landed and append-only. READ IN THE SEAT'S CONTAINER: computed off
+    host by S438, on its clones of the public repository. ON A: printed on
+    Server A by a command the operator ran and pasted back. REVIEW:
+    computed in the container by an independent agent that had not seen
+    the work being written, then measured again by the seat. INHERITED:
+    from a file of an earlier step, checked by digest and not measured
+    again. DERIVED: computed from printed values or read from code.
+    OPERATOR: stated by the operator. RULING: a decision the operator
+    stated in words. Every time below is in UTC, of 2026, with its day.
+    An operator's time is the time his message was sent; a value ON A
+    carries the clock its command printed where it printed one. The seat's
+    context was compacted more than once; where a value of 10-29 or the
+    early hours of 10-30 is not in the files the seat kept, this entry
+    says so instead of giving it.
+
+    THE NUMBER. OPERATOR, 11-01 02:43Z: 439, in answer to the seat's
+    question which number its next entry takes. READ IN THE SEAT'S
+    CONTAINER from 02:44:57Z to 02:45:18Z on 11-01 by ns_count439.py, its
+    predictions NUM439_PREDICTIONS.txt (c32a91b0) hashed by 02:44:46Z, on
+    the mirror fetched from GitHub after the push (D439-6), 163 refs, 1040
+    commits and 3158 distinct blobs, main at 9f3f48fe: the header
+    "  - S439 ", the anchor D439-, the marker __s439_, the token FG-S439
+    and the codes FG-S438-E to FG-S438-P counted zero in the blobs of the
+    trees of every ref, in every commit message on every ref and in the
+    annotated tag messages; so did the words S439 and D439. A pass blind
+    to case found d439 14 times in 7 blobs, each inside a hexadecimal run
+    of eight or more digits. Controls on the same instrument: the header
+    of S437 counted 2, in one blob; the anchor D437- 12; FG-S438-D 2. The
+    instrument that appends this entry refuses unless the header, the
+    anchor and the codes still count zero in the document when it runs.
+    The codes below are this seat's, FG-S438-E to FG-S438-P.
+
+    D439-1  THE LANDING OF D437. READ IN THE SEAT'S CONTAINER, on the
+            mirror: a58ed216, parent 433f5d1b, author and committer Hlias
+            Staurou at 14:02:04Z on 10-29, one path; the document blob
+            75a31aa3 to da1e3c67, sha256 5651dd54 to 7b87df2f, 1429645 B
+            to 1439978 B; its first 1429645 B are the old document and its
+            last 10333 B the entry (1468c0ff), ASCII, no line over 76
+            columns; the message 0a91ccc3, 902 B. The ON A lines of its dry
+            runs, write, commit and push were read by the seat on 10-29;
+            the files the seat kept hold none of them.
+
+    D439-2  AN-GATE-1. OPERATOR, 10-29 14:06Z: FG-S431-AN and D432-12 in
+            one ten-section Innovation Gate, no code. Its revisions, each
+            hashed: r1 f52b58a8, r2 b5dfbcf5, r3 ebe7d5f5, r4 8c11c136, r5
+            501e4abb, r6 84368283, r7 27c08209, r8 91ab6978, r9 bebe21ad,
+            r10 d99c32b0, r11 efd060fd, r12 73ad44f8, r13 a5d206ec, r14
+            30428dbb. RULINGS on 10-30, each carried into its revision: at
+            01:04Z D1 to D6, with A1 to A4; at 01:13Z three corrections; at
+            02:11Z the seven texts outside V3 go to rc 1 with a named FAIL;
+            at 02:17Z corrections; at 02:44Z after phase C's red; at 10:44Z
+            the data reading of K-JS.3 and the second round; at 11:58Z the
+            vendor body strict everywhere, K-JS.7, the allow-only scanner,
+            a third reviewer and the stop rule; at 14:01Z the split and the
+            encoding refusal before the land. D4 and D5 are the ones landed
+            (D439-6); D2 and D3 wait for the next release.
+
+    D439-3  WHAT LANDED. A strict JSON region, StrictJsonError and
+            loads(raw, label), canonical at the end of
+            conformance_verifier.py and carried byte for byte by the 21
+            offline verifier texts and by trace/reference/verifier.py. It
+            refuses a duplicate member name at any depth, NaN, Infinity
+            and -Infinity, bytes that are not UTF-8 and a UTF-8 byte order
+            mark, each with a label that names the file or the field; a
+            refused token or encoding says it is not by itself evidence of
+            tampering. The installed paths nous ndec verify (and nous
+            verify on an .ndec), nous conformance verify, nous continuity
+            verify, nous verify-cost and nous build-attest-verify exit 1 on
+            a refusal. D5: the VSA text says canonical bodies, the ndec
+            docstring evidences. 11 test files, tests/test_an_js_*.py
+            (K-JS.1 to K-JS.7); the s130 baseline moves 9 digests, each a
+            text that carries the region; CHANGELOG [Unreleased], Changed
+            and Known limits. Three installed paths stay lenient:
+            conformance.verify_certificate_from_json (its Rekor leaf is
+            strict), continuity_ledger.verify_authorization_receipt and
+            annex_iv_map.verify_annex_iv_map.
+
+    D439-4  RED BEFORE GREEN, AND THREE REVIEWS. READ IN THE SEAT'S
+            CONTAINER, on a58ed216, each round's predictions hashed before
+            its code. Round 1: GREEN_PREDICTIONS 229ca7fa, amendments G-A
+            and G-B; 26 mutants; then REVIEW 1, 16 items (49816c51). Round
+            2: R2_PREDICTIONS 635c142e; the AST inventory K-JS.6, the red
+            barrier, 70 new cases red on the round 1 tree and green after,
+            10 mutants; the suite 4787 passed, 14 skipped; then REVIEW 2,
+            10 items (7c4b0bdd). Round 3: VB 0c10dc90 (4 vendor bodies in
+            the tree, none with a duplicate or a non-finite token), R3
+            85e228d3, R3B 09a59131; site tags and K-JS.7, 108 tags at 154
+            sites, 106 reached by a case and 2 named with a reason (cnt.2,
+            shadowed by cnt.6; vrk.3, behind a pinned Sigstore key); the
+            scanner allow-only, 16 forms; 22 mutants; the suite 4933, 14.
+            Then REVIEW 3 (c3ba4e4f), with neither earlier report: no
+            end-to-end acceptance found, ten findings, each measured again
+            by the seat (R3R d2ee05b5, all ten held). Its first, a site no
+            case protects (ndec.4, refused again later at ndec.1), is in
+            the class the stop rule names; the seat proposed a split.
+            RULING, 10-30 14:01Z: the split, the reference verifier's copy
+            in the land, and the encoding refusal first. R4 (eaef233b,
+            14:12:58Z): the 122 inputs of the cases re-planted as UTF-16
+            and with a BOM, 244 runs before and after; 227 now refused by
+            name, 12 of them exit 2 to 1, 17 unchanged, none of whose
+            bytes reach the region; red 10 of 12 on the round 3 tree, green
+            after; 2 mutants of the new branch; the suite 4945, 14. The
+            Gate, sections 13 to 20, holds every number.
+
+    D439-5  THE PARENT MOVED. ON A, 10-31 02:35Z: the kit's three files at
+            their digests; HEAD and origin 78acd967; porcelain 0;
+            AN438_LAND --dry REFUSE 44, nothing written (FG-S438-N). READ
+            IN THE SEAT'S CONTAINER, fetched from GitHub at 02:36:16Z: two
+            commits of S426 after a58ed216, 19828fe5 and 78acd967, seven
+            files shared with the change. R4B (55e87c4c, 02:41:05Z): the
+            change carried onto 78acd967 without a commit, five files by
+            git merge-file, dossier.py by applying S426's 12 line edits
+            inside constants by value; no added line of either lost; the
+            strict tests 1025, the baseline Q1 (i) held, the suite 4952
+            passed, 14 skipped, claim_lint 0. The kit rebuilt:
+            AN438_LAND.py c4e4e33d, AN438_COMMIT.py 85b3a4bb,
+            AN438_PAYLOAD.tar 1a2fb8e0, checked by 16 runs on a clone of
+            78acd967.
+
+    D439-6  THE LANDING OF D4 AND D5. ON A, on 11-01, each write after its
+            pame: at 01:32Z the three files at their digests, HEAD and
+            origin 78acd967, porcelain 0, STATE BEFORE, DRY_RUN_GREEN;
+            pame 01:40Z; at 01:41Z WROTE 52 files, owner 986:981,
+            porcelain 52, APPLY_GREEN; pame 01:42Z; at 02:31Z the suite
+            under tests/, HOME a temp dir and XDG_DATA_HOME unset, 6
+            failed, 4948 passed, 12 skipped, no file under that HOME; at
+            02:37Z again with safe.directory given to git by GIT_CONFIG_*
+            and nothing else changed: 4954 passed, 12 skipped, no failure,
+            as predicted (FG-S438-O); at 02:38Z AN438_COMMIT --dry, 52
+            blobs, the pinned identity, claim_lint 437 files and 0
+            violations, DRY_RUN_GREEN; pame 02:38Z; at 02:39Z FETCH_RC 0,
+            origin 78acd967, NEW_HEAD 9f3f48fe, CHECK_COMMIT OK, porcelain
+            0, COMMIT_GREEN; pame 02:39Z; at 02:39Z REMOTE_MAIN 9f3f48fe,
+            PUSH_GREEN. READ IN THE SEAT'S CONTAINER, fetched from GitHub
+            after: 9f3f48fe, parent 78acd967, author and committer Hlias
+            Staurou at 02:39:07Z, 52 paths (41 changed, 11 added); its tree
+            equals the seat's tree, file for file.
+
+    D439-7  WHAT THIS SEAT WROTE AND READ, 10-30 TO 11-01. To the
+            repository: 9f3f48fe, by the operator's commands. To B and to
+            /var/www: nothing. On A: the commands of D439-5 and D439-6; to
+            /root, by the operator, the kit's three files twice. Seat
+            network, each named before it ran: fetches of the mirror from
+            GitHub on 10-31 and 11-01; a fetch on 10-30 that read the
+            mirror only (FG-S438-N); WebSearch and WebFetch for RFC 8259
+            and RFC 7493; gh run list for 9f3f48fe, refused (HTTP 403, no
+            API access in this session). The project: read,
+            claude/s416/D416_LAND.py and D416_COMMIT.py; no write.
+
+    D439-8  WHAT STAYS OPEN. This entry on A by D439_LAND.py and
+            D439_COMMIT.py, each write after its pame. The CI run of
+            9f3f48fe, not read by the seat. The new Gate the split names:
+            a per-site mutant test (K-JS.8), the scanner's five missed
+            forms and region markers outside the texts, the barrier for a
+            planter whose file the verifier rejects, rc 1 pinned in the CLI
+            cases, the readers that decode before the region, the
+            repeated zip member, the vendor phrase for a token, eight
+            labels that name a field, end-to-end cases for the sites
+            reached only through a harness, and the three lenient
+            installed paths, the API route first. D2 and D3, and RULING
+            A4's Known limits line, at the next release. FG-S438-F and
+            FG-S438-M. Built in the container on 10-29 and not recorded in
+            the files the seat kept as run on A: rule0_v2.sh with its
+            predictions, and the /root hygiene kit with its predictions;
+            the operator holds whether they ran. The AN438 kit in /root on
+            A. Not read by S431 or S438: nous-serve-integrity.timer.
+
+    FINDINGS
+
+            FG-S438-E  WORLD. A KNOWN LIMIT OF VERIFY-COST WAS DROPPED, NOT
+                       CLOSED. nous verify-cost --manifest M checks that M
+                       names the certificate's sha256 and no signature on
+                       M; [7.0.0]'s Known limits said so, [8.0.0]'s did
+                       not. The [Unreleased] Known limits of 9f3f48fe say
+                       it again; S426's 19828fe5 makes the command say it.
+
+            FG-S438-F  WORLD. THE BLOG SAYS SIGNED MANIFEST. The post
+                       v5630-verify-cost, lines 165 and 1002 of
+                       website/blog/index.html at 9f3f48fe, says the
+                       manifest is signed; the command checks no signature.
+                       Open.
+
+            FG-S438-G  WORLD. BUILD-ATTEST-VERIFY TAKES ITS ROOTS FROM THE
+                       BUNDLE. Without --pins-dir the pins directory is the
+                       bundle's own; trusted_root.json and tsa_chain.pem,
+                       so the log key and TSA roots of ROOT 2, come from
+                       the bundle under verification. In the [Unreleased]
+                       Known limits.
+
+            FG-S438-H  SEAT. TWO TEST BUILDERS CREATED THE DEFAULT KEY.
+                       test_trace_bundle_dossier_e2e signed with the
+                       default key path when XDG_DATA_HOME pointed into the
+                       test; both builders take a key under tmp_path in
+                       9f3f48fe.
+
+            FG-S438-I  WORLD. THE DEFAULT KEY DIRECTORY ON A HOLDS NO FILE
+                       NEWER THAN 07-08. Read in one root shell on 10-30:
+                       11 files, the newest at 2026-07-08 21:17:46Z; an
+                       mtime shows a write, not a read.
+
+            FG-S438-J  WORLD. D4 TURNED A PASSING RECEIPT INTO A TRACEBACK,
+                       BEFORE THE LAND. A counterparty-signed UTF-16 or BOM
+                       receipt payload, which 8.0.0 passed, ended nous
+                       continuity verify --json in a traceback (REVIEW 3).
+                       Closed before the land by the region's encoding
+                       refusal (R4); it is now refused by name.
+
+            FG-S438-K  WORLD. AN .NDEC WITH A REPEATED ZIP MEMBER PASSES.
+                       dossier/manifest.json twice, the first planted:
+                       nous ndec verify with the pin, rc 0; the last member
+                       of the name is the one verified. In the [Unreleased]
+                       Known limits.
+
+            FG-S438-L  WORLD. THE STRICT TESTS MEASURE REACH, NOT
+                       PROTECTION. ndec.4 made lenient by a form the
+                       scanner does not see leaves every test green, the
+                       same bytes refused at ndec.1; the allow-only scanner
+                       misses five forms; the red barrier marks that a
+                       verifier ran, so a planter whose file the verifier
+                       rejects for another reason counts red (0 of the
+                       seat's 357 red cases came from one).
+
+            FG-S438-M  WORLD. VERIFY-COST'S HELP SAYS "1 REFUTED". Exit 1
+                       is also an input refused since D4. Open.
+
+            FG-S438-N  SEAT. A FETCH OF A MIRROR WAS TAKEN FOR A DRIFT
+                       CHECK. The container clone's origin is a local
+                       mirror of GitHub. On 10-30 the seat fetched it and
+                       said origin/main was a58ed216; S426's 19828fe5 was
+                       already on GitHub. The kit pinned a58ed216, and A
+                       refused it with nothing written (D439-5).
+
+            FG-S438-O  WORLD. THE SUITE ON A NEEDS GIT'S SAFE.DIRECTORY.
+                       With HOME a temp directory, git as root refuses the
+                       tree its owner 986 holds, and 6 tests that call git
+                       fail; with safe.directory passed through
+                       GIT_CONFIG_* the suite is 4954 passed, 12 skipped,
+                       which is S431's container plus 2, minus 2.
+
+            FG-S438-P  SEAT. PREDICTIONS MISSED, EACH CORRECTED BY A
+                       MEASUREMENT BEFORE ANY CLAIM. G-A1 and G-B1 (round
+                       1: a producer failure counted red; nine chain inputs
+                       without a case); I5 (round 2: more than 20 parses
+                       predicted in the installed modules); S4 and S1
+                       (round 3: a site already strict; eight labels still
+                       name a field); P1 and a miscount in M1 (R4: four
+                       trace bundle files and a keys file decoded before
+                       the region; 17 exit 2 written, 12 measured); the
+                       first table's expectation for one mutant of C-CJ.
