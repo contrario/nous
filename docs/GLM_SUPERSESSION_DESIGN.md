@@ -24979,3 +24979,343 @@ document itself.
                        key or file (D444-6, D444-7). A VSA already emitted,
                        and the VSA verifier, which reads no verdict, are
                        unchanged (D444-11).
+
+  - S445 the number the operator gave the fourth entry of the seat S427,
+    which carries D444 landed and read back, the seat's three steps on A,
+    the API Innovation Gate, APIG-K0 on A, APIG-K1, APIG-1 to APIG-3 landed
+    as 69828f36, served and live, and the two findings of the Gate
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S427,
+    DURING ITS SESSION. It describes the seat's work after D444, which is
+    landed and append-only. READ IN THE SEAT'S CONTAINER: computed off host
+    by the seat, on clones of its mirror of the public repository. ON A:
+    printed on Server A by a command the operator ran and pasted back as
+    chat text or as an attached file. Every message of the operator to this
+    seat from 09:07Z on 11-02 is kept as a file copied from the session's
+    own record of it, operator_messages_record_3.txt 004d6c4b, 52 messages
+    numbered R3-1 to R3-52; a task notice and the session's own summary are
+    not in it. REVIEW: computed in the container by an independent agent
+    that had not seen the work being written, then measured again by the
+    seat. DERIVED: computed from printed values or read from code.
+    OPERATOR: stated by the operator. RULING: a decision the operator
+    stated in words. Every time below is in UTC, on 11-02 of 2026. An
+    operator's time is the time his message was sent; a value ON A carries
+    the clock its command printed.
+
+    THE NUMBER. OPERATOR, R3-52 12:46Z: 445. READ IN THE SEAT'S CONTAINER,
+    by S425's numcheck.py 5ccb8fb4 at 12:48Z, on the seat's mirror after
+    its fetch N15 at 12:48:06Z, 163 refs, 1048 commits, main 69828f36: the
+    tokens S445, D445 and FG-S445 and the marker __s445_, matched as words
+    and as bare strings, count zero in every commit message, in the tree of
+    every ref and in main's binary files, and so for 446; the document
+    holds 445 only inside line numbers and hexadecimal digests. The
+    instrument that appends this entry refuses unless the document still
+    holds no S445 token and no anchor of that number when it runs. The two
+    codes below were named by this seat's API Gate
+    (D445-5, D445-7): FG-S427-E is used on no ref and nowhere in the
+    tree; FG-S427-F is cited by 69828f36, in its message and in
+    CHANGELOG.md, and nowhere else. They are anchored here; this entry adds
+    no other code.
+
+    D445-1  THE LANDING OF D444. OPERATOR, R3-1 09:07Z, R3-3 09:08Z, R3-6
+            09:09Z, R3-8 09:10Z: nothing moved, pame, for the upload and
+            dry run, the apply, the commit and the push. ON A: the land
+            tool's dry run 09:08:04Z, the tools as sent, 928fdaf9 and
+            4558268a, the entry d6a424d4, HEAD and origin 03b3fa65,
+            BLOB_HEAD 65b37ce9, the document b74fb145, 644 and 986:981,
+            STATE BEFORE, the namespace of 444 empty, the new document
+            dfeee87b, DRY_RUN_GREEN; the apply 09:08:50Z, WROTE and
+            READBACK dfeee87b, NOT_STAGED, APPLY_GREEN; the commit tool's
+            dry run 09:09:13Z, the message 4d73ea0f, the blob df0e40f3, the
+            lint 437 files and 0 violations, WOULD_COMMIT; the commit
+            09:09:58Z, FETCH_RC 0, origin 03b3fa65, NEW_HEAD d574fc33,
+            CHECK_COMMIT OK, COMMIT_GREEN; the push 09:10:43Z, REMOTE_MAIN
+            d574fc33, PUSH_GREEN; each as D444_PREDICTIONS.md f1b4d34d and
+            its fixture predicted. READ IN THE SEAT'S CONTAINER after its
+            fetch N14 at 09:11:07Z: d574fc33, one parent 03b3fa65, tree
+            1ce48acc, one path, 356 lines added, author and committer the
+            pinned identity at 09:09:59Z; the document byte-equal to the
+            kit's dfeee87b, its tail byte-equal to the entry d6a424d4; the
+            body byte-equal to d444_message.txt 4d73ea0f.
+
+    D445-2  THE SEAT'S PROPOSAL AND STEP 1. OPERATOR, R3-10 09:12Z: how to
+            go on, and why. The seat answered with five steps: G2 on A and
+            the state of nous-api; a restart of nous-api; its own files in
+            /root; the API Gate; then, lower, the VSA verifier's (c) and
+            the trace signer's pin. OPERATOR, R3-11 09:13Z: step 1. ON A,
+            read only: at 09:14:42Z nous-api MainPID 2608862, started on
+            10-29 11:57:49Z, so it held the manifest parse of before
+            cf9acb15 (FG-S427-A), listening on 127.0.0.1:8000; the G2 copy
+            c11e3033; HEAD and origin d574fc33; porcelain 0; the default
+            key directory's digest 8c64622b. At 09:15:15Z the nginx site of
+            nous-lang.org forwards /v1/ and /api/ to that port: the API is
+            reachable through the public site. OPERATOR, R3-14 09:16Z:
+            nothing moved. ON A, G2 c11e3033 from 09:17:19Z to 09:22:00Z,
+            the file attached as R3-15, RC 0: HEAD and origin d574fc33,
+            AHEAD 0 BEHIND 0, DOC_SHA dfeee87b, L6 254 144 99 3 98, the
+            suite 5047 passed and 12 skipped, the lint 437 files and 0
+            violations, the served mirror CLEAN for 569 files with 4
+            orphans, the key directory 8c64622b before and after. Of D444's
+            P3 block, 241 lines, 239 held and 2 MISSED:
+            DOC_BLOB_ORIGIN_MAIN and DOC_WORKTREE_EQ_ORIGIN_MAIN_BLOB, the
+            two lines that read origin's blob; the seat's fixture had run
+            G2 before its push, A after.
+
+    D445-3  STEPS 2 AND 3. OPERATOR, R3-16 09:23Z, step 2; R3-17 09:25Z,
+            nothing moved. ON A at 09:26:13Z, a guarded restart: before,
+            MainPID 2608862, NeedDaemonReload no, eight drop-ins, the
+            newest of 10-26, health 200; RESTART_RC 0; MainPID 904295,
+            NRestarts 0, health 200 after 2 tries. From then nous-api ran
+            d574fc33's modules through the editable install: FG-S427-A
+            closed in the API process (D428-13). OPERATOR, R3-19 09:27Z,
+            step 3. ON A at 09:28:02Z, a read-only inventory of the 24
+            paths the seat had left in /root, each tool at its pinned
+            digest, three K0 folders holding 8 throwaway keys, four empty
+            suite homes, a bare mirror; its digest c337266b. OPERATOR,
+            R3-21 09:37Z, nothing moved. ON A at 09:46:37Z, the guarded
+            deletion: the same inventory digest, then the 24 paths removed
+            and each read ABSENT, the entries of /root 1123 to 1099, the
+            key directory 8c64622b unchanged; /root/G2_R0_S372.sh, the
+            operator's, kept.
+
+    D445-4  THE API GATE AND ITS RECON. OPERATOR, R3-23 09:47Z: open the
+            Innovation Gate for the API; read with the standing ruling of
+            11-01 03:03Z, a Gate and no code. Base d574fc33. READ IN THE
+            SEAT'S CONTAINER, on a clone of d574fc33:
+            APIG_CENSUS_PREDICTIONS.md 8ad47511 at 09:49:35Z, then
+            apig_census.py in process, every prediction held. Over a
+            manifest whose bound Z3 refuted, signed once under a fresh key,
+            /v1/verify-dossier with a policy that required no anchor
+            answered ACCEPT, as for a 'proven' one, and with the default
+            policy REJECT for the missing anchor only;
+            /v1/verify-conformance over a run on it, its signer pinned,
+            answered PASS; no response named the solver verdict;
+            verify_certificate_from_json checked no manifest signature.
+            REVIEW, launched at 09:49Z, read only, no network:
+            REVIEW_APIG.md 831aed33. Measured again by the seat: 28
+            endpoints, 5 with no key check (health, both template GETs,
+            verify-dossier, verify-conformance), every other read through
+            require_api_key, which lets a request with no key through; CORS
+            open to every origin with credentials; the simulator's eval
+            reachable on the no-key surface, whether a nested code object
+            can reach it not determined.
+
+    D445-5  THE RUNTIME READ AND FG-S427-E. ON A at 10:04:02Z, NA26 and
+            NA27, read only: uvicorn with one worker, fastapi 0.136.1,
+            starlette 1.0.0; the drop-in 19ca852a and FORWARDED_ALLOW_IPS
+            in the exec environment; no NOUS_API_KEYS in /proc environ; the
+            public /v1/health and /api/v1/health 200. OPERATOR, R3-24
+            10:06Z, with that paste, a ruling: name FG-S427-E as blocking,
+            the public API having no key material, and configure one key.
+            The seat measured before answering: nous_api.py loads
+            NOUS_ENV_FILE by dotenv before it reads the keys, so the exec
+            environment cannot show them; the seat's read of 10:04Z had
+            looked in the wrong place, a flaw of its instrument; and a
+            configured key closes no anonymous read and opens three write
+            paths. ON A at 10:07:42Z, NA28, counts only: NOUS_ENV_FILE
+            names the systemd credential file; /opt/aetherlang_agents/.env
+            holds no key; a loopback POST of /v1/run in execute mode with
+            no key answered 401 AUTH003, raised before any work: keys are
+            configured. OPERATOR, R3-27 10:09Z: the first wording and the
+            key fix withdrawn, the measurement error acknowledged; RULING:
+            no code change for anonymous reads, no keys added, the product
+            question out of this Gate, the API's configuration untouched.
+            The seat worded FG-S427-E as measured; OPERATOR, R3-28 10:11Z:
+            accepted exactly as worded.
+
+    D445-6  APIG-K0 ON A. RULING, R3-28 10:11Z: APIG-K0 is the Gate's base
+            check, its predictions hashed before the run, throwaway keys in
+            a new folder under /root removed afterwards, no change to
+            systemd or the credential file; it must show ACCEPT and PASS
+            over a refuted manifest; if not, stop. XD5-K0 not run: its
+            premise is what c2ff66b5 and 03b3fa65 changed. READ IN THE
+            SEAT'S CONTAINER: APIG_K0_PREDICTIONS.md c3c12f85 at 10:12:39Z,
+            then apig_k0.py dc105f6f, the real producer for both manifests,
+            against a local server of d574fc33 on loopback, every
+            prediction held. OPERATOR, R3-29 10:15Z: nothing moved, pame.
+            ON A at 10:15:51Z, NA29, loopback only, K0_RC 0, every
+            prediction held: over the refuted manifest verify-dossier
+            ACCEPT, ed25519_only, and pinned to its own key ACCEPT;
+            verify-conformance PASS, conformant True; no response named the
+            verdict; MainPID 904295 before and after; porcelain 0, the key
+            directory 8c64622b before and after; 15 files written and
+            removed. The defect held on A's live public API.
+
+    D445-7  THE GATE DOCUMENT AND ITS RULINGS. READ IN THE SEAT'S
+            CONTAINER: X_APIG_INNOVATION_GATE.md 72f347a3, 236 lines, by
+            build_apig_gate.py, 32 cites to d574fc33 asserted; its
+            generator caught two unquoted uses of the reserved word before
+            it was fixed; the pack s427_apig_gate.tar c18a0ea9. It
+            named FG-S427-F and set APIG-1 to APIG-5 for ruling. OPERATOR,
+            R3-31 10:22Z, RULINGS: APIG-1 (a), OUTSIDE a third verdict with
+            a new check naming the solver verdict and a new spec_version,
+            the V1 path unchanged; APIG-2 built in the library, the
+            manifest's signature checked with an optional
+            expected_manifest_signer_b64, and OUTSIDE for a manifest not
+            'proven', the remedy gate's call measured first; APIG-3 yes,
+            the page and the IDE show OUTSIDE neither green nor red, the
+            deploy its own gate; APIG-4 yes, live only after the restart;
+            APIG-5 out of scope. The simulator's eval: an open item for its
+            own security review, not a blocker. FG-S427-F was not renamed.
+
+    D445-8  APIG-K1. READ IN THE SEAT'S CONTAINER: APIG_K1_PREDICTIONS.md
+            454b02b5 at 10:23:07Z, after a static grep and before the hook;
+            from 10:23:32Z to 10:28:39Z apig_k1_hook.py in the venv's .pth
+            wrapped _render_v2_response and verify_certificate_from_json in
+            every process of one suite run, 5028 passed and 31 skipped, and
+            was removed after; 67 calls, 21 V2 and 46 to the library.
+            APIG-1 changes six outcomes, all ACCEPTs in
+            test_verify_dossier_endpoint_v2 over fixtures whose verdict was
+            "VERIFIED", a value the producer never writes; APIG-2 (ii)
+            changes none; APIG-2 (i) meets one manifest whose signature
+            fails, the binding test of test_s97_certificate, which stays
+            FAIL; the remedy gate's 17 calls pass no manifest, so it is not
+            reached. Q2 MISSED one unparsed call it did not enumerate; Q4
+            MISSED that binding test. The census, APIG_K1_CENSUS.md
+            da09eec4. OPERATOR, R3-32 10:33Z, RULINGS: APIG-1 (a)
+            confirmed, the fixture takes 'proven', spec_version
+            verify-dossier/v3; APIG-2 as ruled, spec_version
+            verify-conformance/v2, a contract change; APIG-3 keeps the
+            pinned phrases; the remedy gate not reached; next the red
+            tests, predictions hashed first, then the code. The message's
+            second part, in Greek, was read as commentary, not as a ruling.
+
+    D445-9  APIG-1 TO APIG-3 IN THE SEAT. READ IN THE SEAT'S CONTAINER, on
+            clones of d574fc33: the pins measured first, pins_out.txt
+            4b1d678b, three tests pinning text the slice changes; and a K1
+            CENSUS MISS found then: both pages refused any spec_version
+            other than verify-dossier/v2, so a restart before the deploy
+            would have left /verify refusing every answer.
+            APIG2_PREDICTIONS.md 14132b13 at 10:48:11Z, before the red run
+            and before any code. RED: 25 failed, 40 passed, each red for
+            its predicted reason. The design: a ninth check,
+            solver_verdict, and OUTSIDE where ACCEPT was given; in the
+            library a manifest_signature check under the pin when given,
+            else under the key the manifest carries, with no fallback to
+            the certificate signer's key, unlike the CLI and the offline
+            verifier; solver_verdict the verdict of a manifest whose
+            signature passed; FAIL, then INCONCLUSIVE, then OUTSIDE where
+            PASS was given; the endpoint takes the pin; the pages paint
+            OUTSIDE gold and read v2 and v3. Held: the patch's fixtures;
+            GREEN 65; the suite 5059 passed and 31 skipped, per test
+            CHANGED 0 and NEW 31; eleven mutants, each red set as
+            predicted; the responses before and after over the same
+            bundles; the lint 406 files and 0 violations; G2 on a local
+            commit; the two pages run in node. APIG2_EVIDENCE.md 1675f0cc.
+            Found and left open: docs/VERIFY_DOSSIER.md's verdict logic
+            names a check the code never reads, and
+            require_pubkey_in_allowlist false changes nothing.
+
+    D445-10 THE LANDING OF 69828f36. READ IN THE SEAT'S CONTAINER: the
+            kit's predictions APIG2_KIT_PREDICTIONS.md c254dd60; its
+            fixture drive on a mirror clone, 535 lines, 0 differing. ORDER
+            SLIP, OWNED: the two tools APIG2_LAND.py e4e94c34 and
+            APIG2_COMMIT.py 0b6005ff were generated before that file, which
+            neither reads nor cites them. OPERATOR, R3-33 11:31Z and R3-35
+            11:43Z: nothing moved. ON A: the dry run 11:40:56Z and the
+            apply 11:44:33Z, the attached file R3-36, eleven files written
+            and read back at their pinned digests, 644 and 986:981. The
+            suite at 11:45:35Z, and again ending at 11:57:09Z: 6 failed,
+            5072 passed, 12 skipped, each failure git refusing the tree as
+            of dubious ownership. FLAW OF THE SEAT'S INSTRUMENT: its two
+            commands set HOME to a temporary folder and dropped the
+            safe.directory setting and the unset XDG_DATA_HOME that the
+            XD-5 and XD5-4 suite commands carried. With them, 12:00:21Z:
+            5078 passed, 12 skipped, as predicted, the key directory
+            8c64622b before and after. The commit tool's dry run 12:14:33Z,
+            eleven blobs as pinned, the lint 437 and 0, WOULD_COMMIT.
+            OPERATOR, R3-41 12:25Z: nothing moved, without a pame; the
+            commit command was given labelled irreversible, and the
+            operator ran it. ON A: the commit 12:28:54Z, NA30, origin
+            d574fc33, NEW_HEAD 69828f36, CHECK_COMMIT OK; OPERATOR, R3-43
+            12:29Z, pame; the push 12:30:08Z, NA31 to NA33, REMOTE_MAIN
+            69828f36, PUSH_GREEN. READ IN THE SEAT'S CONTAINER after its
+            fetch N15 at 12:48:06Z: 69828f36, one parent d574fc33, tree
+            16cc364a, ten paths modified and tests/test_apig_outside_api.py
+            added, author and committer the pinned identity at 12:28:55Z,
+            the body byte-equal to apig2_message.txt 0c02847c.
+
+    D445-11 SERVED AND LIVE. ON A at 12:32:59Z, read only: the deploy's dry
+            run named ide.html and verify.html; the served mirror check
+            DRIFT on those two. OPERATOR, R3-46 12:35Z: nothing moved,
+            pame. ON A at 12:35:55Z: deploy_website.sh --apply, its claim
+            gate 437 files and 0 violations, the two pages written, the
+            mirror check CLEAN for 569 files, served equal to tracked,
+            verify.html 350689c8 and ide.html 25d5f55a. From the apply at
+            11:44:33Z to then, the served pages differed from the tracked
+            ones across the drift timer's runs of 12:00 and 12:30; its log
+            not read. OPERATOR, R3-48 12:40Z: pame. ON A at 12:42:37Z,
+            NA34: the guarded restart, MainPID 904295 to 1731405, health
+            200; the API runs 69828f36. OPERATOR, R3-50 12:44Z: nothing
+            moved. ON A at 12:44:38Z, NA35, APIG-K0 again by the same
+            dc105f6f, every line as predicted before the run: over the
+            'proven' manifest ACCEPT, PASS and INCONCLUSIVE as before; over
+            the refuted one verify-dossier OUTSIDE, pinned to its own key
+            OUTSIDE, to another REJECT, the default policy REJECT;
+            verify-conformance OUTSIDE, conformant True; no manifest
+            INCONCLUSIVE; both new answers name the verdict; MainPID
+            1731405 before and after; the key directory 8c64622b before and
+            after; 15 files written and removed.
+
+    D445-12 MISSES AND FLAWS, EACH OWNED BY THE SEAT. D444's P3 two lines
+            (D445-2). The runtime read of 10:04Z, which looked at /proc
+            environ for keys a dotenv file supplies (D445-5). K1 Q2 and Q4,
+            and the census's silence on the pages' spec_version check
+            (D445-8, D445-9). The kit's tools generated before its
+            predictions (D445-10). The two suite commands on A rewritten
+            from memory without their git setting (D445-10). The deploy's
+            dry-run prediction wrote the paths with a website/ prefix the
+            checker does not print. The A-side network calls of the
+            landing, NA30 to NA35, were named to the operator before they
+            ran but numbered in the seat's log only after. A write outside
+            the scratchpad, in the seat's container only: in-process runs
+            of the API, the censuses, the suites and a local server,
+            appended to its /var/log/nous_api.log.
+
+    D445-13 WHAT STAYS OPEN. In order: this entry on A by its two tools,
+            each step after its pame. The operator's: /root/APIG2_LAND.py,
+            /root/APIG2_COMMIT.py and /root/apig_k0.py; the drift timer's
+            log for 12:00 and 12:30. Not ruled, each for its own Gate: the
+            V1 path of verify-dossier still answers signature_ok true with
+            no verdict (ruled unchanged); the API checks a manifest under
+            the key it carries unless pinned; docs/VERIFY_DOSSIER.md's
+            verdict logic; the simulator's eval, for a security review;
+            whether reads stay anonymous (FG-S427-E); CORS with credentials
+            for every origin; the nous skill's account of the verdicts,
+            outside the repository; D444-11's list stands otherwise. The
+            core lane's: the next release carries cf9acb15, 635dd02b,
+            c2ff66b5, 03b3fa65 and 69828f36, under [Unreleased], Security,
+            in CHANGELOG.md.
+
+    FINDINGS
+
+            FG-S427-E  WORLD. THE PUBLIC API ALLOWS READS BY DEFAULT AND
+                       REQUIRES A KEY FOR WRITES. The API is reachable
+                       through nous-lang.org, nginx forwarding /v1/ and
+                       /api/, the public /v1/health 200 at 10:04:02Z. Five
+                       endpoints make no key check at all: /v1/health, both
+                       GET /v1/templates routes, /v1/verify-dossier and
+                       /v1/verify-conformance. Every other read admits a
+                       request that sends no key: require_api_key returns
+                       "anonymous" when keys are configured and "no-auth"
+                       when none are (nous_api_server.py:96-103). PUT
+                       /v1/templates, /v1/run in execute mode and chat
+                       replay require a valid key; on A the keys come from
+                       the systemd credential file, and a write without a
+                       key answered 401 AUTH003 at 10:07:42Z (D445-5).
+                       Whether reads stay anonymous is a product decision,
+                       outside the Gate. Open, not ruled.
+
+            FG-S427-F  WORLD. THE PUBLIC VERIFICATION API ACCEPTED A
+                       REFUTED BOUND. verify-dossier answered ACCEPT and
+                       verify-conformance PASS over a signed manifest whose
+                       cost bound Z3 refuted, measured in the seat and on
+                       A's live API (D445-4, D445-6), while the offline
+                       verifiers and the CLI answered OUTSIDE, and the
+                       public page painted it green. The API instance
+                       of FG-S427-C's class. Closed by 69828f36, served and
+                       restarted: OUTSIDE in both responses, naming the
+                       verdict, after every integrity and policy check,
+                       measured again on A (D445-9 to D445-11). The V1 path
+                       and a pinless manifest check stay as D445-13 lists
+                       them.
