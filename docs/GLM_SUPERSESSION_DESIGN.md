@@ -24623,3 +24623,359 @@ document itself.
                        offline verifier's pins taken, an unpinned run named
                        in one line (D428-8, D428-9). Neither path reads the
                        manifest's solver verdict (XD-5).
+
+  - S444 the number the operator gave the third entry of the seat S427,
+    which carries D428 landed and read back, the XD-5 Innovation Gate,
+    XD5-K0 on A, XD5-1 to XD5-3 landed as c2ff66b5, XD5-4 (b) landed as
+    03b3fa65, four missed predictions, and the two findings of the Gate
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S427,
+    DURING ITS SESSION. It describes the seat's work after D428, which is
+    landed and append-only. READ IN THE SEAT'S CONTAINER: computed off host
+    by the seat, on clones of its mirror of the public repository. ON A:
+    printed on Server A by a command the operator ran and pasted back as
+    chat text. Every message of the operator to this seat from 08:03Z on
+    11-02 is kept as a file copied from the session's own record of it,
+    operator_messages_record_2.txt bf11dfbe. SEAT LOG: the session's record
+    before 07:26Z on 11-02 is no longer readable in the seat, and the
+    operator's messages from 06:35Z to 07:17Z on 11-02 stand in the seat's
+    running log as it wrote them when each arrived, the ruling of 07:13Z
+    quoted there and in the seat's summary. REVIEW: computed in the
+    container by an independent agent that had not seen the work being
+    written, then measured again by the seat. DERIVED: computed from
+    printed values or read from code. OPERATOR: stated by the operator.
+    RULING: a decision the operator stated in words. Every time below is in
+    UTC, on 11-02 of 2026. An operator's time is the time his message was
+    sent; a value ON A carries the clock its command printed.
+
+    THE NUMBER. OPERATOR, 08:54Z: 444. READ IN THE SEAT'S CONTAINER, by
+    S425's numcheck.py 5ccb8fb4 at 08:54:59Z, on the seat's mirror after
+    its fetch at 08:51:58Z, 163 refs, 1046 commits, main 03b3fa65: the
+    tokens S444, D444 and FG-S444 and the marker __s444_, matched as words
+    and as bare strings, count zero in every commit message, in the tree of
+    every ref and in main's binary files, and so for 445; the document
+    holds 444 only inside hexadecimal digests. Before this entry the
+    document held no S444 token and no anchor of that number, and the
+    instrument that appends this entry refuses unless that is still so when
+    it runs. The two codes below, FG-S427-C and FG-S427-D, were named by
+    this seat's XD-5 Gate (D444-2), are used on no ref and nowhere in the
+    tree at 03b3fa65, and are anchored here; this entry adds no other code.
+
+    D444-1  THE LANDING OF D428. OPERATOR, SEAT LOG: 06:35Z, nothing
+            changed, pame for the upload of the two tools and the dry run;
+            06:35Z, the same for the apply; 06:38Z, the commit tool's
+            dry-run command line with no output, read as no run, then its
+            output; 06:40Z, nothing changed, pame for the commit; 06:41Z,
+            the same for the push. ON A: the land tool's dry run 06:35:27Z,
+            the tools as sent, 3850ed7b and 7c8ac116, HEAD and origin
+            635dd02b, BLOB_HEAD f45949ac, the document 852d8f32, 644 and
+            986:981, STATE BEFORE, the namespace of 428 empty, the new
+            document b74fb145, DRY_RUN_GREEN; the apply 06:36:09Z, WROTE
+            and READBACK b74fb145, NOT_STAGED, APPLY_GREEN; the commit
+            tool's dry run 06:38:19Z, the message 7598c440, the blob
+            65b37ce9, the lint 437 files and 0 violations, WOULD_COMMIT;
+            the commit 06:40:25Z, FETCH_RC 0, origin 635dd02b, NEW_HEAD
+            93ad3a6a, CHECK_COMMIT OK, COMMIT_GREEN; the push 06:41:19Z,
+            REMOTE_MAIN 93ad3a6a, PUSH_GREEN; each as D428_PREDICTIONS.md
+            b0672716 and its fixture predicted. READ IN THE SEAT'S
+            CONTAINER after its fetch at 06:41:44Z: 93ad3a6a, one parent
+            635dd02b, tree 60b166fb, one path, 373 lines added, author and
+            committer the pinned identity at 06:40:27Z; the document
+            byte-equal to the kit's b74fb145, its tail byte-equal to the
+            entry 9aa5b8cd; the body byte-equal to d428_message.txt
+            7598c440; v8.0.0-11. The kit's document counts after D428 (its
+            P3) printed as predicted on that commit; G2 on A was not run.
+
+    D444-2  THE XD-5 GATE. OPERATOR, SEAT LOG, 06:43Z: open the Innovation
+            Gate for XD-5; read with the standing ruling of 11-01 03:03Z, a
+            Gate and no code. Base 93ad3a6a. READ IN THE SEAT'S CONTAINER,
+            on a clone of 93ad3a6a: XD5_CENSUS_PREDICTIONS.md a293929e at
+            06:46:46Z, then xd5_census.py d0403a09, fresh keys under its
+            own directory, a manifest signed for a bound Z3 returned
+            'proven' and one for a bound it refuted, a trace of each and a
+            certificate by the real certify. Over the refuted manifest the
+            online verify with both pins, certify, the offline conformance
+            text and the API's library call each gave PASS, the run
+            conformant at 0.00335 under the cap 0.01, no line naming the
+            verdict; no certificate field names the manifest or a verdict.
+            The dossier verifier over the same manifest: exit 3, OUTSIDE,
+            the solver verdict named 'refuted'. `nous vsa emit` over each:
+            verificationResult PASSED at ORG_NOUS_CONFORMANT_V1, and its
+            offline verifier PASS, while docs/NOUS_VSA.md:43 said Z3 had
+            settled the cap at emission, which emit did not check. Three
+            flaws of the census, each found in its own output and run
+            again, the first output kept: the plain dossier verifier was
+            passed --allow-unanchored, which only its Rekor variant takes
+            (xd5_census_c7b.py 785c1bf1); the VSA verifier was run with no
+            pin; the VSA key was read as PEM where it is 32 raw bytes
+            (xd5_census_c9b.py 68b4ee9d). --timeout-ms 1 still gave
+            refuted; no unknown verdict was produced. A recon read run
+            without -B wrote one ignored bytecode file in the Gate's clone
+            at 06:44:29Z, removed before the Gate was fixed. REVIEW, from
+            06:50Z: an agent given the code and ten questions, not the
+            census or the Gate, with no write and no network by its report
+            and by the seat's scan of its commands; REVIEW_XD5.md 09f302cf.
+            Its added claims measured again at 93ad3a6a before use: the
+            8.0.0 notes give OUTSIDE for signed evidence whose verdict is
+            not 'proven' (CHANGELOG.md:113-114); three VSA tests build
+            manifests with no verdict key; /v1/verify-dossier decides
+            ACCEPT on form, signature and trust level
+            (nous_api_server.py:843-863); verify_certificate_from_json
+            compares three digests and checks no manifest signature
+            (conformance.py:1267-1291); the VSA text checks the manifest
+            under the key it carries. Two network calls, each named first:
+            one web search, and one read of slsa.dev's v1.0
+            verification-summary page: verificationResult is PASSED or
+            FAILED by the policy, with no rule that a failed input fails
+            the summary. X_XD5_INNOVATION_GATE.md 7a94a688, 285 lines, by
+            build_xd5_gate.py 80edb330, which asserts every file:line
+            against 93ad3a6a and caught two of REVIEW's line numbers one
+            off; its sums d29d860c; s427_xd5_gate.tar 4f6f28bf to the
+            operator. It names XD5-1 to XD5-5, the kill criteria XD5-K0 to
+            XD5-K7 and the two findings below. No code, no repository file
+            and nothing on A.
+
+    D444-3  THE RULING AND XD5-K0. RULING, SEAT LOG, 07:13Z: BUILD XD5-1 to
+            XD5-3 as one slice; for XD5-4, (b), refuse to emit, exit 2;
+            neither (a) nor (c) without a separate Gate. Its reasons: XD5-2
+            is integrity, not policy, and the OUTSIDE class must apply to
+            the conformance texts as to the dossier; emitting a VSA over a
+            cap that is not established is a signed falsehood and refusing
+            is fail-closed; XD5-3 is a warning and the online exit codes
+            stay. Before any code, XD5-K0 on the slice's base: C2 to C5
+            still PASS and C7b still OUTSIDE, else stop and report.
+            XD5_K0_PREDICTIONS.md c4ea454c at 07:14:12Z, then xd5_k0.py
+            8cf5a02d, which writes only under its own new directory, signs
+            with throwaway keys made there and lists the default key
+            directory before and after; in the seat on 93ad3a6a every
+            prediction held (xd5_k0_seat_out.txt 53a09ee3). OPERATOR, SEAT
+            LOG, 07:16Z: nothing changed, pame. ON A, 07:17:29Z: the script
+            as sent; HEAD 93ad3a6a; porcelain 0 before and after; the key
+            directory 8c64622b before and after; the run with a 'proven'
+            manifest PASS on every path; the refuted one: C1 refuted, exit
+            1; C2, C4 and C5 PASS; C3 conformant at 0.00335 under 0.01; C7b
+            exit 3, OUTSIDE; 49 files, as in the seat. XD5-K0 held: the
+            premise stands on A's live install. Written on A:
+            /root/xd5_k0.py and /root/xd5_k0, 49 files, the throwaway keys
+            among them. The seat's fetch at 07:18:15Z, named first: no ref
+            moved.
+
+    D444-4  XD5-1 TO XD5-3 IN THE SEAT, on 93ad3a6a's tree. The base suite:
+            5005 passed, 31 skipped. XD5S_PREDICTIONS.md a61e592d at
+            07:25:16Z, before the tests and the patch.
+            tests/test_xd5_outside_conformance.py: 16 tests on fresh
+            bundles, each file signed once, the anchored text's Rekor legs
+            stubbed on both sides, no network. A MISS: P1 named 7 red; the
+            first run gave 10, three from defects of the test, none of the
+            code: t05 swapped in a trace whose body equalled the first's,
+            and t09 to t11 ran the anchored text in a plain dict, where its
+            dataclasses found no module. The test fixed, 1a1a775b, and
+            XD5S_P1R_PREDICTIONS.md df0952be at 07:26:09Z, before the
+            second run: 7 failed and 9 passed, the 7 predicted.
+            xd5s_patch.py, first 81df106c, run on copies first; 16 passed.
+            A MISS: P4 named 5021 passed and the suite gave 2 failed, the
+            claim lint's live-tree tests: the rewritten docstring sentence
+            of the standalone text carried a signature-strength term
+            without its scope. The base sentence had passed only because an
+            unrelated negator stood three tokens after the term, inside the
+            lint's window, a blind spot the lint states; the first patch
+            moved it to four. The lint had not been run on a copy before
+            P4. The tree restored; a905770a wrote the sentence with no such
+            term, and on copies applied, skipped a second run and refused a
+            partial marker and a missing anchor writing nothing, the lint
+            406 files and 0 violations, the two tests passing;
+            XD5S_P4R_PREDICTIONS.md a2664105 at 07:36:41Z, before it
+            touched the tree. The suite: 5021 passed, 31 skipped; by test
+            id against the base none changed and the 16 new passed. A MISS:
+            of eight mutants seven gave their predicted red set; MX5, the
+            anchored branch's check moved before the Rekor check, turned
+            t09 red as well as t10, because t09 also asserts that the Rekor
+            line comes first; the mutant is caught and the prediction read
+            the test short. Flaws of the instruments, each run again and
+            the first output kept: the suite once run from the root without
+            tests/, which collected root scripts and ran nothing; a
+            mutant's junit path relative to the tree; MX5's anchor present
+            twice in the builder. The output, the base against the slice on
+            fresh pinned bundles: the certificate bytes equal; a run over a
+            'proven' manifest unchanged on every path; over the refuted one
+            the online paths add one line with the same exit and both
+            offline texts go from exit 0 to 3, where the base printed
+            VERDICT: PASS and conformant True; certify differed also in its
+            --out line, which the instrument sets per tree, and was equal
+            with the path masked. The lint 406 files and 0 violations. G2
+            on a local commit: TRACKED 1640, DOC_SHA b74fb145, L6 254 144
+            99 3 98. XD5S_EVIDENCE.md 572bee7b; its sums a671b03b.
+
+    D444-5  THE LANDING OF XD5-1 TO XD5-3. The kit: pins.json 138372b9;
+            xd5_message.txt ba248ca8, 1277 bytes; XD5_KIT_PREDICTIONS.md
+            4145c554 at 07:50:53Z, before the tools, which XD-2's builder
+            made with 16 lines of names changed: XF5XD5_LAND.py 71f21705
+            and XF5XD5_COMMIT.py 19fafa58; the fixture, its remote a mirror
+            clone with 163 refs, BASE_OK 93ad3a6a: 28 arms, 0 diff lines;
+            s427_xd5_kit.tar 7d81912a to the operator. OPERATOR: 08:03Z,
+            nothing moved and nothing changed, pame for the upload and the
+            dry run; 08:05Z, nothing moved, pame for the apply; 08:14Z, the
+            same for the commit; 08:15Z, the same for the push. ON A: the
+            dry run 08:04:29Z, HEAD and origin 93ad3a6a, six blobs at HEAD
+            as pinned, the new path absent and not ignored, porcelain 0,
+            the six files 644 and 986:981, three of them read on A for the
+            first time, DRY_RUN_GREEN; the apply 08:05:35Z, seven WROTE and
+            READBACK as pinned, porcelain 7, APPLY_GREEN; the suite
+            08:06:17Z, 5040 passed and 12 skipped in 263.32 s, as derived
+            from XD-2's run on A and the 16 new, its HOME left empty; the
+            commit tool's dry run 08:12:32Z, the lint 437 files and 0
+            violations, WOULD_COMMIT; the commit 08:14:33Z, FETCH_RC 0,
+            origin 93ad3a6a, NEW_HEAD c2ff66b5, CHECK_COMMIT OK; the push
+            08:15:55Z, REMOTE_MAIN c2ff66b5, PUSH_GREEN. READ IN THE SEAT'S
+            CONTAINER after its fetch at 08:16:35Z: c2ff66b5, one parent
+            93ad3a6a, tree 6a328279, equal to the tree of the seat's local
+            commit of the slice, author and committer the pinned identity
+            at 08:14:34Z; six paths modified and the test added, each blob
+            as pinned; the body byte-equal to ba248ca8; v8.0.0-12. A's
+            install is editable: the change was live on A from the apply.
+
+    D444-6  XD5-4 (b) IN THE SEAT, on c2ff66b5's tree, the seat's working
+            tree moved there from its mirror. XD54_CENSUS_PREDICTIONS.md
+            eb3d2e05 at 08:19:13Z, then a hook outside the repository,
+            loaded by a .pth file, wrapped the emit command in every
+            process of a suite run of 5021 passed and 31 skipped, and was
+            removed after: 44 calls from 8 files, 38 with a manifest whose
+            verdict is 'proven', 5 with no verdict key, all in
+            test_s157_u3_cli_vsa, 1 with no file. A MISS: the census
+            predictions named 5 files; 3 more call emit, test_an_js_strict,
+            and test_nt_v3_vector and test_nt_w_vsa_vector_v2 through the
+            frozen vsa-vectors mint scripts, each with a 'proven' manifest.
+            u3's coverage-mismatch test feeds a manifest with no verdict
+            and expects exit 2; under (b) it would pass for the verdict
+            with its own check masked, so its fixture records 'proven'.
+            Measured on copies before the predictions: the patch applied,
+            skipped and refused twice writing nothing, the lint 406 files
+            and 0 violations, G2 on a local commit, the output instrument
+            base against base. XD54_PREDICTIONS.md 22f36188 at 08:31:05Z,
+            before the test ran and before the patch touched the tree.
+            tests/test_xd54_vsa_emit_refusal.py: 7 tests on fresh bundles,
+            6 failed and 1 passed on the base, as predicted. xd54_patch.py
+            f3b92d5b: emit refuses, exit 2, with one PRECONDITION ERROR
+            line naming the verdict, when the manifest's verdict is not
+            'proven', a missing key included, right after the three files
+            load and before any key or file; 15 passed with u3. The suite:
+            5028 passed, 31 skipped; by test id none changed and the 7 new
+            passed. Five mutants, each its predicted red set. The output: a
+            'proven' bundle byte-equal under one key; over the refuted
+            manifest the base wrote five files and a key and signed
+            verificationResult PASSED at ORG_NOUS_CONFORMANT_V1, and the
+            slice wrote nothing and created no key. The lint 406 files and
+            0 violations; G2 TRACKED 1641, L6 unchanged. XD54_EVIDENCE.md
+            a389cfd3; its sums 8aeea3bf.
+
+    D444-7  THE LANDING OF XD5-4 (b). The kit: pins.json 533a0ca6;
+            xd54_message.txt 73f20d3b, 1212 bytes; XD54_KIT_PREDICTIONS.md
+            f538f54f, before the tools, its builder's first run having
+            stopped on a stale key before it wrote the predictions;
+            XF5XD54_LAND.py 25d218f0 and XF5XD54_COMMIT.py 1b7c4413, XD-5's
+            builder with 16 lines of names changed; the fixture, BASE_OK
+            c2ff66b5: 28 arms, 0 diff lines; s427_xd54_kit.tar 67caa4a5 to
+            the operator. OPERATOR: 08:42Z, nothing moved and nothing
+            changed, pame for the upload and the dry run; 08:43Z, the same
+            for the apply; 08:49Z, nothing moved, pame for the commit;
+            08:51Z, the same for the push. ON A: the dry run 08:42:34Z,
+            HEAD and origin c2ff66b5, four blobs at HEAD as pinned, the new
+            path absent and not ignored, porcelain 0, the four files 644
+            and 986:981, DRY_RUN_GREEN; the apply 08:43:28Z, five WROTE and
+            READBACK as pinned, porcelain 5, APPLY_GREEN; the suite
+            08:44:01Z, 5047 passed and 12 skipped in 263.03 s, as derived,
+            its HOME left empty; the commit tool's dry run 08:49:10Z, the
+            lint 437 files and 0 violations, WOULD_COMMIT; the commit
+            08:50:14Z, FETCH_RC 0, origin c2ff66b5, NEW_HEAD 03b3fa65,
+            CHECK_COMMIT OK; the push 08:51:29Z, REMOTE_MAIN 03b3fa65,
+            PUSH_GREEN. READ IN THE SEAT'S CONTAINER after its fetch at
+            08:51:57Z: 03b3fa65, one parent c2ff66b5, tree bb0d9156, equal
+            to the tree of the seat's local commit, author and committer
+            the pinned identity at 08:50:16Z; the body byte-equal to
+            73f20d3b; v8.0.0-13.
+
+    D444-8  NOTES, NOT FINDINGS. The seat's misses, in D444-4 and D444-6:
+            P1, P4 and P5 of XD5-1 to XD5-3 and one of XD5-4's census
+            predictions; the flaws of its instruments, in D444-2, D444-4
+            and D444-7: three in the Gate's census, three in the slice and
+            a builder that stopped before it wrote; each recorded in the
+            seat's evidence, its first output kept. The running log three
+            times stamped an entry in its text with a time later than its
+            append, each corrected there. The claim lint passes a
+            signature-strength term when an unrelated negator stands within
+            three tokens of it, as the lint states; the standalone
+            conformance text's docstring passed that way at 93ad3a6a and no
+            longer uses the term (D444-4). OBSERVED, not a finding of this
+            entry: the offline conformance texts bind the trace's body and
+            check its signature under the key the trace carries; they do
+            not pin the trace's signer (t05's first form, D444-4).
+
+    D444-9  THIS ENTRY'S PREFIXES. Before its tools were built, an
+            instrument of the seat matched every hexadecimal prefix of
+            eight or more digits in this entry and in its commit message
+            against: the seat's files, predictions, kits, evidence and
+            copies of the pastes; the objects of core; the sha256 of every
+            file tracked at the commits this entry names; and the sha256 of
+            every commit body of core. Every prefix resolved.
+
+    D444-10 WHAT THIS SEAT WROTE after D428-12. To this repository:
+            93ad3a6a, c2ff66b5 and 03b3fa65, each by its two tools after
+            its pames, and this entry. To /root on A: D428's two tools;
+            /root/xd5_k0.py and /root/xd5_k0, 49 files, the throwaway keys
+            among them; the tools of XD5-1 to XD5-3 and of XD5-4, four
+            files; /root/xd5_suite_home.yQtCh9 and
+            /root/xd54_suite_home.kyzyol, empty; and this entry's two tools
+            when the operator uploads them. No restart, no unit change; A's
+            default key directory listed, never written. Network from A:
+            the fetches, pushes and reads of the remote by the commit tools
+            of D428, XD5-1 to XD5-3 and XD5-4; XD5-K0 made none. The seat's
+            network, each call named first: four fetches of its mirror, at
+            06:41Z, 07:18Z, 08:16Z and 08:51Z; one web search and one page
+            read (D444-2). The reviewer agent made no network call by its
+            report. To nous-langchain, nothing. To the operator: the Gate's
+            tar, XD5-K0's script and predictions, the two kits' tars and
+            their four tools, and this entry's kit.
+
+    D444-11 WHAT STAYS OPEN. In order: this entry on A by its two tools,
+            each step after its pame. Not ruled, each for its own Gate: the
+            VSA verifier text reads no manifest verdict and checks the
+            manifest under the key it carries, (c) and S4 of the XD-5 Gate;
+            a VSA FAILED record, (a); /v1/verify-dossier decides ACCEPT
+            with no verdict and verify_certificate_from_json checks no
+            manifest signature; the conformance texts pin no trace signer
+            (D444-8); gap-witness manifests in conformance. A verifier text
+            already written into a bundle keeps its old behaviour. The
+            operator's: a restart of nous-api, which unless it restarted
+            since 10-29 holds the old modules (D428-13); G2 on A, not run
+            since 02:08:45Z on 10-31; this seat's files in /root, D444-10
+            and D428-12. The core lane's: the next release carries
+            cf9acb15, 635dd02b, c2ff66b5 and 03b3fa65, under [Unreleased],
+            Security, in CHANGELOG.md.
+
+    FINDINGS
+
+            FG-S427-C  WORLD. THE OUTSIDE RULE STOPPED AT THE DOSSIER. The
+                       8.0.0 notes give OUTSIDE for signed evidence whose
+                       verdict is not 'proven', in each verifier; the
+                       conformance texts applied only the non-conformant
+                       clause, so a run over a refuted manifest was PASS
+                       there while its dossier was OUTSIDE, measured in the
+                       seat and on A (D444-2, D444-3). Closed for both
+                       conformance texts and the online CLI by c2ff66b5:
+                       OUTSIDE, exit 3, after every integrity check, and
+                       one more online line naming the verdict, the
+                       certificate unchanged (D444-4, D444-5). A text
+                       already written into a bundle keeps its old
+                       behaviour, and the VSA text is unchanged (D444-11).
+
+            FG-S427-D  WORLD. A SIGNED SUMMARY OVER A BOUND NOT
+                       ESTABLISHED. `nous vsa emit` signed
+                       verificationResult PASSED at ORG_NOUS_CONFORMANT_V1
+                       for a run whose manifest's cost bound Z3 refuted,
+                       and docs/NOUS_VSA.md said Z3 had settled the cap at
+                       emission (D444-2); c2ff66b5 corrected the document.
+                       Closed for emit by 03b3fa65: it refuses, exit 2, a
+                       manifest whose verdict is not 'proven', before any
+                       key or file (D444-6, D444-7). A VSA already emitted,
+                       and the VSA verifier, which reads no verdict, are
+                       unchanged (D444-11).
