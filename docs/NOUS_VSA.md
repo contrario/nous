@@ -40,9 +40,13 @@ mathematics with no trusted oracle. Everything else evidences.
   lambda^T b < 0) using `Fraction`, with no solver and no NOUS code.
 - The eight conformance obligations, the codegen leg, and the cost
   cap EVIDENCES: they are sha-equality and signature checks over
-  signed artifacts. The cost cap was proven by Z3 at emission time,
-  but no Farkas certificate is carried for it, so offline it is an
-  EVIDENCES leg, not a PROVES leg.
+  signed artifacts. The manifest records Z3's verdict on the cost
+  cap; `nous vsa emit` and the VSA verifier do not read it (XD-5),
+  so a PASSED VSA does not by itself establish the cap. Read the
+  manifest's verdict; the conformance verifier reports OUTSIDE when
+  it is not `proven`. Without a cost Farkas certificate the cap is
+  offline an EVIDENCES leg, not a PROVES leg.
+  <!-- __xd5_outside_docs_v1__ -->
 
 A VSA evidences that a verification occurred over the named artifacts
 and that its verdict is re-derivable. It does NOT attest that the

@@ -103,6 +103,14 @@ def _signer_pins(args):  # __xf5_xd2_pins_v1__
     return t_raw, m_raw
 
 
+def _verdict_line(manifest):  # __xd5_verdict_line_v1__
+    v = getattr(manifest, "verdict", None)
+    if v == "proven":
+        return None
+    return ("  solver verdict       " + repr(v) + ", not 'proven': the "
+            "cost bound is not established")
+
+
 def _signers_line(args) -> str:  # __xf5_xd2_signers_v1__
     if getattr(args, "expect_signer", None) is not None:
         return ("  signers              pinned: the trace and the manifest "
@@ -402,6 +410,9 @@ def _cmd_certify(args: argparse.Namespace) -> int:  # __nous_cli_conformance_cer
 
     _print_detail(detail)
     print(_signers_line(args))  # __xf5_xd2_signers_v1__
+    _vl = _verdict_line(manifest)  # __xd5_verdict_line_v1__
+    if _vl is not None:
+        print(_vl)
     print(f"certificate          {out_path}")
     if signed.transparency_log is not None:
         print(f"anchored             rekor_v2 "
@@ -476,6 +487,9 @@ def cmd_conformance(args: argparse.Namespace) -> int:
             )
     print(f"  provider_token_integrity {detail.provider_token_integrity!r}")
     print(_signers_line(args))  # __xf5_xd2_signers_v1__
+    _vl = _verdict_line(manifest)  # __xd5_verdict_line_v1__
+    if _vl is not None:
+        print(_vl)
     print("-" * 56)
     _verdict_ok = detail.ok and _attest_ok
     print(f"VERDICT: {'PASS' if _verdict_ok else 'FAIL'}")

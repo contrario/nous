@@ -90,6 +90,10 @@ a PASS then evidences signing by the holder of each key. Without them it
 prints `signers NOT PINNED`: each signature was checked only under the key
 its file carries, and a PASS says nothing about who signed.
 <!-- __xf5_xd2_pins_v1__ -->
+When the manifest's solver verdict is not `proven`, verify and certify
+print one more line, `solver verdict`, naming it: the run may conform,
+but the cost bound it is checked against is not established. The exit
+code and the certificate are unchanged. <!-- __xd5_outside_docs_v1__ -->
 
 ---
 
@@ -200,7 +204,9 @@ there runs in place of the standard library's.
 Exit codes: 0 PASS, 1 INTEGRITY (a signature, a binding or a recomputation
 fails), 2 ENVIRONMENT (no key, a malformed or unexpected argument, a missing
 dependency), 3 OUTSIDE (signed by the expected key or keys, and the
-certificate records a non-conformant run). The last line of stdout names
+certificate records a non-conformant run, or the manifest's solver verdict
+is not `proven`, so its cost bound is not established; integrity checks
+come first). The last line of stdout names
 the class (`CLASS: PASS`), and the output ends with a NOT CLAIMED list:
 what a PASS does not establish. The public `/v1/verify-conformance` and
 `/v1/verify-dossier` endpoints take the same optional `expected_signer_b64`

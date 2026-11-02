@@ -64,6 +64,18 @@
   with `--smt-margin` above 0 failed its signature check after
   parsing, and `nous dossier` refused it (FG-S427-A, cf9acb15).
 
+- The conformance verifier texts, `verify_conformance_offline.py` and
+  the Rekor v2-anchored one, give OUTSIDE (exit 3) when the
+  manifest's solver verdict is not `proven`, as the dossier
+  verifiers do; integrity checks still come first. [8.0.0] said
+  OUTSIDE covers signed evidence whose verdict is not proven, in each
+  verifier; these two gave PASS for a conformant certificate over a
+  manifest whose cost bound Z3 refuted (XD-5, FG-S427-C).
+  <!-- __xd5_outside_changelog_v1__ -->
+- `nous conformance verify` and `certify` print one more line,
+  `solver verdict`, when that verdict is not `proven`; their exit
+  codes and the certificate are unchanged.
+
 ### Known limits  <!-- __an_gate1_d4_known_limits_v1__ -->
 
 - An .ndec built before this release is refused under
