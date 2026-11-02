@@ -46,6 +46,24 @@
   canonical bodies of manifest, trace and certificate; the ndec
   docstring says the registry evidences, not proves.
 
+### Security  <!-- __xf5_xd2_pins_v1__ -->
+
+- `nous conformance verify` and `nous conformance certify` check the
+  manifest's Ed25519 signature under the key it carries; one that does
+  not verify is INTEGRITY, exit 1, and certify signs nothing. Before,
+  neither checked it (X-F5).
+- Both take `--expect-signer BASE64`, the trace's signer, and
+  `--expect-manifest-signer BASE64`, else the same key: the offline
+  verifier's flags. Another signer is INTEGRITY, exit 1. A PASS with
+  them evidences signing by the holder of each key; who holds it is
+  established out of band.
+- Without them both print one more line, `signers NOT PINNED`: each
+  signature was checked only under the key its file carries.
+- `parse_manifest_json` and `parse_manifest_json_with_anchor` read
+  `safety_margin_pct`, which the manifest signs. A manifest signed
+  with `--smt-margin` above 0 failed its signature check after
+  parsing, and `nous dossier` refused it (FG-S427-A, cf9acb15).
+
 ### Known limits  <!-- __an_gate1_d4_known_limits_v1__ -->
 
 - An .ndec built before this release is refused under

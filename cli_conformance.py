@@ -48,6 +48,68 @@ from conformance import (  # __nous_cli_conformance_certify_v1__
 from manifest import load_or_create_keypair  # __nous_cli_conformance_certify_v1__
 from _version import __version__ as _NOUS_VERSION  # __nous_cli_conformance_certify_v1__
 
+import base64 as _xf5_b64  # __xf5_xd2_pins_v1__
+from manifest import public_key_b64 as _xf5_pub_b64  # __xf5_xd2_pins_v1__
+from manifest import verify_manifest_signature  # __xf5_xd2_pins_v1__
+from conformance import _x_pinned_raw  # __xf5_xd2_pins_v1__
+
+
+class _SignerRefusal(Exception):  # __xf5_xd2_pins_v1__
+    """INTEGRITY: a manifest signature or a signer the run refuses (exit 1)."""
+
+
+def _add_signer_args(p: argparse.ArgumentParser) -> None:  # __xf5_xd2_args_v1__
+    p.add_argument(
+        "--expect-signer", metavar="BASE64", default=None,
+        help=(
+            "Raw Ed25519 public key (base64, 32 bytes) the trace must be "
+            "signed under; the manifest too, unless "
+            "--expect-manifest-signer is given. Another signer is "
+            "INTEGRITY, exit 1. A PASS then evidences signing by the "
+            "holder of the key; who holds it is established out of band. "
+            "Without it each signature is checked only under the key its "
+            "file carries."
+        ),
+    )
+    p.add_argument(
+        "--expect-manifest-signer", metavar="BASE64", default=None,
+        help=(
+            "Raw Ed25519 public key (base64, 32 bytes) the manifest must "
+            "be signed under, when it is not --expect-signer's key; needs "
+            "--expect-signer"
+        ),
+    )
+
+
+def _signer_pins(args):  # __xf5_xd2_pins_v1__
+    t_b64 = getattr(args, "expect_signer", None)
+    m_b64 = getattr(args, "expect_manifest_signer", None)
+    if t_b64 is None and m_b64 is None:
+        return None, None
+    if t_b64 is None:
+        raise ConformancePreconditionError(
+            "--expect-manifest-signer needs --expect-signer")
+    t_raw = _x_pinned_raw(t_b64)
+    if t_raw is None:
+        raise ConformancePreconditionError(
+            "--expect-signer is not a base64 Ed25519 public key (32 bytes)")
+    if m_b64 is None:
+        return t_raw, t_raw
+    m_raw = _x_pinned_raw(m_b64)
+    if m_raw is None:
+        raise ConformancePreconditionError(
+            "--expect-manifest-signer is not a base64 Ed25519 public key "
+            "(32 bytes)")
+    return t_raw, m_raw
+
+
+def _signers_line(args) -> str:  # __xf5_xd2_signers_v1__
+    if getattr(args, "expect_signer", None) is not None:
+        return ("  signers              pinned: the trace and the manifest "
+                "are signed under the expected keys")
+    return ("  signers              NOT PINNED: each signature checked only "
+            "under the key its file carries")
+
 
 def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
     p = sub.add_parser(
@@ -102,6 +164,7 @@ def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
             "(bounds are re-derived from it, not read from the manifest)"
         ),
     )
+    _add_signer_args(v)  # __xf5_xd2_args_v1__
 
     c = cs.add_parser(  # __nous_cli_conformance_certify_v1__
         "certify",
@@ -161,6 +224,7 @@ def build_conformance_parser(sub: argparse._SubParsersAction) -> None:
             "declared events (DE)"  # __nt_v1d_disclosure_help_v1__
         ),
     )
+    _add_signer_args(c)  # __xf5_xd2_args_v1__
 
 
 def _load_aprs(  # __s145_u4b_loader_v1__
@@ -198,6 +262,7 @@ def _load_attest_root(path: str | None) -> Ed25519PublicKey | None:
 
 
 def _derive_inputs(args: argparse.Namespace):  # __nous_cli_conformance_certify_v1__
+    _pins = _signer_pins(args)  # __xf5_xd2_pins_v1__
     trace_path = Path(args.trace)
     manifest_path = Path(args.manifest)
     prices_path = Path(args.prices)
@@ -215,6 +280,15 @@ def _derive_inputs(args: argparse.Namespace):  # __nous_cli_conformance_certify_
     _strict_loads(manifest_raw, "manifest.json [js:cconf.2]")
     manifest_text = manifest_raw.decode("utf-8")
     manifest, _sig, _pub = parse_manifest_json(manifest_text)
+    if not verify_manifest_signature(manifest, _sig, _pub):  # __xf5_xd2_pins_v1__
+        raise _SignerRefusal(
+            "manifest.json: Ed25519 signature does not verify under the "
+            "key it carries")
+    if (_pins[1] is not None
+            and _xf5_b64.b64decode(_xf5_pub_b64(_pub)) != _pins[1]):
+        raise _SignerRefusal(
+            "manifest.json: signer is not the expected key "
+            "(--expect-manifest-signer, else --expect-signer)")
     source_text = source_path.read_text(encoding="utf-8")
     program = parse_nous(source_text)
     pricing = load_pricing(prices_path)
@@ -224,6 +298,13 @@ def _derive_inputs(args: argparse.Namespace):  # __nous_cli_conformance_certify_
     )
     trace = TraceEnvelope(**_strict_loads(  # __an_js_r2_v1__
         trace_path.read_bytes(), "trace.json [js:cconf.3]"))
+    if _pins[0] is not None:  # __xf5_xd2_pins_v1__
+        _tsig = getattr(trace, "signature", None)
+        _tk = getattr(_tsig, "public_key_b64", None)
+        if _tk is None or _x_pinned_raw(_tk) != _pins[0]:
+            raise _SignerRefusal(
+                "trace.json: signer is not the expected key "
+                "(--expect-signer)")
     _aprs = _load_aprs(getattr(args, "apr", None))  # __s145_u4b_derive_wire_v1__
     _attest_root = _load_attest_root(getattr(args, "attest_root", None))
     from run_shas import compute_codegen_sha256  # __s155_u5_cli_codegen_wire_v1__
@@ -261,6 +342,10 @@ def _print_detail(detail: "ConformanceDetail") -> None:  # __nous_cli_conformanc
 def _cmd_certify(args: argparse.Namespace) -> int:  # __nous_cli_conformance_certify_v1__
     try:
         manifest, _spec, _pricing, trace, detail = _derive_inputs(args)
+    except _SignerRefusal as e:  # __xf5_xd2_pins_v1__
+        import sys
+        print("FAIL: " + str(e), file=sys.stderr)
+        return 1
     except StrictJsonError as e:  # __an_js_strict_v1__
         import sys
         print("FAIL: " + str(e), file=sys.stderr)
@@ -316,6 +401,7 @@ def _cmd_certify(args: argparse.Namespace) -> int:  # __nous_cli_conformance_cer
     out_path.write_text(certificate_json(signed), encoding="utf-8")
 
     _print_detail(detail)
+    print(_signers_line(args))  # __xf5_xd2_signers_v1__
     print(f"certificate          {out_path}")
     if signed.transparency_log is not None:
         print(f"anchored             rekor_v2 "
@@ -338,6 +424,10 @@ def cmd_conformance(args: argparse.Namespace) -> int:
 
     try:
         manifest, _spec, _pricing, trace, detail = _derive_inputs(args)
+    except _SignerRefusal as e:  # __xf5_xd2_pins_v1__
+        import sys
+        print("FAIL: " + str(e), file=sys.stderr)
+        return 1
     except StrictJsonError as e:  # __an_js_strict_v1__
         import sys
         print("FAIL: " + str(e), file=sys.stderr)
@@ -385,6 +475,7 @@ def cmd_conformance(args: argparse.Namespace) -> int:
                 + repr(detail.provider_token_integrity) + ")"
             )
     print(f"  provider_token_integrity {detail.provider_token_integrity!r}")
+    print(_signers_line(args))  # __xf5_xd2_signers_v1__
     print("-" * 56)
     _verdict_ok = detail.ok and _attest_ok
     print(f"VERDICT: {'PASS' if _verdict_ok else 'FAIL'}")

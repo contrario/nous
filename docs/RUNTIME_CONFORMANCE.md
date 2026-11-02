@@ -80,8 +80,16 @@ the certificate records `conformant: false` with the failing obligations in its
 `errors` field, and the command exits 0 (a produced, signed verdict). Exit 2 is
 reserved for precondition errors (structurally unusable inputs).
 
-`nous conformance verify` runs the same checks and prints the six booleans
-without emitting a certificate, for a quick interactive check.
+`nous conformance verify` re-derives the bounds from the source and prints
+the six booleans without emitting a certificate. It checks the manifest's
+Ed25519 signature under the key the manifest carries and refuses one that
+does not verify (INTEGRITY, exit 1). With `--expect-signer`, and
+`--expect-manifest-signer` when the manifest's key differs, the trace and
+the manifest must be signed under those keys, as in the offline verifier;
+a PASS then evidences signing by the holder of each key. Without them it
+prints `signers NOT PINNED`: each signature was checked only under the key
+its file carries, and a PASS says nothing about who signed.
+<!-- __xf5_xd2_pins_v1__ -->
 
 ---
 
