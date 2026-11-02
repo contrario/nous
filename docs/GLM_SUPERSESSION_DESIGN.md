@@ -24250,3 +24250,376 @@ document itself.
                        trace bundle files and a keys file decoded before
                        the region; 17 exit 2 written, 12 measured); the
                        first table's expectation for one mutant of C-CJ.
+
+  - S428 the number the operator gave the second entry of the seat S427,
+    which carries D427 landed and read back, the X-F5 Innovation Gate,
+    XF5-K0 on A, XD-1 landed as cf9acb15, XD-2 to XD-4 and XD-6 landed as
+    635dd02b, a missed prediction, and the two findings of the Gate
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S427,
+    DURING ITS SESSION. It describes the seat's work after D427, which is
+    landed and append-only. READ IN THE SEAT'S CONTAINER: computed off host
+    by the seat, on clones of its mirror of the public repository. ON A:
+    printed on Server A by a command the operator ran and pasted back as
+    chat text; every message of the operator to this seat is kept as a file
+    copied from the session's own record of it,
+    operator_messages_record.txt 7d2facb4. REVIEW: computed in the
+    container by an independent agent that had not seen the work being
+    written, then measured again by the seat. TESTIMONY: stated by another
+    lane and not measured here. DERIVED: computed from printed values or
+    read from code. OPERATOR: stated by the operator. RULING: a decision
+    the operator stated in words. Every time below is in UTC, in 2026, on
+    the date its paragraph names last. An operator's time is the time his
+    message was sent; a value ON A carries the clock its command printed.
+
+    THE NUMBER. OPERATOR, 01:35Z on 11-02: 430; 01:41Z: 432; 01:43Z: 428.
+    READ IN THE SEAT'S CONTAINER, by S425's numcheck.py 5ccb8fb4 on the
+    seat's mirror after its fetch at 01:31:00Z, 163 refs, 1043 commits,
+    main 635dd02b: S430 is the first entry of the seat S431 and D430 landed
+    as cc55aead; S432 is its third entry and D432 landed as 84ca5713; each
+    was named taken to the operator and not used. For 428 and 429, run from
+    01:34:46Z to 01:35:13Z: the tokens S428, D428 and FG-S428 and the
+    marker __s428_, matched as words and as bare strings, count zero in
+    every commit message, in the tree of every ref and in main's binary
+    files; the document holds 428 only in prose. Before this entry the
+    document held no S428 token and no anchor of that number, and the
+    instrument that appends this entry refuses unless that is still so when
+    it runs. The two codes below, FG-S427-A and FG-S427-B, were named by
+    this seat's Gate (D428-3) and are anchored here; this entry adds no
+    other code.
+
+    D428-1  THE LANDING OF D427. OPERATOR, on 10-31: 02:28Z, nothing moved
+            and all free, pame for the upload of the two tools; 02:29Z,
+            nothing moved, pame for the apply; 02:30Z, pame for the commit,
+            nothing moved; 02:31Z, pame for the push, nothing moved. ON A:
+            the land tool's dry run 02:28:47Z, the tools as sent, fed398b9
+            and 61bd9c5b, HEAD and origin 19828fe5, the document 7b87df2f,
+            644 and 986:981, STATE BEFORE, the namespace of 427 empty, the
+            new document 656e8631, DRY_RUN_GREEN; the apply 02:29:36Z,
+            WROTE and READBACK 656e8631, NOT_STAGED, APPLY_GREEN; the
+            commit tool's dry run 02:30:02Z, the message 13438e28, the blob
+            c995d66f, the lint 437 files and 0 violations, WOULD_COMMIT;
+            the commit 02:30:53Z, FETCH_RC 0, origin 19828fe5, NEW_HEAD
+            78acd967, CHECK_COMMIT OK, COMMIT_GREEN; the push 02:31:56Z,
+            REMOTE_MAIN 78acd967, PUSH_GREEN; each as D427_PREDICTIONS.md
+            e756aaf1 and its fixture predicted. READ IN THE SEAT'S
+            CONTAINER after its fetch at 02:32:29Z: 78acd967, one parent
+            19828fe5, tree 6ead75a5, one path, 410 lines added, author and
+            committer the pinned identity at 02:30:54Z; the document
+            byte-equal to the kit's 656e8631, its tail byte-equal to the
+            entry 31b5ef2e; the body byte-equal to d427_message.txt
+            13438e28; v8.0.0-6. The kit predicted A's G2 after D427 (its
+            P3); it was not run.
+
+    D428-2  THE OBJECT. The seat asked which object of S426's board it
+            takes. OPERATOR, 02:33Z on 10-31, as the answer: which is right
+            to do and why, with documented evidence. READ IN THE SEAT'S
+            CONTAINER, on a clone of 78acd967: OBJ427_MEASUREMENT.md
+            40aa33bf, written by measure_obj427.py 7c09d44a, each of its
+            nine measurements asserted against 78acd967 or S426's seal; its
+            order: X-F5 first, the old signer words second, FG-S426-D third
+            and the release lane's. A first output, 5827c741, counted
+            CHANGELOG.md:187, the lint's own list of terms, among the old
+            words; superseded before use. RULING, 03:03Z on 11-01: open
+            X-F5, starting with its Innovation Gate and writing no code,
+            always with documented evidence, principal-level engineering,
+            correct architecture and security.
+
+    D428-3  THE X-F5 GATE. The seat's fetch, named first, 03:03:36Z to
+            03:03:38Z on 11-01: main 78acd967 to 409154e1, two commits of
+            the seat S438, 9f3f48fe, D4 and D5 of AN-GATE-1, 52 paths,
+            cli_conformance.py, conformance.py, conformance_verifier.py,
+            attest_apr.py and CHANGELOG.md among them, and 409154e1, D439,
+            docs only (TESTIMONY for their purpose, D439-6). The Gate's
+            base is 409154e1. One search of the operator's Project, read
+            only, named first: the ten sections at
+            docs/ENGINEERING_CONSTITUTION.md:71-93, read again at 409154e1.
+            READ IN THE SEAT'S CONTAINER, on a clone of 409154e1:
+            RT_PREDICTIONS.md 0fd627b3, then rt_census.py 745e542c, 19
+            cases, the control and each optional signed field of Manifest
+            set alone, each signed once in memory under a fresh key and
+            parsed back: one fails its signature after the parse,
+            safety_margin_pct (rt_census_out.txt ea2ff138). Four web
+            searches and three page reads, each named first: cosign
+            requires an expected identity and issuer for keyless
+            verification, model-transparency's verify takes an identity and
+            its provider, slsa-verifier's takes the expected source; the
+            one patent search returned no patent document. REVIEW, from
+            03:09Z: an agent given the code and ten questions, not the
+            Gate. Its answer Q4(c) contradicted the draft's R5:
+            _v3_outside_manifest, at line 710 of the offline text, is never
+            called. Measured again: one reference; OUTSIDE comes from the
+            certificate's conformant field; offline_verifier_builder.py:316
+            calls it for dossiers. R5, A3, XD-5 and FG-S427-B were
+            corrected and R15 added before the Gate was fixed.
+            X_F5_INNOVATION_GATE.md 9faae1b8, 334 lines, by
+            build_xf5_gate.py a414bec6, which asserts every file:line
+            against 409154e1; REVIEW_11-01.md 5d5d2473; their sums
+            777d9e7b. It names XD-1 to XD-6, the kill criteria XF5-K0 to
+            XF5-K7 and the two findings below. No code, no repository file
+            and nothing on A.
+
+    D428-4  THE RULING OF 11-01 AND XF5-K0. RULING, 03:18Z on 11-01: BUILD.
+            XD-1 alone first, the parse defect and a permanent round-trip
+            test. XD-4 (b): the output unchanged, plus one stdout line
+            naming the run unpinned; a silent PASS is not acceptable. No
+            XD-2 until XD-1 is landed and verified and no lane holds the
+            files (XF5-K6). The command for XF5-K0 asked, its predictions
+            hashed first: K0_PREDICTIONS.md d250e3c1 at 03:20:52Z, then
+            k0_margin.sh 80532f22, which writes only under its own new
+            directory, signs with two throwaway keys made there, never the
+            default key, and lists the default key directory before and
+            after. The seat's venv, pip from PyPI, named first, 03:21:21Z
+            to 03:22:03Z. In the seat, on a clone of 409154e1:
+            k0_seat_out.txt 7caa7d31, every prediction held. OPERATOR,
+            03:25Z: all free. ON A, 03:25:29Z: HEAD 409154e1; porcelain 0
+            before and after; the key directory's digest 8c64622b before
+            and after; M0, no margin: VERIFY_RC 0, the signature verifies
+            before and after the parse, the dossier rc 0; M10, --smt-margin
+            10: VERIFY_RC 0 at the bound 0.45, the margin 10 in the signed
+            manifest, the raw signature verifies, the parsed margin None,
+            the parsed signature does not verify, the dossier rc 1,
+            "manifest Ed25519 signature does NOT verify". XF5-K0 did not
+            fire: FG-S427-A, reproduced on A end to end. Written on A:
+            /root/k0_margin.sh and /root/xf5_k0, 19 files, the two
+            throwaway keys among them.
+
+    D428-5  XD-1 IN THE SEAT. On a clone of 409154e1 installed in the
+            seat's venv, pip named first at 03:27:28Z and 03:31:18Z. The
+            census: a Manifest is built from JSON only in
+            parse_manifest_json and parse_manifest_json_with_anchor, and
+            the third parse delegates; 19 test files call a parse, none
+            with a margin above 0. The base suite: 4935 passed, 31 skipped;
+            a first run without pyflakes had 3 gate tests red, the
+            environment, kept. XD1_PREDICTIONS.md 9a6fd1c7 at 03:36:35Z,
+            before the test and the patch.
+            tests/test_xf5_manifest_roundtrip.py e8866a96 on the base: 3
+            failed and 55 passed, the 3 predicted. xd1_patch.py 3dda2279:
+            manifest.py 5b364730 to ba9e2ac6, two lines, each of the two
+            parses reading safety_margin_pct; 58 passed. The suite: 4993
+            passed, 31 skipped; against the base by test id, none changed
+            and the 58 new passed. Mutants M1 to M4, each its predicted red
+            set. A flaw of the instrument: in its first run M2 printed M1's
+            set; M1 and M2 were equal in size and written in the same
+            second, and Python reused M1's bytecode; run again with -B and
+            the caches removed, the first run kept. K0 on the patched tree:
+            M10's parsed margin 10, its signature verifies, the dossier rc
+            0. The lint 406 files and 0 violations. G2 on a local commit:
+            TRACKED 1638, DOC_SHA 852d8f32, L6 254 144 99 3 98.
+            XD1_EVIDENCE.md 2c355b1c; its sums c443feb2.
+
+    D428-6  THE LANDING OF XD-1. The kit: pins.json afa748c2;
+            xd1_message.txt 155e2749, 864 bytes; XD1_KIT_PREDICTIONS.md
+            381b626e at 03:44:14Z, before the tools; its builder's first
+            run refused on its own count of a token, 6 for the 10 measured,
+            and wrote nothing. XF5XD1_LAND.py 3f3bf6a9 and XF5XD1_COMMIT.py
+            c3237edf, from S426's builder with 16 lines of names changed;
+            the fixture, its remote a mirror clone with 163 refs and HEAD,
+            BASE_OK 409154e1: 28 arms, 0 diff lines; s427_xd1_kit.tar
+            e7a2dfa7 to the operator. OPERATOR, on 11-01: 03:46Z, nothing
+            moved and all free, which held XF5-K6, no pame in words, read
+            as the go for the upload and the dry run, which write nothing
+            in the tree; 03:46Z, all free, nothing moved, pame for the
+            apply; 03:54Z, nothing moved, all free, pame for the commit;
+            03:54Z, the same for the push. ON A: the land tool's dry run
+            03:46:22Z, HEAD and origin 409154e1, BLOB_HEAD 8e5bea83, the
+            new path absent and not ignored, porcelain 0, manifest.py 644
+            and 986:981, DRY_RUN_GREEN; the apply 03:47:13Z, WROTE and
+            READBACK ba9e2ac6 and e8866a96, porcelain 2, APPLY_GREEN; the
+            suite 03:47:56Z, HOME a new directory left empty, 5012 passed
+            and 12 skipped in 261.37 s, as derived from S438's 4954 and 12
+            (D439-6, TESTIMONY) and the 58 new; the commit tool's dry run
+            03:53:14Z, the lint 437 files and 0 violations, WOULD_COMMIT;
+            the commit 03:54:17Z, FETCH_RC 0, origin 409154e1, NEW_HEAD
+            cf9acb15, CHECK_COMMIT OK; the push 03:55:05Z, REMOTE_MAIN
+            cf9acb15, PUSH_GREEN. READ IN THE SEAT'S CONTAINER after its
+            fetch at 03:55:41Z: cf9acb15, one parent 409154e1, tree
+            adc22ff7, author and committer the pinned identity at
+            03:54:19Z; manifest.py 488f116e and the test cef4a007, each
+            byte-equal to the kit's; the diff of manifest.py byte-equal to
+            the evidence's; the body byte-equal to 155e2749; v8.0.0-9.
+
+    D428-7  XD-1 ON A AFTER, AND XF5-K6. OPERATOR, 00:06Z on 11-02: nothing
+            moved, all free, pame for K0 again into a new directory.
+            OPERATOR, 00:08Z: one line of chat text, an ssh login to a host
+            this seat has no record of, neither A nor B, with no output;
+            the seat ran nothing against it, and the line is not explained.
+            ON A, 00:08:57Z, its prompt neurodoc-server and its ROOT the
+            live tree: HEAD cf9acb15; porcelain 0 before and after; the key
+            directory 8c64622b as on 11-01; M0 as before; M10: the parsed
+            margin 10, the parsed signature verifies, the dossier rc 0,
+            where it was 1 on 11-01; 27 files. XD-1 verified on A through
+            the CLI. The seat's fetch at 00:09:34Z, named first: no ref
+            moved since 03:55Z on 11-01, and no commit since on
+            cli_conformance.py, manifest.py, CHANGELOG.md, conformance.py
+            or docs/RUNTIME_CONFORMANCE.md. OPERATOR, 00:17Z: for now this
+            is the only chat working. XF5-K6 held on both halves.
+
+    D428-8  XD-2, XD-3, XD-4 (b) AND XD-6 IN THE SEAT, one slice in the
+            Gate's order, on cf9acb15's tree. The census: a hook outside
+            the repository wrapped the conformance command in every process
+            of the suite, loaded by a .pth file after a first attempt as
+            sitecustomize was shadowed by the system's and recorded
+            nothing: 67 calls from 11 files; the 42 certify calls all had
+            valid manifest signatures; the 3 verify calls whose signature
+            did not verify are strict-JSON plants refused before the parse;
+            in 60 calls the trace and the manifest were signed under
+            different keys. No file holds a digest of cli_conformance.py,
+            RUNTIME_CONFORMANCE.md or CHANGELOG.md. XD2_PREDICTIONS.md
+            c09f211f at 00:31:10Z, before the tests and the patch.
+            tests/test_xf5_xd2_online_pins.py 605aab82, 12 tests on fresh
+            bundles, each file signed once, the trace and the manifest
+            under two keys, a failing manifest signature driven by a stub
+            and never by an altered file: 12 failed on the base.
+            xd2_patch.py 60057e05, run first on copies, where it applied,
+            skipped a second run, and refused a partial marker and a
+            missing anchor writing nothing: cli_conformance.py e69c8723 to
+            d5cf4d75, RUNTIME_CONFORMANCE.md 231702f0 to a3c567a1,
+            CHANGELOG.md a054e238 to a44ab661; 12 passed. The suite: 5005
+            passed, 31 skipped; against XD-1's run by test id, none changed
+            and the 12 new passed. A MISS OF THE PREDICTIONS: P5 gave the
+            mutant MX2, the trace pin's check removed, one red test, t03;
+            read before any mutant ran, t11 pins the trace in certify and
+            goes red too; and MX6 was named, not written.
+            XD2_P5R_PREDICTIONS.md 6700f09f, at 00:41:26Z, before the run,
+            replaced P5: MX1 to MX6, each red on exactly its set. The
+            output, the base tree against the slice on one fresh bundle,
+            unpinned, verify and certify: the exit codes and stderr equal,
+            stdout one line added, signers NOT PINNED, VERDICT still last,
+            the certificate bytes equal, c0bca9d1. The lint 406 files and 0
+            violations. G2 on a local commit: TRACKED 1639, DOC_SHA
+            852d8f32, L6 unchanged. XD2_EVIDENCE.md 7d334c45; its sums
+            53905c14.
+
+    D428-9  THE LANDING OF XD-2. The kit: pins.json b09be8d6;
+            xd2_message.txt 1598803b, 1264 bytes; XD2_KIT_PREDICTIONS.md
+            546d9ffe, before the tools, which XD-1's builder made with 16
+            lines of names changed: XF5XD2_LAND.py 15eb6643 and
+            XF5XD2_COMMIT.py f269d223; the fixture, BASE_OK cf9acb15: 28
+            arms, 0 diff lines; s427_xd2_kit.tar 7b436be7 to the operator.
+            The kit gave the modes of the three changed files as a prior,
+            measured on A before only for manifest.py; it held. OPERATOR,
+            on 11-02: 00:51Z, nothing moved, all free, pame for the upload
+            and the dry run; 00:53Z, nothing changed, pame for the apply;
+            01:07Z, the same for the commit; 01:08Z, the same for the push.
+            ON A: the land tool's dry run 00:53:03Z, HEAD and origin
+            cf9acb15, the three blobs at HEAD as pinned, the new path
+            absent and not ignored, porcelain 0, the three files 644 and
+            986:981, DRY_RUN_GREEN; the apply 00:54:02Z, four WROTE and
+            READBACK as pinned, porcelain 4, APPLY_GREEN; the suite
+            00:54:36Z, 5024 passed and 12 skipped in 261.37 s, as derived
+            from XD-1's run and the 12 new, its HOME left empty; the commit
+            tool's dry run 01:05:49Z, the blobs ffb9bcf8, 5fd08021,
+            2585e949 and 613dda5f, the lint 437 files and 0 violations,
+            WOULD_COMMIT; the commit 01:08:02Z, FETCH_RC 0, origin
+            cf9acb15, NEW_HEAD 635dd02b, CHECK_COMMIT OK; the push
+            01:30:26Z, REMOTE_MAIN 635dd02b, PUSH_GREEN. READ IN THE SEAT'S
+            CONTAINER after its fetch at 01:31:00Z: 635dd02b, one parent
+            cf9acb15, tree b48f2e22, author and committer the pinned
+            identity at 01:08:03Z; three paths modified and the test added,
+            each byte-equal to the kit's; the diff byte-equal to the
+            evidence's E9_slice.diff 9d4728f9; the body byte-equal to
+            1598803b; v8.0.0-10. A's install is editable: the change was
+            live on A from the apply.
+
+    D428-10 NOTES, NOT FINDINGS. The seat's: a prediction written by hand
+            missed a mutant's test, caught by reading before the run
+            (D428-8); a predictions file of D427's kit, f60bae3c, left out
+            a G2 key, HEADS_DISTINCT, and was replaced before any tool
+            existed by e756aaf1, whose key list its generator asserts;
+            reused bytecode in a mutant run (D428-5); a hook shadowed by
+            the system's sitecustomize (D428-8). The two suites on A, of
+            11-01 and 11-02, each print 261.37 s; their counts, home
+            directories and porcelain differ; not explained. The seat's
+            running log said at 00:48Z on 11-02 that no network call had
+            run since N7, where N8 had; corrected there. At 03:03:28Z on
+            11-01 the seat read one file of the operator's notes service,
+            its working protocol, without naming the call first, against
+            its rule; the seat's only call to that service, found in the
+            session's record of its tools. The Gate's R6 read
+            RUNTIME_CONFORMANCE.md:83 as saying that the online and offline
+            paths agree; the line says that verify runs certify's six
+            checks. Found while this entry was written; the finding below
+            states it as measured, and the Gate is the seat's file and
+            stays as written. The operator's numbers 430 and 432 were taken
+            (THE NUMBER). K0's paste holds one character outside ASCII; the
+            seat's copy keeps the bytes.
+
+    D428-11 THIS ENTRY'S PREFIXES. Before its tools were built, an
+            instrument of the seat matched every hexadecimal prefix of
+            eight or more digits in this entry and in its commit message
+            against: the seat's files, predictions, kits, evidence and
+            copies of the pastes; the objects of core; the sha256 of every
+            file tracked at the commits this entry names; and the sha256 of
+            every commit body of core. Every prefix resolved.
+
+    D428-12 WHAT THIS SEAT WROTE. To this repository: 78acd967, cf9acb15
+            and 635dd02b, each by its two tools after its pames, and this
+            entry. To /root on A: /root/s427_nlc, a mirror clone whose
+            config holds the remote's URL, with its bundle; the tools of
+            D427, XD-1 and XD-2, six files; /root/k0_margin.sh;
+            /root/xf5_k0 and /root/xf5_k0_after, 19 and 27 files, the
+            throwaway keys among them; /root/xd1_suite_home.sxIrc7 and
+            /root/xd2_suite_home.sqxO1c, empty; and this entry's two tools
+            when the operator uploads them. No restart, no unit change; A's
+            default key directory listed, never written. Network from A:
+            paste one's two GETs of nous-lang.org and two ssh reads of B;
+            G2's fetch; the mirror clone of nous-langchain; the fetches,
+            pushes and reads of the remote by the commit tools of D427,
+            XD-1 and XD-2; K0 and K0 after made none. The seat's network,
+            each call named first but one: the mirror clone and five
+            fetches of it; pip from PyPI in three named steps; one search
+            of the operator's Project; four web searches and three page
+            reads; one read of the notes service, not named (D428-10). The
+            reviewer agent made no network call. To nous-langchain,
+            nothing. To the operator: s427_kit427.tar 3b9fd9a5,
+            OBJ427_MEASUREMENT.md, the Gate and its review, K0's script,
+            predictions and seat run, s427_xd1_kit.tar e7a2dfa7,
+            s427_xd2_kit.tar 7b436be7, and this entry's kit.
+
+    D428-13 WHAT STAYS OPEN. In order: this entry on A by its two tools,
+            each step after its pame. X-F5's XD-5, whether a conformance
+            verdict depends on the manifest's solver verdict, which neither
+            path reads: its own Gate. The operator's: a restart of
+            nous-api, whose MainPID HM last read at 02:13:08Z on 10-31,
+            unchanged since its start on 10-29; unless it restarted since,
+            it parses manifests the old way (FG-S427-A); G2 on A, not run
+            since 02:08:45Z on 10-31, five commits ago; this seat's files
+            in /root (D428-12); the line of 00:08Z on 11-02. The core
+            lane's: the next release carries cf9acb15 and 635dd02b, under
+            [Unreleased], Security, in CHANGELOG.md. Left out of X-F5's
+            scope and open: as D427-16 lists them, no CLI verifies a
+            certificate and the remedy gate admits self-signed
+            certificates; and verify-cost's signature and the API's
+            manifest paths. D427-16's board stands otherwise; its X-F5 item
+            is closed for the online CLI by 635dd02b.
+
+    FINDINGS
+
+            FG-S427-A  WORLD. A SIGNED MANIFEST FIELD IS LOST IN THE PARSE.
+                       parse_manifest_json and
+                       parse_manifest_json_with_anchor never read
+                       safety_margin_pct, which canonical_dict signs; a
+                       manifest signed with --smt-margin above 0 failed its
+                       signature check after the parse, and nous dossier
+                       refused it, reproduced on A (D428-4). A field the
+                       signer signs and a reader drops breaks the signature
+                       for every holder. Closed for the CLI by cf9acb15 and
+                       verified on A (D428-7), with a test that signs every
+                       optional field alone and parses it back through all
+                       three functions. A process that imported the old
+                       parse keeps it until it restarts; nous-api was one
+                       when last read (D428-13).
+
+            FG-S427-B  WORLD. TWO PATHS, ONE NAME, FEWER CHECKS ONLINE.
+                       `nous conformance verify` and certify checked no
+                       manifest signature and pinned no signer, both of
+                       which the offline verifier does, and certify signed
+                       its certificate over a manifest it had not checked
+                       (D428-3); the docs called the online verify a quick
+                       interactive check and did not say what it leaves
+                       out. Closed for the CLI by 635dd02b: the signature
+                       checked under the key the manifest carries, the
+                       offline verifier's pins taken, an unpinned run named
+                       in one line (D428-8, D428-9). Neither path reads the
+                       manifest's solver verdict (XD-5).
