@@ -217,6 +217,22 @@ to trust the issuer's verification key and identity; `--expect-signer` is
 where the relying party supplies that key, and the verifier gives no PASS
 without it.
 
+<!-- __apig_outside_docs_v1__ -->
+The public `/v1/verify-conformance` endpoint, and
+`conformance.verify_certificate_from_json` behind it, answer
+`verify-conformance/v2`. When a manifest is given they check the
+manifest's Ed25519 signature over its body without `signature` and
+`transparency_log` (`manifest_signature`), under the optional
+`expected_manifest_signer_b64` request field when it is given, else
+under the key the manifest carries; unlike the CLI and the offline
+verifier they do not fall back to the certificate signer's key. The
+verdict is OUTSIDE when every check that ran passed, the trace and the
+manifest were both given, the certificate records a conformant run,
+and the manifest's solver verdict is not `proven`; `solver_verdict`
+names that verdict. A certificate that records a non-conformant run
+stays FAIL there (the CLI's exit 3 covers both). Who holds either key
+is still established out of band.
+
 ---
 
 ## What a cost-bearing certificate discloses

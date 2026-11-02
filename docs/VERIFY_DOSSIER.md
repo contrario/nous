@@ -25,7 +25,8 @@ Open `https://nous-lang.org/verify.html`. Drop a `manifest.json` or a
 `skill_export.zip` onto the page (the verifier extracts the manifest
 from the ZIP client-side via JSZip). The page POSTs the manifest to
 `/api/v1/verify-dossier` and renders the structured V2 response: a
-verdict banner (ACCEPT / REJECT), four status pills (SIGNATURE,
+verdict banner (ACCEPT green, REJECT red, OUTSIDE gold, neither green
+nor red), four status pills (SIGNATURE,
 SOURCE ID, ANCHORED, REKOR ANCHOR), an evidence block, a collapsible
 trust explanation, a next-steps list, and per-check diagnostics for
 any failing checks.
@@ -138,7 +139,7 @@ returned. When present, all fields default if omitted:
 
 ```json
 {
-  "spec_version": "verify-dossier/v2",
+  "spec_version": "verify-dossier/v3",
   "verdict": "ACCEPT",
   "trust_level": "rekor_anchored",
   "policy_applied": {
@@ -154,7 +155,8 @@ returned. When present, all fields default if omitted:
     "rekor_public_key_in_allowlist": {"ok": true, "errors": []},
     "rekor_signed_entry_timestamp": {"ok": true, "errors": []},
     "rekor_leaf_inclusion": {"ok": true, "errors": []},
-    "rekor_anchor_age": {"ok": true, "errors": []}
+    "rekor_anchor_age": {"ok": true, "errors": []},
+    "solver_verdict": {"ok": true, "errors": []}
   },
   "evidence": {
     "manifest_sha256": "<hex>",
@@ -175,10 +177,22 @@ returned. When present, all fields default if omitted:
 
 ### Field semantics
 
-`verdict` is a binary ACCEPT or REJECT, computed deterministically
+`verdict` is ACCEPT, REJECT or OUTSIDE, computed deterministically
 from the applied policy and the check results. ACCEPT means every
-check that policy required to pass did pass. REJECT means at least
-one required check failed.
+check that policy required to pass did pass and the manifest's solver
+verdict is `proven`. REJECT means at least one required check failed.
+OUTSIDE means every check that policy required to pass did pass and
+the manifest's solver verdict is not `proven` (`refuted` or
+`unknown`): the signature and anchor checks hold, and the cost bound
+the manifest records is not established. A manifest that fails an
+integrity or policy check is REJECT whatever its solver verdict.
+OUTSIDE is neither an acceptance nor an integrity failure; the browser
+pages paint it neither green nor red. <!-- __apig_outside_docs_v1__ -->
+
+`spec_version` is `verify-dossier/v3` since OUTSIDE and the
+`solver_verdict` check were added (API Gate, APIG-1).
+`verify-dossier/v2` had ACCEPT and REJECT only; the eight checks
+before `solver_verdict` are unchanged.
 
 `trust_level` upgrades or downgrades based on which checks passed:
 
@@ -208,6 +222,12 @@ ran and failed, and both are distinguishable from a check that ran
 and passed. Boolean response shapes (V1) collapse the first two
 cases, which a strict auditor cannot accept.
 
+`solver_verdict` reads the solver verdict the manifest records: `true`
+when it is `proven`, `false` otherwise, its `errors` naming the
+verdict (for example `solver_verdict_not_proven: got 'refuted'`). It
+is the one check whose `false` gives OUTSIDE rather than REJECT. It
+reads the recorded verdict; it does not re-run the solver.
+
 `evidence` is the raw facts: hashes, log indices, signing keys.
 Useful for cross-referencing against an external source (e.g.
 clicking through to the Sigstore Rekor entry page).
@@ -215,8 +235,8 @@ clicking through to the Sigstore Rekor entry page).
 `human_readable` is a short prose summary intended for UI display.
 The `verdict_summary` is one sentence. The `trust_explanation` is
 one or two sentences explaining why the trust_level is what it is.
-The `next_steps` array is empty on ACCEPT; on REJECT it contains
-suggested remediation actions.
+The `next_steps` array is empty on ACCEPT; on REJECT or OUTSIDE it
+contains suggested remediation actions.
 
 ### Verdict logic
 
@@ -241,6 +261,8 @@ elif checks.transparency_log_present.ok:
         verdict = ACCEPT
 else:
     verdict = ACCEPT
+if verdict == ACCEPT and checks.solver_verdict.ok is not true:
+    verdict = OUTSIDE
 ```
 
 ### V1 backward compatibility
@@ -303,6 +325,7 @@ the cap exists to prevent abuse, not to constrain legitimate use.
 | `verdict=REJECT`, all four `rekor_*` checks are `"skipped_unanchored"`, `policy.require_anchor=true` | No `transparency_log` block in the manifest. Either accept with `policy.require_anchor=false` (downgrades trust to `ed25519_only`) or re-issue with `nous dossier --anchor rekor`. |
 | `verdict=ACCEPT`, `trust_level=ed25519_only` | Dossier has a valid author signature but no public anchor. Audit-acceptable only if your policy allows unanchored dossiers. |
 | `verdict=REJECT`, `checks.rekor_anchor_age.ok=false`, `evidence.rekor_anchor_age_seconds` exceeds `policy.max_anchor_age_seconds` | The Rekor anchor is older than your policy allows. Either widen the policy or re-issue. |
+| `verdict=OUTSIDE`, `checks.solver_verdict.ok=false`, its `errors` naming `'refuted'` or `'unknown'` | The manifest's checks pass under the policy, but Z3 did not establish its cost bound (`refuted`: the solver found a run over the cap; `unknown`: no decision). Do not rely on the bound; issue the dossier from a manifest whose verdict is `proven`. |
 
 ## See also
 

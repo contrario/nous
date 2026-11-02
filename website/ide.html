@@ -2560,8 +2560,11 @@ if (typeof window.loadTemplate === 'function') {
   }
 
   function verdictBanner(verdict, summary) {
-    var color = verdict === 'ACCEPT' ? 'var(--green)' : 'var(--red)';
-    var bg = verdict === 'ACCEPT' ? 'var(--green-d)' : 'var(--red-d)';
+    // __apig3_outside_render_v1__ OUTSIDE: neither green nor red
+    var color = verdict === 'ACCEPT' ? 'var(--green)'
+      : (verdict === 'OUTSIDE' ? 'var(--gold)' : 'var(--red)');
+    var bg = verdict === 'ACCEPT' ? 'var(--green-d)'
+      : (verdict === 'OUTSIDE' ? 'var(--gold-d)' : 'var(--red-d)');
     return '<div style="padding:14px 16px;margin-bottom:12px;'
       + 'background:' + bg + ';border-left:4px solid ' + color + ';'
       + 'border-radius:6px">'
@@ -2587,7 +2590,8 @@ if (typeof window.loadTemplate === 'function') {
   }
 
   function renderResult(data) {
-    if (!data || data.spec_version !== 'verify-dossier/v2') {
+    if (!data || (data.spec_version !== 'verify-dossier/v2'
+        && data.spec_version !== 'verify-dossier/v3')) {
       show('<div style="padding:18px;color:var(--red);'
         + 'font-family:var(--mono);font-size:12px">'
         + 'Unexpected response shape (no spec_version). Reload the '

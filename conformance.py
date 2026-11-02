@@ -895,6 +895,11 @@ _X_SIGNER_MISMATCH = "certificate signer is not the expected key"  # __x_g1_pinn
 _X_SIGNER_BADKEY = (  # __x_g1_pinned_signer_v1__
     "expected signer key is not a base64 raw 32-byte Ed25519 public key"
 )
+_APIG_MAN_SIGNER_BADKEY = (  # __apig2_manifest_pin_v1__
+    "expected manifest signer key is not a base64 raw 32-byte Ed25519 "
+    "public key"
+)
+_APIG_MAN_SIGNER_MISMATCH = "manifest signer is not the expected key"  # __apig2_manifest_pin_v1__
 
 
 def _x_pinned_raw(expected_b64: str) -> Optional[bytes]:  # __x_g1_pinned_signer_v1__
@@ -1004,26 +1009,36 @@ class AnchorCheck(BaseModel):
 
 
 class CertificateVerificationResult(BaseModel):
-    """Top-level verification result, parity with verify-dossier/v2 shape.
+    """Top-level verification result, parity with the verify-dossier shape.
 
     `verdict` summarizes:
-      PASS         all RUN checks ok and recorded conformant is True
+      PASS         all RUN checks ok, recorded conformant is True, and the
+                   manifest's solver verdict is 'proven'
       FAIL         at least one RUN check failed or recorded conformant False
       INCONCLUSIVE certificate parsed and signed but binding/anchor checks
                    could not be run because the optional inputs were absent
+      OUTSIDE      all RUN checks ok, both optional inputs given, recorded
+                   conformant is True, and the manifest's solver verdict is
+                   not 'proven': the cost bound is not established
       MALFORMED    the certificate JSON itself failed to parse / validate
+
+    verify-conformance/v2 (API Gate, APIG-2) added OUTSIDE, the
+    manifest_signature check and solver_verdict, the verdict of a manifest
+    whose signature passed (else None).
     """
     model_config = ConfigDict(strict=True, extra="forbid")
-    spec_version: _Literal["verify-conformance/v1"] = "verify-conformance/v1"
+    spec_version: _Literal["verify-conformance/v2"] = "verify-conformance/v2"  # __apig2_outside_v1__
     parsed: bool
     signature: CertificateCheck
     verdict_consistency: CertificateCheck
     trace_binding: CertificateCheck
     trace_signature: CertificateCheck
     manifest_binding: CertificateCheck
+    manifest_signature: CertificateCheck
     anchor: Optional[AnchorCheck] = None
     conformant: Optional[bool] = None
-    verdict: _Literal["PASS", "FAIL", "INCONCLUSIVE", "MALFORMED"]
+    solver_verdict: Optional[str] = None
+    verdict: _Literal["PASS", "FAIL", "INCONCLUSIVE", "OUTSIDE", "MALFORMED"]
     errors: list[str] = Field(default_factory=list)
 
 
@@ -1055,6 +1070,7 @@ def _malformed(reason: str) -> "CertificateVerificationResult":
         trace_binding=skipped,
         trace_signature=skipped,
         manifest_binding=skipped,
+        manifest_signature=skipped,  # __apig2_outside_v1__
         anchor=None,
         conformant=None,
         verdict="MALFORMED",
@@ -1097,12 +1113,58 @@ def _cert_canonical_body_bytes_dict(doc: dict) -> bytes:
     ).encode("utf-8")
 
 
+def _apig2_manifest_signature(  # __apig2_outside_v1__
+    manifest_json: Optional[str],
+    pin_raw: Optional[bytes],
+    errors: list,
+    skipped: "CertificateCheck",
+) -> "tuple[CertificateCheck, Optional[str]]":
+    """The manifest's Ed25519 signature over its canonical body (without
+    signature and transparency_log), under the pinned key when one is
+    given, else under the key the manifest carries. Returns (check,
+    solver_verdict): solver_verdict is the verdict of a manifest whose
+    signature passed, else None. Appends its failure to errors."""
+    if manifest_json is None:
+        return skipped, None
+    import manifest as _apig_mf
+    from cryptography.hazmat.primitives.serialization import (
+        Encoding as _AEnc,
+        PublicFormat as _APF,
+    )
+    try:
+        m, sig, pub = _apig_mf.parse_manifest_json(manifest_json)
+    except Exception as exc:
+        errors.append("manifest signature not checked: the manifest does "
+                      "not parse")
+        return CertificateCheck(
+            ok=False,
+            detail=f"manifest does not parse: {type(exc).__name__}",
+        ), None
+    if pin_raw is not None and pub.public_bytes(_AEnc.Raw, _APF.Raw) != pin_raw:
+        errors.append(_APIG_MAN_SIGNER_MISMATCH)
+        return CertificateCheck(ok=False, detail=_APIG_MAN_SIGNER_MISMATCH), None
+    try:
+        ok = _apig_mf.verify_manifest_signature(m, sig, pub)
+    except Exception:
+        ok = False
+    if not ok:
+        errors.append("manifest Ed25519 signature does not verify")
+        return CertificateCheck(
+            ok=False,
+            detail="manifest ed25519 verify failed under "
+            + ("the expected key" if pin_raw is not None
+               else "the key it carries"),
+        ), None
+    return CertificateCheck(ok=True), m.verdict
+
+
 def verify_certificate_from_json(
     cert_json: str,
     trace_json: Optional[str] = None,
     manifest_json: Optional[str] = None,
     *,
     expected_signer_b64: Optional[str] = None,  # __x_g1_pinned_signer_v1__
+    expected_manifest_signer_b64: Optional[str] = None,  # __apig2_manifest_pin_v1__
 ) -> CertificateVerificationResult:
     """Verify a runtime conformance certificate from JSON strings.
 
@@ -1116,7 +1178,16 @@ def verify_certificate_from_json(
       3. cert.trace_sha256 == sha256(trace canonical body)   [needs trace]
       4. trace Ed25519 signature over trace canonical body   [needs trace]
       5. cert {source,smt_spec,pricing}_sha256 == manifest's [needs manifest]
+      5b. manifest Ed25519 signature over its canonical body, under
+          expected_manifest_signer_b64 when given, else under the key the
+          manifest carries; no fallback to expected_signer_b64 (the CLI
+          and the offline verifier fall back to the certificate signer's
+          key)                                           [needs manifest]
       6. if cert carries transparency_log: Rekor v2 leaf+checkpoint+proof
+
+    OUTSIDE (API Gate, APIG-2; XD-5): every check that ran passed, both
+    optional inputs were given, the certificate records a conformant run,
+    and the manifest's solver verdict is not 'proven'.
     """
     import base64 as _b64
     import json  # __nous_s98_stage1_imports_hotfix_v1__
@@ -1153,6 +1224,11 @@ def verify_certificate_from_json(
         _x_pin_raw = _x_pinned_raw(expected_signer_b64)
         if _x_pin_raw is None:
             return _malformed(_X_SIGNER_BADKEY)
+    _apig_man_pin: Optional[bytes] = None  # __apig2_manifest_pin_v1__
+    if expected_manifest_signer_b64 is not None:
+        _apig_man_pin = _x_pinned_raw(expected_manifest_signer_b64)
+        if _apig_man_pin is None:
+            return _malformed(_APIG_MAN_SIGNER_BADKEY)
     _x_mismatch = False
     if _x_pin_raw is not None:
         try:
@@ -1290,6 +1366,9 @@ def verify_certificate_from_json(
             else:
                 manifest_binding = CertificateCheck(ok=True)
 
+    manifest_signature, solver_verdict = _apig2_manifest_signature(  # __apig2_outside_v1__
+        manifest_json, _apig_man_pin, errors, skipped)
+
     anchor: Optional[AnchorCheck] = None
     tlog = cert_doc.get("transparency_log")
     if isinstance(tlog, dict):
@@ -1353,6 +1432,8 @@ def verify_certificate_from_json(
         ran_checks.extend([trace_binding, trace_signature])
     if not manifest_binding.skipped:
         ran_checks.append(manifest_binding)
+    if not manifest_signature.skipped:  # __apig2_outside_v1__
+        ran_checks.append(manifest_signature)
     all_ran_ok = all(c.ok for c in ran_checks)
     anchor_ok = (anchor is None) or anchor.overall_ok
 
@@ -1365,7 +1446,7 @@ def verify_certificate_from_json(
     elif inconclusive:
         verdict = "INCONCLUSIVE"
     elif recorded_conformant is True:
-        verdict = "PASS"
+        verdict = "PASS" if solver_verdict == "proven" else "OUTSIDE"  # __apig2_outside_v1__
     else:
         verdict = "FAIL"
 
@@ -1376,8 +1457,10 @@ def verify_certificate_from_json(
         trace_binding=trace_binding,
         trace_signature=trace_signature,
         manifest_binding=manifest_binding,
+        manifest_signature=manifest_signature,  # __apig2_outside_v1__
         anchor=anchor,
         conformant=recorded_conformant,
+        solver_verdict=solver_verdict,
         verdict=verdict,  # type: ignore[arg-type]
         errors=errors,
     )

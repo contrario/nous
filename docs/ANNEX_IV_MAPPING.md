@@ -190,9 +190,13 @@ measures needed."
   inside the source. Static analysis via `nous governance lint`
   (13 rule codes, L000-L100).
 - V2 verify-dossier response surface (shipped v5.5.0):
-  - `verdict: ACCEPT | REJECT` (deterministic from policy + checks).
+  - `verdict: ACCEPT | REJECT | OUTSIDE` (deterministic from policy +
+    checks; OUTSIDE since verify-dossier/v3: the checks pass and the
+    manifest's solver verdict is not `proven`).
+    <!-- __apig_outside_docs_v1__ -->
   - `trust_level: rekor_anchored | ed25519_only | none`.
-  - `checks` (eight discriminated check fields with
+  - `checks` (nine discriminated check fields, the ninth
+    `solver_verdict` since verify-dossier/v3, with
     `ok: true | false | "skipped_unanchored" | "skipped_no_policy"`).
   - `evidence` (raw facts: hashes, log indices, public keys, anchor
     age).
@@ -701,8 +705,9 @@ and dossiers. Definitions are operational, not legal.
   and code generations from source to running program.
 - **Derived admission state** -- the cumulative result of policy
   evaluations across a run.
-- **Verdict** -- `ACCEPT` or `REJECT` in the V2 verify-dossier
-  response, deterministically computed from policy plus checks.
+- **Verdict** -- `ACCEPT`, `REJECT` or `OUTSIDE` in the V2
+  verify-dossier response, deterministically computed from policy plus
+  checks.
 - **Trust level** -- `rekor_anchored | ed25519_only | none`,
   describing the strength of the dossier's transparency chain.
 

@@ -586,7 +586,7 @@ def test_verify_conformance_endpoint_full_bundle_passes(
     )
     assert r.status_code == 200
     data = r.json()
-    assert data["spec_version"] == "verify-conformance/v1"
+    assert data["spec_version"] == "verify-conformance/v2"
     assert data["verdict"] == "PASS"
     assert data["signature"]["ok"] is True
     assert data["trace_binding"]["ok"] is True

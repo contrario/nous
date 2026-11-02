@@ -50,7 +50,7 @@ def _build_signed_dossier_text(
         "world_name": "S82V2TestWorld",
         "cost_cap_usd": "1.00",
         "max_ticks": 100,
-        "verdict": "VERIFIED",
+        "verdict": "proven",  # __apig1_fixture_proven_v1__
         "solver_name": "z3",
         "solver_version": "4.16.0",
         "elapsed_ms": 1,
@@ -96,7 +96,7 @@ def test_v2_response_has_spec_version(client: TestClient) -> None:
         },
     )
     body = resp.json()
-    assert body["spec_version"] == "verify-dossier/v2"
+    assert body["spec_version"] == "verify-dossier/v3"
 
 
 # 3
@@ -344,7 +344,7 @@ def test_v2_response_pydantic_round_trips(client: TestClient) -> None:
     )
     body = resp.json()
     parsed = VerifyDossierEndpointResponseV2(**body)
-    assert parsed.spec_version == "verify-dossier/v2"
+    assert parsed.spec_version == "verify-dossier/v3"
     assert parsed.verdict in ("ACCEPT", "REJECT")
     assert parsed.trust_level in (
         "rekor_anchored", "ed25519_only", "none"

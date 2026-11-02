@@ -534,7 +534,7 @@ async def skill_export_endpoint(
 # # __session82_verify_dossier_v2_v1__
 # ====================================================================
 
-V2_SPEC_VERSION: str = "verify-dossier/v2"
+V2_SPEC_VERSION: str = "verify-dossier/v3"  # __apig1_outside_v1__ OUTSIDE, solver_verdict
 
 
 class VerifyDossierPolicy(BaseModel):
@@ -568,6 +568,7 @@ class V2Checks(BaseModel):
     rekor_signed_entry_timestamp: CheckResult
     rekor_leaf_inclusion: CheckResult
     rekor_anchor_age: CheckResult
+    solver_verdict: CheckResult  # __apig1_outside_v1__
 
 
 class V2Evidence(BaseModel):
@@ -591,7 +592,7 @@ class V2HumanReadable(BaseModel):
 class VerifyDossierEndpointResponseV2(BaseModel):
     model_config = ConfigDict(strict=True, extra="forbid")
     spec_version: str
-    verdict: Literal["ACCEPT", "REJECT"]
+    verdict: Literal["ACCEPT", "REJECT", "OUTSIDE"]  # __apig1_outside_v1__
     trust_level: Literal["rekor_anchored", "ed25519_only", "none"]
     policy_applied: VerifyDossierPolicy
     checks: V2Checks
@@ -687,6 +688,7 @@ def _run_verification_checks(
             rekor_signed_entry_timestamp=rekor_set,
             rekor_leaf_inclusion=rekor_inclusion,
             rekor_anchor_age=rekor_age,
+            solver_verdict=CheckResult(ok=False, errors=[]),  # __apig1_outside_v1__
         )
         evidence = V2Evidence(manifest_sha256=manifest_input_sha256)
         return (checks, evidence, "none")
@@ -729,6 +731,14 @@ def _run_verification_checks(
             errors=[
                 f"source_sha256_field_malformed: got len={len(src_sha)}"
             ],
+        )
+
+    if m.verdict == "proven":  # __apig1_outside_v1__
+        solver_verdict = CheckResult(ok=True)
+    else:
+        solver_verdict = CheckResult(
+            ok=False,
+            errors=[f"solver_verdict_not_proven: got {m.verdict!r}"],
         )
 
     if anchor is None:
@@ -827,6 +837,7 @@ def _run_verification_checks(
         rekor_signed_entry_timestamp=rekor_set,
         rekor_leaf_inclusion=rekor_inclusion,
         rekor_anchor_age=rekor_age,
+        solver_verdict=solver_verdict,  # __apig1_outside_v1__
     )
     evidence = V2Evidence(
         manifest_sha256=manifest_input_sha256,
@@ -838,6 +849,13 @@ def _run_verification_checks(
         rekor_anchor_age_seconds=rekor_anchor_age_seconds,
     )
     return (checks, evidence, trust_level)
+
+
+def _apig1_accept_or_outside(checks: V2Checks) -> str:  # __apig1_outside_v1__
+    """Where the integrity and policy checks give ACCEPT: ACCEPT when the
+    manifest's solver verdict is 'proven', else OUTSIDE, the cost bound it
+    records not established (API Gate, APIG-1). A REJECT never reaches it."""
+    return "ACCEPT" if checks.solver_verdict.ok is True else "OUTSIDE"
 
 
 def _compute_v2_verdict(
@@ -855,11 +873,11 @@ def _compute_v2_verdict(
             and checks.rekor_anchor_age.ok is False
         ):
             return "REJECT"
-        return "ACCEPT"
+        return _apig1_accept_or_outside(checks)
     if trust_level == "ed25519_only":
         if policy.require_anchor:
             return "REJECT"
-        return "ACCEPT"
+        return _apig1_accept_or_outside(checks)
     return "REJECT"
 
 
@@ -869,6 +887,29 @@ def _v2_human_readable(
     checks: V2Checks,
     policy: VerifyDossierPolicy,
 ) -> V2HumanReadable:
+    if verdict == "OUTSIDE":  # __apig1_outside_v1__
+        return V2HumanReadable(
+            verdict_summary=(
+                "Dossier OUTSIDE: every check the policy required passed, "
+                "and the manifest's solver verdict is not 'proven', so the "
+                "cost bound it records is not established."
+            ),
+            trust_explanation=(
+                "The signature check, and the Rekor checks when the dossier "
+                "is anchored, hold for these canonical manifest bytes under "
+                "the key the manifest carries, or under the expected key when "
+                "one is given; who holds that key is established out of band. "
+                "Those checks say nothing about the cost bound. The solver "
+                "verdict the manifest records is not 'proven' (see "
+                "checks.solver_verdict), so Z3 did not establish the bound. "
+                "OUTSIDE is neither an acceptance nor an integrity failure."
+            ),
+            next_steps=[
+                "Do not rely on the cost bound this dossier records.",
+                "Re-run nous verify --smt on the source and issue the "
+                "dossier from a manifest whose verdict is 'proven'.",
+            ],
+        )
     if verdict == "ACCEPT":
         if trust_level == "rekor_anchored":
             summary = (
@@ -3202,6 +3243,11 @@ class VerifyConformanceEndpointRequest(BaseModel):
     expected_signer_b64: Optional[str] = Field(  # __x_g3_endpoint_pin_v1__
         default=None, min_length=1, max_length=128
     )
+    # __apig2_manifest_pin_v1__ the key the manifest must be signed under;
+    # absent, its signature is checked under the key it carries.
+    expected_manifest_signer_b64: Optional[str] = Field(
+        default=None, min_length=1, max_length=128
+    )
 
 
 @app.post("/v1/verify-conformance", response_model=None)
@@ -3218,13 +3264,14 @@ async def verify_conformance_endpoint(
             trace_json=body.trace_json,
             manifest_json=body.manifest_json,
             expected_signer_b64=body.expected_signer_b64,  # __x_g3_endpoint_pin_v1__
+            expected_manifest_signer_b64=body.expected_manifest_signer_b64,  # __apig2_manifest_pin_v1__
         )
         return result
     except Exception as exc:  # last-resort: lib promises no raise on bad input
         return JSONResponse(
             status_code=500,
             content={
-                "spec_version": "verify-conformance/v1",
+                "spec_version": "verify-conformance/v2",  # __apig2_outside_v1__
                 "parsed": False,
                 "verdict": "MALFORMED",
                 "errors": [

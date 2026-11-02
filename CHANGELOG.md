@@ -81,6 +81,21 @@
   refuted (XD-5, FG-S427-D). The VSA policy, the VSA verifier text and
   the served vectors are unchanged.
   <!-- __xd5_vsa_emit_changelog_v1__ -->
+- `POST /v1/verify-dossier` with a policy answers `verify-dossier/v3`:
+  a ninth check, `solver_verdict`, and a third verdict, OUTSIDE, where
+  ACCEPT was given over a manifest whose solver verdict is not `proven`
+  (refuted or unknown); integrity and policy failures stay REJECT. The
+  V1 response (no policy) is unchanged. `POST /v1/verify-conformance`
+  and `conformance.verify_certificate_from_json` answer
+  `verify-conformance/v2`: the manifest's Ed25519 signature is checked
+  when a manifest is given (`manifest_signature`, under the new
+  optional `expected_manifest_signer_b64`, else under the key it
+  carries), `solver_verdict` names its verdict, and OUTSIDE takes the
+  place of PASS for a manifest not `proven`. Both endpoints gave ACCEPT
+  and PASS over a manifest whose cost bound Z3 refuted (API Gate,
+  APIG-K0, FG-S427-F). verify.html and ide.html paint OUTSIDE neither
+  green nor red and read both dossier spec versions.
+  <!-- __apig_outside_changelog_v1__ -->
 
 ### Known limits  <!-- __an_gate1_d4_known_limits_v1__ -->
 
