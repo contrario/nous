@@ -66,6 +66,7 @@ def _inputs(dirp, with_coverage=True, conformant=True):
     manifest = {
         "world_name": "alpha", "source_sha256": src,
         "smt_spec_sha256": smt, "pricing_sha256": pri, "codegen_sha256": cg,
+        "verdict": "proven",  # __xd5_vsa_emit_fixture_v1__
     }
     if with_coverage:
         manifest["coverage_farkas_sha256"] = far_sha

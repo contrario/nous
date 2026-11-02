@@ -75,6 +75,12 @@
 - `nous conformance verify` and `certify` print one more line,
   `solver verdict`, when that verdict is not `proven`; their exit
   codes and the certificate are unchanged.
+- `nous vsa emit` refuses, exit 2, a manifest whose solver verdict is
+  not `proven` (refuted, unknown, or none recorded), before it creates
+  a key or writes a file; it signed a PASSED VSA over a cost bound Z3
+  refuted (XD-5, FG-S427-D). The VSA policy, the VSA verifier text and
+  the served vectors are unchanged.
+  <!-- __xd5_vsa_emit_changelog_v1__ -->
 
 ### Known limits  <!-- __an_gate1_d4_known_limits_v1__ -->
 

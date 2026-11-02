@@ -22,6 +22,11 @@ sha256), so the emitted digests equal what the verifier recomputes. The
 conformance verdict is re-derived from the certificate's eight obligations,
 never trusted from its recorded boolean, so the VSA can never be internally
 inconsistent with what the verifier independently derives.
+
+Refusal (XD-5). emit refuses, exit 2, a manifest whose solver verdict is not
+'proven' (refuted, unknown, or none recorded), before it creates a key or
+writes a file: it signs no VSA over a cost bound that is not established. It
+reads the verdict as written and does not check the manifest's signature.
 """
 from __future__ import annotations
 
@@ -219,6 +224,17 @@ def _cmd_emit(args: argparse.Namespace) -> int:
         cert_doc = _load_json(cert_path, "certificate")
     except (FileNotFoundError, json.JSONDecodeError) as exc:
         print("PRECONDITION ERROR: " + str(exc), file=sys.stderr)
+        return 2
+
+    _verdict = (manifest_doc.get("verdict")
+                if isinstance(manifest_doc, dict) else None)
+    if _verdict != "proven":  # __xd5_vsa_emit_refusal_v1__
+        print(
+            "PRECONDITION ERROR: the manifest's solver verdict is "
+            + repr(_verdict) + ", not 'proven': the cost bound is not "
+            "established, so no VSA is emitted (XD-5)",
+            file=sys.stderr,
+        )
         return 2
 
     manifest_sha = hashlib.sha256(

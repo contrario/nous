@@ -41,8 +41,9 @@ mathematics with no trusted oracle. Everything else evidences.
 - The eight conformance obligations, the codegen leg, and the cost
   cap EVIDENCES: they are sha-equality and signature checks over
   signed artifacts. The manifest records Z3's verdict on the cost
-  cap; `nous vsa emit` and the VSA verifier do not read it (XD-5),
-  so a PASSED VSA does not by itself establish the cap. Read the
+  cap; `nous vsa emit` refuses, exit 2, a manifest whose verdict is
+  not `proven` (XD-5), and the VSA verifier does not read it, so a
+  PASSED VSA alone does not establish the cap. Read the
   manifest's verdict; the conformance verifier reports OUTSIDE when
   it is not `proven`. Without a cost Farkas certificate the cap is
   offline an EVIDENCES leg, not a PROVES leg.
@@ -83,6 +84,12 @@ a complete self-verifying bundle into `--out`:
 If `--coverage` is given, `emit` refuses unless the file sha256 matches
 the manifest's `coverage_farkas_sha256`, so a mismatched or tampered
 Farkas certificate cannot enter the bundle.
+
+`emit` also refuses, exit 2, a manifest whose solver verdict is not
+`proven` (refuted, unknown, or none recorded), before it creates a key
+or writes a file, so it signs no VSA over a cost bound that is not
+established (XD-5). It reads the verdict as written; it does not check
+the manifest's signature. <!-- __xd5_vsa_emit_docs_v1__ -->
 
 ## 4. Verify
 
