@@ -233,6 +233,14 @@ names that verdict. A certificate that records a non-conformant run
 stays FAIL there (the CLI's exit 3 covers both). Who holds either key
 is still established out of band.
 
+<!-- __apis1_strict_docs_v1__ -->
+Before any other check, the endpoint reads `certificate_json`,
+`trace_json` and `manifest_json` through the offline verifier's strict
+JSON parse; an input it refuses (a duplicate member name, a non-finite
+number token, bytes that are not UTF-8, a byte order mark) is
+MALFORMED with that parse's message (APIS-1). The library function
+behind it still parses leniently.
+
 ---
 
 ## What a cost-bearing certificate discloses

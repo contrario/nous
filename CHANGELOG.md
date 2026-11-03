@@ -115,7 +115,27 @@
   keep their verifier text.
   <!-- __fg_s427_i_changelog_v1__ -->
 
+- `/v1/verify-conformance` and `/v1/verify-dossier` read the
+  certificate, trace and manifest text through the offline verifiers'
+  strict JSON parse before any other check (APIS-1). A duplicate member
+  name at any depth, a NaN, Infinity or -Infinity token, bytes that are
+  not UTF-8 or a byte order mark is MALFORMED from verify-conformance,
+  and from verify-dossier a failed `manifest_well_formed` (REJECT) or,
+  without a policy, `signature_ok` false with a `parse_error`; each
+  error is the strict parse's message. Before, the last duplicate won
+  and NaN was read, so a route could answer PASS or ACCEPT over bytes
+  the offline verifier refuses. The spec versions are unchanged. A
+  refusal is not by itself evidence of tampering.
+  <!-- __apis1_strict_changelog_v1__ -->
+
 ### Known limits  <!-- __an_gate1_d4_known_limits_v1__ -->
+
+- The library functions behind those routes,
+  `conformance.verify_certificate_from_json` and
+  `manifest.parse_manifest_json` with its anchored forms, still parse
+  leniently; the routes read strictly before calling them. The routes
+  share the strict parse's own limits listed here (a number such as
+  1e400 reads as infinity). <!-- __apis1_strict_changelog_v1__ -->
 
 - An .ndec built before this release is refused under
   `--strict-canonical` without the verifier-digest registry; with the

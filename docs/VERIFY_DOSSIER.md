@@ -29,7 +29,10 @@ verdict banner (ACCEPT green, REJECT red, OUTSIDE gold, neither green
 nor red), four status pills (SIGNATURE,
 SOURCE ID, ANCHORED, REKOR ANCHOR), an evidence block, a collapsible
 trust explanation, a next-steps list, and per-check diagnostics for
-any failing checks.
+any failing checks. The endpoint reads the manifest through the
+offline verifier's strict JSON parse before any other check; a
+manifest it refuses fails `manifest_well_formed` (APIS-1).
+<!-- __apis1_strict_docs_v1__ -->
 
 The IDE at `https://nous-lang.org/ide.html` exposes the same component
 behind the `Dossier` tab; the surface is identical in semantics, with

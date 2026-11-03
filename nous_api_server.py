@@ -621,6 +621,25 @@ def _x_dossier_pin_error(pub, expected_signer_b64):  # __x_g3_endpoint_pin_v1__
     return None
 
 
+# __apis1_strict_v1__ APIS-1 (seat S440): the public verification
+# routes read a signed artifact's text through the canonical strict
+# region, conformance_verifier.loads, before any other check, as the
+# offline verifiers do (D4). The region is imported, not copied. The
+# text is encoded with surrogatepass, so a lone surrogate from any
+# caller is the region's "not UTF-8", not a UnicodeEncodeError. A
+# refusal is not by itself evidence of tampering (the region says so).
+# Text that is not JSON at all is left to the route's own parse, so its
+# answer to a syntax error is unchanged.
+def _apis_strict(text: str, label: str) -> None:
+    import json as _json
+    from conformance_verifier import loads as _strict_loads
+    try:
+        _strict_loads(text.encode("utf-8", "surrogatepass"), label)
+    except _json.JSONDecodeError:
+        # not JSON at all: the route's own parse answers in its own form
+        return
+
+
 def _run_verification_checks(
     manifest_json_text: str,
     policy: Optional[VerifyDossierPolicy],
@@ -633,6 +652,8 @@ def _run_verification_checks(
     import base64 as _b64
     from datetime import datetime as _dt, timezone as _tz
     from pydantic import ValidationError as _ValidationError
+    from conformance_verifier import (  # __apis1_strict_v1__
+        StrictJsonError as _ApisStrict)
 
     manifest_well_formed = CheckResult(ok=False, errors=[])
     signature_check = CheckResult(ok=False, errors=[])
@@ -658,13 +679,15 @@ def _run_verification_checks(
             verify_manifest_signature,
             public_key_b64 as _pubkey_b64_fn,
         )
+        _apis_strict(manifest_json_text,  # __apis1_strict_v1__
+                     "manifest_json [js:api.4]")
         m, sig, pub, anchor = parse_manifest_json_with_anchor(
             manifest_json_text
         )
         manifest_well_formed = CheckResult(ok=True)
     except (
         json.JSONDecodeError, KeyError, ValueError,
-        TypeError, _ValidationError,
+        TypeError, _ValidationError, _ApisStrict,
     ) as exc:
         manifest_well_formed = CheckResult(
             ok=False,
@@ -1081,6 +1104,8 @@ async def verify_dossier_endpoint(
     import base64 as _b64
     from datetime import datetime as _dt, timezone as _tz
     from pydantic import ValidationError as _ValidationError
+    from conformance_verifier import (  # __apis1_strict_v1__
+        StrictJsonError as _ApisStrict)
 
     input_bytes: bytes = body.manifest_json.encode("utf-8")
     manifest_sha256_hex: str = hashlib.sha256(input_bytes).hexdigest()
@@ -1098,6 +1123,8 @@ async def verify_dossier_endpoint(
             verify_manifest_signature,
             public_key_b64 as _pubkey_b64_fn,
         )
+        _apis_strict(body.manifest_json,  # __apis1_strict_v1__
+                     "manifest_json [js:api.5]")
         m, sig, pub, anchor = parse_manifest_json_with_anchor(
             body.manifest_json
         )
@@ -1107,6 +1134,7 @@ async def verify_dossier_endpoint(
         ValueError,
         TypeError,
         _ValidationError,
+        _ApisStrict,
     ) as exc:
         errors.append(f"parse_error: {type(exc).__name__}: {exc}")
         return VerifyDossierEndpointResponse(
@@ -3218,9 +3246,10 @@ async def templates_save(
 # Convenience wrapper around conformance.verify_certificate_from_json.
 # Mirrors the trust model of /v1/verify-dossier: NOT in the trust path;
 # offline verification with the emitted verify_conformance_offline.py
-# remains canonical. This endpoint exists so verify.html and any other
-# browser-native verifier can display structured PASS/FAIL without
-# requiring the user to install Python first.
+# remains canonical. This endpoint exists so a browser-native
+# verifier can display structured PASS/FAIL without requiring the user
+# to install Python first; no served page calls it (verify.html and
+# ide.html call /v1/verify-dossier). __apis1_strict_v1__
 # ====================================================================
 
 
@@ -3258,7 +3287,15 @@ async def verify_conformance_endpoint(
 ):
     # No require_api_key call: public by design (parity with verify-dossier).
     from conformance import verify_certificate_from_json
+    from conformance import _malformed as _apis_malformed  # __apis1_strict_v1__
+    from conformance_verifier import StrictJsonError as _ApisStrict
     try:
+        _apis_strict(body.certificate_json,  # __apis1_strict_v1__
+                     "certificate_json [js:api.1]")
+        if body.trace_json is not None:
+            _apis_strict(body.trace_json, "trace_json [js:api.2]")
+        if body.manifest_json is not None:
+            _apis_strict(body.manifest_json, "manifest_json [js:api.3]")
         result = verify_certificate_from_json(
             cert_json=body.certificate_json,
             trace_json=body.trace_json,
@@ -3267,6 +3304,8 @@ async def verify_conformance_endpoint(
             expected_manifest_signer_b64=body.expected_manifest_signer_b64,  # __apig2_manifest_pin_v1__
         )
         return result
+    except _ApisStrict as exc:  # __apis1_strict_v1__ the lib's own form
+        return _apis_malformed(str(exc))
     except Exception as exc:  # last-resort: lib promises no raise on bad input
         return JSONResponse(
             status_code=500,
