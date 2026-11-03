@@ -96,6 +96,24 @@
   APIG-K0, FG-S427-F). verify.html and ide.html paint OUTSIDE neither
   green nor red and read both dossier spec versions.
   <!-- __apig_outside_changelog_v1__ -->
+- A pricing table with a negative price, multiplier or hourly cost is
+  refused when it loads: `nous verify --smt --prices` exits 3 and
+  writes no manifest, and `nous dossier` finds no table matching the
+  manifest. `emit_smt` refuses one too (EmitError), for a table built
+  without that check. Before, the table loaded, the spec asserted a
+  negative per-call cost and a per-call cost of at least 0 together,
+  and the run came out `proven` at any cap (FG-S427-I).
+- `nous dossier` now carries `pricing.canonical.json`, as
+  `nous dossier-spec` already did: the bytes whose sha256 the manifest
+  signs as `pricing_sha256`. Every dossier verifier template checks it
+  on the line after its source check: no `pricing_sha256` in the
+  manifest, the file missing, another sha256, or a price that is not a
+  finite number >= 0 is INTEGRITY, exit 1. Before, no verifier read
+  the carried pricing or bound it to the manifest. The templates'
+  digests change (ndec's canonical set follows; the verifier-digest
+  registry gains them at the next publish). Dossiers already issued
+  keep their verifier text.
+  <!-- __fg_s427_i_changelog_v1__ -->
 
 ### Known limits  <!-- __an_gate1_d4_known_limits_v1__ -->
 

@@ -45,6 +45,7 @@ from decimal import Decimal
 from typing import NamedTuple, Optional  # __phase2_stage8_at_most_seq_emit_v1__
 
 from ast_nodes import NousProgram, SoulNode, WorldNode
+import pricing as _pricing_fg_s427_i  # __fg_s427_i_emit_gate_v1__
 from pricing import (
     PricingEntry,
     PricingTable,
@@ -561,6 +562,18 @@ def emit_smt(
         except (KeyError, ValueError) as exc:
             cause = str(exc.args[0]) if isinstance(exc, KeyError) and exc.args else str(exc)
             raise UnpriceableSmtModel(f"soul {s.name!r}: {cause}") from exc
+        for _f_s427i in _pricing_fg_s427_i.PRICE_FIELDS:  # __fg_s427_i_emit_gate_v1__
+            _v_s427i = getattr(entry, _f_s427i, None)
+            if _v_s427i is None:
+                continue
+            try:
+                _pricing_fg_s427_i._require_finite_nonnegative(
+                    _f_s427i, _v_s427i
+                )
+            except ValueError as exc:
+                raise UnpriceableSmtModel(
+                    f"soul {s.name!r}: model {canonical!r}: {exc}"
+                ) from exc
         per_call_expr = _per_call_cost_smt(
             canonical, entry,
             s.tokens.input, s.tokens.output,

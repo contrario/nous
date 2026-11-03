@@ -32,7 +32,13 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Literal, Optional
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import (  # __fg_s427_i_nonneg_price_v1__
+    BaseModel,
+    Field,
+    ValidationInfo,
+    field_validator,
+    model_validator,
+)
 
 
 STALENESS_WARN_DAYS: int = 30
@@ -52,6 +58,116 @@ _V1_TO_V2_FIELD_MAP: dict[str, str] = {
     "input_cache_write_per_1m_usd": "input_cache_write_per_1m",
     "hourly_cost_usd": "hourly_cost",
 }
+
+
+PRICE_FIELDS: tuple = (  # __fg_s427_i_nonneg_price_v1__
+    "input_per_1m",
+    "output_per_1m",
+    "input_cached_per_1m",
+    "input_cache_write_per_1m",
+    "reasoning_token_multiplier",
+    "hourly_cost",
+)
+
+
+def _require_finite_nonnegative(field: str, value: Any) -> None:
+    """FG-S427-I: a price, multiplier or hourly cost must be a finite
+    number >= 0. A negative one made the cost spec contradictory, and a
+    contradictory spec came out 'proven' at any cap. Called by the
+    loader's coercion and, as a second gate, by smt_emit."""
+    try:
+        d = value if isinstance(value, Decimal) else Decimal(str(value))
+    except (ArithmeticError, ValueError):
+        d = None
+    if d is None or not d.is_finite() or d < 0:
+        raise ValueError(
+            f"price field {field!r} must be a finite number >= 0, "
+            f"got {value!s}"
+        )
+
+
+# FG-S427-I: the canonical copy of the region every dossier verifier
+# text carries (dossier.py templates, offline_verifier_builder's v2).
+PRICING_CHECK_EMBED: str = '''# --- pricing check embed (shared text; canonical copy: pricing.py) ---
+# FG-S427-I. Every dossier verifier text carries this region byte for
+# byte and calls _check_pricing on the line after its source.sha256
+# check; tests/test_fg_s427_i_negative_price.py names any copy that
+# drifts. Standard library only. __fg_s427_i_pricing_embed_v1__
+def _check_pricing(manifest, ROOT):
+    import hashlib as _hashlib
+    import sys as _sys
+    from decimal import Decimal as _Decimal
+    field = manifest.get("pricing_sha256")
+    path = ROOT / "pricing.canonical.json"
+    if not isinstance(field, str):
+        print(
+            "FAIL: the signed manifest carries no pricing_sha256; "
+            "pricing.canonical.json cannot be bound to it",
+            file=_sys.stderr,
+        )
+        return 1
+    if not path.is_file():
+        print(
+            "FAIL: pricing.canonical.json is missing; the signed "
+            "manifest's pricing_sha256 cannot be recomputed (missing "
+            "evidence / truncation)",
+            file=_sys.stderr,
+        )
+        return 1
+    data = path.read_bytes()
+    if _hashlib.sha256(data).hexdigest() != field:
+        print(
+            "FAIL: pricing.canonical.json sha256 does not match the "
+            "signed manifest pricing_sha256 (tampered or substituted)",
+            file=_sys.stderr,
+        )
+        return 1
+    try:
+        doc = loads(data, "pricing.canonical.json [js:prc.1]")
+    except Exception as e:
+        print("FAIL: pricing.canonical.json parse error: " + str(e),
+              file=_sys.stderr)
+        return 1
+    models = doc.get("models") if isinstance(doc, dict) else None
+    if not isinstance(models, dict):
+        print("FAIL: pricing.canonical.json has no models object "
+              "(malformed pricing evidence)", file=_sys.stderr)
+        return 1
+    for name in sorted(models):
+        entry = models[name]
+        if not isinstance(entry, dict):
+            print("FAIL: pricing.canonical.json model " + repr(name)
+                  + " is not an object (malformed pricing evidence)",
+                  file=_sys.stderr)
+            return 1
+        for key in ("input_per_1m", "output_per_1m",
+                    "input_cached_per_1m", "input_cache_write_per_1m",
+                    "reasoning_token_multiplier", "hourly_cost"):
+            if key not in entry:
+                continue
+            raw = entry[key]
+            value = None
+            if isinstance(raw, str):
+                try:
+                    value = _Decimal(raw)
+                except Exception:
+                    value = None
+            if value is None or not value.is_finite() or value < 0:
+                print(
+                    "FAIL: pricing table model " + repr(name) + " "
+                    + key + " = " + repr(raw) + " is not a finite "
+                    "number >= 0; a cost verdict over this table would "
+                    "be vacuous",
+                    file=_sys.stderr,
+                )
+                return 1
+    print(
+        "OK   pricing table bound to the manifest "
+        "(pricing.canonical.json sha256 = signed pricing_sha256); "
+        "every price a finite number >= 0"
+    )
+    return 0
+# --- end pricing check embed ---'''  # __fg_s427_i_pricing_embed_v1__
 
 
 class PricingEntry(BaseModel):
@@ -93,17 +209,20 @@ class PricingEntry(BaseModel):
         mode="before",
     )
     @classmethod
-    def _coerce_decimal(cls, v: Any) -> Any:
+    def _coerce_decimal(cls, v: Any, info: ValidationInfo) -> Any:
         if v is None:
             return None
         if isinstance(v, Decimal):
-            return v
-        if isinstance(v, (str, int)):
-            return Decimal(str(v))
-        raise ValueError(
-            f"price values must be string or int, got {type(v).__name__}: "
-            f"floats are rejected to preserve exact rationals"
-        )
+            d = v
+        elif isinstance(v, (str, int)):
+            d = Decimal(str(v))
+        else:
+            raise ValueError(
+                f"price values must be string or int, got {type(v).__name__}: "
+                f"floats are rejected to preserve exact rationals"
+            )
+        _require_finite_nonnegative(info.field_name, d)  # __fg_s427_i_nonneg_price_v1__
+        return d
 
     @model_validator(mode="after")
     def _validate_consistency(self) -> "PricingEntry":

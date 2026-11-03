@@ -11,10 +11,11 @@ from cryptography.hazmat.primitives import serialization
 
 import manifest as M
 import continuity_ledger as L
+import _pricing_evidence as _pe  # __fg_s427_i_pricing_evidence_v1__
 
 FIELDS = dict(
     schema_version="1", nous_version="5.66.0", smt_emit_version="1",
-    source_sha256="a" * 64, pricing_sha256="b" * 64, smt_spec_sha256="c" * 64,
+    source_sha256="a" * 64, pricing_sha256=_pe.SHA, smt_spec_sha256="c" * 64,
     world_name="w", cost_cap_usd="1.00", max_ticks=10, verdict="proven",
     solver_name="z3", solver_version="4.16.0", elapsed_ms=5,
     timestamp_utc="2026-06-26T00:00:00Z",
@@ -160,6 +161,7 @@ def _emit_and_run(tmp, m, op_sk, *, extra_files=None):
     mj = M.manifest_json(m, sig, op_sk.public_key())
     (d / "manifest.json").write_text(mj, encoding="utf-8")
     (d / "source.nous").write_bytes(source_bytes)
+    _pe.write(d)
     for name, data in (extra_files or {}).items():
         (d / name).write_bytes(data)
     parsed, _, _ = M.parse_manifest_json(mj)
@@ -218,6 +220,7 @@ def test_attested_verifier_fails_closed_on_tampered_and_replayed():
         mj = M.manifest_json(m, sig, op_sk.public_key())
         (d / "manifest.json").write_text(mj, encoding="utf-8")
         (d / "source.nous").write_bytes(source_bytes)
+        _pe.write(d)
         parsed, _, _ = M.parse_manifest_json(mj)
         assert M.verify_manifest_signature(m, sig, op_sk.public_key())
         vp = d / "verify_offline.py"
@@ -244,6 +247,7 @@ def test_attested_verifier_fails_closed_on_tampered_and_replayed():
         mj = M.manifest_json(m, sig, op_sk.public_key())
         (d / "manifest.json").write_text(mj, encoding="utf-8")
         (d / "source.nous").write_bytes(source_bytes)
+        _pe.write(d)
         parsed, _, _ = M.parse_manifest_json(mj)
         assert M.verify_manifest_signature(m, sig, op_sk.public_key())
         vp = d / "verify_offline.py"

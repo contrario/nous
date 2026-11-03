@@ -3,6 +3,7 @@
 """
 from __future__ import annotations
 from _v3pin import key_public  # __nt_v3_classes_tests_v1__
+import _pricing_evidence as _pe  # __fg_s427_i_pricing_evidence_v1__
 
 import base64
 import hashlib
@@ -57,6 +58,7 @@ def _make_dossier(tmp_path: Path, verifier_text: str) -> Path:
         "verdict": "proven",
         "cost_cap_usd": "0.5",
         "source_sha256": hashlib.sha256(source).hexdigest(),
+        "pricing_sha256": _pe.write(d),  # __fg_s427_i_pricing_evidence_v1__
     }
     key = Ed25519PrivateKey.generate()
     pub = key.public_key()

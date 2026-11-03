@@ -377,7 +377,8 @@ def test_kjs_dossier_manifest(bundles, tmp_path, mutation):
     _assert_refused(rc, so, se, "manifest.json", mutation, key)
 
 
-REBOUND = (("cost.farkas.json", "cost_farkas_sha256"),)
+REBOUND = (("cost.farkas.json", "cost_farkas_sha256"),
+           ("pricing.canonical.json", "pricing_sha256"))  # __fg_s427_i_rebound_v1__
 
 
 @pytest.mark.parametrize("mutation", MUTATIONS)

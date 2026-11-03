@@ -39,6 +39,7 @@ _BASELINE_FILES = {
     "verify_offline.py",
     "cost.farkas.json",  # __s170_leg2b_dossier_goldens_v1__
     "spec.canon",  # __nt_v1_spec_canon_carry_v1__
+    "pricing.canonical.json",  # __fg_s427_i_pin_v1__
 }
 
 

@@ -21,6 +21,7 @@ import hashlib
 import json
 import subprocess
 from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
+import _pricing_evidence as _pe  # __fg_s427_i_pricing_evidence_v1__
 import sys
 from pathlib import Path
 from typing import Any
@@ -64,7 +65,7 @@ def _base(**over: Any) -> Manifest:
         nous_version="5.36.0",
         smt_emit_version="1",
         source_sha256=_sha(SOURCE.encode("utf-8")),
-        pricing_sha256="1" * 64,
+        pricing_sha256=_pe.SHA,
         smt_spec_sha256="2" * 64,
         world_name="Demo",
         cost_cap_usd="10.00",
@@ -88,6 +89,7 @@ def _signed_text(m: Manifest) -> str:
 def _write(tmp: Path, manifest_text: str, sidecar: bytes | None) -> None:
     (tmp / "manifest.json").write_text(manifest_text, encoding="utf-8")
     (tmp / "source.nous").write_bytes(SOURCE.encode("utf-8"))
+    _pe.write(tmp)
     if sidecar is not None:
         (tmp / "coverage.gapwitness.json").write_bytes(sidecar)
     (tmp / "verify_offline.py").write_text(

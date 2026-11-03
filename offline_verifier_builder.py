@@ -259,6 +259,9 @@ _DISPATCH_MAIN_LINES = (
     "        )",
     "    print('OK   source.sha256 matches manifest "
     "(' + src_sha[:16] + '...)')",
+    "    _rc_pricing = _check_pricing(manifest, ROOT)",
+    "    if _rc_pricing != 0:",
+    "        return _rc_pricing",
     "    return 0",
     "",
     "",
@@ -491,6 +494,11 @@ def _extract_segments(
     return "\n\n".join(ordered)
 
 
+def _pricing_check_region() -> str:  # __fg_s427_i_pricing_embed_v1__
+    from pricing import PRICING_CHECK_EMBED
+    return PRICING_CHECK_EMBED
+
+
 def build_offline_verifier_v2(allowlist_literal: str = "{}") -> str:
     """Assemble and return the standalone verify_offline.py source string.
 
@@ -548,6 +556,7 @@ def build_offline_verifier_v2(allowlist_literal: str = "{}") -> str:
         anchor_shim,
         "\n\n" + _strict_json_region() + "\n",  # __an_js_strict_v1__
         "\n\n" + _v3_classes_region() + "\n",  # __nt_v3_classes_wire_v1__
+        "\n\n" + _pricing_check_region() + "\n",  # __fg_s427_i_pricing_embed_v1__
         dispatch_main,
     ]
     return "".join(parts)

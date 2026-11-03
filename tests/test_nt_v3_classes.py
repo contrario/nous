@@ -856,6 +856,8 @@ def _refuted_bundle_dossier(tmp_path: Path) -> tuple:
            "trace_bundle_sha256": hashlib.sha256(
                (d / "trace_bundle" / "manifest.json").read_bytes()
            ).hexdigest()}
+    import _pricing_evidence as _pe  # __fg_s427_i_pricing_evidence_v1__
+    man["pricing_sha256"] = _pe.write(d)
     man = tb._sign_manifest(man)
     (d / "manifest.json").write_text(json.dumps(man), encoding="utf-8")
     (d / "verify_offline.py").write_text(

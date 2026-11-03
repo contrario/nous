@@ -29,6 +29,7 @@ import importlib.util
 import json
 import subprocess
 from _v3pin import manifest_signer_args  # __nt_v3_classes_tests_v1__
+import _pricing_evidence as _pe  # __fg_s427_i_pricing_evidence_v1__
 import sys
 import tempfile
 from pathlib import Path
@@ -110,6 +111,7 @@ def _assemble(dossier_dir: Path, pack: Path, template: str,
     (dossier_dir / "source.nous").write_text("world W {}\n", encoding="utf-8")
     src_sha = hashlib.sha256(b"world W {}\n").hexdigest()
     man = {"source_sha256": src_sha, "verdict": "proven"}  # __nt_v3_classes_tests_v1__
+    man["pricing_sha256"] = _pe.write(dossier_dir)
     if with_field:
         import shutil
         shutil.copytree(pack, dossier_dir / "trace_bundle")
