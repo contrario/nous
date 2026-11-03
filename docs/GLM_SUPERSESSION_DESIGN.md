@@ -25543,3 +25543,294 @@ document itself.
                        "NOUS_S438_OPENER.md section 0 says"; the opener's
                        sections are 1 to 4 and the rule is its first,
                        unnumbered paragraph. The seat read that paragraph.
+
+  - S447 the number the operator gave the second entry of the seat S440,
+    which carries D446 landed and read back, the Gate of the split to
+    revision 2 and its measurements, APIS-K1, APIS-1 landed as 4fe4c5b9
+    and live on A, and the seat's findings
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S440,
+    DURING ITS SESSION. It describes the seat's work after D446, which is
+    landed and append-only. READ IN THE SEAT'S CONTAINER: computed off
+    host by S440, on its mirror of the public repository and its clones.
+    ON A: printed on Server A by a command the operator ran and pasted
+    back; each paste is kept as a file transcribed from the chat, some as
+    excerpts that say so. REVIEW: computed in the container by an agent of
+    the seat in a fresh context that had not seen the results, then read
+    by the seat. RESEARCH: read on the web by an agent of the seat; its
+    report holds every quote and URL. TESTIMONY: stated by another lane
+    and not measured here. DERIVED: computed from printed values or read
+    from code. OPERATOR: stated by the operator. RULING: a decision the
+    operator stated in words. Every time below is in UTC, on 11-03 of
+    2026. An operator's time is the time his message was sent; a value ON
+    A carries the clock its command printed where it printed one.
+
+    THE NUMBER. OPERATOR, 13:22Z: 447, in answer to the seat's question
+    which D number the next entry takes. READ IN THE SEAT'S CONTAINER from
+    13:22:49Z to 13:23:02Z by ns_count447.py (3d9621f2), its predictions
+    NUM447_PREDICTIONS.txt (74d271f9) hashed by 13:22:48Z, on the mirror
+    fetched from GitHub at 13:20:31Z (named before it ran), 163 refs,
+    1052 commits, 3188 distinct blobs and 70 annotated tags, main at
+    4fe4c5b9: the header "  - S447 ", the anchor D447-, the marker
+    __s447_, the token FG-S447 and the words S447 and D447 counted zero in
+    the blobs of the trees of every ref, in every commit message on every
+    ref and in the annotated tag messages. A pass blind to case found
+    d447 9 times in 9 blobs, each inside a hexadecimal run of eight or
+    more digits. Controls on the same instrument: the header of S446
+    counted 2, in one blob, the document at main (5784a7d4); the anchor
+    D446- 15 there; FG-S440 11 there and 2 in messages; the word D446 1
+    in messages. Every prediction held. The instrument that appends this
+    entry refuses unless the header, the anchor and the marker of 447 and
+    the codes FG-S440-E to FG-S440-M still count zero in the document when
+    it runs. The codes below are this seat's, FG-S440-E to FG-S440-M.
+
+    D447-1  THE LANDING OF D446. ON A, each write after its pame, the
+            pastes transcribed (land_dry_1103.txt 4ca85398,
+            land_apply_1103.txt bfa8921c, commit_dry_1103.txt 1ec5617e,
+            commit_commit_1103.txt 3714d77e, commit_push_1103.txt
+            f9333a08): at 11:51Z D446_LAND --dry, HEAD and origin
+            5151cc4d, BLOB_HEAD ae1761ab, porcelain 0, the document
+            0b26cb83, 1555726 B, mode 644, 986:981, STATE BEFORE, the
+            namespace 0 0 0 0, DOC_NEW 085da9f8, 1570603 B,
+            DRY_RUN_GREEN; pame 11:52Z; at 11:53Z WROTE and READBACK
+            085da9f8, 644, 986:981, porcelain 1, APPLY_GREEN; at 11:54Z
+            D446_COMMIT --dry, BLOB_WORKTREE 5784a7d4, the pinned
+            identity, lint 437 files and 0 violations, DRY_RUN_GREEN;
+            pame 11:55Z; at 11:55Z FETCH_RC 0, origin 5151cc4d, NEW_HEAD
+            56a88b22, CHECK_COMMIT OK, porcelain 0, COMMIT_GREEN; pame
+            11:55Z; at 11:56Z REMOTE_MAIN 56a88b22, PUSH_GREEN. READ IN
+            THE SEAT'S CONTAINER, fetched from GitHub at 11:56:35Z:
+            56a88b22, parent 5151cc4d, author and committer Hlias Staurou
+            at 11:55:16Z, one path, blob 5784a7d4, sha256 085da9f8; its
+            first 1555726 B the old document, its last 14877 B the entry
+            (cf0479ef); the message 605a4a80, 569 B, byte for byte. The
+            tools D446_LAND.py 18f2c1ce and D446_COMMIT.py 29ef0571 were
+            built from D439's, uploaded by the operator at 11:46Z from A's
+            /root (7bf1e16d, 0b72991d, the S438 handoff's digests); their
+            predictions D446_PREDICTIONS.txt 615258c6 hashed by 11:48:18Z;
+            on the fixture 22 cases at the predicted exit codes and 6
+            mutants killed (fx_out.txt 0773c93d). One predicted line
+            missed there: the fixture's claim lint scanned 406 files, A's
+            437 (FG-S440-F).
+
+    D447-2  THE GATE OF THE SPLIT. OPERATOR, 11:58Z, in Greek: go to the
+            Gate of the split. NOUS_S440_GATE_SPLIT.md revision 1
+            b62843f6, 448 lines, evidence S440_GATE_R1_EVIDENCE.tgz
+            90b70342; OPERATOR, 12:17Z, in Greeklish: accept them if they
+            are right and evidenced; research deeper; the right
+            architecture with security; the mistakes to avoid; what is not
+            seen at first glance; what the seat would do, and why.
+            Revision 2 d2e9b54d, 661 lines, evidence
+            S440_GATE_R2_EVIDENCE.tgz 0acd7b90. RULING, 12:37Z, in
+            Greeklish: "I accept the order, go": the order of its section
+            13.6, APIS-K1 first, then slice 1 with both routes and no
+            spec_version bump, then S7 (region v2) with the next release,
+            and S8 (the bytes-first envelope) banked as
+            BUILD-ELIGIBLE-DEFERRED. Not in this repository; the operator
+            holds the Gate and its evidence.
+
+    D447-3  THE GATE'S MEASUREMENTS. READ IN THE SEAT'S CONTAINER, a clone
+            at 56a88b22, Python 3.13, fastapi 0.162.0, pydantic 2.14.2,
+            from PyPI at 12:00Z, the API in process, each run's
+            predictions hashed before it. SPL-K0 (787de17f, 12:01:29Z):
+            over one honest bundle and text edits that leave the signed
+            canonical body as it was, /v1/verify-conformance PASS where
+            the offline text exits 1 INTEGRITY by name, for a duplicate
+            member put first in the certificate, the trace and the
+            manifest ("verdict": "refuted" before the signed 'proven'), a
+            signature_b64 twice and a NaN in the signature block.
+            REVIEW: an agent's own probe (b67a558e), its own members, the
+            same results (report 931487a4). SPL-K1 (fb2bbf14):
+            /v1/verify-dossier ACCEPT on that manifest. SPL-K2 (6f401530):
+            the routes' parse-failure forms. SPL-K3 (6e4a1f4b): the region
+            accepts an unpaired surrogate, a noncharacter and 1e400; a
+            manifest signed with safety_margin_pct inf, refused as written
+            (Infinity), passes the region and its signature with the token
+            spelled 1e400; 60000 nested arrays raise RecursionError, a 500
+            on verify-conformance and "unhandled" in the offline text.
+            DERIVED: verify.html and ide.html call /v1/verify-dossier and
+            escape the API's errors; no served page calls
+            /v1/verify-conformance. RESEARCH: two reports, 56827bc5 and
+            1796b85b; the seat read RFC 7493 s2.1 and s2.3 itself.
+
+    D447-4  APIS-K1. Predictions 4d0561c1 hashed by 12:38:58Z. The first
+            probe (c875e93d) stopped at an exception after A1; a second
+            (52683557) failed on a line of the seat's own; the third
+            (d51e5c8c, output 88a395be) ran all legs. A1: no float in
+            the honest certificate, trace or manifest, and no non-finite
+            token. A2 MISSED: predicted that a cost_cap written as a
+            400-digit literal builds a manifest; the parser refuses it
+            (FG-S440-J). A3, A3b and A4: the pricing loader refuses an
+            infinite price, a string "inf" and an infinite multiplier.
+            On these writers and inputs no NOUS writer signs a non-finite
+            number from a user input: KC1 did not fire. Other signers
+            (ndec, receipts, VSA) were not measured.
+
+    D447-5  APIS-1, BUILT. Predictions APIS1_PREDICTIONS.txt d1674413
+            hashed by 12:42:39Z; amendment A1 dbfdc685 by 12:44:11Z (an
+            unpaired surrogate in the request never reaches the route,
+            FG-S440-K; its case tests the helper); amendment A2 46906ace
+            by 12:53:25Z. Red on the base at 12:44:38Z: the new file's 20
+            tests, 5 passed and 15 failed, the 5 predicted, each failure
+            a PASS, an ACCEPT or the missing helper. P1 MISSED: the base
+            suite in a venv with no install of the tree, 158 failed and
+            then 155 (No module named 'cli'); the changed tree had one
+            more, test_s97_certificate's malformed-JSON case, a 500 where
+            200 MALFORMED was answered: a regression, fixed before A by
+            leaving a syntax error to the route's own parse (A2). With an
+            editable install and nous on PATH: base 5151 passed, 14
+            skipped; changed 5171 passed, 14 skipped, 0 failed, as A2
+            predicted. 8 mutants, each killed by a behavioral case
+            (mutants2_out.txt 59550ec7). claim_lint 0. APIS-K0
+            (predictions 5391852f, 12:49:10Z) against a local server in
+            the container, before and after, as predicted. The kit:
+            APIS1_LAND.py 2671f804, APIS1_COMMIT.py 363d0485, apis_k0.py
+            cf0070f8, sums 4ea61c08; its predictions 5472c929 by
+            13:05:52Z; on the fixture 22 cases at the predicted exit codes
+            and 5 mutants killed (fx_apis1_out.txt e7623b4f). Evidence
+            S440_APIS1_EVIDENCE.tgz 739e771d.
+
+    D447-6  WHAT LANDED, 4fe4c5b9. nous_api_server.py: a helper
+            _apis_strict that encodes a field with surrogatepass and reads
+            it through conformance_verifier.loads, imported, not copied,
+            and leaves text that is not JSON to the route's own parse;
+            five sites, certificate_json, trace_json and manifest_json on
+            verify-conformance (api.1 to api.3), manifest_json on
+            verify-dossier's policy path (api.4) and V1 path (api.5); a
+            refusal answers each route's existing form with the region's
+            message; the route comment no longer says verify.html calls
+            it. CHANGELOG [Unreleased]: a Security line and a Known limits
+            line (the library functions stay lenient; the region's own
+            limits apply). One paragraph in docs/RUNTIME_CONFORMANCE.md,
+            one sentence in docs/VERIFY_DOSSIER.md; its line 18 is
+            unchanged (Gate D10). tests/test_apis1_strict_routes.py, 20
+            tests: the variants, parity with the offline text on the same
+            bytes, the helper, and a static census of the request fields
+            that carry an artifact. The spec versions are unchanged.
+
+    D447-7  APIS-1 ON A. Pastes transcribed: apis1_sums_1103.txt
+            96b4c810, apis_k0_a_before_1103.txt 9b3a205f,
+            apis1_land_dry_1103.txt 9f29c1a7, apis1_suite_1103.txt
+            19b2f955, apis1_commit_1103.txt 8b2ffbd2 and
+            apis1_push_1103.txt 874ae0fa (excerpts),
+            apis1_restart_1103.txt cbe9724a, apis_k0_a_after_1103.txt
+            0b767a7e. At 13:09Z the kit's sums OK. Pame 13:09Z; at 13:10Z
+            APIS-K0 BEFORE on the live API: dossier ACCEPT on the honest
+            manifest and on the duplicate verdict, signature_ok true
+            without a policy, conformance PASS on the honest and on the
+            duplicate certificate; HOME 0, the temp dir removed. At 13:10Z
+            APIS1_LAND --dry, HEAD and origin 56a88b22, the four blobs at
+            HEAD as pinned, porcelain 0, STATE BEFORE, COMPILE_OK 2,
+            DRY_RUN_GREEN; pame 13:10Z; at 13:11Z five WROTE lines at
+            their digests, 644, 986:981, porcelain 5, APPLY_GREEN; pame
+            13:11Z; at 13:17Z the operator pasted the apply's output
+            again, not a new run (STATE BEFORE and WROTE, where a second
+            apply prints SKIP); at 13:18Z the suite under tests/, HOME a
+            temp dir, XDG_DATA_HOME unset, safe.directory by GIT_CONFIG_*:
+            5173 passed, 12 skipped, HOME_FILES 0, PORCELAIN_AFTER 5, as
+            predicted; at 13:19Z APIS1_COMMIT --dry, the five worktree
+            blobs, the identity, lint 437 files and 0 violations,
+            DRY_RUN_GREEN; pame 13:19Z; at 13:19Z FETCH_RC 0, origin
+            56a88b22, NEW_HEAD 4fe4c5b9, CHECK_COMMIT OK, porcelain 0,
+            COMMIT_GREEN; pame 13:20Z; at 13:20Z REMOTE_MAIN 4fe4c5b9,
+            PUSH_GREEN. READ IN THE SEAT'S CONTAINER, fetched from GitHub
+            at 13:20:31Z: 4fe4c5b9, parent 56a88b22, author and committer
+            Hlias Staurou at 13:19:37Z, four paths changed and one added,
+            each equal to the seat's tree; the message 82805956, 946 B,
+            byte for byte. At 13:21Z, without a stated pame (FG-S440-E):
+            NeedDaemonReload no, MainPID 3129772, NRestarts 0, RESTART_RC
+            0, health 8.0.0 at 13:20:59Z, MainPID 3721556, NRestarts 0,
+            active. Pame 13:21Z; at 13:22Z APIS-K0 AFTER on the live API:
+            dossier ACCEPT on the honest manifest and REJECT on the
+            duplicate, "parse_error: StrictJsonError: manifest_json
+            [js:api.4] refused: duplicate key 'verdict'"; without a policy
+            signature_ok false by [js:api.5]; conformance PASS on the
+            honest certificate and MALFORMED on the duplicate by
+            [js:api.1]; HOME 0, the temp dir removed. As predicted.
+
+    D447-8  WHAT THIS SEAT WROTE AND READ, 11-03 AFTER D446. To the
+            repository: 56a88b22 and 4fe4c5b9, by the operator's
+            commands. On A: the commands of D447-1 and D447-7; to /root,
+            by the operator, D446's two tools and the APIS-1 kit's four
+            files; one restart of nous-api. To B and to /var/www: nothing.
+            Seat network, each named before it ran: the mirror fetched
+            from GitHub at 11:56:35Z, 13:03:44Z and 13:20:31Z; PyPI into
+            the seat's venv at 12:00:24Z (the dependencies), 12:46:11Z
+            (pyflakes, pygls, lsprotocol) and 12:53:39Z (setuptools and
+            wheel, then editable installs with no dependencies); a WebFetch
+            of RFC 7493 at rfc-editor.org before 12:20Z; two research
+            agents, web only. In the container only: local API servers on
+            127.0.0.1:8000. The project: no read, no write.
+
+    D447-9  WHAT STAYS OPEN. This entry on A by its two tools, each write
+            after its pame. S7, region v2, with the next release: refuse
+            non-finite values, not only tokens (FG-S440-H); unpaired
+            surrogates, noncharacters and a named depth (FG-S440-I);
+            every NOUS signer with allow_nan off; it moves every text that
+            carries the region, so its FG-S426-D window is named before
+            its apply and its order against the DFG slice is set. S8,
+            banked: verify the signed bytes before any parse, with a
+            census of raw-byte identities first (Gate H6). The library
+            functions stay lenient (CHANGELOG Known limits). The Gate's S2
+            to S6 as its section 12 routes them. FG-S440-J and FG-S440-K,
+            not ruled. The pages' innerHTML (Gate H7). The S427 lane's
+            owed entry for 5151cc4d appends after this one. The next
+            release carries 4fe4c5b9 with the commits already unreleased.
+            Hygiene on A: the kits in /root (D439, D446, APIS-1, rule0 and
+            its sums) and the suite temp HOMEs under /tmp.
+
+    FINDINGS
+
+            FG-S440-E  SEAT. A COMMAND SENT WITH ITS PAME QUESTION. The
+                       restart command was in the message that asked for
+                       the pame, and the operator ran it; no pame was
+                       stated. The rule is describe, ask, then give the
+                       command. Every later write in this seat followed it.
+
+            FG-S440-F  WORLD. CLAIM LINT COUNTS BY TREE SHAPE. At the same
+                       commit, a fresh clone scans 406 files and A's tree
+                       437, with porcelain 0 on A. Not explained here.
+
+            FG-S440-G  WORLD. THE PUBLIC VERIFICATION ROUTES PASSED BYTES
+                       THE OFFLINE VERIFIER REFUSES. Measured in the
+                       container (SPL-K0, SPL-K1, REVIEW) and on A's live
+                       API (APIS-K0 BEFORE). Closed by 4fe4c5b9, restarted,
+                       measured again on A (APIS-K0 AFTER).
+
+            FG-S440-H  WORLD. THE REGION REFUSES THE TOKEN, NOT THE VALUE.
+                       A signed infinity refused as Infinity passes as
+                       1e400 (SPL-K3, K3-5). It forges nothing; it needs a
+                       signer that signed an infinity. Open, S7.
+
+            FG-S440-I  WORLD. THE REGION ADMITS WHAT I-JSON FORBIDS IN
+                       STRINGS, AND DEPTH IS UNNAMED. An unpaired surrogate
+                       and a noncharacter pass (RFC 7493 s2.1); deep
+                       nesting fails closed as an unnamed RecursionError.
+                       Open, S7.
+
+            FG-S440-J  WORLD. A COST LITERAL PASSES THROUGH A BINARY
+                       FLOAT. parser.py's FLOAT is float(tok) and
+                       cost_amount_float is Decimal(str(...)): a cap past
+                       double precision is rounded before the proof, and
+                       one past its range is refused at parse. Open, not
+                       ruled.
+
+            FG-S440-K  WORLD. A LONE SURROGATE IN A REQUEST IS A 500.
+                       Pydantic refuses the field, and FastAPI's 422
+                       handler fails to encode the echoed input
+                       (UnicodeEncodeError). The framework's, outside
+                       APIS-1. Open, not ruled.
+
+            FG-S440-L  SEAT. PREDICTIONS MISSED, EACH MEASURED BEFORE A
+                       CLAIM. APIS-1 P1 (the venv had no install of the
+                       tree); APIS-K1 A2 (refused at parse, not built);
+                       D446's fixture lint count (FG-S440-F). A first base
+                       suite with options the venv lacks printed no count
+                       and was discarded. A regression, caught by an
+                       existing test before A (D447-5).
+
+            FG-S440-M  SEAT. A KILL PATTERN MATCHED ITS OWN SHELL. In the
+                       container, pkill -f with the server's command line
+                       killed the seat's own command; a server left running
+                       answered one later check, which is not evidence
+                       here. Nothing outside the container.
