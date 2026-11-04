@@ -26813,3 +26813,376 @@ document itself.
                        (D450); the control of NUM452 had counted it, and
                        the seat refused it before any write. A question
                        asks for one value.
+
+  - S455 the number the operator gave the first entry of the seat
+    S454, the seat after S453 that verified the S453 seal by its
+    digests and ran its RULE 0, which carries what that seal owed:
+    D452's landing, G3, KS4, G4, the codes FG-S453-D and FG-S453-E,
+    and the seal itself
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT
+    S454, DURING ITS SESSION, and uses the labels of D450 to D452: READ
+    IN THE SEAT'S CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED,
+    OPERATOR and MEASURED. Every time below is in UTC, on 11-04 of 2026
+    unless another day is named. An operator's time is the time his
+    message was sent; a value ON A carries the clock its command printed
+    where it printed one. Each paste ON A is kept as a file transcribed
+    from the chat, under ona_s454/ in the seal of S454. What the seat
+    S453 measured and this seat did not run again is INHERITED, from
+    the S453 seal's evidence, each file checked here by its digest.
+
+    THE NUMBERS. OPERATOR, 14:14Z: the kickoff, for the seat after S453,
+    its number to be given. OPERATOR, 17:05Z: 454, in answer to the
+    seat's one question asking the number of the seat. MEASURED from
+    17:14:45Z to 17:15:17Z by ns_count454.py (6a4e9624, ns_count453.py
+    with its targets set to 454, 453 and 452, its nonce changed and one
+    read added, K8), its predictions NUM454_PREDICTIONS.txt (4441ad93)
+    hashed at 17:07:11Z, before the instrument was written, on a mirror
+    cloned from GitHub from 17:07:19Z to 17:14:40Z (named before it
+    ran), 163 refs, 1058 commits, 3189 distinct blobs and 70 annotated
+    tags, main at 054ad571: for 454 the header, the anchor, the marker,
+    the token FG-S454 and the words S454 and D454 counted zero in the
+    blobs of the trees of every ref, in every commit message on every
+    ref and in the annotated tag messages; a pass blind to case found no
+    hit outside a hexadecimal run. The values for 453 and 452 were
+    DERIVED before the run, NUM453's counts plus D452's entry and
+    message (derive454.py 03ab7e61), and each held: FG-S453 10 in one
+    blob, the document at main (dbf542ce), and 2 in one message; the
+    word S453 13 there and 4 in that message; the header of S452 1 and
+    the anchor D452- 10 there; the header of S450 1 and the anchor D450-
+    18 there; FG-S449 36 there and 4 in 2 messages; the header of S449
+    0; a nonce 0; dbf542ce in the tree of main alone, 2964ee58 in none
+    (ns_count454_out.txt c2faea3a, NUM454_RESULTS.txt 0fef40a8). The
+    bare word 454, read: three hits, two inside the binary
+    noesis_embeddings.npz and one a line number in
+    NOUS_SESSION_59_HANDOFF.md in 25 tag trees; none names a seat or an
+    entry. OPERATOR, 17:17Z: 455 for the entry. MEASURED from 17:18:12Z
+    to 17:18:44Z by ns_count455.py (51abcc8b), its predictions
+    NUM455_PREDICTIONS.txt (4e44bbd2) hashed at 17:18:02Z, on the mirror
+    fetched from GitHub at 17:18:11Z (named before it ran), the same
+    inventory: for 455 the same six counts zero and no blind hit outside
+    a hexadecimal run; the bare word 455 one hit, inside the binary
+    noesis_embeddings.npz; for 454 and 453 again the counts of 17:15Z;
+    main and the refs the same after (ns_count455_out.txt baa9cb60,
+    NUM455_RESULTS.txt c73262d1). The instrument that appends this entry
+    refuses unless the word S455, the anchor and the marker of 455 and
+    the codes below still count zero in the document when it runs. The
+    codes below are FG-S453-D and FG-S453-E, the seat S453's, and
+    FG-S454-A and FG-S454-B, this seat's.
+
+    D455-1  THE SEAL OF S453. OPERATOR, 14:14Z: the kickoff, naming five
+            files by digest: NOUS_SESSION_453_HANDOFF.md 39aff64a,
+            NOUS_S453_OPENER.md 3147f507, rule0_s438.sh 0d6f5aa9,
+            S453_SEAL_EVIDENCE.tgz 736eafc5 and S453_SEAL_SHA256SUMS.txt
+            ed7653e6. READ IN THE SEAT'S CONTAINER at 14:14:58Z: the five
+            uploads, found by digest under changed names, equal those
+            digests, 15410, 5470, 3877, 58999 and 349 B; a zero digest,
+            the negative control, matched no file. The sums file holds
+            four lines and not its own; later, with the four files copied
+            under their listed names, each is OK. Five files of the Project
+            arrived with them; the seat hashed them in the same command
+            and read none. The text of four of the seal files had
+            reached the seat with the kickoff, before any tool ran; the
+            seat acted on none of them before the digests matched, and
+            its first reply said so (FG-S453-A not repeated). The
+            archive, extracted into an empty directory, holds 53 regular
+            files; its EV_SHA256SUMS.txt (70874146) lists the other 52
+            and each is OK. The handoff's section 9 names 50 of them,
+            not g3/runG_meta.txt (f7a4c03d) and ks4/runO_meta.txt
+            (9ae4b311) (FG-S454-A). ON A, paste 16:57Z: the loop over
+            /root printed FOUND S453_SEAL_SHA256SUMS.txt and FOUND_COUNT
+            1 with the digest it looked for. Paste 16:58Z: sha256sum -c
+            with --ignore-missing printed rule0_s438.sh: OK, RC 0; the
+            three other listed files ABSENT from /root; LISTED 4.
+
+    D455-2  RULE 0. OPERATOR, 14:16Z, in Greeklish, to the seat's
+            question whether another lane holds the tree or the hosts:
+            no, all are free. The seat named the writes (rule0's fetch of
+            origin's refs, a possible index refresh by git status on A
+            and on B, the suite under a temp HOME in /tmp, bytecode under
+            the tree; no tracked file, no restart) and the network calls
+            (the fetch, one ssh to B, one curl to PyPI), and asked a pame
+            without giving the command. OPERATOR, 16:59Z: pame. ON A by
+            rule0_s438.sh, paste 17:04Z, A's clock 17:00:00Z: fetch_rc 0;
+            HEAD and origin 054ad571, the log 054ad57, 29bcf1c, ff66271,
+            1f45f37; porcelain empty; v8.0.0 peeling to 580c28f4; A
+            health 8.0.0, uptime 58888 s, MainPID 2363391; B health
+            8.0.0, uptime 536295 s, HEAD 580c28f4 at v8.0.0, porcelain
+            "?? .venv/", pip Version 8.0.0, MainPID 3078825; the floor
+            3912; the suite under tests/, HOME a new temp dir,
+            XDG_DATA_HOME unset, safe.directory by GIT_CONFIG_*: 5196
+            passed, 12 skipped, 11 warnings, in 269.00 s, HOME_FILES 0,
+            PORCELAIN_AFTER 0; claim_lint 437 files, 0 violations;
+            sidecar_lint 265, 0; the mirror CLEAN, 569 tracked, 4
+            orphans; the registry logged, True, True, 154, 0, 174366343,
+            repo and served 7e6ef662; the release VSA index 3a3bab3f,
+            repo and served; PyPI latest 8.0.0. At 17:04:40Z, Asklepios:
+            nous-api healthy 200 0, nous-bot healthy 0, nous-key-guard
+            healthy 0, each checked at 17:04:08Z or 17:04:09Z, age 31 or
+            32 s. The timer nous-serve-integrity.timer active and
+            waiting, last trigger 17:01:12Z, next 17:30:37Z, Result
+            success; its unit nous-serve-integrity.service inactive,
+            ExecMainStatus 0, exit 17:01:12Z, its journal RESULT: CLEAN,
+            569 tracked, 4 orphans. Every row equals the S453 opener's
+            EXPECTED; no row moved. DERIVED: A's process started at
+            00:38:32Z, the restart the opener names; B's at about
+            12:01:46Z on 10-29, as D452-2 gives. Not measured: whether
+            the run wrote ignored bytecode under the tree; its
+            PORCELAIN_AFTER counts changed and untracked files, not
+            ignored ones.
+
+    D455-3  THE OTHER LANES. OPERATOR, 14:16Z: none holds the tree or
+            the hosts. READ IN THE SEAT'S CONTAINER, on the mirror of
+            17:14Z and of 17:18Z: main 054ad571 both times, no commit
+            above D452; the branches main, nous-trace (09109512) and
+            refs/pull/1/head (49b70920); 160 tags, the latest reachable
+            from main v8.0.0, 25 commits below main. The S427 lane's DFG
+            slice has not landed; 5151cc4d still has no entry
+            (TESTIMONY, the S427 handoff, through D446-3, D450-3 and
+            D452-3: it is that lane's to write).
+
+    D455-4  THE LANDING OF D452. INHERITED, the S453 handoff
+            (39aff64a), section 6, and the six pastes of ona_s453/ in the
+            seal's evidence (d452_sums_1104.txt 21d06460,
+            d452_land_dry_1104.txt d893b911, d452_land_apply_1104.txt
+            9a85d741, d452_commit_dry_1104.txt b5e49367,
+            d452_commit_commit_1104.txt fa0658b2,
+            d452_commit_push_1104.txt ef0ea58d): ON A, each write after
+            its pame: at 12:55Z D452_KIT_SHA256SUMS.txt ce24a958,
+            D452_LAND.py and D452_COMMIT.py OK; at 13:00Z the dry run,
+            HEAD and origin 29bcf1c4, BLOB_HEAD 2964ee58, porcelain 0,
+            the document 79034652, 1638366 B, mode 644, 986:981, STATE
+            BEFORE, the namespace 0 0 0 0, DOC_NEW d20e166f, 1653201 B,
+            DRY_RUN_GREEN; pame 13:04Z; at 13:05Z WROTE and READBACK
+            d20e166f, 644, 986:981, porcelain 1, APPLY_GREEN; at 13:08Z
+            the commit tool's dry run, BLOB_WORKTREE dbf542ce, the pinned
+            identity, lint 437 files and 0 violations, DRY_RUN_GREEN;
+            pame 13:08Z; paste 13:15Z: FETCH_RC 0, origin 29bcf1c4,
+            NEW_HEAD 054ad571, CHECK_COMMIT OK, porcelain 0,
+            COMMIT_GREEN; pame 13:18Z; at 13:18Z origin 29bcf1c4,
+            REMOTE_MAIN 054ad571, PUSH_GREEN. READ IN THE SEAT'S
+            CONTAINER, on the mirror of 17:14Z: 054ad571, parent
+            29bcf1c4, author and committer Hlias Staurou at 13:09:05Z,
+            one path; the document blob 2964ee58 to dbf542ce, sha256
+            79034652 to d20e166f, 1638366 B to 1653201 B; its first
+            1638366 B the old document and its last 14835 B the entry
+            (2064b63c), ASCII, no line over 73 columns; the raw message
+            5759d786, 483 B, equal byte for byte to the message
+            D452_COMMIT.py (e36a75c7) embeds; the entry D452_LAND.py
+            (bdb5cc07) embeds equals those last 14835 B. The tools,
+            INHERITED: build_d452.py (477fe28f); predictions
+            D452_PREDICTIONS.txt (4d7dab72) hashed at 12:53:02Z; on a
+            fixture made from the mirror, 30 cases at the predicted exit
+            codes and 9 mutants killed (fx_d452.py 0a7d5bd6,
+            fx_d452_out.txt 148245c4). No restart: a document only.
+
+    D455-5  G3, THE READER CENSUS. INHERITED, the S453 seal's evidence,
+            g3/. OPERATOR, 13:21Z, in Greek: start G3 here. The question
+            of the Gate of S7b r1 (0e05305d), G3: for each of the 33 SIGN
+            and HASH sites of S7B_CENSUS.txt (bb5a318f), does a call of
+            the strict json region's loads read the site's bytes, its
+            content or its digest when the suite runs? Predictions
+            G3_PREDICTIONS.txt (a39e7b68) hashed at 13:24:46Z, before the
+            instrument; the mirror fetched from GitHub at 13:24:53Z, main
+            054ad571, 163 refs; a fresh clone; the diff of *.py, *.toml
+            and *.lark from ff662714 empty, so C4's site table holds by
+            line; a venv on Python 3.13.18, 39 packages from PyPI from
+            13:25:02Z to 13:25:18Z (freeze.txt ebc45aef). The instrument
+            g3_instrument.py (344fd8ed), loaded by a .pth line
+            (FG-S449-I), wraps json.dumps and json.loads and returns
+            their results unchanged; at a site it records the output's
+            digest and normal form; a json.loads whose parse_constant is
+            the region's _token is a region read, recorded with its
+            label, its caller and its sub-objects. Matched offline: M1
+            an output is a region read's input; M2 a normal form is a
+            region read's sub-object, whole or less one member, or less
+            signature and transparency_log; M3 an output's digest is hex
+            in a region-read document; M4 an output equals a
+            recomputation by a region carrier in a process that made a
+            region read. The control before the suite (g3_control.py
+            4afeca4d, 13:26:57Z): bytes region-read whole M1, bytes read
+            only by a plain json.loads no match, a body inside a signed
+            document M2, a digest as hex M3: held. Run G, 13:27:06Z to
+            13:32:18Z: 5194 passed, 14 skipped, 13 warnings, rc 0, no
+            file under HOME, porcelain 0 (runG.txt d384f24b,
+            runG_meta.txt f7a4c03d); 1072 processes, 1003 with region
+            reads, 7498 region reads under 518 labels; every prediction
+            held (g3_sites.json 7a04df57, g3_report.py e29727cd,
+            g3_report_G.txt 016c9c13, G3_RESULTS.txt 16230324). The 33:
+            23 IN, MEASURED: SIGN annex_iv_map.py:146, build_vsa.py:80,
+            conformance.py:781, continuity_ledger.py:57,
+            guardrails_adapter.py:75, llm_guard_adapter.py:76,
+            santander_adapter.py:120, manifest.py:235, ndec.py:152,
+            nous_trace.py:272, verifier_registry.py:123, vsa.py:97; HASH
+            annex_iv_map.py:159, cli_verify.py:263, :384 and :902,
+            cli_vsa.py:54, closure_witness.py:64 (M4 only),
+            continuity_checkpoint.py:64, cost_farkas.py:292,
+            manifest.py:310, ndec.py:86, pricing.py:343. 3 IN, DERIVED
+            by reading code: attest_apr.py:179, provenance.py:134,
+            run_identity.py:158. 2 OPEN, no region reader found:
+            ast_nodes.py:409 and closure_attestation.py:100, out unless
+            one is found (the Gate's G3 rule). 5 OUT as the Gate
+            predicted: memory_entry.py:77 and :155, memory_keyring.py:59,
+            memory_store.py:180, replay_store.py:97. S7b's guard set:
+            the 26 IN sites. A match is of content, not a call chain.
+
+    D455-6  KS4, THE OBSERVE RUN. INHERITED, the seal's evidence, ks4/.
+            OPERATOR, 13:35Z, in Greek: continue with KS4 here. The
+            question (the Gate's KS4): with the strict re-read run at
+            every site, counting and refusing nothing, is any honest byte
+            string refused? Predictions KS4_PREDICTIONS.txt (47925b27)
+            hashed at 13:36:33Z, before the instrument; the mirror
+            fetched from GitHub at 13:37:11Z, main 054ad571; G3's clone
+            and venv, G3's .pth line and module removed; the instrument
+            ks4_instrument.py (a0e0bbca), by a .pth line, re-reads each
+            site's output with conformance_verifier.loads inside a try,
+            counts calls, accepts and refusals, and returns the output
+            unchanged. The control before the suite (ks4_control.py
+            2d29cd52, 13:37:11Z): a dict holding NaN refused, an honest
+            dict accepted, a dict holding the string "\ud800" refused as
+            an unpaired surrogate; each control output equal to the
+            unwrapped json.dumps's: held. Run O, 13:37:17Z to 13:42:37Z:
+            5194 passed, 14 skipped, 13 warnings, rc 0, no file under
+            HOME, porcelain 0 (runO.txt ce49b3eb, runO_meta.txt
+            9ae4b311); all 33 reached, the calls per site equal to run
+            G's. 16441 re-reads, 6 refused, all at ndec.py:86, NaN and
+            -Infinity (nan_top and neginf_top) under test_an_js_strict_b,
+            _c and _e, the hostile NDECs those tests build on purpose
+            through manifest_canonical_sha256, a helper S7b does not
+            guard (G2); 0 refused at the other 32 sites. Totals: IN
+            measured 15641 calls, 15635 accepted, 6 refused; IN derived
+            77, 77, 0; OPEN 99, 99, 0; OUT 624, 624, 0 (ks4_sites.json
+            08fc27b8, ks4_report.py 1693395d, ks4_report_O.txt 3dd1d96a,
+            KS4_RESULTS.txt 38b73e7e). KS4 holds on the suite: no honest
+            byte string refused. A site is a helper's call, broader than
+            an entry-point guard; the re-read is of the str the writer
+            encodes.
+
+    D455-7  G4, THE CLI RC. INHERITED, the seal's evidence, g4/, and the
+            S453 handoff, sections 1 and 3. At about 13:43Z the seat S453
+            proposed rc 3 for a CLI writer refused by its guard.
+            OPERATOR, 13:58Z, in Greeklish: go with the seat's proposal,
+            with evidence. Predictions G4_PREDICTIONS.txt (c19cdfd0)
+            hashed at 13:58:27Z, before g4_census.py (a11c92e3), which
+            reads cli_verify.py at 054ad571 with ast (g4_out.txt
+            94e15f7d). Each message then read in the code (DERIVED;
+            G4_RESULTS.txt 948547f7): the seven "return 3" each follow an
+            ERROR on an input the run cannot proceed with (lines 82, 121,
+            130, 143, 160, 192, 227); of the 28 "return 1", 23 print
+            "REFUSED: ...", the writer declining to write, the closest
+            "REFUSED: gap-witness serialization refused (...); no
+            manifest written" at line 900, beside the HASH site
+            cli_verify.py:902; 1 "NOUS does not sign a system with an
+            unproven ..." (244); 3 WARN (924, 932, 949); 1 with no print
+            near it (831). The census refuted the proposal; the seat said
+            so before any code (FG-S453-D). RULING, OPERATOR, 14:01Z, in
+            Greek: a CLI writer refused by its S7b guard prints
+            "REFUSED: <reason>" and exits 1, not 3. The use of REFUSED
+            outside cli_verify.py is not measured.
+
+    D455-8  THE SEAL OF S453, ITS LAST MEASUREMENTS. INHERITED, the S453
+            handoff, section 2a, and the evidence. OPERATOR, 14:04Z, in
+            Greeklish: seal. SEAL_PREDICTIONS.txt (45f05d0d) hashed at
+            14:05:07Z, before the runs; the mirror fetched from GitHub at
+            14:05:14Z, main 054ad571, 163 refs; G3's clone at 054ad571,
+            the KS4 instrument removed from the venv, so json.dumps is
+            the stdlib's; its suite under tests/ with HOME a new empty
+            dir and XDG_DATA_HOME unset, 14:05:20Z to 14:10:47Z: 5194
+            passed, 14 skipped, 13 warnings, rc 0, no file under that
+            HOME, porcelain 0 (suite_seal.txt ed447309, whose last line,
+            read here, gives 5194 passed, 14 skipped, 13 warnings in
+            324.50 s; suite_meta.txt 4b5f8951); rule0_s438.sh carried
+            unchanged, 0d6f5aa9. Every prediction held. ON A at 054ad571
+            (D455-2): 5196 and 12, the container's plus 2 and minus 2, as
+            in S431, S438, S440, S449 and S453.
+
+    D455-9  WHAT THIS SEAT WROTE AND READ. To the repository, to B and
+            to /var/www: nothing before this entry. On A: the commands of
+            D455-1 and D455-2, among them rule0's fetch of origin's refs
+            and its suite under a new temp HOME in /tmp; to /root, by the
+            operator, S453_SEAL_SHA256SUMS.txt, then this entry's tools.
+            Seat network, each named before it ran: the mirror cloned
+            from GitHub from 17:07:19Z to 17:14:40Z and fetched at
+            17:18:11Z. No PyPI, no web search, no web page, no agent. The
+            Project: no read and no write by the seat.
+
+    D455-10 WHAT STAYS OPEN. This entry on A by its two tools, each
+            write after its pame; the next entry records its landing. The
+            next object, ruled by the operator at 11:39Z on the Gate's
+            terms, G3, KS4 and G4 now done: the S7b build. First the
+            census of the writers' entry points that reach the 26 IN
+            sites (G2: the signers, and the hash writers whose digest
+            enters a signed body; never a helper the verify side also
+            calls; S449's rows2_ff662714.json binds callers to modules),
+            with hashed predictions. Then the guards:
+            conformance_verifier.loads imported, never a helper edited,
+            before any output, a file, a journal line, a signature or a
+            Rekor call; a CLI writer prints "REFUSED: <reason>" and exits
+            1 (G4); red before green; a mutant per guard named in hashed
+            predictions; the strict read of the santander input line
+            (Gate 12.3 g); KS1 to KS7; the suite on A; a LAND; a restart
+            of nous-api soon after the push; KS3 decides whether a
+            release is needed instead (G5). Or the object the operator
+            brings instead. The two OPEN sites stay out unless a region
+            reader is found. Routed: FG-S449-F. The next Gate, the seat
+            S449's choice: FG-S440-J, measured as FG-S449-G. Carried: the
+            DFG slice, the S427 lane's (E4), and its owed entry for
+            5151cc4d; S8, banked; the Gate of the split's S2 to S6;
+            FG-S440-F, FG-S440-K, FG-S440-Q; Gate H7; at the next release
+            D2, D3 and A4's lines, the moved template digests, the
+            FG-S426-D window; FG-S438-F and FG-S438-M; NV (D430-9);
+            FG-S414-I. Hygiene on A: the /root kits of S431, S438, S440,
+            S449, S453 and this seat, /tmp/p800, /tmp/v800 and the suite
+            temp HOMEs. The seal of the seat.
+
+    FINDINGS
+
+            FG-S453-D  SEAT S453. A PROPOSAL FROM SEVEN OF 35 CASES. At
+                       about 13:43Z the seat proposed rc 3 for G4 from
+                       the seven "return 3" of cli_verify.py and the
+                       verifiers' classes, without reading the 28
+                       "return 1". The operator accepted it at 13:58Z on
+                       condition of evidence; the census then read the
+                       28, 23 of them REFUSED, and refuted the proposal;
+                       the seat said so before any code, and the
+                       operator ruled rc 1 at 14:01Z. A proposal reads
+                       the cases it generalizes from before it is
+                       offered.
+
+            FG-S453-E  SEAT S453. A MATCH LESS ONE MEMBER MISSES A BODY
+                       LESS TWO. G3's M2 forms each dict less one member,
+                       or less signature and transparency_log. The APR
+                       body drops its signature and a null quote_sha256,
+                       so attest_apr.py:179 matched nothing though
+                       cli_conformance.py:249 region-reads APR files; it
+                       was classed by reading code. An instrument names
+                       the shapes it cannot see.
+
+            FG-S454-A  SEAT S453, FOUND BY S454. AN EVIDENCE LIST WRITTEN
+                       BESIDE THE ARCHIVE. The S453 handoff's section 9
+                       names 50 files of S453_SEAL_EVIDENCE.tgz by
+                       digest; the archive's EV_SHA256SUMS.txt lists 52.
+                       The two not named, g3/runG_meta.txt and
+                       ks4/runO_meta.txt, hold the HOME, the times, the
+                       rc, HOME_FILES and the porcelain of runs G and O;
+                       G3_RESULTS.txt and KS4_RESULTS.txt state the same
+                       values but the HOME's path. Nothing is lost; the
+                       list and the archive were not compared when the
+                       seal was made. A seal's evidence list is made from
+                       the archive's sums, or checked against them,
+                       before the seal is hashed.
+
+            FG-S454-B  SEAT. A RESULT WRITTEN FROM A NOTICE. The mirror
+                       clone of 17:07:19Z outlived its tool call and ran
+                       on in the background; it printed its own end
+                       time, 17:14:40Z, and clone_rc 0 to a file. The
+                       seat read that file at a wrong path, found
+                       nothing, and wrote NUM454_RESULTS.txt (3e090beb)
+                       with "done before 17:14:45Z, exit 0", from the
+                       harness's notice and the next command's clock,
+                       and gave that digest to the operator at about
+                       17:16Z. At 17:20:40Z it read the file at its path
+                       and replaced the line with the clone's own
+                       prints; the result is 0fef40a8. No count changed.
+                       A result is written from its command's own
+                       output, read where it is.
