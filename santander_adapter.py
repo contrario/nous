@@ -559,8 +559,12 @@ def _cb(obj):
 # -Infinity token, is refused; so are bytes that are not UTF-8 and a
 # UTF-8 byte order mark (RFC 8259 8.1, RFC 7493 2.1). Any other
 # malformed JSON still raises the json module's own error. Decoding
-# (base64, an ndjson line, a sha check) stays with the caller.
-# __an_js_strict_v1__ __an_js_r4_v1__
+# (base64, an ndjson line, a sha check) stays with the caller. Region
+# v2 (S7, seat S440) also refuses a number whose value is not finite in
+# a double (1e400), an unpaired surrogate or a noncharacter in a string
+# or a member name (RFC 7493 2.1, 2.2) and nesting deeper than 128; an
+# integer past 2**53 - 1 is not refused.
+# __an_js_strict_v1__ __an_js_r4_v1__ __an_js_s7_v1__
 class StrictJsonError(Exception):
     # A strict JSON refusal; str() is the whole message.
     an_js_refusal = True
@@ -568,6 +572,9 @@ class StrictJsonError(Exception):
 
 def loads(raw, label):
     import json as _json
+    import math as _math
+    _tail = (" (a signer can sign these bytes, so this refusal is not "
+             "by itself evidence of tampering)")
 
     def _pairs(pairs):
         seen = set()
@@ -583,6 +590,60 @@ def loads(raw, label):
             label + " refused: non-finite number " + tok + " (a NOUS "
             "writer can write this token, so this refusal is not by "
             "itself evidence of tampering)")
+
+    def _float(s):
+        v = float(s)
+        if not _math.isfinite(v):
+            raise StrictJsonError(
+                label + " refused: number out of range " + s[:40]
+                + " (RFC 7493 2.2)" + _tail)
+        return v
+
+    def _deep(text):
+        bs, qt = chr(92), chr(34)
+        depth, in_str, esc = 0, False, False
+        for ch in text:
+            if in_str:
+                if esc:
+                    esc = False
+                elif ch == bs:
+                    esc = True
+                elif ch == qt:
+                    in_str = False
+            elif ch == qt:
+                in_str = True
+            elif ch == "[" or ch == "{":
+                depth += 1
+                if depth > 128:
+                    raise StrictJsonError(
+                        label + " refused: nesting deeper than 128"
+                        + _tail)
+            elif ch == "]" or ch == "}":
+                depth -= 1
+
+    def _chars(obj):
+        stack = [obj]
+        while stack:
+            o = stack.pop()
+            if isinstance(o, dict):
+                for k, v in o.items():
+                    stack.append(k)
+                    stack.append(v)
+            elif isinstance(o, list):
+                stack.extend(o)
+            elif isinstance(o, str):
+                for ch in o:
+                    c = ord(ch)
+                    if 0xD800 <= c <= 0xDFFF:
+                        raise StrictJsonError(
+                            label + " refused: unpaired surrogate U+"
+                            + format(c, "04X") + " (RFC 7493 2.1)"
+                            + _tail)
+                    if 0xFDD0 <= c <= 0xFDEF or (c & 0xFFFE) == 0xFFFE:
+                        raise StrictJsonError(
+                            label + " refused: noncharacter U+"
+                            + format(c, "04X") + " (RFC 7493 2.1)"
+                            + _tail)
     if not isinstance(raw, (bytes, bytearray)):
         raise TypeError(label + ": strict loads takes bytes")
     raw = bytes(raw)
@@ -598,8 +659,11 @@ def loads(raw, label):
             label + " refused: not UTF-8 (RFC 8259 8.1, RFC 7493 "
             "2.1; a signer can sign these bytes, so this refusal "
             "is not by itself evidence of tampering)") from None
-    return _json.loads(text, object_pairs_hook=_pairs,
-                       parse_constant=_token)
+    _deep(text)
+    obj = _json.loads(text, object_pairs_hook=_pairs,
+                      parse_constant=_token, parse_float=_float)
+    _chars(obj)
+    return obj
 # --- end strict json embed ---
 
 

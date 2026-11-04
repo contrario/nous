@@ -46,6 +46,17 @@
   canonical bodies of manifest, trace and certificate; the ndec
   docstring says the registry evidences, not proves.
 
+- The strict JSON region (every offline verifier text, the reference
+  verifier, the installed paths and the two public verification
+  routes) also refuses a number whose value is not finite in a double
+  (1e400, which read as infinity), an unpaired surrogate or a
+  noncharacter in a string or a member name (RFC 7493 2.1, 2.2), and
+  nesting deeper than 128, by name; before, a signed infinity refused
+  as `Infinity` passed as `1e400`, and a deep input ended in an
+  unnamed recursion error (S7). An input 8.0.0 read may now be
+  refused; none of the 300 tracked JSON files is. A refusal is not by
+  itself evidence of tampering. <!-- __an_js_s7_changelog_v1__ -->
+
 ### Security  <!-- __xf5_xd2_pins_v1__ -->
 
 - `nous conformance verify` and `nous conformance certify` check the
@@ -134,8 +145,15 @@
   `conformance.verify_certificate_from_json` and
   `manifest.parse_manifest_json` with its anchored forms, still parse
   leniently; the routes read strictly before calling them. The routes
-  share the strict parse's own limits listed here (a number such as
-  1e400 reads as infinity). <!-- __apis1_strict_changelog_v1__ -->
+  share the strict parse's own limits listed here.
+  <!-- __apis1_strict_changelog_v1__ -->
+- An integer beyond 2**53 - 1 is not refused; a reader that holds only
+  doubles reads it differently (RFC 7493 2.2). A number that underflows
+  (1e-400) reads as zero. <!-- __an_js_s7_changelog_v1__ -->
+- Until the next release, the verifier texts in this tree differ from
+  the ones the published verifier-digest registry lists and from those
+  pip's 8.0.0 emits (the window FG-S426-D names, which S7 widens and
+  does not open). <!-- __an_js_s7_changelog_v1__ -->
 
 - An .ndec built before this release is refused under
   `--strict-canonical` without the verifier-digest registry; with the
@@ -145,8 +163,6 @@
   fails `nous conformance verify`, exit 1. None has been observed.
 - A signed input in UTF-16, UTF-32 or with a byte order mark, which
   8.0.0 read, now fails; a counterparty receipt is one such input.
-- A number too large for a double (1e400) reads as infinity and is not
-  refused.
 - Some files are decoded by their reader before the strict parse (the
   trace bundle's files, read in text mode, and a pinned Rekor log keys
   file): one that is not UTF-8 fails with the reader's own error, not
