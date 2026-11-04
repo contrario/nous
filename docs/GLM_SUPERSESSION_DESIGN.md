@@ -26354,3 +26354,233 @@ document itself.
                        D446-2's seat asked one for the same script. The
                        operator ran it. A fetch that moves refs and a suite
                        that writes under /tmp are writes on A.
+
+  - S451 the number the operator gave the second entry of the seat
+    S449, which records D450's landing, the S7b census, its C4 and the
+    Gate of S7b with the operator's acceptance of its decisions
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S449,
+    DURING ITS SESSION, and uses D450's labels: READ IN THE SEAT'S
+    CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR; and
+    MEASURED, printed in the seat's container by a named instrument
+    whose predictions were hashed before it ran. Every time below is in
+    UTC, on 11-04 of 2026. An operator's time is the time his message
+    was sent. Each paste ON A is kept as a file transcribed from the
+    chat, under ona_s449/ in the seal of S449.
+
+    THE NUMBER. OPERATOR, 11:43Z: 451, in answer to the seat's question
+    whether to write the entry under a number of his and seal. READ IN
+    THE SEAT'S CONTAINER from 11:44:13Z to 11:44:26Z by ns_count451.py
+    (206c7f72), its predictions NUM451_PREDICTIONS.txt (95cdfd36) hashed
+    at 11:44:07Z, on the mirror fetched from GitHub at 11:44:13Z (named
+    before it ran), 163 refs, 1056 commits, 3189 distinct blobs and 70
+    annotated tags, main at ff662714: for 451 the header, the anchor,
+    the marker, the token FG-S451 and the words S451 and D451 counted
+    zero in the blobs of the trees of every ref, in every commit message
+    on every ref and in the annotated tag messages; a pass blind to case
+    found no hit outside a hexadecimal run; the codes FG-S449-E to
+    FG-S449-J counted zero. Controls: the header of S450 1, in one blob,
+    the document at main (f19f98f4); the anchor D450- 10 there; FG-S449
+    14 there and 2 in one message; the word D450 in 1 message; the
+    marker __an_js_s7_v1__ 20 in 11 blobs; a nonce 0. Main and the refs
+    were the same after the run (ns_count451_out.txt b9a99ce6). The bare
+    word 451: 2 in one blob, read. The codes below continue D450's:
+    FG-S449-E to FG-S449-J.
+
+    D451-1  THE LANDING OF D450. ON A, each write after its pame: at
+            01:43Z D450_KIT_SHA256SUMS.txt 8e2aafd6, D450_LAND.py and
+            D450_COMMIT.py OK; the dry run, HEAD and origin 1f45f37d,
+            BLOB_HEAD c29f029e, porcelain 0, the document 9724c0aa,
+            1609629 B, mode 644, 986:981, STATE BEFORE, the namespace 0
+            0 0 0, DOC_NEW a2cec594, 1623836 B, DRY_RUN_GREEN; pame
+            01:43Z; at 01:44Z WROTE and READBACK a2cec594, 644, 986:981,
+            porcelain 1, APPLY_GREEN; at 01:44Z the commit tool's dry
+            run, BLOB_WORKTREE f19f98f4, the pinned identity, lint 437
+            files and 0 violations, DRY_RUN_GREEN; pame 01:45Z; at 01:45Z
+            FETCH_RC 0, origin 1f45f37d, NEW_HEAD ff662714, CHECK_COMMIT
+            OK, porcelain 0, COMMIT_GREEN; pame 01:45Z; at 01:46Z origin
+            1f45f37d, REMOTE_MAIN ff662714, PUSH_GREEN (the pastes
+            d450_sums_1104.txt 203aca60, d450_land_dry_1104.txt 7eaecadc,
+            d450_land_apply_1104.txt 9657fa64, d450_commit_dry_1104.txt
+            9ee491f4, d450_commit_commit_1104.txt aa66570a,
+            d450_commit_push_1104.txt f85321aa). READ IN THE SEAT'S
+            CONTAINER, on the mirror fetched at 01:46:28Z: ff662714,
+            parent 1f45f37d, author and committer Hlias Staurou at
+            01:45:32Z, one path; the document blob c29f029e to f19f98f4,
+            sha256 9724c0aa to a2cec594, 1609629 B to 1623836 B; its
+            first 1609629 B the old document and its last 14207 B the
+            entry (159d5f3c); the raw message 5aa7bb2e, 491 B, byte for
+            byte. The tools: built from D448's by build_d450.py
+            (ca2d3031), each replacement found as often as pinned;
+            predictions D450_PREDICTIONS.txt (426b6e2e) hashed at
+            01:39:12Z; on a
+            fixture made from the mirror, 30 cases at the predicted exit
+            codes and 9 mutants killed (fx_d450.py 48f3e9b9,
+            fx_d450_out.txt 148245c4). The pastes of D450-1 and D450-2
+            are kept as rule0_sums_1104.txt (841005f2) and
+            rule0_run_1104.txt (328bd563). No restart: a document only.
+
+    D451-2  THE OBJECT. OPERATOR, 01:49Z, in Greeklish, of the open items
+            the seat listed: which can we do here. The seat sorted them
+            into what this seat can do now, what needs a Gate or a
+            ruling, and what is not its own; it would take the S7b
+            census first. OPERATOR, 01:51Z: the S7b census. 10:45Z, in
+            Greeklish: measure C4 now in the container, with hashed
+            predictions. 11:07Z, in Greek: we go to the Gate of S7b on
+            these data. 11:39Z, in Greeklish: if they are right and with
+            evidenced proofs, I accept them. The seat answered that the
+            Gate rests on evidence, not on a proof in NOUS's sense, which
+            is Z3 or Farkas only (D451-6).
+
+    D451-3  THE S7B CENSUS. MEASURED, S7B_CENSUS.txt (bb5a318f), its
+            predictions (7b2c8819) hashed at 01:52:30Z; the instruments
+            census_s7b.py (9772482a: a text count, an AST count, a flow
+            count) and census_s7b_r2.py (b89a6a42: callers bound to their
+            module), on the blobs of ef8e4c7c and ff662714. 133 calls to
+            json.dumps with sort_keys=True outside tests/, in 96 files,
+            at both bases; none passes allow_nan. 50 are served or
+            example verifier texts with published digests; 83 are on the
+            writer side: 17 SIGN (their bytes are signed), 16 HASH (their
+            digest is kept as evidence), 4 RAW (written with a .sha256 of
+            the raw bytes), 3 KEY (replay keys), 8 VERIFY, 1 ORDER, 31
+            WRITTEN, 3 DISPLAY. 13 of the 17 SIGN helpers and 2 HASH
+            sites are also called by a verify function. One prediction
+            missed: the text count less the AST count is 45 calls inside
+            string literals less 8 calls through an alias the text count
+            cannot see. The first flow run joined callers by bare name
+            (FG-S449-H).
+
+    D451-4  C4. MEASURED, C4_RESULTS.txt (38e152bf), its predictions
+            (76604cd3) hashed at 10:46:36Z, amendment 1 (6419b138) at
+            10:52:22Z, amendment 2 (c5771ed4) at 10:56:49Z. The mirror
+            fetched from GitHub at 10:47:27Z, main ff662714; a fresh clone
+            and a new venv on Python 3.13.18, 39 packages from PyPI at
+            10:47:38Z to 10:47:46Z (both named before they ran). Three
+            runs of the suite under tests/, HOME a new empty dir,
+            XDG_DATA_HOME unset: U without an instrument, I and A with
+            one on json.dumps in every process of the venv; each 5194
+            passed, 14 skipped, 13 warnings, no file under HOME, porcelain
+            0. All 33 SIGN and HASH sites reached. No honest input brought
+            a non-finite float or a Decimal to any of them; the only
+            non-finite values, 6 at ndec.py:86, are built on purpose by
+            three strict JSON tests (test_an_js_strict_b, _c, _e;
+            nan_top, neginf_top) through manifest_canonical_sha256 (R2
+            missed, attributed by amendment 2). Finite floats reached 7 of
+            the 33. No Decimal reached pricing.py:343 (R4 missed). The
+            control K1 recorded nothing on its first run (FG-S449-I).
+
+    D451-5  THE GATE OF S7B. NOUS_S449_GATE_S7B.md, revision 1, 0e05305d,
+            383 lines, END OF GATE; not in the repository; in the
+            evidence S449_S7B_GATE_EVIDENCE.tgz (6e699405, 38 files with
+            inner sums). Its own measurements, MEASURED, predictions
+            S7BG_PREDICTIONS.txt (4842017e) hashed at 11:09:36Z, amendment
+            1 (54261073) at 11:10:19Z, amendment 2 (9cf26578) at
+            11:17:53Z. K0, a cost cap literal from source to verdict: 1e400
+            and 1e308 refused at parse, rc 3 (the grammar's FLOAT has no
+            exponent); 0.50 signed as "0.5"; 0.1000000000000000000001 as
+            "0.1" and 0.29999999999999999999 as "0.3", each dossier
+            verifying PASS (FG-S449-G). K1, run K 11:10:59Z to 11:15:01Z,
+            5194 and 14: at the 33 no lone surrogate, no noncharacter, no
+            nesting past 128, the deepest 6. K2, at 11:18:08Z: the
+            santander fixture line with the token NaN for one score was
+            parsed by a lenient json.loads, signed by build_dossier, its
+            payload.json written holding NaN; the emitted verifier refused
+            it, rc 1, [js:snt.3]; the library verify_santander_dossier
+            returned ok (FG-S449-E, FG-S449-F). Research by one agent,
+            primary sources: RFC 8785 3.2.2.3 and 3.2.2.2 make a JCS
+            writer stop on NaN, Infinity and lone surrogates; RFC 7493
+            refuses surrogates and noncharacters, escaped or not; Python's
+            json writes NaN by default; no incident and no patent on point
+            found. Its decisions: G1 re-read the bytes with
+            conformance_verifier.loads before signing or committing a
+            digest; G2 at the writers' entry points, never in a helper the
+            verify side calls; G3 a reader census of the 33 first; G4 the
+            region's message before any output, a non-zero rc; G5 a LAND
+            and a restart, no release; G6 S7b now; G7 the library
+            differential routed, not built in S7b. The seat's choice: S7b
+            now, then the Gate of FG-S440-J.
+
+    D451-6  THE ACCEPTANCE. OPERATOR, 11:39Z: accepted if right and
+            evidenced. The seat's reading, sent before 11:43Z: G2, G3, G6
+            and G7 right and evidenced; G1 right in design, its claim that
+            no honest byte is refused left to KS4, the observe run that
+            opens the build; G5 a prediction that KS3 decides
+            (tests/test_nt_v2_recompute.py reads the source of
+            conformance.py and vsa.py; if a pinned digest moves, S7b
+            waits for a release); G4 half: the refusal before any output
+            with a non-zero rc is evidenced (the emitted verifiers exit
+            1), its value is not (cli_verify.py returns 1 in 28 places and
+            3 in 7) and is the operator's in the build. The seat named the
+            build for a fresh seat (the Constitution's fresh context;
+            FG-S440-P); OPERATOR, 11:43Z: 451.
+
+    D451-7  WHAT THIS SEAT WROTE AND READ SINCE D450-6. To the
+            repository: D450 (ff662714). To B, /var/www, PyPI and Rekor:
+            nothing. On A: the commands of D451-1; to /root, by the
+            operator, the D450 kit, then this entry's two tools; no
+            restart. Seat network, each named before it ran: the mirror
+            fetched from GitHub at 01:41:27Z, 01:46:28Z, 10:47:27Z and
+            11:44:13Z; pip from PyPI at 10:47:38Z to 10:47:46Z; one
+            research agent on the web from 11:08Z to 11:17Z. In the
+            container: a clone and venv, four runs of the suite (U, I, A,
+            K) and the probes K0 and K2 with their controls, each under a
+            temp dir; every key made in such a dir or in memory, never
+            the default key path. The project: no read and no write by
+            the seat.
+
+    D451-8  WHAT STAYS OPEN. This entry on A by its two tools, each write
+            after its pame; the seal of the seat S449. S7b, for a fresh
+            seat: the reader census of the 33 (G3), the observe run
+            (KS4), G4's rc, then the guards, red before green, a mutant
+            per guard, the strict read of the santander input line, the
+            suite on A, a LAND and a restart, and KS3 for G5. FG-S449-F
+            (G7) and the Gate of FG-S440-J (FG-S449-G). The rest of
+            D450-7's board as it stands: the DFG slice, the S427 lane's;
+            S8, banked; the Gate of the split's S2 to S6; FG-S440-F,
+            FG-S440-K, FG-S440-Q and Gate H7; the next release's items;
+            FG-S438-F and FG-S438-M; NV; hygiene on A, now with the D450
+            and D451 kits; FG-S414-I.
+
+    FINDINGS
+
+            FG-S449-E  WORLD. A NOUS WRITER SIGNS WHAT ITS OFFLINE
+                       VERIFIER REFUSES. santander_adapter.py:139 reads a
+                       decision line with a lenient json.loads; the NaN it
+                       accepts is signed into the dossier, and the
+                       verifier the adapter emits refuses that dossier
+                       (D451-5, K2). For S7b.
+
+            FG-S449-F  WORLD. THE LIBRARY AND THE OFFLINE VERIFIER
+                       DISAGREE ON ONE DOSSIER. verify_santander_dossier
+                       returns ok on the dossier the emitted
+                       verify_offline.py refuses. APIS-1 left the library
+                       readers lenient. Routed (G7).
+
+            FG-S449-G  WORLD. A PASS VERDICT ON A CAP THE SOURCE DOES NOT
+                       STATE. parser.py reads a cost literal by float()
+                       then Decimal(str()); 0.29999999999999999999 is
+                       signed as "0.3" and its dossier verifies PASS.
+                       FG-S440-J, measured; its own Gate.
+
+            FG-S449-H  SEAT. A CALLER FOUND BY NAME IS NOT A CALLER. The
+                       census's first flow run joined 38 served _canon
+                       functions to signers in other modules by name (64
+                       RETURNED/SIGNED). The second binds a caller to its
+                       module; both outputs are kept, and every class was
+                       read in its code.
+
+            FG-S449-I  WORLD. THE CONTAINER'S PYTHON SHADOWS A VENV'S
+                       SITECUSTOMIZE. /usr/local/lib/python3.13/
+                       sitecustomize.py stands before the venv's
+                       site-packages, so C4's instrument did not load and
+                       K1 recorded nothing. Amendment 1 moved it to a .pth
+                       line before any instrumented run. A control run
+                       before the suite caught it.
+
+            FG-S449-J  SEAT. A LINE IN AN EMBEDDED TEXT IS NOT THE
+                       MODULE'S CODE. The Gate's draft said the adapters
+                       read their upstream records through the region,
+                       citing guardrails_adapter.py:502, a line inside the
+                       verifier text the adapter emits (351 to 769). Read
+                       again before the Gate was sent: santander reads
+                       with json.loads at line 139; K2 then measured it.
