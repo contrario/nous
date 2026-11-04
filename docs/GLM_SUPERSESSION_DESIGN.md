@@ -26139,3 +26139,218 @@ document itself.
                        S7, 00:29Z to 00:38Z on 11-04; for APIS-1, 13:11Z
                        to 13:21Z on 11-03. Whether any import fell in
                        either window was not measured.
+
+  - S450 the number the operator gave the first entry of the seat S449,
+    the seat after S440 that verified the S440 seal by its digests and ran
+    its RULE 0, which carries what that seal owed: D448's landing and the
+    seal itself
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S449,
+    DURING ITS SESSION. It describes the last steps of the seat S440 after
+    D448, which is landed and append-only, and the opening of S449. READ IN
+    THE SEAT'S CONTAINER: computed off host by S449, on its mirror of the
+    public repository. ON A: printed on Server A by a command the operator
+    ran and pasted back; each paste is kept as a file transcribed from the
+    chat. INHERITED: from a file of the S440 seal, checked by digest and
+    not measured again. TESTIMONY: stated by another lane and not measured
+    here. DERIVED: computed from printed values or read from code.
+    OPERATOR: stated by the operator. Every time below is in UTC, on 11-04
+    of 2026 unless another day is named. An operator's time is the time
+    his message was sent; a value ON A carries the clock its command
+    printed where it printed one.
+
+    THE NUMBER. OPERATOR, 01:15Z: the kickoff, for the seat S449, to be
+    checked as the first paragraph of the S440 opener says. READ IN THE
+    SEAT'S CONTAINER: predictions N449_PREDICTIONS.txt (db453fcd) hashed at
+    01:17:08Z; git ls-remote and a mirror clone from GitHub, 01:17:13Z to
+    01:17:18Z (named before they ran); the words D449 and S449 and the
+    token FG-S449 counted zero in the tree of main and in the messages of
+    1055 commits on every ref (N449_RESULTS.txt dc04f6f6). That count was
+    narrower than the ledger's instrument (FG-S449-C) and named the wrong
+    instrument for the refs (FG-S449-B). OPERATOR, 01:32Z: 450, in answer
+    to the seat's question which number the entry S440 owes takes. READ IN
+    THE SEAT'S CONTAINER from 01:34:43Z to 01:35:26Z by ns_count450.py
+    (a353745d), its predictions NUM450_PREDICTIONS.txt (a9ff6e56) hashed at
+    01:34:15Z, before the instrument was written, on the mirror fetched
+    from GitHub at 01:34:42Z (named before it ran), 163 refs, 1055 commits,
+    3189 distinct blobs and 70 annotated tags, main at 1f45f37d: for 450,
+    for 449 again, and for 441 to 443, seen free on 11-03 and not measured
+    since, the header "  - S<n> ", the anchor D<n>-, the marker __s<n>_,
+    the token FG-S<n> and the words S<n> and D<n> counted zero in the
+    blobs of the trees of every ref, in every commit message on every ref
+    and in the annotated tag messages. A pass blind to case found no hit
+    outside a hexadecimal run of eight or more digits for 450 or for 441
+    to 443. For 449 it found one, d449 in D448's own record of its pass
+    (the document at main, line 25871), not a use of the number; that
+    prediction missed. Controls on the same instrument: the header of S448
+    1, in one blob, the document at main (c29f029e); the anchor D448- 10
+    there; FG-S440 55 there and 6 in 3 messages; the word D448 in 1
+    message; the marker __an_js_s7_v1__ 19 in 11 blobs; a nonce 0. Main
+    and the refs were the same after the run (ns_count450_out.txt
+    bfea0a9b, NUM450_RESULTS.txt 13124f72). The instrument that appends
+    this entry refuses unless the header, the anchor and the marker of 450
+    and the codes FG-S449-A to FG-S449-D still count zero in the document
+    when it runs. The codes below are this seat's, FG-S449-A to FG-S449-D.
+
+    D450-1  THE SEAL OF S440. OPERATOR, 01:15Z: the kickoff, naming five
+            files by digest: NOUS_SESSION_440_HANDOFF.md 5d0a09bb,
+            NOUS_S440_OPENER.md 5e1a3729, rule0_s438.sh 0d6f5aa9,
+            S440_SEAL_EVIDENCE.tgz 29c9b1f0 and S440_SEAL_SHA256SUMS.txt
+            3b429137. READ IN THE SEAT'S CONTAINER, before the seat's first
+            reply and with no clock read: the five uploads, found by digest
+            under changed names, equal those digests, 17059, 4038, 3877,
+            18277 and 349 B; the sums file holds four lines and not its own;
+            the text of four of the files had reached the seat with the
+            kickoff (FG-S449-A). The archive, extracted into an empty
+            directory, holds ten files; its EV_SHA256SUMS.txt (ebad6799)
+            lists the other nine and each is OK: the Gate of the split r3
+            (dc0782d7, 744 lines), SEAL_PREDICTIONS.txt (443cbb4f),
+            suite_seal.txt (e140d2e4) and the six pastes of ona_d448/. ON
+            A, paste 01:22Z: /root/S440_SEAL_SHA256SUMS.txt 3b429137 by a
+            direct sha256sum; sha256sum -c with --ignore-missing,
+            rule0_s438.sh: OK.
+
+    D450-2  RULE 0. OPERATOR, 01:21Z, in Greeklish, to the seat's question
+            whether another lane holds the tree or the hosts: no, all are
+            free. The seat named the writes (rule0's fetch of origin's refs,
+            the suite under a new temp HOME in /tmp) and the network calls
+            (the fetch, one ssh to B, one curl to PyPI) and gave the command
+            without a pame (FG-S449-D). ON A by rule0_s438.sh, paste 01:29Z,
+            A's clock 01:22:48Z: fetch_rc 0; HEAD and origin 1f45f37d, the
+            log 1f45f37, 73178a7, ef8e4c7, 4fe4c5b; porcelain empty; v8.0.0
+            peeling to 580c28f4; A health 8.0.0, uptime 2656 s, MainPID
+            2363391; B health 8.0.0, uptime 480063 s, HEAD 580c28f4 at
+            v8.0.0, porcelain "?? .venv/", pip Version 8.0.0, MainPID
+            3078825; the floor 3912; the suite under tests/, HOME a new temp
+            dir, XDG_DATA_HOME unset, safe.directory by GIT_CONFIG_*: 5196
+            passed, 12 skipped, 11 warnings, in 268.10 s, HOME_FILES 0,
+            PORCELAIN_AFTER 0; claim_lint 437 files, 0 violations;
+            sidecar_lint 265, 0; the mirror CLEAN, 569 tracked, 4 orphans;
+            the registry logged, True, True, 154, 0, 174366343, repo and
+            served 7e6ef662; the release VSA index 3a3bab3f, repo and
+            served; PyPI latest 8.0.0. At 01:27:27Z, Asklepios: nous-api
+            healthy 200 0, nous-bot healthy 0, nous-key-guard healthy 0,
+            each checked at 01:27:24Z, age 3 s. The timer
+            nous-serve-integrity.timer active and waiting, last trigger
+            01:01:23Z, next 01:30:38Z, Result success; its unit
+            nous-serve-integrity.service inactive, ExecMainStatus 0, exit
+            01:01:23Z, its journal RESULT: CLEAN, 569 tracked, 4 orphans.
+            Every row equals the opener's EXPECTED, the rows last read on
+            11-03 among them; no row moved. DERIVED: A's process started at
+            00:38:32Z, the restart of D448-5; B's at 12:01:46Z on 10-29, the
+            start D446-2 gives.
+
+    D450-3  THE OTHER LANES. OPERATOR, 01:21Z: none holds the tree or the
+            hosts. READ IN THE SEAT'S CONTAINER, on the mirror of 01:17Z and
+            of 01:34Z: main 1f45f37d both times, no commit above D448; the
+            branches main, nous-trace (09109512) and refs/pull/1/head
+            (49b70920). The S427 lane's DFG slice has not landed. No header
+            after S445 is that lane's; 5151cc4d still has no entry
+            (TESTIMONY, the S427 handoff, through D446-3: it is that lane's
+            to write).
+
+    D450-4  THE LANDING OF D448. INHERITED, the S440 handoff (5d0a09bb),
+            section 6, and the six pastes of ona_d448/ in the seal's
+            evidence (d448_sums_1104.txt 6faafb62, d448_land_dry_1104.txt
+            87965fcf, d448_land_apply_1104.txt fe321dc6,
+            d448_commit_dry_1104.txt 02ace87a, d448_commit_commit_1104.txt
+            3e6f9a5c, d448_commit_push_1104.txt 96211e32): ON A, each write
+            after its pame: at 00:58Z D448_KIT_SHA256SUMS.txt 6b79e905,
+            D448_LAND.py and D448_COMMIT.py OK; the dry run, HEAD and origin
+            73178a71, BLOB_HEAD 660c7b78, porcelain 0, the document
+            43aa4f36, 1589372 B, mode 644, 986:981, STATE BEFORE, the
+            namespace 0 0 0 0, DOC_NEW 9724c0aa, 1609629 B, DRY_RUN_GREEN;
+            pame 00:59Z; at 01:00Z WROTE and READBACK 9724c0aa, 644,
+            986:981, porcelain 1, APPLY_GREEN; at 01:01Z the commit tool's
+            dry run, BLOB_WORKTREE c29f029e, the pinned identity, lint 437
+            files and 0 violations, DRY_RUN_GREEN; pame 01:01Z; at 01:02Z
+            FETCH_RC 0, origin 73178a71, NEW_HEAD 1f45f37d, CHECK_COMMIT OK,
+            porcelain 0, COMMIT_GREEN; pame 01:02Z; at 01:03Z origin
+            73178a71, REMOTE_MAIN 1f45f37d, PUSH_GREEN. READ IN THE SEAT'S
+            CONTAINER, on the mirror of 01:17Z: 1f45f37d, parent 73178a71,
+            author and committer Hlias Staurou at 01:02:20Z, one path; the
+            document blob 660c7b78 to c29f029e, sha256 43aa4f36 to
+            9724c0aa, 1589372 B to 1609629 B; its first 1589372 B the old
+            document and its last 20257 B the entry (87cae840), ASCII, no
+            line over 76 columns. OPERATOR, 01:32Z: D448_LAND.py and
+            D448_COMMIT.py attached; READ IN THE SEAT'S CONTAINER: b6c12b0f
+            and 0d839e4a, the SELF_SHA each printed ON A in those pastes;
+            the entry D448_LAND.py embeds equals the last 20257 B, and the
+            message D448_COMMIT.py embeds equals the raw message of
+            1f45f37d, a25ab1db, 516 B, byte for byte.
+
+    D450-5  THE SEAL. INHERITED, the S440 handoff, section 2a, and the
+            evidence: SEAL_PREDICTIONS.txt (443cbb4f) hashed at 01:06:43Z;
+            the mirror fetched from GitHub at 01:06:49Z, main 1f45f37d, 163
+            refs; a fresh clone of 1f45f37d, its suite under tests/ with
+            HOME a new empty dir and XDG_DATA_HOME unset, 01:07:04Z to
+            01:13:10Z: 5194 passed, 14 skipped, 13 warnings, rc 0, no file
+            under that HOME, porcelain 0 (suite_seal.txt e140d2e4);
+            rule0_s438.sh carried unchanged, 0d6f5aa9. ON A at 1f45f37d
+            (D450-2): 5196 and 12, the container's plus 2 and minus 2, as
+            in S431, S438 and S440. The seal's section 7 leaves no object
+            ruled.
+
+    D450-6  WHAT THIS SEAT WROTE AND READ. To the repository, to B and to
+            /var/www: nothing before this entry. On A: the commands of
+            D450-1 and D450-2, among them rule0's fetch of origin's refs
+            and its suite under a new temp HOME in /tmp; to /root, by the
+            operator, S440_SEAL_SHA256SUMS.txt, then this entry's two
+            tools. Seat network, each named before it ran: git ls-remote and
+            the mirror cloned from GitHub from 01:17:13Z to 01:17:18Z; the
+            mirror fetched at 01:34:42Z. No PyPI, no web search, no web
+            page, no agent. The project: no read and no write by the seat.
+
+    D450-7  WHAT STAYS OPEN. This entry on A by its two tools, each write
+            after its pame; the next entry records its landing. The next
+            object: none ruled; the operator brings one or hands the seat
+            the choice, and if neither, the seat names the plateau and
+            stops. Of the order ruled on 11-03 (12:37Z, 13:42Z): the DFG
+            slice, the S427 lane's, on top of main as it then is, its kit
+            built on that HEAD (E4); S7b, the writer half, after its own
+            census of the 133 calls (E3); S8, banked (Gate H6). The Gate's
+            S2 to S6 as its section 12 routes them. Not ruled: FG-S440-F,
+            FG-S440-J, FG-S440-K, FG-S440-Q and the pages' innerHTML (Gate
+            H7). The S427 lane's owed entry for 5151cc4d. At the next
+            release: D2, D3 and A4's lines (RULING 10-30 01:04Z); it carries
+            the commits since v8.0.0, mints the moved template digests and
+            closes the FG-S426-D window. FG-S438-F and FG-S438-M. NV
+            (D430-9). Hygiene on A: the /root kits of S431, S438, S440 and
+            this seat, /tmp/p800, /tmp/v800 and the suite temp HOMEs.
+            FG-S414-I. The seal of the seat.
+
+    FINDINGS
+
+            FG-S449-A  WORLD. AN ATTACHED FILE IS READ BEFORE IT IS HASHED,
+                       A THIRD TIME. As FG-S438-A and FG-S440-A: the chat
+                       put the text of four of the five seal files into the
+                       seat's context with the kickoff, before any tool ran,
+                       and the text of D448_COMMIT.py with its upload at
+                       01:32Z. The seat acted on none of them before the
+                       digests matched; its first reply did not say the
+                       text had come first.
+
+            FG-S449-B  SEAT. A REF COUNT PREDICTED ON THE WRONG INSTRUMENT.
+                       The S440 handoff says 163 refs and names no
+                       instrument. The seat's prediction named git
+                       ls-remote, which printed 234 lines: 160 tags, 70 of
+                       them peeled again, 2 heads, 1 pull ref and HEAD. The
+                       mirror's for-each-ref prints 163. Main held. A count
+                       is predicted with the instrument that printed it.
+
+            FG-S449-C  SEAT. THE FIRST COUNT OF 449 WAS NARROWER THAN THE
+                       LEDGER'S INSTRUMENT. At 01:17Z the seat counted the
+                       words D449 and S449 and the token FG-S449 in the tree
+                       of main, of nous-trace and of refs/pull/1/head and in
+                       the commit messages, and told the operator 449 was
+                       free: not the header, not the marker, not the trees
+                       of the 160 tags, not the tag messages, and no pass
+                       blind to case. ns_count450.py counted 449 again with
+                       450 on the instrument of D446 and D448 (THE NUMBER).
+
+            FG-S449-D  SEAT. RULE 0 GIVEN WITHOUT A PAME. The seat named
+                       rule0's writes on A and its network calls, then gave
+                       the command in the same message with no pame asked;
+                       D446-2's seat asked one for the same script. The
+                       operator ran it. A fetch that moves refs and a suite
+                       that writes under /tmp are writes on A.
