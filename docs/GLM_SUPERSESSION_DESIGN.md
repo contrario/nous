@@ -25834,3 +25834,308 @@ document itself.
                        killed the seat's own command; a server left running
                        answered one later check, which is not evidence
                        here. Nothing outside the container.
+
+  - S448 the number the operator gave the third entry of the seat S440,
+    which carries D447 landed and read back, S7 ordered and the Gate of
+    the split to revision 3, S7 (region v2) built in the container,
+    landed as 73178a71 and live on A, and the seat's findings
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S440,
+    DURING ITS SESSION. It describes the seat's work after D447, which is
+    landed and append-only. READ IN THE SEAT'S CONTAINER: computed off
+    host by S440, on its mirror of the public repository and its clones.
+    ON A: printed on Server A by a command the operator ran and pasted
+    back; each paste is kept as a file transcribed from the chat.
+    TESTIMONY: stated by another lane and not measured here. DERIVED:
+    computed from printed values or read from code. OPERATOR: stated by
+    the operator. RULING: a decision the operator stated in words. Every
+    time below is in UTC, on 11-03 or on 11-04 of 2026, as named. An
+    operator's time is the time his message was sent; a value ON A
+    carries the clock its command printed where it printed one. THE
+    SEAT'S CONTEXT: at 11-04 00:27Z the seat's working context was
+    replaced by a summary of itself (FG-S440-P). Every value below was
+    read again from the seat's files or from the session's own record,
+    not taken from the summary.
+
+    THE NUMBER. OPERATOR, 11-04 00:40Z: 449, in answer to the seat's
+    question which D number the next entry takes. READ IN THE SEAT'S
+    CONTAINER from 00:43:54Z to 00:44:13Z by ns_count449.py (790798e8),
+    its predictions NUM449_PREDICTIONS.txt (854cf882) hashed at
+    00:43:16Z, on the mirror fetched from GitHub at 00:43:27Z (named
+    before it ran), 163 refs, 1054 commits, 3189 distinct blobs and 70
+    annotated tags, main at 73178a71: for 449, and for 448, the number
+    not given, the header "  - S<n> ", the anchor D<n>-, the marker
+    __s<n>_, the token FG-S<n> and the words S<n> and D<n> counted zero
+    in the blobs of the trees of every ref, in every commit message on
+    every ref and in the annotated tag messages. A pass blind to case
+    found d449 twice in 2 blobs and d448 once, each inside a hexadecimal
+    run of eight or more digits. Controls on the same instrument: the
+    header of S447 2, in one blob, the document at main (660c7b78); the
+    anchor D447- 13 there; FG-S440 34 there and 4 in messages; the word
+    D447 14 there and 1 in messages; the marker __an_js_s7_v1__ 17 in 10
+    blobs, S7's. Every prediction held; refs and main were the same after
+    the run (ns_count449_out.txt f3973745). The seat asked once whether
+    448 was held by another lane or left out on purpose. OPERATOR, 00:47Z,
+    in Greeklish: not on purpose, so 448. The count above named 448 as a
+    target before it ran; nothing was counted again. The instrument that
+    appends this entry refuses unless the header, the anchor and the
+    marker of 448 and the codes FG-S440-N to FG-S440-Q still count zero
+    in the document when it runs. The codes below are this seat's,
+    FG-S440-N to FG-S440-Q.
+
+    D448-1  THE LANDING OF D447. ON A, each write after its pame, the
+            pastes transcribed (d447_land_dry_1103.txt 023f9dbd,
+            d447_land_apply_1103.txt 049cf375, d447_commit_dry_1103.txt
+            846ca8e4, d447_commit_commit_1103.txt b3ba29b2,
+            d447_commit_push_1103.txt 8510f201), on 11-03: at 13:28Z
+            D447_LAND --dry, HEAD and origin 4fe4c5b9, BLOB_HEAD 5784a7d4,
+            porcelain 0, the document 085da9f8, 1570603 B, mode 644,
+            986:981, STATE BEFORE, the namespace 0 0 0 0, DOC_NEW
+            43aa4f36, 1589372 B, DRY_RUN_GREEN; pame 13:28Z; at 13:29Z
+            WROTE and READBACK 43aa4f36, 644, 986:981, porcelain 1,
+            APPLY_GREEN; at 13:32Z D447_COMMIT --dry, BLOB_WORKTREE
+            660c7b78, the pinned identity, lint 437 files and 0
+            violations, DRY_RUN_GREEN; pame 13:33Z; at 13:33Z FETCH_RC 0,
+            origin 4fe4c5b9, NEW_HEAD ef8e4c7c, CHECK_COMMIT OK, porcelain
+            0, COMMIT_GREEN; pame 13:34Z; at 13:34Z REMOTE_MAIN ef8e4c7c,
+            PUSH_GREEN. READ IN THE SEAT'S CONTAINER, fetched from GitHub
+            at 13:34:43Z: ef8e4c7c, parent 4fe4c5b9, author and committer
+            Hlias Staurou at 13:33:49Z, one path, blob 660c7b78, sha256
+            43aa4f36; its first 1570603 B the old document, its last
+            18769 B the entry (fd9073b4); the message 202dfe7c, 529 B,
+            byte for byte. The tools D447_LAND.py 08d0f0cf and
+            D447_COMMIT.py beaada6e, built from D446's; their predictions
+            D447_PREDICTIONS.txt 2ae9c1d8, written at 13:26:28Z, before
+            the tools (13:27:00Z); on the fixture 22 cases at the predicted
+            exit codes and 6 mutants killed (fx_d447_out.txt b149088d).
+
+    D448-2  S7 ORDERED, AND THE GATE TO REVISION 3. OPERATOR, 11-03
+            13:35Z, in Greek: S7 and its order against the DFG, in this
+            seat. READ IN THE SEAT'S CONTAINER, a clone at ef8e4c7c:
+            S7-K0, predictions S7_K0_PREDICTIONS.txt d10bbaf5 hashed at
+            13:37:00Z before s7_k0.py (c1800e2e) existed, output 50607adb
+            at 13:37:17Z: all 300 tracked JSON files read through the
+            region of the time without a refusal; none holds a number that
+            is not finite, an unpaired surrogate or a noncharacter; the
+            deepest nests 9 (trace/reference/vectors/golden/
+            obligations.json); no file holds an integer past 2**53 - 1;
+            json.dumps with sort_keys=True outside tests/: 133 calls in 96
+            modules, a count that takes in served and example paths, none
+            with allow_nan=False. As predicted. A count of the region's
+            copies by its first line, raw and escaped, 13:37Z to 13:38Z:
+            51 lines, 2220 B (region_old.txt 1a189858), 17 copies in 10
+            files, 7 as lines and 10 in single-quoted literals; this count
+            was short by two (D448-3, FG-S440-N).
+            NOUS_S440_GATE_SPLIT.md revision 3, dc0782d7, 744 lines, sent
+            at 13:39Z, adds section 14, S7's design: V2-1 refuse a number
+            whose value is not finite in a double; V2-2 an unpaired
+            surrogate or a noncharacter in a string or a member name (RFC
+            7493 s2.1); V2-3 nesting deeper than 128, by a scan before the
+            parse; D4's messages unchanged; an integer past 2**53 - 1 and
+            an underflow not refused (Known limits); the writer half split
+            off as S7b, with its own census of the 133 calls; S7 before
+            the DFG slice, the second to land rebuilding its kit on the
+            first's HEAD (TESTIMONY, the S427 handoff: DFG-K1 not run);
+            the FG-S426-D window, open since 10:44Z on 11-03 (TESTIMONY,
+            the same), widened by S7 and not opened, named in Known
+            limits; kill criteria KS1 to KS4; the decisions E1 to E5.
+            RULING, 13:42Z, in Greeklish: E1 to E5 accepted, on the terms
+            of the earlier ones (right and evidenced). The Gate's 14.1
+            still says 17 in 10; this entry corrects it. Not in this
+            repository; the operator holds the Gate and its evidence.
+
+    D448-3  S7, BUILT. READ IN THE SEAT'S CONTAINER, clones at ef8e4c7c,
+            the seat's venv with an editable install of the tree under
+            test and its bin on PATH. Predictions S7_PREDICTIONS.txt
+            361b6ff4 hashed at 13:43:24Z, before the region, the generator
+            or the tests: Q1 the generator replaces the region in exactly
+            17 places in 10 files and K-JS.2 then holds; Q2 red on the
+            base; Q3 the full suite after, the base's passed plus the new
+            file's, 0 failed, once the s130 baseline is regenerated and
+            each digest it moves is a text that carries the region; Q4 six
+            named mutants, each killed; Q5 claim lint 0, inserted lines
+            ASCII, each changed module compiles. Region v2 (region_v2.txt
+            689bb309, 4611 B, ASCII, no backslash, its first line the same
+            82 columns as before) at 13:43:50Z; the test file
+            tests/test_s7_region_v2.py b3c59712, 23 tests, at 13:45:04Z.
+            Red on the base at 13:45:23Z (red_out.txt 9ef43696): the 12
+            cases of what v2 refuses failed, the 11 of what stays passed;
+            Q2 held. Q1 MISSED: after the generator, K-JS.2 failed for
+            continuity.template and ndec.carried, two texts stored
+            base64-encoded, so the copies are 19 in 12 files
+            (FG-S440-N). Amendment A1 (S7_AMENDMENT_A1.txt f87cc671),
+            hashed at 13:47:11Z, before the second attempt: the generator
+            (apply_s7.py 54e478ab) also decodes each, replaces the region
+            once and encodes it again in the same layout, checked first by
+            rebuilding the old literal from its own decoded text. Then
+            K-JS.2 held; NOUS_UPDATE_SNAPSHOTS=1 moved all 9 of the s130
+            baseline's verifier digests and neither of its 2 shared
+            regions, each moved digest a text that carries the region.
+            Suites under tests/: the base 5171 passed, 14 skipped,
+            13:47:53Z to 13:52:06Z; the changed tree 5194 passed, 14
+            skipped, 0 failed, 13:52:07Z to 13:56:17Z; HOME 0 in both
+            (suite_s7_tree.txt cbdee222, suite_s7_work.txt feabc804). Q3
+            held. Mutants at 13:48:28Z (mutants_s7.py e2afd6ca, output
+            0f946bc9): seven, each killed by its case; the unmutated file
+            22 passed and 1 skipped (the census, in a copy without .git).
+            Q4 named six; the seventh, the escape inside a string not
+            handled, was added to the instrument before it ran
+            (FG-S440-O). Claim lint on the changed tree 0 violations (406
+            files, FG-S440-F); of the 1365 lines the change adds, none is
+            outside ASCII, and the two decoded texts are ASCII; the LAND
+            tool compiles the 13 changed .py files. Q5 held. S7-K1,
+            predictions S7_K1_PREDICTIONS.txt 7d46855d hashed at 13:49:14Z
+            before s7_k1.py (4b9b5a2d) ran: four POSTs to
+            /v1/verify-dossier with the policy over one fresh bundle,
+            against a local server on a tree in the container at 4fe4c5b9
+            (which differs from ef8e4c7c in the ledger document alone),
+            before and after the generator: K1 honest ACCEPT both times;
+            K2 a member "zz":1e400 and K3 a member "zz":"\ud800" put first,
+            ACCEPT before and REJECT by [js:api.4] after; K4 60000 nested
+            arrays REJECT as parse_error_unexpected: RecursionError before
+            and by name after; HOME 0 and the temp dir removed in each
+            (s7_k1_container_before.txt 05bd2816, _after.txt 45689c3b).
+            The kit, from the APIS-1 kit's templates by build_s7_kit.py
+            d3b3b77c at 13:56:48Z: S7_LAND.py d75a8be3, 2265434 B, payload
+            1d40d192 with fifteen files; S7_COMMIT.py 96471e19; the
+            message s7_message.txt 11eb37ab, 977 B. A first build of
+            S7_COMMIT.py said "five" files in its docstring and was
+            rebuilt before any run. Predictions S7_KIT_PREDICTIONS.txt
+            daf66939 at 13:57:04Z; on the fixture (fx_s7.py efa2fc22,
+            output 0386ddd4) L1 to L11 and C1 to C11 at the predicted exit
+            codes, M1 to M5 killed. S7_KIT_SHA256SUMS.txt 8dafe6af at
+            13:57:28Z. Evidence S440_S7_EVIDENCE.tgz bf33eca0.
+
+    D448-4  WHAT LANDED, 73178a71. Region v2 of the strict JSON region,
+            in its canonical copy in conformance_verifier.py and its 18
+            other copies (7 as lines in all, 10 in single-quoted literals,
+            2 base64-encoded), in 12 files: besides D4's refusals, a
+            number whose value is not finite in a double (a parse_float
+            hook), an unpaired surrogate or a noncharacter in a string or
+            a member name (a walk of the parsed value), and nesting deeper
+            than 128 (a scan before the parse that skips strings and their
+            escapes), each by label with the region's clause that a
+            refusal is not by itself evidence of tampering; marker
+            __an_js_s7_v1__. The s130 baseline's 9 verifier digests.
+            CHANGELOG [Unreleased]: a Changed line; Known limits: an
+            integer past 2**53 - 1 is not refused, an underflow reads as
+            zero, and the FG-S426-D window is widened, not opened; the two
+            statements that 1e400 reads as infinity are gone.
+            tests/test_s7_region_v2.py, 23 tests: ten refusals by name,
+            six accepts, D4's four messages unchanged, the census of the
+            tracked JSON files, the offline conformance text and the
+            verify-dossier route end to end. Fifteen paths, 14 modified
+            and 1 added. The spec versions are unchanged; no served file
+            changed; the published verifier registry and pip's 8.0.0 still
+            carry the old texts.
+
+    D448-5  S7 ON A. Pastes transcribed, on 11-04: s7_sums_1104.txt
+            54085e97, s7_k1_a_before_1104.txt ae24f4f1,
+            s7_land_dry_1104.txt 2c3e65f5, s7_land_apply_1104.txt
+            d572ccc5, s7_suite_1104.txt d47cbe2f, s7_commit_dry_1104.txt
+            06dfcc7e, s7_commit_commit_1104.txt 5f9e81aa (sent as an
+            attachment), s7_commit_push_1104.txt 3b7583f4,
+            s7_restart_1104.txt 9f995922, s7_k1_a_after_1104.txt 47f42ea0.
+            At 00:25Z the kit's sums OK, 8dafe6af and its three files.
+            READ IN THE SEAT'S CONTAINER, fetched from GitHub at
+            00:26:05Z: main ef8e4c7c, the kit's parent. Pame 00:27Z; at
+            00:28Z S7-K1 BEFORE on the live API: K1 ACCEPT, K2 ACCEPT, K3
+            ACCEPT, K4 REJECT parse_error_unexpected: RecursionError,
+            HOME_FILES 0, TMP_REMOVED True, as predicted. At 00:28Z
+            S7_LAND --dry, HEAD and origin ef8e4c7c, 14 blobs at HEAD as
+            pinned, porcelain 0, 15 files OLD (the test absent), STATE
+            BEFORE, COMPILE_OK 13, DRY_RUN_GREEN; pame 00:29Z; at 00:29Z
+            fifteen WROTE lines at their digests, 644, 986:981, porcelain
+            15 (14 M, 1 ??), APPLY_GREEN; pame 00:29Z; at 00:35Z the suite
+            under tests/, HOME a temp dir, XDG_DATA_HOME unset,
+            safe.directory by GIT_CONFIG_*: 5196 passed, 12 skipped, in
+            267.36s, HOME_FILES 0, PORCELAIN_AFTER 15, as predicted (5173
+            of D447-7 and 23); at 00:36Z S7_COMMIT --dry, the fifteen
+            worktree blobs as pinned, the identity, lint 437 files and 0
+            violations, DRY_RUN_GREEN; pame 00:36Z; at 00:36Z FETCH_RC 0,
+            origin ef8e4c7c, NEW_HEAD 73178a71, the fifteen blobs, the
+            parent and the author as pinned, CHECK_COMMIT OK, porcelain 0,
+            COMMIT_GREEN; pame 00:36Z; at 00:37Z origin ef8e4c7c,
+            REMOTE_MAIN 73178a71, PUSH_GREEN. READ IN THE SEAT'S
+            CONTAINER, fetched from GitHub at 00:37:29Z: 73178a71, parent
+            ef8e4c7c, author and committer Hlias Staurou at 00:36:31Z,
+            fifteen paths, each file's sha256 the pinned one; the raw
+            message 11eb37ab, 977 B, byte for byte (git log %B printed it
+            with one newline more). Pame 00:38Z; at 00:38Z the guard on
+            NeedDaemonReload passed, MainPID 3721556, NRestarts 0,
+            RESTART_RC 0, health ok, 8.0.0, at 00:38:33Z, MainPID 2363391,
+            NRestarts 0, active. Pame 00:39Z; at 00:40Z S7-K1 AFTER on the
+            live API: K1 ACCEPT; K2 REJECT, "manifest_json [js:api.4]
+            refused: number out of range 1e400"; K3 REJECT, the same label,
+            "unpaired surrogate U+D800"; K4 REJECT, the same label,
+            "nesting deeper than 128"; HOME_FILES 0, TMP_REMOVED True. As
+            predicted. FG-S440-H and FG-S440-I are closed on A by 73178a71
+            and the restart. From 00:29Z to 00:38Z the tree held S7's files
+            under the process the restart of 13:21Z on 11-03 started
+            (FG-S440-Q).
+
+    D448-6  WHAT THIS SEAT WROTE AND READ AFTER D447. To the repository:
+            ef8e4c7c and 73178a71, by the operator's commands. On A: the
+            commands of D448-1 and D448-5; to /root, by the operator,
+            D447's two tools and the S7 kit's four files; one restart of
+            nous-api; two runs of s7_k1.py, each temp dir removed; one
+            suite, whose temp HOME stays, empty. To B and to /var/www:
+            nothing. Seat network, each named before it ran: the mirror
+            fetched from GitHub at 13:34:43Z on 11-03 and at 00:26:05Z,
+            00:37:29Z and 00:43:27Z on 11-04. No PyPI (the venv's
+            installs were editable, local, with no dependencies and no
+            build isolation), no web search, no web page, no agent. In
+            the container only: a local API server on 127.0.0.1:8000 at
+            13:49Z. The project: no read, no write.
+
+    D448-7  WHAT STAYS OPEN. This entry on A by its two tools, each write
+            after its pame; the next entry records its landing. The DFG
+            slice (the S427 lane, DFG-K1 first) on top of 73178a71, its
+            kit rebuilt on that HEAD (Gate 14.5, E4). S7b, the writer
+            half, after its own census of the 133 calls (E3). S8, banked:
+            verify the signed bytes before any parse, with a census of
+            raw-byte identities first (Gate H6). The Gate's S2 to S6 as
+            its section 12 routes them. FG-S440-F, FG-S440-J and
+            FG-S440-K, not ruled. The pages' innerHTML (Gate H7). The S427
+            lane's owed entry for 5151cc4d. The next release carries
+            4fe4c5b9 and 73178a71 with the commits already unreleased, and
+            closes the FG-S426-D window that S7 widened. Hygiene on A: the
+            kits in /root (D439, D446, D447, APIS-1, S7, rule0 and its
+            sums) and the suite temp HOMEs under /tmp. The seal of the
+            seat.
+
+    FINDINGS
+
+            FG-S440-N  SEAT. A CENSUS BY A MARKER LINE MISSED ENCODED
+                       CARRIERS. The count of the region's copies searched
+                       the source for its first line, raw and escaped, and
+                       found 17 in 10 files; two texts, continuity's and
+                       ndec's, hold the region base64-encoded, so the
+                       carriers are 19 in 12. Gate 14.1 and Q1 carried the
+                       short count. K-JS.2 caught it in the container,
+                       before anything reached A (KS2); amendment A1. A
+                       count of copies decodes what a carrier encodes.
+
+            FG-S440-O  SEAT. A MUTANT PAST THE HASHED LIST. Q4 named six
+                       mutants; the instrument ran seven. The seventh, the
+                       escape inside a string not handled, was added before
+                       the run and was killed, but no amendment named it
+                       first.
+
+            FG-S440-P  SEAT. THE SEAT WENT ON FROM A SUMMARY OF ITSELF. At
+                       11-04 00:27Z the session's context was replaced by
+                       a summary the session wrote; the work on A went on
+                       from it. This entry's values were read again from
+                       files and from the session's own record, which is
+                       how FG-S440-O was found. Fresh context over
+                       compacted is the Constitution's; this seat did not
+                       start fresh.
+
+            FG-S440-Q  WORLD. THE TREE CHANGES UNDER THE RUNNING API
+                       BEFORE ITS RESTART. A LAND writes the live tree
+                       while nous-api runs; until the restart, a module the
+                       process imports for the first time reads the new
+                       text, and one it had imported keeps the old. For
+                       S7, 00:29Z to 00:38Z on 11-04; for APIS-1, 13:11Z
+                       to 13:21Z on 11-03. Whether any import fell in
+                       either window was not measured.
