@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import base64
 import json
+import os
 import shutil
 from pathlib import Path
 
@@ -189,9 +190,17 @@ def test_anchor_refuses_on_nonconvergent_selfverify(tmp_path: Path) -> None:
     assert not (d / "index.json").exists()
 
 
+# __s405_trusted_root_readable_v1__
+def _trusted_root_readable() -> bool:
+    try:
+        return _TRUSTED_ROOT.is_file() and os.access(_TRUSTED_ROOT, os.R_OK)
+    except OSError:
+        return False
+
+
 @pytest.mark.skipif(
-    not _TRUSTED_ROOT.is_file(),
-    reason="durable operator trusted_root.json not present",
+    not _trusted_root_readable(),
+    reason="durable operator trusted_root.json not present or not readable by this user",
 )
 def test_anchor_selfverify_converges_with_real_verifier(tmp_path: Path) -> None:
     d = _mint_dir(tmp_path)
