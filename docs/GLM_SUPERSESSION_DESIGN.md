@@ -27625,3 +27625,317 @@ document itself.
                        record step runs only on its producer's success, and
                        a count in an assert is computed from the data it
                        checks.
+
+  - S461 the number the operator gave the second entry of the seat S456,
+    the entry that records D460's landing on A and the S7b slices A, B and
+    B3 built, tested and landed as ff31ee5d by a kit, with the number 461
+    and the codes FG-S456-B to FG-S456-G
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S456,
+    DURING ITS SESSION, and uses the labels of D450 to D460: READ IN THE
+    SEAT'S CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR and
+    MEASURED. Every time below is in UTC, on 11-05 of 2026 unless another
+    day is named. An operator's time is the time his message was sent; a
+    value ON A carries the clock its command printed. Each paste ON A is
+    kept as a file transcribed from the chat, under ona/ in the seal
+    of S456, named by its digest below. The seat's running log
+    (log/seat_running_log.txt) holds each step in the order it ran, with
+    the times of the operator's messages; where a step was logged after it
+    ran, the log says so. What D460 records is not repeated here.
+
+    THE NUMBER. OPERATOR, 08:02Z: 461, for this entry. MEASURED from
+    08:04:54Z to 08:05:36Z by ns_count461.py (9a2b11e0, ns_count460.py with
+    its targets set to 461, 460 and 456, its nonce changed and the blobs of
+    K8 set to cb00041c and 58af455c, nothing else changed), its predictions
+    NUM461_PREDICTIONS.txt (dba4b04c) hashed at 08:04:49Z, before the
+    instrument was written, on the seat mirror fetched from GitHub at
+    08:04:54Z (N-C2, named before it ran): main ff31ee5d, 163 refs, 1061
+    commits, 70 annotated tags and 3203 distinct blobs in the trees of the
+    refs. For 461 the header, the anchor, the marker, the token FG-S461 and
+    the words S461 and D461 counted zero in those blobs, in every commit
+    message on every ref and in the annotated tag messages, and a pass
+    blind to case found no hit outside a hexadecimal run. The values for
+    460 (now D460's), 456 and the controls were DERIVED before the run,
+    NUM460's out plus the blobs and messages that moved since 116ab33b
+    (derive461.py 63fc9ac3, its out e7dcdaf7: 32 paths, 18 blobs gone from
+    every ref tip, 32 new, 2 commits), and each held: the header of S460 1,
+    the anchor D460- 12 and the word D460 12 in one blob, the document at
+    main (cb00041c), and the word D460 in one message; FG-S456 3 there and
+    1 in one message; the anchor D450- 21, FG-S449 43 and the word S449 77
+    there; a nonce 0; cb00041c in the tree of main alone, 58af455c in none
+    (ns_count461_out.txt 49fe6fc9, NUM461_RESULTS.txt 184ffe03). The bare
+    word 461, read hit by hit (bare461_read.txt 300cc5fb): 9 in 9 blobs, 7
+    revisions of the ledger citing a line 461 of another document, 1 "at
+    line 461" in a design document, 1 binary; none names a seat or an
+    entry. The count cannot see a session that wrote nothing to the tree, a
+    commit message or a tag.
+
+    D461-1  D460 LANDED. OPERATOR, 05:35Z: pame, with D460_LAND.py,
+            D460_COMMIT.py and D460_KIT_SHA256SUMS.txt uploaded to /root on
+            A, six hours after the seat's last step. ON A, A's clock
+            05:35:51Z: FOUND D460_KIT_SHA256SUMS.txt, FOUND_COUNT 1 for
+            d3b04146, both tools OK. N5, a fetch of the seat mirror from
+            GitHub, was named in the seat's message; its log line was
+            refused for width and the command ran the fetch anyway, not
+            gated on the log (FG-S456-A's pattern again; the seat owned it
+            and logged it after the run): main 116ab33b, 163 refs, nothing
+            moved. From then a log step and the step it names ran as
+            separate commands. ON A, 05:37:00Z, LAND --dry: HEAD and origin
+            116ab33b, the blob at HEAD 58af455c, porcelain 0, the document
+            34428abd, 1677583 B, mode 644, uid 986, gid 981, STATE BEFORE,
+            the D460 namespace 0, WOULD_APPLY, DRY_RUN_GREEN (ona
+            e9f55cf8). OPERATOR, 05:37Z: pame. ON A, 05:37:48Z, --apply:
+            WROTE and READBACK 97424792 with the mode and owner kept, one
+            porcelain line, APPLY_GREEN (bb1e7cd5). ON A, 05:38:37Z, COMMIT
+            --dry: the worktree blob cb00041c, STATE APPLIED, the pinned
+            identity, the claim lint 437 files and 0 violations,
+            DRY_RUN_GREEN (9bc1041f). OPERATOR, 05:39Z: pame. ON A,
+            05:39:50Z, --commit: its fetch of origin (NA4, named) rc 0,
+            origin 116ab33b, NEW_HEAD c133a333, CHECK_COMMIT OK,
+            COMMIT_GREEN (47f3e85d). OPERATOR, 05:40Z: pame. ON A,
+            05:40:47Z, --push (NA5 and NA6, named): REMOTE_MAIN c133a333,
+            PUSH_GREEN (8c12de3e). Each row as D460's kit predictions
+            (2f8df003) held. MEASURED in the container, N6 at 05:41:31Z:
+            c133a333's parent 116ab33b, author and committer Hlias Staurou
+            at 05:39:51Z, one path, the blob cb00041c equal to the old
+            document and the entry, the message the pinned one
+            (readback_c133a333.txt c33b6524). No restart: a document.
+
+    D461-2  SLICE A RE-APPLIED. The S454 seal carries slice A of the S7b
+            guards as a diff and its tests, not landed.
+            REAPPLY_PREDICTIONS.txt (c1a089fa) hashed at 05:42:56Z, before
+            the venv, the clone and any run. N7, named: PyPI by pip from
+            the container. MEASURED: a venv of Python 3.13.18 with the 38
+            pins of the S454 freeze (pins38.txt f41db28d), the freeze equal
+            to the pins; a clone at c133a333 with the slice's diff applied,
+            14 files, 15 porcelain lines; the editable install from the
+            clone; R5, the predicted selection, 57 passed (r5_run.txt
+            df37b9b3). R6, the full suite, 05:44:33Z to 05:48:11Z: 5201
+            passed and 31 skipped, MISSED (5218 and 14 predicted): 17 tests
+            skip on shutil.which("nous") because the seat ran the venv's
+            python without the venv's bin on PATH (r6_run.txt 3b8ad1c1);
+            the instrument, not the tree (FG-S456-F).
+            REAPPLY_AMENDMENT_1.txt (a641a115) hashed at 05:48:55Z, before
+            the re-run. R6b, 05:49:06Z to 05:53:37Z, the venv's bin first
+            on PATH: 5218 passed, 14 skipped, rc 0, its stream equal
+            to S454's R1 test for test (r6b_run.txt 50d8e626). The base for
+            slice B.
+
+    D461-3  B1, THE CENSUS OF THE CLI CALLERS. B1_PREDICTIONS.txt
+            (ae32d21c) hashed at 05:59:22Z; b1_index.py (138117d2), an
+            index by ast of the callers of each guarded writer and the
+            exceptions their try blocks catch, its control held; run at
+            06:00:58Z (b1_run.txt 1f526ee1): 16 targets in 14 modules, 24
+            call sites; the predictions held but one, held in substance and
+            missed as worded (the roots sit above main). READ: nous verify
+            --smt caught a G1 refusal as "WARN: signing failed" and exited
+            by the verdict, 0 for a program within its bound, its unsigned
+            outputs left; not in the S454 handoff's list: cli_ndec (G5),
+            cli_dossier_spec (G1), the API's skill export (G1, HTTP 422),
+            compiled_trace (G3) and the served mint_vsa_vector scripts
+            (B1_RESULTS_STATIC.txt 1a1bac6d).
+
+    D461-4  THE PLAN FOR SLICE B. OPERATOR, 05:57Z: how do we go on, and
+            what do we do. OPERATOR, 06:05Z, in Greeklish: which is right
+            and why, with documented evidence; what principal engineers
+            would do; research online; an innovative solution. READ before
+            the answer, the premise of B2: the sites S454's census logged
+            as "WRITE replace" in cli_verify.py and dossier_spec.py are
+            dataclasses.replace of a manifest, not os.replace; cmd_verify's
+            first file write follows G1, and build_dossier_spec's follows
+            G1 and its Rekor calls (FG-S456-G). Web research, each call
+            named before it ran, W1 to W15, 13 ran and 2 refused (URLs the
+            seat had built): fail-rs on failpoints, the Rekor overview
+            (entries append-only), LWN on ext4 and fsync, rename(2), and
+            the functional-core, imperative-shell screencast. The answer:
+            B2 is already true for those writers; make it a rule by
+            failpoint tests built from the census; B1 catches print
+            "REFUSED: <reason>" and exit 1; generalized staging to a Gate
+            of its own. OPERATOR, 06:09Z: pame. READ after it: nous dossier
+            (dossier.build_dossier) writes the whole dossier and only then,
+            with --annex-iv, hashes those files and runs G10 and G11, so a
+            refusal there leaves a dossier without its map; the seat's
+            06:09Z answer, that every slice-A guard runs before every
+            output, held for cmd_verify and build_dossier_spec and not for
+            nous dossier (FG-S453-D again: a claim generalized before its
+            cases were read); owned. OPERATOR, 06:12Z: pame, a staging
+            directory renamed onto the output, inside S7b. READ:
+            build_dossier anchors to Rekor before it writes and before G10,
+            and a Rekor entry is never removed, so staging cannot undo an
+            anchored manifest that G10 refuses. OPERATOR, 06:15Z: pame, a
+            guard G25 [js:w.aiv.0] before the anchor, only with --annex-iv.
+
+    D461-5  SLICE B. S7B_B_PREDICTIONS.txt (7df9a5dd) hashed at 06:16:18Z,
+            before any code or test: the catches C1 to C12, the staging S1,
+            G25; tests F1 to F14, each red predicted; a mutant per guard;
+            kill criteria KB1 to KB6. Amendment 1 (001d2ba2, 06:19:21Z): C2
+            (no CLI fixture), C10 and C11 (release tooling) deferred with
+            their tests and mutants; F9 a failpoint at run_program; F14 a
+            manifest re-signed with a noncharacter in it. RED, run 1 at
+            06:20:53Z (red_run.txt ecc32e61): F5 missed in its setup
+            (_material returns six values); amendment 2 (c577fbc7,
+            06:21:26Z); run 2 at 06:21:33Z (red_run2.txt 64109ec0): 11
+            failed, each as predicted, among them F1 with rc 0 and "WARN:
+            signing failed", the swallow MEASURED, F13 files left and F14
+            the anchor called. BUILT by apply_b.py (76b5ace8) at 06:23Z,
+            every edit located by ast once: 10 files, 15 catch markers, no
+            str constant removed; GREEN 06:24:04Z, 35 passed
+            (green_file.txt 3ec325f2); amendment 3 (a58cb1cb) for M13; 11
+            mutants killed, each by its own test (mutants_b_out.txt
+            b9eddaaf); KB6: a dossier by the base and by S1 on the same
+            inputs, with and without the map, equal in bytes and modes. R7,
+            06:25:59Z to 06:30:22Z: 5229 passed, 14 skipped (r7_run.txt
+            938ad3dc); guards_b.diff b5428b56; S7B_B_RESULTS.txt f47a219e.
+            OPERATOR, 06:31Z, in Greek: we go on here.
+
+    D461-6  B3, THE INNER HASH WRITERS. S7B_B3_PREDICTIONS.txt (874f2357)
+            hashed at 06:34:41Z: guards H1 to H5 on the bytes hashed inside
+            a signed body (the cost farkas certificates of nous verify
+            --smt and of the spec dossier, the ndec manifest body, the
+            checkpoint leaf set and budget sidecar, run_identity's remedy
+            digest) and the catch C13; tests F15 to F20. RED 06:35:18Z: 6
+            failed as predicted (red_b3.txt ea590850). apply_b3.py 03c1b826
+            skipped cli_continuity.py on slice B's marker; 4b824826 before
+            the green. GREEN 06:36:32Z, 41 passed (e2c3610b). MUTANTS
+            06:37:09Z (mutants_b3.py 5f914da2, no amendment before it): 7
+            killed, but M18 and M19 each failed F18 and F19 where the
+            predictions said each alone: MISSED. Attributed by hand and in
+            memory: the tool's mutants for M16, M18 and M19 removed the
+            enclosing if block, not the guard (FG-S456-B). Amendment 1
+            (fcc4f91c), the v3 tool (860fc06e) removing the guard alone: 7
+            killed, each exactly (0605f505). R8, 06:43:25Z to 06:47:51Z:
+            5227 passed, 8 failed, MISSED: seven test_c_strict cases of the
+            continuity sidecar and kjs7; the reader's test plants its taint
+            through the writer, and H4 now refused it at the
+            writer (FG-S456-C). OPERATOR, 06:53Z: the seat's proposal (a),
+            in its best execution for security and innovation. Amendment 2
+            (7719a076), hashed before any run: tests/test_an_js_strict_c.py
+            (9eebeb02 to 1cacd80c, by apply_b3t.py cbbef048) first shows
+            the guarded writer refusing each planted byte string with the
+            reason the reader gives and leaving the case directory as it
+            was, then models a writer without that one guard (a test-only
+            bypass of one label, counted) for the reader. RED with M19 on:
+            7 failed at the writer step (9da90abf); GREEN: the strict
+            families and B3, 1038 passed (5f4fa099); MUTANTS v4 (9ad6b534):
+            7 killed, each exactly, M19 now also by the 7 cases (dcdc7e88).
+            R9, 06:59:27Z to 07:04:32Z: 5235 passed, 14 skipped, as
+            predicted (r9_run.txt 8f6c9071). S7B_B3_RESULTS.txt 0ade4d3f.
+
+    D461-7  THE LAND KIT. OPERATOR, 07:07Z: build the land kit.
+            S7B_KIT_PREDICTIONS.txt (6a4f3f9f) hashed at 07:12:55Z, before
+            any kit code, with the commit message verbatim. The kit:
+            S7B_PAYLOAD.tar, the 31 target files, deterministic;
+            S7B_LAND.py, which checks the payload and every member by its
+            pin, HEAD and origin at c133a333, the 28 base blobs at HEAD,
+            that no str constant is removed or changed, that every inserted
+            line is ASCII, that every file compiles and that added paths
+            are tests only, and writes all 31 files or none (each temp
+            written, synced, given its mode and owner before any replace);
+            S7B_COMMIT.py, modelled on D460_COMMIT. Its first fixture run,
+            at 07:18:45Z, refused with 48: a raw U+FFFE inserted in
+            tests/test_s7b_guards_b.py, F14's literal (FG-S456-D).
+            Amendment 4 to slice B (cba3a193; a first copy 94d1ce9c held
+            the same raw character and was superseded) and amendment 5
+            (b98ede56): fix_b_ascii.py (53b8c63f) wrote the escape, the
+            same AST and, under -X no_debug_ranges, the same code (a first
+            try compared column ranges too and refused, nothing
+            written: FG-S456-E); the file 95340079 to e08563ef, 11 passed.
+            The kit rebuilt twice to the same bytes; 45 fixture cases at
+            their predicted codes and 21 mutants killed, each by the case
+            named, under Python 3.13 and 3.12 with the same output
+            (fx_s7b_out.txt 4ace1ea6); s7b_all_v2.diff (3072863b) applies
+            to a fresh c133a333 and equals the tree; S7B_KIT_RESULTS.txt
+            39bbb135. Sums 65396d95: LAND f778caa4, COMMIT 730e22b2,
+            PAYLOAD 696a41fc.
+
+    D461-8  S7B LANDED. OPERATOR, 07:28Z: the files go to /root. ON A,
+            07:29:52Z: the sums 65396d95, the three files OK (ona
+            461225a4). ON A, 07:30:35Z, LAND --dry: HEAD and origin
+            c133a333, base blobs 28 of 28, CONTENT 31 (28 M, 3 A),
+            KS3_REMOVED 0, NONASCII_INSERTED 0, COMPILED 31, STATE BEFORE,
+            the owners 644 986:981 for all 31, DRY_RUN_GREEN (e01e14d8).
+            OPERATOR, 07:31Z: no other lane holds the tree or A; pame. ON
+            A, 07:32:02Z, --apply: REPLACED 31, readback 31 with 0 bad and
+            0 left over, porcelain the manifest's 31 lines, APPLY_GREEN
+            (0d2a9350). OPERATOR, 07:32Z: pame. ON A, 07:32:57Z to
+            07:37:31Z, --suite under a temporary HOME: 5237 passed, 12
+            skipped, HOME_FILES 0, the porcelain unchanged, SUITE_GREEN, as
+            predicted (08af872a). ON A, 07:39:20Z, COMMIT --dry:
+            WORKTREE_BLOBS 31 of 31, the claim lint 437 files and 0
+            violations, DRY_RUN_GREEN (9e1300e8). OPERATOR, 07:42Z: pame.
+            ON A, 07:43:38Z, --commit (N-A5, its fetch, named): origin
+            c133a333, NEW_HEAD ff31ee5d, CHECK_COMMIT OK, COMMIT_GREEN
+            (39863517). OPERATOR, 07:56Z: pame. ON A, 07:56:24Z, --push
+            (N-A6a to N-A6c, named): REMOTE_MAIN ff31ee5d, PUSH_GREEN
+            (63a5e21d). MEASURED in the container, N-C1 at 07:57:04Z:
+            ff31ee5d's parent c133a333, its 31 paths and blobs and its
+            message equal the kit's (readback_ff31ee5d.txt be923877).
+            OPERATOR, 08:00Z: pame for the restart (FG-S440-Q). ON A,
+            08:00:58Z: nous-api's MainPID 2363391 to 1887580, active and
+            running, /v1/health 200 at the second try, version 8.0.0
+            (9f5cab8a). Every row as the kit's predictions held
+            (S7B_LAND_RESULTS.txt 89c57fe7).
+
+    D461-9  WHAT S7B LEAVES OPEN. Not in ff31ee5d: C2 (no CLI fixture), C10
+            (mint_release_vsa) and C11 (scripts/release.py, the release
+            lane's tooling), with their tests; the served mint_vsa_vector
+            scripts (KS2); the API's skill export, which keeps its HTTP
+            422; and generalized staging, (b), a Gate of its own. No
+            release, no served file, no PYTEST_FLOOR change. The seat's
+            container still holds the venv, the clone and every instrument
+            named above, for the seal.
+
+    FINDINGS
+
+            FG-S456-B  SEAT. A MUTANT WIDER THAN ITS GUARD. To mend an
+                       IndentationError, the B3 mutant tool was changed to
+                       remove the enclosing if block that holds a guard's
+                       label, with no amendment before its run; for M16
+                       that block held other code, and for M18 and M19 it
+                       held both checkpoint guards and the budget code, so
+                       those two mutants were one, each killed by both
+                       tests; the three kills evidenced nothing about their
+                       guards. A mutant's removed lines are measured, and
+                       printed by the tool, before its run.
+
+            FG-S456-C  SEAT. A WRITER GUARD CAUGHT A READER TEST'S PLANT.
+                       The strict family plants the sidecar's taint by
+                       patching cc._canonical_bytes, so the real writer
+                       writes it and the reader cnt.5 refuses it; H4 hashes
+                       the same function's output and refused the plant
+                       first: R8 failed 8 where 0 was predicted. Before a
+                       suite count is predicted for a writer guard, the
+                       reader families that plant through that writer are
+                       run.
+
+            FG-S456-D  SEAT. A FILE WRITE DECODED AN ESCAPE. The seat's
+                       file writes turn the six characters of a backslash-u
+                       escape into the character itself: F14's literal held
+                       a raw U+FFFE, and so did the first copy of amendment
+                       4 and three lines of its fix. Text that must hold an
+                       escape is written by a script that builds it from
+                       chr(92), and every new file is checked for ASCII
+                       before use.
+
+            FG-S456-E  SEAT. A CODE COMPARISON THAT COUNTED COLUMNS. A code
+                       object carries column ranges, which CPython counts
+                       in UTF-8 bytes; the raw U+FFFE (3 bytes) and its
+                       escape (6) moved the string's end column by 3, and
+                       the fix's check of marshal.dumps refused. Code is
+                       compared under -X no_debug_ranges, where compile
+                       keeps the lines and not the columns.
+
+            FG-S456-F  SEAT. A SKIP COUNT MOVED BY PATH. R6 ran the venv's
+                       python without the venv's bin on PATH; 17 tests that
+                       look for the nous command skipped, and 5201 and 31
+                       stood where 5218 and 14 were predicted. In the
+                       container a suite runs with its venv's bin first on
+                       PATH, checked by which nous before the run.
+
+            FG-S456-G  SEAT S454, FOUND BY S456. A NAME READ AS A FILE
+                       WRITE. S454's census logged the calls named replace
+                       in cli_verify.py and dossier_spec.py as file writes,
+                       and its handoff read them so; they are
+                       dataclasses.replace of a manifest. The B2 premise
+                       built on them was corrected before the plan; a call
+                       is classed by what it resolves to, not by its name.
