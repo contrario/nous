@@ -145,6 +145,12 @@ X-API-Key: <key>
   and `X-Skill-Name: <resolved-name>`.
 - `408 Request Timeout` -> `{"error": "skill-export timed out (60s)",
   "code": "TIMEOUT003"}` if the SMT step exceeds 60 seconds.
+- `422 Unprocessable Entity` -> `{"error": "REFUSED: <reason>",
+  "code": "STRICT_JSON_REFUSED"}` when a guarded writer refuses the
+  JSON bytes it would sign or hash, because the offline verifier's
+  strict region would refuse them (a duplicate member name, a
+  non-finite number, a surrogate or a noncharacter); nothing is
+  signed and no key is kept. Logged at WARNING, without a traceback.
 - `422 Unprocessable Entity` -> `{"error": "<message>",
   "code": "SKILLEXPORT001"}` for every other refusal (parse failure,
   cost-law absence, name violation, etc.).
@@ -279,7 +285,8 @@ when:
   (regex `^[a-z0-9]+(-[a-z0-9]+)*$`, 1-64 chars).
 
 All refusals are surfaced verbatim through the CLI (`stderr`, exit 1),
-the HTTP API (`422` with `code: "SKILLEXPORT001"`), and the IDE
+the HTTP API (`422` with `code: "SKILLEXPORT001"`, or
+`code: "STRICT_JSON_REFUSED"` for a strict JSON refusal), and the IDE
 (`alert("Export failed: ...")`).
 
 ## 9. End-to-end verification

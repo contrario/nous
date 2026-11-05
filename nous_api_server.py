@@ -384,6 +384,8 @@ async def skill_export_endpoint(
 ):
     require_api_key(x_api_key)
     from rekor_anchor import RekorRejected, RekorUnavailable
+    from conformance_verifier import (  # __s7b_api_refusal_v1__
+        StrictJsonError as _S7B_API_SJE)
     logger.info(
         f"skill-export request: {len(body.source)} chars, "
         f"with_dossier={body.with_dossier}"
@@ -498,6 +500,13 @@ async def skill_export_endpoint(
         raise HTTPException(
             status_code=503,
             detail={"error": str(e), "code": "REKOR_UNAVAILABLE"},
+        )
+    except _S7B_API_SJE as e:  # __s7b_api_refusal_v1__
+        logger.warning("skill-export refused: %s", e)
+        raise HTTPException(
+            status_code=422,
+            detail={"error": "REFUSED: " + str(e),
+                    "code": "STRICT_JSON_REFUSED"},
         )
     except Exception as e:
         logger.error(f"skill-export error: {traceback.format_exc()}")
