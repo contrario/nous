@@ -840,6 +840,44 @@ def cmd_verify_impl_guard_for_test(  # __s127_chain_coverage_flag_v1__
     return 0
 
 
+def _s7b_c2_rederive(gw_script, src_path, manifest):  # __s7b_c2_guard_v1__
+    """H7 (S7b C2, seat S457): run the emitted gap witness verifier's
+    re-derivation (its check 5) on the bytes this writer is about to
+    bind, with the library twins of the verifier's embedded code:
+    coverage_minilang.ml_parse and ml_scan_blocking_signals, and
+    coverage_farkas.check_serialized_gap_witness. Returns None when the
+    witness re-derives from the signed source, else the reason. The
+    source is read again and must hash to manifest.source_sha256, the
+    value the signature will cover."""
+    from coverage_farkas import (
+        FarkasError as _fe_c2,
+        check_serialized_gap_witness as _chk_c2,
+    )
+    from coverage_minilang import (
+        MinilangError as _me_c2,
+        ml_parse as _parse_c2,
+        ml_scan_blocking_signals as _scan_c2,
+    )
+    try:
+        src_bytes = Path(src_path).read_bytes()
+    except OSError as e:
+        return "source unreadable: " + str(e)
+    if _hashlib_s115.sha256(src_bytes).hexdigest() != manifest.source_sha256:
+        return "the source changed since it was verified"
+    doc = _json_s116.loads(gw_script)
+    texpr = doc.get("threshold_expr") if isinstance(doc, dict) else None
+    if not isinstance(texpr, str) or not texpr:
+        return "the witness carries no threshold_expr"
+    try:
+        th = _parse_c2(texpr)
+        blk = _scan_c2(src_bytes.decode("utf-8"))
+    except (_me_c2, _fe_c2, UnicodeDecodeError) as e:
+        return str(e)
+    if not _chk_c2(doc, th, blk):
+        return "the carried point is not a gap under the offline derivation"
+    return None
+
+
 def _issue_gap_witness_dossier(  # __s134_gapw_issue_v1__
     args, result, th_ast, policies, cov_threshold, src_path
 ) -> int:
@@ -917,6 +955,19 @@ def _issue_gap_witness_dossier(  # __s134_gapw_issue_v1__
         source_kind="gap-witness",
         gap_witness_sha256=gw_sha,
     )
+    try:  # __s7b_c2_guard_v1__
+        _s7b_loads(gw_script.encode("utf-8"), "gap witness [js:w.gw.1]")
+    except _S7B_SJE as _s7b_e:
+        print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+        return 1
+    _rd_s7b_c2 = _s7b_c2_rederive(gw_script, src_path, manifest)  # __s7b_c2_guard_v1__
+    if _rd_s7b_c2 is not None:
+        print(
+            "REFUSED: gap witness does not re-derive offline from the "
+            "signed source (" + _rd_s7b_c2 + "); no manifest written.",
+            file=sys.stderr,
+        )
+        return 1
 
     try:
         priv, pub, key_path = load_or_create_keypair(
@@ -933,6 +984,9 @@ def _issue_gap_witness_dossier(  # __s134_gapw_issue_v1__
     try:
         sig = sign_manifest(manifest, priv)
         doc = manifest_json(manifest, sig, pub)
+    except _S7B_SJE as _s7b_e:  # __s7b_c2_catch_v1__
+        print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+        return 1
     except Exception as e:
         print(
             "WARN: gap-witness signing failed: " + str(e), file=sys.stderr
