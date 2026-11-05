@@ -307,14 +307,86 @@ def _emit_yaml_sidecar(
     return "\n".join(lines) + "\n"
 
 
+def _yaml_needs_escape(o: int) -> bool:  # __s464_skill_export_errors_v1__
+    return (
+        o < 0x20 or o == 0x7F or 0x80 <= o <= 0x9F
+        or o in (0x2028, 0x2029, 0xFEFF)
+        or 0xD800 <= o <= 0xDFFF or 0xFDD0 <= o <= 0xFDEF
+        or (o & 0xFFFE) == 0xFFFE
+    )
+
+
 def _escape_yaml_scalar(s: str) -> str:
     """Quote-and-escape a string for safe YAML scalar emission.
 
     Used for frontmatter description fields that may contain ':' or
     leading/trailing whitespace. Always emits a double-quoted scalar.
+    Line breaks, controls, U+2028/9, U+FEFF, noncharacters and
+    surrogates become YAML escapes, so the reader gets the same string
+    back; any other text keeps its bytes.
     """
-    escaped = s.replace("\\", "\\\\").replace("\"", "\\\"")
-    return f"\"{escaped}\""
+    out: list[str] = []
+    for ch in s:
+        o = ord(ch)
+        if ch == "\\":
+            out.append("\\\\")
+        elif ch == "\"":
+            out.append("\\\"")
+        elif _yaml_needs_escape(o):
+            if o <= 0xFF:
+                out.append("\\x%02X" % o)
+            elif o <= 0xFFFF:
+                out.append("\\u%04X" % o)
+            else:
+                out.append("\\U%08X" % o)
+        else:
+            out.append(ch)
+    return "\"" + "".join(out) + "\""
+
+
+_PLAIN_LICENSE_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9 .,()+/_-]*")
+
+
+def _emit_license(license_: str) -> str:
+    """A license stays a plain scalar only when the reader gives it back."""
+    plain = f"license: {license_}"
+    if _PLAIN_LICENSE_RE.fullmatch(license_) and not license_.endswith(" "):
+        from skill_md import SkillMDError, _load_yaml_mapping
+        try:
+            back = _load_yaml_mapping(plain + "\n", "SKILL.md", allow_empty=False)
+        except SkillMDError:
+            back = None
+        if back == {"license": license_}:
+            return plain
+    return f"license: {_escape_yaml_scalar(license_)}"
+
+
+_FRONTMATTER_KEYS = ("name", "description", "license", "compatibility")
+
+
+def _check_frontmatter_reads_back(text: str, want: dict) -> None:
+    """The writer reads its frontmatter back with the reader the dossier
+    uses; a field that does not come back unchanged is refused here,
+    before any file, key, signature or anchor."""
+    from skill_md import SkillMDError, _load_yaml_mapping, _split_frontmatter
+    try:
+        yaml_text, _ = _split_frontmatter(text, "SKILL.md")
+        got = _load_yaml_mapping(yaml_text, "SKILL.md", allow_empty=False)
+    except SkillMDError:
+        raise SkillExportError(
+            "the SKILL.md frontmatter does not read back; a field holds "
+            "text YAML cannot carry"
+        ) from None
+    extra = sorted(set(got) - set(_FRONTMATTER_KEYS))
+    if extra:
+        raise SkillExportError(
+            f"the SKILL.md frontmatter reads back with keys not written: {extra}"
+        )
+    for key, value in want.items():
+        if (value is None and key in got) or (
+            value is not None and got.get(key) != value
+        ):
+            raise SkillExportError(f"field {key!r} does not read back unchanged")
 
 
 def _emit_skill_md(
@@ -337,7 +409,7 @@ def _emit_skill_md(
     """
     fm: list[str] = ["---", f"name: {name}", f"description: {_escape_yaml_scalar(description)}"]
     if license_ is not None:
-        fm.append(f"license: {license_}")
+        fm.append(_emit_license(license_))
     if compatibility is not None:
         fm.append(f"compatibility: {_escape_yaml_scalar(compatibility)}")
     fm.append("---")
@@ -457,6 +529,12 @@ def export_skill(
         cost_cap_str=cost_cap_str,
         tools=tools,
     )
+    _check_frontmatter_reads_back(skill_md, {
+        "name": skill_name,
+        "description": request.description,
+        "license": request.license,
+        "compatibility": request.compatibility,
+    })
     return ExportedSkill(
         skill_name=skill_name,
         skill_md=skill_md,

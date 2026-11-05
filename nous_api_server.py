@@ -129,6 +129,37 @@ async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
         content={"error": "Rate limit exceeded", "code": "RATE001"},
     )
 
+
+from fastapi.exceptions import RequestValidationError  # noqa: E402  __s464_skill_export_errors_v1__
+from fastapi.exception_handlers import (  # noqa: E402
+    request_validation_exception_handler as _fastapi_validation_handler,
+)
+
+
+def _s464_scrub(value: Any) -> Any:
+    if isinstance(value, str):
+        return value.encode("utf-16", "surrogatepass").decode("utf-16", "replace")
+    if isinstance(value, dict):
+        return {_s464_scrub(k): _s464_scrub(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_s464_scrub(v) for v in value]
+    return value
+
+
+@app.exception_handler(RequestValidationError)
+async def request_validation_handler(request: Request, exc: RequestValidationError):
+    """FastAPI's own 422 reply; only a reply that cannot be encoded (a
+    lone surrogate echoed from the request) is rebuilt, same shape, the
+    surrogate replaced by U+FFFD, so client input never becomes a 500."""
+    try:
+        return await _fastapi_validation_handler(request, exc)
+    except UnicodeEncodeError:
+        from fastapi.encoders import jsonable_encoder
+        return JSONResponse(
+            status_code=422,
+            content={"detail": _s464_scrub(jsonable_encoder(exc.errors()))},
+        )
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -375,6 +406,18 @@ class SkillExportEndpointRequest(BaseModel):
     anchor: str = Field(default="none", pattern="^(none|rekor)$")  # __nous_aetherproof_api_dossier_anchor_v1__
 
 
+class _SkillExportClientError(Exception):  # __s464_skill_export_errors_v1__
+    """A refusal caused by the request's own content: 422."""
+
+
+def _s464_validation_text(exc: Any) -> str:
+    parts = []
+    for err in exc.errors():
+        loc = ".".join(str(p) for p in err.get("loc", ())) or "request"
+        parts.append(f"{loc}: {err.get('msg', 'invalid')}")
+    return "; ".join(parts)
+
+
 @app.post("/v1/skill/export")  # __session77_skill_export_endpoint_v1__
 @limiter.limit("10/minute")
 async def skill_export_endpoint(
@@ -393,23 +436,39 @@ async def skill_export_endpoint(
     try:
         def _do_export() -> tuple[bytes, str]:
             from parser import parse_nous
+            from lark.exceptions import UnexpectedInput, VisitError
+            from pydantic import ValidationError
             from skill_export import (
                 ExportRequest,
+                SkillExportError,
                 ToolBudgetOverride,
                 export_skill,
             )
-            program = parse_nous(body.source)
-            overrides = [
-                ToolBudgetOverride(**o) for o in body.tool_overrides
-            ]
-            export_req = ExportRequest(
-                description=body.description,
-                skill_name=body.skill_name,
-                license=body.license,
-                compatibility=body.compatibility,
-                tool_overrides=overrides,
-            )
-            exported = export_skill(program, export_req)
+            try:
+                program = parse_nous(body.source)
+            except UnexpectedInput as e:
+                raise _SkillExportClientError(str(e)) from e
+            except VisitError as e:
+                if isinstance(e.orig_exc, ValueError):
+                    raise _SkillExportClientError(str(e.orig_exc)) from e
+                raise
+            try:
+                overrides = [
+                    ToolBudgetOverride(**o) for o in body.tool_overrides
+                ]
+                export_req = ExportRequest(
+                    description=body.description,
+                    skill_name=body.skill_name,
+                    license=body.license,
+                    compatibility=body.compatibility,
+                    tool_overrides=overrides,
+                )
+            except ValidationError as e:
+                raise _SkillExportClientError(_s464_validation_text(e)) from e
+            try:
+                exported = export_skill(program, export_req)
+            except SkillExportError as e:
+                raise _SkillExportClientError(str(e)) from e
             buf = BytesIO()
             with tempfile.TemporaryDirectory(
                 prefix="nous_skill_export_"
@@ -424,15 +483,21 @@ async def skill_export_endpoint(
                     exported.nous_yaml, encoding="utf-8"
                 )
                 if body.with_dossier:
-                    from dossier_spec import build_dossier_spec
+                    from dossier_spec import DossierSpecError, build_dossier_spec
+                    from smt_emit import EmitError
                     output_dir = td_path / "_dossier_out"
                     key_path = td_path / "_ephemeral_signing.key"
-                    dossier_result = build_dossier_spec(
-                        skill_dir,
-                        output=output_dir,
-                        key_path=key_path,
-                        anchor=getattr(body, "anchor", "none"),
-                    )
+                    try:
+                        dossier_result = build_dossier_spec(
+                            skill_dir,
+                            output=output_dir,
+                            key_path=key_path,
+                            anchor=getattr(body, "anchor", "none"),
+                        )
+                    except DossierSpecError as e:
+                        if isinstance(e.__cause__, EmitError):
+                            raise _SkillExportClientError(str(e)) from e
+                        raise
                     try:
                         key_path.unlink()
                     except FileNotFoundError:
@@ -481,6 +546,8 @@ async def skill_export_endpoint(
                 "X-Skill-Name": skill_name,
             },
         )
+    except HTTPException:
+        raise
     except asyncio.TimeoutError:
         raise HTTPException(
             status_code=408,
@@ -508,11 +575,20 @@ async def skill_export_endpoint(
             detail={"error": "REFUSED: " + str(e),
                     "code": "STRICT_JSON_REFUSED"},
         )
-    except Exception as e:
-        logger.error(f"skill-export error: {traceback.format_exc()}")
+    except _SkillExportClientError as e:
+        logger.warning("skill-export refused: %r", str(e))
         raise HTTPException(
             status_code=422,
             detail={"error": str(e), "code": "SKILLEXPORT001"},
+        )
+    except Exception:
+        error_id = uuid.uuid4().hex
+        logger.error("skill-export fault %s: %s", error_id,
+                     traceback.format_exc())
+        raise HTTPException(
+            status_code=500,
+            detail={"error": "skill export failed on the server",
+                    "code": "SKILLEXPORT500", "error_id": error_id},
         )
 
 

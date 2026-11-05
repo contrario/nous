@@ -152,8 +152,19 @@ X-API-Key: <key>
   non-finite number, a surrogate or a noncharacter); nothing is
   signed and no key is kept. Logged at WARNING, without a traceback.
 - `422 Unprocessable Entity` -> `{"error": "<message>",
-  "code": "SKILLEXPORT001"}` for every other refusal (parse failure,
-  cost-law absence, name violation, etc.).
+  "code": "SKILLEXPORT001"}` when the request's own content is refused:
+  a source that does not parse, an override or name the request model
+  refuses, a refusal of `export_skill()` (Section 8), or a program the
+  SMT step cannot price or bound. Logged at WARNING, one line, without
+  a traceback. The message names the field, never a server path.
+- `500 Internal Server Error` -> `{"error": "skill export failed on
+  the server", "code": "SKILLEXPORT500", "error_id": "<32 hex>"}` for
+  any other failure. The reply carries no exception text; the server
+  logs the traceback at ERROR with the same `error_id`.
+  <!-- __s464_skill_export_errors_v1__ -->
+- A request body the model refuses answers FastAPI's `422` with its
+  usual `{"detail": [...]}` shape, also when it holds a lone surrogate
+  (echoed as U+FFFD), on every route.
 
 Rate-limited to **10 requests per minute per API key**. The
 ephemeral Ed25519 signing key is generated inside the request handler,
@@ -283,6 +294,10 @@ when:
   (zero tools -> sidecar fails validation).
 - The derived or supplied skill name is not agentskills.io-compliant
   (regex `^[a-z0-9]+(-[a-z0-9]+)*$`, 1-64 chars).
+- The emitted frontmatter does not read back, through the reader the
+  dossier uses, to the same `name`, `description`, `license` and
+  `compatibility`. Line breaks, controls and noncharacters in those
+  fields are written as YAML escapes, so they read back unchanged.
 
 All refusals are surfaced verbatim through the CLI (`stderr`, exit 1),
 the HTTP API (`422` with `code: "SKILLEXPORT001"`, or
