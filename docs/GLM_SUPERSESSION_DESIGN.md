@@ -28170,3 +28170,376 @@ document itself.
             measured by this seat: KS2, and the key directory's digest.
             Hygiene on A: the /root kits of S456 and of this seat; the temp
             HOMEs of the RULE 0 suites under /tmp. The seal of the seat.
+
+  - S463 the number the operator gave the second entry of the seat S457,
+    the entry that records D462's landing on A, the S7b C2 work with the
+    guards H6 and H7 landed as 16abd51e, the KS2 measurement, the skill
+    export's refusal code landed as 5956ea6b with nous-api restarted, the
+    number 463 and the codes FG-S457-A to FG-S457-H
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S457,
+    DURING ITS SESSION, and uses the labels of D450 to D462: READ IN THE
+    SEAT'S CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR and
+    MEASURED. Every time below is in UTC, on 11-05 of 2026. An operator's
+    time is the time his message was sent; a value ON A carries the clock
+    its command printed. Each paste ON A is kept as a file transcribed from
+    the chat, under ona/ in the seal of S457, named by its digest below.
+    The seat's running log (log/seat_running_log.txt) holds each step in
+    the order it ran; where a stamp in it was corrected, the log says so.
+    Each result named below was written by a script from its command's
+    output. What D462 records is not repeated here.
+
+    THE NUMBER. OPERATOR, 11:25Z: 463, for this entry. MEASURED from
+    11:27:22Z to 11:27:53Z by ns_count463.py (5aea4eef, ns_count462.py with
+    its targets set to 463, 462 and 457, its nonce changed and the blobs of
+    K8 set to cb56da7c and 1d90f792, nothing else changed), its predictions
+    NUM463_PREDICTIONS.txt (f4b52c1d) hashed at 11:27:02Z, before the
+    instrument was written, on the seat mirror fetched from GitHub at
+    11:27:22Z (N10, named before it ran): main 5956ea6b, 163 refs, 1065
+    commits, 70 annotated tags and 3206 distinct blobs. For 463 the header,
+    the anchor, the marker, the token FG-S followed by it and the words S
+    and D followed by it counted zero in those blobs, in every commit
+    message on every ref and in the annotated tag messages, and a pass
+    blind to case found no hit outside a hexadecimal run; no earlier count
+    had targeted 463, so its zeros were predicted as priors. The values for
+    462 (now D462's), 457 and the controls were DERIVED before the run,
+    NUM462's out plus what moved since 942b25c4 (derive463.py d86c442e, its
+    out 68250390: 6 paths, 3 blobs gone from every ref tip, 6 new, 3
+    commits whose raw messages equal the pinned ones), and each held: the
+    header of S462 1, the anchor D462- 12 and the word D462 12 in one blob,
+    the document at main (cb56da7c), and the word D462 in one message; the
+    word S457 10 in 4 blobs and 4 in 3 messages; the anchor D450-
+    23, FG-S449 45 and the word S449 81 there; a nonce 0; cb56da7c in the
+    tree of main alone, 1d90f792 in none (ns_count463_out.txt 77b276c7,
+    NUM463_RESULTS.txt 0901af5b). The bare word 463, read (bare463_read.txt
+    808f587e): 18 in 10 blobs, values and line cites in lattice JSON and
+    design documents, 1 binary; none names a seat or an entry. The count
+    cannot see a session that wrote nothing to the tree, a commit message
+    or a tag. The instrument that appends this entry refuses unless the
+    word S463, the anchor and the marker of 463 and the codes below still
+    count zero in the document when it runs.
+
+    D463-1  D462 LANDED. After D462's text was pinned at 09:24:30Z:
+            D462_PREDICTIONS.txt (4541603d) hashed at 09:24:45Z, before
+            build_d462.py (4cca4025) built D462_LAND.py bc450520 and
+            D462_COMMIT.py 0013cd33, sums ce817b25; N3, named in those
+            predictions, ran at 09:26:42Z; fx_d462.py (254283d2): 30 cases
+            OK and 9 mutants killed (fx_d462_out.txt 5769304e). ON A, each
+            write after its pame: at 09:29:53Z D462_KIT_SHA256SUMS.txt
+            found by its digest ce817b25, FOUND_COUNT 1, D462_LAND.py and
+            D462_COMMIT.py OK, RC 0 (bdfe6cc2); at 09:32:01Z LAND --dry:
+            HEAD and origin 942b25c4, BLOB_HEAD 1d90f792, porcelain 0, the
+            document c95638df, 1728076 B, mode 644, 986:981, STATE BEFORE,
+            the namespace 0 0 0 0, DOC_NEW 0e9b6457, 1743832 B,
+            DRY_RUN_GREEN (1098b9b4); OPERATOR, 09:33Z: pame; at 09:33:16Z
+            WROTE and READBACK 0e9b6457, 644, 986:981, porcelain 1,
+            APPLY_GREEN (db791e9b); at 09:34:15Z COMMIT --dry:
+            BLOB_WORKTREE cb56da7c, the pinned identity, the claim lint 437
+            files and 0 violations, DRY_RUN_GREEN (03586c86); OPERATOR,
+            09:35Z: pame; at 09:35:16Z its fetch (NA4, named) rc 0, origin
+            942b25c4, NEW_HEAD f394a271, CHECK_COMMIT OK, porcelain 0,
+            COMMIT_GREEN (08afc657); OPERATOR, 09:37Z: pame; at 09:39:36Z
+            (NA5 and NA6, named) REMOTE_MAIN f394a271, PUSH_GREEN
+            (b5dd7efe). Each row as the kit's predictions
+            (D462_PREDICTIONS.txt 4541603d) held, asserted from the pastes.
+            READ IN THE SEAT'S CONTAINER on the mirror updated at 09:40:16Z
+            (N4): f394a271, parent 942b25c4, author and committer Hlias
+            Staurou at 09:35:17Z, one path; the document 0e9b6457, 1743832
+            B, equal to the 942b25c4 document followed by the entry; the
+            raw message 0851b275, 530 B, equal byte for byte. No restart: a
+            document.
+
+    D463-2  C2, THE READ AND THE PROBES. OPERATOR, 09:41Z: C2, the CLI
+            fixture for cli_verify's gap witness. READ:
+            _issue_gap_witness_dossier caught a G1 refusal as "WARN:
+            gap-witness signing failed", rc 1, nothing written;
+            tests/test_s134_gapw_issue.py already drives cmd_verify through
+            the gap witness on the AML template, so S456's reason for
+            deferring C2 (no test drives it through the CLI) did not
+            hold (FG-S457-D). READ: the writer hashes the witness bytes
+            into the signed manifest (gap_witness_sha256), and the emitted
+            gap witness verifier reads them through the strict region at
+            [js:gw.2]; no guard read them first. The region refused, in a
+            probe of its loads, a duplicate key, NaN, Infinity, escaped
+            U+D800, escaped and raw U+FFFE and 1e999. N5, named: the 38
+            pins from PyPI into a venv, its freeze equal to them.
+            PROBE_PREDICTIONS.txt (e5eae41d) hashed at 09:44:40Z: P1, a
+            threshold holding a NOUS comment with U+FFFE: rc 0, both files
+            written and bound, the strict read refusing: held; P3, the
+            control: held; P2, U+DC80: MISSED as worded, the success print
+            raising UnicodeEncodeError after the writes
+            (PROBE_RESULTS_1.txt 976c7920); its amendment (1088f23b, POST
+            HOC) held: written, bound, refused. OPERATOR, 09:48Z, in
+            Greeklish: is the proposal right, and yes; why, with documented
+            answers; what principal engineers would do; research online.
+            Web research, each call named before it ran: RFC 7493 (I-JSON,
+            2.1: no surrogates or noncharacters), RFC 9413 (the costs of
+            tolerating malformed input), PEP 383 (undecodable argv bytes
+            become U+DC80 to U+DCFF), the Bishop Fox study of JSON parser
+            differences, differential testing (McKeeman 1998); Python's
+            json measured in the container (it writes NaN and escaped lone
+            surrogates). READ: ml_parse, the verifier's re-derivation
+            parser, refuses any "#". PROBE2_PREDICTIONS.txt (6a96c74e)
+            hashed at 09:50:38Z, the whole loop through the EMITTED
+            verifier: E1, the control, exit 3: held; E2, an ASCII comment,
+            and E3, a U+FFFE comment: issued rc 0, the verifier exit 1:
+            held, their texts not observed by the probe's filter; its
+            amendment (17a9d8c7, before the re-run): E2 INTEGRITY,
+            re-derivation refused on "#"; E3 INTEGRITY at [js:gw.2]: held.
+            So NOUS signed a refutation its own verifier refused, for an
+            ASCII comment too (FG-S457-C). OPERATOR, 09:55Z: pame for C2,
+            H6, H7 and a differential test.
+
+    D463-3  C2, H6 AND H7 BUILT. N6, named: the clone installed editable,
+            setuptools fetched by pip. BASE_PREDICTION.txt (ef482302) and
+            the base suite, 09:57:41Z to 10:00:46Z: 5235 passed, 14
+            skipped: held. S7C2_PREDICTIONS.txt (3577c84e) hashed at
+            09:58:53Z, before the code, the tests and the mutant tool. The
+            families that drive the writer (10 files, 433 tests) passed on
+            the base and after, test for test. Red at 10:01:57Z,
+            tests/test_s7b_guards_c2.py (40cb4332) alone on the base: F2
+            failed on the WARN line; R1, R2 and R4 issued and the emitted
+            verifier exited 1; R3 raised UnicodeEncodeError; A1 to A5
+            passed: held. The first apply raised before any write: it read
+            cli_verify.py as ASCII, and the module holds 3 non-ASCII
+            characters from before, a count the seat had taken at
+            09:20Z (FG-S457-E); AMENDMENT_1 (09afca2d, 10:03:01Z).
+            apply_c2.py (5f604449), anchored by ast: 54 lines added, none
+            removed, no str constant removed; the non-ASCII count
+            unchanged; under -X no_debug_ranges only <module> and
+            _issue_gap_witness_dossier changed, the helper _s7b_c2_rederive
+            added (codecmp_c2.py d7ddb36e). H6 reads the witness bytes
+            through the strict region at [js:w.gw.1]; H7 runs the
+            verifier's re-derivation (its check 5) through the library's
+            ml_parse, ml_scan_blocking_signals and
+            check_serialized_gap_witness on the source, read again and
+            checked against manifest.source_sha256; both before the key,
+            the signature and any file; C2 is the REFUSED handler before
+            the broad one. Green at 10:03:45Z: 10 passed. AMENDMENT_2
+            (17cac593, 10:04:27Z) held the mutant measures; M2 (C2 gone) by
+            F2, M22 (H6 gone) by R2 and R3, M23 (both moved after the key)
+            by R1 to R4, M24 (H7 gone) by R1 and R4: 4 of 4, each exactly
+            its set (mutants_out.txt accdcc3d). The suite, 10:04:54Z to
+            10:07:55Z: 5245 passed, 14 skipped (green_suite.txt 5cc005fd);
+            the claim lint 406 files and 0 violations on the applied clone
+            and on an archive of f394a271 with the 2 paths.
+
+    D463-4  THE C2 KIT AND ITS LANDING. S7C2_KIT_PREDICTIONS.txt (d169cc0c)
+            hashed at 10:06:49Z. build_kitc2.py (d3b297a1), from the S456
+            templates by exact replacements, first refused, nothing written
+            (its gone check matched the test's own path; narrowed), then
+            built S7C2_LAND.py 01baf873, S7C2_COMMIT.py b9313bf3 and
+            S7C2_PAYLOAD.tar a4a875d7, sums 18f492bc. fx_s7c2.py
+            (39978f4e), from fx_s7b.py: 45 cases OK and 21 mutants killed
+            under 3.13.18 and 3.12, the same bytes (fx_s7c2_out.txt
+            4ace1ea6). ON A, each write after its pame: at 10:13:58Z the
+            sums found by digest, three OK (a67c70b7); at 10:15:23Z LAND
+            --dry: HEAD and origin f394a271, CONTENT 2 rows, KS3_REMOVED 0,
+            NONASCII_INSERTED 0, STATE BEFORE, DRY_RUN_GREEN (963f0191);
+            pame 10:16Z; at 10:17:49Z REPLACED 2, READBACK 2 bad 0,
+            APPLY_GREEN (55da870e); pame 10:18Z; from 10:18:54Z to
+            10:23:31Z --suite: 5247 passed, 12 skipped, HOME_FILES 0,
+            SUITE_GREEN (13a92924); at 10:24:49Z COMMIT --dry: lint 437 and
+            0, DRY_RUN_GREEN (8ccd5621); pame 10:25Z; at 10:25:58Z (NA7)
+            NEW_HEAD 16abd51e, CHECK_COMMIT OK (5d95cd15); pame 10:26Z; at
+            10:26:55Z (NA8, NA9) REMOTE_MAIN 16abd51e, PUSH_GREEN
+            (d331dd8f). Every row as predicted (S7C2_RESULTS.txt 1f763f6d).
+            READ, the mirror at 10:27:28Z (N8): 16abd51e, parent f394a271,
+            cli_verify.py and the test equal to the manifest and the clone,
+            the message equal. No restart: by a static read,
+            nous_api_server.py imports neither cli nor cli_verify.
+
+    D463-5  KS2. OPERATOR, 10:28Z: KS2, a read-only measurement.
+            KS2_PREDICTIONS.txt (96524681) hashed at 10:30:55Z, before
+            ks2_run.py (9a6c77bc), a recorder on every guarded module's
+            _s7b_loads. The three served mint_vsa_vector scripts call
+            cmd_verify, sign_manifest, TraceRecorder.finalize (which
+            returns sign_trace), sign_certificate and cmd_vsa (sign_vsa
+            inside C8's try). v3 on this tree: rc 0, 12 guarded calls
+            (w.cf.1, w.man.1 twice, w.trace.1, w.cert.1, w.vsa.1 per mint),
+            none refused: held. v2: its PASS gate failed, the same 12, no
+            output: held. v1 (read): "mint: vsa emit returned 2" after 5
+            calls, no output. Failpoints on v3: at w.cf.1, w.man.1 inside
+            cmd_verify and w.vsa.1 inside cmd_vsa, "REFUSED: <label>" and
+            exit 1; at the repin's w.man.1, w.trace.1 and w.cert.1, direct
+            library calls, an uncaught StrictJsonError and a traceback; no
+            output in any case: held (d_out.txt ac48c887, f_out.txt
+            4d7f2942, KS2_RESULTS.txt 3d02e65a). The deploy already
+            excludes __pycache__ and *.pyc, so the bytecode the suite
+            leaves under vsa-vectors/v2 is not served.
+
+    D463-6  THE API: THE READ, THE PROBE AND THE RULING. OPERATOR, 10:33Z:
+            API 422. READ: the skill export mapped every exception but
+            Rekor's to HTTP 422 SKILLEXPORT001 and logged it at ERROR with
+            a traceback; its tests pinned 422 by status only.
+            API_PROBE_PREDICTIONS.txt (df43ca10) hashed at 10:34:20Z: PA1,
+            a G1 failpoint: 422 SKILLEXPORT001, the label in the error, one
+            ERROR record with a traceback: held; PA2 (read): a U+FFFE in
+            the description refused before any guard, by the YAML parser of
+            SKILL.md, 422 SKILLEXPORT001, its detail naming the server's
+            temp path; PA3, the control: 200 (test_zz_probe_api.out
+            7e20ce75). Two fetches of URLs the seat had built were refused
+            by the tool; found by search and fetched: RFC 9110's 422
+            (through http.dev, a paraphrase) and RFC 9457 (problem types).
+            OPERATOR, 10:38Z, in Greeklish: pame for (b), the seat's
+            proposal, with documented evidence, principal engineers, the
+            errors not seen at first sight, research. Fetched, each named:
+            OpenTelemetry's HTTP spans (a 4xx on a server span leaves the
+            status unset) and CWE-209. READ: the guarded writers import
+            _s7b_loads from conformance_verifier, whose StrictJsonError the
+            handler catches; the APIS-1 reader routes already answer strict
+            refusals in their own forms; docs/SKILL_EXPORT.md named
+            SKILLEXPORT001 for every refusal; nous_api_server.py holds 40
+            non-ASCII characters from before.
+
+    D463-7  THE API CODE BUILT. API_PREDICTIONS.txt (d9686ba0) hashed at
+            10:41:21Z, before the code, the tests and the mutant tool. Red
+            at 10:42:03Z, tests/test_s7b_api_422.py alone on the base: T2
+            and T5 failed, T1 (the pin: the export crosses w.cf.2 then
+            w.man.1), T3 and T4 passed: held. apply_api.py (07af19a6):
+            nous_api_server.py 9 lines added, the docs a bullet of 6 lines
+            added and one line made two; 5 str constants added, none
+            removed; the added lines ASCII (the non-ASCII counts, 40 and 0,
+            the same before and after, counted for this entry). codecmp
+            listed 15 class bodies besides skill_export_endpoint; each
+            differs only in the int constant equal to its first line,
+            Python 3.13's __firstlineno__ (FG-S457-F); AMENDMENT_1
+            (3e82ccfb, POST HOC, 10:43:24Z); codecmp_api.py (104f4b8b):
+            skill_export_endpoint alone: held, a control still flagging the
+            C2 pair. Green: 5 passed. The mutant measures and the kill sets
+            of MA and MD, wrong as predicted (T5 reads the code string),
+            corrected before the run: AMENDMENT_2 (be550a78,
+            10:44:21Z, FG-S457-H); 5 of 5 as amended. The suite, 10:44:52Z
+            to 10:47:54Z: 6 failed, 5244 passed, MISSED: each 429, the
+            route's in-memory limiter spent by the new test file collected
+            before tests/test_skill_export_endpoint.py (FG-S457-G);
+            AMENDMENT_3 (4530fce3, 10:48:48Z): the new test's fixture sets
+            limiter.enabled False, as five files of the tree do. Then, each
+            before the next: red again, T2 and T5 failing; green 5; the new
+            file then the endpoint file in one process 16 passed, and the
+            old file then it 6 failed; mutants 5 of 5 (b7bc30e8); the
+            families 34, identical; the suite, 10:50:39Z to 10:53:39Z: 5250
+            passed, 14 skipped (ad98b978); the claim lint 406 and 0 before
+            and after. The handler answers 422, code STRICT_JSON_REFUSED,
+            error "REFUSED: <reason>", logged at WARNING with no traceback;
+            every other refusal keeps SKILLEXPORT001.
+
+    D463-8  THE API KIT, ITS LANDING AND THE RESTART.
+            S7API_KIT_PREDICTIONS.txt (a0db1970) hashed at 10:45:55Z. The
+            kit rebuilt after the test's change: S7API_LAND.py eddd15ab,
+            S7API_COMMIT.py d672d3af, S7API_PAYLOAD.tar 613d4290, sums
+            47cbfc3f; fx_s7api.py (dd76ec1f): 45 cases OK, 21 mutants
+            killed, 3.13.18 and 3.12 the same bytes. ON A, each write after
+            its pame: at 10:58:07Z three OK (4da88bdb); at 10:58:42Z --dry:
+            HEAD and origin 16abd51e, CONTENT 3 rows, STATE BEFORE,
+            DRY_RUN_GREEN (7490192e); pame 10:59Z; at 10:59:59Z REPLACED 3,
+            APPLY_GREEN (a5425e03); pame 11:00Z; from 11:01:56Z to
+            11:06:30Z --suite: 5252 passed, 12 skipped, SUITE_GREEN
+            (b3e1e9d1); at 11:08:01Z COMMIT --dry: lint 437 and 0
+            (29c760e4); pame 11:09Z; at 11:09:25Z (NA10) NEW_HEAD 5956ea6b,
+            CHECK_COMMIT OK (7aaf3900); pame 11:10Z; at 11:10:36Z (NA11,
+            NA12) REMOTE_MAIN 5956ea6b, PUSH_GREEN (7319b24c); pame 11:13Z;
+            at 11:14:32Z nous-api restarted, MainPID 1887580 to 2738059,
+            health 200 in 2 tries, 8.0.0 (083ea6a5). Every row as predicted
+            (S7API_RESULTS.txt 00cf59a7). READ, the mirror at 11:14:58Z
+            (N9): 5956ea6b, parent 16abd51e, three paths equal to the
+            manifest and the clone, the message equal.
+
+    D463-9  WHAT THIS SEAT WROTE AND READ, SINCE D462 WAS PINNED. To the
+            repository, by kits run on A by the operator, each write after
+            its pame: f394a271 (D462), 16abd51e (C2) and 5956ea6b (the API
+            code); no tag, no release. On A outside the tree: nous-api
+            restarted at 11:14:32Z; in /root, the operator's uploads of the
+            three kits; under /tmp, the suites' temp HOMEs. To B, to
+            /var/www, to PyPI, to Rekor and to the Project: nothing. Seat
+            network, each named before it ran: the mirror N3, N4 and N8 to
+            N10 from GitHub (no N7 was used); PyPI by pip, N5 and N6; web
+            searches and fetches W1 to W10 for C2 and the API, W7 and W8
+            refused by the tool, one redirect followed once named (W6f),
+            one not followed (W9f). On A, by the kits, the fetches and
+            pushes NA4 to NA12, each named. N3 ran in the same message as
+            its log line, which the log tool refused (FG-S457-B). The log's
+            leading stamps were typed three times ahead of the clock; the
+            guard refused the third (FG-S457-A). One command hung on a
+            stray "cat" of an unset variable and was stopped. No agent.
+
+    D463-10 WHAT STAYS OPEN. This entry on A by its two tools, each write
+            after its pame; the next entry records its landing. The closing
+            RULE 0 and the seal of S457. On the board: C10 and C11, with
+            the release lane; (b), the Gate for staging multi-file writers,
+            in a fresh seat; the KS2 ruling, whether the served harnesses
+            should print "REFUSED: <reason>" where three of six guarded
+            sites end in a traceback (their bytes are pinned by v3's
+            index); the API's catch-all, which answers a server fault with
+            4xx, logs a client's error at ERROR with a traceback, and named
+            the server's temp path in PA2's 422 (CWE-209). Hygiene on A:
+            the /root kits of S456 and this seat.
+
+    FINDINGS
+
+            FG-S457-A  SEAT. A LOG STAMP TYPED, NOT READ. Three leading
+                       stamps of the running log were typed ahead of the
+                       clock: 09:14Z at 09:12:31Z, 09:33Z at 09:24:30Z,
+                       09:28Z at 09:26:39Z. logadd2.py now refuses a
+                       leading stamp later than the clock, and refused the
+                       third. A log line's stamp comes from the clock in
+                       its own command.
+
+            FG-S457-B  SEAT. A NAMED STEP NOT GATED ON ITS LOG LINE, AGAIN.
+                       The log line naming N3 and N3 itself went out in one
+                       message as separate calls; the line was refused and
+                       N3 ran (S456's N5, FG-S456-A); N3 had been named in
+                       D462_PREDICTIONS.txt before it ran. Separate
+                       commands are not enough when they are sent at once:
+                       a named step is sent after its log line has been
+                       written.
+
+            FG-S457-C  WORLD, FOUND BY S457. A WRITER AND ITS OWN VERIFIER
+                       READ ONE FIELD WITH TWO GRAMMARS. cmd_verify parsed
+                       the coverage threshold with the NOUS grammar, which
+                       takes comments; the emitted gap witness verifier
+                       re-derives it with coverage_minilang, which refuses
+                       "#"; and the witness bytes were hashed into the
+                       signed manifest unread by the strict region the
+                       verifier runs. NOUS signed refutations its verifier
+                       gave INTEGRITY. A writer runs its verifier's checks
+                       on what it binds, before any key, signature or file.
+
+            FG-S457-D  SEAT S456, FOUND BY S457. A DEFERRAL ON AN UNREAD
+                       PREMISE. S456 deferred C2 because no test drove the
+                       gap witness through the CLI;
+                       tests/test_s134_gapw_issue.py does. A deferral's
+                       reason is read against the tree before it is
+                       carried.
+
+            FG-S457-E  SEAT. A TOOL ASSUMED WHAT A COUNT HAD ALREADY
+                       REFUTED. apply_c2.py opened cli_verify.py as ASCII;
+                       the seat had counted its 3 non-ASCII characters at
+                       09:20Z. A tool reads a module as UTF-8 and checks
+                       only the lines it inserts.
+
+            FG-S457-F  WORLD, FOUND BY S457. A CLASS BODY HOLDS ITS FIRST
+                       LINE. Under Python 3.13 a class body stores
+                       __firstlineno__ as a constant, so inserting lines
+                       changed the code of 15 class bodies below the
+                       insertion in nous_api_server.py, and -X
+                       no_debug_ranges does not remove it. A structural
+                       code comparison reads that constant as line
+                       information.
+
+            FG-S457-G  SEAT. A TEST SPENT ANOTHER FILE'S RATE LIMIT. The
+                       skill export's limiter is one per process; the new
+                       test file, collected first, spent it, and six tests
+                       of the next file got 429. The family run, which held
+                       the endpoint file and not the new one, could not see
+                       it. A test that drives a rate-limited route disables
+                       the limiter by monkeypatch, as five files of the
+                       tree do; a cross-file effect is seen only by running
+                       the files together.
+
+            FG-S457-H  SEAT. A KILL SET PREDICTED FROM A TEST'S NAME. The
+                       API predictions gave the mutants MA and MD to T2
+                       alone; T5 reads the code string those mutants remove
+                       or change. Found after the measure and corrected
+                       before the run. A mutant's kill set is predicted
+                       from what each test reads.
