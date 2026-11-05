@@ -28543,3 +28543,300 @@ document itself.
                        or change. Found after the measure and corrected
                        before the run. A mutant's kill set is predicted
                        from what each test reads.
+
+  - S458 the number the operator gave the first entry of the seat S464, the
+    entry that records the S457 seal, D463's landing on A, S457's closing
+    RULE 0, the other lane's root guard on A and the operator's push rule,
+    RULE 0 in its owner form, the numbers 464 and 458 and the
+    codes FG-S464-A to FG-S464-D
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S464,
+    DURING ITS SESSION, and uses the labels of D450 to D463: READ IN THE
+    SEAT'S CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR and
+    MEASURED. Every time below is in UTC, on 11-05 of 2026. An operator's
+    time is the time his message was sent; a value ON A carries the clock
+    its command printed. Each paste ON A is kept as a file transcribed from
+    the chat, under ona/ in the seal of S464, named by its digest
+    below; S457's pastes are named from the S457 seal. The seat's running
+    log (log/seat_running_log.txt) holds each step in the order it ran;
+    where a stamp or a value in it was corrected, the log says so. Each
+    result named below was written by a script from its command's output.
+    What D463 records is not repeated here.
+
+    THE NUMBERS. OPERATOR, 13:45Z: 464, the number of this seat; 13:48Z:
+    458, for this entry. S457's handoff (section 4) left 458, 459 and 464
+    up not measured. MEASURED from 13:47:00Z to 13:47:38Z by ns_count464.py
+    (ff4a3c99, ns_count463.py with its targets set to 464, 463 and 457, its
+    nonce changed and the blobs of K8 set to cb56da7c and bf98d753, nothing
+    else changed), its predictions NUM464_PREDICTIONS.txt (cee64005) hashed
+    at 13:46:46Z, before the instrument was written, on the seat mirror
+    fetched from GitHub at 13:46:55Z (N2, named before it ran): main
+    2ccaaf86, 163 refs, 1068 commits, 70 annotated tags and 3209 distinct
+    blobs. For 464 the header, the anchor, the marker, the token FG-S
+    followed by it and the words S and D followed by it counted zero in
+    those blobs, in every commit message on every ref and in the annotated
+    tag messages, and a pass blind to case found no hit outside a
+    hexadecimal run; no earlier count had targeted 464, so its zeros were
+    predicted as priors. The values for 463 (now D463's), 457 and the
+    controls were DERIVED before the run, NUM463's out plus what moved
+    since 5956ea6b (derive464.py 0e165468, its out 829006c0: 4 paths, 1
+    blob gone from every ref tip, 4 new, 3 commits), and each held: the
+    header of S463 1, the anchor D463- 10 and the word D463 10 in one blob,
+    the document at main (bf98d753), and the word D463 in one
+    message; FG-S457 18 in that blob and 2 in one message; the word S457 36
+    in 4 blobs and 8 in 4 messages; the anchor D450- 24 and the word S449
+    83 there; a nonce 0; bf98d753 in the tree of main alone, cb56da7c in
+    none (ns_count464_out.txt f4d7a2e0, NUM464_RESULTS.txt 6fe7b58f). Then
+    ns_count458.py (ab73b03f, ns_count464.py with its targets set to 458,
+    464, 463 and 457 and its nonce changed), its predictions
+    NUM458_PREDICTIONS.txt (dc210762) hashed at 13:49:21Z, on the mirror
+    fetched at 13:49:27Z (N3, named before it ran), main unchanged, from
+    13:49:28Z to 13:50:12Z: 458 zero in the same six forms and in the blind
+    pass, and every other line of NUM464's out unchanged
+    (ns_count458_out.txt c8ca63df, NUM458_RESULTS.txt 219fed45). The bare
+    words, read: 464 five times in 4 blobs, a served file count in three
+    revisions of the ledger and a binary (bare464_read.txt a850367f); 458
+    fifteen times in 8 blobs, lattice JSON values and a line cite
+    (bare458_read.txt 4a218823); none names a seat or an entry. The count
+    cannot see a session that wrote nothing to the tree, a commit message
+    or a tag. The tool that appends this entry refuses unless the
+    header S458, the anchor D458-, the marker of 458 and the codes below
+    still count zero in the document when it runs.
+
+    D458-1  THE S457 SEAL. OPERATOR, 12:27Z: the kickoff of the seat
+            after S457, five files named by sha256, the seat's number left
+            as a placeholder. READ IN THE SEAT'S CONTAINER from 12:27:40Z:
+            each digest matched one upload, FOUND_COUNT 1 each, a digest of
+            zeros 0; the sums file (56f8f083) listed four files, each
+            matching one renamed upload; the archive was listed before it
+            was extracted: 189 files and 24 directories, no link, no
+            absolute path and no dotdot; its EV_SHA256SUMS.txt 188 of 188
+            OK, a copy with one digest altered 1 FAILED; the 188 pairs of
+            the handoff's section 9 equal to it. The text of the handoff,
+            the opener, the script and the sums file was placed in context
+            by the harness before they were hashed; nothing was acted on
+            before the digests matched. OPERATOR, 12:51Z, in Greeklish: no
+            other lane holds the tree or the hosts. ON A: at 12:56Z the
+            sums file found by its digest, FOUND_COUNT 1 (535aed7b); at
+            12:57Z rule0_s438.sh: OK, RC 0, the other three files it lists
+            absent from /root (e3e1b6c8).
+
+    D458-2  D463 LANDED. INHERITED, the S457 seal (its handoff, section 6,
+            and its pastes). ON A, by S457's two tools, each write after
+            its pame: at 11:45:33Z D463_KIT_SHA256SUMS.txt b1734c82 found,
+            both tools OK (d401edec); at 11:47:14Z the dry run: HEAD and
+            origin 5956ea6b, BLOB_HEAD cb56da7c, porcelain 0, the document
+            0e9b6457, 1743832 B, mode 644, 986:981, the namespace 0 0 0 0,
+            DOC_NEW a4aa1f99, 1768645 B, DRY_RUN_GREEN (3643bc21);
+            OPERATOR, 11:48Z: pame; at 11:50:11Z WROTE and READBACK
+            a4aa1f99, porcelain 1, APPLY_GREEN (fa991554); at 11:50:47Z the
+            commit tool's dry run: BLOB_WORKTREE bf98d753, the pinned
+            identity, the claim lint 437 files and 0 violations,
+            DRY_RUN_GREEN (dcc8a6ff); OPERATOR, 11:55Z: pame; at 11:55:47Z
+            FETCH_RC 0, origin 5956ea6b, NEW_HEAD e30f1fd7, CHECK_COMMIT
+            OK, porcelain 0, COMMIT_GREEN (cce08a59); OPERATOR, 11:56Z:
+            pame; at 11:56:59Z REMOTE_MAIN e30f1fd7, PUSH_GREEN (31581db6).
+            The kit's predictions D463_PREDICTIONS.txt (3aa6e366);
+            fx_d463.py 30 cases and 9 mutants killed (fx_d463_out.txt
+            8e5680b3); D463_KIT_RESULTS.txt 87ca53ce. READ IN THE SEAT'S
+            CONTAINER on the N1 mirror (13:06:42Z): e30f1fd7, parent
+            5956ea6b, author and committer Hlias Staurou at 11:55:49Z, one
+            path; its document, blob bf98d753, sha256 a4aa1f99, 1768645 B,
+            equal byte for byte to the 5956ea6b document (0e9b6457)
+            followed by S457's entry text (32768a8d); its raw message equal
+            to S457's message file (cba6afec). INHERITED, S457's handoff,
+            section 6: after D463 was pinned, three values were typed ahead
+            of their command's output, each corrected by a later log line
+            (the entry's wording fixes logged as 20 for 21, counted; a
+            replace count 12 for 7, refused by its tool, nothing written; a
+            negative count 3 for 2), and D463_KIT_RESULTS.txt was rewritten
+            before it was named anywhere. No restart: a document.
+
+    D458-3  S457'S CLOSE. INHERITED, the S457 seal: S457's closing RULE 0
+            ran ON A from 12:12:19Z to 12:17:00Z (6e4e9006) against its
+            close predictions, 19 rows held (RULE0_CLOSE_RESULTS.txt
+            c9bf57a3): HEAD and origin e30f1fd7, the suite 5252 passed and
+            12 skipped as root, the claim lint 437 files and 0 violations,
+            A's MainPID 2738059, RULE0_RC 0. READ IN THE SEAT'S CONTAINER:
+            this seat's reconciler, reconcile_open.py (b10ca70f), over that
+            paste: 19 HELD. The seal itself is the five files of the
+            kickoff (D458-1).
+
+    D458-4  THE OTHER LANE ON A. This seat's first RULE 0 predictions,
+            RULE0_PREDICTIONS.txt (681ed83b), were hashed at 12:57Z from
+            the opener's EXPECTED. OPERATOR, 12:58Z: pame. ON A at
+            12:58:27Z (0d79869d): git as root refused the tree, "detected
+            dubious ownership", 8 times; fetch_rc 128; HEAD, ORIGIN, the
+            log, the porcelain, the tag and its peel printed empty; the
+            suite printed "REFUSED: pytest as root (euid 0); run it as the
+            checkout's owner, e.g. runuser -u aetherlang (see conftest.py
+            at the repository root)"; the claim lint scanned 438 files, 0
+            violations; the other twelve rows held, and RULE0_RC 0
+            (reconcile_open.py: 12 HELD, 7 DIFF; RULE0_RESULTS.txt
+            02f5a95e). No write followed. OPERATOR, 13:05Z, in Greeklish:
+            he made the change himself, with another lane. READ IN THE
+            SEAT'S CONTAINER, GitHub at 13:06:42Z (N1, named before it
+            ran): main 2ccaaf86, 163 refs; two commits after e30f1fd7,
+            author Hlias Staurou, committer Claude <noreply@anthropic.com>,
+            each with an SSH signature header this seat did not verify:
+            d8ed5368, committed 12:15:51Z, a conftest.py at the repository
+            root that exits 4 when the effective uid is 0, and
+            tests/test_s405_root_guard.py with two tests; 2ccaaf86,
+            committed 12:38:32Z, under which
+            tests/test_s172_p0b2_anchor_orchestrator.py skips its
+            real-verifier test when the trusted root is not readable by the
+            user. The claim lint on archives of the two trees: 406 files at
+            e30f1fd7, 407 at 2ccaaf86, 0 violations each; the +1 is A's 437
+            to 438. ON A, read only: at 13:09Z (5d1143a8) root's global
+            safe.directory holds /tmp/nous_scratch twice and
+            /tmp/dsh-worktree, not the tree, and root's git exits 128; git
+            as aetherlang reads HEAD and origin/main at 2ccaaf86, the
+            porcelain empty, origin over public https, the user Hlias
+            Staurou in .git/config; the tree, .git, conftest.py and
+            /tmp/__pycache__ belong to aetherlang. At 13:11Z (0825f08f) the
+            reflog of main: S457's four commits made on A ("commit:") and
+            pushed from A ("update by push"); d8ed5368 and 2ccaaf86 arrived
+            by "fetch -q origin" (12:19:35Z, 12:40:02Z) and "merge
+            origin/main: Fast-forward" (12:25:18Z, 12:40:02Z), not made on
+            A; aetherlang holds no credential for the repository, root a
+            stored one. At 13:28Z (c054e2be) the integrity timer runs
+            served_mirror_check.py as the user nous-serve-integrity;
+            aetherlang reads every file under /var/www/nous-lang.org; its
+            python is 3.12.3 with pytest 9.0.3; /var/lib/nous-refresh is
+            nous-refresh's, mode 700.
+
+    D458-5  THE PUSH RULE. OPERATOR, 13:16Z, in English: decision (b).
+            Commits and pushes to contrario/nous are made from the session
+            that has push access, never from A; A only fetches over public
+            https as aetherlang and fast-forwards. His basis: S405 addendum
+            2, section 1, point 2, which supersedes the rule "the seat
+            never commits from its container"; TESTIMONY, the account state
+            at 14:56 local: no GitHub credential can write (no SSH key, a
+            classic token with no scope, a fine-grained token with no
+            repository and no permission), so root's stored credential on A
+            no longer pushes, and a new one is not to be stored on A; a
+            push right for the runtime user, rejected. The procedure, his:
+            the session commits on a branch and pushes only the branch; on
+            A, as aetherlang, in a separate clone under aetherlang's home,
+            never the live tree: fetch, check that the branch and its
+            parent are the predicted ones, run the suite and report the
+            counts; only if green, the session fast-forwards main to that
+            commit and pushes main; then on A, as aetherlang, in the live
+            tree: git fetch origin and git merge --ff-only origin/main;
+            immediately before each push a fetch, refusing unless
+            origin/main is the expected parent (FG-S405-H); root runs no
+            git in the tree at any step; no clone for root and no new
+            credential on A. The author is Hlias Staurou; the committer is
+            what the session produces. The seat had offered three paths:
+            (a) a bundle pushed by root from a clone of its own, (b) this
+            one, (c) a push credential for aetherlang; (a) rested on root's
+            credential, which the account state above leaves without write.
+
+    D458-6  RULE 0 IN ITS OWNER FORM. rule0_owner.sh (2c7665cf):
+            rule0_s438.sh with every leg that runs git or the repository's
+            code run as aetherlang by runuser, its HOME its own, no user
+            site, the fetch unable to prompt; the suite under a temp HOME
+            that aetherlang makes, XDG_DATA_HOME unset; root's python only
+            with -I; B's legs unchanged; each of 17 legs prints its exit
+            code, FAILED_LEGS counts the failed ones and the script exits 1
+            on any. The fixture fx_rule0o in the container (stubs for
+            runuser, getent, curl, ssh, systemctl, journalctl, sqlite3 and
+            the pytest call; real git on a clone of the N1 mirror; the real
+            lints, registry and mirror check): FAILED_LEGS 0 and rc 0
+            (0a566eea), the pytest call in the tree with the temp HOME,
+            XDG_DATA_HOME unset, no user site and no prompt; the fetch, the
+            suite and the mirror failed together, FAILED_LEGS 3 and rc 1,
+            an untracked file seen before and after (9251716b); no owner,
+            NO_OWNER and rc 2 (f6de7850). RULE0O_PREDICTIONS.txt
+            (dbdaf76a), logged at 13:33:09Z before the command, its suite
+            row DERIVED: 5252 and 12 as root at e30f1fd7, plus the two
+            tests of test_s405_root_guard.py, the real-verifier test
+            skipped as aetherlang. reconcile_owner.py (968bccb4): a
+            constructed paste 20 HELD, the same with 5 values planted 6
+            DIFF. The operator uploaded the script and its sums (87f51bf6);
+            ON A at 13:37Z: FOUND_COUNT 1, rule0_owner.sh: OK (a4c1a1ea).
+            OPERATOR, 13:39Z: pame. ON A from 13:39:14Z to 13:43:56Z
+            (2310d55b): fetch 0; HEAD and ORIGIN 2ccaaf86a19a; porcelain 0;
+            v8.0.0 peeling to 580c28f4; A 8.0.0, MainPID 2738059, its start
+            11:14:33Z derived from uptime; B unchanged; the floor 3912; the
+            suite as aetherlang 5253 passed, 13 skipped, 11 warnings in
+            273.03 s, HOME_FILES 0, PORCELAIN_AFTER 0; the claim lint 438
+            and 0; sidecars 265 and 0; the mirror CLEAN, 569 tracked, 4
+            orphans; the registry and the release VSA as before; PyPI
+            8.0.0; Asklepios three healthy rows; the timer's last run
+            13:31:07Z, CLEAN; 17 exit codes 0, FAILED_LEGS 0, RULE0_RC 0:
+            20 of 20 rows held (RULE0O_RESULTS.txt 50fb43aa). The suite's
+            derivation held; that is evidence for it, not more.
+
+    D458-7  THE STANDING RULES THE PUSH RULE CHANGES. OPERATOR, 13:16Z: the
+            rule "the seat never commits from its container" is superseded.
+            DERIVED by the seat from "root runs no git in the tree at any
+            step": the opener's lines "On A, a suite under a temp HOME
+            gives git safe.directory by GIT_CONFIG_*" and "A code landing
+            uses the multi-file kit form" no longer apply on A, since those
+            kits and that suite ran git and the repository's code as root;
+            RULE 0 is rule0_owner.sh from here, and rule0_s438.sh stays in
+            /root unused. The rule after a LAND on A that changes code the
+            API imports, restart nous-api soon after, still holds, the LAND
+            now being the fast-forward.
+
+    D458-8  WHAT THIS SEAT WROTE AND READ, TO THIS ENTRY'S PIN. To the
+            repository: nothing. ON A: in /root the operator's uploads
+            S457_SEAL_SHA256SUMS.txt, rule0_owner.sh and
+            RULE0O_SHA256SUMS.txt; under /tmp the temp HOME root's mktemp
+            made for the refused suite and the one aetherlang made for its
+            suite, HOME_FILES 0 in each; a git fetch as aetherlang, origin
+            already at 2ccaaf86. To B, to /var/www, to PyPI, to Rekor and
+            to the Project: nothing. Seat network, each named before it
+            ran: GitHub, N1 to N3; no web search and no PyPI. On A by the
+            two RULE 0 runs, each named: NA1 to NA6, NA1 ending with rc 128
+            at git's ownership check. No agent.
+
+    D458-9  WHAT STAYS OPEN. This entry, landed by the push rule: a branch
+            from the session, its check and the suite on A as aetherlang in
+            a separate clone, then main fast-forwarded; the next entry
+            records its landing. The seal of S464. On the board, as S457
+            left it: C10 and C11 with the release lane; the board's (b),
+            the Gate for staging multi-file writers, in a fresh seat; the
+            KS2 ruling; the API's catch-all. Hygiene on A: the /root kits
+            of S456 and S457, and rule0_s438.sh, which runs git and python
+            as root.
+
+    FINDINGS
+
+            FG-S464-A  SEAT LINEAGE (rule0_s438.sh, S438), FOUND BY S464. A
+                       RULE 0 THAT COULD NOT PRINT ITS NEGATIVE. With git
+                       refused and the suite refused, rule0_s438.sh printed
+                       PORCELAIN_AFTER 0, a line count of an empty output,
+                       and HOME_FILES 0 for a suite that never ran, and it
+                       ended RULE0_RC 0, its last command's code. Each leg
+                       prints its own exit code, and the script's code
+                       counts the failed legs (rule0_owner.sh).
+
+            FG-S464-B  SEAT LINEAGE (rule0_s438.sh), FOUND BY S464. ROOT'S
+                       PYTHON IMPORTED FROM /tmp. Its registry and PyPI
+                       legs ran python3 -c as root with /tmp, which every
+                       user can write, as the working directory, and
+                       python3 -c puts that directory first on sys.path: a
+                       module planted there under a standard name would run
+                       as root. In the container a planted json.py ran
+                       under python3 -c and not under python3 -I -c; not
+                       exercised on A. A python run by root takes -I and
+                       does not start in a directory others can write.
+
+            FG-S464-C  SEAT. A COMMAND FOR A NOT RUN FIRST IN THE
+                       CONTAINER. D1 asked git rev-parse --short=12 for two
+                       revisions; --short implies --verify, which takes
+                       one, and the line was refused; HEAD and origin/main
+                       were read from the log's decoration instead. A
+                       command for A runs first on the seat's clone where
+                       its shape allows.
+
+            FG-S464-D  SEAT S457, CODED BY S464. A VALUE TYPED, NOT
+                       READ. S457 typed three values ahead of their
+                       command's output after D463 was pinned (its handoff,
+                       section 8); this seat typed an uptime of 6760 for
+                       7000 into a constructed control, and the reconciler
+                       gave it DIFF. A value enters a record or a control
+                       only from an output already seen, or is computed by
+                       the script that writes it.
