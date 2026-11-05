@@ -27186,3 +27186,442 @@ document itself.
                        prints; the result is 0fef40a8. No count changed.
                        A result is written from its command's own
                        output, read where it is.
+
+  - S460 the number the operator gave the first entry of the seat S456, the
+    seat after S454 that verified the S454 seal by its digests and ran its
+    RULE 0, which carries what that seal owed: D455's landing, the S7b
+    entry-point census, slice A of the guards, the codes FG-S454-C
+    to FG-S454-G, and the seal itself
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S456,
+    DURING ITS SESSION, and uses the labels of D450 to D455: READ IN THE
+    SEAT'S CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR and
+    MEASURED. Every time below is in UTC, on 11-04 of 2026 unless another
+    day is named. An operator's time is the time his message was sent; a
+    value ON A carries the clock its command printed where it printed one.
+    Each paste ON A is kept as a file transcribed from the chat, under ona/
+    in the seal of S456. What the seat S454 measured and this seat did not
+    run again is INHERITED, from the S454 seal's evidence, each file
+    checked here by its digest. The seat S456 sits in the chat the operator
+    had started for the seat after S427, as the S454 opener names it; that
+    chat's earlier context is TESTIMONY, and this entry rests on what the
+    seal and RULE 0 measure.
+
+    THE NUMBERS. OPERATOR, 22:55Z: the kickoff, for the seat after S454,
+    its number to be given. OPERATOR, 23:17Z: 456, in answer to the seat's
+    one question asking the number of the seat. MEASURED from 23:19:33Z to
+    23:20:06Z by ns_count456.py (2459f065, ns_count455.py with its targets
+    set to 456, 455 and 454, its nonce changed and the two blobs of K8 set
+    to 58af455c and dbf542ce), its predictions NUM456_PREDICTIONS.txt
+    (4f540b36) hashed at 23:19:11Z, before the instrument was written, on a
+    mirror cloned from GitHub from 23:02:49Z to 23:02:53Z and fetched at
+    23:19:32Z (each named before it ran), 163 refs, 1059 commits, 3189
+    distinct blobs and 70 annotated tags, main at 116ab33b: for 456 the
+    header, the anchor, the marker, the token FG-S456 and the words S456
+    and D456 counted zero in the blobs of the trees of every ref, in every
+    commit message on every ref and in the annotated tag messages; a pass
+    blind to case found no hit outside a hexadecimal run. The values for
+    455, 454 and the controls were DERIVED before the run, NUM455's counts
+    plus D455's entry and message (derive456.py da27189c, its out
+    71721307), and each held: the header of S455 1 and the anchor D455- 13
+    in one blob, the document at main (58af455c); the word D455 13 there
+    and 1 in one message; FG-S454 6 there and 2 in one message; the
+    anchor D450- 20, FG-S449 40 and the word S449 69 there; a nonce 0;
+    58af455c in the tree of main alone, dbf542ce in none
+    (ns_count456_out.txt 3aca8b30, NUM456_RESULTS.txt 5843bf6d). The bare
+    word 456, read: 21 hits in 15 blobs, the line cite ":456" in revisions
+    of the ledger, "Gateway 456 Step 4" in noesis lattice JSON files, two
+    inside binaries; none names a seat or an entry. OPERATOR, 23:21Z: 460
+    for the entry. MEASURED from 23:22:12Z to 23:22:43Z by ns_count460.py
+    (75c23883, ns_count456.py with its targets set to 460, 456 and 455 and
+    its nonce changed), its predictions NUM460_PREDICTIONS.txt (026d8182)
+    hashed at 23:21:55Z, on the mirror fetched from GitHub at 23:22:11Z
+    (named before it ran), the same inventory: for 460 the same six counts
+    zero and no blind hit outside a hexadecimal run; the bare word 460 50
+    hits in 15 blobs, counts and line cites in revisions of the ledger,
+    "Caches 460 Step 5" in lattice JSON, three inside binaries, none naming
+    a seat or an entry; the 34 lines of the inventory, of 456, of 455 and
+    of the controls equal to the 456 count's (ns_count460_out.txt 695b5894,
+    NUM460_RESULTS.txt 58790503). The instrument that appends this entry
+    refuses unless the word S460, the anchor and the marker of 460 and the
+    codes below still count zero in the document when it runs. The codes
+    below are FG-S454-C to FG-S454-G, the seat S454's, and FG-S456-A, this
+    seat's.
+
+    D460-1  THE SEAL OF S454. OPERATOR, 22:55Z: the kickoff, naming five
+            files by digest: NOUS_SESSION_454_HANDOFF.md bc8a1ac4,
+            NOUS_S454_OPENER.md bdeb2974, rule0_s438.sh 0d6f5aa9,
+            S454_SEAL_EVIDENCE.tgz 5f855b67 and S454_SEAL_SHA256SUMS.txt
+            1e03031a. READ IN THE SEAT'S CONTAINER at 22:56:09Z: four
+            uploads, found by digest under changed names, equal four of
+            those digests, 24677, 6804, 98147 and 349 B; rule0_s438.sh had
+            not arrived: none of the 479 files hashed under the upload area
+            and the seat's directory held its digest. The upload area also
+            held the S427 seal (637534db) and five files of the Project,
+            from this chat's start on 11-03; hashed in the same command,
+            none read by this seat. The sums file holds four lines and not
+            its own: three OK by digest, rule0_s438.sh MISSING. The
+            archive, listed before extraction (79 members, 71 regular
+            files, no absolute path, no "..", no link) and extracted into
+            an empty directory: its EV_SHA256SUMS.txt (ea260dfd) lists the
+            other 70 files, each OK and none unlisted, as the handoff's
+            section 9 names them; d455/D455_KIT_SHA256SUMS.txt 2 of 2 OK.
+            The text of the sums file, the opener and the handoff had
+            reached the seat with the kickoff, before any tool ran; the
+            seat acted on none of them before the digests matched, and said
+            so. It asked for the missing file. OPERATOR, 23:01Z:
+            rule0_s438.sh attached; READ at 23:01:55Z: 0d6f5aa9, 3877 B, 43
+            lines, ASCII; its text too had reached the seat before the
+            hash. ON A, after the operator's upload of the sums file and
+            the script to /root at his pame (23:04Z), paste 23:05Z, A's
+            clock 23:05:27Z: the loop over /root printed FOUND
+            S454_SEAL_SHA256SUMS.txt and FOUND_COUNT 1 for 1e03031a, FOUND
+            rule0_s438.sh and FOUND_COUNT 1 for 0d6f5aa9. Paste 23:06Z, A's
+            clock 23:06:49Z: sha256sum -c with --ignore-missing printed
+            rule0_s438.sh: OK, RC 0.
+
+    D460-2  RULE 0. OPERATOR, 22:55Z, in Greeklish, in the kickoff itself:
+            all is free now and we can go on. The seat took those words as
+            the answer, at 22:55Z, to the opener's first question, whether
+            another lane holds the tree or the hosts, and did not ask it
+            again. RULE0_PREDICTIONS.txt (abcbef7d) hashed at 23:03:08Z,
+            before any command on A, from the opener's EXPECTED and the
+            mirror of 23:02:53Z. The seat named the writes (rule0's fetch
+            of origin's refs, a possible index refresh by git status on A
+            and on B, the suite under a new temp HOME in /tmp, bytecode
+            under the tree; no tracked file, no restart) and the network
+            calls (the fetch, one ssh to B, one curl to PyPI, loopback
+            curls on A and B), and asked a pame without giving the command.
+            OPERATOR, 23:07Z: pame. ON A by rule0_s438.sh, paste 23:13Z,
+            A's clock 23:08:20Z to 23:13:02Z: fetch_rc 0; HEAD and origin
+            116ab33b, the log 116ab33, 054ad57, 29bcf1c, ff66271; porcelain
+            empty; v8.0.0 peeling to 580c28f4; A health 8.0.0, uptime 80989
+            s, MainPID 2363391; B health 8.0.0, uptime 558396 s, HEAD
+            580c28f4 at v8.0.0, porcelain "?? .venv/", pip Version 8.0.0,
+            MainPID 3078825; the floor 3912; the suite under tests/, HOME a
+            new temp dir, XDG_DATA_HOME unset, safe.directory by
+            GIT_CONFIG_*: 5196 passed, 12 skipped, 11 warnings, in 269.49
+            s, HOME_FILES 0, PORCELAIN_AFTER 0; claim_lint 437 files, 0
+            violations; sidecar_lint 265, 0; the mirror CLEAN, 569 tracked,
+            4 orphans; the registry logged, True, True, 154, 0, 174366343,
+            repo and served 7e6ef662; the release VSA index 3a3bab3f, repo
+            and served; PyPI latest 8.0.0. At 23:13:02Z, Asklepios:
+            nous-api healthy 200 0, nous-bot healthy 0, nous-key-guard
+            healthy 0, each checked at 23:12:26Z, age 36 s. The timer
+            nous-serve-integrity.timer active and waiting, last trigger
+            23:01:22Z, next 23:30:07Z, Result success; its unit inactive,
+            ExecMainStatus 0, exit 23:01:22Z, its journal RESULT: CLEAN,
+            569 tracked, 4 orphans. Reconciled by a script against
+            abcbef7d: 19 rows, each as predicted
+            (rule0_run_042308_transcribed.txt f987eeec). DERIVED: A's
+            process started at 00:38:32Z, the restart the opener names; B's
+            at 12:01:46Z on 10-29, as D455-2 gives. Not measured: whether
+            the run wrote ignored bytecode under the tree. RULE 0 leaves
+            its temp HOME, empty, under /tmp on A.
+
+    D460-3  THE OTHER LANES. OPERATOR, 22:55Z: none holds the tree or the
+            hosts. READ IN THE SEAT'S CONTAINER, on the mirror of
+            23:02:53Z, 23:19:33Z and 23:22:12Z: main 116ab33b each time, no
+            commit above D455; the branches main, nous-trace (09109512) and
+            refs/pull/1/head (49b70920); 160 tags, the latest reachable
+            from main v8.0.0. The S427 lane's DFG slice has not landed, and
+            5151cc4d still has no entry (TESTIMONY, the S427 handoff,
+            through D455-3). This chat, the operator's, held on 11-03 from
+            11:49Z to 11:51Z a seat after S427 that verified the S427 seal
+            (637534db, its sums file 15db1696, every pack's sums OK) and
+            read its handoff, opener and running log; it made no network
+            call, wrote nothing outside its container and asked one
+            question, which the S454 seal's kickoff overtook (SEAT, its
+            running log).
+
+    D460-4  THE LANDING OF D455. INHERITED, the S454 handoff (bc8a1ac4),
+            section 6, and the pastes of ona_s454/ in the seal's evidence
+            (d455_sums_1104.txt 80c676e5, d455_land_dry_1104.txt 3a5eb710,
+            d455_land_apply_1104.txt 79933879, d455_commit_dry_1104.txt
+            cb9a1f88, d455_commit_commit_1104.txt d1118573,
+            d455_commit_push_1104.txt 49813b3b): ON A, each write after its
+            pame: at 17:29Z D455_KIT_SHA256SUMS.txt found by digest
+            96decbd3, D455_LAND.py and D455_COMMIT.py OK, RC 0; at 17:31Z
+            the dry run, HEAD and origin 054ad571, BLOB_HEAD dbf542ce,
+            porcelain 0, the document d20e166f, 1653201 B, mode 644,
+            986:981, STATE BEFORE, the namespace 0 0 0 0, DOC_NEW 34428abd,
+            1677583 B, DRY_RUN_GREEN; pame 17:32Z; at 17:32Z WROTE and
+            READBACK 34428abd, 644, 986:981, porcelain 1, APPLY_GREEN; at
+            17:33Z the commit tool's dry run, BLOB_WORKTREE 58af455c, the
+            pinned identity, lint 437 files and 0 violations,
+            DRY_RUN_GREEN; pame 17:33Z; paste 17:34Z: FETCH_RC 0, origin
+            054ad571, NEW_HEAD 116ab33b, CHECK_COMMIT OK, porcelain 0,
+            COMMIT_GREEN; pame 17:34Z; paste 17:34Z: origin 054ad571,
+            REMOTE_MAIN 116ab33b, PUSH_GREEN. READ IN THE SEAT'S CONTAINER,
+            on the mirror of 23:02:53Z: 116ab33b, parent 054ad571, author
+            and committer Hlias Staurou at 17:34:01Z, one path; the
+            document blob dbf542ce to 58af455c, sha256 d20e166f to
+            34428abd, 1653201 B to 1677583 B; its first 1653201 B the old
+            document and its last 24382 B the entry (55a1c61d), ASCII, no
+            line of the entry over 75 columns; the raw message acbbaecf,
+            586 B, equal byte for byte to d455/message.txt. The tools,
+            INHERITED: build_d455.py (620d7156) from D452's; predictions
+            D455_PREDICTIONS.txt (5a42a29b) hashed at 17:26:23Z; on a
+            fixture made from the mirror, 30 cases at the predicted exit
+            codes and 9 mutants killed (fx_d455.py 0aa03c9a,
+            fx_d455_out.txt 148245c4). No restart: a document only.
+
+    D460-5  THE S7b ENTRY-POINT CENSUS. INHERITED, the seal's evidence,
+            ep/. OPERATOR, 17:35Z, in Greek: go on with the S7b census;
+            17:38Z: the S449 seal evidence uploaded at the seat's one
+            question (f72522c7; the Gate r1 0e05305d;
+            S449_S7B_GATE_EVIDENCE.tgz 6e699405; rows2_ff662714.json
+            d8f3b9dd; these four as EP_RESULTS.txt gives them, the S449
+            seal's files not being in the S454 seal). The question: which
+            writers' entry points reach the 26 IN sites of G3 (D455-5) when
+            the suite runs? Predictions EP_PREDICTIONS.txt (0ea632ed)
+            hashed at 17:41:10Z, before the instrument; amendment 1
+            (f52bb52a) at 17:46:02Z, before the report, the control and the
+            run. The mirror fetched from GitHub at 17:41:22Z, main
+            116ab33b, 163 refs; a clone at 116ab33b; a venv on Python
+            3.13.18, 39 packages from PyPI from 17:41:30Z to 17:45:10Z
+            (freeze.txt 243f4384). The instrument ep_instrument.py
+            (1c588021), loaded by a .pth line, records the call stack at
+            each of the 26 sites (ep_sites.json 251060fd: 14 SIGN, 12
+            HASH); ep_report.py (e60c91bf) classes each frame by the hashed
+            rules. The control K1 at 17:47:51Z (ctl/ctlmod.py 5aa0456f,
+            ctl/tests/run_ctl.py 55422565): a signer a GUARD; a verify-only
+            frame VERIFY_ONLY and its helper SHARED; a hasher a GUARD; a
+            test frame TEST_ONLY; a second signer SHARED by its static
+            binding under an outer GUARD; a verify_and_sign a GUARD: held.
+            Run E, 17:48:01Z to 17:52:08Z: 5194 passed, 14 skipped, 13
+            warnings, rc 0, HOME_FILES 0, porcelain 0 (runE.txt 1ac3796b,
+            runE_meta.txt 8fce5166); all 26 reached; 120 process records
+            (ep_report_E.txt d1048919). Under the hashed rules: P1 13 of
+            14, missed manifest.py:235; P2 2 of 4, missed cli_verify.py:263
+            and :384; P3 and P4 missed for cmd_verify; P5 missed as stated
+            and held in substance. The cause, read: cli.py cmd_verify, the
+            dispatcher of "nous verify", holds "verify" and does not sign,
+            so the --smt writer chain under it was SHARED (FG-S454-C). POST
+            HOC, not held predictions: amendment 2 (ed727140, 17:54:36Z)
+            takes out of VERIFY eight frames that read no signed artifact;
+            amendment 3 (6e73d659, 17:56:31Z) stops the GUARD search at the
+            first VERIFY frame, and "_signer*" is not a signature; the
+            control K1A to K1G held under each, K1G added after (FG-S454-D;
+            ep_report_K.txt 2f73cf3a, ep_report3_K.txt 0f77aeab); under
+            them P1 14 of 14 and P2 4 of 4 (ep_report2_E.txt 24178e6b,
+            ep_report3_E.txt 896fc249). DERIVED, each of the 34 candidate
+            places read (EP_RESULTS.txt be127215): 22 SIGNERS,
+            annex_iv_map.build_annex_iv_map, attest_apr.sign_apr,
+            build_vsa.sign_build_vsa, conformance.sign_certificate,
+            continuity_checkpoint.build_continuity_checkpoint,
+            continuity_ledger.build_authorization_receipt and
+            build_counterparty_receipt, dossier_spec.build_dossier_spec,
+            the build_dossier of the guardrails, llm_guard and santander
+            adapters, manifest.sign_manifest, ndec.sign_envelope,
+            nous_trace.sign_trace, provenance.sign_provenance,
+            verifier_registry.sign_registry, vsa.sign_vsa,
+            scripts/release.py phase_provenance, and four CLI writers,
+            cli_verify.cmd_verify, cli_verify._issue_gap_witness_dossier,
+            cli_vsa._cmd_emit and cli_conformance._cmd_certify; 6 INNER
+            HASH WRITERS, cost_farkas.cost_farkas_sha256,
+            continuity_checkpoint._budget_extension_line and
+            _budget_leaf_bytes, ndec._dossier_artifacts and
+            build_statement, run_identity.build_run_remedy_application; 5
+            OUT, whose digest enters no signed body:
+            cli_prices.cmd_prices_verify and smt_verify.format_verdict
+            print it, dossier._find_pricing_match compares it,
+            dossier.build_dossier writes an unsigned bundle,
+            smt_emit.emit_smt is also called by a reader; 1 READER,
+            cli_conformance._derive_inputs; and 2 IN sites with no writer
+            in the tree, closure_witness.py:64 and manifest.py:310. So 24
+            of the 26 sites have a writer to guard. The events at 116ab33b:
+            ep_events.txt (65e241b5).
+
+    D460-6  SLICE A OF THE GUARDS. INHERITED, the seal's evidence, s7b/.
+            OPERATOR, 18:00Z, in Greek: go on with the guards' predictions
+            here; 18:28Z: build slice A here. Predictions
+            S7B_A_PREDICTIONS.txt (9f0d752c) hashed at 18:06:40Z;
+            amendments 1 (2c47e110, 18:31:16Z, G24 added), 2 (46927959,
+            18:32:29Z, after the first red run: U+FFFE in place of U+D800
+            for G2 to G4) and 3 (a779b0fc, 18:35:18Z, the form of M23 and
+            the runners' refusals). The tree: the census clone at 116ab33b,
+            the census instrument removed from the venv first. 24 guards in
+            15 writer functions of 14 modules, each "_s7b_loads(<bytes>,
+            <label>)", _s7b_loads being conformance_verifier.loads imported
+            at the module's top, on the bytes the writer signs or hashes,
+            the signature over that same local; no helper and no string
+            literal edited: G1 the manifest body [js:w.man.1] in
+            sign_manifest; G2 the certificate body [js:w.cert.1] in
+            sign_certificate; G3 the trace body [js:w.trace.1] in
+            sign_trace; G4 the APR body [js:w.apr.1] in sign_apr; G5 the
+            NDEC statement [js:w.ndec.1] in sign_envelope; G6 the build VSA
+            statement [js:w.bvsa.1] in sign_build_vsa; G7 the provenance
+            statement [js:w.prv.1] in sign_provenance; G8 the registry body
+            [js:w.reg.1] in sign_registry; G9 the VSA statement
+            [js:w.vsa.1] in sign_vsa; G10 the manifest.json body
+            [js:w.aiv.1] and G11 the Annex IV map body [js:w.aiv.2] in
+            build_annex_iv_map; G12 the receipt's protected header
+            [js:w.rcp.1], G13 its claims [js:w.rcp.2] and G24 its
+            certificate [js:w.rcp.3] in build_counterparty_receipt; G14 the
+            authorization's protected header [js:w.auth.1] in
+            build_authorization_receipt; G15 to G17 the guardrails
+            adapter's payload, record and manifest [js:w.grd.1] to
+            [js:w.grd.3]; G18 to G20 the same in llm_guard [js:w.llg.1] to
+            [js:w.llg.3]; G21 the santander payload [js:w.snt.1], G22 its
+            manifest [js:w.snt.2], and G23 its decision record [js:w.snt.0]
+            in parse_decision_jsonl, the line read by the region in place
+            of json.loads and the refusal raised as SantanderAdapterError
+            with the region's message. A library guard lets StrictJsonError
+            propagate. Red, the test file alone, 18:32:07Z: 24 failed, 21
+            DID NOT RAISE and 3 a pydantic ValidationError: MISSED for G2
+            to G4, as ConformanceCertificate, TraceEnvelope and
+            AttestationPinningRecord refuse a lone surrogate at
+            construction (FG-S454-E); after amendment 2, 18:32:45Z: 24
+            failed, each DID NOT RAISE (redA_file.txt 2b4fbe9f); the suite
+            18:32:54Z to 18:37:12Z: 24 failed, 5194 passed, 14 skipped, rc
+            1, HOME_FILES 0, porcelain the test file only (runR0.txt
+            0d395454, runR0_meta.txt a71bb032). Apply at 18:37:28Z,
+            apply_guards_a.py (a5915694, apply_out.txt ca9e6912): 24 calls
+            anchored by ast, 0 refusals; guards_a.diff (31c396e3) 60 lines
+            in, 11 out, 14 files; no str constant removed, 26 added, the 24
+            labels and in santander_adapter "utf-8" and "decision record is
+            not valid UTF-8: ". Green, 18:37:39Z to 18:41:52Z: 5218 passed,
+            14 skipped, 13 warnings, rc 0, HOME_FILES 0 (runR1.txt
+            10b3f950, runR1_meta.txt 59358064); 14 modules modified and the
+            test file untracked, where the predictions said 13 modules
+            (MISSED as stated, FG-S454-F). Mutants, 18:37:41Z to 18:38:17Z
+            (mutants_a.py 3e0918cf, mutants_a_out.txt 762b7a0c): 24 of 24
+            killed, in each only its own test failing; M15 and M18 refused
+            at G16 and G19 with the other label, as predicted. KS1, KS2,
+            KS3 (no string literal changed, nothing under website/ or
+            examples/, test_nt_v2_recompute passing inside R1) and KS5
+            held; KS6 is not met by slice A, the CLI catch being slice B's;
+            KS7 held for the 15 library writers, read. Found on the way:
+            annex_iv_map.py holds a second "from __future__" line inside
+            its embedded verifier text, and the guard script's refusal
+            caught it before any write (FG-S454-G). The tests:
+            tests/test_s7b_guards_a.py (eed5604c), 24 tests, every key in
+            memory, no default key path (S7B_A_RESULTS.txt a0e9a751). Slice
+            A is not in the repository; it is in the S454 seal's evidence
+            as a diff and a test file.
+
+    D460-7  THE SEAL OF S454, ITS LAST MEASUREMENTS. INHERITED, the S454
+            handoff, section 2a, and the evidence. OPERATOR, 18:43Z, in
+            Greeklish: seal now; slice B goes on in the chat the operator
+            had started (427). SEAL_PREDICTIONS.txt (77d9b943) hashed at
+            18:44:17Z, before the runs. P1 the mirror fetched from GitHub
+            at 18:44:28Z: main 116ab33b, 163 refs. P2 a fresh clone of
+            main; git apply --check and git apply of guards_a.diff
+            (31c396e3) succeeded; tests/test_s7b_guards_a.py (eed5604c)
+            copied in; the guarded modules imported from that clone; pytest
+            on that file and tests/test_nt_v2_recompute.py: 57 passed, rc
+            0, no file under HOME (p2_run.txt 6db74d30, whose last line,
+            read here, gives 57 passed in 6.90 s). P3 rule0_s438.sh carried
+            unchanged, 0d6f5aa9. Every prediction held. The last full suite
+            in the container was R1 of slice A at 116ab33b, 5218 passed and
+            14 skipped; ON A at 116ab33b (D460-2): 5196 and 12, the
+            container's base plus 2 and minus 2, as in every seat
+            since S431.
+
+    D460-8  WHAT THIS SEAT WROTE AND READ. To the repository, to B and to
+            /var/www: nothing before this entry. On A: the commands
+            of D460-1 and D460-2, among them rule0's fetch of origin's refs
+            and its suite under a new temp HOME in /tmp; to /root, by the
+            operator, S454_SEAL_SHA256SUMS.txt and rule0_s438.sh, then this
+            entry's tools. Seat network, each named before it ran: the
+            mirror cloned from GitHub from 23:02:49Z to 23:02:53Z and
+            fetched at 23:19:32Z and 23:22:11Z. No PyPI, no web search, no
+            web page, no agent. The Project: no read and no write by the
+            seat.
+
+    D460-9  WHAT STAYS OPEN. This entry on A by its two tools, each write
+            after its pame; the next entry records its landing. The next
+            object, ruled by the operator at 18:43Z (the S454 handoff):
+            slice B of S7b. Its first step: slice A re-applied from
+            the S454 seal (s7b/guards_a.diff and s7b/test_s7b_guards_a.py)
+            to a fresh clone of main and run, before any new code. Then B1,
+            the census of the CLI and script callers of the slice-A guards
+            with hashed predictions, each to catch StrictJsonError and
+            print "REFUSED: <reason>", exit 1 (G4), with no traceback and
+            no partial output (KS6); B2, the writers with an output before
+            a site (cli_verify.cmd_verify, dossier_spec.build_dossier_spec,
+            build_continuity_checkpoint, _cmd_certify, phase_provenance,
+            _issue_gap_witness_dossier, _cmd_emit), and the operator's
+            decision before code, for cmd_verify and build_dossier_spec,
+            among (a) every hashed byte string re-read before the first
+            output, (b) a temp dir moved into place on success and (c) the
+            outputs removed on a refusal; B3, the inner hash writers; B4,
+            red before green, a mutant per guard, the label asserted per
+            test, KS1 to KS7, the suite on A, a LAND of slices A and B
+            together and a restart of nous-api soon after the
+            push (FG-S440-Q); KS3 measured again (G5). Or the object the
+            operator brings instead. Not in S7b: the two IN sites with no
+            writer, and the two OPEN sites of G3 unless a reader is found.
+            Routed: FG-S449-F. The next Gate, the seat S449's
+            choice: FG-S440-J, measured as FG-S449-G. Carried: the DFG
+            slice, the S427 lane's (E4), and its owed entry for 5151cc4d;
+            S8, banked; the Gate of the split's S2 to
+            S6; FG-S440-F, FG-S440-K, FG-S440-Q; Gate H7; at the next
+            release D2, D3 and A4's lines, the moved template digests,
+            the FG-S426-D window; FG-S438-F and FG-S438-M;
+            NV (D430-9); FG-S414-I. Hygiene on A: the /root kits
+            of S431, S438, S440, S449, S453, S454 and this seat, /tmp/p800,
+            /tmp/v800 and the suite temp HOMEs, RULE 0's of 23:08Z among
+            them. The seal of the seat.
+
+    FINDINGS
+
+            FG-S454-C  SEAT S454. "VERIFY" NAMES THREE THINGS. The census
+                       took the verify side as a function whose name holds
+                       "verify". NOUS names so the readers of signed
+                       artifacts, the program verifier (Z3), and the writer
+                       CLI "nous verify" with its dispatcher cli.py
+                       cmd_verify, which does not sign. Under that rule the
+                       --smt writer chain was SHARED and P1, P2 and P3
+                       missed for a name. A rule by name is run over the
+                       names the tree holds, and read, before the
+                       predictions that use it are hashed.
+
+            FG-S454-D  SEAT S454. THE CONTROL LACKED A SHAPE THE TREE HELD.
+                       The census's GUARD search walked outward past a
+                       verify frame and made a reader, _derive_inputs, a
+                       GUARD. The control K1 had no stack with a verify
+                       call inward of a signer; K1G was added after. A
+                       control holds every shape its rule decides on.
+
+            FG-S454-E  SEAT S454. A PROBE OF A PLAIN MODEL TAKEN FOR THE
+                       MODELS. Slice A's predictions held that pydantic
+                       keeps a lone surrogate in a str field, read on a
+                       plain model; ConformanceCertificate, TraceEnvelope
+                       and AttestationPinningRecord refuse it at
+                       construction (string_unicode). R0 missed for G2 to
+                       G4; U+FFFE replaced it by amendment. A probe is run
+                       on the object the prediction names.
+
+            FG-S454-F  SEAT S454. A COUNT RECALLED. Slice A's predictions
+                       said 13 modules; the guards touch 14, in 15 writer
+                       functions. A count in a prediction is counted, not
+                       recalled.
+
+            FG-S454-G  WORLD, FOUND BY S454. A SECOND "from __future__"
+                       INSIDE A VERIFIER TEXT. annex_iv_map.py holds one at
+                       line 44 and one at 468, inside its embedded verifier
+                       text. An edit anchored on text would have put an
+                       import inside that text and moved a verifier digest
+                       (KS3). The guard script refused it; anchors in a
+                       module that embeds a verifier text are checked by
+                       ast, not by text.
+
+            FG-S456-A  SEAT. A RECORD WRITTEN FROM A FAILED CHECK. At
+                       23:23Z the script that writes NUM460_RESULTS.txt
+                       asserted that 33 lines of the 460 count equal the
+                       456 count's; 33 was recalled, not counted, and the
+                       assert failed on 34 (FG-S454-F again). The command
+                       then ran its log append on the failed script: the
+                       seat's running log took a line naming
+                       NUM460_RESULTS.txt with an empty digest and the
+                       count 33. The seat said so, corrected the log at
+                       23:23:47Z and wrote the results with the count
+                       computed (34: the inventory 2, 456 10, 455 10, the
+                       controls K2 to K5 9, K7 and K8 3), the append gated
+                       on the script's exit. No count of the check changed
+                       and no number was adopted from the failed run. A
+                       record step runs only on its producer's success, and
+                       a count in an assert is computed from the data it
+                       checks.
