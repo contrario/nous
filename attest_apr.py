@@ -1,4 +1,5 @@
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import hashlib
@@ -183,6 +184,7 @@ def sign_apr(
     apr: AttestationPinningRecord, private_key: Ed25519PrivateKey
 ) -> AttestationPinningRecord:
     body = apr.canonical_body_bytes()
+    _s7b_loads(body, "APR body [js:w.apr.1]")  # __s7b_a_guard_v1__
     signature_bytes = private_key.sign(body)
     signature = TrustRootSignature(
         algorithm="ed25519",

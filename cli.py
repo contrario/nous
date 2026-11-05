@@ -43,6 +43,7 @@ import os
 import py_compile
 import subprocess
 import sys
+from conformance_verifier import StrictJsonError as _S7B_SJE  # __s7b_b_catch_v1__
 import tempfile
 import time
 from pathlib import Path
@@ -194,6 +195,9 @@ def cmd_run(args: argparse.Namespace) -> int:
     except KeyboardInterrupt:
         print("\n\nWorld stopped by user.")
         return 0
+    except _S7B_SJE as _s7b_e:  # __s7b_b_catch_v1__
+        print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+        return 1
     except Exception as e:
         print(f"Runtime error: {e}", file=sys.stderr)
         return 1

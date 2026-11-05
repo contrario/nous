@@ -19,6 +19,7 @@ only; priced tool calls are Phase 2). A missing or "0" tool_cost is free.
 # __nous_trace_module_v1__
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import json
@@ -304,6 +305,7 @@ def sign_trace(
     private_key: Ed25519PrivateKey,
 ) -> TraceEnvelope:
     body: bytes = envelope.canonical_body_bytes()
+    _s7b_loads(body, "trace body [js:w.trace.1]")  # __s7b_a_guard_v1__
     raw_sig: bytes = private_key.sign(body)
     sig = TraceSignature(
         algorithm="ed25519",

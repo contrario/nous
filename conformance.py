@@ -30,6 +30,7 @@ the dossier's job.
 # __nous_conformance_module_v1__
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 from dataclasses import dataclass, field
@@ -854,6 +855,7 @@ def sign_certificate(  # __nous_conformance_certificate_v1__
     private_key: Ed25519PrivateKey,
 ) -> ConformanceCertificate:
     body: bytes = cert.certificate_canonical_body_bytes()
+    _s7b_loads(body, "certificate body [js:w.cert.1]")  # __s7b_a_guard_v1__
     raw_sig: bytes = private_key.sign(body)
     sig = CertificateSignature(
         algorithm="ed25519",

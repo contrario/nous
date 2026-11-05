@@ -35,6 +35,7 @@ import hashlib
 import json
 import subprocess
 import sys
+from conformance_verifier import StrictJsonError as _S7B_SJE  # __s7b_b_catch_v1__
 import tempfile
 from pathlib import Path
 
@@ -376,7 +377,12 @@ def _cmd_emit(args: argparse.Namespace) -> int:
     priv, pub, key_path = vsa.load_or_create_vsa_keypair(
         Path(args.key_path) if args.key_path else None
     )
-    envelope = vsa.sign_vsa(statement, priv)
+    try:  # __s7b_b_catch_v1__
+        envelope = vsa.sign_vsa(statement, priv)
+    except _S7B_SJE as _s7b_e:
+        import sys as _s7b_sys
+        print("REFUSED: " + str(_s7b_e), file=_s7b_sys.stderr)
+        return 1
 
     out_dir.mkdir(parents=True, exist_ok=True)
     src_by_name = {

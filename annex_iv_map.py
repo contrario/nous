@@ -42,6 +42,7 @@ DESIGN NOTES:
 # __s135_annex_iv_map_module_v1__
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import hashlib
@@ -202,9 +203,9 @@ def build_annex_iv_map(
     if not isinstance(manifest, dict):
         raise AnnexIvMapError("manifest.json is not a JSON object")
 
-    manifest_canonical_sha = hashlib.sha256(
-        _manifest_canonical_body_bytes(manifest)
-    ).hexdigest()
+    _mbody = _manifest_canonical_body_bytes(manifest)
+    _s7b_loads(_mbody, "manifest.json body [js:w.aiv.1]")  # __s7b_a_guard_v1__
+    manifest_canonical_sha = hashlib.sha256(_mbody).hexdigest()
 
     items: dict[str, dict] = {}
     for item_id, title, candidates, clause_kind in ANNEX_IV_ITEMS:
@@ -240,6 +241,7 @@ def build_annex_iv_map(
         "items": items,
     }
     body_bytes = _canonical_body_bytes(body)
+    _s7b_loads(body_bytes, "Annex IV map body [js:w.aiv.2]")  # __s7b_a_guard_v1__
     signature = private_key.sign(body_bytes)
     body["signature"] = {
         "public_key_b64": _public_key_b64(private_key.public_key()),

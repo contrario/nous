@@ -32,6 +32,7 @@ is set. VALUE-ADD is real ONLY because an LLM Guard scan result is UNSIGNED.
 """
 # __s219_llm_guard_adapter_v1__
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import hashlib
@@ -237,13 +238,17 @@ def build_dossier(
     canonical body excludes transparency_log, so the signed body is byte-
     identical whether or not the dossier is anchored (drop-when-None)."""
     payload = project_llmguard(record)
+    _s7b_loads(_canonical_bytes(payload), "llm_guard payload [js:w.llg.1]")  # __s7b_a_guard_v1__
+    _s7b_loads(_canonical_bytes(record), "llm_guard record [js:w.llg.2]")  # __s7b_a_guard_v1__
     manifest = LLMGuardDossierManifest(
         nous_version=nous_version,
         upstream_digest=upstream_digest(record),
         projection_digest=projection_digest(payload),
         timestamp_utc=timestamp_utc,
     )
-    signature = private_key.sign(manifest.canonical_bytes())
+    _mb = manifest.canonical_bytes()
+    _s7b_loads(_mb, "llm_guard manifest [js:w.llg.3]")  # __s7b_a_guard_v1__
+    signature = private_key.sign(_mb)
     public_key = private_key.public_key()
     doc: dict[str, Any] = manifest.canonical_dict()
     doc["signature"] = {

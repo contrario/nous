@@ -1,4 +1,5 @@
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 # __s164_p3_u2_build_vsa_v1__
 #
@@ -214,6 +215,7 @@ def sign_build_vsa(
     if not isinstance(seed, (bytes, bytearray)) or len(seed) != 32:
         raise BuildVsaError("seed must be a raw 32-byte Ed25519 private seed")
     payload = _canon(statement)
+    _s7b_loads(payload, "build VSA statement [js:w.bvsa.1]")  # __s7b_a_guard_v1__
     priv = Ed25519PrivateKey.from_private_bytes(bytes(seed))
     sig = priv.sign(_pae(DSSE_PAYLOAD_TYPE, payload))
     return {

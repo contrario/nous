@@ -29,6 +29,7 @@ Public API:
 # __nous_manifest_module_v1__
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 # __session64_publish_removal_v1__
 # __session64_smt_margin_v1__
 
@@ -446,7 +447,9 @@ def sign_manifest(
     manifest: Manifest,
     private_key: Ed25519PrivateKey,
 ) -> bytes:
-    return private_key.sign(manifest.canonical_bytes())
+    body = manifest.canonical_bytes()
+    _s7b_loads(body, "manifest body [js:w.man.1]")  # __s7b_a_guard_v1__
+    return private_key.sign(body)
 
 
 def verify_manifest_signature(

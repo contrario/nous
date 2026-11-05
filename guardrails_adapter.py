@@ -31,6 +31,7 @@ ValidationOutcome is UNSIGNED.
 """
 # __s219_guardrails_adapter_v1__
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import hashlib
@@ -237,13 +238,17 @@ def build_dossier(
     canonical body excludes transparency_log, so the signed body is byte-
     identical whether or not the dossier is anchored (drop-when-None)."""
     payload = project_guardrails(record)
+    _s7b_loads(_canonical_bytes(payload), "guardrails payload [js:w.grd.1]")  # __s7b_a_guard_v1__
+    _s7b_loads(_canonical_bytes(record), "guardrails record [js:w.grd.2]")  # __s7b_a_guard_v1__
     manifest = GuardrailsDossierManifest(
         nous_version=nous_version,
         upstream_digest=upstream_digest(record),
         projection_digest=projection_digest(payload),
         timestamp_utc=timestamp_utc,
     )
-    signature = private_key.sign(manifest.canonical_bytes())
+    _mb = manifest.canonical_bytes()
+    _s7b_loads(_mb, "guardrails manifest [js:w.grd.3]")  # __s7b_a_guard_v1__
+    signature = private_key.sign(_mb)
     public_key = private_key.public_key()
     doc: dict[str, Any] = manifest.canonical_dict()
     doc["signature"] = {

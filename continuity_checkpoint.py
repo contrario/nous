@@ -33,6 +33,7 @@ and rekor_v2_offline.verify_checkpoint_signature consume.
 from __future__ import annotations
 
 import base64
+from conformance_verifier import loads as _s7b_loads  # __s7b_b3_guard_v1__
 import hashlib
 import json
 from fractions import Fraction
@@ -259,6 +260,10 @@ def build_continuity_checkpoint(
         caps = _ordered_caps(order, digest_to_manifest)
         ext_line, sidecar = _budget_extension_line(order, caps, budget_q)
         budget_leaf = _budget_leaf_bytes(sidecar)
+        _s7b_loads(_canonical_bytes(list(order)),  # __s7b_b3_guard_v1__
+                   "checkpoint leaf set [js:w.ckp.1]")
+        _s7b_loads(_canonical_bytes(sidecar),
+                   "checkpoint budget sidecar [js:w.ckp.2]")
         budget_str = str(budget_q)
 
     leaves = link_leaves if budget_leaf is None else link_leaves + [budget_leaf]

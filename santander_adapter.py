@@ -33,6 +33,7 @@ and no new claim class. Writes nothing unless NOUS_SANTANDER_ADAPTER is set.
 """
 # __s216_rekor_anchor_v1__
 from __future__ import annotations
+from conformance_verifier import StrictJsonError, loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import hashlib
@@ -136,7 +137,13 @@ def parse_decision_jsonl(line: str) -> dict[str, Any]:
             "decision record must be a JSONL string, got: " + repr(type(line))
         )
     try:
-        record = json.loads(line)
+        record = _s7b_loads(line.encode("utf-8"), "decision record [js:w.snt.0]")  # __s7b_a_guard_v1__
+    except StrictJsonError as exc:
+        raise SantanderAdapterError(str(exc)) from exc
+    except UnicodeEncodeError as exc:
+        raise SantanderAdapterError(
+            "decision record is not valid UTF-8: " + str(exc)
+        ) from exc
     except json.JSONDecodeError as exc:
         raise SantanderAdapterError(
             "decision record is not valid JSON: " + str(exc)
@@ -373,6 +380,7 @@ def build_dossier(
     identical whether or not the dossier is anchored (drop-when-None).
     """
     payload = project_decision(record)
+    _s7b_loads(_canonical_bytes(payload), "santander payload [js:w.snt.1]")  # __s7b_a_guard_v1__
     manifest = SantanderDossierManifest(
         nous_version=nous_version,
         upstream_digest=upstream_digest(jsonl_line),
@@ -380,7 +388,9 @@ def build_dossier(
         timestamp_utc=timestamp_utc,
         entropy_leg=build_entropy_leg(record),
     )
-    signature = private_key.sign(manifest.canonical_bytes())
+    _mb = manifest.canonical_bytes()
+    _s7b_loads(_mb, "santander manifest [js:w.snt.2]")  # __s7b_a_guard_v1__
+    signature = private_key.sign(_mb)
     public_key = private_key.public_key()
     doc: dict[str, Any] = manifest.canonical_dict()
     doc["signature"] = {

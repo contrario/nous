@@ -387,7 +387,12 @@ def _cmd_certify(args: argparse.Namespace) -> int:  # __nous_cli_conformance_cer
         nous_version=_NOUS_VERSION, issued_utc=issued,
         obligations_canon=_ob_canon,
     )
-    signed = sign_certificate(cert, priv)
+    try:  # __s7b_b_catch_v1__
+        signed = sign_certificate(cert, priv)
+    except StrictJsonError as _s7b_e:
+        import sys as _s7b_sys
+        print("REFUSED: " + str(_s7b_e), file=_s7b_sys.stderr)
+        return 1
 
     if args.anchor == "rekor_v2":  # __nous_conformance_anchored_verifier_v1__
         from rekor_anchor_v2 import anchor_manifest_to_rekor_v2

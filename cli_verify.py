@@ -25,7 +25,9 @@ from __future__ import annotations
 # __session64_smt_margin_v1__
 
 import argparse
+from conformance_verifier import loads as _s7b_loads  # __s7b_b3_guard_v1__
 import sys
+from conformance_verifier import StrictJsonError as _S7B_SJE  # __s7b_b_catch_v1__
 from pathlib import Path
 from typing import Optional
 
@@ -590,8 +592,14 @@ def cmd_verify(args: argparse.Namespace) -> int:
         return _exit_for_verdict(result.verdict)
 
     try:
+        if _cost_doc_s170 is not None:  # __s7b_b3_guard_v1__
+            _s7b_loads(_cost_bytes_s170,
+                       "cost farkas certificate [js:w.cf.1]")
         sig = sign_manifest(manifest, priv)
         doc = manifest_json(manifest, sig, pub)
+    except _S7B_SJE as _s7b_e:  # __s7b_b_catch_v1__
+        print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+        return 1
     except Exception as e:
         print(f"\nWARN: signing failed: {e}", file=sys.stderr)
         return _exit_for_verdict(result.verdict)

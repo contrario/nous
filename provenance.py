@@ -34,6 +34,7 @@ are injected by the caller and legitimately differ between two builds, like
 the execution trace. The signature is taken over the exact emitted bytes.
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import hashlib
@@ -322,6 +323,7 @@ def sign_provenance(
     key, returning the envelope dict. The payload is the canonical Statement;
     the signature is over PAE(payloadType, payload)."""
     payload = _canon(statement)
+    _s7b_loads(payload, "provenance statement [js:w.prv.1]")  # __s7b_a_guard_v1__
     payload_b64 = base64.b64encode(payload).decode("ascii")
     pae = _pae(DSSE_PAYLOAD_TYPE, payload)
     signature = private_key.sign(pae)

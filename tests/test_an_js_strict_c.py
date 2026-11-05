@@ -381,8 +381,32 @@ def _receipt_part(part):
     return apply
 
 
+def _tree_digest(d):  # __s7b_b3_sidecar_writer_v1__
+    return sorted(
+        (str(p.relative_to(d)), oct(p.lstat().st_mode),
+         hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else "")
+        for p in d.rglob("*"))
+
+
+def _writer_refused(msg, mutation, key):  # __s7b_b3_sidecar_writer_v1__
+    # The reason _named asks of the reader, asked of the writer's guard.
+    assert "[js:w.ckp.2]" in msg, (mutation, msg)
+    if mutation.startswith("dup_"):
+        assert "refused: duplicate key " + repr(key) in msg, (mutation, msg)
+    else:
+        assert A.TOKENS[mutation] in msg, (mutation, msg)
+        assert A.NONFINITE_PHRASE in msg, (mutation, msg)
+
+
 def _sidecar(f, d, mutation):
+    # __s7b_b3_sidecar_writer_v1__ (S7B_B3_AMENDMENT_2). For a mutation:
+    # W1 the real writer refuses the planted sidecar by its S7b guard
+    # [js:w.ckp.2], with the reason the reader gives, and leaves the case
+    # dir as it was; W2 a writer without that one guard (any NOUS before
+    # S7b) writes the same bytes, and the reader (cnt.5) is checked as
+    # before. The bypass lives only in this MonkeyPatch context.
     import continuity_checkpoint as cc
+    from conformance_verifier import StrictJsonError
     real = cc._canonical_bytes
     seen = {}
 
@@ -396,10 +420,30 @@ def _sidecar(f, d, mutation):
         return b
     for n in ("checkpoint.note", "aggregate.cost.farkas.json"):
         (d / n).unlink()
+    hits = []
+    if mutation is not None:
+        before = _tree_digest(d)
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(cc, "_canonical_bytes", planted)
+            with pytest.raises(StrictJsonError) as ei:
+                cc.build_continuity_checkpoint(
+                    d, log_key_path=f.info["logkey"], budget="1.00")
+        _writer_refused(str(ei.value), mutation, seen["key"])
+        assert _tree_digest(d) == before, "the refused writer wrote"
     with pytest.MonkeyPatch.context() as mp:
         mp.setattr(cc, "_canonical_bytes", planted)
+        if mutation is not None:
+            guard = cc._s7b_loads
+
+            def unguarded(raw, label):
+                if "[js:w.ckp.2]" in label:
+                    hits.append(label)
+                    return None
+                return guard(raw, label)
+            mp.setattr(cc, "_s7b_loads", unguarded)
         cc.build_continuity_checkpoint(d, log_key_path=f.info["logkey"],
                                        budget="1.00")
+    assert len(hits) == (0 if mutation is None else 1), hits
     assert (d / "aggregate.cost.farkas.json").read_bytes() == seen["raw"]
     return seen["key"]
 

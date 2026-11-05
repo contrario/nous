@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from conformance_verifier import StrictJsonError as _S7B_SJE  # __s7b_b_catch_v1__
 from pathlib import Path
 
 
@@ -62,6 +63,9 @@ def cmd_dossier_spec(args: argparse.Namespace) -> int:
             key_path=Path(args.key) if args.key else None,
             anchor=getattr(args, "anchor", "none"),
         )
+    except _S7B_SJE as _s7b_e:  # __s7b_b_catch_v1__
+        print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+        return 1
     except DossierSpecError as e:
         print(
             f"ERROR: dossier-spec build failed: {e}",

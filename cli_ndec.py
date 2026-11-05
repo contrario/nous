@@ -79,6 +79,9 @@ def cmd_ndec(args: argparse.Namespace) -> int:
                 key_path=args.key_path,
                 output=args.output,
             )
+        except ndec.StrictJsonError as _s7b_e:  # __s7b_b_catch_v1__
+            print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+            return 1
         except ndec.NdecError as exc:
             print("ndec build: " + str(exc), file=sys.stderr)
             return 1

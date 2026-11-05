@@ -24,6 +24,7 @@ not resolve from. No method here imports an external agent framework, a solver,
 or any network client.
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import hashlib
@@ -238,6 +239,7 @@ def build_counterparty_receipt(
         )
 
     world, soul, head, seq = _extract_consultation(trace)
+    _s7b_loads(_canonical_bytes(dict(cert)), "receipt certificate [js:w.rcp.3]")  # __s7b_a_guard_v1__
     cert_body = certificate_body_digest(cert)
     if "conformant" not in cert:
         raise ContinuityLedgerError(
@@ -277,8 +279,12 @@ def build_counterparty_receipt(
             )
         claims["nbf"] = not_before
 
-    protected_b64 = _b64url(_canonical_bytes(protected))
-    payload_b64 = _b64url(_canonical_bytes(claims))
+    _pb = _canonical_bytes(protected)
+    _s7b_loads(_pb, "receipt protected header [js:w.rcp.1]")  # __s7b_a_guard_v1__
+    _cb = _canonical_bytes(claims)
+    _s7b_loads(_cb, "receipt claims [js:w.rcp.2]")  # __s7b_a_guard_v1__
+    protected_b64 = _b64url(_pb)
+    payload_b64 = _b64url(_cb)
     signing_input = (protected_b64 + "." + payload_b64).encode("ascii")
     signature_b64 = _b64url(counterparty_signing_key.sign(signing_input))
 
@@ -333,7 +339,9 @@ def build_authorization_receipt(
         "run_digest": run_digest,
         "key_id": authorizer_kid,
     }
-    protected_b64 = _b64url(_canonical_bytes(protected))
+    _pb = _canonical_bytes(protected)
+    _s7b_loads(_pb, "authorization protected header [js:w.auth.1]")  # __s7b_a_guard_v1__
+    protected_b64 = _b64url(_pb)
     payload_b64 = _b64url(_canonical_bytes(claims))
     signing_input = (protected_b64 + "." + payload_b64).encode("ascii")
     signature_b64 = _b64url(authorizer_signing_key.sign(signing_input))

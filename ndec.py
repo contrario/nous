@@ -20,6 +20,7 @@ distinct from the inner manifest's Ed25519 signature over canonical JSON. The
 inner dossier and its signature are never modified by this module.
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import binascii
@@ -156,6 +157,7 @@ def serialize_body(statement: dict) -> bytes:
 
 def sign_envelope(*, statement: dict, private_key: Ed25519PrivateKey) -> dict:
     body: bytes = serialize_body(statement)
+    _s7b_loads(body, "NDEC statement [js:w.ndec.1]")  # __s7b_a_guard_v1__
     signature: bytes = private_key.sign(pae(NDEC_PAYLOAD_TYPE, body))
     public_key: Ed25519PublicKey = private_key.public_key()
     return {
@@ -359,6 +361,14 @@ def build_ndec(
     man = json.loads(man_path.read_text(encoding="utf-8"))
     _verify_dossier_consistency(dossier_dir, man)
     artifacts = _dossier_artifacts(dossier_dir, man)
+    _s7b_loads(  # __s7b_b3_guard_v1__
+        json.dumps(
+            {k: v for k, v in man.items()
+             if k not in ("signature", "transparency_log")},
+            sort_keys=True, separators=(",", ":"),
+        ).encode("utf-8"),
+        "dossier manifest body [js:w.ndec.0]",
+    )
 
     import manifest as _manifest_module
 

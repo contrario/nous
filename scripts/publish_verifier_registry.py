@@ -49,6 +49,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import _version  # noqa: E402
 import ndec  # noqa: E402
 import verifier_registry  # noqa: E402
+from conformance_verifier import StrictJsonError as _S7B_SJE  # __s7b_b_catch_v1__
 
 
 class PublishError(RuntimeError):
@@ -247,6 +248,9 @@ def cmd_build(args: argparse.Namespace) -> int:
         )
         signed = sign_doc(unsigned, key_path)
         pub_b64 = registry_public_key_b64(key_path)
+    except _S7B_SJE as _s7b_e:  # __s7b_b_catch_v1__
+        print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+        return 1
     except (PublishError, verifier_registry.RegistryError) as exc:
         print("build: " + str(exc), file=sys.stderr)
         return 1

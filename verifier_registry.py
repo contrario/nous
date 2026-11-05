@@ -38,6 +38,7 @@ same reason. The canonical body is the registry minus BOTH ``signature`` and
 strips ``signature`` and ``transparency_log``.
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import binascii
@@ -267,6 +268,7 @@ def sign_registry(
             "after signing, never before"
         )
     body_bytes = canonical_registry_body_bytes(unsigned)
+    _s7b_loads(body_bytes, "registry body [js:w.reg.1]")  # __s7b_a_guard_v1__
     signature = private_key.sign(body_bytes)
     public_raw = private_key.public_key().public_bytes(
         Encoding.Raw, PublicFormat.Raw

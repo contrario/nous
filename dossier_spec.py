@@ -26,6 +26,7 @@ Output bundle:
 from __future__ import annotations
 
 import base64
+from conformance_verifier import loads as _s7b_loads  # __s7b_b3_guard_v1__
 import hashlib
 import shutil
 from dataclasses import dataclass
@@ -232,6 +233,8 @@ def build_dossier_spec(
         )
     if _cost_doc_s175 is not None:
         cost_farkas_bytes = cost_farkas_json_bytes(_cost_doc_s175)
+        _s7b_loads(cost_farkas_bytes,  # __s7b_b3_guard_v1__
+                   "cost farkas certificate [js:w.cf.2]")
         manifest = _dc_s175.replace(
             manifest, cost_farkas_sha256=cost_farkas_sha256(_cost_doc_s175)
         )

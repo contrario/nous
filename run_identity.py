@@ -17,6 +17,7 @@ execution influence; its consumer is wired in a later unit (axiom 11).
 from __future__ import annotations
 
 import hashlib
+from conformance_verifier import loads as _s7b_loads  # __s7b_b3_guard_v1__
 import logging  # __s111_u5_logging_import_v1__
 
 _s111_log = logging.getLogger("nous.memory.remedy")
@@ -154,6 +155,12 @@ def build_run_remedy_application(  # __s111_u5_producer_v1__
 
     winning_digest = admissible[0]
     src_seq, proof_dict = by_digest[winning_digest]
+    _s7b_loads(  # __s7b_b3_guard_v1__
+        _json.dumps(
+            proof_dict, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8"),
+        "remedy proof [js:w.rem.1]",
+    )
     proof_sha = _hashlib.sha256(
         _json.dumps(
             proof_dict, sort_keys=True, separators=(",", ":")

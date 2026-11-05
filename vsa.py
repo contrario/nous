@@ -40,6 +40,7 @@ signature verification. Determinism makes the VSA byte-identical given the
 same inputs.
 """
 from __future__ import annotations
+from conformance_verifier import loads as _s7b_loads  # __s7b_a_guard_v1__
 
 import base64
 import hashlib
@@ -403,6 +404,7 @@ def sign_vsa(
     """Wrap an in-toto Statement in a DSSE envelope, signing the
     Pre-Authentication Encoding of the canonical payload with Ed25519."""
     payload = _canon(statement)
+    _s7b_loads(payload, "VSA statement [js:w.vsa.1]")  # __s7b_a_guard_v1__
     pae = _pae(DSSE_PAYLOAD_TYPE, payload)
     raw_sig = private_key.sign(pae)
     return {

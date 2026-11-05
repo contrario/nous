@@ -250,6 +250,9 @@ def _cmd_receipt(args: argparse.Namespace) -> int:
             prev_run_digest=link.get("prev_run_digest"),
             issued_at=int(time.time()),
         )
+    except StrictJsonError as _s7b_e:  # __s7b_b_catch_v1__
+        print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+        return 1
     except cl.ContinuityLedgerError as e:
         print("receipt refused: " + str(e), file=sys.stderr)
         return 1
@@ -402,6 +405,9 @@ def _cmd_checkpoint(args: argparse.Namespace) -> int:
             expected_audience=args.aud,
             emit_inclusion=args.emit_inclusion,
         )
+    except StrictJsonError as _s7b_e:  # __s7b_b_catch_v1__
+        print("REFUSED: " + str(_s7b_e), file=sys.stderr)
+        return 1
     except cc.ContinuityCheckpointError as e:
         print("checkpoint refused: " + str(e), file=sys.stderr)
         return 1
