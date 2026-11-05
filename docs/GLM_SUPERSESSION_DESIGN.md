@@ -27939,3 +27939,234 @@ document itself.
                        dataclasses.replace of a manifest. The B2 premise
                        built on them was corrected before the plan; a call
                        is classed by what it resolves to, not by its name.
+
+  - S462 the number the operator gave the first entry of the seat S457, the
+    seat after S456 that verified the S456 seal by its digests and ran its
+    RULE 0, which carries what that seal owed: D461's landing, the closing
+    RULE 0 of S456 and the seal itself
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S457,
+    DURING ITS SESSION, and uses the labels of D450 to D461: READ IN THE
+    SEAT'S CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR and
+    MEASURED. Every time below is in UTC, on 11-05 of 2026 unless another
+    day is named. An operator's time is the time his message was sent; a
+    value ON A carries the clock its command printed where it printed one.
+    Each paste ON A is kept as a file transcribed from the chat, under ona/
+    in the seal of S457, named by its digest below. What the seat S456
+    measured and this seat did not run again is INHERITED, from the S456
+    seal's evidence, each file checked here by its digest. The seat's
+    running log (log/seat_running_log.txt) holds each step in the order it
+    ran, with the times of the operator's messages; where a stamp in it was
+    corrected, the log says so. What D461 records is not repeated here.
+    This seat's chat began with the kickoff.
+
+    THE NUMBERS. OPERATOR, 08:41Z: the kickoff, naming this seat S457.
+    OPERATOR, 09:11Z: 462, in answer to the seat's one question asking the
+    number of the entry. MEASURED from 09:14:40Z to 09:15:14Z by
+    ns_count462.py (3032959e, ns_count461.py with its targets set to 462,
+    461, 457 and 456, its nonce changed and the blobs of K8 set to 1d90f792
+    and cb00041c, nothing else changed), its predictions
+    NUM462_PREDICTIONS.txt (63e3044f) hashed at 09:14:20Z, before the
+    instrument was written, on a mirror cloned from GitHub from 09:12:33Z
+    to 09:12:37Z (N1, named to the operator before it ran) and updated at
+    09:14:40Z (N2, named in the log before it ran): main 942b25c4, 163
+    refs, 1062 commits, 70 annotated tags and 3203 distinct blobs in the
+    trees of the refs. For 462 and for 457 the header, the anchor, the
+    marker, the token FG-S followed by the number and the words S and D
+    followed by it counted zero in those blobs, in every commit message on
+    every ref and in the annotated tag messages, and a pass blind to case
+    found no hit outside a hexadecimal run. No earlier count had targeted
+    462 or 457, so their zeros were priors, from the handoff and from
+    D461's delta. The values for 461 (now D461's), 456 and the controls
+    were DERIVED before the run, NUM461's out plus the one blob and the one
+    message that moved since ff31ee5d (derive462.py 7046dce6, its out
+    593223fd), and each held: the header of S461 1, the anchor D461- 9 and
+    the word D461 10 in one blob, the document at main (1d90f792), and the
+    word D461 in one message; FG-S456 19 there and 3 in two messages; the
+    anchor D450- 22, FG-S449 44 and the word S449 79 there; a nonce 0;
+    1d90f792 in the tree of main alone, cb00041c in none
+    (ns_count462_out.txt 6b52c27e, NUM462_RESULTS.txt 7cfc5c32). The raw
+    body of 942b25c4 equals d461/message.txt (353a47b2) byte for byte; git
+    log's %B adds a newline, and the seat's first compare, made on %B,
+    differed by it. The bare word 462, read hit by hit
+    (bare462_457_read.txt a42e468a): 30 in 14 blobs, D327-9's "462 hit" in
+    7 revisions of the ledger, a value in 4 lattice JSON files, one line of
+    a design document, 2 inside binaries; the bare word 457: 1, inside a
+    dist tarball; none names a seat or an entry. The results' row for the
+    bare 462 was first typed with 9 revisions where the read holds 7, and
+    was written again from the read file by a script before any
+    use (FG-S454-B's pattern). The seat named its own files S457 from
+    08:55Z, before the count, in the kickoff's order, which put the count
+    with the entry; nothing on A or in the tree held the number before it.
+    The count cannot see a session that wrote nothing to the tree, a commit
+    message or a tag. The instrument that appends this entry refuses unless
+    the word S462, the anchor and the marker of 462 still count zero in the
+    document when it runs, and no code of the seat S457 stands there. This
+    entry adds no code.
+
+    D462-1  THE SEAL OF S456. OPERATOR, 08:41Z: the kickoff, naming five
+            files by digest: NOUS_SESSION_456_HANDOFF.md 07214fc0,
+            NOUS_S456_OPENER.md be8a862f, rule0_s438.sh 0d6f5aa9,
+            S456_SEAL_EVIDENCE.tgz a95bd4f9 and S456_SEAL_SHA256SUMS.txt
+            f643e7f3. READ IN THE SEAT'S CONTAINER at 08:41Z: five uploads
+            under changed names, each found by its digest with FOUND_COUNT
+            1, 18907, 6649, 3877, 700813 and 349 B; a digest altered in its
+            last digit found 0. The upload area also held five PDF files
+            the Project delivered, three of them one file, hashed in the
+            same command and not read. The sums file holds four lines and
+            not its own, each OK against the renamed uploads. The archive,
+            listed before extraction (177 members, 158 regular files, 19
+            directories, no absolute path, no "..", no link) and extracted
+            into an empty directory: its EV_SHA256SUMS.txt (3ca2c4d3) lists
+            the other 157 files, each OK, none unlisted and none missing; a
+            copy with its first line altered gave 1 FAIL; the handoff's
+            section 9 names the same 157 files with the same digests. Six
+            files hold bytes outside ASCII: the raw U+FFFE in the copies
+            under s7bb/ made before its fix (test_s7b_guards_b.py,
+            s7b_all.diff and the recovered amendment 4), as D461 records;
+            pytest's glyphs in red_run.txt and red_run2.txt; and the
+            S7B_PAYLOAD.tar members cli.py, cli_verify.py and manifest.py,
+            which equal ff31ee5d's blobs and hold as many non-ASCII
+            characters as c133a333's (273, 3 and 418), no such line new:
+            S7b inserted none. The text of the handoff, the opener, the
+            sums file and rule0_s438.sh had reached the seat with the
+            kickoff, before any tool ran; the seat acted on none of them
+            before the digests matched, and said so. ON A, after the
+            operator's upload of the sums file to /root, paste 08:56Z, no
+            clock printed: the loop over /root printed FOUND
+            S456_SEAL_SHA256SUMS.txt and FOUND_COUNT 1 for f643e7f3
+            (9c7849c3). Paste 09:00Z: sha256sum -c with --ignore-missing
+            printed rule0_s438.sh: OK, RC 0; the handoff, the opener and
+            the archive ABSENT from /root, the script PRESENT (1e7c0f3b).
+
+    D462-2  RULE 0. OPERATOR, 08:55Z, in Greeklish: no, all is free, in
+            answer to the seat's one question, whether another lane holds
+            the tree or the hosts. RULE0_PREDICTIONS.txt (4be8fd30) hashed
+            at 09:01Z, before the command was given, from the opener's
+            EXPECTED; no drift check in the container preceded it. The seat
+            named the writes (rule0's fetch of origin's refs, a possible
+            index refresh by git status on A and on B, ignored bytecode,
+            the suite under a new temp HOME in /tmp; no tracked file) and
+            the network calls (NA1 the fetch, NA2 one ssh to B, NA3 one
+            curl to PyPI; loopback curls on A and B), and asked a pame
+            without giving the command. OPERATOR, 09:02Z: pame. ON A by
+            rule0_s438.sh, paste 09:10Z, A's clock 09:03:47Z to 09:08:28Z:
+            fetch_rc 0; HEAD and origin 942b25c4, the log 942b25c, ff31ee5,
+            c133a33, 116ab33; porcelain empty; v8.0.0 peeling to 580c28f4;
+            A health 8.0.0, uptime 3769 s, MainPID 1887580; B health 8.0.0,
+            uptime 594122 s, HEAD 580c28f4 at v8.0.0, porcelain "??
+            .venv/", pip Version 8.0.0, MainPID 3078825; the floor 3912;
+            the suite under tests/, HOME a new temp dir, XDG_DATA_HOME
+            unset, safe.directory by GIT_CONFIG_*: 5237 passed, 12 skipped,
+            11 warnings, in 269.31 s, HOME_FILES 0, PORCELAIN_AFTER 0;
+            claim_lint 437 files, 0 violations; sidecar_lint 265, 0; the
+            mirror CLEAN, 569 tracked, 4 orphans; the registry logged,
+            True, True, 154, 0, 174366343, repo and served 7e6ef662; the
+            release VSA index 3a3bab3f, repo and served; PyPI latest 8.0.0.
+            At 09:08:28Z, Asklepios: nous-api healthy 200 0, nous-bot
+            healthy 0, nous-key-guard healthy 0, each checked at 09:07:55Z,
+            age 33 s. The timer nous-serve-integrity.timer active and
+            waiting, last trigger 09:00:51Z, next 09:30:04Z, Result
+            success; its unit inactive, ExecMainStatus 0, exit 09:00:51Z,
+            its journal RESULT: CLEAN, 569 tracked, 4 orphans. RULE0_RC 0.
+            Reconciled by reconcile.py (02474395) against 4be8fd30: 19
+            rows, each as predicted; a copy of the paste with three rows
+            altered gave 3 DIFF (rule0_run_090347_transcribed.txt f200d6e8,
+            RULE0_RESULTS.txt 8db38fdc). DERIVED: A's process started at
+            08:00:58Z, the S456 restart; B's at 12:01:46Z on 10-29,
+            as D460-2 gives. Not measured: whether the run wrote ignored
+            bytecode under the tree. RULE 0 leaves its temp HOME, with no
+            file in it, under /tmp on A.
+
+    D462-3  THE OTHER LANES. OPERATOR, 08:55Z: none holds the tree or the
+            hosts. READ IN THE SEAT'S CONTAINER, on the mirror of 09:12:37Z
+            and 09:14:40Z: main 942b25c4 each time, no commit above D461;
+            the branches main, nous-trace (09109512) and refs/pull/1/head
+            (49b70920); 160 tags, the latest reachable from main v8.0.0. ON
+            A at 09:03:47Z: HEAD and origin 942b25c4, the tag v8.0.0, PyPI
+            latest 8.0.0: no tag and no PyPI release since the S456 close.
+
+    D462-4  THE LANDING OF D461. INHERITED, the S456 handoff (07214fc0),
+            section 6, and the pastes of ona/ in its seal (d461_a0_081425
+            4fc84913, d461_land_dry_081511 04585770, d461_land_apply_081613
+            ab20aa8b, d461_commit_dry_081715 c3241e43,
+            d461_commit_commit_081922 21a1b533, d461_commit_push_082058
+            f04bdad0), each read here: ON A, each write after its pame: at
+            08:14:25Z D461_KIT_SHA256SUMS.txt 23adfdd9, D461_LAND.py and
+            D461_COMMIT.py OK, RC 0; at 08:15:11Z the dry run, HEAD and
+            origin ff31ee5d, BLOB_HEAD cb00041c, porcelain 0, the document
+            97424792, 1707143 B, mode 644, 986:981, STATE BEFORE, the
+            namespace 0 0 0 0, DOC_NEW c95638df, 1728076 B, DRY_RUN_GREEN;
+            pame 08:16Z; at 08:16:13Z WROTE and READBACK c95638df, 644,
+            986:981, porcelain 1, APPLY_GREEN; at 08:17:15Z the commit
+            tool's dry run, BLOB_WORKTREE 1d90f792, the pinned identity,
+            lint 437 files and 0 violations, DRY_RUN_GREEN; pame 08:18Z; at
+            08:19:22Z FETCH_RC 0, origin ff31ee5d, NEW_HEAD 942b25c4,
+            CHECK_COMMIT OK, porcelain 0, COMMIT_GREEN; pame 08:20Z; at
+            08:20:58Z origin ff31ee5d, REMOTE_MAIN 942b25c4, PUSH_GREEN.
+            READ IN THE SEAT'S CONTAINER, on the mirror of 09:12:37Z:
+            942b25c4, parent ff31ee5d, author and committer Hlias Staurou
+            at 08:19:23Z, one path; the document blob cb00041c to 1d90f792,
+            sha256 97424792 to c95638df, 1707143 B to 1728076 B; its first
+            1707143 B the old document and its last 20933 B the entry
+            (47401cfd), ASCII, no line of the entry over 75 columns; the
+            raw message 353a47b2, 672 B, equal byte for byte to
+            d461/message.txt. The tools, INHERITED: build_d461.py
+            (7728f331) from D460's; predictions D461_PREDICTIONS.txt
+            (fc927756); on a fixture made from the mirror, 30 cases at the
+            predicted exit codes and 9 mutants killed (fx_d461.py 16dc0fb1,
+            fx_d461_out.txt 148245c4). No restart: a document only.
+
+    D462-5  THE CLOSING RULE 0 OF S456 AND ITS SEAL. INHERITED, the S456
+            handoff, sections 2 and 9, and
+            ona/rule0_close_082602_transcribed.txt (8d720dbd): ON A, A's
+            clock 08:26:02Z to 08:30:44Z, against
+            rule0/RULE0_CLOSE_PREDICTIONS.txt (55b73502), 22 rows held as
+            that seat counted them: HEAD and origin 942b25c4, porcelain
+            empty, v8.0.0 at 580c28f4, A 8.0.0, MainPID 1887580, uptime
+            1504 s; B at 580c28f4, MainPID 3078825; the floor 3912; the
+            suite 5237 passed, 12 skipped, 11 warnings, 269.39 s,
+            HOME_FILES 0, PORCELAIN_AFTER 0; claim lint 437 and 0; sidecars
+            265 and 0; the mirror CLEAN, 569 and 4; the registry and the
+            release VSA as in D462-2; PyPI 8.0.0; Asklepios healthy, age 51
+            s at 08:30:44Z; the timer's last run at 08:30:17Z, success,
+            CLEAN. Read again by this seat's reconcile.py: 18 of its 19
+            rows at this seat's values, the 19th, RULE0_RC, absent from the
+            paste: the command given then lacked the echo, and that exit
+            code stays unobserved; this seat's run, with the echo, printed
+            0 (D462-2). Not in the script, then or now: the key directory's
+            digest; no claim is made about it. The seal: the handoff and
+            the opener generated from the evidence's EV_SHA256SUMS.txt by
+            seal/build_seal_docs.py (debdd93b); then
+            S456_SEAL_SHA256SUMS.txt over the handoff, the opener, the
+            archive and rule0_s438.sh (carried, 0d6f5aa9), its digest
+            f643e7f3 given in this seat's kickoff and verified at D462-1.
+            Main stood at 942b25c4 at the S456 close and at this seat's
+            RULE 0.
+
+    D462-6  WHAT THIS SEAT WROTE AND READ. To the repository, to B and to
+            /var/www: nothing before this entry. On A: the commands
+            of D462-1 and D462-2, among them rule0's fetch of origin's refs
+            and its suite under a new temp HOME in /tmp; to /root, by the
+            operator, S456_SEAL_SHA256SUMS.txt, then this entry's tools.
+            Seat network, each named before it ran: the mirror cloned from
+            GitHub from 09:12:33Z to 09:12:37Z (N1, to the operator) and
+            updated at 09:14:40Z (N2, in the log only). The log line naming
+            N1 carried a typed stamp, 09:14Z, where the clone ran at
+            09:12:33Z; the log corrects it at 09:12:47Z. No PyPI, no web
+            search, no web page, no agent. The Project: the five PDF files
+            it delivered hashed and not read; no write.
+
+    D462-7  WHAT STAYS OPEN. This entry on A by its two tools, each write
+            after its pame; the next entry records its landing. The next
+            object, the operator's, or one from the S456 handoff's section
+            7 at his word: C2, cli_verify's gap witness, with no CLI
+            fixture yet; C10, mint_release_vsa, and C11,
+            scripts/release.py, with the release lane; KS2, whether the
+            served mint_vsa_vector scripts call the guarded writers, not
+            measured; the API's skill export, which keeps HTTP 422 on a G1
+            refusal, a ruling for the operator; (b), generalized staging
+            for multi-file writers, a Gate of its own in a fresh seat. Not
+            measured by this seat: KS2, and the key directory's digest.
+            Hygiene on A: the /root kits of S456 and of this seat; the temp
+            HOMEs of the RULE 0 suites under /tmp. The seal of the seat.
