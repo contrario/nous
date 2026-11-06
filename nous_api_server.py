@@ -103,6 +103,101 @@ def require_api_key(x_api_key: Optional[str] = Header(None)) -> str:
     return x_api_key
 
 
+# __s465_true_deadline_v1__
+# S465 option T: a server-side deadline answers 503 and tells the truth.
+# BUSY<n> with Retry-After when no worker was free within the admission
+# wait (the work never ran); TIMEOUT<n> without it when the work started
+# and overran its budget (its thread may still run: Python threads
+# cannot be cancelled). A slot is freed when the worker's thread ends,
+# not when the reply is sent. Each budget, plus the admission wait,
+# plus a margin, stays under the edge's read timeout (nginx 60 s on A).
+import threading as _s465_threading  # noqa: E402
+from concurrent.futures import ThreadPoolExecutor as _S465Executor  # noqa: E402
+
+_S465_BUDGET_S: dict = {
+    "compile": 30.0, "verify": 30.0, "diff": 30.0,
+    "skill_export": 50.0, "run": 50.0, "chat": 35.0,
+}
+_S465_ADMIT_WAIT_S: float = 2.0
+_S465_RETRY_AFTER_S: int = 5
+_S465_EDGE_READ_TIMEOUT_S: float = 60.0
+_S465_POOL_SIZE: int = min(32, (os.cpu_count() or 1) + 4)
+_S465_CODES: dict = {
+    "compile": ("TIMEOUT001", "BUSY001"),
+    "verify": ("TIMEOUT002", "BUSY002"),
+    "skill_export": ("TIMEOUT003", "BUSY003"),
+    "run": ("TIMEOUT004", "BUSY004"),
+    "diff": ("TIMEOUT005", "BUSY005"),
+}
+_s465_pool = None
+
+
+def _s465_get_pool():
+    global _s465_pool
+    if _s465_pool is None:
+        n = int(_S465_POOL_SIZE)
+        _s465_pool = (
+            _S465Executor(max_workers=n, thread_name_prefix="nous-budget"),
+            _s465_threading.BoundedSemaphore(n),
+        )
+    return _s465_pool
+
+
+def _s465_reply(route: str, code: str, text: str, budget: float,
+                work_started: bool, retry_after: bool = False):
+    error_id = uuid.uuid4().hex
+    logger.warning(
+        "deadline route=%s code=%s budget=%gs work_started=%s error_id=%s",
+        route, code, budget, work_started, error_id)
+    headers = ({"Retry-After": str(_S465_RETRY_AFTER_S)}
+               if retry_after else None)
+    return HTTPException(status_code=503, detail={
+        "error": text, "code": code, "error_id": error_id,
+        "work_started": work_started}, headers=headers)
+
+
+async def _s465_run_budgeted(route: str, fn):
+    """Run fn(deadline) on the budget pool. deadline is a monotonic
+    time; the reply is 503 BUSY or 503 TIMEOUT as the module header
+    says; any other outcome is fn's own."""
+    budget = float(_S465_BUDGET_S[route])
+    timeout_code, busy_code = _S465_CODES[route]
+    executor, slots = _s465_get_pool()
+    busy_text = route + " not started: no worker was free"
+    admit_until = time.monotonic() + float(_S465_ADMIT_WAIT_S)
+    while not slots.acquire(blocking=False):
+        if time.monotonic() >= admit_until:
+            raise _s465_reply(route, busy_code, busy_text, budget, False,
+                              retry_after=True)
+        await asyncio.sleep(0.02)
+    deadline = time.monotonic() + budget
+
+    def _work():
+        try:
+            return fn(deadline)
+        finally:
+            slots.release()
+
+    try:
+        cf = executor.submit(_work)
+    except BaseException:
+        slots.release()
+        raise
+    afut = asyncio.wrap_future(cf)
+    afut.add_done_callback(lambda f: f.cancelled() or f.exception())
+    try:
+        return await asyncio.wait_for(asyncio.shield(afut), budget)
+    except asyncio.TimeoutError:
+        if cf.cancel():
+            slots.release()
+            raise _s465_reply(route, busy_code, busy_text, budget, False,
+                              retry_after=True)
+        raise _s465_reply(
+            route, timeout_code,
+            "%s did not finish within its %g s budget" % (route, budget),
+            budget, True)
+
+
 # ── App ──
 
 @asynccontextmanager
@@ -280,13 +375,11 @@ async def compile_source(request: Request, body: CompileRequest, x_api_key: Opti
     logger.info(f"compile request: {len(body.source)} chars")
 
     try:
-        result = await asyncio.wait_for(
-            asyncio.get_event_loop().run_in_executor(None, _compile_pipeline, body.source),
-            timeout=30.0,
-        )
+        result = await _s465_run_budgeted(  # __s465_true_deadline_v1__
+            "compile", lambda _d: _compile_pipeline(body.source))
         return result
-    except asyncio.TimeoutError:
-        raise HTTPException(status_code=408, detail={"error": "Compilation timed out (30s)", "code": "TIMEOUT001"})
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"compile error: {traceback.format_exc()}")
         raise HTTPException(status_code=422, detail={"error": str(e), "code": "COMPILE001"})
@@ -382,13 +475,11 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
                 "total_checks": len(ver_result.items),
             }
 
-        result = await asyncio.wait_for(
-            asyncio.get_event_loop().run_in_executor(None, _do_verify),
-            timeout=30.0,
-        )
+        result = await _s465_run_budgeted(  # __s465_true_deadline_v1__
+            "verify", lambda _d: _do_verify())
         return result
-    except asyncio.TimeoutError:
-        raise HTTPException(status_code=408, detail={"error": "Verification timed out (30s)", "code": "TIMEOUT002"})
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"verify error: {traceback.format_exc()}")
         raise HTTPException(status_code=422, detail={"error": str(e), "code": "VERIFY001"})
@@ -429,12 +520,14 @@ async def skill_export_endpoint(
     from rekor_anchor import RekorRejected, RekorUnavailable
     from conformance_verifier import (  # __s7b_api_refusal_v1__
         StrictJsonError as _S7B_API_SJE)
+    from dossier_spec import (  # __s465_true_deadline_v1__
+        AnchorDeadlineError as _S465_ANCHOR_DEADLINE)
     logger.info(
         f"skill-export request: {len(body.source)} chars, "
         f"with_dossier={body.with_dossier}"
     )
     try:
-        def _do_export() -> tuple[bytes, str]:
+        def _do_export(deadline: float) -> tuple[bytes, str]:
             from parser import parse_nous
             from lark.exceptions import UnexpectedInput, VisitError
             from pydantic import ValidationError
@@ -493,6 +586,7 @@ async def skill_export_endpoint(
                             output=output_dir,
                             key_path=key_path,
                             anchor=getattr(body, "anchor", "none"),
+                            deadline=deadline,  # __s465_true_deadline_v1__
                         )
                     except DossierSpecError as e:
                         if isinstance(e.__cause__, EmitError):
@@ -532,10 +626,8 @@ async def skill_export_endpoint(
                             exported.nous_yaml,
                         )
             return buf.getvalue(), exported.skill_name
-        zip_bytes, skill_name = await asyncio.wait_for(
-            asyncio.get_event_loop().run_in_executor(None, _do_export),
-            timeout=60.0,
-        )
+        zip_bytes, skill_name = await _s465_run_budgeted(  # __s465_true_deadline_v1__
+            "skill_export", _do_export)
         return Response(
             content=zip_bytes,
             media_type="application/zip",
@@ -548,14 +640,12 @@ async def skill_export_endpoint(
         )
     except HTTPException:
         raise
-    except asyncio.TimeoutError:
-        raise HTTPException(
-            status_code=408,
-            detail={
-                "error": "skill-export timed out (60s)",
-                "code": "TIMEOUT003",
-            },
-        )
+    except _S465_ANCHOR_DEADLINE:  # __s465_true_deadline_v1__
+        raise _s465_reply(
+            "skill_export", "REKOR_DEADLINE",
+            "skill export refused before the Rekor step: too little of"
+            " its budget was left", float(_S465_BUDGET_S["skill_export"]),
+            True)
     except RekorRejected as e:
         logger.warning(f"skill-export rekor rejected: {e}")
         raise HTTPException(
@@ -1362,13 +1452,11 @@ async def run_source(request: Request, body: RunRequest, x_api_key: Optional[str
                 "execution_kind": "refused",  # __s105_exec_kind_v1__
             }
 
-        result = await asyncio.wait_for(
-            asyncio.get_event_loop().run_in_executor(None, _do_run),
-            timeout=60.0,
-        )
+        result = await _s465_run_budgeted(  # __s465_true_deadline_v1__
+            "run", lambda _d: _do_run())
         return result
-    except asyncio.TimeoutError:
-        raise HTTPException(status_code=408, detail={"error": "Run timed out (60s)", "code": "TIMEOUT003"})
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"run error: {traceback.format_exc()}")
         raise HTTPException(status_code=422, detail={"error": str(e), "code": "RUN001"})
@@ -1818,7 +1906,9 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
                         logger.warning(f"chat replay store close failed: {_cerr}")
 
         except asyncio.TimeoutError:
-            raise HTTPException(status_code=504, detail={"error": "Chat timed out (35s)", "code": "CHAT004"})
+            raise _s465_reply(  # __s465_true_deadline_v1__
+                "chat", "CHAT004", "chat did not finish within its 35 s budget",
+                35.0, True)
         except HTTPException:
             raise
         except Exception as e:
@@ -2286,17 +2376,15 @@ async def diff_source(request: Request, body: DiffRequest, x_api_key: Optional[s
             raw = result.to_dict()
             return _transform_diff_for_ide(raw, old_program, new_program)
 
-        result = await asyncio.wait_for(
-            loop.run_in_executor(None, _run_diff),
-            timeout=30.0,
-        )
+        result = await _s465_run_budgeted(  # __s465_true_deadline_v1__
+            "diff", lambda _d: _run_diff())
         # __DIFF_SIDE_RESPONSE_LABELS_v1__
         from nous_api import render_diff_side
         result["original_label"] = render_diff_side(body.original_side)
         result["modified_label"] = render_diff_side(body.modified_side)
         return JSONResponse(content={"ok": True, "diff": result})
-    except asyncio.TimeoutError:
-        raise HTTPException(status_code=504, detail="Diff timed out (30s)")
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"diff error: {e}")
         raise HTTPException(status_code=422, detail=str(e))

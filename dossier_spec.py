@@ -40,6 +40,27 @@ class DossierSpecError(RuntimeError):
     """Raised on any skill_md dossier build failure."""
 
 
+class AnchorDeadlineError(DossierSpecError):  # __s465_rekor_deadline_gate_v1__
+    """The Rekor step was not begun: too little of the caller's budget
+    was left for its two HTTP calls at their own limits."""
+
+
+def _s465_rekor_gate(deadline: "float | None") -> None:
+    """Refuse before any network call unless the time left covers the
+    Rekor step's two HTTP calls at their own limits. deadline is a
+    time.monotonic() value, or None (no deadline: the CLI)."""
+    if deadline is None:
+        return
+    import time as _s465_time
+    from rekor_anchor import REKOR_CONNECT_TIMEOUT_S, REKOR_DEFAULT_TIMEOUT_S
+    need = 2 * (REKOR_CONNECT_TIMEOUT_S + REKOR_DEFAULT_TIMEOUT_S)
+    left = deadline - _s465_time.monotonic()
+    if left < need:
+        raise AnchorDeadlineError(
+            "Rekor step not begun: %.0f s of the budget left, %.0f s needed"
+            % (left, need))
+
+
 @dataclass(frozen=True)
 class DossierSpecResult:
     output_dir: Path
@@ -98,6 +119,7 @@ def build_dossier_spec(
     anchor: str = "none",
     _test_rekor_anchor: "object | None" = None,
     _test_rekor_anchor_v2: "object | None" = None,
+    deadline: "float | None" = None,
 ) -> DossierSpecResult:
     """Build an Annex IV-aligned dossier from a SKILL.md skill directory.
 
@@ -260,6 +282,7 @@ def build_dossier_spec(
         if _test_rekor_anchor is not None:
             rekor_anchor_obj = _test_rekor_anchor
         else:
+            _s465_rekor_gate(deadline)  # __s465_rekor_deadline_gate_v1__
             from rekor_anchor import anchor_manifest_to_rekor
             rekor_anchor_obj = anchor_manifest_to_rekor(
                 manifest_canonical_bytes=manifest.canonical_bytes(),

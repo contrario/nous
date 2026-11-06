@@ -143,8 +143,21 @@ X-API-Key: <key>
 - `200 OK` -> `application/zip` payload (see Section 4 for layout);
   headers carry `Content-Disposition: attachment; filename="<skill>.zip"`
   and `X-Skill-Name: <resolved-name>`.
-- `408 Request Timeout` -> `{"error": "skill-export timed out (60s)",
-  "code": "TIMEOUT003"}` if the SMT step exceeds 60 seconds.
+- `503 Service Unavailable` -> `{"error": "<message>", "code":
+  "TIMEOUT003", "error_id": "<uuid4 hex>", "work_started": true}`, with
+  no Retry-After, if the export (parsing, the export itself, the SMT
+  step, signing, any Rekor step and the zip) does not finish within its
+  50 second budget. The work started; its thread may still run, since
+  a Python thread cannot be stopped. Logged at WARNING, one line.
+- `503 Service Unavailable` -> `{"error": "<message>", "code":
+  "BUSY003", "error_id": "<uuid4 hex>", "work_started": false}` with
+  `Retry-After: 5` if no worker was free within 2 seconds; the export
+  never ran.
+- `503 Service Unavailable` -> `{"error": "<message>", "code":
+  "REKOR_DEADLINE", "error_id": "<uuid4 hex>", "work_started": true}`
+  when `anchor` is `"rekor"` and less than 40 seconds of the budget are
+  left at the Rekor step (its two HTTP calls at 5 s connect and 15 s
+  read each); nothing is submitted to Rekor.
 - `422 Unprocessable Entity` -> `{"error": "REFUSED: <reason>",
   "code": "STRICT_JSON_REFUSED"}` when a guarded writer refuses the
   JSON bytes it would sign or hash, because the offline verifier's
