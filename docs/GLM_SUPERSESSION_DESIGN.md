@@ -29062,3 +29062,203 @@ document itself.
                        over. The writer reads back what it writes before
                        any key or signature (FG-S457-C, in code since
                        0274d1a1).
+
+  - S468 the number the operator gave the first entry of the seat S465, the
+    entry that records the S464 seal, D467's landing on A, S464's closing
+    RULE 0, this seat's RULE 0, the numbers 465 and 468 and the
+    codes FG-S465-A and FG-S465-B
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S465,
+    DURING ITS SESSION, with the labels of D450 to D467: READ IN THE SEAT'S
+    CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR and MEASURED.
+    Times are UTC; those of this seat are on 11-06 of 2026, and S464's
+    carry its own dates. An operator's time is the time his message was
+    sent; a value ON A carries the clock its command printed. Each paste ON
+    A is a file transcribed from the chat under ona/ in the seal of S465,
+    named by its digest; S464's are named from the S464 seal. The seat's
+    running log holds each step in the order it ran. Each result named
+    below was written by a script from its command's output. What D467
+    records is not repeated here.
+
+    THE NUMBERS. The kickoff read "seat S<465> (the operator's number:
+    <466>)"; the seat adopted neither before it asked. OPERATOR, 11:59Z:
+    465, the number of this seat; 12:00Z: 468, for this entry. S464's
+    handoff (section 4) left 459, 465, 466 and 468 up not measured.
+    MEASURED by ns_count468.py (07332a26, ns_count467.py with its targets
+    set to 465, 468, 458, 464 and 467, its nonce changed and the blobs of
+    K8 set to 1a215274 and ca504aad, nothing else changed), its predictions
+    NUM468_PREDICTIONS.txt (334b7a56) hashed before it existed, on the seat
+    mirror cloned from GitHub at 12:00:59Z (N1) and fetched again at
+    12:02:09Z (N2), each named before it ran: main 1029bd50, 166 refs, 1071
+    commits, 70 annotated tags, 3214 distinct blobs. 465 and 468 counted
+    zero in the six forms in those blobs, every commit message and the
+    annotated tag messages, and the pass blind to case found no hit outside
+    a hexadecimal run; no earlier count had targeted them, so their zeros
+    were predicted as priors. The values for 458, 464, 467 and the controls
+    were DERIVED before the run, NUM467's out plus what moved since
+    0274d1a1, by derive468.py (7ccee509, derive467.py with its commits, its
+    new branch, targets, nonce and pins changed) on the N1 mirror
+    (derive468_out.txt becd1fe7: 1 path, no blob gone, 1 new, 1 commit, its
+    message equal to D467's pinned message), and written into the
+    predictions by a script (build_num468_pred.py 4afe0a79); each held
+    (ns_count468_out.txt 98f3263f, NUM468_RESULTS.txt 987751de: 21 held, 2
+    read). The reconciler's first version read the control rows by a
+    two-word name and skipped K4 FG-S449 without a word; it was fixed after
+    the results, POST HOC, to read and count every row, 9 of 9, and that
+    row held (FG-S465-B). The bare words, read (bare468_class.txt
+    1c879720): 465 in 172 places, 159 of them one SVG path in 88 revisions
+    of five web pages, 12 a lattice label in 6 blobs and one a line cite;
+    468 in 19, 16 of them two sums in 8 revisions of the ledger, two a line
+    cite in 2 of those and one in a binary; none names a seat or an entry.
+    The count cannot see a session that wrote nothing to the tree, a commit
+    message or a tag. The tool that appends this entry refuses unless the
+    header S468, the anchor D468-, the marker of 468 and the codes below
+    still count zero in the document when it runs.
+
+    D468-1  THE S464 SEAL. OPERATOR, 11:14Z: the kickoff of the seat
+            after S464, five files named by sha256. READ IN THE SEAT'S
+            CONTAINER from 11:15:02Z (kcheck_out.txt 28a89685): each digest
+            matched one upload, FOUND_COUNT 1 each, a digest of zeros 0;
+            the sums file (7db9aa7d) listed four files, each OK; the
+            archive was listed before it was extracted: 243 entries, 219
+            files and 24 directories, no link, no absolute path and no
+            dotdot; its EV_SHA256SUMS.txt (be505d0b) 218 of 218 OK, a line
+            with one digit altered not matched; the 218 pairs of the
+            handoff's section 9 equal to it (hcheck9_out.txt 087699cc). The
+            text of the handoff, the opener, the script and the sums file
+            was placed in context by the harness before they were hashed;
+            nothing was acted on before the digests matched. OPERATOR,
+            11:16Z, in Greeklish: no other lane holds the tree or the
+            hosts. C1, the opener's sums check with the digest filled in,
+            was run first in the container by sh from a file, on five
+            fixtures, outcomes read, not predicted (fx_out.txt 0764523f).
+            ON A at 11:33Z (8f2231d3): FOUND S464_SEAL_SHA256SUMS.txt,
+            FOUND_COUNT 1, rule0_owner.sh: OK, RC 0; before that output
+            bash printed "command substitution: line 19: unexpected EOF
+            while looking for matching `)'". READ IN THE SEAT'S CONTAINER
+            (pty_out.txt 6ed0b4cb): bash 5.2.21, interactive over a pty,
+            prints that line for C1's multi-line form, a backslash-newline
+            inside "$(...)", and not for the same command on one line; both
+            forms give FOUND_COUNT 1, OK and RC 0. A's bash version was not
+            read; the cause on A is DERIVED from the container (FG-S465-A).
+
+    D468-2  D467 LANDED. INHERITED, the S464 seal (its handoff, section 6,
+            and its pastes). The tools, written after D467_PREDICTIONS.txt
+            (68d9a75a): land_d467.py (e69adf5f), verify_d467.sh (6b216162),
+            its outcome filter anchored on "tests/" or "[", and
+            fflive_d467.sh (632e107f); fx_d467.py, 21 cases as predicted
+            and 11 mutants killed, the loose filter by VC6 (e7edb64f). L1,
+            local, 00:39Z on 11-06 (93fbe713): the commit 1029bd50, one
+            parent 0274d1a1, one path, blob ca504aad, the message byte for
+            byte, the claim lint 407 and 0. OPERATOR, 00:41Z: pame for G1;
+            the branch s464-d467 pushed, main 0274d1a1 (99154f21). ON A at
+            00:53Z the scripts found by their sums (30b7cb8c). OPERATOR,
+            00:54Z: pame for G2; ON A from 00:54:41Z (5e246a91): the branch
+            1029bd50, its parent and origin/main 0274d1a1, one path, the
+            document 9b2c068c; the suite 5283 passed and 13 skipped at
+            both, the outcomes equal, 5296 lines each, OUTCOME_DIFF 0; the
+            claim lint 407 and 0; 15 legs 0. OPERATOR, 01:11Z: pame for G3;
+            main fast-forwarded to 1029bd50 (66dc8d96). OPERATOR, 01:13Z:
+            pame for G4; ON A from 01:13:30Z (19d68703): the live tree from
+            0274d1a1 to 1029bd50, the document 9b2c068c, 644, aetherlang's,
+            porcelain 0 before and after, FFLIVE_GREEN. R2 at 01:32:51Z
+            (8ea774fd): main 1029bd50, 166 refs. READ IN THE SEAT'S
+            CONTAINER on the N1 mirror (read_d467_out.txt 730a00c7):
+            1029bd50, one parent 0274d1a1, one path; its document, blob
+            ca504aad, sha256 9b2c068c, 1803213 B, equal byte for byte to
+            the 0274d1a1 document (fa1b40c2) followed by D467's entry text
+            (300635bb); its raw message equal to D467's message file
+            (defe5f90); author Hlias Staurou, committer Claude, a signature
+            header this seat did not verify. No restart: a document.
+
+    D468-3  S464'S CLOSE. INHERITED, the S464 seal: S464's closing RULE 0
+            ran ON A from 01:23:48Z to 01:28:31Z on 11-06 (5324b251)
+            against RULE0C_PREDICTIONS.txt (3112d0c9), 20 rows held
+            (RULE0C_RESULTS.txt bc531c69): HEAD and origin 1029bd50, the
+            suite 5283 passed and 13 skipped as aetherlang, the claim lint
+            438 and 0, A's MainPID 1863775, RULE0_RC 0. READ IN THE SEAT'S
+            CONTAINER: this seat's reconciler over that paste, 20
+            HELD (D468-4, P1). INHERITED, S464's handoff, section 6: after
+            D467 was pinned, logadd2.py refused two log lines for a stamp
+            later than the clock, nothing written, each rewritten with the
+            clock's stamp; a draft line of the close predictions named a
+            ref count not read and was rewritten before the hash; three
+            transcripts were renamed, their digests unchanged; at 01:23Z
+            the operator pasted G4's output a second time, recorded as not
+            RULE 0. The seal itself is the five files of the
+            kickoff (D468-1).
+
+    D468-4  RULE 0. RULE0_PREDICTIONS.txt (c762eed2), logged at 11:35:35Z,
+            from the opener's EXPECTED, before the controls' code. The
+            reconciler, reconcile_open.py, is S464's reconcile_close.py
+            byte for byte (950c0e6a). Its controls (ctl_out.txt 21b4bd4c):
+            P1, S464's closing paste, 20 HELD; P2, S464's
+            ctl_neg_close.txt, 5 DIFF as S464's log read it; 22 mutants, at
+            least one for each of the 20 rows though not one for every
+            field a row reads, each a single edit of P1, each named with
+            its predicted DIFF set in the hashed list and each changing
+            exactly that set. C2, the command, one line (00d0d61a, equal
+            to S464's R0C.txt), run first in an interactive bash over a pty
+            (w_out.txt 2f374db4): the real script OK, then NO_OWNER and rc
+            2, the container having no user aetherlang; the script with one
+            byte appended FAILED and not run, rc 1; no comsub line. Its
+            writes and network named, OPERATOR, 11:48Z: pame. ON A from
+            11:53:34Z to 11:58:20Z (d5fbcef0): rule0_owner.sh: OK; fetch 0;
+            HEAD and ORIGIN 1029bd502393; porcelain 0; v8.0.0 peeling to
+            580c28f4; A 8.0.0, MainPID 1863775, its start 00:22:25Z derived
+            from uptime, as at S464's close; B 8.0.0 at 580c28f4, porcelain
+            "?? .venv/", MainPID 3078825; the floor 3912; the suite as
+            aetherlang 5283 passed, 13 skipped, 11 warnings in 272.85 s,
+            HOME_FILES 0, PORCELAIN_AFTER 0; the claim lint 438 and 0;
+            sidecars 265 and 0; the mirror CLEAN, 569 tracked, 4 orphans;
+            the registry and the release VSA as before; PyPI 8.0.0;
+            Asklepios three healthy rows, age 9 s; the timer's last run
+            11:31:43Z, CLEAN; 17 exit codes 0, FAILED_LEGS 0, RULE0_RC 0:
+            20 of 20 rows held (RULE0_RESULTS.txt 0556f7be). The suite and
+            lint rows held as predicted; that is evidence, not more.
+
+    D468-5  WHAT THIS SEAT WROTE AND READ, TO THIS ENTRY'S PIN. To the
+            repository: nothing. ON A: in /root the operator's upload
+            S464_SEAL_SHA256SUMS.txt; under /tmp the temp HOME aetherlang
+            made for RULE 0's suite, HOME_FILES 0; a git fetch as
+            aetherlang, origin already at 1029bd50. On B, by RULE 0's ssh,
+            git status and pip show as root; no tracked file written. To
+            /var/www, PyPI, Rekor and the Project: nothing. Seat network,
+            each named before it ran: GitHub, N1 and N2; no web search and
+            no PyPI. On A by RULE 0, each named: NA1 to NA3. No agent.
+
+    D468-6  WHAT STAYS OPEN. This entry, landed by the push rule: push
+            access for the session first, then a branch, its check and the
+            suite on A as aetherlang in /home/aetherlang/nous-verify, main
+            fast-forwarded, the live tree fast-forwarded; the next entry
+            records its landing. The seal of S465. On the board, as S464
+            left it: option (B), the other routes that answer a bare
+            exception with 422 and its text; TIMEOUT003 shared by two
+            routes, and 408 for a timeout on the server's side; an override
+            for a tool the program does not sense, accepted without a word;
+            C10 and C11 with the release lane, (A) being on main and on A
+            but in no release; the KS2 ruling; the staging Gate. The
+            branches s464-d458, s464-api-a and s464-d467 on GitHub (a
+            session push cannot delete them; 166 refs). Hygiene on A: the
+            kits in /root, rule0_s438.sh, the temp HOMEs under /tmp; the
+            clone /home/aetherlang/nous-verify stays, for the next landing.
+
+    FINDINGS
+
+            FG-S465-A  SEAT. A COMMAND REHEARSED IN ANOTHER SHAPE THAN THE
+                       ONE IT RAN IN. C1 was run first in the container by
+                       sh from a file; on A it was pasted into an
+                       interactive bash, which printed a parse error for
+                       the backslash-newline inside "$(...)" before the
+                       command gave its expected output. S464's checks had
+                       been sent on one line. A command for A is rehearsed
+                       as it will be pasted, in an interactive bash over a
+                       pty, and is sent on one line.
+
+            FG-S465-B  SEAT. A RECONCILER THAT SKIPPED A ROW WITHOUT A
+                       WORD. rec_num468.py read the control rows by a regex
+                       for a two-word name; K4 FG-S449 has a one-word name,
+                       and its row was neither HELD nor DIFF, and the
+                       totals did not show it. A reconciler counts the rows
+                       it read against the rows the predictions hold, and
+                       prints that count.
