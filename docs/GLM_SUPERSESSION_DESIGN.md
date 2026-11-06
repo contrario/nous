@@ -28840,3 +28840,225 @@ document itself.
                        gave it DIFF. A value enters a record or a control
                        only from an output already seen, or is computed by
                        the script that writes it.
+
+  - S467 the number the operator gave the second entry of the seat S464,
+    the entry that records D458's landing under the push rule, the API
+    catch-all ruling and its option (A) from probe to restart, the number
+    467 and the codes FG-S464-E to FG-S464-G
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S464,
+    DURING ITS SESSION, with the labels of D450 to D458. Times are UTC;
+    those after midnight are on 11-06 of 2026, the others on 11-05. Each
+    paste ON A is a file transcribed from the chat under ona/ in the seal
+    of S464, named by its digest; each result named below was written by a
+    script from its command's output. What D458 records is not repeated
+    here.
+
+    THE NUMBER. OPERATOR, 00:28Z on 11-06: 467, for this entry. MEASURED
+    from 00:30:41Z to 00:31:13Z by ns_count467.py (0056fd7d, ns_count458.py
+    with its targets set to 467, 458 and 464, its nonce changed and the
+    blobs of K8 set to bf98d753 and 1a215274), its predictions
+    NUM467_PREDICTIONS.txt (69e5c581) hashed before it existed, on the seat
+    mirror fetched from GitHub at 00:30:41Z (N18, named before it ran):
+    main 0274d1a1, 165 refs, 1070 commits, 70 annotated tags, 3213 distinct
+    blobs. 467 counted zero in the six forms in those blobs, every commit
+    message and the annotated tag messages, and the pass blind to case
+    found no hit outside a hexadecimal run. The values for 458, 464 and the
+    controls were DERIVED before the run, NUM458's out plus what moved
+    since 2ccaaf86, by derive467.py (11b44b7e), which keeps the two new
+    branches apart: they hold blobs main holds or held, so they count for a
+    blob still held and not for a blob already there (derive467_out.txt
+    25f90741: 5 paths, 1 blob gone, 5 new, 2 commits); each held
+    (ns_count467_out.txt 2d23b09c, NUM467_RESULTS.txt 5f731cdd, 42 rows).
+    The bare 467: twice in a binary and once in a message's line range
+    "codegen.py 452-467" (bare467_read.txt 6ca0dcce); none names a seat or
+    an entry. The count cannot see a session that wrote nothing to the
+    tree, a commit message or a tag.
+
+    D467-1  D458 LANDED, UNDER THE PUSH RULE. READ IN THE SEAT'S CONTAINER,
+            the tools and their fixture before any gate: land_d458.py,
+            verify_d458.sh and fflive_d458.sh, written after
+            D458_PREDICTIONS.txt (dc341e78); fx_d458.py, with a bare origin
+            cloned from the mirror and the real paths standing for A, 20
+            cases as predicted and 10 named mutants killed (0e846728;
+            amendment 1, 4c79034d, POST HOC as to MU4's path). OPERATOR,
+            14:09Z: pame for G0; add_repo gave the session push access, and
+            the clone it names went to /home/claude/nous (N4), not to the
+            path the seat had written. L1, local, 14:11Z (1f1bd99f): the
+            commit 876905f0, one parent 2ccaaf86, one path, blob 1a215274,
+            the message byte for byte, author Hlias Staurou, committer
+            Claude, signed by the session. OPERATOR, 14:12Z: pame for G1;
+            the branch s464-d458 pushed, main untouched (227ae8b7). ON A,
+            the scripts found by their sums at 14:14Z (2b43559a); OPERATOR,
+            14:16Z: pame for G2; at 14:16:44Z, as aetherlang in a new clone
+            /home/aetherlang/nous-verify, the branch, its parent and
+            origin/main as pinned, the suite at 2ccaaf86 and at the branch
+            5253 passed, 13 skipped each, the outcomes equal line for line,
+            the claim lint 407 and 0 (38ef8677). OPERATOR, 14:29Z: pame for
+            G3; main fast-forwarded to 876905f0 (711b8885). OPERATOR,
+            14:31Z: pame for G4; ON A at 14:32:28Z, as aetherlang, the live
+            tree fast-forwarded to 876905f0, the document fa1b40c2,
+            porcelain 0 (68ebd7a3). OPERATOR, 14:33Z: pame for G5; the
+            delete of the branch refused by the session's git proxy, HTTP
+            403, nothing deleted (957b1ed1); OPERATOR, 14:35Z: leave it.
+            R1, the mirror at 14:34:38Z: main 876905f0, the document and
+            the message equal to their pins, 164 refs (9055be0e). No
+            restart: a document.
+
+    D467-2  THE OBJECT, AND WHAT THE PROBES READ. OPERATOR, 14:36Z: the API
+            catch-all ruling. READ IN THE SEAT'S CONTAINER at 876905f0, as
+            a user that is not root, the venv of the 38 pins (N11),
+            predictions and three amendments hashed before their probes
+            (CATCHALL_PROBE_RESULTS.txt f6ce6566,
+            CATCHALL_PROBE_RESULTS_H.txt 292e75ff): every exception of the
+            skill export but Rekor's two, the strict refusal and the
+            timeout answered 422 SKILLEXPORT001 with its own text and an
+            ERROR record with a traceback: a source that does not parse and
+            an unknown override key (the client's), an OSError and a
+            RuntimeError (the server's); the temp path, internal text and
+            pydantic's versioned URL reached the reply; a description with
+            a "---" line, a LF or U+001C shipped (200) in a SKILL.md the
+            repository's reader refused or altered; the license, written
+            plain, let "MIT\nallowed-tools: Bash" add a key, the dossier
+            built over it; a lone surrogate gave a 500 with a traceback
+            before the key check on the skill export and the public
+            /v1/verify-dossier, and, by FastAPI's code path, on every route
+            with a body; a client's text reached the ERROR log across
+            lines. The client classes, read (probe_c.out ee1005d4): lark's
+            parse errors, SkillExportError, pydantic's ValidationError, and
+            DossierSpecError from smt_emit's EmitError (a model the pricing
+            table cannot price); an override naming an unsensed tool was
+            accepted (200), read, not changed. A scan of
+            nous_api_server.py, a heuristic: 17 places map a bare exception
+            to a status with its text, 7 of them to 422; TIMEOUT003 names
+            both the skill export's and the run route's timeouts, each 408.
+            Web, each named before it ran (W1 to W11): RFC 9110 on 422
+            (MDN), the OWASP Error Handling Cheat Sheet, CWE-209, CWE-116,
+            CWE-117, the SRE workbook's SLO document (only 5XX count
+            against availability), RFC 9457, the Agent Skills
+            specification, str.splitlines, FastAPI's errors page.
+
+    D467-3  THE RULING. OPERATOR, 23:14Z: option (A), with evidence, the
+            steps a team of principal engineers would take, the errors not
+            seen at first sight, the innovation and the security, and these
+            to hold for all the work of the session. The seat's gate
+            (API_A_GATE.txt 7a1b2253): I1 a client's input never yields a
+            5xx and a server fault never a 4xx; I2 no reply holds a server
+            path, an exception's own text or a library URL; I3 a client
+            error logs one WARNING line with its text escaped, a server
+            fault logs ERROR with the traceback and the reply's error_id;
+            I4 the writer emits only what its reader reads back unchanged,
+            before any dossier; I5 bytes that read back before keep their
+            bytes. Measured before it was chosen (escape_check2_out.txt
+            739a0a3b): escaping only controls, C1, U+2028/9, U+FEFF,
+            noncharacters and surrogates, 13 of 13 classes read back
+            exactly, and Greek, emoji and a no-break space keep their
+            bytes. Rejected: yaml.safe_dump (I5), RFC 9457 bodies now (the
+            shape), a global catch-all now (option B). OPERATOR, 23:25Z:
+            FastAPI's 422 handler is part of (A), the same invariant I1,
+            the same shape.
+
+    D467-4  OPTION (A) BUILT. READ IN THE SEAT'S CONTAINER, as that user,
+            its predictions (A_PREDICTIONS.txt 76a5ca3e) and three
+            amendments hashed before the runs they name, the third POST HOC
+            as to its reading (A_RESULTS.txt be009fa8): 30 tests, 25
+            failing and 5 passing at 876905f0, then 30 passing with the
+            change; the families that drive the export, 56 outcomes equal
+            before and after, their ERROR lines 3 then 0; 12 mutants
+            killed, 11 with the predicted set; the whole suite at 876905f0
+            and with the change, the outcomes differing by the 30 new
+            tests, all passed, and nothing else. skill_export.py: one
+            escape for the free text, a license plain only when the reader
+            gives it back, and a read-back of the frontmatter that refuses
+            before any file, key or signature. nous_api_server.py: the
+            client's classes 422 SKILLEXPORT001 at WARNING with repr, an
+            HTTPException passing, any other failure 500 SKILLEXPORT500
+            with a uuid4 error_id in the reply and in the ERROR record; a
+            handler for RequestValidationError that returns FastAPI's own
+            reply and rebuilds it, same shape, only when a lone surrogate
+            cannot be encoded. docs/SKILL_EXPORT.md says so.
+
+    D467-5  OPTION (A) LANDED, UNDER THE PUSH RULE. land_a.py, verify_a.sh,
+            fflive_a.sh, written after A_LAND_PREDICTIONS.txt (a0a7de28);
+            fx_a.py, 21 cases and 11 named mutants killed (d5ea5a7b). L1,
+            local, 23:47Z (5c0e9e19): the commit 0274d1a1, one parent
+            876905f0, the three paths changed and the test file added at
+            their pinned blobs, the message byte for byte, the claim lint
+            407 and 0. OPERATOR, 00:01Z: pame for G1; the branch s464-api-a
+            pushed (7dd674fd). ON A, the scripts found by their sums at
+            00:02Z (ac82c7ff). OPERATOR, 00:03Z: pame for G2; at 00:05:37Z
+            (d7f2cc25) the identity, the four blobs, the claim lint and the
+            porcelain held, the suite 5253 and 13 at 876905f0 and 5283 and
+            13 at the branch, as predicted, but the compare leg read 34
+            added and 5 removed: the filter also took pytest's captured log
+            lines (FG-S464-E). D4, read only, on A's own two outcome files
+            with the strict filter (67dbebca): 30 added, each PASSED in the
+            new file, 0 removed, the other 9 lines ERROR log lines, as in
+            the container (A_LAND_AMENDMENT_1.txt 94ed19f0, POST HOC).
+            OPERATOR, 00:20Z: pame for G3; main fast-forwarded to 0274d1a1
+            (eeaffc9e). OPERATOR, 00:20Z: pame for G4; ON A at 00:20:45Z
+            the live tree at 0274d1a1, the four paths at their pinned
+            blobs, 644, aetherlang's (45d7590d). The probes of G5 run first
+            on a local server in the container: 422 with the change, 500
+            INTERNAL001 with 8 traceback lines on the base. OPERATOR,
+            00:22Z: pame for G5; ON A at 00:22:24Z (9c4fdfc6): nous-api
+            restarted, MainPID 2738059 to 1863775, User aetherlang, health
+            8.0.0; the skill export and /v1/verify-dossier, with a lone
+            surrogate and no key, 422 each with the detail list; no
+            traceback in the journal since.
+
+    D467-6  WHAT THE SEAT BROKE, AND CORRECTED. Twice a log line ran in the
+            same command as a results writer that failed and printed an
+            empty digest (FG-S456-A); each was corrected by a later line. A
+            transcript was described in the log as holding an escape before
+            it was read; it held the raw U+FFFD, and was rewritten by a
+            script and the line corrected (FG-S464-D, in the seat that
+            coded it). The misses of prediction, each recorded where it
+            fell: Q6, H1, A4 tab at the base, M1's kill set, M7's anchor,
+            G2's compare.
+
+    D467-7  WHAT STAYS OPEN. The landing of this entry; the closing RULE 0
+            and the seal of S464. Option (B): the six other routes that
+            answer a bare exception with 422 and its text, each route's
+            client classes to be read first. TIMEOUT003 shared by two
+            routes, and 408 for a timeout on the server's side. An override
+            for a tool the program does not sense, accepted without a word.
+            The branches s464-d458 and s464-api-a on GitHub (a session push
+            cannot delete them; 165 refs). On the board as S457 left it:
+            C10 and C11 with the release lane; the KS2 ruling; the board's
+            (b). Hygiene on A: the kits in /root, rule0_s438.sh, the temp
+            HOMEs under /tmp; the clone /home/aetherlang/nous-verify stays,
+            for the next landing.
+
+    FINDINGS
+
+            FG-S464-E  SEAT. A FILTER FIXED IN ONE TOOL AND NOT IN ITS
+                       TWIN. The families step anchored its outcome filter
+                       on "tests/" once it caught pytest's captured log
+                       lines; verify_a.sh, built from D458's verify, kept
+                       the loose filter, and G2 read 34 added and 5 removed
+                       where the tests differed by 30 and 0. A filter fixed
+                       in one tool is fixed in every tool built from the
+                       same source before that tool runs.
+
+            FG-S464-F  WORLD (nous_api_server.py, FastAPI's default 422),
+                       FOUND BY S464. A CLIENT'S BYTES ON A 5XX PATH,
+                       BEFORE THE KEY. Body validation runs before
+                       require_api_key, and FastAPI's 422 reply puts the
+                       input in its detail: a lone surrogate failed the
+                       UTF-8 render and answered 500 with a traceback, with
+                       no key, on the two routes probed and, by that code
+                       path, on every route with a body. An error reply is
+                       built only from what it can encode; a client's input
+                       never reaches a 5xx (0274d1a1).
+
+            FG-S464-G  WORLD (skill_export.py), FOUND BY S464. A WRITER ITS
+                       OWN READER REFUSES, AND A FIELD THAT ADDS KEYS. The
+                       export escaped only the backslash and the quote and
+                       wrote the license plain: text with a line break or a
+                       control shipped in a SKILL.md the repository's
+                       reader refused or altered, and a license added
+                       allowed-tools to the skill the dossier was built
+                       over. The writer reads back what it writes before
+                       any key or signature (FG-S457-C, in code since
+                       0274d1a1).
