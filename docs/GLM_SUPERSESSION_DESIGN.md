@@ -29262,3 +29262,277 @@ document itself.
                        totals did not show it. A reconciler counts the rows
                        it read against the rows the predictions hold, and
                        prints that count.
+
+  - S469 the number the operator gave the second entry of the seat S465,
+    the entry that records D468's landing under the push rule, the object
+    TIMEOUT003 and its option T from the probes and the gate to the landing
+    (50fe59d3) and the restart of nous-api, the number 469, the writes in
+    the seat's container it cannot attribute, and the codes FG-S465-C
+    to FG-S465-G
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S465,
+    DURING ITS SESSION, with the labels of D450 to D468. Times are UTC, on
+    11-06 of 2026. Each paste ON A is a file transcribed from the chat
+    under ona/ in the seal of S465, named by its digest; each result named
+    below was written by a script from its command's output. What D468
+    records is not repeated here. Each test, mutant and suite below
+    evidences; nothing here is a Z3 or Farkas result.
+
+    THE NUMBER. OPERATOR, 14:17Z: 469, for this entry. MEASURED by
+    ns_count469.py (6a471bc6, ns_count468.py with its targets set to 469,
+    465, 468, 458, 464 and 467, its nonce changed and the blobs of K8 set
+    to ca504aad and 7d3daa24, nothing else changed), its predictions
+    NUM469_PREDICTIONS.txt (4d685a3f) written by a script before it
+    existed, on the seat mirror fetched from GitHub at 14:16:40Z (N6) and
+    again at 14:18:13Z (N7), each named before it ran: main 50fe59d3, 168
+    refs, 1073 commits, 70 annotated tags, 3219 distinct blobs. 469 counted
+    zero in the six forms in those blobs, every commit message and the
+    annotated tag messages; the pass blind to case found no hit outside a
+    hexadecimal run; the bare word 469 is in none of them. The values for
+    465, 468, 458, 464, 467 and the controls were DERIVED before the run,
+    NUM468's out plus what moved since 1029bd50, by derive469.py
+    (bc832c86): 5 paths, no blob gone, 5 new, 2 commits, both messages
+    equal to their files (derive469_out.txt dac384a5); each held
+    (ns_count469_out.txt 418a216a, NUM469_RESULTS.txt 0b2253bb: 21 held, 1
+    read, 9 of 9 control rows read). The count cannot see a session that
+    wrote nothing to the tree, a commit message or a tag. The tool that
+    appends this entry refuses unless the header S469, the anchor D469-,
+    the marker of 469 and the codes below still count zero in the document
+    when it runs.
+
+    D469-1  D468 LANDED, UNDER THE PUSH RULE. READ IN THE SEAT'S CONTAINER,
+            the tools and their fixture before any gate: land_d468.py,
+            verify_d468.sh and fflive_d468.sh, written after
+            D468_PREDICTIONS.txt (48b6e3b7) from D467's by a builder whose
+            first version replaced the pins one after another, so that
+            OLD_SHA and OLD_BLOB came out with the new values; seen in the
+            diff before any run, nothing run; rebuilt in one simultaneous
+            pass (FG-S465-C). fx_d468.py: 21 cases and 11 mutants killed
+            (13f3e9b3). OPERATOR, 12:12Z: pame for G0; add_repo gave the
+            session push access; its clone, depth 1, went to
+            /home/claude/nous (N3). L1, local, 12:14Z (4dce50ea): the
+            commit ec1d27f2, one parent 1029bd50, one path, blob 7d3daa24,
+            the message byte for byte, author Hlias Staurou, committer
+            Claude, signed by the session. OPERATOR, 12:14Z: pame for G1;
+            the branch s465-d468 pushed, main 1029bd50 (e8f77f90). The
+            commands for A were first run in an interactive bash over a
+            pty (FG-S465-A; rh_out.txt 77f0aeeb). ON A at 12:23Z the
+            scripts found by their sums (100416d5). OPERATOR, 12:24Z: pame
+            for G2; ON A from 12:24:54Z (3df29111): the branch, its parent
+            and origin/main as pinned, the suite 5283 passed and 13 skipped
+            at both, the outcomes equal, the claim lint 407 and 0; read by
+            rec_g2.py, whose first version, written after the paste, read
+            the summary three lines below the HEAD line, where it is two,
+            fixed POST HOC (09fdf5dd). OPERATOR, 12:36Z: pame for G3; main
+            fast-forwarded to ec1d27f2 (91fbd98a). OPERATOR, 12:37Z: pame
+            for G4; ON A from 12:38:04Z (3050216b): the live tree at
+            ec1d27f2, the document 9b846463, 644, aetherlang's, porcelain
+            0. N4 at 12:38:36Z (a9096364): main ec1d27f2, 167 refs. No
+            restart: a document.
+
+    D469-2  THE OBJECT, AND WHAT THE PROBES READ. OPERATOR, 12:39Z: the
+            object, TIMEOUT003. READ IN THE TREE at ec1d27f2: six deadline
+            sites over threads, each asyncio.wait_for of run_in_executor:
+            compile 30 s 408 TIMEOUT001, verify 30 s 408 TIMEOUT002, the
+            skill export 60 s 408 TIMEOUT003, run 60 s 408 TIMEOUT003, diff
+            30 s 504 with a bare string, chat 35 s 504 CHAT004; the
+            export's worker builds the dossier and, with anchor rekor,
+            submits to Rekor. READ IN THE SEAT'S CONTAINER, the tree run by
+            the venv of S464's 38 pins (N5), the timeouts scaled by 0.05
+            and the workers slowed, its predictions and one amendment
+            hashed before the runs they name (TMO_PROBE_RESULTS.txt
+            30d0fe7a, 10 held, 1 read): each timed-out worker ran on after
+            its 408; the dossier step, a stand-in that never contacted
+            Rekor, ran after the export's 408 with anchor rekor; two held
+            workers filled a pool of 2 and a valid verify queued behind
+            them answered 408 TIMEOUT002 and never ran, the same verify 200
+            when the pool was free; Chromium resent one fetch's POST on a
+            408 over a reused connection, also with connection: close, and
+            not on a 503; compile answered 200 with no key. ON A at 13:21Z,
+            read only (a642b1df): 8 CPUs; nous-api is uvicorn nous_api:app,
+            one process; nginx proxies /api/ with proxy_read_timeout 60s.
+            Web, each named before it ran (W1 to W12): MDN on 408 and 504,
+            Armeria issue 5579 quoting RFC 9110 on 408, bpo-43019, a blog
+            on browser retry on 408 with Chromium's and Firefox's code,
+            Cloudflare's 408, 502/504, 503 and 500 pages, grpc-gateway's
+            HTTPStatusFromCode, urllib3's Retry source, a guide on nginx
+            timeouts; RFC 9110's own text was cut by the fetcher and not
+            read.
+
+    D469-3  THE CHOICE. OPERATOR, 12:52Z, in Greeklish: the seat chooses,
+            with documented evidence, the steps of a team of principal
+            engineers, the errors not seen at first sight, the innovation
+            and the security, for all the work of the session. The seat's
+            gate (TMO_GATE.txt a702ce9b): 503 for a server-side deadline.
+            408 is a client-side wait and Chromium resends on it; 504 is a
+            gateway's and, by Cloudflare's own page, an origin's 504 is
+            answered with Cloudflare's branded page, so its JSON and code
+            do not reach the browser (DERIVED for nous-lang.org, not
+            measured there); an origin's 503 reaches the visitor by that
+            page's account, Chromium did not resend it and urllib3 honours
+            its Retry-After; S464's gate already says a server fault never
+            answers a 4xx. Invariants T1 to T9, steps S1 to S10, errors E1
+            to E12. OPERATOR, 13:31Z: option T: BUSY with Retry-After when
+            the work did not start, TIMEOUT without it when it started and
+            overran, one code a route, the slot freed when the thread ends,
+            Rekor only with 40 s left, budgets of 50 s for 60, the body
+            keeping detail.error, one WARNING line; tests red at ec1d27f2,
+            deadlines tested without sleep, one helper, one gate in
+            dossier_spec checked by ast, mutants, the suite here and on A
+            by the push rule, the restart; the open errors written as open.
+
+    D469-4  OPTION T BUILT. READ IN THE SEAT'S CONTAINER, as the user seat
+            in a work clone at ec1d27f2: T_PREDICTIONS.txt (34e9b366)
+            hashed before the test file; tests/test_s465_deadlines.py, 14
+            tests timed by a shim over the module's wait_for and by workers
+            held on threading.Event: 12 failed and 2 passed at ec1d27f2
+            (cda0de53). apply_t.py (abb1f05f): anchored edits, each found
+            once or nothing written; its check of dossier_spec by ast,
+            whose first version counted the gate call after stripping it,
+            was fixed, and three planted deviations were each refused.
+            nous_api_server.py: one helper, _s465_run_budgeted, on one pool
+            of min(32, CPUs + 4) threads and a semaphore of that size; no
+            worker free within 2 s answers 503 BUSY00x with Retry-After 5
+            and the work never runs; an overrun answers 503 TIMEOUT00x
+            without it, work_started true; codes TIMEOUT001 to 005 and
+            BUSY001 to 005, one a route; the slot is released in the
+            worker's finally, or by the route only when cancel() shows the
+            job never started; compile, verify and diff 30 s, run and the
+            export 50 s, the admission wait 2 s, the edge 60 s; chat's
+            CHAT004 answers 503. dossier_spec.py: AnchorDeadlineError and a
+            gate that begins the Rekor step only when 2 x (5 s + 15 s) of
+            the budget is left, else 503 REKOR_DEADLINE before any network
+            call. docs/SKILL_EXPORT.md says so. 14 passed, five repeats.
+            Amendment 1 (defa8d57), hashed before any mutant ran, corrected
+            five kill sets read against the tests. 10 of 11 mutants were
+            killed as predicted and MU1, the slot freed at the reply,
+            survived: the pool's own thread count turned the wrongly
+            admitted verify into BUSY after its budget, and D7 did not read
+            time (FG-S465-D). Amendment 2 (5b94b259): D7 reads time; red
+            again at ec1d27f2, 14 passed three times, 11 of 11 killed as
+            predicted (bcd2dea2). The families, 20 files listed before
+            their run: 305 passed before and after, the outcomes equal. The
+            whole suite at a base clone and with the change: apart from the
+            new file, 5284 outcome lines equal at each, the new file 14
+            PASSED with the change.
+
+    D469-5  OPTION T LANDED, UNDER THE PUSH RULE. land_t.py, verify_t.sh
+            and fflive_t.sh, built from S464's landA tools after
+            T_LAND_PREDICTIONS.txt (48ecfe05) by whole-block anchored
+            edits, verify's outcome filter anchored on "tests/" or "[";
+            fx_t.py, 22 cases and 12 mutants killed (6713dcce). L1, local,
+            13:55Z (a32b0018): the commit 50fe59d3, one parent ec1d27f2, A
+            tests/test_s465_deadlines.py and M of docs/SKILL_EXPORT.md,
+            dossier_spec.py and nous_api_server.py at their pinned blobs,
+            the claim lint 407 and 0, the message byte for byte; a second
+            run ALREADY_COMMITTED. OPERATOR, 13:57Z: pame for G1; the
+            branch s465-api-t pushed (4ea47e72). ON A at 14:00Z the scripts
+            found by their sums (a0d06d53). OPERATOR, 14:00Z: pame for G2;
+            ON A from 14:00:43Z (597f9db6): the identity and the four blobs
+            as pinned; the suite 5283 passed and 13 skipped at ec1d27f2 and
+            5297 and 13 at the branch; the outcomes 14 added, each PASSED
+            in the new file, 0 removed; the claim lint 407 and 0; 19 exit
+            codes 0; read by rec_g2t.py, whose first version, written after
+            the paste, wanted 20 exit codes, fixed POST HOC to the 19 the
+            script prints (21f7324a). OPERATOR, 14:11Z: pame for G3; main
+            fast-forwarded to 50fe59d3 (0a841baf). OPERATOR, 14:12Z: pame
+            for G4; ON A from 14:12:13Z (d50b13a4): the live tree at
+            50fe59d3, the four paths at their pins, 644, aetherlang's,
+            porcelain 0. OPERATOR, 14:14Z: pame for G5; ON A at 14:15:58Z
+            (365feeda): nous-api restarted, MainPID 1863775 to 1177974,
+            User aetherlang, health 8.0.0; compile, verify, run and diff to
+            the loopback with no key, each 200; no traceback and no
+            deadline line since. N6 at 14:16:40Z (5d2d04c0): main and the
+            branch 50fe59d3, the blobs and the message as pinned, 168 refs.
+            No release carries it.
+
+    D469-6  WRITES THE SEAT CANNOT ATTRIBUTE. READ IN THE SEAT'S CONTAINER:
+            at 13:29:31Z the user seat was made (/etc/passwd and its kin
+            changed then); at 13:29:51Z a clone /home/seat/base at
+            ec1d27f2; in tmo/, fam_base.txt and fam_base_outcomes.txt
+            (13:30:00Z, 410 passed there) and suite_base.txt and
+            suite_base_time.txt (13:30:53Z to 13:33:39Z, 155 failed and
+            5109 passed there). No command of this seat's context wrote
+            them; a background notification at 13:33Z named that suite run.
+            Their source is not known. Between 13:34Z and 13:36Z the seat's
+            "id seat || useradd" found the user and went on without a
+            word (FG-S465-G). The container's processes started again at
+            14:09:21Z, a resume. 46 file digests named in the seat's log
+            were each equal to the file afterwards (logdigest_check_out.txt
+            1615ffcd, three found by hand). The four files are kept in the
+            seal, apart, and not used as evidence. What landed was checked
+            on A against pins, and A ran its own suites.
+
+    D469-7  WHAT THE SEAT BROKE, AND CORRECTED. The pins replaced one after
+            another (FG-S465-C). A mutant that survived a test blind to
+            time (FG-S465-D). Two reconcilers written after their pastes
+            read a value one line off and a count it had typed, each fixed
+            POST HOC and recorded. Five kill sets predicted too small,
+            corrected by an amendment hashed before the mutants ran. A
+            prediction generator stopped at its own assert of one message
+            where two had moved, nothing written. Four log lines refused by
+            logadd2.py, each over 76 columns, nothing written, each
+            rewritten.
+
+    D469-8  WHAT STAYS OPEN. This entry, landed by the push rule; the
+            closing RULE 0 and the seal of S465. From the gate, open, not
+            closed: a started thread cannot be stopped, so an overrun's
+            work may run on (E1; process isolation, its own gate); one
+            anonymous client can still hold the pool with slow inputs (a
+            per-client cap waits on E12, the address the limiter sees
+            behind nginx and Cloudflare, not read); z3's budget is not
+            taken from the deadline; the chat's 35 s stays a literal per
+            tier; the served path through Cloudflare and nginx was not
+            measured, and Chromium was measured over HTTP/1.1 only. On the
+            board: option (B); the override for an unsensed tool; C10 and
+            C11 with the release lane, and options (A) and T on main and on
+            A but in no release, so B and PyPI 8.0.0 do not carry them; the
+            KS2 ruling; the staging Gate. The branches s464-d458,
+            s464-api-a, s464-d467, s465-d468 and s465-api-t on GitHub (168
+            refs). Hygiene on A: the kits in /root, rule0_s438.sh, the temp
+            HOMEs under /tmp; the clone /home/aetherlang/nous-verify stays,
+            for the next landing.
+
+    FINDINGS
+
+            FG-S465-C  SEAT. PINS REPLACED ONE AFTER ANOTHER. The builder
+                       of D468's tools moved each old pin to the new one in
+                       turn; the old document's pin became the new one and
+                       was replaced again, so OLD_SHA and OLD_BLOB came out
+                       equal to NEW_SHA and NEW_BLOB. Seen in the diff
+                       before any run. A builder that moves pins replaces
+                       them in one simultaneous pass or by whole blocks,
+                       and its output is diffed against its source before
+                       it runs.
+
+            FG-S465-D  SEAT. A TEST BLIND TO THE BOUND IT GUARDS. D7
+                       checked that a request with no free worker answered
+                       BUSY and never ran, but not when it answered; with
+                       the slot freed at the reply the pool's own threads
+                       still turned it into BUSY, after its budget, and the
+                       mutant survived. A test of an invariant stated in
+                       time reads the time.
+
+            FG-S465-E  WORLD (nous_api_server.py, its timeouts), FOUND
+                       BY S465. THE REPLY SAID IT FAILED; THE WORK RAN ON.
+                       Each timeout answered 408 while its worker thread
+                       ran on, the export's dossier step with it; a valid
+                       request queued behind held threads answered its own
+                       timeout and never ran; a 408 made Chromium resend
+                       the POST. A deadline reply says whether the work
+                       started, and no irreversible step begins after the
+                       deadline (option T, 50fe59d3).
+
+            FG-S465-F  WORLD (the edge: nginx and Cloudflare), FOUND
+                       BY S465. A REPLY THE EDGE DOES NOT CARRY. The run
+                       and export budgets equalled nginx's 60 s read
+                       timeout, and Cloudflare answers an origin's 502 or
+                       504 with its own page. A server-side deadline
+                       answers a status the edge passes through, and fires
+                       before the edge's own timeout.
+
+            FG-S465-G  SEAT. AN EXISTING USER ACCEPTED WITHOUT A WORD. "id
+                       seat || useradd" found a user that another writer
+                       had made some minutes before and went on. A user,
+                       path or clone the seat creates is checked absent
+                       first; one already there is attributed before use.
