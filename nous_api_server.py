@@ -156,20 +156,150 @@ def _s465_reply(route: str, code: str, text: str, budget: float,
         "work_started": work_started}, headers=headers)
 
 
-async def _s465_run_budgeted(route: str, fn):
+# __s466_client_cap_v1__
+# S466: one client key holds at most _S466_CLIENT_CAP of the pool's
+# slots at once. The key is slowapi's get_remote_address: an IPv4-mapped
+# address folded to IPv4, other IPv6 keyed by its /64, loopback exempt
+# (no key, no cap: a collapse of the key path falls back to option T
+# alone). A key at its cap answers 429 CAPn before the admission wait;
+# its work never starts. The count is taken before the admission wait
+# and given back where the slot is: when the worker's thread ends, on
+# the cancel path, on a submit failure, on the BUSY reply and on any
+# exception during the wait. NOUS_CLIENT_CAP sets the cap at import; 0
+# turns it off. docs/API_CLIENT_CAP.md.
+import ipaddress as _s466_ipaddress  # noqa: E402
+import hmac as _s466_hmac  # noqa: E402
+import secrets as _s466_secrets  # noqa: E402
+
+_S466_CAP_CODES: dict = {
+    "compile": "CAP001", "verify": "CAP002", "skill_export": "CAP003",
+    "run": "CAP004", "diff": "CAP005",
+}
+_S466_TRIP_EVERY_S: float = 60.0
+
+
+def _s466_parse_cap(value, pool):
+    default = max(2, int(pool) // 4)
+    if value is None:
+        return default, False
+    try:
+        n = int(str(value).strip())
+    except ValueError:
+        return default, True
+    if n < 0:
+        return default, True
+    return n, False
+
+
+_S466_CLIENT_CAP, _s466_cap_warn = _s466_parse_cap(
+    os.environ.get("NOUS_CLIENT_CAP"), _S465_POOL_SIZE)
+if _s466_cap_warn:
+    logger.warning(
+        "client_cap NOUS_CLIENT_CAP is not an integer >= 0; "
+        "the default %d holds", _S466_CLIENT_CAP)
+_s466_table: dict = {}
+_s466_lock = _s465_threading.Lock()
+_s466_salt = _s466_secrets.token_bytes(16)
+_s466_trip_last: float = float("-inf")
+
+
+def _s466_client_key(request):
+    host = get_remote_address(request)
+    try:
+        ip = _s466_ipaddress.ip_address(host)
+    except ValueError:
+        return host
+    if ip.version == 6 and ip.ipv4_mapped is not None:
+        ip = ip.ipv4_mapped
+    if ip.is_loopback:
+        return None
+    if ip.version == 6:
+        return str(_s466_ipaddress.ip_network((ip, 64), strict=False))
+    return str(ip)
+
+
+def _s466_hash(key):
+    return _s466_hmac.new(_s466_salt, str(key).encode("utf-8", "replace"),
+                          "sha256").hexdigest()[:8]
+
+
+def _s466_trip(request):
+    global _s466_trip_last
+    if "x-forwarded-for" not in request.headers:
+        return
+    now = time.monotonic()
+    with _s466_lock:
+        if now - _s466_trip_last < _S466_TRIP_EVERY_S:
+            return
+        _s466_trip_last = now
+    logger.warning(
+        "client_cap tripwire: a loopback client key carried "
+        "X-Forwarded-For; client keys may have collapsed")
+
+
+def _s466_refuse(route, key, cap):
+    code = _S466_CAP_CODES[route]
+    error_id = uuid.uuid4().hex
+    logger.warning(
+        "client_cap route=%s code=%s cap=%d client=%s error_id=%s",
+        route, code, cap, _s466_hash(key), error_id)
+    return HTTPException(status_code=429, detail={
+        "error": "%s not started: this client already has %d requests "
+                 "in flight" % (route, cap),
+        "code": code, "error_id": error_id, "work_started": False,
+        "scope": "client"}, headers={
+        "Retry-After": str(_S465_RETRY_AFTER_S),
+        "RateLimit-Policy": '"client";q=%d;qu="concurrent-requests"' % cap,
+        "RateLimit": '"client";r=0'})
+
+
+def _s466_take(route, request):
+    key = _s466_client_key(request)
+    if key is None:
+        _s466_trip(request)
+        return None
+    cap = int(_S466_CLIENT_CAP)
+    if cap <= 0:
+        return None
+    with _s466_lock:
+        n = _s466_table.get(key, 0)
+        if n < cap:
+            _s466_table[key] = n + 1
+            return key
+    raise _s466_refuse(route, key, cap)
+
+
+def _s466_give(key):
+    if key is None:
+        return
+    with _s466_lock:
+        n = _s466_table.get(key, 0) - 1
+        if n > 0:
+            _s466_table[key] = n
+        else:
+            _s466_table.pop(key, None)
+
+
+async def _s465_run_budgeted(route: str, fn, *, request):  # __s466_client_cap_v1__
     """Run fn(deadline) on the budget pool. deadline is a monotonic
     time; the reply is 503 BUSY or 503 TIMEOUT as the module header
-    says; any other outcome is fn's own."""
+    says, or 429 CAPn when the request's client key is at its cap;
+    any other outcome is fn's own."""
     budget = float(_S465_BUDGET_S[route])
     timeout_code, busy_code = _S465_CODES[route]
+    key = _s466_take(route, request)
     executor, slots = _s465_get_pool()
     busy_text = route + " not started: no worker was free"
     admit_until = time.monotonic() + float(_S465_ADMIT_WAIT_S)
-    while not slots.acquire(blocking=False):
-        if time.monotonic() >= admit_until:
-            raise _s465_reply(route, busy_code, busy_text, budget, False,
-                              retry_after=True)
-        await asyncio.sleep(0.02)
+    try:
+        while not slots.acquire(blocking=False):
+            if time.monotonic() >= admit_until:
+                raise _s465_reply(route, busy_code, busy_text, budget,
+                                  False, retry_after=True)
+            await asyncio.sleep(0.02)
+    except BaseException:
+        _s466_give(key)
+        raise
     deadline = time.monotonic() + budget
 
     def _work():
@@ -177,11 +307,13 @@ async def _s465_run_budgeted(route: str, fn):
             return fn(deadline)
         finally:
             slots.release()
+            _s466_give(key)
 
     try:
         cf = executor.submit(_work)
     except BaseException:
         slots.release()
+        _s466_give(key)
         raise
     afut = asyncio.wrap_future(cf)
     afut.add_done_callback(lambda f: f.cancelled() or f.exception())
@@ -190,6 +322,7 @@ async def _s465_run_budgeted(route: str, fn):
     except asyncio.TimeoutError:
         if cf.cancel():
             slots.release()
+            _s466_give(key)
             raise _s465_reply(route, busy_code, busy_text, budget, False,
                               retry_after=True)
         raise _s465_reply(
@@ -376,7 +509,8 @@ async def compile_source(request: Request, body: CompileRequest, x_api_key: Opti
 
     try:
         result = await _s465_run_budgeted(  # __s465_true_deadline_v1__
-            "compile", lambda _d: _compile_pipeline(body.source))
+            "compile", lambda _d: _compile_pipeline(body.source),
+            request=request)  # __s466_client_cap_v1__
         return result
     except HTTPException:
         raise
@@ -476,7 +610,8 @@ async def verify_source(request: Request, body: VerifyRequest, x_api_key: Option
             }
 
         result = await _s465_run_budgeted(  # __s465_true_deadline_v1__
-            "verify", lambda _d: _do_verify())
+            "verify", lambda _d: _do_verify(),
+            request=request)  # __s466_client_cap_v1__
         return result
     except HTTPException:
         raise
@@ -627,7 +762,8 @@ async def skill_export_endpoint(
                         )
             return buf.getvalue(), exported.skill_name
         zip_bytes, skill_name = await _s465_run_budgeted(  # __s465_true_deadline_v1__
-            "skill_export", _do_export)
+            "skill_export", _do_export,
+            request=request)  # __s466_client_cap_v1__
         return Response(
             content=zip_bytes,
             media_type="application/zip",
@@ -1453,7 +1589,8 @@ async def run_source(request: Request, body: RunRequest, x_api_key: Optional[str
             }
 
         result = await _s465_run_budgeted(  # __s465_true_deadline_v1__
-            "run", lambda _d: _do_run())
+            "run", lambda _d: _do_run(),
+            request=request)  # __s466_client_cap_v1__
         return result
     except HTTPException:
         raise
@@ -2377,7 +2514,8 @@ async def diff_source(request: Request, body: DiffRequest, x_api_key: Optional[s
             return _transform_diff_for_ide(raw, old_program, new_program)
 
         result = await _s465_run_budgeted(  # __s465_true_deadline_v1__
-            "diff", lambda _d: _run_diff())
+            "diff", lambda _d: _run_diff(),
+            request=request)  # __s466_client_cap_v1__
         # __DIFF_SIDE_RESPONSE_LABELS_v1__
         from nous_api import render_diff_side
         result["original_label"] = render_diff_side(body.original_side)
