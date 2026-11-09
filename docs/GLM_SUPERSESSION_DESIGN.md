@@ -30335,3 +30335,339 @@ document itself.
                        command fed by a heredoc carries no other redirect
                        of its stdin; a command that must not read stdin
                        takes "< /dev/null" and no heredoc.
+
+  - S473 the number the operator gave the closing entry of the seat S472,
+    written by it: D474's landing; RATE001, the object the operator
+    brought: its reads, its Gate, his rulings, the change with its tests
+    and mutants, its landing by the push rule, nous-api restarted, and its
+    reply measured on A through Cloudflare; the number 473 counted; the
+    resumes; and the codes FG-S472-B to FG-S472-D
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S472,
+    DURING ITS SESSION, with the labels of D450 to D474: READ IN THE SEAT'S
+    CONTAINER, ON A, TESTIMONY, DERIVED, OPERATOR and MEASURED. Times are
+    UTC, on 11-09 of 2026. An operator's time is the time his message was
+    sent; a value ON A carries the clock its command printed. Each paste ON
+    A is a file transcribed from the chat under ona/ in this seat's
+    evidence, named by its digest. Each result named below was written by a
+    script from its command's output. What D474 records is not repeated
+    here. Each suite, control and measurement below evidences; nothing here
+    is a Z3 or Farkas result.
+
+    THE NUMBER. OPERATOR, 23:20Z: 473, for this entry. MEASURED by
+    ns_count473.py (27b6a83a), NUM474's instrument with its targets (473
+    added, 474 among the taken) and its nonce changed, built in one pass
+    and diffed; its predictions NUM473_PREDICTIONS.txt (0bbc4780) written
+    by a script from NUM474's out and derive473_out.txt (ed78b896) before
+    the instrument existed: derive473.py on the seat mirror fetched from
+    GitHub at 23:22:26Z (N11) found, since NUM474's run at 8458ad96, 5
+    paths, no blob gone, 5 new and 2 commits whose messages equal D474's
+    and RATE001's pinned messages, and the branches s472-d474 and
+    s472-rate001. Fetched again at 23:23:48Z (N12), nothing new: main
+    d3666df0, 174 refs, 1079 commits, 70 annotated tags, 3230 distinct
+    blobs. 473 counted zero in the six forms, and the pass blind to case
+    found no hit outside a hexadecimal run, in those blobs, every commit
+    message and the tag messages; the K1 rows of the eleven taken numbers
+    and the nine control rows held as derived: 28 rows, 27 held, 0 DIFF, 1
+    read, FREE (rec_num473_out.txt d82a417f). Two controls, an anchor
+    planted in the count's output and an orphan ref planted in a local copy
+    of the mirror, each NOT FREE on the rows its amendment named before it
+    ran (NUM473_RESULTS.txt ff42b815). The bare word 473 in 8 blobs, in no
+    message. The count cannot see a session that wrote nothing to the tree,
+    a commit message or a tag. The tool that appends this entry refuses
+    unless the header S473, the anchor D473-, the marker of 473 and the
+    codes below still count zero in the document when it runs.
+
+    D473-1  D474 LANDED, BY THIS SEAT. Its predictions D474_PREDICTIONS.txt
+            (fc39a40a) hashed before its tools, written from D471's in one
+            simultaneous pass and diffed: land_d474.py (da8d1947),
+            verify_d474.sh (7e0b8d1e) and fflive_d474.sh (17d1c104); their
+            fixture, 21 cases and 11 mutants killed (d474/fx_d474_out.txt
+            fd238256). OPERATOR, 11:27Z: pame for G0; add_repo gave the
+            session push access to contrario/nous, and its clone (N5). L1,
+            local (d474/l1_commit_out.txt 288c3097): the commit d10489e2,
+            one parent 8458ad96, one path, blob 8dc70fbe, the message byte
+            for byte, the claim lint 408 and 0. OPERATOR, 11:30Z: pame for
+            G1; the branch s472-d474 pushed, main 8458ad96
+            (d474/l2_push_branch_out.txt 57789ebd). The commands for A
+            written by a script from G1's output and run first over a pty
+            (d474/reh_d474_out.txt c566e6c2); the G2 reconciler built and
+            controlled before the paste, 9 controls
+            (d474/rec_g2_controls_out.txt 6566b7ac). ON A at 11:36Z
+            (07b9ab56): the scripts found by their sums. OPERATOR, 11:37Z:
+            pame for G2; ON A from 11:38:28Z (82cd75d1): the branch
+            d10489e2, its parent and origin/main 8458ad96, one path, the
+            document 21025ebd; the suite as aetherlang 5313 passed and 13
+            skipped at both, the outcomes 5326 lines and 41998b08 at both,
+            OUTCOME_DIFF 0; the claim lint 408 and 0; 15 legs 0; read by
+            rec_g2_d474.py, 15 held (d474/rec_g2_out.txt cf3a09c5).
+            OPERATOR, 11:50Z: pame for G3; main fast-forwarded to d10489e2
+            (d474/l3_ff_main_out.txt 79fffa76). OPERATOR, 11:55Z: pame for
+            G4; ON A from 11:56:28Z (c688626c): the live tree from 8458ad96
+            to d10489e2, the document 21025ebd, 644, aetherlang's,
+            porcelain 0 before and after, FFLIVE_GREEN; 12 rows held
+            (d474/rec_g4_out.txt b32b098b), their checker's controls read
+            POST HOC. At 11:57:09Z (N6; d474/r1_readback_out.txt f5e3b8e5):
+            main and s472-d474 d10489e2, the document equal to the 8458ad96
+            document followed by the entry, the raw message equal to the
+            message file, 173 refs. No restart: a document.
+
+    D473-2  THE OBJECT: RATE001. OPERATOR, 12:30Z: the object is RATE001,
+            whose 429 body S466's M0 read with no detail and no
+            Retry-After; the work measured and evidenced, as a team of
+            principal engineers, hidden errors and future obstacles found
+            first, with targeted web research and new proposals. READ IN
+            THE TREE at d10489e2: one Limiter with slowapi's defaults; 28
+            routes under a per-minute limit; the handler answered every
+            refusal of the limiter with 429 and two members, "error" and
+            "code", and no header; every other refusal of the API (AUTH001,
+            BUSYn, TIMEOUTn, CAPn, SB00n) an HTTPException under "detail",
+            CAPn with Retry-After and the draft's two fields. RATE001 was
+            the one envelope apart, with no error_id, no Retry-After and no
+            log line. No reader of its body in the tree.
+
+    D473-3  THE READS. Web research W1 to W7, each named before it ran: the
+            slowapi 0.1.9 wheel from PyPI (N7); the IETF datatracker,
+            draft-ietf-httpapi-ratelimit-headers-11 of 2026-05-23, a WG
+            Document, I-D Exists, expiring 2026-11-24, an early review of
+            -10 "Not ready"; GitHub's and Anthropic's pages on 429, each
+            giving seconds; Cloudflare's pages, silent on an origin's
+            Retry-After. READ IN THE SOURCE of slowapi 0.1.9:
+            headers_enabled makes its wrapper raise for an endpoint that
+            returns no Response and takes no response parameter; on a
+            refusal view_rate_limit holds the limit and its key; the
+            limiter's warning names the key and goes to a BlackHoleHandler.
+            RL1, a read ON A at 12:39:35Z (aa1778b2): limits 5.8.0, slowapi
+            0.1.9, starlette 1.0.0, fastapi 0.136.1; no .env in the unit's
+            directory; 16 variables in the process environment, none
+            RATELIMIT_; no nous-api line in the journal for M0's minute. In
+            the seat's container, in a venv with A's versions (N8, PyPI):
+            MRL1 (rate001/mrl1_out.txt 92998c6a) the 429 with only
+            content-length and content-type, the limit and key on the
+            request, the window's reset; MRL2 (9ec0c647) 150 requests
+            FastAPI refused with 422, none counted against the route's
+            limit of 100 a minute, then 100 programs the compiler refused,
+            each 422 COMPILE001, each logging a full traceback at ERROR and
+            each counted, the next 429 (F9); MRL3 (352af047) the key style
+            "url": 250 template names from one key, none answered 429, 250
+            keys in memory (F10).
+
+    D473-4  THE GATE, AND THE OPERATOR'S RULINGS. RATE001_GATE.txt
+            (5688c5fa): C-A, slowapi's headers_enabled, rejected for the
+            wrapper's raise; C-B chosen: the handler alone computes
+            Retry-After from the limit and the window the limiter left on
+            the request, clamped to between 1 and the window, the whole
+            window when the window cannot be read, and sends the draft's
+            RateLimit-Policy and RateLimit; F1 to F9; invariants R1 to R11;
+            mutants K1 to K12. OPERATOR, 12:46Z: E1, the body additive,
+            "error" and "code" unchanged at the top level. 12:47Z: one log
+            line per scope per 60 s at most, the count refused since and
+            the salted hash of the key, never the address. 12:48Z: the
+            policy's name "route". 12:50Z: F10 in the same change.
+            RATE001_GATE_AMENDMENT_1.txt (55c79c1c), before any test or
+            code: key_style "endpoint", R12, R13, the controls X1 to X3,
+            K13.
+
+    D473-5  THE CHANGE, AND ITS EVIDENCE. tests/test_s472_rate001.py
+            (068da739), 16 tests, X1 to X3, R1 to R10, R12 to R14;
+            RATE001_PREDICTIONS.txt (9d590970) hashed before the red run
+            and before any code. In the container, as a user made for it,
+            the tree refusing pytest as root: RED twice at d10489e2, 13
+            failed and the 3 controls passed; the kit applied; GREEN twice,
+            16 passed; K1 to K13 each killed as predicted
+            (rate001/mutants_out2.txt afbc7608). A PREDICTION MISSED: the
+            suite at the change turned 3 tests of
+            tests/test_templates_save.py from passed to failed, its 11th
+            PUT answered 429 RATE001 from one bucket of 10 a minute: the
+            test file drove a limited route with the limiter on and had
+            passed on the per-URL keying (FG-S472-B).
+            RATE001_AMENDMENT_2.txt (4b9c67e8), POST HOC and said so,
+            before any further change: that file's fixture disables the
+            limiter, and the families are chosen by route. After it: the 25
+            files that request a limited path, 396 passed at the parent and
+            at the change, outcome lines equal; the suite's outcome lines
+            the parent's plus the 16 new PASSED lines, none removed
+            (rate001/suite_diff2.txt bed45e5c); the claim lint 409 and 0.
+            The apply writes the module last, refuses when an anchor is not
+            found once or the docs directory is absent, and writes nothing
+            then: 8 cases (rate001/fx_apply_out.txt af597aec).
+
+    D473-6  RATE001 LANDED, BY THE PUSH RULE. R_LAND_PREDICTIONS.txt
+            (073550a0) hashed before the tools, written from S466's in one
+            pass and diffed: land_r.py (ecc1cd45), verify_r.sh (6ec5699f)
+            and fflive_r.sh (20c226ae); their fixture, 22 cases and 12
+            mutants killed (rate001/landR/fx_r_out.txt f9a5e031). L1, local
+            (rate001/landR/l1_out.txt 2f6cbbd9): the commit d3666df0, one
+            parent d10489e2, four paths, A docs/API_RATE001.md, M
+            nous_api_server.py, A tests/test_s472_rate001.py and M
+            tests/test_templates_save.py, blobs ab34a7f2, 224127d8,
+            5cbaaa8f and 4996dcd3, the message byte for byte
+            (rate001/r_message.txt 95c34e92), the claim lint 409 and 0.
+            OPERATOR, 13:18Z: pame for G1; the branch s472-rate001 pushed,
+            main d10489e2 (rate001/landR/l2_out.txt 1b88e05e). The commands
+            by a script from G1's output, rehearsed over a pty
+            (rate001/landR/reh_r_out.txt 073381ff); the G2 reconciler, 17
+            rows, and 10 controls before the paste
+            (rate001/landR/rec_g2_controls_out.txt 83b4325b). ON A at
+            13:23Z (e24c3a53): the scripts found by their sums. OPERATOR,
+            13:24Z: pame for G2; ON A from 13:24:49Z (0b993598), as
+            aetherlang in nous-verify: the branch d3666df0, its parent and
+            origin/main d10489e2, the four paths at their pins; the suite
+            at the parent 5313 passed and 13 skipped, outcomes 5326 lines
+            and 41998b08; at the branch 5329 passed and 13 skipped,
+            outcomes 5342 lines and d5b4a260; OUTCOME_DIFF added 16,
+            removed 0, each added a PASSED line of the new file; the claim
+            lint 409 and 0; 19 legs 0; 17 rows held
+            (rate001/landR/rec_g2_out.txt d999aa92). OPERATOR, 13:38Z: pame
+            for G3; main fast-forwarded to d3666df0
+            (rate001/landR/l3_out.txt c0804166). OPERATOR, 13:44Z: pame for
+            G4; ON A at 13:45:54Z (3baaa0d1): the live tree from d10489e2
+            to d3666df0, the four blobs at their pins, each 644 and
+            aetherlang's, porcelain 0 before and after, FFLIVE_GREEN; 12
+            rows held (rate001/landR/rec_g4_out.txt 1d3f2a18). At 23:18:50Z
+            (N10; rate001/landR/readback_out.txt a69c7237): main and
+            s472-rate001 d3666df0, its parent d10489e2, the four blobs at
+            their pins, the raw message equal to the message file, 174
+            refs, no other ref moved.
+
+    D473-7  NOUS-API RESTARTED. G5_PREDICTIONS.txt (35f94673) hashed before
+            the command, its stubs and its checker; the command cmd/G5R.txt
+            (d706c2bd), S466's G5 with nine legs inserted and nothing else,
+            rehearsed over a pty in a private mount in three cases, each
+            leg's negative shown; its checker, 16 rows, and four controls.
+            OPERATOR, 13:54Z: pame for G5. ON A at 13:55:41Z (f8aa5f15):
+            MainPID 3101869 to 2424513, active, running, aetherlang; health
+            200 after 2 s, 8.0.0; in the new process's environment no
+            NOUS_CLIENT_CAP and no RATELIMIT_; no .env in the unit's
+            directory; the unit names NOUS_ENV_FILE, the file is there, and
+            it holds no RATELIMIT_ line and no NOUS_CLIENT_CAP= line; the
+            module's mtime 13:45:55Z, the fast-forward, before the restart;
+            no RateLimit field and no Retry-After on a 200; compile,
+            verify, run and diff 200; since the restart no traceback,
+            deadline, client_cap or rate_limit line in its journal; 16 rows
+            held (rate001/landR/rec_g5_out.txt 72cfa062).
+
+    D473-8  RATE001'S REPLY, MEASURED ON A THROUGH CLOUDFLARE. M-R's
+            predictions (rate001/mr/MR_PREDICTIONS.txt a7e6003c) hashed
+            before its script; its fixture, four cases and three mutants
+            killed (rate001/mr/fx_mr_out.txt f40e26ea); its command
+            rehearsed over a pty; its checker, 12 rows, and four controls.
+            OPERATOR, 23:14Z (01:14 on 11-10 in Athens): pame. ON A from
+            23:15:49Z to 23:16:51Z (ac80d3f8), N9: of 230 HTTPS GETs of
+            /v1/health from A over IPv4, 200 answered 200 and 30 answered
+            429, the first at the 201st; the next, over HTTP/2: 429,
+            application/json, server cloudflare, cf-cache-status DYNAMIC,
+            with retry-after 52, ratelimit-policy "route";q=200;w=60 and
+            ratelimit "route";r=0;t=52, as the origin sent them; the body's
+            "code" RATE001, an error_id of 32 hex, retry_after 52, limit
+            "200 per 1 minute", scope "route" and work_started false. A GET
+            at 2 s before the Retry-After was over: 429; at 1 s after: 200.
+            The loopback key 200 after that: not a test of the keys apart,
+            as M0's was. The journal since the start: one rate_limit line
+            for the 32 refusals, scope nous_api_server.health, the limit,
+            the key's hash, refused=1, no address; slowapi's own warning 0;
+            no other nous-api line. 12 rows held (rate001/mr/MR_RESULTS.txt
+            5331f761). MEASURED once, over IPv4 and HTTP/2, from A.
+
+    D473-9  THE RESUMES. READ IN THE SEAT'S CONTAINER, after those D474
+            names: the container started again at about 11:27:33Z,
+            11:49:14Z, 11:55:21Z, 12:28:22Z, 13:33:45Z, 13:38:27Z, 13:44Z
+            and 23:15Z, each as an operator's message arrived. Each was
+            read in a command of its own, and the pins named in the log
+            were checked equal before any other act, with one altered as
+            the negative: 46, 59, 65 and 69, then the 22 of RATE001 with
+            them. Once, at 13:44Z, the reading of the command for G4 and a
+            log line ran in the same turn as the uptime read, before it was
+            seen; the pins came after (FG-S466-A, its order slipped by one
+            act).
+
+    D473-10 WHAT THE SEAT BROKE, AND CORRECTED. The test file the suite
+            showed failing, a prediction missed and amended POST
+            HOC (FG-S472-B). The first apply for the landing held its doc
+            under the name of the doc's path constant and wrote the module
+            before the doc's write failed, a half write in its fixture;
+            fixed, the module written last and the docs directory checked
+            first, with a case for it. Values typed instead of
+            read (FG-S464-D, again): MRL1's limit counts from an earlier
+            grep; a digest of a tool typed wrong in the landing's
+            predictions, seen before they were hashed; a placeholder in a
+            pin list, replaced before it ran; the reconciler predictions'
+            row count, 16 for 17 (FG-S465-B), amended before its controls
+            ran; M-R's results writer, its first draft typing 31 refusals
+            where the paste gives 32. RL1's environment leg masked by its
+            pipeline, shown by its fixture and amended before its next run.
+            A double zero (FG-S472-D), twice, before any run. The read of
+            RATE001's settings, narrower than the Gate said (FG-S472-C),
+            closed by G5's read. A directory counted once by ls and once by
+            os.listdir, three apart, the dotfiles: named, not a write.
+            Lines refused by their writer for width, each split.
+
+    D473-11 WHAT THIS SEAT WROTE AND READ, TO THIS ENTRY'S PIN. To the
+            repository: D474 (d10489e2) and RATE001 (d3666df0) on main, and
+            the branches s472-d474 and s472-rate001. ON A: in /root the
+            operator's uploads, the sums file, D474's and RATE001's kits,
+            rl1_read.sh and mr_429.sh; the sums checks and RL1, reads; G2
+            twice as aetherlang in nous-verify, with the writes its script
+            names; G4 twice, the live tree fast-forwarded as aetherlang;
+            G5, nous-api restarted by root; M-R, N9, a read that cost A's
+            key a minute of /v1/health. On B: RULE 0's ssh reads only. To
+            /var/www, PyPI, Rekor and the Project: nothing. Seat network,
+            each named before it ran: GitHub for the seat mirror, a clone
+            and three fetches for D474's number (N1 to N4), the session
+            clone (N5), the pushes of G1 and G3 twice, and fetches (N6, N10
+            to N12); PyPI for slowapi's wheel (N7) and the seat's venv
+            (N8); the web research W1 to W7. No agent.
+
+    D473-12 WHAT STAYS OPEN. This entry, landed by the push rule; the next
+            entry records its landing, the closing RULE 0 of S472 and its
+            seal. From RATE001: F9, a request FastAPI refuses with 422 not
+            counted against its route's limit, and each program the
+            compiler refuses logging a full traceback at ERROR, 4 such
+            paths in the module, each its own ruling; the draft's expiry on
+            2026-11-24, its two fields built in one function; E2, the
+            "detail" envelope, not ruled; no RateLimit field on an answer
+            not refused; IPv6 and a path not through Cloudflare, not
+            measured; limits not pinned (slowapi>=0.1.9 in pyproject). The
+            rest of D474-9's list stands, less RATE001's body and
+            Retry-After, now answered. The branches of D474-9 and s472-d474
+            and s472-rate001 on GitHub (174 refs). Hygiene on A: the kits
+            in /root, the temp HOMEs under /tmp; the clone nous-verify
+            stays, for the next landing. 459 by no one this seat knows of.
+
+    FINDINGS
+
+            FG-S472-B  SEAT. A FAMILY CHOSEN BY NAME MISSES A FILE THAT
+                       DRIVES THE ROUTE. RATE001's test families were
+                       chosen by file names; the file
+                       tests/test_templates_save.py requests a limited
+                       route (PUT /v1/templates/{name}, 10 a minute) with
+                       the limiter on, and passed only on slowapi's per-URL
+                       keying. Keyed by route, its 11th PUT was answered
+                       429 and three of its tests failed in the container's
+                       suite, a prediction missed. A change to the limiter
+                       or to a limited route chooses its families by route:
+                       every test file that requests a limited path, run at
+                       the parent and at the change.
+
+            FG-S472-C  SEAT, AND S466. A PROCESS'S ENVIRONMENT IS NOT ITS
+                       /proc ENVIRON. nous_api.py loads NOUS_ENV_FILE, else
+                       the .env above the tree, with load_dotenv at import,
+                       before the Limiter is built; slowapi reads its
+                       RATELIMIT_ settings from os.environ through
+                       starlette's Config; /proc/PID/environ shows the
+                       environment of the exec only. RL1 read the unit's
+                       directory and the environ, so the Gate's "no
+                       RATELIMIT_ variable" covered less than it said, and
+                       so did S466's G5 line that the default cap then
+                       holds. G5 read the file the unit names: no
+                       RATELIMIT_ line and no NOUS_CLIENT_CAP= line. A read
+                       of a process's settings names every source it loads.
+
+            FG-S472-D  SEAT. A COUNT WITH A FALLBACK PRINTS TWO LINES. In a
+                       command substitution, "grep -c P F || echo 0" prints
+                       0 twice when P counts zero: grep prints 0 and exits
+                       1, and the fallback runs. Found in the design of
+                       G5's env-file legs and in M-R's RA_EQ_T leg, each
+                       before any run, each written as if and else. A
+                       count's fallback branches on the condition that
+                       would fail it, never on the count's own exit code.
