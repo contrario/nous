@@ -39,8 +39,9 @@ def no_keys(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-def client() -> TestClient:
-    from nous_api_server import app
+def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
+    from nous_api_server import app, limiter
+    monkeypatch.setattr(limiter, "enabled", False)  # __s472_rate001_reply_v1__
     return TestClient(app)
 
 

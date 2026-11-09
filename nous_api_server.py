@@ -81,7 +81,7 @@ def _register_sense_world(*_args: object, **_kwargs: object) -> None:
     raise NotImplementedError("_register_sense_world is not implemented")
 
 # Rate limiter (module-level; server-only)
-limiter = Limiter(key_func=get_remote_address)
+limiter = Limiter(key_func=get_remote_address, key_style="endpoint")  # __s472_rate001_reply_v1__
 
 # Ensure NOUS_DIR is on sys.path for internal module imports below
 if str(NOUS_DIR) not in sys.path:
@@ -350,11 +350,98 @@ app = FastAPI(
 
 app.state.limiter = limiter
 
+# __s472_rate001_reply_v1__
+# S472: RATE001 tells the truth about when to come back. A route's
+# per-minute limit refused the request; slowapi 0.1.9 leaves the limit
+# that failed and its [key, scope] on request.state.view_rate_limit.
+# Retry-After is the seconds until the limiter's window for that key
+# resets, rounded up and clamped to [1, the limit's window]; the whole
+# window when the window cannot be read. The body keeps "error" and
+# "code" at the top level as they were (OPERATOR RULING, 11-09: E1) and
+# adds error_id, retry_after, limit, scope and work_started.
+# RateLimit-Policy and RateLimit are the fields of
+# draft-ietf-httpapi-ratelimit-headers-11, an Internet-Draft, built in
+# _s472_ratelimit_fields alone. One warning line per scope per 60 s at
+# most, the client key hashed as the cap hashes it. The Limiter's
+# key_style "endpoint" keys a limit by its route, not its URL.
+# docs/API_RATE001.md.
+import math as _s472_math  # noqa: E402
+
+_S472_POLICY: str = "route"
+_S472_LOG_EVERY_S: float = 60.0
+_S472_LOG_SCOPES_MAX: int = 256
+_s472_log_state: dict = {}
+_s472_log_lock = _s465_threading.Lock()
+_s472_clock = time.monotonic
+
+
+def _s472_ratelimit_fields(policy, quota, window, remaining, reset_in):
+    return {
+        "RateLimit-Policy": '"%s";q=%d;w=%d' % (policy, quota, window),
+        "RateLimit": '"%s";r=%d;t=%d' % (policy, remaining, reset_in),
+    }
+
+
+def _s472_window(request, exc):
+    item, args = None, None
+    view = getattr(request.state, "view_rate_limit", None)
+    if view:
+        item, args = view[0], list(view[1])
+    if item is None:
+        item = exc.limit.limit
+    window = max(1, int(item.get_expiry()))
+    n = window
+    if args:
+        try:
+            stats = limiter.limiter.get_window_stats(item, *args)
+            n = int(_s472_math.ceil(float(stats[0]) - time.time()))
+        except Exception:
+            n = window
+    n = min(max(1, n), window)
+    key = args[-2] if args and len(args) >= 2 else None
+    scope = str(args[-1]) if args else "?"
+    return item, key, scope, n, window
+
+
+def _s472_log(scope, key, limit_text, error_id):
+    now = _s472_clock()
+    with _s472_log_lock:
+        if (scope not in _s472_log_state
+                and len(_s472_log_state) >= _S472_LOG_SCOPES_MAX):
+            _s472_log_state.clear()
+        state = _s472_log_state.setdefault(scope, [float("-inf"), 0])
+        state[1] += 1
+        if now - state[0] < _S472_LOG_EVERY_S:
+            return
+        refused = state[1]
+        state[0], state[1] = now, 0
+    logger.warning(
+        "rate_limit scope=%s code=RATE001 limit=%s client=%s refused=%d "
+        "error_id=%s", scope, limit_text, _s466_hash(key), refused,
+        error_id)
+
+
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    error_id = uuid.uuid4().hex
+    try:
+        item, key, scope, n, window = _s472_window(request, exc)
+        limit_text, quota = str(item), int(item.amount)
+    except Exception:
+        key, scope, n, window, limit_text, quota = None, "?", 60, 60, "?", 0
+    try:
+        _s472_log(scope, key, limit_text, error_id)
+    except Exception:
+        pass
+    headers = {"Retry-After": str(n)}
+    headers.update(_s472_ratelimit_fields(_S472_POLICY, quota, window, 0, n))
     return JSONResponse(
         status_code=429,
-        content={"error": "Rate limit exceeded", "code": "RATE001"},
+        content={"error": "Rate limit exceeded", "code": "RATE001",
+                 "error_id": error_id, "retry_after": n,
+                 "limit": limit_text, "scope": _S472_POLICY,
+                 "work_started": False},
+        headers=headers,
     )
 
 
