@@ -30122,3 +30122,216 @@ document itself.
                        measurement needs, an input, a load or a host state,
                        is measured when the Gate is written, not when the
                        measurement is due.
+
+  - S474 the number the operator gave the entry the seat S466 owed, written
+    by the seat S472: D471's landing, the closing RULE 0 of S466 and its
+    seal; the seat S472's opening, the seal checked, the sums check and
+    RULE 0 on A, the numbers 472 and 474 counted and 467 refused as taken;
+    the resumes; and the code FG-S472-A
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S472,
+    DURING ITS SESSION, with the labels of D450 to D471: READ IN THE SEAT'S
+    CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR and MEASURED.
+    Times are UTC, on 11-09 of 2026. An operator's time is the time his
+    message was sent; a value ON A carries the clock its command printed.
+    What S466 did after D471 was pinned is INHERITED from its seal, each
+    value named by the digest of the file in S466_SEAL_EVIDENCE.tgz that
+    holds it; that archive was checked by this seat against the kickoff's
+    digests before any act. Each paste ON A by this seat is a file
+    transcribed from the chat under ona/ in this seat's evidence, named by
+    its digest. Each result named below was written by a script from its
+    command's output. What D471 records is not repeated here. Each suite
+    and control below evidences; nothing here is a Z3 or Farkas result.
+
+    THE NUMBERS. OPERATOR, 10:44Z: 472, for this seat. MEASURED by
+    ns_count472.py (807332aa), NUM471's instrument with its targets (472
+    added, 471 among the taken) and its nonce changed, built in one pass
+    and diffed; its predictions NUM472_PREDICTIONS.txt (dd2e26b7) written
+    by a script from NUM471's out and derive472_out.txt (2e5a6189) before
+    the instrument existed: derive472.py on the seat mirror cloned from
+    GitHub at 10:45:58Z (N1) found, since NUM471's run at 6ddebf81, 1 path,
+    no blob gone, 1 new and 1 commit whose message equals D471's pinned
+    message, and the branch s466-d471. Fetched again at 10:48:09Z (N2),
+    nothing new: main 8458ad96, 172 refs, 1077 commits, 70 annotated tags,
+    3225 distinct blobs. 472 counted zero in the six forms, and the pass
+    blind to case found no hit outside a hexadecimal run, in those blobs,
+    every commit message and the tag messages; the K1 rows of the nine
+    taken numbers and the nine control rows held as derived: 26 rows, 25
+    held, 0 DIFF, 1 read, FREE (rec_num472_out.txt 343d6c3f). Two controls,
+    an anchor planted in the count's output and an orphan ref planted in a
+    local copy of the mirror, each NOT FREE on the rows its amendment named
+    before it ran (NUM472_RESULTS.txt 3e9b1ca2). OPERATOR, 10:53Z: 467, for
+    this entry; not adopted: the same count read 467 taken, its header in 5
+    blobs, its anchor D467- 35 times, the word D467 3 times in 2 commit
+    messages, one of them 1029bd50, D467's own. OPERATOR, 11:03Z: 474.
+    MEASURED the same way by ns_count474.py (cc6c2deb), 472 among the
+    taken, on the mirror fetched at 11:04:10Z (N3) and 11:05:18Z (N4),
+    nothing new since NUM472's run: 27 rows, 26 held, 0 DIFF, 1 read, FREE
+    (rec_num474_out.txt b4ef31f1); its two controls NOT FREE as predicted
+    (NUM474_RESULTS.txt d81e8112). The bare words: 472 in 8 blobs, 474 in 8
+    blobs, neither in a message. The count cannot see a session that wrote
+    nothing to the tree, a commit message or a tag. The tool that appends
+    this entry refuses unless the header S474, the anchor D474-, the marker
+    of 474 and the code below still count zero in the document when it
+    runs.
+
+    D474-1  D471 LANDED. INHERITED from the seal of S466. The tools,
+            written after D471_PREDICTIONS.txt (3e0bfbbb) from D470's in
+            one simultaneous pass (d471/make_tools.py 37e2f1d5):
+            land_d471.py, verify_d471.sh and fflive_d471.sh; their fixture,
+            21 cases and 11 mutants killed (d471/fx_d471_out.txt 63b50366).
+            OPERATOR, 00:38Z on 11-09: pame for G0; L1, local
+            (d471/l1_commit_out.txt 76dcfd44): the commit 8458ad96, one
+            parent 6ddebf81, one path, blob aa36a633, the message byte for
+            byte, the claim lint 408 and 0. OPERATOR, 00:40Z: pame for G1;
+            the branch s466-d471 pushed, main 6ddebf81
+            (d471/l2_push_branch_out.txt 04d41d05). The commands for A
+            written by a script from G1's output and run first over a pty
+            (d471/reh_d471_out.txt 9fd6a5ef); the G2 reconciler built and
+            controlled before the paste, 9 controls
+            (d471/rec_g2_controls_out.txt 6227baa7). ON A at 00:50Z
+            (dabc1913): the scripts found by their sums. OPERATOR, 00:54Z:
+            pame for G2; ON A from 00:58:01Z (ce652dfd): the branch
+            8458ad96, its parent and origin/main 6ddebf81, one path, the
+            document db0c7001; the suite as aetherlang 5313 passed and 13
+            skipped at both, the outcomes 5326 lines and 41998b08 at both,
+            OUTCOME_DIFF 0; the claim lint 408 and 0; 15 legs 0; read by
+            rec_g2_d471.py, 15 held (d471/rec_g2_out.txt cf3a09c5).
+            OPERATOR, 01:08Z: pame for G3; main fast-forwarded to 8458ad96
+            (d471/l3_ff_main_out.txt fc9ad49d). OPERATOR, 01:11Z: pame for
+            G4; ON A from 01:13:13Z (57abb761): the live tree from 6ddebf81
+            to 8458ad96, the document db0c7001, 644, aetherlang's,
+            porcelain 0 before and after, FFLIVE_GREEN. At 01:13:54Z
+            (d471/r1_readback_out.txt 7382d53e): main and s466-d471
+            8458ad96, the document equal to the 6ddebf81 document followed
+            by the entry, the raw message equal to the message file, 172
+            refs. No restart: a document.
+
+    D474-2  THE CLOSING RULE 0 OF S466. INHERITED. Its predictions
+            rule0c466/RULE0C_PREDICTIONS.txt (f14c9436) hashed before its
+            reconciler, reconcile_close466.py (8fccc2c7), the opening
+            reconciler with six values moved, and its controls: P1, the
+            opening paste, DIFF on exactly the six rows that moved, 14
+            held; P2, a paste made by script with those rows set, 20 held;
+            N1 to N3, one row each. ON A from 10:09:39Z to 10:14:34Z on
+            11-09 (a5990bce): 20 rows held (rule0c466/RULE0C_RESULTS.txt
+            0668e7e3): HEAD and ORIGIN 8458ad963bd4; A 8.0.0, MainPID
+            3101869; B 8.0.0, MainPID 3078825; the suite 5313 passed and 13
+            skipped as aetherlang; the claim lint 439 files and 0; PyPI
+            8.0.0; 17 legs 0.
+
+    D474-3  THE SEAL OF S466, AND ITS CHECK. The kickoff named five files
+            by their digests: NOUS_SESSION_466_HANDOFF.md (f3f4ef61),
+            NOUS_S466_OPENER.md (ce34794a), S466_SEAL_EVIDENCE.tgz
+            (ac63e8e5), rule0_owner.sh (2c7665cf, carried unchanged) and
+            S466_SEAL_SHA256SUMS.txt (3a3f4595). The next seat's one-line
+            sums check, seal466/C1_next_template.txt (a2e47fd8), was
+            rehearsed by S466 over a pty in three cases
+            (seal466/c1n_out.txt fa93b0ef). READ IN THE SEAT'S CONTAINER by
+            this seat from 10:23Z: each of the five attachments found by
+            its digest, one each, and a digest of zeros found none; the
+            sums file equal to the kickoff's other four rows; the archive
+            listed before it was extracted, 501 entries, 449 files and 52
+            directories, no absolute path and no parent step; its
+            EV_SHA256SUMS.txt 448 OK and 0 not, the files listed equal to
+            the files present; a copy of one file with a byte appended did
+            not match; the 448 prefixes in the handoff's section 9 equal to
+            the inner sums (tools/hcheck.py 73dadb48).
+
+    D474-4  THE SEAT S472 OPENS. OPERATOR, 10:25Z: no other lane holds the
+            tree or the hosts. The sums check c1/C1.txt (5df2e557), the
+            template with the kickoff's digest filled in twice by a script
+            and diffed; its predictions (e5e23e79) hashed before it was
+            rehearsed in an interactive bash over a pty in five cases, the
+            sums renamed, absent, a script altered, two copies and the full
+            set, each as predicted (c1/reh_c1_out.txt 71e1e8c4). ON A at
+            10:28Z (c9063852), its command line equal to c1/C1.txt: FOUND
+            S466_SEAL_SHA256SUMS.txt, FOUND_COUNT 1, rule0_owner.sh OK, RC
+            0; a read.
+
+    D474-5  RULE 0 ON A. Its predictions rule0/RULE0_PREDICTIONS.txt
+            (1919018f), the opener's EXPECTED, equal value for value to the
+            closing predictions of S466, hashed before the reconciler's
+            copy (rule0/reconcile.py, reconcile_close466.py byte for byte),
+            its controls and the rehearsal: S466's closing paste, 20 held;
+            seven pastes made by script, N1 to N7, one change each, each
+            DIFF on exactly the rows predicted; the command rule0/C2.txt,
+            the seal's byte for byte, rehearsed over a pty in three cases.
+            OPERATOR, 10:30Z: pame for RULE 0. ON A from 10:31:13Z to
+            10:36:08Z (f24c69e6), its command line equal to C2.txt: 20 rows
+            held, 0 DIFF (rule0/RULE0_RESULTS.txt 220d1587): HEAD and
+            ORIGIN 8458ad963bd4, the log as S466 left it, porcelain 0;
+            v8.0.0 peeled to 580c28f43e6d; A 8.0.0, MainPID 3101869, its
+            start derived 00:01:09Z; B 8.0.0 at 580c28f43e6d, its porcelain
+            the untracked .venv/ only, MainPID 3078825; the floor 3912; the
+            suite 5313 passed, 13 skipped and 11 warnings in 282.92 s as
+            aetherlang, HOME_FILES 0, PORCELAIN_AFTER 0; the claim lint 439
+            files and 0; sidecars 265 and 0; the mirror CLEAN, 569 tracked,
+            4 orphans; the registry logged, 154 entries, its anchor
+            174366343, repo and served 7e6ef6629ea0e7e5; the release VSA
+            3a3bab3f6492113d at both; PyPI 8.0.0; Asklepios three nous rows
+            healthy, 0 fails, at 10:36:08Z; the integrity timer's last run
+            10:30:53Z, success, CLEAN; 17 legs 0, RULE0_RC 0. Nothing moved
+            since the seal of S466.
+
+    D474-6  THE RESUMES. READ IN THE SEAT'S CONTAINER: the container
+            started at 10:19:58Z, before the kickoff was read, and again at
+            about 10:40:22Z and 11:03:03Z, each as an operator's message
+            arrived. Each was read in a command of its own before the next
+            act, and the pins named in the log were checked equal, 15 and
+            then 31, with one altered as the negative.
+
+    D474-7  WHAT THE SEAT BROKE, AND CORRECTED. The check of the pins after
+            the resume of 10:40Z held a stray cat that read the tool's
+            stdin; it waited 120 s and was stopped, having read nothing.
+            Twice a command fed by a heredoc carried a later "< /dev/null":
+            at 10:43:05Z the log took one empty line, which the next line
+            names; at 11:03Z a writer read nothing and wrote
+            nothing (FG-S472-A). The reconciler's row count was first set
+            against the number of prediction lines, 19, where the
+            predictions hold 20 rows in 19 lines, the LEGS line holding
+            two; mapped by script before the results file was
+            written (FG-S465-B, again). The handoff check's parser was
+            fixed twice before its clean run, and the first compare of
+            listed and present files read the ./ prefix of the sums as a
+            difference; each the seat's own instrument. Lines refused by
+            their writer for width, each split.
+
+    D474-8  WHAT THIS SEAT WROTE AND READ, TO THIS ENTRY'S PIN. To the
+            repository: nothing before this entry. ON A: in /root the
+            operator's upload of the sums file; the sums check, a read;
+            RULE 0, with the writes it names, origin's refs and the index,
+            ignored bytecode and a temp HOME under /tmp, as aetherlang. On
+            B: RULE 0's ssh reads only. To /var/www, PyPI, Rekor and the
+            Project: nothing. Seat network, each named before it ran:
+            GitHub for the seat mirror, a clone (N1) and three fetches (N2
+            to N4). No web search, no agent.
+
+    D474-9  WHAT STAYS OPEN. This entry, landed by the push rule; the next
+            entry records its landing. From S466: M1, deferred; P1 again
+            later, counts only; a dark-launch mode for the next limiter;
+            the draft's expiry on 2026-11-24; RATE001's body, with no
+            detail and no Retry-After, its own ruling; a cap per API key, a
+            /48 for larger delegations, a queue fair across keys; IPv6 and
+            a path not through cloudflared, not measured; option (B);
+            option T's residue; the unsensed override; C10 and C11 with the
+            release lane, options (A), T and the cap on main and on A but
+            in no release; the KS2 ruling; the staging Gate. The branches
+            s464-d458, s464-api-a, s464-d467, s465-d468, s465-api-t,
+            s465-d469, s466-d470, s466-client-cap and s466-d471 on GitHub
+            (172 refs). Hygiene on A: the kits in /root, rule0_s438.sh, the
+            temp HOMEs under /tmp; the clone nous-verify stays, for the
+            next landing. 473 not measured by this seat; 459 by no one this
+            seat knows of.
+
+    FINDINGS
+
+            FG-S472-A  SEAT. A COMMAND'S STDIN NAMED TWICE. A command fed
+                       by a heredoc and ending in "< /dev/null" reads
+                       /dev/null: the later redirect wins and the heredoc
+                       is dropped without a word. At 10:43:05Z logadd2.py
+                       appended an empty text, one blank log line; at
+                       11:03Z a writer read nothing and wrote nothing. A
+                       command fed by a heredoc carries no other redirect
+                       of its stdin; a command that must not read stdin
+                       takes "< /dev/null" and no heredoc.
