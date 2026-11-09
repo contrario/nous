@@ -29791,3 +29791,334 @@ document itself.
                        message the seat reads PID 1's start in a command of
                        its own, before any other act, and a line about a
                        resume is written only from that output.
+
+  - S471 the number the operator gave the entry that closes the seat S466,
+    the entry that records D470's landing, the reads E12, E12b and E12c of
+    the address the limiter keys on, M0, the per-client cap from its Gate
+    to its landing on A and nous-api's restart, the measure M1 deferred and
+    the passive read P1, the number 471, the resumes after D470, and the
+    codes FG-S466-B to FG-S466-D
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S466,
+    DURING ITS SESSION, with the labels of D450 to D470: READ IN THE SEAT'S
+    CONTAINER, ON A, INHERITED, TESTIMONY, DERIVED, OPERATOR and MEASURED.
+    Times are UTC, on 11-07 to 11-09 of 2026. An operator's time is the
+    time his message was sent; a value ON A carries the clock its command
+    printed. Each paste ON A is a file transcribed from the chat under ona/
+    in the seal of S466, named by its digest. The seat's running log holds
+    each step in the order it ran. Each result named below was written by a
+    script from its command's output. What D470 records is not repeated
+    here. Each suite and mutant below evidences; nothing here is a Z3 or
+    Farkas result.
+
+    THE NUMBER. OPERATOR, 00:21Z on 11-09: 471, for this entry. MEASURED by
+    ns_count471.py (93c03e2d), NUM470's instrument with its targets (471
+    added, 470 among the taken) and its nonce changed, built in one pass
+    and diffed; its predictions NUM471_PREDICTIONS.txt (313ea621) written
+    by a script from NUM470's out and derive471_out.txt (5eee3bde) before
+    the instrument existed: derive471.py (dcaf56ec) on the seat mirror
+    fetched from GitHub at 00:23:21Z (N9) found, since NUM470's run at
+    4fcfe6a8, 4 paths, no blob gone, 4 new, 2 commits whose messages equal
+    the pinned message files, and the branches s466-d470 and
+    s466-client-cap. Fetched again at 00:24:34Z (N10), nothing new: main
+    6ddebf81, 171 refs, 1076 commits, 70 annotated tags, 3224 distinct
+    blobs. 471 counted zero in the six forms in those blobs, every commit
+    message and the tag messages. The pass blind to case found one hit
+    outside a hexadecimal run: "S471" in blob d24153c0,
+    website/docs/GLM_formation_layer_type_rationale.pdf, at byte 3629
+    inside a content stream filtered by ASCII85Decode and FlateDecode,
+    encoded bytes and not text, in main at 4fcfe6a8 too; no earlier count
+    had targeted 471, so its zero was a prior, and the reconciler said NOT
+    FREE (rec_num471_out.txt 90b652bd: 23 held, 1 DIFF, 1 read). Attributed
+    in NUM471_AMENDMENT_2.txt (5dcb12ac), POST HOC, before the controls:
+    nothing takes 471; adopted on that reading and said so to the operator.
+    The K1 rows for 465, 468, 458, 464, 467, 469, 466 and 470 and the nine
+    control rows held as derived. Two controls, an anchor planted in the
+    count's output and an orphan ref planted in a local copy of the mirror,
+    each NOT FREE on the rows predicted; the second's vector of hits
+    outside hex was [3, 1, 0], not the [2, 0, 0] the amendment gave
+    (NUM471_RESULTS.txt 98585991). The bare word 471: 2 hits, both in
+    binary blobs. The count cannot see a session that wrote nothing to the
+    tree, a commit message or a tag. The tool that appends this entry
+    refuses unless the header S471, the anchor D471-, the marker of 471 and
+    the codes below still count zero in the document when it runs.
+
+    D471-1  D470 LANDED. OPERATOR, 11:39Z on 11-07: pame for G0, the resume
+            of 11:39:04Z read first and 74 pins equal. add_repo gave the
+            session push access to contrario/nous; its clone (N4) at
+            4fcfe6a8. L1, local (d470/l1_commit_out.txt 9dbb0af5): the
+            commit cb57fad4, one parent 4fcfe6a8, one path, blob 4820abca,
+            the message byte for byte, the claim lint 407 and 0. OPERATOR,
+            11:40Z: pame for G1; the branch s466-d470 pushed, main 4fcfe6a8
+            (d470/l2_push_branch_out.txt 588495dc). The commands for A were
+            run first in an interactive bash over a pty (09b3ac80). ON A at
+            11:44Z (89507020): the scripts found by their sums. OPERATOR,
+            11:47Z: pame for G2; ON A from 11:47:54Z (64a078a0): the branch
+            cb57fad4, its parent and origin/main 4fcfe6a8, one path, the
+            document 237b4b3b; the suite as aetherlang 5297 passed and 13
+            skipped at both, the outcomes 5310 lines each and equal; the
+            claim lint 407 and 0; 15 legs 0; read by rec_g2_d470.py, built
+            and controlled before the paste (d470/rec_g2_out.txt 09fdf5dd).
+            OPERATOR, 01:07Z on 11-08: pame for G3, the resume of 01:07:23Z
+            read first; main fast-forwarded to cb57fad4
+            (d470/l3_ff_main_out.txt 1dc364b6). OPERATOR, 01:08Z: pame for
+            G4; ON A from 01:08:55Z (58dff1f0): the live tree from 4fcfe6a8
+            to cb57fad4, the document 237b4b3b, 644, aetherlang's,
+            porcelain 0 before and after, FFLIVE_GREEN; checked by a script
+            written after the paste was seen (POST HOC) against the G4 rows
+            hashed before: 12 held. N5 at 01:09:40Z
+            (d470/r1_readback_out.txt 0c2117ad): main and s466-d470
+            cb57fad4, the document equal to the 4fcfe6a8 document followed
+            by the entry, the raw message equal to the message file, 170
+            refs. No restart: a document.
+
+    D471-2  THE ADDRESS THE LIMITER KEYS ON. OPERATOR, 01:41Z on 11-08:
+            E12, S465's open item, as the object. READ IN THE TREE at
+            cb57fad4: the limiter keys on slowapi's get_remote_address;
+            nginx appends its peer to X-Forwarded-For; D407-4's drop-in set
+            FORWARDED_ALLOW_IPS to the two loopback addresses. ON A, E12
+            from 01:55:29Z (52b50ce4): MainPID 1177974 holding the
+            variable; uvicorn 0.46.0 in
+            /usr/local/lib/python3.12/dist-packages, run with --log-level
+            warning, so no access line names a client: not decided
+            (e12/E12_RESULTS.txt 4c030500). N6, that uvicorn's wheel from
+            PyPI: its proxy middleware walks X-Forwarded-For from the
+            right, the first host not trusted wins, all trusted gives the
+            first; eight header chains run on it as predicted
+            (e12/chains_out.txt dc6516d2). ON A, E12b from 02:03:56Z
+            (3c1b9716): A's proxy_headers.py and config.py equal to the
+            wheel's; tcpdump on lo, for its own nonce only, saw
+            X-Forwarded-For carry A's own address and then ::1 for a GET
+            from A over Cloudflare, and a forged first entry before them
+            for a second GET; the wheel's middleware on those bytes keys
+            both on A's own address (e12/e12b_keys_out.txt 600ebc75;
+            e12/E12B_RESULTS.txt a29d7426). ON A, E12c from 02:14:21Z
+            (393c94a2): one slowapi, 0.1.9, in dist-packages;
+            get_remote_address returns request.client.host, or the IPv4
+            loopback address with no client, and reads no header; A holds
+            one global IPv6 address. E12 closed for the Cloudflare path
+            over IPv4, end to end (e12c/E12C_RESULTS.txt 06e7452b); not
+            measured: IPv6, a path not through cloudflared. Each read had
+            its predictions, a fixture with stubs and mutants, and a
+            rehearsal over a pty before it ran; E12 took three amendments,
+            E12b two and E12c one, each hashed before the change it names.
+
+    D471-3  M0. OPERATOR, 09:52Z on 11-08: pame for M0. ON A from 09:58:11Z
+            (e69d00d9): 230 GETs of /v1/health from A over Cloudflare in
+            one curl process, 200 answered 200 and then 30 answered 429,
+            the first at the 201st; the last: HTTP/2 429, application/json,
+            server cloudflare, cf-cache-status DYNAMIC, the body naming
+            RATE001, no Retry-After; a GET from the loopback key after it,
+            200 (m0/M0_RESULTS.txt c4828d1a). Cloudflare passed an origin
+            429 and its JSON body, and the limiter kept A's key apart from
+            the loopback key. MEASURED in the container, Chromium by
+            Playwright (pcc/probe_status.py 459dbbe9): a fetch POST
+            answered 429 or 503 reached the server once and read the
+            status, Retry-After and the body; one answered 408 reached it
+            twice. M0 cost A's own key a minute of /v1/health.
+
+    D471-4  THE CAP'S GATE AND ITS RULING. pcc/PCC_GATE.txt (85d43ff5),
+            09:47Z on 11-08, after option T's code was read and the web
+            research W1 to W4 ran (urllib3 honours Retry-After on 413, 429
+            and 503; Cloudflare passes an origin's 5xx; a /64 a common key
+            for IPv6; RFC 6585 section 4), then W5 to W8 (Stripe's per-user
+            concurrent limiter and its fleet shedder at 503; Google's
+            RESOURCE_EXHAUSTED to 429; Envoy's adaptive concurrency at 503;
+            draft-ietf-httpapi-ratelimit-headers-11). Its amendment 1
+            (bd0b3f17), after M0: the loopback key exempt, with a tripwire;
+            the body's detail shaped as option T's; the draft's
+            RateLimit-Policy and RateLimit fields on the 429; the kill
+            switch NOUS_CLIENT_CAP. OPERATOR, 10:01Z on 11-08, RULING: 429,
+            not 503, for a key at its cap, with A2 to A5; red tests C11 to
+            C14 and mutants K12 to K15 before green. Q2, the cap's value,
+            was not ruled on its own: this seat read the ruling as the
+            Gate's max(2, POOL // 4), 3 on A, and said so to the operator
+            at 10:32Z; that no objection came is not a ruling.
+
+    D471-5  THE BUILD. In the container: /opt/seatvenv466, Python 3.12.3
+            with A's known versions pinned (N8, PyPI); a user seat466 and
+            clones /home/seat466/base and work at cb57fad4.
+            pcc/PCC_PREDICTIONS.txt (dbd63399) before the test file; its
+            amendment 1 (95ceebcd) before any code: F9, a cancellation
+            during the admission wait would keep its count, C16 and K16
+            added. The tests C1 to C16 red at cb57fad4, twice: 13 failed,
+            the 3 controls passed (pcc/red5.txt 0a1a87b1). The change by
+            pcc/src/apply_pcc.py (86cb552b), anchored, its fixture 7 cases
+            (APPLY, SKIP, five REFUSE writing nothing): the module +138
+            lines, docs/API_CLIENT_CAP.md new. Green: 1 failed, 15 passed;
+            C6 asserted 500 for a submit that raised and met 422
+            COMPILE001, the route's own mapping of any exception, its count
+            leg passing; pcc/PCC_AMENDMENT_2.txt (cbf2827a), POST HOC,
+            changed that one assertion before the next run; then 16 passed,
+            twice, and S465's 14 tests passed. The mutants K1 to K17 (K17
+            added: a cap of 0 not honoured) in pcc/PCC_AMENDMENT_3.txt
+            (1f30239e) before they ran: each killed, each failing set as
+            predicted (pcc/mutants_out.txt c381806c). The 21 family files
+            368 passed, their outcomes equal to the parent's
+            (pcc/fam_change.txt f4bab7ab); the suite in the container, its
+            outcome lines the parent's plus the 16 new PASSED lines, none
+            removed (pcc/suite_change.txt 6818f528); the claim lint 408
+            files and 0.
+
+    D471-6  THE CAP LANDED. The landing tools from S465's by
+            landC/make_land_c.py (562f91a9) in one pass, diffed, after
+            landC/C_LAND_PREDICTIONS.txt (34236da1); their fixture 22 cases
+            and 12 mutants killed (landC/fx_c_out.txt dc6dfa43). OPERATOR,
+            23:22Z on 11-08: pame for G0, the resume of 23:22:12Z read
+            first. L1, local (landC/l1_out.txt 03890dee): the commit
+            6ddebf81, one parent cb57fad4, A docs/API_CLIENT_CAP.md, A
+            tests/test_s466_client_cap.py and M nous_api_server.py, blobs
+            4b2e4d17, 57e6039d and 4c6c2c6e, the message byte for byte, the
+            claim lint 408 and 0; a second run ALREADY_COMMITTED. OPERATOR,
+            23:24Z: pame for G1; the branch s466-client-cap pushed, main
+            cb57fad4 (landC/l2_out.txt 2c476470). The commands for A were
+            run first over a pty (landC/reh_c_out.txt 57d742dd). ON A at
+            23:29Z (a6ae8482): the scripts found by their sums. OPERATOR,
+            23:29Z: pame for G2; ON A from 23:31:10Z (f807e4ed): branch,
+            parent, origin/main and the three blobs as pinned, 18 rc lines
+            0; the suite as aetherlang 5297 passed and 13 skipped at
+            cb57fad4, 5313 and 13 at the branch; OUTCOME_DIFF added 16
+            removed 0, each added line PASSED in the new test file; the
+            claim lint 408 and 0; FAILED_LEGS 0. OPERATOR, 23:45Z: pame for
+            G3; main fast-forwarded to 6ddebf81 (landC/l3_out.txt
+            1f28b613). OPERATOR, 23:48Z: pame for G4; ON A from 23:56:04Z
+            (c37d020b): the live tree from cb57fad4 to 6ddebf81, the three
+            blobs as pinned, 644, aetherlang's, porcelain 0 before and
+            after, FFLIVE_GREEN.
+
+    D471-7  THE RESTART AND THE PASSIVE READ. OPERATOR, 23:59Z on 11-08:
+            pame for G5, its command run first over a pty with stubs
+            (landC/reh_g5_out.txt 25728e2e). ON A from 00:01:08Z on 11-09
+            (ee4e0448): MainPID 1177974, S465's G5 start on 11-06,
+            restarted, RESTART_RC 0; the health 200 after 2 s, version
+            8.0.0; MainPID 3101869, active, User aetherlang;
+            NOUS_CLIENT_CAP absent from its environment, so the default cap
+            3 holds; compile, verify, run and diff answered 200 from the
+            loopback key; no Traceback, deadline or client_cap line since
+            the restart. P1, a read, its command run first over a pty with
+            stubs (p1/reh_p1_out.txt 5bc95b38); ON A at 00:16:31Z
+            (2ca7abcb): MainPID 3101869 active; 11 journal lines since
+            00:01:08Z; 0 client_cap lines, 0 of each code, 0 tripwire, 0
+            deadline and 0 Traceback lines. The 0 says only that no client
+            met the cap in those 15 minutes.
+
+    D471-8  M1 DEFERRED, AND WHAT STANDS IN ITS PLACE. The Gate's M1 was
+            four slow requests from A's key over Cloudflare, three admitted
+            and the fourth a 429 CAP. M1P (m1p/M1P_PREDICTIONS.txt
+            faaafd85), in the container: compile and verify of the 36 .nous
+            files at the tree's root, 3 runs each (m1p/measure_out.txt
+            9c3c2262): the slowest median 0.014 s; 6 files refused by the
+            parser in milliseconds, among them noosphere_migrated.nous, the
+            one predicted the slowest; no input held a slot between 2 and
+            10 s, and by the rule fixed before the run M1 waits. OPERATOR,
+            00:10Z on 11-09: M1 deferred, the seat to close. What stands,
+            each part by its own instrument: the cap's logic, EVIDENCED by
+            C1 to C16 and K1 to K17; the module live on A, MEASURED by G5;
+            A's key apart from the loopback key, MEASURED by M0 for
+            get_remote_address, which the cap's key calls, so DERIVED for
+            the cap; an origin 429 with JSON through Cloudflare, MEASURED
+            by M0 for RATE001, DERIVED for CAP001 to CAP005; how often the
+            cap fires, UNKNOWN, read by P1 as 0 so far. Web research on
+            11-09, named before it ran: the RateLimit fields draft is still
+            -11 of 2026-05-23, a WG Document that expires on 2026-11-24
+            (the IETF datatracker); Stripe's blog counsels a dark launch,
+            feature flags, kill switches and metrics on how often a limiter
+            fires; Uber's Cinnamon was validated by load tests in
+            production. This cap enforced from its first restart, with no
+            dark launch; its kill switch and P1 are what it has.
+
+    D471-9  THE RESUMES AFTER D470. READ IN THE SEAT'S CONTAINER: the
+            container started again at 11:39:04Z and 11:56:37Z on 11-07; at
+            01:07:23Z, 01:12:46Z, 01:41:55Z, 01:54:35Z, 02:08:40Z,
+            02:14:30Z, 09:43:36Z, 09:58:38Z, 23:22:12Z, 23:42:52Z,
+            23:48:23Z and 23:56:11Z on 11-08; at 00:16:41Z and 00:21:34Z on
+            11-09, most of them as an operator's message arrived. Each was
+            read in a command of its own before the next act, and the pins
+            named in the log were checked equal, with one altered or a
+            digest of zeros as the negative.
+
+    D471-10 WHAT THE SEAT BROKE, AND CORRECTED. FG-S466-A again at 11:31Z
+            on 11-07: a log line said no resume in the command that printed
+            the uptime; corrected at 11:31:28Z, the claim held, and from
+            then the uptime was read alone. FG-S464-D four times: pins
+            typed from recall at 11:57Z on 11-07; E12's predictions digest
+            at 01:45Z, the Gate's digest in its amendment at 10:00Z and
+            amendment 1's digest in the build's predictions at 10:07Z on
+            11-08; each seen before use and replaced by a script's value,
+            and from 10:07Z a digest entered a document only by the script
+            that wrote it. Of its kind once more: NUM471's amendment 2 gave
+            a control's vector reckoned by hand, [2, 0, 0], where the count
+            read [3, 1, 0]. C6's 500 (FG-S466-B); M1P's prediction for
+            noosphere_migrated.nous (FG-S466-C); the Gate's M1 resting on
+            an input never measured (FG-S466-D). The fixtures of E12, E12b
+            and E12c each failed once on their own checks (a path printed
+            with bin/.., a sign that read the whole output, a substring
+            inside NEG_SRC) and E12's first rehearsal held its variable in
+            a subshell; each fixed under an amendment hashed before the
+            change. The parent suite's first outcome list took six log
+            lines that begin ERROR (FG-S464-E); refiltered. An editable
+            install's .pth would have shadowed the work tree; removed
+            before any run. Builders stopped by their own asserts at counts
+            guessed, nothing written. The mirror's fetches at 00:23Z and
+            00:24Z on 11-09 were logged as N4 and N5, names already given
+            to other calls; here N9 and N10. Several log lines refused for
+            width, each rewritten.
+
+    D471-11 WHAT THIS SEAT WROTE AND READ, TO THIS ENTRY'S PIN. To the
+            repository: cb57fad4 (D470) and 6ddebf81 (the cap) on main, and
+            the branches s466-d470 and s466-client-cap. ON A: in /root the
+            operator's uploads, the kits of both landings and the scripts
+            of E12, E12b, E12c and M0; /home/aetherlang/nous-verify used
+            for both G2 runs, their temp HOMEs under /tmp; the live tree
+            fast-forwarded twice; nous-api restarted at 00:01:08Z on 11-09;
+            E12b's capture on lo for its own nonce; M0's 230 GETs. On B
+            after D470's pin: nothing. To /var/www, PyPI, Rekor and the
+            Project: nothing. Seat network, each named before it ran:
+            GitHub for the session clone (N4, N7, and each landing's G1 and
+            G3) and the mirror (N5, N9, N10); PyPI for the wheel (N6) and
+            the venv (N8); web searches and fetches W1 to W8 on 11-08,
+            three searches and three fetches on 11-09. No agent.
+
+    D471-12 WHAT STAYS OPEN. This entry, landed by the push rule; the next
+            entry records its landing; the closing RULE 0 and the seal
+            of S466. M1, deferred; P1 again later, counts only; a
+            dark-launch mode for the next limiter. The draft's expiry on
+            2026-11-24. RATE001's body, with no detail and no Retry-After,
+            its own ruling. A cap per API key, a /48 for larger
+            delegations, a queue fair across keys; IPv6 and a path not
+            through cloudflared, not measured. From S465: option (B); E1, a
+            started thread cannot be stopped; z3's budget not taken from
+            the deadline; the chat's 35 s a literal; an anchor that a
+            TIMEOUT003 may follow; an override for a tool the program does
+            not sense, accepted without a word; C10 and C11 with the
+            release lane, options (A), T and now the cap on main and on A
+            but in no release; the KS2 ruling; the staging Gate. The
+            branches s464-d458, s464-api-a, s464-d467, s465-d468,
+            s465-api-t, s465-d469, s466-d470 and s466-client-cap on GitHub
+            (171 refs). Hygiene on A: the kits in /root, rule0_s438.sh, the
+            temp HOMEs under /tmp; the clone nous-verify stays, for the
+            next landing.
+
+    FINDINGS
+
+            FG-S466-B  SEAT. A STATUS PREDICTED WITHOUT READING THE ROUTE'S
+                       MAPPING. C6 asserted 500 for a submit that raised;
+                       compile_source maps any exception but HTTPException
+                       to 422 COMPILE001, before the change and after it.
+                       Before a test predicts a reply's status, the route's
+                       exception handling is read and named in the
+                       prediction.
+
+            FG-S466-C  SEAT. A COST PREDICTED FOR AN INPUT NOT CHECKED
+                       VALID. M1P named the largest file the slowest; the
+                       parser refused it in 5 ms. An input's validity is
+                       read before its cost is predicted, and a prediction
+                       names only inputs that pass.
+
+            FG-S466-D  SEAT. A MEASURE DESIGNED ON AN INPUT NOT MEASURED.
+                       The Gate's M1 needed requests that hold a slot for
+                       seconds; no such input was measured, at the Gate or
+                       before the landing, and M1 could not run. What a
+                       measurement needs, an input, a load or a host state,
+                       is measured when the Gate is written, not when the
+                       measurement is due.
