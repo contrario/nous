@@ -30898,3 +30898,342 @@ document itself.
                        well formed in every part but the one it negates,
                        and its code is read from the checker itself, not
                        from a later command in its pipe.
+
+  - S478 the number the operator gave the entry that closes the seat S475,
+    written by it: D476's landing; FG-S349-Q measured at the published
+    wheel and its import closure read; PKG001, the wheel's closure and the
+    migrator's names, built red before green and landed by the push rule;
+    the release read and set aside; the numbers 477, not adopted, and 478
+    counted; the resumes; and the codes FG-S475-B to FG-S475-D
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S475,
+    DURING ITS SESSION, with the labels of D450 to D476: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, DERIVED and MEASURED. Times are UTC, on
+    11-10 of 2026. An operator's time is the time his message was sent; a
+    value ON A carries the clock its command printed. Each paste ON A is a
+    file transcribed from the chat under ona/ in this seat's evidence,
+    named by its digest. Each result named below was written by a script
+    from its command's output. What D476 records is not repeated here. Each
+    test, suite and control below evidences; nothing here is a Z3 or Farkas
+    result.
+
+    THE NUMBERS. OPERATOR, 13:21Z: 477, for this entry. MEASURED by
+    ns_count477.py (81cb7dc2), NUM476's instrument with its targets (477
+    added, 476 among the taken) and its nonce changed, built in one pass
+    and diffed; its predictions NUM477_PREDICTIONS.txt (cfbeddc7) written
+    by a script from NUM476's out and derive477_out.txt (0c383a9e) before
+    the instrument existed: since NUM476's run, D476 and PKG001 on main and
+    their two branches, 9 paths, 9 blobs new, none gone, 2 commits whose
+    messages equal the pinned files. Fetched at 13:23:51Z (N13), nothing
+    new: main 4eb7c6f0, 177 refs, 1082 commits, 70 annotated tags, 3240
+    distinct blobs. 31 rows, 28 held, 2 DIFF, 1 read, NOT FREE
+    (rec_num477_out.txt 83c79d29); the prediction FREE was missed. The two
+    DIFF rows: the form word S of 477 once, as bytes inside
+    noesis_embeddings.npz, a zip on main that the pass blind to case
+    classes binary; and one hit outside a hexadecimal run in the message of
+    1eb3e6b3, the 7-hex short id of the commit bbed4774. Neither names a
+    seat or an entry; header, anchor, marker, FG and word D counted 0.
+    Attributed in NUM477_AMENDMENT_2.txt (dece90db), POST HOC, hashed
+    before its three controls ran, each NOT FREE on the rows it named
+    (NUM477_RESULTS.txt e25a62e2). By the hashed rule 477 is not free; the
+    seat proposed its use by ruling, not taken. OPERATOR, 13:35Z: 478.
+    MEASURED the same way by ns_count478.py (c98d85e5), 477 read as a row
+    and not as taken, on the mirror fetched at 13:37:22Z (N14), nothing
+    new: 32 rows, 31 held, 0 DIFF, 1 read, FREE (rec_num478_out.txt
+    751259e8); its two controls NOT FREE as predicted (NUM478_RESULTS.txt
+    75bbad34). The bare word 478 in 27 blobs, in no message. The count
+    cannot see a session that wrote nothing to the tree, a commit message
+    or a tag. The tool that appends this entry refuses unless the
+    header S478, the anchor D478-, the marker of 478 and the codes below
+    still count zero in the document when it runs.
+
+    D478-1  D476 LANDED. By the push rule, each write after its pame, the
+            tools written after D476_PREDICTIONS.txt (6c7e5195) from D473's
+            in one simultaneous pass (d476/make_tools476.py eac2db51):
+            land_d476.py (7e6dc32b), verify_d476.sh (8b28e19a) and
+            fflive_d476.sh (57558a93); their fixture, 21 cases and 11
+            mutants killed (d476/fx_d476_out.txt e83dd0a9). OPERATOR,
+            07:59Z: pame for G0; the session given push access to
+            contrario/nous by add_repo, its clone made from GitHub at
+            08:01:28Z (N4). L1, local, at 08:02:14Z (d476/l1_commit_out.txt
+            1cad6d8d): the commit 0eb0c68e, one parent 62f65e6b, one path,
+            blob 65a23b26, the message f7995596 byte for byte, author Hlias
+            Staurou, committer Claude, ssh-signed. OPERATOR, 08:02Z: pame
+            for G1; the branch s475-d476 pushed, main 62f65e6b
+            (d476/l2_push_branch_out.txt 079ec684). The commands for A
+            written by a script from G1's output and rehearsed over a pty
+            (d476/reh_d476_out.txt 5be1315c); the G2 reconciler built and
+            controlled before the paste, 9 controls
+            (d476/rec_g2_controls_out.txt 917074b1). ON A at 08:07Z
+            (e4a0048f): the scripts found by their sums. OPERATOR, 08:09Z:
+            pame for G2; ON A from 08:12:31Z (aab9e39e): the branch
+            0eb0c68e, its parent and origin/main 62f65e6b, one path, the
+            document 13bda936; the suite as aetherlang 5329 passed and 13
+            skipped at both, the outcomes 5342 lines and d5b4a260 at both,
+            OUTCOME_DIFF 0; the claim lint 409 and 0; 15 legs 0; read by
+            rec_g2_d476.py, 15 held (d476/rec_g2_out.txt 4ad6a6da).
+            OPERATOR, 08:23Z: pame for G3; main fast-forwarded to 0eb0c68e
+            (d476/l3_ff_main_out.txt a7be417e). OPERATOR, 08:37Z: pame for
+            G4; ON A at 08:38:54Z (12bf6055): the live tree from 62f65e6b
+            to 0eb0c68e, the document 13bda936, 644, aetherlang's,
+            porcelain 0 before and after, FFLIVE_GREEN; 12 rows held
+            (d476/rec_g4_out.txt b32b098b), their checker's controls named
+            before they ran (d476/G4_PREDICTIONS.txt 7414ca12). At
+            08:39:33Z (N5; d476/r1_readback_out.txt b84a71d6): main and
+            s475-d476 0eb0c68e, the document equal to the 62f65e6b document
+            followed by the entry, the raw message equal to the message
+            file, 176 refs. No restart: a document.
+
+    D478-2  THE OBJECT. OPERATOR, 08:46Z: which object is right, and why.
+            READ in the mirror at 0eb0c68e: cli.py imports aevolver and
+            migrate, and nous_runtime.py noesis_engine and noesis_oracle,
+            each inside a function, and pyproject.toml declares none of the
+            four. N6, the published wheel nous-lang 8.0.0 from PyPI, read
+            and not installed (probe/nous_lang-8.0.0-py3-none-any.whl
+            f627ff99): 143 top-level modules, the four absent, its cli.py
+            holding both imports. The seat proposed FG-S349-Q. OPERATOR,
+            08:50Z: FG-S349-Q, the object. The proposal said
+            noesis_engine.py holds a path under /opt; a read of the tree
+            found such paths in nous_runtime.py and noesis_oracle.py, not
+            there: corrected to the operator at 08:54Z.
+
+    D478-3  CL1, THE IMPORT CLOSURE. MEASURED by cl1/cl1.py (d2cf8239),
+            which parses each module by ast and imports or runs nothing, on
+            main's tree and on the wheel of N6; its predictions (4ab13c8b)
+            and two amendments (6407b249, f36870ec) hashed before it and
+            before its controls CP, CN and CE ran, each OK
+            (cl1/ctl_cl1_out.txt eca1d5e1). Results (cl1/CL1_RESULTS.txt
+            ded7c800): the wheel ships 143 modules and the package
+            templates, equal to what pyproject declares; exactly 4 edges
+            from a shipped module to an unshipped local one, none eager:
+            cli to aevolver and to migrate, each lazy; nous_runtime to
+            noesis_engine and to noesis_oracle, each guarded by an except
+            that fails silent. READ: aevolver needs only shipped modules;
+            migrate none local, its yaml a core dependency; noesis_engine
+            and noesis_telegram import 10 modules no commit of any ref
+            holds, each matched by the gitignore line noesis_*_patch.py;
+            three noesis modules hold paths under /opt. The noesis set
+            cannot ship from git.
+
+    D478-4  MART1, SR1 AND TWO OBSTACLES. SR1, a read by ast of aevolver.py
+            and migrate.py (cl1/sr1_out.txt 02cdbe31): no eval, exec,
+            subprocess, network or environment read; YAML by safe_load;
+            writes only to a path the caller names. READ: migrate built
+            .nous text from YAML values unescaped, agent_id, tool names,
+            the model, the directory's name and a comment. N7: the wheel of
+            sqlalchemy-migrate 0.13.0 on PyPI holds the top-level package
+            migrate: a second distribution owns that import name. MEASURED,
+            MART1 (its predictions mart/MART1_PREDICTIONS.txt 2c78d53a
+            hashed before N8): nous-lang 8.0.0 and 17 dependencies from
+            PyPI in a clean venv (N8), the working directory outside every
+            tree (mart/mart1_out.txt 4532daf0): nous evolve rc 1, "No
+            module named 'aevolver'"; nous migrate on a YAML file and on a
+            directory rc 1, "No module named 'migrate'"; 6 rows
+            held. FG-S349-Q MEASURED at the published artifact. MEASURED at
+            0eb0c68e in the container: a YAML whose tool name carried a
+            closing bracket, a newline and a second soul migrated to a
+            program that parses with the souls DemoAgent and Exfil, Exfil's
+            senses [http_post] (pkg001/inj_probe2_out.txt b3259e8f).
+
+    D478-5  THE GATE AND ITS RULINGS. OPERATOR, 08:55Z: PKG001 if it is
+            right, with evidence and measurements, the errors and obstacles
+            to avoid, the security and the architecture. OPERATOR, 09:01Z:
+            PKG001 v2: migrate.py renamed nous_migrate_config.py with an
+            unshipped shim under the old name, each value written as a NOUS
+            name checked, a closure test with an allowlist for noesis, the
+            green measured on a built wheel. READ for the Gate: the wheel
+            gate's required list held 74 names and test_s339 pinned its
+            floor at 74; the install smoke imports _version, cli and
+            nous_api only; the grammar's NAME and model_name. N9: the
+            container's suite venv, Python 3.12.3, from PyPI. The suite
+            refused root by the tree's conftest.py: a user seat475 made in
+            the container, checked absent first. The Gate
+            (pkg001/PKG001_GATE.txt 6c6282ec) written from the measurements
+            and the rulings before any code; its predictions
+            (pkg001/PKG001_PREDICTIONS.txt c4e89b0a) hashed before any code
+            of the change: 13 new tests, red 11 and 2, the families, the
+            suite, 11 mutants with their kill sets, the lint 410, the wheel
+            and MART2.
+
+    D478-6  PKG001, RED BEFORE GREEN. The tests, after the predictions:
+            test_s475_pkg001_closure.py (31b335a5), 5 tests, and
+            test_s475_pkg001_migrate.py (767a1e29), 8. RED as seat475,
+            twice, equal: 11 failed, 2 passed (pkg001/red1.txt bb4520f6).
+            The kit apply_pkg001.py (228edece): applied, skipped and
+            refused on its fixture as built (pkg001/fx_apply_out.txt
+            64b045ff). It writes nous_migrate_config.py, migrate.py's text
+            with each name checked against the grammar: an agent_id that
+            fails skips its file, a tool name that fails is dropped, a
+            model that fails is written unknown, a world name that fails is
+            written Migrated, each said on stderr; CR and LF in the Source
+            comment written as spaces. migrate.py becomes a shim that
+            re-exports it and is not declared; cli.py imports the new
+            module; pyproject declares aevolver and nous_migrate_config;
+            the wheel gate requires both (Rule 9); test_s339's floor 74 to
+            76. GREEN twice: 13 passed (pkg001/green1.txt 92f4c51d). The
+            families, the 18 test files that read pyproject.toml or
+            scripts/release.py: 179 passed and 1 skipped at the parent, 192
+            and 1 with the change. The suite in the container as seat475:
+            155 failed, 5155 passed, 32 skipped at the parent; 155, 5168
+            and 32 with the change; the failures the same lines at both, in
+            the strict-JSON site tests, which fail in the container and not
+            on A; the outcomes differ by 13 lines added, each a PASSED of
+            the new tests. 11 mutants, each KILLED on its predicted set
+            (pkg001/mutants_out.txt 488f82eb). The claim lint 409 files at
+            the parent, 410 with the change, 0 violations each. N10, a
+            wheel built from the change as seat475
+            (/home/seat475/dist/nous_lang-8.0.0-py3-none-any.whl 19adcc8a):
+            the wheel gate of the changed release.py, run alone, GATE_OK on
+            it, 145 top-level modules, aevolver and nous_migrate_config in,
+            migrate and noesis out; GATE_REFUSED on PyPI's 8.0.0 wheel
+            (pkg001/wheelgate_out.txt 5ba8f075). MART2 on that wheel in a
+            clean venv (N11; pkg001/mart2_out.txt 24bc1b5b): nous evolve
+            and nous migrate rc 0; the Exfil YAML migrates with no soul
+            Exfil and the tool dropped on stderr; import migrate fails, the
+            other two import; 6 rows held.
+
+    D478-7  PKG001 LANDED. By the push rule, each write after its pame, the
+            tools written after P_LAND_PREDICTIONS.txt (caba57ac)
+            from S472's RATE001 tools, one simultaneous pass per file:
+            land_p.py (a460c16b), verify_p.sh (b370711f) and fflive_p.sh
+            (251d96ec); their fixture, 22 cases and 12 mutants killed
+            (pkg001/landP/fx_p_out.txt d3a8a617). L1, local, at 09:24:40Z
+            (pkg001/landP/l1_out.txt b756be5a): the commit 4eb7c6f0, one
+            parent 0eb0c68e, eight paths, the message f35a1e68 byte for
+            byte, author Hlias Staurou, committer Claude, ssh-signed.
+            OPERATOR, 11:37Z: pame for G1; the branch s475-pkg001 pushed,
+            main 0eb0c68e (pkg001/landP/l2_out.txt baa14cf0). The commands
+            for A rehearsed over a pty (pkg001/landP/reh_p_out.txt
+            323347ca); the G2 reconciler controlled before the paste, 10
+            controls (pkg001/landP/rec_g2_controls_out.txt 27ddb74d). ON A
+            at 12:13Z (be8a0310): the scripts found by their sums.
+            OPERATOR, 12:20Z: pame for G2; ON A from 12:21:14Z (4c831f51):
+            the branch 4eb7c6f0, its parent and origin/main 0eb0c68e, the
+            eight paths at their pins; the suite as aetherlang 5329 passed
+            and 13 skipped at the parent, 5342 and 13 at the branch; the
+            outcomes 5342 lines and d5b4a260, then 5355 and 7fa71405; 13
+            added, 0 removed, each added a PASSED of the new tests; the
+            claim lint 410 and 0; 23 legs 0; 17 rows held
+            (pkg001/landP/rec_g2_out.txt 9b1d0d28). READ before G3: the
+            import closure of nous_api_server and nous_api, by ast, 62
+            local modules, none of cli, migrate, aevolver or
+            nous_migrate_config. OPERATOR, 12:36Z: pame for G3; main
+            fast-forwarded to 4eb7c6f0 (pkg001/landP/l3_out.txt 32acc243).
+            OPERATOR, 12:42Z: pame for G4; ON A at 12:43:27Z (60bd9adf):
+            the live tree from 0eb0c68e to 4eb7c6f0, the eight paths at
+            their pins, 644, aetherlang's, porcelain 0 before and after,
+            FFLIVE_GREEN; 12 rows held (pkg001/landP/rec_g4_out.txt
+            1d3f2a18), their checker's controls named before they ran. At
+            12:44:23Z (N12; pkg001/landP/readback_out.txt 3fc01c8b): main
+            and s475-pkg001 4eb7c6f0, the eight blobs as pinned, the raw
+            message equal to the message file, 177 refs. No restart: no
+            module the API imports changed. In no release: PyPI's 8.0.0
+            keeps the defect.
+
+    D478-8  THE RELEASE, READ. OPERATOR, 13:14Z: a release would carry many
+            commits not released. READ in the seat mirror: v8.0.0 peels to
+            580c28f4; from it to main 4eb7c6f0, 49 commits, by their paths
+            28 docs only, 2 tests only, 1 the conftest and tests, 18
+            changing shipped modules; the net diff 142 files, 42 of them
+            shipped modules. READ in scripts/release.py: publishing is a
+            tag push, and CI uploads by Trusted Publishing behind the
+            approval of the environment pypi; its registry phase refuses a
+            version the published verifier registry does not cover, and the
+            verifier texts changed since 8.0.0. OPERATOR, 13:19Z: close the
+            seat now; the release to the board.
+
+    D478-9  THE RESUMES. READ IN THE SEAT'S CONTAINER: after D476 was
+            pinned, the container started again at about 07:59:26Z,
+            08:22:19Z, 08:37:16Z, 08:46:38Z, 11:37:32Z, 12:13:44Z,
+            12:20:53Z, 12:31:53Z, 12:42:08Z, 13:13:44Z, 13:19:42Z and
+            13:35:46Z. Each was read in a command of its own before the
+            next act, and the pins named in the log were checked equal,
+            with a negative.
+
+    D478-10 WHAT THE SEAT BROKE, AND CORRECTED. An answer to the operator
+            placed a path under /opt in noesis_engine.py; a read of the
+            tree found it elsewhere; corrected (FG-S454-B, again). The kit,
+            first written by the Write tool, held the two Greek bounds of
+            NAME as characters, not as the escape text the source needed;
+            its own guard refused before any write, and a script wrote the
+            escapes (FG-S456-D, again). The first wheel build as seat475
+            could not read root's CA bundle; a copy of the public bundle
+            given to seat475. rsync absent in the container: the mutants
+            copied by shutil. Two errors in the maker of the landing tools,
+            caught before any run. A grep piped to head printed head's
+            code, read as such. NUM477's prediction FREE missed, attributed
+            by an amendment marked POST HOC. Lines refused by the log's
+            writer for width, each split.
+
+    D478-11 WHAT THIS SEAT WROTE AND READ, TO THIS ENTRY'S PIN. To the
+            repository, from the session by the push rule, each push after
+            its pame: 0eb0c68e (D476, 1 path) and 4eb7c6f0 (PKG001, 8
+            paths), the branches s475-d476 and s475-pkg001; no delete, no
+            tag, no release. ON A, by the operator's commands, each write
+            after its pame: two fast-forwards of the live tree as
+            aetherlang; nous-verify used for two G2 runs, their temp HOMEs
+            under /tmp; in /root the operator's uploads of the kits out15/
+            and out16/; no restart. On B: nothing since RULE 0. To
+            /var/www, PyPI, Rekor and the Project: nothing. Seat network,
+            each named before it ran: GitHub for the session's clone (N4),
+            the seat mirror's fetches (N5, N12 to N14) and the four pushes
+            of G1 and G3; PyPI for the 8.0.0 wheel (N6),
+            sqlalchemy-migrate's wheel (N7), two clean venvs (N8, N11), the
+            suite venv (N9) and the build's setuptools (N10, run again as
+            N10b); the web for the datatracker page of the RateLimit draft
+            (W1) and a search on Article 50(2) (W2), at 08:49Z. No agent.
+
+    D478-12 WHAT STAYS OPEN. This entry, landed by the push rule; the next
+            entry records its landing, the closing RULE 0 and the seal. The
+            release, by the operator to the board: the 49 commits since
+            8.0.0, their verdict changes and the version they call for, the
+            registry signed again with the registry and VSA keys and
+            anchored, the tag push, the approval of pypi, B pinned at
+            v8.0.0; each irreversible, each its own pame. From PKG001: the
+            noesis set, held by no commit, not shipped; nous_runtime.py,
+            shipped, holding paths under /opt and reading a file there; 143
+            top-level modules with generic names, each a collision risk;
+            the install smoke not running evolve or migrate. The regress:
+            each entry records the landing of the one before; the seat's
+            proposal at 08:49Z, that a closing entry's landing be recorded
+            in the seal's evidence and the next entry written for an
+            object, not ruled. From S472, as D476 lists them, unchanged.
+            Fourteen branches on GitHub, s464-d458 to s475-pkg001 (177
+            refs). Hygiene on A: the kits in /root, rule0_s438.sh, the temp
+            HOMEs under /tmp; the clone nous-verify stays. 477 not adopted;
+            no number above 478 measured.
+
+    FINDINGS
+
+            FG-S475-B  SEAT. A NAME TAKEN ON PYPI. The first remedy read
+                       for FG-S349-Q, declaring migrate.py in the wheel
+                       (CL1's derived line), would have shipped the import
+                       name migrate. N7 read that sqlalchemy-migrate's
+                       wheel holds a top-level package migrate: two
+                       distributions would own one import name in one
+                       environment, and only one of them can be imported.
+                       The module was renamed and the old name kept as a
+                       shim no wheel ships. A module added to a wheel's top
+                       level has its import name read against PyPI's
+                       distributions first.
+
+            FG-S475-C  SEAT. SOURCE WRITTEN FROM DATA. migrate wrote values
+                       from a YAML file into .nous source as it found them;
+                       a tool name with a bracket, a newline and a soul
+                       made a program that parses with a second agent
+                       holding http_post. Nothing a user ran showed it: the
+                       output parsed. A writer of source from data writes
+                       each value only when it matches the grammar's token
+                       for its place, and otherwise skips or replaces it
+                       and says so on stderr.
+
+            FG-S475-D  SEAT. A NUMBER'S COUNT READS BYTES, NOT NAMES. 477,
+                       never measured before, was predicted free; the count
+                       found its form word S as bytes inside a zip and the
+                       7-hex short id of a commit in a message, the pass
+                       skipping only runs of 8 or more. By its hashed rule
+                       477 was not free, and the number used is another. A
+                       count's word forms are read against the object that
+                       holds them, a blob the pass classes binary and a
+                       short id that names a commit attributed by the
+                       instrument itself, in its next form.
