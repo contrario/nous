@@ -30671,3 +30671,230 @@ document itself.
                        before any run, each written as if and else. A
                        count's fallback branches on the condition that
                        would fail it, never on the count's own exit code.
+
+  - S476 the number the operator gave the entry the seat S472 owed, written
+    by the seat S475: D473's landing, the closing RULE 0 of S472 and its
+    seal; the seat S475's opening, the seal checked, the sums check and
+    RULE 0 on A, the numbers 475 and 476 counted and 473 refused as taken;
+    the resume; and the code FG-S475-A
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S475,
+    DURING ITS SESSION, with the labels of D450 to D473: READ IN THE SEAT'S
+    CONTAINER, ON A, INHERITED, OPERATOR, DERIVED and MEASURED. Times are
+    UTC, on 11-10 of 2026 unless a value names 11-09. An operator's time is
+    the time his message was sent; a value ON A carries the clock its
+    command printed. What S472 did after D473 was pinned is INHERITED from
+    its seal, each value named by the digest of the file in
+    S472_SEAL_EVIDENCE.tgz that holds it; that archive was checked by this
+    seat against the kickoff's digests before any act. Each paste ON A by
+    this seat is a file transcribed from the chat under ona/ in this seat's
+    evidence, named by its digest. Each result named below was written by a
+    script from its command's output. What D473 records is not repeated
+    here. Each suite and control below evidences; nothing here is a Z3 or
+    Farkas result.
+
+    THE NUMBERS. OPERATOR, 00:49Z: 475, for this seat. MEASURED by
+    ns_count475.py (33c50941), NUM473's instrument with its targets (475
+    added, 473 among the taken) and its nonce changed, built in one pass
+    and diffed; its predictions NUM475_PREDICTIONS.txt (5584d1f8) written
+    by a script from NUM473's out and derive475_out.txt (4fe8d5e2) before
+    the instrument existed: derive475.py on the seat mirror cloned from
+    GitHub at 00:50:42Z (N1) found, since NUM473's run at d3666df0, 1 path,
+    no blob gone, 1 new and 1 commit whose message equals D473's pinned
+    message, and the branch s472-d473. Fetched again at 00:52:36Z (N2),
+    nothing new: main 62f65e6b, 175 refs, 1080 commits, 70 annotated tags,
+    3231 distinct blobs. 475 counted zero in the six forms, and the pass
+    blind to case found no hit outside a hexadecimal run, in those blobs,
+    every commit message and the tag messages; the K1 rows of the twelve
+    taken numbers and the nine control rows held as derived: 29 rows, 28
+    held, 0 DIFF, 1 read, FREE (rec_num475_out.txt ac8c6d39). Two controls,
+    an anchor planted in the count's output and an orphan ref planted in a
+    local copy of the mirror, each NOT FREE on the rows its amendment named
+    before it ran (NUM475_RESULTS.txt 3696d572). OPERATOR, 00:58Z: 473, for
+    this entry; not adopted: the same count read 473 taken, its header
+    counted 1 and its anchor D473- 13, in 1 blob, the word D473 in 1 commit
+    message, 62f65e6b, D473's own. OPERATOR, 00:59Z: 476. MEASURED the same
+    way by ns_count476.py (aa0ff05f), 475 among the taken, on the mirror
+    fetched at 01:01:02Z (N3), nothing new since NUM475's run: 30 rows, 29
+    held, 0 DIFF, 1 read, FREE (rec_num476_out.txt 9d361aee); its two
+    controls NOT FREE as predicted (NUM476_RESULTS.txt 7864d8d2). The bare
+    words: 475 in 111 blobs, 476 in 8 blobs, neither in a message. The
+    count cannot see a session that wrote nothing to the tree, a commit
+    message or a tag. The tool that appends this entry refuses unless the
+    header S476, the anchor D476-, the marker of 476 and the code below
+    still count zero in the document when it runs.
+
+    D476-1  D473 LANDED. INHERITED from the seal of S472. The tools,
+            written after D473_PREDICTIONS.txt (a73487b8) from D474's in
+            one simultaneous pass (d473/make_tools473.py f86e11cc):
+            land_d473.py (d04248f4), verify_d473.sh (cd8b561d) and
+            fflive_d473.sh (462a48cf); their fixture, 21 cases and 11
+            mutants killed (d473/fx_d473_out.txt b06a0cdc). L1, local, at
+            23:38Z on 11-09 (d473/l1_commit_out.txt 0a2fd5ea): the commit
+            62f65e6b, one parent d3666df0, one path, blob e45cf33d, the
+            message byte for byte, the claim lint 409 and 0. OPERATOR,
+            23:39Z: pame for G1; the branch s472-d473 pushed, main d3666df0
+            (d473/l2_push_branch_out.txt 1d255822). A stop hook asked at
+            23:38Z for main to be pushed; not done: the push rule pushes
+            main only at G3. The commands for A written by a script from
+            G1's output and run first over a pty (d473/reh_d473_out.txt
+            fc7654b5); the G2 reconciler built and controlled before the
+            paste, 9 controls (d473/rec_g2_controls_out.txt e59c2ddb). ON A
+            at 23:42Z (7a063e9f): the scripts found by their sums.
+            OPERATOR, 23:43Z: pame for G2; ON A from 23:44:40Z (42df606e):
+            the branch 62f65e6b, its parent and origin/main d3666df0, one
+            path, the document 7248dc58; the suite as aetherlang 5329
+            passed and 13 skipped at both, the outcomes 5342 lines and
+            d5b4a260 at both, OUTCOME_DIFF 0; the claim lint 409 and 0; 15
+            legs 0; read by rec_g2_d473.py, 15 held (d473/rec_g2_out.txt
+            4ad6a6da). OPERATOR, 23:57Z: pame for G3; main fast-forwarded
+            to 62f65e6b (d473/l3_ff_main_out.txt 3be2bdcf). OPERATOR,
+            00:00Z on 11-10: pame for G4; ON A at 00:04:08Z (f88c24be): the
+            live tree from d3666df0 to 62f65e6b, the document 7248dc58,
+            644, aetherlang's, porcelain 0 before and after, FFLIVE_GREEN;
+            12 rows held (d473/rec_g4_out.txt b32b098b), their checker's
+            controls named before they ran (d473/G4_PREDICTIONS.txt
+            2d673fdd). At 00:05:54Z (N13 of S472; d473/r1_readback_out.txt
+            f853b1bd): main and s472-d473 62f65e6b, the document equal to
+            the d3666df0 document followed by the entry, the raw message
+            equal to the message file, 175 refs. No restart: a document.
+
+    D476-2  THE CLOSING RULE 0 OF S472. INHERITED. Its predictions
+            rule0c472/RULE0C_PREDICTIONS.txt (748fd96c) hashed before its
+            reconciler, reconcile_close472.py (4cb58a44), the opening
+            reconciler with six values moved, and its controls: P1, the
+            opening paste, DIFF on exactly the six rows that moved, 14
+            held; P2, a paste made by script with those rows set, 20 held;
+            N1 to N3, one row each. OPERATOR, 00:10Z: pame. ON A from
+            00:12:06Z, Asklepios read at 00:17:06Z (71a95ec4): 20 rows held
+            (rule0c472/RULE0C_RESULTS.txt d324fab7): HEAD and ORIGIN
+            62f65e6b40aa; A 8.0.0, MainPID 2424513; B 8.0.0, MainPID
+            3078825; the suite 5329 passed and 13 skipped as aetherlang;
+            the claim lint 440 files and 0; PyPI 8.0.0; 17 legs 0.
+
+    D476-3  THE SEAL OF S472, AND ITS CHECK. The kickoff named five files
+            by their digests: NOUS_SESSION_472_HANDOFF.md (f693ebf5),
+            NOUS_S472_OPENER.md (d77faddc), S472_SEAL_EVIDENCE.tgz
+            (f0f140d2), rule0_owner.sh (2c7665cf, carried unchanged) and
+            S472_SEAL_SHA256SUMS.txt (854b076d). The next seat's one-line
+            sums check, seal472/C1_next_template.txt (a2e47fd8, S466's byte
+            for byte), was rehearsed by S472 over a pty in three cases
+            (seal472/c1n_out.txt ae185ec0). READ IN THE SEAT'S CONTAINER by
+            this seat from 00:28Z: each of the five attachments found by
+            its digest, one each, and a planted digest found none
+            (scripts/kick_check.py 7c058c21); the sums file's four rows OK,
+            and a row of 64 zeros FAILED; the archive listed before it was
+            extracted, 451 entries, 430 files and 21 directories, no link,
+            no absolute path and no parent step; its EV_SHA256SUMS.txt 429
+            OK and 0 not, the files listed equal to the files present, a
+            planted name not; the 429 prefixes in the handoff's evidence
+            list equal to the inner sums (scripts/handoff_vs_ev.py
+            e4c5bf85).
+
+    D476-4  THE SEAT S475 OPENS. OPERATOR, 00:31Z: no other lane holds the
+            tree or the hosts. The sums check c1/C1R.txt (7c491a50), the
+            template with the kickoff's digest filled in twice by a script
+            (c1/build_c1r.py eb35a1df); its predictions
+            (c1/C1R_PREDICTIONS.txt 57051474) hashed before it was
+            rehearsed in an interactive bash over a pty in four cases with
+            the real sums file and script: the sums renamed beside a decoy,
+            absent, the script altered, two copies; each as predicted
+            (c1/reh_c1r_out.txt 870e1327). ON A at 00:33Z (1c2dc978), its
+            command line equal to c1/C1R.txt: FOUND
+            S472_SEAL_SHA256SUMS.txt, FOUND_COUNT 1, rule0_owner.sh OK, RC
+            0; a read.
+
+    D476-5  RULE 0 ON A. Its predictions rule0o/RULE0O_PREDICTIONS.txt
+            (9c384c5f), each value that of S472's closing run, hashed
+            before the reconciler's copy
+            (rule0o/reconcile_close472.py, S472's byte for byte), its
+            controls and the rehearsal: S472's closing paste, 20 held; five
+            pastes made by script, N1 to N5, one change each, each DIFF on
+            exactly the row named before it ran (rule0o/ctl_o_out.txt
+            abf28936); the command rule0o/C2.txt, the seal's byte for byte,
+            rehearsed over a pty in three cases (rule0o/reh_c2o_out.txt
+            5dfa11c0). OPERATOR, 00:35Z: pame for RULE 0. ON A from
+            00:38:05Z, Asklepios read at 00:43:02Z (80f67ce2), its command
+            line equal to C2.txt: 20 rows held, 0 DIFF
+            (rule0o/RULE0O_RESULTS.txt 2fe1c5f6): HEAD and ORIGIN
+            62f65e6b40aa, the log as S472 left it, porcelain 0; v8.0.0
+            peeled to 580c28f43e6d; A 8.0.0, MainPID 2424513, its start
+            derived 13:55:42Z on 11-09; B 8.0.0 at 580c28f43e6d, its
+            porcelain the untracked .venv/ only, MainPID 3078825; the floor
+            3912; the suite 5329 passed, 13 skipped and 11 warnings in
+            285.69 s as aetherlang, HOME_FILES 0, PORCELAIN_AFTER 0; the
+            claim lint 440 files and 0; sidecars 265 and 0; the mirror
+            CLEAN, 569 tracked, 4 orphans; the registry logged, 154
+            entries, its anchor 174366343, repo and served
+            7e6ef6629ea0e7e5; the release VSA 3a3bab3f6492113d at both;
+            PyPI 8.0.0; Asklepios three nous rows healthy, 0 fails, at
+            00:43:02Z; the integrity timer's last run 00:30:05Z, success,
+            CLEAN; 17 legs 0, RULE0_RC 0. Nothing moved since the closing
+            run of S472 but the clocks.
+
+    D476-6  THE RESUMES. READ IN THE SEAT'S CONTAINER: the container
+            started at about 00:23:58Z, before the kickoff was read, and
+            again at about 00:48:31Z, as the paste of RULE 0 arrived. The
+            resume was read in a command of its own before the next act,
+            and the pins named in the log were checked: 13 equal by the
+            line that names each step, 2 that the log names without their
+            directory read by their digests, each equal, and a planted
+            digest not equal.
+
+    D476-7  WHAT THE SEAT BROKE, AND CORRECTED. The first negative of the
+            kickoff's sums check fed sha256sum a digest of 8 hex
+            characters: it refused the line as not formatted, and the code
+            printed was the pipe's last command's, 0; the check meant to
+            fail never ran. Redone with a digest of 64 zeros: FAILED, rc
+            1 (FG-S475-A). The first compare of listed and present evidence
+            files read the ./ prefix of the sums as a difference, as S472's
+            did; the seat's own instrument. RULE 0's predictions and a log
+            line gave the time of a getent read as "at 00:34Z", a time no
+            clock in its command printed; the log was corrected to the
+            window between the two stamps around it, and the predictions'
+            file stands as hashed (FG-S464-D, again). A log line said two
+            pins were read by the same command's sha256sum; they were read
+            by the command before it, and a later line says so (FG-S454-B,
+            again). Lines refused by their writer for width, each split.
+
+    D476-8  WHAT THIS SEAT WROTE AND READ, TO THIS ENTRY'S PIN. To the
+            repository: nothing before this entry. ON A: in /root the
+            operator's upload of the sums file; the sums check, a read;
+            RULE 0, with the writes it names, origin's refs and the index,
+            ignored bytecode and a temp HOME under /tmp, as aetherlang. On
+            B: RULE 0's ssh reads only. To /var/www, PyPI, Rekor and the
+            Project: nothing. Seat network, each named before it ran:
+            GitHub for the seat mirror, a clone (N1) and two fetches (N2,
+            N3). No web search, no agent.
+
+    D476-9  WHAT STAYS OPEN. This entry, landed by the push rule; the next
+            entry records its landing. From S472: F9, a request FastAPI
+            refuses with 422 not counted against its route's limit, and
+            each program the compiler refuses logging a full traceback at
+            ERROR, each its own ruling; the draft's expiry on 2026-11-24;
+            E2, RATE001 under "detail", not ruled; no RateLimit field on an
+            answer not refused; IPv6 and a path not through Cloudflare, not
+            measured; limits not pinned; M1; P1 again later; a dark-launch
+            mode for the next limiter; a cap per API key, a /48 for larger
+            delegations, a queue fair across keys; option (B); option T's
+            residue; the unsensed override; C10 and C11 with the release
+            lane, options (A), T, the cap and RATE001 on main and on A but
+            in no release; the KS2 ruling; the staging Gate. Twelve
+            branches on GitHub, s464-d458 to s472-d473 (175 refs). Hygiene
+            on A: the kits in /root, rule0_s438.sh, the temp HOMEs under
+            /tmp; the clone nous-verify stays, for the next landing. 459 by
+            no one this seat knows of; no number above 476 measured.
+
+    FINDINGS
+
+            FG-S475-A  SEAT. A NEGATIVE THAT DID NOT PARSE. The first
+                       negative of the kickoff's sums check gave sha256sum
+                       -c a line whose digest was 8 hex characters.
+                       sha256sum refused it as holding no properly
+                       formatted line, and the code the command printed was
+                       tail's, 0: the comparison that was to fail was never
+                       made, and nothing showed it but the refusal's text.
+                       Redone with 64 zeros: FAILED, rc 1. A negative is
+                       well formed in every part but the one it negates,
+                       and its code is read from the checker itself, not
+                       from a later command in its pipe.
