@@ -805,7 +805,7 @@ def cmd_migrate(args: argparse.Namespace) -> int:
             return 0
         return 1
     else:
-        from migrate import migrate_file, migrate_directory
+        from nous_migrate_config import migrate_file, migrate_directory  # __pkg001_s475_cli_v1__
         if source.is_dir():
             output = Path(args.output) if args.output else None
             report = migrate_directory(source, output)

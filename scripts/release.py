@@ -561,7 +561,9 @@ def phase_wheel_gate(whl: Path, version: str) -> None:
                                 "llm_guard_adapter.py",  # __s219_llm_guard_adapter_wheelgate_v1__
                                 "trace_bridge.py",  # __s256_trace_bridge_wheelgate_v1__
                                 "uds_signer_client.py",  # __s256_uds_signer_client_wheelgate_v1__
-                                "annex_iv_map.py"]  # __s135_annex_iv_map_wheelgate_v1__  # __s105_compiled_trace_wheelgate_v1__ __s105_trace_anchor_wheelgate_v1__ __s105_memory_entry_wheelgate_v1__ __s105_memory_keyring_wheelgate_v1__ __s105_memory_store_wheelgate_v1__ __s105_memory_index_wheelgate_v1__  # __phase2_stage6_wheelgate_v1__
+                                "annex_iv_map.py",  # __s135_annex_iv_map_wheelgate_v1__  # __s105_compiled_trace_wheelgate_v1__ __s105_trace_anchor_wheelgate_v1__ __s105_memory_entry_wheelgate_v1__ __s105_memory_keyring_wheelgate_v1__ __s105_memory_store_wheelgate_v1__ __s105_memory_index_wheelgate_v1__  # __phase2_stage6_wheelgate_v1__
+                                "aevolver.py",  # __pkg001_s475_wheelgate_v1__
+                                "nous_migrate_config.py"]
     missing: list[str] = [r for r in required if not any(n.endswith(r) for n in names)]
     if missing:
         raise ReleaseError(f"wheel missing files: {missing}")

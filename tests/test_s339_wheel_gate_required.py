@@ -36,7 +36,7 @@ GATE_FUNC: str = "phase_wheel_gate"
 GATE_LIST: str = "required"
 
 # One way ratchet. Raise with the list, never lower.
-REQUIRED_FLOOR: int = 74  # __s339_wheelgate_required_floor_74__
+REQUIRED_FLOOR: int = 76  # __s339_wheelgate_required_floor_74__  # __pkg001_s475_floor_76__
 
 
 class ExtractionRefused(Exception):
