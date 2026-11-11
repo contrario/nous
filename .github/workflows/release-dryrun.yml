@@ -1,0 +1,71 @@
+name: release-dryrun
+
+# S481 DR1: the build job of release.yml, byte for byte, run by hand
+# (workflow_dispatch) at a chosen ref, and before it a count job that
+# runs release.py's phase 1 and phase 2 commands as written there, to
+# read the runner's suite count before a tag is pushed. No publish job,
+# no id-token, no attestations, no environment; contents: read only.
+# tests/test_s481_release_dryrun.py holds this file to release.yml and
+# to scripts/release.py.
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  count:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+        with:
+          fetch-depth: 0                   # full history + tags: preflight tag check + SDE
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        with:
+          python-version: "3.12"           # match Server A build minor (3.12.x)
+      - name: Install (runtime extras + build + pytest; confirm floor on first dry-run)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[all]'
+          python -m pip install pytest build pyflakes  # __s162_p1_pyflakes_added__
+      - name: Suite count, release.py phase 1 and phase 2 commands (read, not gated)
+        run: |
+          umask 022
+          python3 scripts/sync_grammar.py
+          python3 -m pytest tests/test_grammar_sync.py -q
+          python3 -m pytest tests/ -q --tb=no
+
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+        with:
+          fetch-depth: 0                   # full history + tags: preflight tag check + SDE
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
+        with:
+          python-version: "3.12"           # match Server A build minor (3.12.x)
+      - name: Install (runtime extras + build + pytest; confirm floor on first dry-run)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[all]'
+          python -m pip install pytest build pyflakes  # __s162_p1_pyflakes_added__
+      - name: Gate + build + wheel-gate + install-smoke (no provenance, no operator key)
+        run: |
+          umask 022
+          SDE="$(git log -1 --format=%ct "${GITHUB_REF_NAME}")"
+          echo "SOURCE_DATE_EPOCH=${SDE} (build hygiene, not a reproducibility claim)"
+          SOURCE_DATE_EPOCH="${SDE}" \
+            python scripts/release.py --build --no-provenance --allow-existing-tag
+      - name: Print digests (operator records the published wheel/sdist sha)
+        run: sha256sum dist/*
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
