@@ -4,6 +4,9 @@
 
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
+
+## [9.0.0]  <!-- __s481_changelog_v9_0_0__ -->
+
 ### Changed  <!-- __an_gate1_d4_changelog_v1__ -->
 
 - The verifier texts and the five named installed paths refuse a JSON
@@ -56,6 +59,68 @@
   unnamed recursion error (S7). An input 8.0.0 read may now be
   refused; none of the 300 tracked JSON files is. A refusal is not by
   itself evidence of tampering. <!-- __an_js_s7_changelog_v1__ -->
+
+- The writers that sign or hash JSON read those bytes through the
+  verifiers' strict JSON region first and refuse what a verifier would
+  refuse: the signing writers, the cost Farkas certificates, the ndec
+  manifest body, the checkpoint leaf set and budget sidecar, and the
+  remedy proof. A refused CLI writer prints `REFUSED: <reason>` and
+  exits 1. `nous dossier` builds in a staging directory beside the
+  output and renames it onto the output only after every step; with
+  `--annex-iv-map` it reads the input manifest's body strictly before
+  it checks the signature or writes anything (S7b).
+  <!-- __s481_changelog_s7b_writers_v1__ -->
+- The gap witness issuer, `cli_verify.cmd_verify` with `gap_witness`
+  set, refuses, before any key, signature or file, a gap witness its
+  own emitted offline verifier would refuse, with `REFUSED: <reason>`,
+  return 1. 8.0.0 signed a threshold carrying a NOUS comment, and the
+  emitted verifier exited INTEGRITY on it. The `nous` command does not
+  register `--gap-witness`; only `cli_verify.build_verify_parser`
+  declares it, in 8.0.0 as now.
+  <!-- __s481_changelog_s7b_writers_v1__ -->
+- The dossier verifier texts' Requires lines no longer say "author
+  signature" (they check the manifest's signature under the key it
+  carries), and the lines they print for sidecar evidence say "bound
+  to the manifest", not "authenticated"; `nous verify-cost` says it
+  does not check the manifest's signature. Only strings change: no
+  exit code or verdict changes.
+  <!-- __s481_changelog_signer_wording_v1__ -->
+- API deadlines: compile, verify, run, diff and the skill export share
+  one budget pool. A request whose work never started is answered 503
+  BUSY001 to BUSY005 with Retry-After, and its work does not run; one
+  whose work started and overran is answered 503 TIMEOUT001 to
+  TIMEOUT005 with `work_started` true. 8.0.0 answered compile,
+  verify, run and the export 408 (run and the export both TIMEOUT003)
+  and diff 504 with no code; run is now TIMEOUT004 and diff
+  TIMEOUT005. Chat's CHAT004 is 503 (8.0.0: 504). The export's Rekor
+  step begins only with at least 40 s of its budget left, else 503
+  REKOR_DEADLINE. No deadline answers 408, 502 or 504.
+  <!-- __s481_changelog_api_v1__ -->
+- API per-client cap: one client key holds at most max(2, pool // 4)
+  of the budget pool's slots at once; a key at its cap is answered 429
+  CAP001 to CAP005 before the admission wait, with Retry-After 5 and
+  the RateLimit-Policy and RateLimit fields of
+  draft-ietf-httpapi-ratelimit-headers-11 (an Internet-Draft); its work
+  does not start. Loopback is exempt. `NOUS_CLIENT_CAP` sets the cap at
+  import; 0 turns it off. docs/API_CLIENT_CAP.md.
+  <!-- __s481_changelog_api_v1__ -->
+- API RATE001: a route's per-minute limit answers 429 RATE001 with
+  Retry-After, the seconds until the limiter's window for that key
+  resets, and the same RateLimit fields; the body keeps `error` and
+  `code` and adds `error_id`, `retry_after`, `limit`, `scope` and
+  `work_started`. A limit is keyed by its route: 8.0.0 kept one bucket
+  per URL for a route with a path parameter. docs/API_RATE001.md.
+  <!-- __s481_changelog_api_v1__ -->
+- `POST /v1/skill/export` answers a client's input 422 SKILLEXPORT001,
+  a writer's strict JSON refusal 422 STRICT_JSON_REFUSED with
+  `REFUSED: <reason>`, and any other failure 500 SKILLEXPORT500 with an
+  `error_id` the server's log also holds; no reply carries a server
+  path, an exception's text or a library URL. 8.0.0 answered a failure
+  not from Rekor or its timeout 422 SKILLEXPORT001 with the exception's
+  text. A request body FastAPI refuses is answered 422 on every route,
+  also when it echoes a lone surrogate, which 8.0.0 answered "Internal
+  server error", INTERNAL001. docs/SKILL_EXPORT.md.
+  <!-- __s481_changelog_api_v1__ -->
 
 ### Security  <!-- __xf5_xd2_pins_v1__ -->
 
@@ -139,6 +204,20 @@
   refusal is not by itself evidence of tampering.
   <!-- __apis1_strict_changelog_v1__ -->
 
+- `nous migrate` writes a YAML value into the .nous source only when
+  it is a NOUS name (agent_id, tools, model, world), and turns CR and
+  LF in the source comment into spaces. Before, a crafted tool name
+  made a program that parses with an extra soul (PKG001).
+  <!-- __s481_changelog_pkg001_v1__ -->
+
+### Fixed  <!-- __s481_changelog_pkg001_v1__ -->
+
+- The wheel ships `aevolver` and `nous_migrate_config`, which
+  `nous evolve` and `nous migrate` import. On 8.0.0's wheel both
+  commands fail with ModuleNotFoundError. The migrator's module is
+  `nous_migrate_config`, because sqlalchemy-migrate owns the import
+  name `migrate` (PKG001, FG-S349-Q).
+
 ### Known limits  <!-- __an_gate1_d4_known_limits_v1__ -->
 
 - The library functions behind those routes,
@@ -150,10 +229,6 @@
 - An integer beyond 2**53 - 1 is not refused; a reader that holds only
   doubles reads it differently (RFC 7493 2.2). A number that underflows
   (1e-400) reads as zero. <!-- __an_js_s7_changelog_v1__ -->
-- Until the next release, the verifier texts in this tree differ from
-  the ones the published verifier-digest registry lists and from those
-  pip's 8.0.0 emits (the window FG-S426-D names, which S7 widens and
-  does not open). <!-- __an_js_s7_changelog_v1__ -->
 
 - An .ndec built before this release is refused under
   `--strict-canonical` without the verifier-digest registry; with the
@@ -177,6 +252,22 @@
 - An .ndec whose zip carries a member name twice passes
   `nous ndec verify`; the last member of that name is the one
   verified.
+
+### Notes  <!-- __s481_changelog_why_major_v1__ -->
+
+- 9.0.0 is a major version because it refuses or changes behaviour
+  8.0.0 accepted: the offline verifier texts, the reference verifier,
+  five installed paths and the two public verification routes refuse
+  JSON 8.0.0 read; `nous conformance verify` and `certify` check the
+  manifest's signature; the conformance verifier texts and both
+  verification routes give OUTSIDE where they gave PASS or ACCEPT over
+  a manifest whose solver verdict is not `proven`, and `nous vsa emit`
+  refuses such a manifest; a negative price is refused; the dossier
+  templates require `pricing.canonical.json`; the writers refuse what
+  a verifier would refuse; and the API answers a deadline 503 where
+  8.0.0 answered 408 or 504, renumbers run's timeout TIMEOUT004, and
+  answers a client at its cap 429. A script that reads these exit
+  codes, response versions or status codes must change.
 
 
 ## [8.0.0]  <!-- __s431_changelog_v8_0_0__ -->
