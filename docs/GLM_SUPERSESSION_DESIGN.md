@@ -32097,3 +32097,285 @@ document itself.
                        path, removed; a fetch run before it was named; the
                        uptime not read first at the operator's message of
                        00:57Z on 11-17.
+
+  - S483 the number the operator gave the entry the seat S481 owed, written
+    by the seat S485: D482's landing; the second closing RULE 0 of S481;
+    the DSH lane's note answered and its 94 failed integrity runs
+    attributed; RULE 0 v2; the S481 seal; the seat S485's opening, the seal
+    checked, the sums check and RULE 0 on A; the numbers 483 and 485
+    counted, 484 not used; and the codes FG-S485-A to FG-S485-I
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S485,
+    DURING ITS SESSION, with the labels of D450 to D482: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC, on 11-17 of 2026; an operator's time is the time his message was
+    sent, a value ON A carries the clock its command printed. D483-1
+    to D483-5 are the seat S481's, from 10:31Z to its seal: each value was
+    asserted by the script that built this entry from S481's running log or
+    from a file of its seal's evidence (S481_SEAL_EVIDENCE.tgz d03c4fca,
+    1237 files under its inner sums); the paths named there are that
+    evidence's. D483-6 to D483-8 are the seat S485's, from 13:03Z, asserted
+    from its own files and log. Each paste is a file transcribed from the
+    chat, named by its digest. What D482 records is not repeated here. Each
+    suite, control and signature check below evidences; nothing here is a
+    Z3 or Farkas result.
+
+    THE NUMBERS. OPERATOR, 13:26Z: 483, for this entry; 13:47Z: 485, for
+    this seat; 484 is not used. MEASURED by ns_count483.py (5a734ba6),
+    NUM482's instrument with 483 and 484 put first among its targets and
+    its nonce changed, built after its predictions NUM483_PREDICTIONS.txt
+    (0582b283), which a script wrote from NUM482's count (ec13e877) and
+    derive483_out.txt (3e77ce77); derive483.py is derive482.py with new and
+    gone blobs made distinct (FG-S481-U). Since NUM482's run: one commit on
+    main, e6cc809d, one path, its message equal to D482's pinned file, and
+    the branch s481-d482. N1 at 13:28:31Z cloned the count's mirror from
+    GitHub; N2 at 13:31:13Z found nothing new: main e6cc809d, 185 refs,
+    1089 commits, 71 annotated tags, 3262 blobs, as predicted. 483 counted
+    zero in the six forms, and the pass blind to case found no hit outside
+    a hexadecimal run: 37 rows, 35 held, 0 DIFF, 2 read, FREE
+    (rec_num483_out.txt 9cc7ab58); its 52 hits inside hex runs lie in 10
+    blobs, each run longer than 12, none a short id. Three controls, each
+    on the rows amendment 1 (73b715f6) named: an anchor of 483 planted in
+    the count's output, the count of the taken 482's anchor raised in it,
+    and an orphan ref holding the header and the anchor planted in a local
+    copy of the mirror (NUM483_RESULTS.txt a01f6f8e). 485 the same way
+    after N3 and N4 found nothing new, its base not measured: 38 rows, 36
+    held, 0 DIFF, 2 read, FREE (rec_num485_out.txt 78d689d3;
+    NUM485_RESULTS.txt ec9c5e7b); its bare form in one commit message is a
+    line number. The count cannot see a session that wrote nothing to the
+    tree, a commit message or a tag. The tool that appends this entry
+    refuses unless the header S483, the anchor D483-, the marker of 483 and
+    the codes below still count zero in the document when it runs.
+
+    D483-1  D482 LANDED, 11-17. By the push rule, each write after its
+            pame. Pins on a local clone at de258337 (d482/pins_out.txt
+            bf30e2eb): the old document 4379abc9, 1966738 B, blob 031ff184;
+            the new e2a8cc1b, 2004468 B, blob 6d7b2b08; the claim lint 410
+            and 0 without and with the entry. D482_PREDICTIONS.txt
+            (00e7ef7b) before the tools; the tools from D480's in one pass
+            (d482/make_tools482.py c71201d4); fx_d482.py, 21 cases and 11
+            mutants as predicted (fx_d482_out.txt 5026de8f); against D480's
+            one line moved, VC2 FAILED_LEGS 3 to 4, attributed: de258337
+            changes 12 paths. L1, local, between 10:31:25Z and 10:31:32Z
+            (d482/l1_commit_out.txt fd510ade): e6cc809d, one parent
+            de258337, one path, blob 6d7b2b08. OPERATOR, 10:45Z: pame for
+            G1; the branch s481-d482 at 10:45:51Z (l2_push_branch_out.txt
+            864776d2). ON A at 10:46Z, C24, the kit out27/ by its sums
+            (ona/c24_sums_paste1246_transcribed.txt f4c73fc5). OPERATOR,
+            10:47Z: pame for G2; ON A from 10:48:35Z
+            (ona/g2_verify_d482_104835_transcribed.txt c94f1e1f): the suite
+            as aetherlang 5348 passed and 13 skipped at the parent and at
+            the branch, the outcome lists 5361 lines and 704ba5d7 at both,
+            the claim lint 410 and 0, VERIFY_RC 0; 15 rows held
+            (d482/rec_g2_out.txt 313a9799). OPERATOR, 11:01Z: pame for G3;
+            GitHub's main e6cc809d at 11:01:31Z (l3_ff_main_out.txt
+            b9daa040). OPERATOR, 11:02Z: pame for G4; ON A at 11:02:30Z,
+            fflive in a subshell under umask 022
+            (ona/g4_fflive_d482_110230_transcribed.txt f00271c1): HEAD
+            de258337 to e6cc809d, the document e2a8cc1b, 644, aetherlang's;
+            FFLIVE_GREEN. Its checker read row 1 DIFF (rec_g4_out.txt
+            ceef8353): built from D480's, it lacked B1's fix for a paste
+            that begins "# " (FG-S485-A); CHECKERS_AMENDMENT_1 (523f0879),
+            POST HOC; then 12 held (rec_g4_out_am1.txt b32b098b) and 14
+            controls (rec_controls_out_am1.txt fd3a4b04). N13 at 11:03:32Z
+            and the readback (d482/readback_out.txt a3568222): main and the
+            branch e6cc809d, the document the parent's plus the entry, the
+            message equal, 185 refs, READBACK_GREEN.
+
+    D483-2  THE SECOND CLOSING RULE 0 OF S481, 11-17. The 11-11 closing run
+            read 8.0.0, so the seal's expectations were measured, not
+            derived: RULE0Z_PREDICTIONS.txt (36db3e7b) before the
+            reconciler reconcile_close481z.py (754e0620) and 7 controls
+            (rule0z/ctl_summary.txt 29922ab8). OPERATOR, 11:57Z: pame, and
+            a RULE 0 that reads the current release. ON A from 11:58:08Z
+            (ona/rule0z_run_115808_transcribed.txt edd82be9): 20 rows held
+            (RULE0Z_RESULTS_raw.txt 1da989f7): HEAD and ORIGIN e6cc809d; A
+            9.0.0, MainPID 662291; B 9.0.0 at b264c9db, MainPID 3098357;
+            the suite 5348 and 13 as aetherlang; the claim lint 441 and 0;
+            the mirror CLEAN, 581 tracked; the integrity timer's last run
+            12:00:13Z, CLEAN; RULE0_RC 0. Its TAG leg peeled v8.0.0
+            (580c28f43e6d) and its VSA leg read 8.0.0 only, by the script's
+            text (FG-S485-E).
+
+    D483-3  THE DSH NOTE, 11-17. OPERATOR, 11:57Z, a relay of the DSH
+            security lane's note on A, TESTIMONY of that lane, not measured
+            here: noosphere-health failing on aether-engine;
+            nous-serve-integrity failing, 94 runs. Read in the mirror
+            first: website/ changed in A's live tree at the G4s of B1, B3
+            and B9, and /var/www only at B3's D3 (13:50Z on 11-16) and B9's
+            (09:38Z on 11-17). DSH1, its predictions
+            (dsh/DSH1_PREDICTIONS.txt b1e2c6c8) before the command
+            (dsh/DSH1.txt 6d380ffa), a read, rehearsed over a pty with
+            stubs (dsh/dsh1_reh_out.txt 8ace82f8). ON A at 12:26Z
+            (ona/dsh1_read_122659_transcribed.txt bf4f74c6): Q1 to Q4 held.
+            Every DRIFT run fell in two windows, none outside: 80 from
+            22:00:08Z on 11-14, where the kept journal starts, to 13:30Z on
+            11-16, index.html and docs/index.html differing, and 14 from
+            03:00Z to 09:30Z on 11-17, the twelve release-vsa/9.0.0 files
+            missing; CLEAN from 10:00:21Z; 94, the lane's count. Each
+            failed run fired its OnFailure alert, hermes-telemetry-alert.
+            ATTRIBUTED: all 94 to S481's landings of website/ ahead of
+            their deploys (FG-S485-B). The first Q4 reading said 0, by the
+            seat's ad hoc reconcile reading the command line's
+            words (FG-S485-C). aether-engine, read: loaded, disabled, never
+            started this boot; noosphere-health reads its list from
+            /opt/aetherlang_agents/monitoring/health_config.toml and fails
+            every 10 minutes. Not this lane's: the operator's decision,
+            nothing written.
+
+    D483-4  RULE 0 V2, 11-17. OPERATOR, 11:57Z: the right rule.
+            R0V2_PREDICTIONS.txt (61228732) before the script, its harness
+            and mutants. rule0_owner2.sh (2994b713) from rule0_owner.sh by
+            three counted replacements, nothing else: TAG_PEEL peels the
+            tag git describe finds; the RELEASE VSA leg compares index.json
+            of every version under the tree's release-vsa/ with /var/www's,
+            a pair equal only when both exist, and requires the found tag's
+            version; 18 legs. The harness's first run (harness_out_run1.txt
+            8a863827) held 1 case of 5: the tree holds 39 version
+            directories, which the predictions had not read (FG-S485-D);
+            R0V2_AMENDMENT_1.txt (2dc65d2c), POST HOC, the expectations
+            only; then 5 cases, the old script on the new fixture among
+            them, and 4 mutants killed (harness_out.txt 01837e6c). The
+            command r0v2/C2V2.txt (f1a9bb0a) rehearsed over a pty
+            (reh_c2v2_out.txt d03a1cf3); R0V2_RUN_PREDICTIONS.txt
+            (23ce6347) before the reconciler reconcile_r0v2.py (346c5f42)
+            and 5 controls (r0v2/ctl_summary.txt d76a9183). OPERATOR,
+            12:34Z: pame. ON A from 12:34:55Z
+            (ona/r0v2_run_123455_transcribed.txt 4e74828c): 20 rows held
+            (R0V2_RUN_RESULTS_raw.txt 94449e9e): TAG_PEEL b264c9db84cc; 39
+            release VSA pairs, each equal to the tree's digest at e6cc809d,
+            9.0.0 present; 18 legs 0; RULE0_RC 0.
+
+    D483-5  THE S481 SEAL, 11-17. The next seat's one-line sums check
+            (seal481/C1_next_template.txt a2e47fd8, S475's byte for byte)
+            rehearsed N1 to N3 over a pty (seal481/c1n_out.txt 28e1137a). A
+            first stage, read back before delivery, held a list at the
+            archive's top level that the checker does not read
+            (HANDOFF_NAMED 1236, EV_NOT_NAMED 1): nothing was delivered;
+            the stage was rebuilt by stage481.py (e99f293c) and
+            build_seal_docs481.py (72f61b6b), which refuses any top-level
+            file. Delivered: NOUS_SESSION_481_HANDOFF.md (9f5496e1),
+            NOUS_S481_OPENER.md (5f63e524), S481_SEAL_EVIDENCE.tgz
+            (d03c4fca), rule0_owner2.sh (2994b713), and
+            S481_SEAL_SHA256SUMS.txt (e818936c) over the four. Nothing was
+            written to the Project.
+
+    D483-6  THE SEAT S485 OPENS, 11-17. OPERATOR, 13:03Z: the five files of
+            the S481 seal with their digests, the kickoff's root. READ IN
+            THE SEAT'S CONTAINER: each found once by its digest, a negative
+            found none; S481_SEAL_SHA256SUMS.txt's four rows OK; the
+            archive listed before extraction, 1238 files and 121
+            directories, no link, no absolute or .. path; its inner sums
+            1237 rows OK, present equal to listed; kick_next.py with its
+            KICK moved, KICK_BAD 0; handoff_vs_ev2.py on "THE EVIDENCE (",
+            1237 named and 1237 equal; each with its negative. OPERATOR,
+            13:06Z: no other lane holds the tree or the hosts. The sums
+            check on A, C1 (c1/C1.txt b66cd0b2, the seal's template filled
+            by script), its predictions (c1/C1_PREDICTIONS.txt e8ad56fd)
+            before its rehearsal over a pty, the old kit failing first
+            (c1/reh_c1_out.txt 685c89a5). ON A at 13:09Z
+            (ona/c1_check_130900_transcribed.txt 3286fefb): FOUND_COUNT 1,
+            rule0_owner2.sh OK, RC 0; 5 rows held. The container started
+            again 5 times before this entry was built; after each the seat
+            read the clock and its pins before its next act.
+
+    D483-7  RULE 0 ON A, 11-17. r0/R0_PREDICTIONS.txt (c3bfb82c), every row
+            the opener's EXPECTED, before 7 controls (r0/ctl_summary.txt
+            7107cbf2) and the rehearsal of r0v2/C2V2.txt over a pty, the
+            old kit first (r0/reh_c2_out.txt 534e602b); the reconciler
+            reconcile_r0v2.py unchanged (346c5f42). Its writes and network
+            named; OPERATOR, 13:12Z: pame. ON A from 13:12:39Z, an
+            attachment with CRLF line ends (ona/r0_run_131239_raw_crlf.txt
+            0d3d2666; LF ona/r0_run_131239_transcribed.txt 4ac08ca8): 20
+            rows held (r0/R0_RESULTS_raw.txt 0a6a57fd): HEAD and ORIGIN
+            e6cc809d; A 9.0.0, MainPID 662291; B 9.0.0, MainPID 3098357;
+            the suite 5348 passed and 13 skipped in 295.53 s as aetherlang;
+            the claim lint 441 and 0; the mirror CLEAN, 581 tracked, 4
+            orphans; the registry de48483f in the tree and served; 39
+            release VSA pairs equal, 9.0.0 present; PyPI 9.0.0; Asklepios
+            three nous rows healthy at 13:17:45Z; the integrity timer's
+            last run 13:01:03Z, CLEAN; 18 legs 0; RULE0_RC 0. No finding.
+
+    D483-8  WHAT STANDS, 11-17. GitHub's main and A's live tree at e6cc809d
+            before this entry; NOUS 9.0.0 on A, on B and on PyPI; the floor
+            5347; RULE 0 is rule0_owner2.sh. Open, from S481's board: the
+            sdist's reproducibility; the root-run mint's path and child;
+            the verify clone's isolation; the lint's walk; the procedure's
+            Rekor step; the suite's skip under a directory named live and a
+            docstring's skip; aether-engine, the operator's; S475's board;
+            the branches; the kits in /root. This entry changes one
+            document and no served file.
+
+    FINDINGS
+
+            FG-S485-A  SEAT S481. A CHECKER BUILT FROM AN OLDER LINEAGE
+                       MISSED A FIX A NEWER ONE CARRIED. D482's G4 checker
+                       came from D480's, which predates B1's fix for a
+                       paste that begins "# " (11-14); its controls used
+                       D480's paste, which has no "# ", so none could fail
+                       on it, and row 1 read DIFF on a green G4. S481's
+                       rule: a checker is built from the newest form of its
+                       lineage.
+
+            FG-S485-B  SEAT S481. WEBSITE/ LANDED AHEAD OF ITS DEPLOY. S481
+                       fast-forwarded A's live tree with website/ files at
+                       three G4s and deployed them later; served and
+                       tracked differed meanwhile, and each half-hourly
+                       integrity run in those windows failed and fired its
+                       alert, 94 in the kept journal. The seat named
+                       neither the windows nor the alerts, and did not read
+                       the timer from 11-11 to 11-17. S481's rule: a
+                       landing that changes website/ is deployed before the
+                       next half-hour run, or its window and alerts are
+                       named first.
+
+            FG-S485-C  SEAT S481. AN AD HOC RECONCILE READ A COMMAND'S OWN
+                       WORDS AS ITS OUTPUT. DSH1's first Q4 reading was 0:
+                       the script took the day counts from the pasted
+                       command line. S481's rule: a reconcile reads a
+                       paste's output, not its command line.
+
+            FG-S485-D  SEAT S481. PREDICTIONS COUNTED A DIRECTORY WITHOUT
+                       READING IT. R0V2's predictions named two release VSA
+                       versions; the tree holds 39, and the harness's first
+                       run held 1 case of 5. S481's rule: a prediction that
+                       counts a directory reads it first.
+
+            FG-S485-E  NOT A SEAT ERROR, INHERITED. RULE 0 READ ONLY THE
+                       RELEASE ITS TEXT NAMED. rule0_owner.sh peeled v8.0.0
+                       whatever tag describe found, and read
+                       release-vsa/8.0.0 only, by its text; after 9.0.0
+                       both legs still passed and neither read 9.0.0's peel
+                       or its VSA. Replaced by rule0_owner2.sh (D483-4).
+
+            FG-S485-F  SEAT. A NEGATIVE NOT WELL FORMED. At the kickoff the
+                       first negative for the inner sums put a character
+                       outside hexadecimal into a digest; sha256sum skipped
+                       the line as improperly formatted and the check
+                       printed rc 0, a negative that could not
+                       fail (FG-S475-A). Redone with a hexadecimal digit:
+                       one FAILED line, rc 1.
+
+            FG-S485-G  NOT A SEAT ERROR, INHERITED. A CHECKER WHOSE EXIT
+                       CODE DOES NOT CARRY ITS RESULT.
+                       scripts/handoff_vs_ev2.py exits 0 with BAD above 0;
+                       its negative printed BAD 1 and rc 0. Its result is
+                       read from its printed line; the script is not
+                       changed here.
+
+            FG-S485-H  SEAT. THE SEAT'S MOVERS AND RECORDS, EACH CAUGHT
+                       BEFORE USE. A forbid in mk_num483_b.py that matched
+                       a correct "K1 482"; an expected count in
+                       mk_num485_b.py, 13 for 14; NUM485's results text
+                       carrying "before N2" from 483's, regenerated; a log
+                       line over 76 columns, refused by the log tool. Each
+                       refused by the tool's own check or read before use;
+                       each tool rerun whole.
+
+            FG-S485-I  SEAT. TWO ORDERS FOR ONE FIRST ACT. The kickoff
+                       ordered the digests checked before any other
+                       act; FG-S466-A orders the uptime read first on each
+                       operator message. The seat checked the digests first
+                       and read the uptime in its sixth command, 110 s
+                       after the container started; on every later message
+                       it read the uptime first.
