@@ -31515,3 +31515,585 @@ document itself.
                        while the check by digest and the read by name saw
                        it either way. A check for an upload reads by digest
                        or by name, never by mtime alone.
+
+  - S482 the number the operator gave the entry that closes the seat S481,
+    written by it: D480's landing; the closing RULE 0 of 11-11; the release
+    9.0.0 from its reads to its cold audit, B1 to B10 with DR1 to DR4, each
+    irreversible act after its own pame; a breach on A, root running two
+    modules of the live tree, found by the kit's own negative, measured to
+    the byte and replaced by a re-mint; the number 482 counted; and the
+    codes FG-S481-B to FG-S481-V
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S481,
+    DURING ITS SESSION, with the labels of D450 to D480: READ IN THE SEAT'S
+    CONTAINER, ON A, ON B, OPERATOR, DERIVED and MEASURED. Times are UTC,
+    from 11-11 to 11-17 of 2026, the date named in each item; an operator's
+    time is the time his message was sent, a value ON A or ON B carries the
+    clock its command printed. Each paste is a file transcribed from the
+    chat under ona/ in this seat's evidence, named by its digest; each
+    result named below was written by a script from its command's output;
+    each value in this entry was asserted from a file or the seat's log by
+    the script that built it. What D480 records is not repeated here. Each
+    suite, control and signature check below evidences; nothing here is a
+    Z3 or Farkas result.
+
+    THE NUMBERS. OPERATOR, 09:45Z on 11-17: 482, for this entry. MEASURED
+    by ns_count482.py (3e32f88b), NUM481's instrument with 482 and 483 put
+    first among its targets and its nonce changed, built after its
+    predictions NUM482_PREDICTIONS.txt (d4e31d88), which a script wrote
+    from NUM481's out and derive482_out.txt (2555661b): since NUM481's run,
+    five commits on main to de258337, each message equal to its pinned
+    file, 21 paths new, and six refs, five branches s481-* whose tips are
+    on main and the annotated tag v9.0.0. The seat had used the count's
+    mirror as a fixture source (FG-S481-V); a fetch with prune at 09:48:30Z
+    (N11) gave it GitHub's refs again, and N12 at 09:51:28Z found nothing
+    new: main de258337, 184 refs, 1088 commits, 71 annotated tags. 482
+    counted zero in the six forms, and the pass blind to case found no hit
+    outside a hexadecimal run: 36 rows, 33 held, 1 DIFF, 2 read, FREE
+    (rec_num482_out.txt 7ecc9373). The DIFF: 3261 distinct blobs, predicted
+    3262, attributed in NUM482_AMENDMENT_2.txt (6086c387), POST HOC, before
+    the controls: the release VSA's two names are one blob, c0dd9536, and
+    the derive counts a new blob once per path (FG-S481-U). Three controls,
+    an anchor of 482 planted in the count's output, the count of the taken
+    481's anchor raised in it, and an orphan ref holding the header and the
+    anchor planted in a local copy of the mirror, each on the rows the
+    amendment named (NUM482_RESULTS.txt d0e99093). 483 was read by the same
+    count: zero, no hit outside a hexadecimal run; not adopted. The count
+    cannot see a session that wrote nothing to the tree, a commit message
+    or a tag. The tool that appends this entry refuses unless the
+    header S482, the anchor D482-, the marker of 482 and the codes below
+    still count zero in the document when it runs.
+
+    D482-1  D480 LANDED, 11-11. By the push rule, each write after its
+            pame. L1, local, between 14:15:50Z and 14:16:05Z
+            (d480/l1_commit_out.txt 16d927aa): the commit 52168580, one
+            parent 6e310b2a, one path, blob 031ff184, the claim lint 410
+            and 0. OPERATOR, 14:19Z: pame for G1; the branch s481-d480 at
+            14:20Z (d480/l2_push_branch_out.txt 01ac44c6). OPERATOR,
+            14:40Z: pame for G2; ON A from 15:02:34Z
+            (ona/g2_verify_d480_150234_transcribed.txt 6b5f8760): the suite
+            as aetherlang 5342 passed and 13 skipped at the parent and at
+            the branch, the outcome lists 5355 lines and 7fa71405 at both,
+            the claim lint 410 and 0, VERIFY_RC 0; 15 rows held
+            (d480/rec_g2_out.txt 313a9799). OPERATOR, 22:30Z: pame for G3;
+            GitHub's main to 52168580 (d480/l3_ff_main_out.txt 51fbaeb8).
+            OPERATOR, 22:32Z: pame for G4; ON A at 22:32:48Z
+            (ona/g4_fflive_d480_223248_transcribed.txt d2b2ec6f):
+            FFLIVE_GREEN, and the document's mode 600 where 644 was
+            predicted (FG-S481-B). ON A, a read
+            (ona/g4a_read_223500_transcribed.txt 72bfb33d): the umask 0077
+            for root and for aetherlang under runuser. OPERATOR, 22:38Z,
+            TESTIMONY: he had set it with another lane after 12:33Z.
+            OPERATOR, 22:41Z: the document to 644; 22:45Z: pame for CH1; ON
+            A (ona/ch1_chmod_224500_transcribed.txt 132d6c86): 600 to 644
+            as aetherlang, its digest unchanged, the porcelain 0. The
+            readback from GitHub (d480/readback_out.txt f1ebbac1):
+            READBACK_GREEN.
+
+    D482-2  THE CLOSING RULE 0 OF 11-11. OPERATOR, 22:48Z: pame. ON A from
+            22:49:19Z (ona/rule0c_run_224919_transcribed.txt 749b9296):
+            HEAD and origin 52168580; A and B at 8.0.0, their uptimes 33403
+            s past the opening's, no restart; the floor 3912; the suite as
+            aetherlang 5342 passed and 13 skipped; the claim lint 441 and
+            0; Asklepios healthy; 20 rows held (rule0c/RULE0C_RESULTS.txt
+            a048370e). The controls' first run read rc 0 where
+            RULE0C_PREDICTIONS named rc 1: the reconciler exits 0 whatever
+            its rows. RULE0C_AMENDMENT_1.txt (2db47e0b), POST HOC, named rc
+            0 with the DIFF sets unchanged, and the second run held.
+
+    D482-3  THE RELEASE: READS AND RULINGS, 11-11. OPERATOR, 22:59Z: the
+            object is the release, C10 and C11 of S475's board.
+            rel/RELEASE_GATE_1.txt (31ce3221), from the seat mirror
+            (rel/scope_out.txt 82eeec7b): 51 commits since v8.0.0, 18
+            changing shipped modules; the ceremony B1 to B10 under the
+            rules since 11-05; BLOCKER K: the two key steps import the
+            tree, and the keys are root's. RULING R1, 23:07Z: 9.0.0, major
+            by the CHANGELOG's rule. RULING R2, 23:08Z: the kit form (a)
+            for B3 and B9, the release commit's tree exported by the
+            session with its sums, checked on A by digest, extracted into a
+            root-owned directory and run there by root with python3 -I,
+            never the live tree. A measure of the runner's count in the
+            container stopped (FG-S481-C). RULING R3, 23:28Z: the floor set
+            to the value evidenced, not kept at 3912; R3b, 23:29Z: a
+            dry-run workflow landed by the push rule, its runner count N
+            read, the floor N-1, the dry run again at the commit to be
+            tagged. Each later ruling in its item: R5 the notes; R6, 01:48Z
+            on 11-14, A's editable reinstall as root after the
+            fast-forward; R7, the removal of the live tree's egg-info,
+            taken from the operator's run (FG-S481-H); R8, 12:44Z on 11-16,
+            the deploy; R4, 00:02Z on 11-17, Server B to the tag before B9;
+            R9, 00:57Z on 11-17, the re-mint.
+
+    D482-4  DR1 AND DR2: THE RUNNER'S COUNT, 11-11 TO 11-12. DR1: a
+            workflow release-dryrun.yml on workflow_dispatch, release.yml's
+            build job step for step with a count job and no publish job,
+            and a test of six cases, red before green
+            (dr1/DR1_PREDICTIONS.txt bab9dec4); the first green failed one
+            test that read the workflow's own comment, changed after
+            DR1_AMENDMENT_1.txt (eab9d353), POST HOC; every mutant killed,
+            one by a test more than named (dr1/mutants_out.txt cce17642).
+            Landed by the push rule as e48d0629, two paths added
+            (dr1/l1_commit_out.txt 89d35f9c). G2 ON A from 00:05:05Z on
+            11-12 (ona/g2_verify_dr1_000505_transcribed.txt 7588dba6): 5342
+            passed and 13 skipped at the parent, 5348 and 13 at the branch,
+            six outcomes added, each a new test passed, VERIFY_RC 0; 17
+            rows held (dr1/rec_g2_dr1_out.txt cb9f429d). OPERATOR, 09:57Z:
+            pame for G3; G4 ON A at 10:01:11Z
+            (ona/g4_fflive_dr1_100111_transcribed.txt d01f44a2):
+            FFLIVE_GREEN, the two files 644, fflive run under umask 022 in
+            a subshell; READBACK_GREEN (dr1/readback_dr1_out.txt 923c9046).
+            DR2, the operator's dispatch at e48d0629, run 43197462028, read
+            from GitHub's API: its build job stopped at the preflight, as
+            predicted, and the count job 5348 passed, 13 skipped, 0 failed,
+            equal to A at the same commit; 13 rows held
+            (dr2/DR2_RESULTS.txt bfc52595), its selector changed after
+            DR2_AMENDMENT_1.txt (e73eac7a), POST HOC. The floor by R3:
+            5347.
+
+    D482-5  R5, THE NOTES, 11-12 TO 11-14. RULING R5, 14:26Z on 11-12:
+            [9.0.0] is [Unreleased] as it stands, a note on the major and
+            what the diffs of the 18 shipped-module commits show missing;
+            14:33Z: the draft approved only if each line is evidenced by
+            measurement. Each added line against e48d0629 and 8.0.0's
+            580c28f4, its predictions hashed before any probe
+            (b1/ev/EV_PREDICTIONS.txt 2fed9a70), five amendments POST HOC,
+            each before its change: 27 rows, 26 held, 1 DIFF, a prediction
+            miss no line rests on (b1/ev/EV_RESULTS.txt 0bb6f2c9). The
+            draft corrected from them (FG-S481-D;
+            b1/draft/CHANGELOG_draft.md 21ccaafd); the claim lint with it
+            410 and 0 (b1/ev/claimlint_draft.txt 762491c6). OPERATOR,
+            01:30Z on 11-14: the corrected draft approved.
+
+    D482-6  B1, THE BUMP, 11-14. The kit, six files: _version, release.py's
+            floor 5347, README, the hero, the docs page, CHANGELOG [9.0.0]
+            (b1/B1_PREDICTIONS.txt 28ce214a). In the container the suite at
+            the kit 5347 passed and 14 skipped, its outcome set the same as
+            its parent's (b1/suite_wb1.txt 91b4f9ff, b1/cmp_out.txt
+            187782b9). Measured before R6 with A's toolchain: an editable
+            reinstall with --no-index ran no module of the tree and changed
+            no file of it (b1/ri/ri2_out.txt 12f9da40). L1 the commit
+            181efb3d, parent e48d0629 (b1/l1_commit_out.txt 3f2ea046);
+            OPERATOR, 02:31Z: pame for G1, the branch s481-b1. G2 ON A from
+            02:38:10Z (ona/g2_verify_b1_023810_transcribed.txt 4e73abc4):
+            the parent 5348 and 13; the branch 3 failed, 5345 passed and 13
+            skipped, VERIFY_RC 1; 12 of 19 rows held (b1/rec_g2_b1_out.txt
+            e3caf531). B1_LAND_PREDICTIONS.txt (2de4623f) had named one
+            failure, the metadata test; two strict-family tests failed
+            besides. Attributed in the container before any act
+            (b1/x2/X2_PREDICTIONS.txt 03820d67): those two start the CLI
+            from the installed editable, A's live tree then at e48d0629,
+            and the SMT spec hash carries the version (FG-S481-F); the
+            metadata test read the system install's 8.0.0 (FG-S481-E). DR3,
+            the operator's dispatch at 181efb3d, run 43550549575
+            (b1/dr3/DR3_RESULTS.txt c7743105): the count job 5348 passed,
+            13 skipped, 0 failed; the build job stopped at 5c as predicted,
+            the registry not yet covering 9.0.0; a first dispatch had run
+            at main, and that run then answered 404. OPERATOR, 03:20Z: pame
+            for G3; GitHub's main to 181efb3d. G4 ON A at 03:22:41Z
+            (ona/g4_fflive_b1_032241_transcribed.txt 8dedcf03):
+            FFLIVE_GREEN, the six files 644. G5, by R6, ON A at 03:24:46Z
+            (ona/g5_ri_b1_032446_transcribed.txt 64919782): root's pip
+            install --no-deps --no-build-isolation --no-index -e of the
+            live tree, the metadata 9.0.0 for root and aetherlang,
+            RI_GREEN. G6 (ona/g6_restart_b1_032639_transcribed.txt
+            256bd27a): nous-api restarted, its health 9.0.0. A read
+            (ona/r3_egginfo_033000_transcribed.txt 8aed84e8): the live
+            tree's egg-info read 8.0.0, written 10-29 (FG-S481-G). G7 ON A
+            at 03:33Z (ona/g7_egginfo_b1_033300_transcribed.txt 6a60998e):
+            that egg-info removed as aetherlang, the metadata with the tree
+            on sys.path then 9.0.0; the message that asked R7 had carried
+            G7's command (FG-S481-H).
+
+    D482-7  B2, 11-14. OPERATOR, 10:49Z: pame, after a pause of 6 h 55 min.
+            release.py --check as aetherlang in the live tree ON A
+            (ona/b2_check_b1_105600_transcribed.txt 21b2e736;
+            b1/B2_PREDICTIONS.txt b780adb9): HEAD 181efb3d, 9.0.0, no tag;
+            5348 passed and 13 skipped against the floor 5347; every gate
+            held but 5c, seven verifier digests MISSING for 9.0.0; CHECK_RC
+            2, as predicted. Its second rehearsal, on a stand-in under a
+            directory named live, skipped the whole suite and stopped at
+            phase 2 (b1/b2reh/reh_out_run2.txt c1483c1f; FG-S481-I).
+
+    D482-8  B3, THE REGISTRY, 11-14 TO 11-16. Read in the container from
+            181efb3d's tree with throwaway keys: the build loads 16 tree
+            modules and adds 7 entries for 9.0.0, each differing from
+            8.0.0's; deploy_website.sh runs git and the claim lint in the
+            live tree, so root cannot run it (R8). ON A, a read
+            (ona/b3r1_read_111056_transcribed.txt 441d1f9a,
+            b3/rec/r1_out.txt bc217b19): both keys root's, mode 600, their
+            public halves equal to their pins; root's python3 -I ends
+            sys.meta_path with the 9.0.0 editable finder. The kit
+            (out21/S481_B3_SHA256SUMS.txt 68bef078); its rehearsal's
+            control with a module taken from the copy loaded it from the
+            stand-in live tree, so the negative fires. B3a ON A, pasted at
+            12:37Z on 11-16 (ona/b3a_build_123700_transcribed.txt
+            526d0347): 161 entries, LIVE_TREE_HITS 0, COPY_MODULES 16, 8
+            facts held; 13 rows (b3/rec/rec_b3a_out.txt 48d05feb).
+            OPERATOR, 12:39Z: pame for B3b. ON A at 12:40:22Z
+            (ona/b3b_anchor_124022_transcribed.txt ab6afc3c): anchored on
+            Rekor v2 log2025-1 at log_index 201702765, LIVE_TREE_HITS 0, 12
+            facts held, the file de48483f; checked again in the container
+            from a fresh archive of 181efb3d (b3/sv/verify_out.txt
+            ee28834f): the signature and the anchor true, 161 entries, two
+            negatives refused. Landed by the push rule as b264c9db, two
+            paths (b3/land/l1_commit_out.txt 0f1991fa): G2 ON A from
+            13:25:37Z (ona/g2_verify_b3_132537_transcribed.txt 5e21fa7d):
+            5348 passed and 13 skipped at both, OUTCOME_DIFF 0, VERIFY_RC
+            0; G4 ON A at 13:40:04Z
+            (ona/g4_fflive_b3_134004_transcribed.txt a14e632d):
+            FFLIVE_GREEN. By R8: D1 the claim lint as aetherlang in the
+            live tree, 0 violations over 441 files where 410 were predicted
+            (ona/d1_lint_b3_134300_transcribed.txt 45b2caf3; FG-S481-J); D2
+            root's rsync dry run, 4 lines
+            (ona/d2_dryrun_b3_134600_transcribed.txt e0b04b44); D3 the four
+            files served, each equal to the tree's, the public registry
+            de48483f (ona/d3_deploy_b3_135000_transcribed.txt 241c73d5).
+
+    D482-9  B4 AND DR4, 11-16. B4 ON A at 14:01Z
+            (ona/b4_check_b3_140100_transcribed.txt 912236e8;
+            b3/B4_PREDICTIONS.txt e3f6f8c1): release.py --check, the 7
+            verifier digests covered for 9.0.0, every gate green for
+            v9.0.0, CHECK_RC 0. DR4, the operator's dispatch at b264c9db,
+            run 43974543635 (b3/dr4/DR4_RESULTS.txt 3be331c7): 18 rows
+            held, 5348 passed and 13 skipped, the wheel d7fc38ea and the
+            sdist 967e4eb0.
+
+    D482-10 B5 TO B7: THE TAG, CI AND PYPI, 11-16. OPERATOR, 23:02Z: pame
+            for the tag. In the session clone the annotated tag was made
+            and its push refused by the proxy, HTTP 403, a policy denial,
+            not retried (FG-S481-K); nothing reached GitHub. On the
+            operator's computer, by scripts rehearsed here
+            (b3/tag/TAG_R1_AMENDMENT_1.txt 527911e9): RUN A made the tag,
+            object 754d7b1f on b264c9db, recomputed here from its printed
+            content, and its dry-run push failed on a stored credential not
+            valid (ona/tag_r1a_win_231315_transcribed.txt c57d2a79); then
+            Git Credential Manager alone, a browser sign-in, a dry run.
+            OPERATOR, 23:19Z: pame for RUN B; RUN B at 23:20:32Z
+            (ona/tag_r1b_win_232032_transcribed.txt 51b1e889): PUSH_RC 0,
+            the remote tag 754d7b1f peeling to b264c9db. release.yml run
+            43978440074 on the tag: 11 rows held (b3/rel/REL_RESULTS.txt
+            120bd307); the wheel d7fc38ea equal to DR4's, the sdist
+            a356fd2a not equal to DR4's 967e4eb0 (FG-S481-L). OPERATOR,
+            23:57Z: the pypi environment approved, the publish job success.
+            Read from PyPI (b3/pub/PUB_PREDICTIONS.txt 0a45def6): the two
+            files equal to the build's; their PEP 740 provenance present,
+            its signatures not checked here; a clean venv installs 9.0.0.
+
+    D482-11 B8, SERVER B AT THE TAG, 11-17. OPERATOR, 00:02Z: R4 first. ON
+            B, by ssh from A, a read (ona/r4r1_read_000539_transcribed.txt
+            998e6a56): B at 8.0.0, nous-api's MainPID 3078825 since 10-29.
+            R4A at 00:13Z (ona/r4a_b_001309_transcribed.txt e76323ad): B's
+            root-owned tree from 580c28f4 to b264c9db, the tag 754d7b1f
+            peeling to it; nous-lang 9.0.0 editable; the tree's egg-info
+            rewritten at 9.0.0, the step R4_AMENDMENT_1.txt (5c2f78fd)
+            added after its rehearsal left an 8.0.0 egg-info in the other
+            mode (FG-S481-G). R4B at 00:14Z
+            (ona/r4b_b_001445_transcribed.txt dd8b0e3c): nous-api
+            restarted, MainPID 3078825 to 3098357, its health 9.0.0.
+
+    D482-12 B9a, THE FIRST MINT, AND A BREACH, 11-17. Read in the
+            container: mint_release_vsa.py imports build_vsa, and its
+            self-check runs the emitted verifier as a child. ON A, a read
+            (ona/b9r1_read_002516_transcribed.txt 679a4286): the release
+            key root's, mode 600, its public half the pin E3FNG9zF.
+            Rehearsed (b9/B9_PREDICTIONS.txt f6b201de): LIVE_TREE_HITS 0,
+            COPY_MODULES 2. OPERATOR, 00:34Z: pame for B9a. ON A at
+            00:35:05Z (ona/b9a_mint_003505_transcribed.txt d8fb9861):
+            MINT_RC 0, 18 facts held, and the kit's negative LIVE_TREE_HITS
+            4, COPY_MODULES 0: root's mint had imported build_vsa and
+            conformance_verifier from the live tree, aetherlang's. A BREACH
+            of the rule that root runs no code of the tree on
+            A (FG-S481-M). The cause, measured here: python3 -I implies
+            safe_path, so the script's directory is not on sys.path; B3's
+            publisher puts its tree on sys.path itself and the mint does
+            not, so the 9.0.0 editable finder resolved the names to the
+            live tree (FG-S481-N). The rehearsal's wrapper had put the
+            directory on sys.path (FG-S481-O). B9b, the anchor, was not
+            sent.
+
+    D482-13 THE BYTES ROOT RAN, 11-17. ON A, a read pasted at 00:38Z
+            (ona/b9r2_read_paste0238_transcribed.txt f84004aa): the mint
+            executed two .pyc of the live tree, build_vsa's (fbd4ce13,
+            29613 B) and conformance_verifier's (5116f8a8, 55417 B),
+            aetherlang's, dated 11-05 and 11-04; their .py equal the
+            copy's; the live tree at b264c9db, clean. Both files, brought
+            to the container by the operator: in each one byte differs from
+            this container's compile, the type code of the constant ","
+            interned in A's, every code object equal (b9/pyc/diff_out.txt
+            7dc6a8ac, b9/pyc/diff_bv_out.txt abfa80aa); POST HOC, with ","
+            interned before the compile, the copy's sources compile to A's
+            two files byte for byte (b9/pyc/x2_out.txt 2741a8d9). B9R3 and
+            B9R4 ON A (ona/b9r4_read_paste0309_transcribed.txt 31f9f515):
+            of the 1931 files B9a's process loaded, resolved through links,
+            2204 paths with their ancestors, seven are another principal's:
+            the two .py, their .pyc and three directories, all
+            aetherlang's; sitecustomize is dpkg's link to a root file, dpkg
+            -V clean; B9R3's mode 777 was the link's own, a fault of B9R3.
+            DERIVED: on this evidence root ran the bytecode CPython writes
+            for the reviewed source; the release key was readable by that
+            process; no tampering was found. The self-check child's loads
+            are not covered (FG-S481-P).
+
+    D482-14 R9 AND THE RE-MINT, 11-17. RULING R9, 00:57Z: re-mint with a
+            fixed kit, B9a's output kept on A as evidence; the operator
+            asked what principal engineers would do and which errors not
+            seen at first glance to avoid. Measured for it: the self-check
+            child runs without isolation (FG-S481-P); setuptools' editable
+            finder is appended to sys.meta_path, so -E and -s alone fail
+            open; B9a's negative was a path pattern, a proxy (FG-S481-Q).
+            The kit (out25/S481_B9M_SHA256SUMS.txt dc2b2bd5;
+            b9m/B9M_PREDICTIONS.txt 257bf278): b9m_boot.py takes out of the
+            process every hook the editable install added, puts the copy
+            first and refuses if any is left; b9m_vcheck.py checks every
+            loaded file, resolved, and its ancestors for an owner other
+            than root or a write bit for group or other; env -i with a
+            listed environment; the child replayed alone with its imports
+            logged and checked. The rehearsal ran B9a's kit first, red,
+            then the new one, green, its mutants each caught
+            (b9m/B9M_REH_RESULTS.txt b23bf41f); one fact missed, named by
+            B9M_AMENDMENT_1.txt (5d1297d9) before anything ran on A.
+            OPERATOR, 01:24Z: send B9M. ON A at 01:25:52Z
+            (ona/b9m_mint_012552_transcribed.txt 06b2b339): the editable
+            finder removed; of the tree exactly build_vsa and
+            conformance_verifier loaded, from the copy; no file flagged
+            over the mint's 1930 files and 2201 paths; the child's 155
+            files passed the same check; 18 facts held; the payload
+            d7b4580f differs from B9a's only at timeVerified, 00:35:07Z to
+            01:25:55Z; B9M GREEN; 22 rows held (b9m/rec_b9m_out.txt
+            e22d9880). B9a's VSA superseded, never anchored.
+
+    D482-15 B9N, THE ANCHOR, 11-17. OPERATOR, 01:30Z: send B9N. ON A at
+            01:32:24Z (ona/b9n_anchor_013224_transcribed.txt 72e2c4d9): the
+            payload pinned to the operator's digest, anchored on Rekor v2
+            log2025-1 at log_index 202470048, tree size 202470058, the RFC
+            3161 time 01:32:28Z; the offline convergence PASS; no file
+            flagged, nothing of the live tree; 21 facts held; the packed
+            tar 3049be17, 14 files; 18 rows held (b9m/rec_b9n_out.txt
+            3f640807). The tar, brought to the container at 01:41Z, checked
+            (b9m/sv/SV_PREDICTIONS.txt 00efe4ea, b9m/sv/sv_out.txt
+            6a50855b): the sidecars, the pins, the digests; the shipped
+            verifier rc 0 with PyPI's wheel and sdist beside it, both
+            subjects derived again; a changed signature refused. Its
+            convergence leg first read the published names, a fault of the
+            check script, rerun after SV_AMENDMENT_1.txt (8ed79997) with
+            the canonical names: PASS on all five legs
+            (b9m/sv/sv_r2_out.txt 78f0cc2a; FG-S481-R).
+
+    D482-16 THE RELEASE VSA LANDED AND SERVED, 11-17. OPERATOR, 01:44Z:
+            pame, prepare the landing. The twelve files under
+            website/.well-known/nous/release-vsa/9.0.0/
+            (b9l/B9L_PREDICTIONS.txt 7efc5bac): the fixture 25 cases and 12
+            mutants killed (b9l/fx_b9l_out.txt e13b591e); L1 the commit
+            de258337, parent b264c9db, twelve added (b9l/l1_commit_out.txt
+            8bd47f3a); the suite at it in the container 5348 passed and 13
+            skipped, the same outcome set as b264c9db's
+            (b9l/cmp_wb9_out.txt 8e4ff1e0). The kit's sums first found
+            nothing on A, its files not yet uploaded
+            (ona/c23r_read_paste0407_transcribed.txt da131ccc). OPERATOR,
+            02:11Z: pame for G1. OPERATOR, 02:14Z: send G2; ON A from
+            02:16:00Z (ona/g2_verify_b9l_021600_transcribed.txt 96aafb0f):
+            5348 and 13 at both, the outcome lists 5361 lines and 704ba5d7
+            at both, VERIFY_RC 0. OPERATOR, 02:31Z: run G3; GitHub's main
+            de258337. OPERATOR, 02:32Z: send G4; ON A at 02:32:56Z
+            (ona/g4_fflive_b9l_023256_transcribed.txt ec01b814):
+            FFLIVE_GREEN, the twelve files 644. By R8: D1 pasted at 02:36Z,
+            0 violations over 441 files; D2 pasted at 09:36Z, after a pause
+            of about seven hours, 13 lines, the new directory and its files
+            only (ona/d2_dry_b9l_paste1136_transcribed.txt dfdf7ce0); D3 at
+            09:38Z (ona/d3_deploy_b9l_paste1138_transcribed.txt 501b3cb4):
+            each served file equal to the tree's, the public index.json
+            4d419511. B3's D3 had printed EQ for two missing files after a
+            refusal; this one counts a pair equal only when both digests
+            exist (b9l/B9L_REH_AMENDMENT_1.txt cb48fac8; FG-S481-S).
+
+    D482-17 B10, THE COLD AUDIT, 11-17. This container's proxy refused
+            nous-lang.org, HTTP 403, a policy denial, not retried; so the
+            audit ran on Server B, not the producer, with B's
+            scripts/cold_audit.py, equal to the tag's
+            (b10/B10_PREDICTIONS.txt b7dce19c). Sent as if the operator's
+            shell were B's, it ran on A and stopped at its own digest gate
+            (ona/b10_audit_onA_paste1141_transcribed.txt
+            6338eeda; FG-S481-T); B10_AMENDMENT_1.txt (3e22ce10) named the
+            ssh form. OPERATOR, 09:43Z: send the ssh command. ON B at
+            09:43:44Z (ona/b10b_audit_onB_paste1144_transcribed.txt
+            f5b1b4ef): the surface answers 404 for a version that cannot
+            exist; release-vsa, provenance, the vsa-vectors and the
+            registry each verified cold, 4 of 4, AUDIT_RC 0; the fetched
+            files equal the kit's, the wheel PyPI's, the registry B3's.
+
+    D482-18 WHAT STANDS AT THE CLOSE. GitHub's main and A's live tree
+            de258337; the tag v9.0.0 on b264c9db; PyPI nous-lang 9.0.0; A's
+            and B's nous-api at 9.0.0; the registry anchored at 201702765
+            and the release VSA at 202470048, both served. Left on the
+            hosts, named: on A the kits under /root, /root/s481_b9 (B9a's
+            output, superseded) and /root/s481_b9m; on B one audit
+            directory under /tmp. Seen on A and not acted on, outside this
+            seat's lane: /root/shieldjail, a backup of aether-shield.env
+            and /root/oracle2-bootstrap/auto-retry.log at 63175218 B. Seen
+            on GitHub: an active workflow ci-diag, not in main's tree.
+
+    FINDINGS
+
+            FG-S481-B  SEAT. A LANDING WRITES UNDER THE SHELL'S UMASK.
+                       D480's G4 wrote the ledger 600 where D478's G4 wrote
+                       644: the operator's shell on A had umask 0077 by
+                       then, set with another lane. A mode predicted for a
+                       fast-forward reads that umask first, or the command
+                       sets its own; this seat's later landings ran fflive
+                       under umask 022 in a subshell, each file 644.
+
+            FG-S481-C  NOT A SEAT ERROR, NOT ATTRIBUTED. THE CONTAINER DID
+                       NOT GIVE THE RUNNER'S COUNT. In a fresh venv pip's
+                       self-upgrade stopped on a hash mismatch against the
+                       index, its cause not read, and the install then ran
+                       at about 16 KB/s and was stopped; nothing from it
+                       was used. The count was read from CI's own log
+                       (DR2).
+
+            FG-S481-D  SEAT, CAUGHT BEFORE THE COMMIT. THE CHANGELOG'S
+                       DRAFT HELD WRONG LINES. Before the probes, one line
+                       was corrected, 8.0.0's 422 for export not being
+                       every failure, and a Known limit of [Unreleased],
+                       false at the tag, was dropped. By the probes: 8.0.0
+                       answered diff's and chat's deadline with 504, not
+                       408; and the gap witness is written by
+                       cli_verify.cmd_verify, the nous command declaring no
+                       --gap-witness. Each corrected before the approval.
+
+            FG-S481-E  NOT A SEAT ERROR. A TEST'S DOCSTRING AND ITS CODE
+                       DISAGREE. test_installed_metadata_matches_source
+                       says it is skipped in editable contexts; its code
+                       skips only when nous-lang is not installed, so an
+                       editable install's stale metadata fails it after any
+                       bump, as at B1's G2.
+
+            FG-S481-F  NOT A SEAT ERROR. A VERIFY CLONE ON A IS NOT
+                       ISOLATED FROM THE INSTALLED nous-lang. Tests that
+                       start the CLI as python -I -c "from cli import ..."
+                       import the live tree's modules through the editable
+                       finder, and importlib.metadata reads the system
+                       install; so since 11-05 those parts of every G2 ran
+                       at the live tree's commit, not the branch's. B1's
+                       three failures at its branch were this.
+
+            FG-S481-G  NOT A SEAT ERROR. AN EGG-INFO IN A TREE SHADOWS THE
+                       INSTALLED METADATA when that tree is on sys.path.
+                       A's live tree held an 8.0.0 egg-info of 10-29 after
+                       the 9.0.0 install, removed under R7; on B the
+                       reinstall rewrote its own at 9.0.0, and the step
+                       R4_AMENDMENT_1 added removes an old one.
+
+            FG-S481-H  SEAT. A RULE BREACHED: THE COMMAND WITH THE
+                       QUESTION. The message that asked R7 carried G7's
+                       command with it; the operator ran it, and his run
+                       was taken as his ruling.
+
+            FG-S481-I  NOT A SEAT ERROR. A CHECKOUT UNDER A DIRECTORY NAMED
+                       live SKIPS THE WHOLE SUITE: the conftest skips an
+                       item whose keywords hold "live", and pytest's
+                       keywords hold the names of its parent directories.
+                       release.py's phase 2 stops on no passes. Found by
+                       B2's rehearsal on such a stand-in.
+
+            FG-S481-J  NOT A SEAT ERROR. THE DEPLOY GATE LINTS FILES NO
+                       COMMIT HOLDS. The claim lint walks the filesystem,
+                       so in the live tree it read 441 files where a clean
+                       clone of the same commit holds 410; a refusal there
+                       could come from bytes no commit holds. The 31 were
+                       not identified.
+
+            FG-S481-K  NOT A SEAT ERROR. THE SESSION CANNOT PUSH A TAG: the
+                       proxy refused it as policy, where branch and main
+                       pushes from the same clone went through. The tag was
+                       made and pushed from the operator's computer by Git
+                       Credential Manager; the plaintext "store" helper
+                       also configured there was named to him and not used.
+
+            FG-S481-L  NOT ATTRIBUTED. THE SDIST DIFFERS BETWEEN TWO RUNNER
+                       BUILDS of one commit at one SOURCE_DATE_EPOCH, while
+                       the wheel is byte-equal. PyPI holds the release
+                       run's sdist a356fd2a; DR4's was 967e4eb0.
+
+            FG-S481-M  SEAT. A RULE BREACHED: ROOT RAN CODE OF THE LIVE
+                       TREE. B9a's mint executed two .pyc that aetherlang
+                       can write, with the release key readable. Measured
+                       afterwards (D482-13); its output superseded by a
+                       re-mint and never anchored. The kit's negative
+                       caught it; its rehearsal could not (FG-S481-O).
+
+            FG-S481-N  NOT A SEAT ERROR. python -I IMPLIES -P, AND AN
+                       EDITABLE FINDER CATCHES WHAT THE PATH LACKS. Under
+                       -I the script's directory is not on sys.path;
+                       setuptools' editable finder, appended to
+                       sys.meta_path, then resolves the tree's names to the
+                       live tree, silently, for any module a copy lacks.
+                       B3's publisher escaped it only because it puts its
+                       tree on sys.path itself.
+
+            FG-S481-O  SEAT. A REHEARSAL THAT COULD NOT FAIL. B9's
+                       rehearsal ran the mint through a wrapper that put
+                       the copy on sys.path, which python -I does not do on
+                       A: it removed the condition that failed there. The
+                       re-mint's rehearsal ran B9a's kit first and required
+                       it to fail.
+
+            FG-S481-P  NOT A SEAT ERROR. THE MINT'S SELF-CHECK CHILD RUNS
+                       WITHOUT ISOLATION: sys.executable with no flags, the
+                       environment inherited, its stderr dropped when it
+                       passes, so no log covered its loads in B9a. The
+                       re-mint ran it under env -i and replayed it alone
+                       with its imports checked.
+
+            FG-S481-Q  SEAT. A NEGATIVE THAT WAS A PROXY. B9a's negative
+                       looked for the live tree's path in the import log;
+                       the invariant is that root runs no byte another
+                       principal can write. It caught B9a, and would not
+                       have caught such a file elsewhere. The re-mint
+                       checks the owner and the write bits of every loaded
+                       file and its ancestors, through links.
+
+            FG-S481-R  NOT A SEAT ERROR, OLD. THE PUBLISHED PROCEDURE
+                       COVERS THE OFFLINE VERIFIER ONLY:
+                       docs/VERIFYING_A_RELEASE.md has no step for the
+                       Rekor bundle or its convergence, and
+                       verify_convergence reads canonical names the
+                       published directory does not carry, for 9.0.0 as for
+                       8.0.0. Whether a stranger is told to stage them is
+                       not known.
+
+            FG-S481-S  SEAT. A REFUSED DEPLOY PRINTED EQUALITY. B3's D3,
+                       this seat's, hashed both sides after a refusal and
+                       printed EQ for two missing files; it ran green, so
+                       no record it made is wrong. B9's rehearsal found it;
+                       B9's D3 counts a pair equal only when both digests
+                       exist.
+
+            FG-S481-T  SEAT. A COMMAND WRITTEN FOR THE WRONG HOST. B10 was
+                       written as if the operator had a shell on B; he
+                       reaches B by ssh from A. It ran on A and its digest
+                       gate stopped it; the ssh form followed under an
+                       amendment. Its first form had piped the digest check
+                       into sed, which would pass a mismatch; fixed before
+                       any run.
+
+            FG-S481-U  NOT A SEAT ERROR, INHERITED. THE NUMBER CHECK'S
+                       DERIVE COUNTS A NEW BLOB ONCE PER PATH, so two names
+                       for one blob count twice; NUM482's blob row missed
+                       by one for that, and no other row moved.
+
+            FG-S481-V  SEAT. RECORDS AND FIXTURES NOT KEPT BY THE SEAT'S
+                       OWN RULES. A digest typed by hand, its tail wrong,
+                       regenerated by script before use; log stamps not
+                       read from a clock, refused by the log tool or
+                       corrected by a CORR line; one check of a command
+                       against itself, not against the paste, redone; a
+                       reconciler that took a value printed twice as one,
+                       fixed; a check script that read the bundle by its
+                       published name; B3's landing rehearsal rows not
+                       hashed as their own predictions; a GET whose curl
+                       had no -f, so a storage error read as an answer; the
+                       count's mirror used as a fixture source, restored by
+                       N11, and a worktree made inside it by a relative
+                       path, removed; a fetch run before it was named; the
+                       uptime not read first at the operator's message of
+                       00:57Z on 11-17.
