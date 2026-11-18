@@ -61,6 +61,9 @@ import uuid
 from datetime import datetime, timezone
 import tempfile
 import zipfile
+import gzip  # __s485_sdist_normalize_v1__
+import io
+import tarfile
 from pathlib import Path
 
 REPO_ROOT: Path = Path(__file__).resolve().parent.parent  # __s162_p1_portable_repo_root_v1__
@@ -472,6 +475,86 @@ def phase_registry_coverage(version: str) -> None:  # __s232_p2_registry_phase_v
     print(f"  OK: all {len(live)} verifier digests covered for {version}")
 
 
+def sdist_content_digest(path: Path) -> str:
+    """sha256 over the sorted lines (name, type, sha256 of bytes) of the
+    sdist's members: its identity across hosts, whatever its archive
+    metadata or the deflate library that wrote it (S485 SD1).
+    __s485_sdist_normalize_v1__"""
+    raw = gzip.decompress(Path(path).read_bytes())
+    lines = []
+    with tarfile.open(fileobj=io.BytesIO(raw), mode="r:") as tf:
+        for m in tf.getmembers():
+            data = tf.extractfile(m).read() if m.isfile() else b""
+            lines.append("%s\0%s\0%s\n" % (m.name, m.type.decode("ascii", "replace"),
+                                           hashlib.sha256(data).hexdigest()))
+    return hashlib.sha256("".join(sorted(lines)).encode("utf-8")).hexdigest()
+
+
+def normalize_sdist(path: Path, epoch: int) -> str:
+    """Re-pack the sdist so that its bytes depend only on its members, the
+    epoch and the deflate library (FG-S481-L): names sorted, mtime the
+    epoch, uid and gid 0, uname and gname empty, modes 0o644 or 0o755,
+    PAX, gzip MTIME the epoch and no file name. Refuses, writing nothing,
+    a member that is not a regular file or a directory, a duplicate name,
+    or an absolute name or one with a .. part. Writes a temp file beside
+    the sdist, checks its content digest equals the input's, then
+    replaces the sdist. Returns that digest."""
+    path = Path(path)
+    before = sdist_content_digest(path)
+    out = io.BytesIO()
+    with tarfile.open(fileobj=io.BytesIO(gzip.decompress(path.read_bytes())), mode="r:") as tin:
+        ms = tin.getmembers()
+        names = [m.name for m in ms]
+        if len(set(names)) != len(names):
+            raise ReleaseError("sdist: duplicate member names")
+        for m in ms:
+            if not (m.isfile() or m.isdir()):
+                raise ReleaseError(f"sdist: member {m.name!r} is not a file or a directory")
+            if m.name.startswith("/") or ".." in m.name.split("/"):
+                raise ReleaseError(f"sdist: member name {m.name!r} is not relative")
+        with tarfile.open(fileobj=out, mode="w:", format=tarfile.PAX_FORMAT) as tout:
+            for m in sorted(ms, key=lambda x: x.name):
+                n = tarfile.TarInfo(m.name)
+                n.type = m.type
+                n.size = m.size if m.isfile() else 0
+                n.mtime = epoch
+                n.uid = n.gid = 0
+                n.uname = n.gname = ""
+                n.mode = 0o755 if (m.isdir() or m.mode & 0o111) else 0o644
+                tout.addfile(n, tin.extractfile(m) if m.isfile() else None)
+    gz = io.BytesIO()
+    with gzip.GzipFile(filename="", mode="wb", fileobj=gz, compresslevel=9, mtime=epoch) as g:
+        g.write(out.getvalue())
+    fd, tmp = tempfile.mkstemp(prefix=".sdist-", dir=str(path.parent))
+    try:
+        with os.fdopen(fd, "wb") as fh:
+            fh.write(gz.getvalue())
+        os.chmod(tmp, 0o644)
+        after = sdist_content_digest(Path(tmp))
+        if after != before:
+            raise ReleaseError("sdist: the normalization changed its content")
+        os.replace(tmp, path)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+        raise
+    return after
+
+
+def build_epoch() -> tuple[int, str]:
+    """SOURCE_DATE_EPOCH when set and made of ASCII digits, else the HEAD
+    commit's time in REPO_ROOT."""
+    v = os.environ.get("SOURCE_DATE_EPOCH", "")
+    if v.isascii() and v.isdigit():
+        return int(v), "SOURCE_DATE_EPOCH"
+    r = subprocess.run(["git", "-C", str(REPO_ROOT), "log", "-1", "--format=%ct", "HEAD"],
+                       capture_output=True, text=True, check=False)
+    t = r.stdout.strip()
+    if r.returncode == 0 and t.isascii() and t.isdigit():
+        return int(t), "HEAD commit time"
+    raise ReleaseError("no SOURCE_DATE_EPOCH and no HEAD commit time")
+
+
 def phase_build() -> tuple[Path, Path]:
     print("\n[6/10] BUILD")
     for d in (REPO_ROOT / "build", DIST_DIR):
@@ -485,6 +568,10 @@ def phase_build() -> tuple[Path, Path]:
     if len(whl) != 1 or len(sdist) != 1:
         raise ReleaseError(f"expected 1 wheel + 1 sdist, got whl={whl} sdist={sdist}")
     print(f"  OK: {whl[0].name} + {sdist[0].name}")
+    epoch, source = build_epoch()  # __s485_sdist_normalize_v1__
+    digest = normalize_sdist(sdist[0], epoch)
+    print(f"  OK: sdist normalized, epoch {epoch} ({source}), content {digest[:16]}")
+    print(f"  SDIST_CONTENT_DIGEST {digest}")
     return whl[0], sdist[0]
 
 
