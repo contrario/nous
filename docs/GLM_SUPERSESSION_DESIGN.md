@@ -32379,3 +32379,165 @@ document itself.
                        and read the uptime in its sixth command, 110 s
                        after the container started; on every later message
                        it read the uptime first.
+
+  - S486 the number the operator gave the seat S485's second entry: the
+    mint's root guard, measured, landed as S485M; FG-S481-F measured in
+    full and its fix measured in a replica of A; the number 486 counted;
+    and the codes FG-S485-J to FG-S485-O
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S485,
+    DURING ITS SESSION, with the labels of D450 to D483: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC, on 11-18 of 2026; an operator's time is the time his message was
+    sent, a value ON A carries the clock its command printed. Each value
+    was asserted by the script that built this entry from the seat's
+    running log or its files. Each paste is a file transcribed from the
+    chat, named by its digest. What D483 records is not repeated here. Each
+    suite, control and signature check below evidences; nothing here is a
+    Z3 or Farkas result. The container restarted several times in the
+    session; after each the seat read the uptime and the pins before its
+    next act, and no file was lost.
+
+    D486-1  THE BOARD READ AND THE MINT'S HAZARD, MEASURED. OPERATOR,
+            09:52Z: the open items, the most important first, with measured
+            evidence and online research where needed, and the mistakes
+            that do not show at first sight. The board of S481's section 7
+            read; READ in S481's evidence: nous-api on A runs as aetherlang
+            (g4a, 11-11), the tree's owner; on B as root from its tree
+            (R4R1). As root the mint imports build_vsa and then reads the
+            release signing key. M1 in the container (m1/M1_PREDICTIONS.txt
+            af690122 before m1/m1_run.sh; m1/m1_out.txt 1d42aa68), a
+            root-owned copy of the mint beside a stand-in tree installed
+            editable and owned by another user: under -I -B the tree's
+            build_vsa ran as euid 0; with a root-owned build_vsa.py beside
+            the copy, the tree's still ran and the copy's did not; without
+            flags the copy's ran. Five of five as predicted; named
+            deviation: Python 3.13 there for A's 3.12.
+
+    D486-2  THE GUARD, MEASURED IN THE CONTAINER. mint/MINT_PREDICTIONS.txt
+            39ba3247 before the tests and the code. Red: the 22 new tests
+            failed on f0c0ef8c. The first green run of the file failed T06
+            by a fault of the test's helper; mint/MINT_AMENDMENT_1.txt
+            6addd3a0, POST HOC for T06, before the next run. Green: the
+            suite as a user of the seat's own, 5369 passed and 14 skipped,
+            22 outcome lines added, all in the new file, none removed. 14
+            mutants, each killed by exactly the tests the amendment names
+            (mint/mut_out.txt 3f06ebd1). M2 as root on M1's fixture
+            (mint/m2_out.txt b41d40ff): the old mint ran the tree's code;
+            the guarded one refused without -I -B, refused a group-writable
+            or foreign-owned path, refused build_vsa from a world-writable
+            cache before it ran, and ran the copy's build_vsa when all was
+            root's. Seven of seven as predicted.
+
+    D486-3  S485M LANDED, 11-18. By the push rule, each write after its
+            pame. s485m/S485M_PREDICTIONS.txt 8b3bbdb6 before the tools,
+            which came from S481's B9L in one pass; the fixture 28 cases
+            and 14 mutants as predicted; the checkers by their own
+            predictions (s485m/CHECKERS_PREDICTIONS.txt 26812a39), 23
+            controls, none bad. L1: 8d8348e2, one parent f0c0ef8c, the
+            mint, scripts/release.py and
+            tests/test_s485_mint_root_guard.py, the claim lint 410 and 0.
+            The container restarted before G1; pins re-read. OPERATOR,
+            11:33Z: pame for G1; the branch s485-mint. ON A at 14:21Z, C26,
+            the kit out29/ by its sums
+            (ona/c26_check_162100_transcribed.txt 36c9ba1d). OPERATOR,
+            14:23Z: pame for G2; ON A from 14:24:21Z
+            (ona/g2_verify_s485m_163700_transcribed.txt 1f41497c): 5348
+            passed and 13 skipped at f0c0ef8c, 5370 and 13 at 8d8348e2;
+            outcomes 5361 and 5383; 22 added, 0 removed, their digest the
+            pinned 60f725b9; the claim lint 410 and 0; VERIFY_RC 0; 19 rows
+            held. OPERATOR, 15:01Z: pame for G3; the first call refused
+            with rc 2 at its usage check, before any fetch, nothing
+            written (FG-S485-J); with the commit, GitHub's main 8d8348e2.
+            OPERATOR, 15:02Z: pame for G4; ON A at 15:02:39Z
+            (ona/g4_fflive_s485m_170200_transcribed.txt 9f173184): HEAD
+            f0c0ef8c to 8d8348e2, the three paths 644, aetherlang's; 14
+            rows held. The readback: main and s485-mint 8d8348e2, 187 refs,
+            READBACK_GREEN. No service imports the mint; no restart, no
+            deploy.
+
+    D486-4  FG-S481-F MEASURED IN FULL, 11-18. OPERATOR, 15:05Z: continue;
+            what was done and what remains. VERIFY taken first: it is the
+            instrument every landing on A passes. V1 (v1/V1_PREDICTIONS.txt
+            e4c7ab41 before the probe): a probe in the container's
+            site-packages logged, per process, every module file it loaded;
+            the suite from a clone Y while the editable install pointed at
+            a tree X, as A's verify clone and live tree. The probe changed
+            no outcome. 218 children in 10 test files loaded the CLI from
+            X, none from Y: the nous console script in s123 to s127, a
+            child importing cli with no clone entry on its path in
+            an_js_strict_c to g. 1041 offline verifier children loaded no
+            tree file. One prediction missed (FG-S485-L) (v1/V1_RESULTS.txt
+            889a9e31). So in every G2 since 11-05 those children ran the
+            live tree's CLI, not the branch's.
+
+    D486-5  THE FIX, MEASURED IN A REPLICA OF A. V2 (v1/V2_PREDICTIONS.txt
+            b4854a3d): A's 40 pins, setuptools and wheel installed into the
+            system Python 3.12 of the container, X installed editable by
+            root, as on A. Its first run used the wrong interpreter and is
+            void (FG-S485-K); amendments 4e40cc49 and 3a3db417 before the
+            rerun. R0, today's form: 218 children from X. R1: each suite in
+            its own venv over the system site-packages, the clone installed
+            editable in it with no index and no network: 0 children from X,
+            280 from Y. Both 5369 passed and 14 skipped with the same
+            outcome list (v1/V2_RESULTS.txt 7ae97767). Not measured: A
+            itself, and the metadata half of FG-S481-F at differing
+            versions. The verify kit takes this form from this entry's
+            landing, the clone reinstalled at each checkout and a leg that
+            refuses unless cli resolves to the clone.
+
+    D486-6  THE NUMBER 486. OPERATOR, 15:44Z: 486, for this entry. N9 and
+            N10 fetched the mirror: main 8d8348e2, 187 refs, nothing new.
+            numbers/NUM486_PREDICTIONS.txt bbde9939 and its amendment
+            77c5221b before the count; 486 a target of NUM485's count, so
+            its rows were measured, not priors. The count: 39 rows, 37
+            held, 0 differ, 2 read; 486 free. Its 17 hex hits lie inside
+            runs longer than 12 in 11 blobs, none at a run's
+            start (FG-S475-D). The three controls each differed only where
+            the amendment said (numbers/NUM486_RESULTS.txt 3aace750).
+
+    FINDINGS
+
+            FG-S485-J  SEAT. A GATE CALLED WITHOUT ITS ARGUMENT. G3's first
+                       call omitted the commit the tool requires; it
+                       refused at its usage check with rc 2, before any
+                       network call, and wrote nothing. The rerun with the
+                       commit was green. A gate's call is copied from its
+                       last green form.
+
+            FG-S485-K  SEAT. A REPLICA RUN ON THE WRONG INTERPRETER. In the
+                       container both /usr/local/bin/python3 and
+                       /usr/bin/python3 are 3.13; A's python3 is 3.12. V2's
+                       first run took the first on its PATH, failed with
+                       141 errors, and was voided; two amendments came
+                       before the rerun. A replica names and checks its
+                       interpreter before a run counts.
+
+            FG-S485-L  SEAT. A PREDICTION READ THE FLAGS, NOT THE CODE. V1
+                       named nt_v1_cost_rederive among the files whose
+                       children would load the other tree, from its -I -c;
+                       that child runs a copied offline verifier that
+                       imports no tree module.
+
+            FG-S485-M  NOT A SEAT ERROR, MEASURED. FG-S481-F IN FULL. A G2
+                       on A runs the suite in a clone while the editable
+                       install points at the live tree; children started as
+                       the nous script, or importing cli with no clone
+                       entry on their path, load the live tree's CLI. 218
+                       such children in 10 files, in a replica; the venv
+                       form takes all of them to the clone, outcomes
+                       unchanged. Not yet measured on A.
+
+            FG-S485-N  NOT A SEAT ERROR, READ. ON B nous-api RUNS AS ROOT
+                       FROM ITS TREE (R4R1, S481's evidence): code in that
+                       tree runs as root. Not this seat's lane; named for
+                       the security lane.
+
+            FG-S485-O  NOT A SEAT ERROR, THE GUARD'S BOUNDARY. A .pth file
+                       runs before the guard: it is checked and refused,
+                       not stopped. The ROOT-1 child keeps its bare
+                       argv (FG-S234-A), so it runs without -I and its site
+                       can process root's user site directory, which the
+                       guard does not check. The guard has not yet run as
+                       root on A; its first use is the next mint, from a
+                       root-owned copy staged from the tag, under -I -B.
