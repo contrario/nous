@@ -39,7 +39,10 @@ def pytest_collection_modifyitems(config, items):
         return
     skip_live = _pytest.mark.skip(reason="live test; pass --run-live to run")
     for item in items:
-        if "live" in item.keywords:
+        # __s485_live_marker_only_v1__ the marker, not item.keywords: those hold every
+        # node's name, a directory's too, so a checkout in a directory
+        # named live skipped the whole suite (FG-S481-I).
+        if item.get_closest_marker("live") is not None:
             item.add_marker(skip_live)
 
 

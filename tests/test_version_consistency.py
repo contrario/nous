@@ -124,8 +124,10 @@ def test_pyproject_has_no_static_version_literal() -> None:
 
 
 def test_installed_metadata_matches_source() -> None:
-    """Only meaningful when nous-lang is installed (e.g. via pip install ...).
-    Skipped in editable/uninstalled contexts.
+    """Meaningful when nous-lang is installed from this checkout: a wheel,
+    or an editable install of this tree, as the verify's venv form makes
+    it. Skipped only when nous-lang is not installed; an install of
+    another checkout fails it after a version bump (FG-S481-E).
     """
     try:
         meta_version: str = importlib.metadata.version("nous-lang")
