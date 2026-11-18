@@ -34,6 +34,263 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+# __s485_root_guard_v1__
+# Root guard (S485; FG-S481-M, N, P, Q). When this script runs as root it
+# executes no byte another principal can write: run it as python3 -I -B
+# from a root-owned copy staged from the tag, never from the live tree.
+# For euid 0 the boot below refuses unless -I and -B; removes every import
+# hook an editable install put in this process; refuses unless the script,
+# every sys.path entry (a missing one by its nearest existing ancestor),
+# every .pth of a site dir and every module already loaded are owned by
+# root and not writable by group or other, through their lexical and
+# resolved chains (a sticky ancestor allowed, never a sticky target); puts
+# the script's directory first; and installs a finder first on
+# sys.meta_path that refuses a spec, before its module runs, unless its
+# origin, its cache directory and its search locations pass the same test.
+# A .pth runs before this code: detected and refused, not prevented. For
+# any other euid nothing here acts.
+import importlib.util as _s485_ilu
+import stat as _s485_stat
+
+_S485_TAG = "__editable__"
+_S485_W = 0o022
+
+
+class RootGuardError(Exception):
+    pass
+
+
+class _S485GuardImportError(ImportError):
+    pass
+
+
+def _s485_chain(p: str) -> list[str]:
+    out = []
+    d = p
+    while True:
+        out.append(d)
+        nd = os.path.dirname(d)
+        if nd == d:
+            return out
+        d = nd
+
+
+def _s485_unsafe(path: str, *, owners: tuple[int, ...] = (0,), lstat: Any = os.lstat,
+                 target_sticky: bool = False) -> str | None:
+    lex = os.path.abspath(path)
+    real = os.path.realpath(lex)
+    for form in (lex, real):
+        q = form
+        while True:
+            try:
+                lstat(q)
+                break
+            except FileNotFoundError:
+                nq = os.path.dirname(q)
+                if nq == q:
+                    return "no existing ancestor: " + form
+                q = nq
+            except OSError as exc:
+                return "cannot stat " + q + ": " + exc.__class__.__name__
+        for d in _s485_chain(q):
+            try:
+                st = lstat(d)
+            except OSError as exc:
+                return "cannot stat " + d + ": " + exc.__class__.__name__
+            if st.st_uid not in owners:
+                return "not root-owned: %s (uid %d)" % (d, st.st_uid)
+            if _s485_stat.S_ISLNK(st.st_mode):
+                continue
+            if st.st_mode & _S485_W:
+                sticky = bool(st.st_mode & _s485_stat.S_ISVTX)
+                if not sticky or (d == q and not target_sticky):
+                    return "writable by group or other: %s (%o)" % (
+                        d, _s485_stat.S_IMODE(st.st_mode))
+    return None
+
+
+def _s485_site_dirs() -> list[str]:
+    try:
+        import site
+        dirs = list(site.getsitepackages())
+    except Exception:
+        dirs = []
+    return [d for d in dirs if os.path.isdir(d)]
+
+
+def _s485_strip(meta_path: list, path_hooks: list, path: list) -> list[str]:
+    removed = []
+    for f in list(meta_path):
+        mod = getattr(f, "__module__", "") or ""
+        name = getattr(f, "__name__", type(f).__name__)
+        if mod.startswith(_S485_TAG) or name.startswith(_S485_TAG):
+            meta_path.remove(f)
+            removed.append("meta_path:" + mod + "." + name)
+    for h in list(path_hooks):
+        mod = getattr(h, "__module__", "") or ""
+        if mod.startswith(_S485_TAG):
+            path_hooks.remove(h)
+            removed.append("path_hook:" + mod)
+    for p in list(path):
+        if isinstance(p, str) and p.startswith(_S485_TAG):
+            path.remove(p)
+            removed.append("path:" + p)
+    return removed
+
+
+def _s485_editable_left(meta_path: list, path_hooks: list) -> list[str]:
+    return [repr(x) for x in list(meta_path) + list(path_hooks)
+            if _S485_TAG in repr(x) or "editable" in repr(x).lower()]
+
+
+def _s485_module_paths(mod: Any) -> list[str]:
+    out = []
+    for attr in ("__file__", "__cached__"):
+        v = getattr(mod, attr, None)
+        if isinstance(v, str) and v:
+            out.append(v)
+    spec = getattr(mod, "__spec__", None)
+    locs = getattr(spec, "submodule_search_locations", None) if spec is not None else None
+    for loc in list(locs or []):
+        if isinstance(loc, str) and loc and not loc.startswith(_S485_TAG):
+            out.append(loc)
+    return out
+
+
+def _s485_check_modules(modules: Any, owners: tuple[int, ...], lstat: Any) -> None:
+    for name, mod in list(modules.items()):
+        if mod is None:
+            continue
+        for p in _s485_module_paths(mod):
+            why = _s485_unsafe(p, owners=owners, lstat=lstat)
+            if why:
+                raise RootGuardError("module " + name + ": " + why)
+
+
+class _S485Guard:
+    """First on sys.meta_path in a root run: asks the other finders for
+    the spec and refuses it, before its module runs, unless its origin,
+    its cache directory and its search locations pass _s485_unsafe."""
+
+    def __init__(self, meta_path: list, *, owners: tuple[int, ...] = (0,),
+                 lstat: Any = os.lstat) -> None:
+        self._mp = meta_path
+        self._owners = owners
+        self._lstat = lstat
+
+    def check_spec(self, spec: Any) -> str | None:
+        paths = []
+        o = spec.origin
+        if spec.has_location and isinstance(o, str):
+            paths.append(o)
+            if o.endswith(".py"):
+                try:
+                    paths.append(_s485_ilu.cache_from_source(o))
+                except (NotImplementedError, ValueError):
+                    pass
+        for loc in list(spec.submodule_search_locations or []):
+            if isinstance(loc, str) and loc and not loc.startswith(_S485_TAG):
+                paths.append(loc)
+        for p in paths:
+            why = _s485_unsafe(p, owners=self._owners, lstat=self._lstat)
+            if why:
+                return why
+        return None
+
+    def find_spec(self, fullname: str, path: Any = None, target: Any = None) -> Any:
+        for f in list(self._mp):
+            if f is self:
+                continue
+            fs = getattr(f, "find_spec", None)
+            if fs is None:
+                continue
+            spec = fs(fullname, path, target)
+            if spec is None:
+                continue
+            why = self.check_spec(spec)
+            if why:
+                raise _S485GuardImportError("root guard: " + fullname + ": " + why,
+                                            name=fullname)
+            return spec
+        return None
+
+    def invalidate_caches(self) -> None:
+        return None
+
+
+def _s485_root_boot(*, euid: int | None = None, flags: Any = None, meta_path: Any = None,
+                    path_hooks: Any = None, path: Any = None, modules: Any = None,
+                    script: str | None = None, owners: tuple[int, ...] = (0,),
+                    lstat: Any = os.lstat, site_dirs: Any = None) -> list[str] | None:
+    if euid is None:
+        euid = os.geteuid()
+    if euid != 0:
+        return None
+    flags = sys.flags if flags is None else flags
+    if not (flags.isolated and flags.safe_path and flags.dont_write_bytecode):
+        raise RootGuardError("run as root needs python3 -I -B (isolated, no bytecode written)")
+    meta_path = sys.meta_path if meta_path is None else meta_path
+    path_hooks = sys.path_hooks if path_hooks is None else path_hooks
+    path = sys.path if path is None else path
+    modules = sys.modules if modules is None else modules
+    script = os.path.abspath(__file__) if script is None else script
+    site_dirs = _s485_site_dirs() if site_dirs is None else site_dirs
+    removed = _s485_strip(meta_path, path_hooks, path)
+    left = _s485_editable_left(meta_path, path_hooks)
+    if left:
+        raise RootGuardError("editable import hooks left: " + " ".join(left))
+    why = _s485_unsafe(script, owners=owners, lstat=lstat)
+    if why:
+        raise RootGuardError("the script: " + why)
+    home = os.path.dirname(os.path.realpath(script))
+    while home in path:
+        path.remove(home)
+    path.insert(0, home)
+    for e in list(path):
+        if not isinstance(e, str):
+            continue
+        e2 = e or os.getcwd()
+        why = _s485_unsafe(e2, owners=owners, lstat=lstat)
+        if why:
+            raise RootGuardError("sys.path entry " + e2 + ": " + why)
+    for sd in site_dirs:
+        try:
+            names = sorted(os.listdir(sd))
+        except OSError:
+            continue
+        for n in names:
+            if n.endswith(".pth"):
+                why = _s485_unsafe(os.path.join(sd, n), owners=owners, lstat=lstat)
+                if why:
+                    raise RootGuardError(".pth " + n + ": " + why)
+    _s485_check_modules(modules, owners, lstat)
+    meta_path.insert(0, _S485Guard(meta_path, owners=owners, lstat=lstat))
+    sys.path_importer_cache.clear()
+    return removed
+
+
+def _s485_root_check(*, euid: int | None = None, modules: Any = None, meta_path: Any = None,
+                     path_hooks: Any = None, owners: tuple[int, ...] = (0,),
+                     lstat: Any = os.lstat) -> None:
+    if euid is None:
+        euid = os.geteuid()
+    if euid != 0:
+        return
+    meta_path = sys.meta_path if meta_path is None else meta_path
+    if not meta_path or not isinstance(meta_path[0], _S485Guard):
+        raise RootGuardError("the guard is not first on sys.meta_path")
+    left = _s485_editable_left(meta_path, sys.path_hooks if path_hooks is None else path_hooks)
+    if left:
+        raise RootGuardError("editable import hooks left: " + " ".join(left))
+    _s485_check_modules(sys.modules if modules is None else modules, owners, lstat)
+
+
+try:
+    _S485_BOOT = _s485_root_boot()
+except RootGuardError as _s485_exc:
+    sys.stderr.write("MINT REFUSED: root guard: " + str(_s485_exc) + "\n")
+    raise SystemExit(2)
+
 import build_vsa
 
 DEFAULT_OPERATOR_KEY = "/root/.local/share/nous/keys/release_attest_signing.key"
@@ -85,6 +342,46 @@ BACKFILL_NOTE = (
 class MintError(ValueError):
     """Raised on any precondition or verification failure in the MINT phase.
     The message starts with the cause. No files are written on a raise."""
+
+
+# __s485_root_guard_v1__
+_S485_EAGER = {
+    "mint": ("datetime", "subprocess", "httpx",
+             "cryptography.hazmat.primitives.serialization",
+             "cryptography.hazmat.primitives.asymmetric.ed25519",
+             "sigstore.models", "sigstore.verify", "sigstore.verify.policy",
+             "pypi_attestations"),
+    "anchor": ("datetime", "httpx", "rekor_anchor", "rekor_anchor_v2",
+               "tsa_client", "cli_verify_release", "rekor_v2_offline"),
+}
+
+
+def _s485_checkpoint(stage: str) -> None:
+    try:
+        _s485_root_check()
+    except RootGuardError as exc:
+        raise MintError("root guard (" + stage + "): " + str(exc)) from exc
+
+
+def _s485_root_prepare(command: str) -> None:
+    """For a root run: import the command's whole closure first, through
+    the guard, then check every loaded module, before the seed is read
+    (mint) or the network is touched (anchor)."""
+    if os.geteuid() != 0:
+        return
+    import importlib
+
+    for name in _S485_EAGER[command]:
+        try:
+            importlib.import_module(name)
+        except ImportError as exc:
+            raise MintError("root guard (" + command + "): cannot import " + name
+                            + ": " + str(exc)) from exc
+    _s485_checkpoint(command + ": before " + ("the seed" if command == "mint" else "the network"))
+
+
+def _s485_child_env() -> dict[str, str]:
+    return {"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "LANG": "C.UTF-8"}
 
 
 def _sha256_hex(data: bytes) -> str:
@@ -345,6 +642,7 @@ def _write_with_sidecar(path: Path, data: bytes) -> None:
 
 
 def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path, backfill: bool = False) -> int:
+    _s485_root_prepare("mint")  # __s485_root_guard_v1__
     seed = _load_operator_seed(key_path)
     pin = _operator_pubkey_b64(seed)
     if pin != COMMITTED_RELEASE_PIN_B64:
@@ -361,6 +659,7 @@ def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path, backfil
     wheel = files["wheel"]
     sdist = files["sdist"]
 
+    _s485_checkpoint("mint: before the first write")  # __s485_root_guard_v1__
     work_dir.mkdir(parents=True, exist_ok=True)
     httpx = _require_http()
     dist_paths: dict[str, Path] = {}
@@ -535,10 +834,12 @@ def _root1_self_verify(out_dir: Path, vsa_name: str) -> int:  # __s236_p1_root1_
             "the offline verifier reads " + VERIFIER_VSA_FILENAME
             + " and the mint did not write it: " + str(alias)
         )
+    _s485_checkpoint("mint: before the ROOT-1 child")  # __s485_root_guard_v1__
     result = subprocess.run(
         [sys.executable, str(out_dir / "verify_build_vsa_offline.py")],
         capture_output=True,
         text=True,
+        env=_s485_child_env(),  # __s485_root_guard_v1__
     )
     sys.stdout.write(result.stdout)
     # __s172_p0a_root1_stderr_suppress_v1__
@@ -1067,6 +1368,8 @@ def anchor(
     refuses on an ATTEMPTED one. The journal is local operator state, not
     evidence.
     """
+    _s485_root_prepare("anchor")  # __s485_root_guard_v1__
+
     import datetime as _dt
 
     import httpx
