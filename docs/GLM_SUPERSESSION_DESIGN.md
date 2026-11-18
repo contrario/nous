@@ -32541,3 +32541,212 @@ document itself.
                        guard does not check. The guard has not yet run as
                        root on A; its first use is the next mint, from a
                        root-owned copy staged from the tag, under -I -B.
+
+  - S487 the number the operator gave the seat S485's third entry: D486
+    landed with the first venv form of the verify on A; FG-S481-L measured,
+    fixed and landed as S485S; FG-S481-I and FG-S481-E measured, fixed and
+    landed as S485U; the number 487 counted; and the codes FG-S485-P
+    to FG-S485-V
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S485,
+    DURING ITS SESSION, with the labels of D450 to D486: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC, on 11-18 of 2026; after 22:00Z the operator's clock read 11-19. An
+    operator's time is the time his message was sent, a value ON A carries
+    the clock its command printed. Each value was asserted by the script
+    that built this entry from the seat's running log or its files. Each
+    paste is a file transcribed from the chat, named by its digest. What
+    D486 records is not repeated here. Each suite, control and readback
+    below evidences; nothing here is a Z3 or Farkas result. The container
+    restarted many times in the session; after each the seat read the
+    uptime and the pins before its next act, and no file was lost.
+
+    D487-1  D486 LANDED: THE FIRST VENV FORM ON A.
+            d486/D486_PREDICTIONS.txt 4ddc6924 before its tools. The verify
+            took the venv form V2 measured, and root's writes moved to a
+            directory of its own: in D483's verify root read and wrote
+            inside aetherlang's temporary HOME after aetherlang's code had
+            run there, where a planted link could steer it. The fixture 23
+            cases and 15 mutants as predicted; the rehearsal's first run
+            refused at its own count (fflive 8 times, not 7). The checkers
+            by their predictions (fb509ccb); amendment d8d21bad before any
+            control, a miscount of rows; amendment 2b540359, POST
+            HOC (FG-S485-P); 17 controls, none bad. L1 8ee79219, one parent
+            8d8348e2. OPERATOR, 16:11Z: pame for G1; the branch s486-d486.
+            ON A at 16:13Z, C27, the kit out30/ by its sums
+            (ona/c27_check_181300_transcribed.txt 28dfc3c1). OPERATOR,
+            16:15Z: pame for G2; ON A from 16:16:15Z
+            (ona/g2_verify_d486_182800_transcribed.txt 1e3090d6): 23 legs
+            0; at both checkouts the CLI from the clone and nous from a
+            venv under /tmp; 5370 passed and 13 skipped at both, outcomes
+            5383 f3e2a8df at both, equal to S485M's branch run in the old
+            form; no outcome moved. So the fix of FG-S485-M, not yet
+            measured on A when D486 was written, is measured there by its
+            legs; no probe ran on A. OPERATOR, 16:30Z: pame for G3;
+            GitHub's main 8ee79219. OPERATOR, 16:31Z: pame for G4; ON A at
+            16:32:09Z (ona/g4_fflive_d486_183200_transcribed.txt 0620fc46):
+            the document 644, aetherlang's. The readback: 188 refs,
+            READBACK_GREEN.
+
+    D487-2  FG-S481-L MEASURED. OPERATOR, 16:34Z: continue at the same
+            level; new solutions welcome with measured evidence; weight on
+            the mistakes that do not show at first sight. SDIST taken next.
+            RESEARCH by web search: a setuptools sdist is not made
+            reproducible by SOURCE_DATE_EPOCH alone. SD1
+            (sd1/SD1_PREDICTIONS.txt c055a4a0, before any download or
+            build): PyPI's 9.0.0 sdist a356fd2a, its gzip time inside the
+            release job; its 602 members carry the checkout's or the
+            build's minute and the runner's owner, none the epoch. Two
+            fresh builds of b264c9db at the release's epoch differ as
+            archives; their member names and bytes are equal, content
+            digest dc01248d, and so are PyPI's, PKG-INFO
+            included. FG-S481-L is attributed to archive metadata, not
+            content. A re-pack of all three, names sorted, mtime the epoch,
+            owners 0, modes 644 or 755, gives one archive, 061fab50. The
+            deflate library changes the .tar.gz bytes of one tar (GNU gzip
+            5e135017, zlib-ng 061fab50): the content digest, not the
+            archive's, is the identity across hosts (sd1/SD1_RESULTS.txt
+            aad23199).
+
+    D487-3  THE NORMALIZER, MEASURED. sd2/SD2_PREDICTIONS.txt 2efa597f
+            before the tests and the code: scripts/release.py rewrites the
+            sdist after the build and prints its content digest; it refuses
+            a link, a duplicate name, an absolute name or one with a ..
+            part, writes by an atomic replace, and refuses if the content
+            digest moved. Red: 11 failed; amendment a0eaa6f1 for the 11
+            ids, before the code. The first green run of the file failed
+            U08 by the test's own fault; amendment 8f29680f, POST HOC, the
+            test only (FG-S485-Q). Green in a clone in the venv form: 5380
+            passed and 14 skipped, 11 outcome lines added, none removed.
+            Amendment 5c344990 widened four kill sets before any mutant
+            ran; 10 of 10 mutants as named. The normalizer on SD1's three
+            sdists: all 061fab50, content dc01248d.
+
+    D487-4  S485S LANDED, 11-18. s485s/S485S_PREDICTIONS.txt 4c535663
+            before the tools: S485M's code landing joined with D486's venv
+            run. The fixture 30 cases and 18 mutants as predicted. The
+            first control run differed on the legs: the script prints 24,
+            the predictions and the checker said 25; amendment bff1cfbf,
+            POST HOC, and 853e5513 before C28 and G2 (FG-S485-P). L1
+            82aaf682, one parent 8ee79219. OPERATOR, 17:11Z: pame for G1;
+            the branch s485-sdist. ON A at 17:13Z, C28
+            (ona/c28_check_191300_transcribed.txt 4c372aa6). OPERATOR,
+            17:15Z: pame for G2; ON A from 17:16:07Z
+            (ona/g2_verify_s485s_192700_transcribed.txt 1f4feecc): 24 legs
+            0; 5370 passed and 13 skipped at 8ee79219, 5381 and 13 at
+            82aaf682; outcomes 5383 and 5394; 11 added, 0 removed, their
+            digest the pinned c12b7f39; the claim lint 410 and 0. After a
+            pause of five hours, OPERATOR, 22:28Z: pame for G3; GitHub's
+            main 82aaf682, no drift in the pause. OPERATOR, 22:29Z: pame
+            for G4; ON A at 22:31:27Z
+            (ona/g4_fflive_s485s_003100_transcribed.txt e7ecc006): both
+            paths 644, aetherlang's. The readback: 189 refs,
+            READBACK_GREEN. The normalizer has not yet run in a release.
+
+    D487-5  FG-S481-I AND FG-S481-E MEASURED. OPERATOR, 22:33Z: continue as
+            usual; SUITE taken next. su1/SU1_PREDICTIONS.txt 6b9982c7
+            before any run. A clone of 82aaf682 in a directory named live:
+            the 11 tests of the sdist file skipped as live tests, none
+            passed; in .../live/nous, 11 passed. The trigger is the
+            checkout's own directory, or one inside the tree, named live:
+            the gate read item.keywords, which hold every node's
+            name (FG-S485-V). Red: two of the four new tests failed. The
+            fix: the gate asks get_closest_marker("live"), and the metadata
+            test's docstring says what its code does (FG-S481-E). In the
+            live-named clone after it: 11 passed, and the four live-marked
+            tests of three files still skipped. The suite in the venv form:
+            5384 passed and 14 skipped, 4 outcome lines added and none
+            removed; the prediction said 5385, an arithmetic
+            slip (FG-S485-R). 3 of 3 mutants as named (su1/SU1_RESULTS.txt
+            4327030e).
+
+    D487-6  S485U LANDED, 11-18. s485u/S485U_PREDICTIONS.txt 185e6834
+            before the tools, made from S485S's in one pass of 47 counted
+            substitutions; the fixture 30 cases and 18 mutants as
+            predicted; the checkers by their predictions (ba272b2c), 16
+            controls, none bad. L1 daf9452e, one parent 82aaf682. OPERATOR,
+            22:57Z: pame for G1; the branch s485-suite. ON A at 22:59Z, C29
+            (ona/c29_check_005900_transcribed.txt e93aacdb). OPERATOR,
+            23:00Z: pame for G2; ON A from 23:01:08Z
+            (ona/g2_verify_s485u_011100_transcribed.txt 5a55a9db): 25 legs
+            0; 5381 passed and 13 skipped at 82aaf682, 5385 and 13 at
+            daf9452e; outcomes 5394 and 5398; 4 added, 0 removed, their
+            digest the pinned 064a4d3c; the claim lint 410 and 0. OPERATOR,
+            23:12Z: pame for G3; GitHub's main daf9452e. OPERATOR, 23:15Z:
+            pame for G4; ON A at 23:15:42Z
+            (ona/g4_fflive_s485u_011500_transcribed.txt 674e7f2d): the
+            three paths 644, aetherlang's. The readback: 190 refs,
+            READBACK_GREEN. Test files only: no restart, no deploy.
+
+    D487-7  THE NUMBER 487. OPERATOR, 23:18Z: 486, for this entry. Not
+            taken: 486 is D486's, on main since 8ee79219 (FG-S485-U).
+            OPERATOR, 23:20Z: 487. N11, the readback's fetch, and N12
+            fetched the mirror: main daf9452e, 190 refs; since NUM486's run
+            only main moved and three refs came.
+            numbers/NUM487_PREDICTIONS.txt d5ce43e8 and its amendment
+            f68c1c21 before the count; 487 a target of NUM486's count, so
+            its rows were measured, not priors. The count: 40 rows, 38
+            held, 0 differ, 2 read; 487 free. Its 28 hex hits lie inside
+            runs longer than 12 in 9 blobs, none at a run's
+            start (FG-S475-D). The three controls each differed only where
+            the amendment said (numbers/NUM487_RESULTS.txt 16315479).
+
+    FINDINGS
+
+            FG-S485-P  SEAT. A CHECKER'S COUNT TAKEN FROM ITS LINEAGE, NOT
+                       FROM THE SCRIPT. D486's checkers kept the old
+                       verify's two lines before a suite's summary; the
+                       venv form prints eight. S485S's predictions and
+                       checker said 25 legs; the script prints 24. Each was
+                       caught by the first control run on the real script's
+                       output, before the gate, and amended POST HOC. A
+                       count is read from the script's output on the
+                       fixture.
+
+            FG-S485-Q  SEAT. A NEW TEST'S OWN FAULT. SD2's U08 failed on
+                       the first green run by a KeyError on a directory's
+                       trailing slash, a fault of the test, not of the
+                       code; the test alone was fixed, POST HOC, and the
+                       kit's pin moved. Four kill sets were narrower than
+                       the tests; they were widened before any mutant ran.
+
+            FG-S485-R  SEAT. PREDICTIONS WITH A SLIP. SU1 said 5385 passed
+                       for 5380 and 4; SD1's P1 wrote the date 16-11 for
+                       11-16. The outcome deltas held; a count is read from
+                       the run, not from its prediction.
+
+            FG-S485-S  SEAT. TOOL CALLS THAT WROTE WRONG BYTES, CAUGHT. The
+                       log tool takes a path and reads the text on stdin;
+                       one call passed the text as the path and wrote a
+                       stray file of one byte, removed; the correction then
+                       wrote a time ahead of the clock, corrected in turn.
+                       The NUM487 results writer's blind substitution of
+                       485 renamed the seat S486 in its header; caught on
+                       reading the output, before any digest was logged.
+                       The checkers' builder ran two substitutions in an
+                       order that doubled a match; its count assert refused
+                       before any write. A substitution is scoped to its
+                       token, not to its digits.
+
+            FG-S485-T  NOT A SEAT ERROR, MEASURED. FG-S481-L. setuptools
+                       writes an sdist's archive metadata from the clock,
+                       the checkout and the runner, not from
+                       SOURCE_DATE_EPOCH, and the deflate library changes
+                       the .tar.gz bytes. scripts/release.py now rewrites
+                       the archive's metadata from the epoch and prints the
+                       content digest, the identity across hosts; the
+                       .tar.gz bytes still follow the deflate build. It has
+                       not yet run in a release.
+
+            FG-S485-U  NOT A SEAT ERROR, CAUGHT. A NUMBER GIVEN THAT WAS
+                       TAKEN. The operator gave 486 for this entry; the
+                       tree held D486 under it. The seat read the tree
+                       before any write and asked; 487 was given and
+                       counted.
+
+            FG-S485-V  NOT A SEAT ERROR, MEASURED. FG-S481-I. pytest puts
+                       the name of every node, a directory's too, in an
+                       item's keywords; the gate by keywords skipped every
+                       test of a checkout in a directory named live, and
+                       would skip any test, class or module named live. The
+                       gate now asks for the marker.
