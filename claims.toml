@@ -164,9 +164,11 @@ forbidden_fields = ["severity", "proven"]
 
 [surfaces]
 include = ["*.py", "*.md", "*.html"]
+# __s485_lint_anchored_exclude_v1__ "/examples" is examples/ at the root
+# only; website/examples/ is served, so it is linted (FG-S481-J).
 exclude_dirs = [
     ".git", "tests", "build", "dist", ".venv", "venv", "node_modules",
-    "website/.well-known", "examples", "htmlcov", "__pycache__",
+    "website/.well-known", "/examples", "htmlcov", "__pycache__",
 ]
 # Signed, sha-pinned, byte-frozen evidence artifacts are excluded on purpose: a
 # linter that demands an edit to a signed artifact breaks the signature. That is

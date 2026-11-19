@@ -171,6 +171,11 @@ def load_config(path: Path) -> Config:
     for word, values in res.get("alternatives", {}).items():
         alts[word.lower()] = tuple(values)
 
+    # __s485_lint_anchored_exclude_v1__ an entry that names no directory
+    for ex in surf.get("exclude_dirs", []):
+        if not isinstance(ex, str) or ex in ("", "/") or ex.endswith("/"):
+            raise ConfigError("exclude_dirs entry names no directory: %r" % (ex,))
+
     return Config(
         raw=raw,
         declared_proof_legs=legs,
@@ -833,8 +838,15 @@ def iter_files(root: Path, cfg: Config) -> Iterator[Path]:
         pruned: list[str] = []
         for d in dirnames:
             cand = f"{rel_dir}/{d}" if rel_dir else d
+            # __s485_lint_anchored_exclude_v1__ an entry with a leading "/"
+            # names one directory from the root: "/examples" keeps examples/
+            # out and lints website/examples/, which is served (FG-S481-J).
+            # Any other entry keeps its meaning: a bare name at any depth, a
+            # path from the root.
             if any(
-                cand == ex or cand.startswith(ex + "/") or d == ex
+                (cand == ex[1:] or cand.startswith(ex[1:] + "/"))
+                if ex.startswith("/") else
+                (cand == ex or cand.startswith(ex + "/") or d == ex)
                 for ex in cfg.exclude_dirs
             ):
                 continue
