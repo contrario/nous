@@ -169,7 +169,7 @@ def _real(monkeypatch):
 def _boot_real(monkeypatch, tmp_path, entry, foreign=()):
     _real(monkeypatch)
     sys.path.insert(0, str(entry))
-    _boot(tmp_path, meta_path=sys.meta_path, path_hooks=sys.path_hooks, path=sys.path,
+    _boot(tmp_path, meta_path=sys.meta_path, path_hooks=sys.path_hooks, path=[str(entry)],
           lstat=_lstat(foreign=foreign))
     sys.path_importer_cache.clear()
 
@@ -318,3 +318,100 @@ def test_T22_release_steps_name_a_root_owned_copy_and_I_B():
     assert "python3 -I -B <copy>/mint_release_vsa.py anchor X.Y.Z" in src
     assert "root-owned copy staged from the tag" in src
     assert '"  4) mint:   python3 mint_release_vsa.py mint X.Y.Z --out /tmp/vsaX"' not in src
+
+
+_ARGV = {
+    "mint": lambda t: ["mint", "9.9.9", "--out", str(t / "out")],
+    "anchor": lambda t: ["anchor", "9.9.9", "--dir", str(t), "--pins-dir", str(t)],
+}
+_LABEL = {"mint": "MINT REFUSED: ", "anchor": "ANCHOR REFUSED: "}
+
+
+def _swallowed(monkeypatch, tmp_path, name):
+    d = _pkgdir(tmp_path, "r_" + name)
+    m = d / (name + ".py")
+    m.write_text("X = 1\n", encoding="ascii")
+    os.chmod(m, 0o644)
+    _real(monkeypatch)
+    sys.path.insert(0, str(d))
+    sys.path_importer_cache.clear()
+    g = M._S485Guard(list(sys.meta_path), owners=OWN, lstat=_lstat(foreign=[m]))
+    try:
+        g.find_spec(name)
+    except ImportError:
+        pass
+    sys.meta_path.append(g)
+    return g
+
+
+@pytest.mark.parametrize("cmd", ["mint", "anchor"])
+def test_T23_main_turns_a_guard_refusal_into_refused_exit_2(monkeypatch, tmp_path, capsys,
+                                                            cmd):
+    def boom(*a, **k):
+        raise M._S485GuardImportError("root guard: x485t23: not root-owned", name="x485t23")
+
+    monkeypatch.setattr(M, cmd, boom)
+    assert M.main(_ARGV[cmd](tmp_path)) == 2
+    err = capsys.readouterr().err
+    assert err.startswith(_LABEL[cmd] + "root guard: x485t23: not root-owned")
+
+
+def test_T25_main_lets_a_plain_import_error_through(monkeypatch, tmp_path):
+    _real(monkeypatch)
+
+    def boom(*a, **k):
+        raise ImportError("plain485t25")
+
+    monkeypatch.setattr(M, "mint", boom)
+    with pytest.raises(ImportError, match="plain485t25") as ei:
+        M.main(_ARGV["mint"](tmp_path))
+    assert not isinstance(ei.value, M._S485GuardImportError)
+
+
+def test_T26_a_swallowed_refusal_fails_the_next_check(monkeypatch, tmp_path):
+    d = _pkgdir(tmp_path, "e26")
+    m = d / "evil485t26.py"
+    m.write_text("X = 1\n", encoding="ascii")
+    os.chmod(m, 0o644)
+    _boot_real(monkeypatch, tmp_path, d, foreign=[m])
+    try:
+        importlib.import_module("evil485t26")
+    except ImportError:
+        pass
+    assert "evil485t26" not in sys.modules
+    with pytest.raises(M.RootGuardError, match="imports refused: evil485t26: "):
+        M._s485_root_check(euid=0, modules={}, meta_path=sys.meta_path, owners=OWN,
+                           lstat=_lstat())
+
+
+@pytest.mark.parametrize("cmd", ["mint", "anchor"])
+def test_T27_main_refuses_when_a_refusal_was_swallowed(monkeypatch, tmp_path, capsys, cmd):
+    name = "evil485t27" + cmd
+    _swallowed(monkeypatch, tmp_path, name)
+    monkeypatch.setattr(M, cmd, lambda *a, **k: 0)
+    assert M.main(_ARGV[cmd](tmp_path)) == 2
+    err = capsys.readouterr().err
+    assert err.startswith(_LABEL[cmd] + "root guard: imports refused: " + name + ": ")
+
+
+def test_T28_main_refuses_when_a_refusal_ends_in_another_error(monkeypatch, tmp_path, capsys):
+    _swallowed(monkeypatch, tmp_path, "evil485t28")
+
+    def boom(*a, **k):
+        raise RuntimeError("wrapped485t28")
+
+    monkeypatch.setattr(M, "mint", boom)
+    assert M.main(_ARGV["mint"](tmp_path)) == 2
+    err = capsys.readouterr().err
+    assert err.startswith("MINT REFUSED: root guard: imports refused: evil485t28: ")
+    assert "RuntimeError: wrapped485t28" in err
+
+
+def test_T29_boot_tests_do_not_walk_the_host_sys_path(monkeypatch, tmp_path):
+    w = tmp_path / "x777"
+    w.mkdir()
+    os.chmod(w, 0o777)
+    _real(monkeypatch)
+    sys.path.append(str(w / "python3xx.zip"))
+    _boot_real(monkeypatch, tmp_path, _pkgdir(tmp_path, "e29"))
+    assert isinstance(sys.meta_path[0], M._S485Guard)

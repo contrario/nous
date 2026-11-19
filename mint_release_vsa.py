@@ -170,13 +170,16 @@ def _s485_check_modules(modules: Any, owners: tuple[int, ...], lstat: Any) -> No
 class _S485Guard:
     """First on sys.meta_path in a root run: asks the other finders for
     the spec and refuses it, before its module runs, unless its origin,
-    its cache directory and its search locations pass _s485_unsafe."""
+    its cache directory and its search locations pass _s485_unsafe.
+    Each refusal is kept in .refused (__s485_guard_refusals_v1__): a
+    caller that catches the ImportError does not erase it."""
 
     def __init__(self, meta_path: list, *, owners: tuple[int, ...] = (0,),
                  lstat: Any = os.lstat) -> None:
         self._mp = meta_path
         self._owners = owners
         self._lstat = lstat
+        self.refused: list[str] = []
 
     def check_spec(self, spec: Any) -> str | None:
         paths = []
@@ -209,6 +212,7 @@ class _S485Guard:
                 continue
             why = self.check_spec(spec)
             if why:
+                self.refused.append(fullname + ": " + why)
                 raise _S485GuardImportError("root guard: " + fullname + ": " + why,
                                             name=fullname)
             return spec
@@ -216,6 +220,27 @@ class _S485Guard:
 
     def invalidate_caches(self) -> None:
         return None
+
+
+def _s485_refused(meta_path: Any = None) -> list[str]:
+    """The refusals kept by every guard on meta_path, in order."""
+    meta_path = sys.meta_path if meta_path is None else meta_path
+    out: list[str] = []
+    for f in list(meta_path):
+        if isinstance(f, _S485Guard):
+            out.extend(f.refused)
+    return out
+
+
+def _s485_after(label: str, rc: int, exc: BaseException | None = None) -> int:
+    """A refusal a library caught still ends the root run: exit 2."""
+    refused = _s485_refused()
+    if not refused:
+        return rc
+    tail = "" if exc is None else " (then " + type(exc).__name__ + ": " + str(exc) + ")"
+    print(label + " REFUSED: root guard: imports refused: " + "; ".join(refused) + tail,
+          file=sys.stderr)
+    return 2
 
 
 def _s485_root_boot(*, euid: int | None = None, flags: Any = None, meta_path: Any = None,
@@ -279,6 +304,9 @@ def _s485_root_check(*, euid: int | None = None, modules: Any = None, meta_path:
     meta_path = sys.meta_path if meta_path is None else meta_path
     if not meta_path or not isinstance(meta_path[0], _S485Guard):
         raise RootGuardError("the guard is not first on sys.meta_path")
+    refused = _s485_refused(meta_path)
+    if refused:
+        raise RootGuardError("imports refused: " + "; ".join(refused))
     left = _s485_editable_left(meta_path, sys.path_hooks if path_hooks is None else path_hooks)
     if left:
         raise RootGuardError("editable import hooks left: " + " ".join(left))
@@ -1754,7 +1782,7 @@ def main(argv: list[str] | None = None) -> int:
             Path(args.work_dir) if args.work_dir else out_dir / ".mint-work"
         )
         try:
-            return mint(
+            rc = mint(
                 args.version,
                 out_dir,
                 key_path=Path(args.key_path),
@@ -1764,9 +1792,17 @@ def main(argv: list[str] | None = None) -> int:
         except MintError as exc:
             print("MINT REFUSED: " + str(exc), file=sys.stderr)
             return 2
+        except _S485GuardImportError as exc:
+            print("MINT REFUSED: " + str(exc), file=sys.stderr)
+            return 2
+        except Exception as exc:
+            if not _s485_refused():
+                raise
+            return _s485_after("MINT", 2, exc)
+        return _s485_after("MINT", rc)
     if args.command == "anchor":
         try:
-            return anchor(
+            rc = anchor(
                 args.version,
                 Path(args.dir),
                 pins_dir=Path(args.pins_dir),
@@ -1774,6 +1810,14 @@ def main(argv: list[str] | None = None) -> int:
         except MintError as exc:
             print("ANCHOR REFUSED: " + str(exc), file=sys.stderr)
             return 2
+        except _S485GuardImportError as exc:
+            print("ANCHOR REFUSED: " + str(exc), file=sys.stderr)
+            return 2
+        except Exception as exc:
+            if not _s485_refused():
+                raise
+            return _s485_after("ANCHOR", 2, exc)
+        return _s485_after("ANCHOR", rc)
     print("usage: mint_release_vsa {mint,anchor} ...", file=sys.stderr)
     return 1
 
