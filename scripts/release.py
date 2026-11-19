@@ -289,19 +289,50 @@ def phase_claim_lint() -> None:  # __s232_p2_claim_lint_phase_v1__
     All three are documented at full strength in docs/CLAIM_LINT.md, and all
     three have produced real violations that only hand adjudication caught. A
     gate that manufactures confidence is worse than no gate.
+
+    __s485_release_lint_commit_v1__ (FG-S481-J): the gate reads the commit,
+    not the working tree. HEAD's commit is exported with git archive and the
+    export's own scripts/claim_lint.py and claims.toml run over it, --anchor
+    the commit, so a file that no commit holds neither moves the count nor
+    refuses a release; a violation a commit holds still refuses it.
     """
     print("\n[5b/10] CLAIM BOUNDARY")
-    result = subprocess.run(
-        [
-            "python3", "scripts/claim_lint.py",
-            "--config", "claims.toml",
-            "--root", ".",
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
+    head = subprocess.run(
+        ["git", "rev-parse", "--verify", "HEAD"],
+        cwd=REPO_ROOT, capture_output=True, text=True, check=False,
     )
+    commit = head.stdout.strip()
+    if head.returncode != 0 or len(commit) != 40:
+        raise ReleaseError(
+            "the commit to lint could not be named: git rev-parse HEAD "
+            f"exit {head.returncode}"
+        )
+    with tempfile.TemporaryDirectory(prefix="nous-claim-lint-") as td:
+        tar_path = os.path.join(td, "commit.tar")
+        tree = os.path.join(td, "tree")
+        arch = subprocess.run(
+            ["git", "archive", "--format=tar", "-o", tar_path, commit],
+            cwd=REPO_ROOT, capture_output=True, text=True, check=False,
+        )
+        if arch.returncode != 0:
+            raise ReleaseError(
+                f"git archive of {commit[:12]} failed: exit {arch.returncode}"
+            )
+        os.mkdir(tree)
+        with tarfile.open(tar_path) as tf:
+            tf.extractall(tree, filter="data")
+        result = subprocess.run(
+            [
+                "python3", "-B", os.path.join(tree, "scripts", "claim_lint.py"),
+                "--config", os.path.join(tree, "claims.toml"),
+                "--root", tree,
+                "--anchor", commit,
+            ],
+            cwd=tree,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
     if result.returncode != 0:
         for line in (result.stdout + result.stderr).splitlines():
             print(f"  {line}")
@@ -309,6 +340,9 @@ def phase_claim_lint() -> None:  # __s232_p2_claim_lint_phase_v1__
             "claim-boundary violations present; the honest boundary is not "
             "negotiable for a release"
         )
+    for line in result.stdout.splitlines():
+        if line.startswith(("anchor:", "scanned:")):
+            print(f"  {line}")
     print(
         "  OK: 0 violations (EVIDENCES convention conformance; the tree is "
         "NOT thereby proven free of overclaims)"
