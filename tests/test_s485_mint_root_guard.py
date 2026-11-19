@@ -257,7 +257,9 @@ def test_T18_boot_call_precedes_build_vsa_import():
     boot = [i for i, n in enumerate(body)
             if "_s485_root_boot()" in ast.unparse(n) and not isinstance(n, ast.FunctionDef)]
     imp = [i for i, n in enumerate(body)
-           if isinstance(n, ast.Import) and any(a.name == "build_vsa" for a in n.names)]
+           if isinstance(n, ast.Try) and any(isinstance(x, ast.Import)
+                                             and any(a.name == "build_vsa" for a in x.names)
+                                             for x in n.body)]
     assert boot and imp and boot[0] < imp[0]
 
 
@@ -415,3 +417,193 @@ def test_T29_boot_tests_do_not_walk_the_host_sys_path(monkeypatch, tmp_path):
     sys.path.append(str(w / "python3xx.zip"))
     _boot_real(monkeypatch, tmp_path, _pkgdir(tmp_path, "e29"))
     assert isinstance(sys.meta_path[0], M._S485Guard)
+
+
+_DRIVER = """import os, re, sys
+mint, stub = sys.argv[1], sys.argv[2]
+foreign = {os.path.join(stub, n + ".py") for n in sys.argv[3:]}
+src = open(mint, encoding="utf-8").read()
+m = re.search(r"^try:.*\\n    import build_vsa\\n", src, re.M)
+if m is None:
+    sys.exit(97)
+ns = {"__name__": "mint_head", "__file__": mint}
+exec(compile(src[:m.start()], mint, "exec"), ns)
+sys.path.insert(0, stub)
+
+
+class _St:
+    def __init__(self, st, uid):
+        self.st_uid, self.st_gid, self.st_mode = uid, st.st_gid, st.st_mode
+
+
+def lstat(p):
+    st = os.lstat(p)
+    return _St(st, 54321 if os.path.abspath(p) in foreign else st.st_uid)
+
+
+sys.meta_path.insert(0, ns["_S485Guard"](list(sys.meta_path), owners=(0, os.geteuid()),
+                                         lstat=lstat))
+block = src[m.start():src.index("\\nDEFAULT_OPERATOR_KEY")]
+exec(compile(block, mint, "exec"), ns)
+print("NOT_REFUSED")
+"""
+
+
+def _module_level(tmp_path, build_vsa_src, extra=None, foreign=()):
+    stub = tmp_path / "stub"
+    stub.mkdir()
+    os.chmod(stub, 0o755)
+    (stub / "build_vsa.py").write_text(build_vsa_src, encoding="ascii")
+    for n, s in (extra or {}).items():
+        (stub / (n + ".py")).write_text(s, encoding="ascii")
+    drv = tmp_path / "drv.py"
+    drv.write_text(_DRIVER, encoding="ascii")
+    import subprocess
+    return subprocess.run([sys.executable, str(drv), str(_REPO / "mint_release_vsa.py"),
+                           str(stub)] + list(foreign), capture_output=True, text=True,
+                          cwd=str(tmp_path))
+
+
+def test_T30_module_level_refusal_is_refused_exit_2(tmp_path):
+    ran = tmp_path / "ran30"
+    r = _module_level(tmp_path, "open(%r, 'w').close()\n" % str(ran), foreign=["build_vsa"])
+    assert r.returncode == 2, (r.returncode, r.stderr[-400:])
+    assert r.stderr.startswith("MINT REFUSED: root guard: imports refused: build_vsa: "
+                               "not root-owned: ")
+    assert "Traceback" not in r.stderr and not ran.exists()
+
+
+def test_T31_module_level_refusal_caught_then_another_error_exit_2(tmp_path):
+    ran = tmp_path / "ran31"
+    r = _module_level(tmp_path,
+                      "try:\n    import evil485t31\nexcept ImportError:\n    pass\n"
+                      "raise RuntimeError('wrapped485t31')\n",
+                      extra={"evil485t31": "open(%r, 'w').close()\n" % str(ran)},
+                      foreign=["evil485t31"])
+    assert r.returncode == 2, (r.returncode, r.stderr[-400:])
+    assert r.stderr.startswith("MINT REFUSED: root guard: imports refused: evil485t31: ")
+    assert not ran.exists()
+
+
+def test_T32_module_level_error_without_refusal_propagates(tmp_path):
+    r = _module_level(tmp_path, "raise RuntimeError('plain485t32')\n")
+    assert r.returncode == 1
+    assert "RuntimeError: plain485t32" in r.stderr and "MINT REFUSED" not in r.stderr
+
+
+def test_T33_own_dir_makes_and_accepts_a_fresh_dir(tmp_path):
+    d = tmp_path / "out33"
+    M._s485_own_dir(d, "t33", create=True, euid=0, owners=OWN, lstat=_lstat())
+    assert d.is_dir()
+
+
+def test_T34_own_dir_refuses_a_dir_of_another_owner(tmp_path):
+    d = tmp_path / "out34"
+    d.mkdir()
+    os.chmod(d, 0o755)
+    with pytest.raises(M.MintError, match=r"^root guard \(t34\): not root-owned: "):
+        M._s485_own_dir(d, "t34", create=True, euid=0, owners=OWN, lstat=_lstat(foreign=[d]))
+
+
+def test_T35_own_dir_refuses_a_sticky_world_writable_parent(tmp_path):
+    st = tmp_path / "st35"
+    st.mkdir()
+    os.chmod(st, 0o1777)
+    d = st / "out35"
+    with pytest.raises(M.MintError, match=r"writable by group or other: .*st35 \(1777\)"):
+        M._s485_own_dir(d, "t35", create=True, euid=0, owners=OWN, lstat=_lstat())
+    assert not d.exists()
+
+
+def test_T36_own_dir_does_nothing_for_another_euid(tmp_path):
+    d = tmp_path / "x36" / "out36"
+    M._s485_own_dir(d, "t36", create=True, euid=1000, owners=OWN,
+                    lstat=_lstat(foreign=[tmp_path]))
+    assert not d.exists() and not (tmp_path / "x36").exists()
+
+
+def test_T37_mint_checks_both_dirs_before_its_first_mkdir():
+    src = (_REPO / "mint_release_vsa.py").read_text(encoding="utf-8")
+    body = src[src.index("def mint("):src.index("def _root1_self_verify")]
+    order = [body.index('_s485_checkpoint("mint: before the first write")'),
+             body.index('_s485_own_dir(out_dir, "mint: the out dir", create=True)'),
+             body.index('_s485_own_dir(work_dir, "mint: the work dir", create=True)'),
+             body.index("work_dir.mkdir(parents=True, exist_ok=True)")]
+    assert order == sorted(order)
+
+
+def test_T38_anchor_checks_its_dir_after_prepare_before_network(monkeypatch, tmp_path):
+    calls = []
+    monkeypatch.setattr(M, "_s485_root_prepare", lambda command: calls.append("prepare:" + command))
+
+    def own(d, what, *, create, **kw):
+        calls.append("own:%s:%s" % (what, create))
+        raise M.MintError("stop38")
+
+    monkeypatch.setattr(M, "_s485_own_dir", own)
+
+    def net(*a, **k):
+        calls.append("network")
+
+    with pytest.raises(M.MintError, match="stop38"):
+        M.anchor("9.9.9", tmp_path / "d38", pins_dir=tmp_path, anchor_fn=net, timestamp_fn=net,
+                 verify_fn=net)
+    assert calls == ["prepare:anchor", "own:anchor: the dir:False"]
+
+
+@pytest.mark.parametrize("cmd", ["mint", "anchor"])
+def test_T39_a_mint_error_after_a_kept_refusal_names_it(monkeypatch, tmp_path, capsys, cmd):
+    name = "evil485t39" + cmd
+    _swallowed(monkeypatch, tmp_path, name)
+
+    def boom(*a, **k):
+        raise M.MintError("other cause 39")
+
+    monkeypatch.setattr(M, cmd, boom)
+    assert M.main(_ARGV[cmd](tmp_path)) == 2
+    err = capsys.readouterr().err
+    assert err.startswith(_LABEL[cmd] + "other cause 39; root guard: imports refused: "
+                          + name + ": ")
+    kept = M._s485_refused()
+
+    def boom2(*a, **k):
+        raise M.MintError("root guard (x): imports refused: " + "; ".join(kept))
+
+    monkeypatch.setattr(M, cmd, boom2)
+    assert M.main(_ARGV[cmd](tmp_path)) == 2
+    err2 = capsys.readouterr().err
+    assert "; root guard: imports refused:" not in err2
+    assert err2.count(kept[0]) == 1
+
+
+@pytest.mark.parametrize("cmd", ["mint", "anchor"])
+def test_T40_system_exit_after_a_kept_refusal_exits_2(monkeypatch, tmp_path, capsys, cmd):
+    name = "evil485t40" + cmd
+    _swallowed(monkeypatch, tmp_path, name)
+
+    def boom(*a, **k):
+        raise SystemExit(0)
+
+    monkeypatch.setattr(M, cmd, boom)
+    assert M.main(_ARGV[cmd](tmp_path)) == 2
+    err = capsys.readouterr().err
+    assert err.startswith(_LABEL[cmd] + "root guard: imports refused: " + name + ": ")
+    assert "(then SystemExit: 0)" in err
+
+
+def test_T41_keyboard_interrupt_after_a_kept_refusal_propagates(monkeypatch, tmp_path):
+    _swallowed(monkeypatch, tmp_path, "evil485t41")
+
+    def boom(*a, **k):
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(M, "mint", boom)
+    with pytest.raises(KeyboardInterrupt):
+        M.main(_ARGV["mint"](tmp_path))
+
+
+def test_T42_release_steps_name_a_root_only_bundle_dir():
+    src = (_REPO / "scripts" / "release.py").read_text(encoding="utf-8")
+    assert "mint X.Y.Z --out /root/nous-vsa/X.Y.Z" in src
+    assert "anchor X.Y.Z --dir /root/nous-vsa/X.Y.Z" in src
+    assert "/tmp/vsaX" not in src

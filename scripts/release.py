@@ -891,9 +891,9 @@ def main() -> int:
         print("  2) tag:    git tag vX.Y.Z && git push origin vX.Y.Z")
         print("  3) approve the 'pypi' environment in GitHub Actions")
         print("  4) mint:   as root, from a root-owned copy staged from the tag, never the")  # __s485_root_guard_v1__
-        print("             live tree: python3 -I -B <copy>/mint_release_vsa.py mint X.Y.Z --out /tmp/vsaX")
+        print("             live tree: python3 -I -B <copy>/mint_release_vsa.py mint X.Y.Z --out /root/nous-vsa/X.Y.Z")  # __s485h_root_paths_v1__
         print("     (reversible; hashes the PUBLISHED PyPI artifacts, not a rebuild)")
-        print("  5) anchor: python3 -I -B <copy>/mint_release_vsa.py anchor X.Y.Z --dir /tmp/vsaX \\")
+        print("  5) anchor: python3 -I -B <copy>/mint_release_vsa.py anchor X.Y.Z --dir /root/nous-vsa/X.Y.Z \\")
         print("               --pins-dir /root/.local/share/nous/pins   [IRREVERSIBLE]")
         print("  6) publish: copy the bundle to BOTH")
         print("               /var/www/nous-lang.org/.well-known/nous/release-vsa/X.Y.Z/")

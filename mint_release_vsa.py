@@ -22,7 +22,7 @@ from __future__ import annotations
 # endorsement; it PROVES nothing. The evidence layer is a monitor, not a guard.
 #
 # Refuse over guess: every precondition miss raises MintError (message starts
-# with the cause) before any file is written.
+# with the cause). A raise after the first write leaves what was written.
 
 import argparse
 import base64
@@ -319,7 +319,14 @@ except RootGuardError as _s485_exc:
     sys.stderr.write("MINT REFUSED: root guard: " + str(_s485_exc) + "\n")
     raise SystemExit(2)
 
-import build_vsa
+try:  # __s485h_root_paths_v1__
+    import build_vsa
+except Exception:
+    if not _s485_refused():
+        raise
+    sys.stderr.write("MINT REFUSED: root guard: imports refused: "
+                     + "; ".join(_s485_refused()) + "\n")
+    raise SystemExit(2)
 
 DEFAULT_OPERATOR_KEY = "/root/.local/share/nous/keys/release_attest_signing.key"
 COMMITTED_RELEASE_PIN_B64 = "E3FNG9zFMRjhg/iVkOu9K3gH5mmG6Uwvdy8EvwHsYVo="
@@ -369,7 +376,8 @@ BACKFILL_NOTE = (
 
 class MintError(ValueError):
     """Raised on any precondition or verification failure in the MINT phase.
-    The message starts with the cause. No files are written on a raise."""
+    The message starts with the cause. A raise after the first write
+    leaves the files already written; nothing removes them."""
 
 
 # __s485_root_guard_v1__
@@ -406,6 +414,39 @@ def _s485_root_prepare(command: str) -> None:
             raise MintError("root guard (" + command + "): cannot import " + name
                             + ": " + str(exc)) from exc
     _s485_checkpoint(command + ": before " + ("the seed" if command == "mint" else "the network"))
+
+
+def _s485_own_dir(d: Path, what: str, *, create: bool, euid: int | None = None,
+                  owners: tuple[int, ...] = (0,), lstat: Any = os.lstat) -> None:
+    """__s485h_root_paths_v1__ For a root run: the directory the mint
+    writes into, or the anchor reads and writes beside (its journal is a
+    sibling), and its parent must be root-owned and not writable by group
+    or other; the parent is checked as a target, so a sticky /tmp is
+    refused. Made 0o755 first when create is set. For any other euid
+    nothing here acts."""
+    if (os.geteuid() if euid is None else euid) != 0:
+        return
+    p = os.path.abspath(str(d))
+    why = None
+    for par in sorted({os.path.dirname(p), os.path.dirname(os.path.realpath(p))}):
+        why = why or _s485_unsafe(par, owners=owners, lstat=lstat)
+    if not why and create:
+        try:
+            os.makedirs(p, mode=0o755, exist_ok=True)
+        except OSError as exc:
+            why = "cannot make " + p + ": " + exc.__class__.__name__
+    if not why:
+        why = _s485_unsafe(p, owners=owners, lstat=lstat)
+    if why:
+        raise MintError("root guard (" + what + "): " + why)
+
+
+def _s485_kept(exc: BaseException) -> str:
+    """The kept refusals a MintError's text does not already name."""
+    r = _s485_refused()
+    if not r or all(x in str(exc) for x in r):
+        return ""
+    return "; root guard: imports refused: " + "; ".join(r)
 
 
 def _s485_child_env() -> dict[str, str]:
@@ -688,6 +729,8 @@ def mint(version: str, out_dir: Path, *, key_path: Path, work_dir: Path, backfil
     sdist = files["sdist"]
 
     _s485_checkpoint("mint: before the first write")  # __s485_root_guard_v1__
+    _s485_own_dir(out_dir, "mint: the out dir", create=True)  # __s485h_root_paths_v1__
+    _s485_own_dir(work_dir, "mint: the work dir", create=True)
     work_dir.mkdir(parents=True, exist_ok=True)
     httpx = _require_http()
     dist_paths: dict[str, Path] = {}
@@ -1397,6 +1440,7 @@ def anchor(
     evidence.
     """
     _s485_root_prepare("anchor")  # __s485_root_guard_v1__
+    _s485_own_dir(out_dir, "anchor: the dir", create=False)  # __s485h_root_paths_v1__
 
     import datetime as _dt
 
@@ -1790,12 +1834,16 @@ def main(argv: list[str] | None = None) -> int:
                 backfill=args.backfill,
             )
         except MintError as exc:
-            print("MINT REFUSED: " + str(exc), file=sys.stderr)
+            print("MINT REFUSED: " + str(exc) + _s485_kept(exc), file=sys.stderr)
             return 2
         except _S485GuardImportError as exc:
             print("MINT REFUSED: " + str(exc), file=sys.stderr)
             return 2
         except Exception as exc:
+            if not _s485_refused():
+                raise
+            return _s485_after("MINT", 2, exc)
+        except SystemExit as exc:
             if not _s485_refused():
                 raise
             return _s485_after("MINT", 2, exc)
@@ -1808,12 +1856,16 @@ def main(argv: list[str] | None = None) -> int:
                 pins_dir=Path(args.pins_dir),
             )
         except MintError as exc:
-            print("ANCHOR REFUSED: " + str(exc), file=sys.stderr)
+            print("ANCHOR REFUSED: " + str(exc) + _s485_kept(exc), file=sys.stderr)
             return 2
         except _S485GuardImportError as exc:
             print("ANCHOR REFUSED: " + str(exc), file=sys.stderr)
             return 2
         except Exception as exc:
+            if not _s485_refused():
+                raise
+            return _s485_after("ANCHOR", 2, exc)
+        except SystemExit as exc:
             if not _s485_refused():
                 raise
             return _s485_after("ANCHOR", 2, exc)
