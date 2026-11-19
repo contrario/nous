@@ -33003,3 +33003,179 @@ document itself.
                         extracted with tarfile's data filter, with the
                         commit as its anchor. It has not yet run in a
                         release.
+
+  - S490 the number the operator gave the seat S485's fifth entry: D489
+    landed; FG-S481-R measured; the convergence verifier taught to read a
+    release directory as it is served and to pick the Rekor key by the
+    checkpoint's origin, and landed as S485C; the number 490 counted; and
+    the codes FG-S485-AE to FG-S485-AJ
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S485,
+    DURING ITS SESSION, with the labels of D450 to D489: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC, on 11-19 of 2026; the operator's clock reads two hours ahead. An
+    operator's time is the time his message was sent, a value ON A carries
+    the clock its command printed. Each value was asserted by the script
+    that built this entry from the seat's running log or its files. Each
+    paste is a file transcribed from the chat, named by its digest. What
+    D489 records is not repeated here. Each suite, control and readback
+    below evidences; nothing here is a Z3 or Farkas result. The container
+    restarted many times in the session; after each the seat read the
+    uptime and the pins before its next act, and no file was lost.
+
+    D490-1  D489 LANDED. d489/D489_PREDICTIONS.txt ce1b1687 before its
+            tools, which make_tools489.py made from D487's in one pass; the
+            fixture 23 cases and 15 mutants as predicted; the checkers by
+            their predictions (7ca4a5d9), 17 controls, none bad. L1
+            f951faa6, one parent 177a8be7, one path. OPERATOR, 09:13Z: pame
+            for G1; the branch s489-d489. ON A at 09:15Z, C35
+            (ona/c35_check_111500_transcribed.txt 90925d57). OPERATOR,
+            09:16Z: pame for G2; ON A from 09:17:28Z
+            (ona/g2_verify_d489_112700_transcribed.txt bbbc5a27): 23 legs
+            0; 5402 passed and 13 skipped at both checkouts, outcomes 5415
+            ad8d9dd0 at both, no outcome moved; the claim lint 411 and 0.
+            OPERATOR, 09:28Z: pame for G3; GitHub's main f951faa6.
+            OPERATOR, 09:29Z: pame for G4; ON A at 09:30:42Z
+            (ona/g4_fflive_d489_113000_transcribed.txt a1c751a3): the
+            document 644, aetherlang's. The readback: 194 refs,
+            READBACK_GREEN.
+
+    D490-2  FG-S481-R MEASURED. OPERATOR, 09:32Z: pame for DOCS. READ IN
+            THE SEAT'S CONTAINER: the procedure names the version-named
+            Rekor bundle in a table and gives no step that fetches it or
+            runs build-attest-verify; the convergence verifier reads four
+            canonical names, three never served (the bundle's and the two
+            pins'); load_pins takes the last ED25519 tlog.
+            docs1/DOCS1_PREDICTIONS.txt 9552d126 before any probe or
+            download. As s485 with PyPI's 9.0.0 wheel in a fresh venv
+            (docs1/probe1_out.txt 0dc4a6b0): on the 12 files of 9.0.0 as
+            the tree serves them, rc 2, the bundle not found; with the
+            bundle under the canonical name and S481's pins, 9.0.0 and
+            8.0.0 PASS at their log indexes; a changed byte in the log's
+            own checkpoint signature, and an absent tsa_chain.pem, each
+            FAIL. The second pin is the last certificate of the first's TSA
+            chain, byte for byte. Sigstore's prod trusted root, from the
+            newest sigstore wheel and from its root-signing repository on
+            GitHub, is byte-equal to S481's pins today. Amendment 5afb730d
+            before a synthetic: a second ED25519 tlog after log2025-1 turns
+            the valid 9.0.0 anchor to FAIL, the same tlog before it leaves
+            PASS (docs1/probe9_out.txt 67af8e37; FG-S485-AE)
+            (docs1/DOCS1_RESULTS.txt 327476b3).
+
+    D490-3  THE VERIFIER READS A SERVED DIRECTORY, MEASURED. OPERATOR,
+            09:39Z, by the question card: code now, the procedure's step
+            with the next release. docs2/DOCS2_PREDICTIONS.txt cb22823e
+            before the tests and the code. load_pins takes the ED25519 tlog
+            whose host is the checkpoint origin and refuses more than one;
+            when tsa_chain.pem is absent the TSA roots come from the
+            trusted root; verify_convergence reads the one version-named
+            bundle when the canonical name is absent and refuses two. 11
+            tests, X01 to X11. RED on f951faa6: 10 failed and 1 passed, but
+            four failed at the missing bundle, not at their own subjects;
+            amendment ae5557d8, POST HOC, before any code (FG-S485-AH); RED
+            again, each on its own subject. As s485 in the venv form: green
+            11 passed, X11 PASS on each of the 39 served dirs with one pin
+            file; the suite 5408 passed and 18 skipped, 11 outcome lines
+            added and none removed; the claim lint 411 and 0; M1 to M5
+            killed as named, each mutant's modules imported from its own
+            copy (docs2/DOCS2_RESULTS.txt ddcfcd25).
+
+    D490-4  S485C LANDED, 11-19. s485c/S485C_PREDICTIONS.txt 6015ea53
+            before the tools, S485R's form moved in 47 counted
+            substitutions; the fixture 30 cases and 18 mutants as
+            predicted; the checkers by their predictions (523f0870), 16
+            controls, none bad. L1 9bf1f6e2, one parent f951faa6, three
+            blobs. OPERATOR, 10:04Z: pame for G1; the branch
+            s485-convergence. ON A at 10:07Z, C36
+            (ona/c36_check_120700_transcribed.txt d424b119). OPERATOR,
+            10:08Z: pame for G2; ON A from 10:09:16Z
+            (ona/g2_verify_s485c_121800_transcribed.txt caf58e2c): 25 legs
+            0; 5402 passed and 13 skipped at f951faa6, 5413 and 13 at
+            9bf1f6e2; outcomes 5415 and 5426; 11 added, 0 removed, their
+            digest the pinned bc9df964, X11 among them on A's tree; the
+            claim lint 411 and 0. OPERATOR, 10:35Z: pame for G3; GitHub's
+            main 9bf1f6e2. OPERATOR, 10:36Z: pame for G4; ON A at 10:37:51Z
+            (ona/g4_fflive_s485c_123700_transcribed.txt 791e1545): the
+            three paths 644, aetherlang's. The readback: 195 refs,
+            READBACK_GREEN. No restart, no deploy, no release (FG-S485-AI).
+
+    D490-5  THE NUMBER 490. OPERATOR, 10:39Z: 490, for this entry. N15, the
+            readback's fetch, and N16 fetched the mirror: main 9bf1f6e2,
+            195 refs, no ref moved between them.
+            numbers/NUM490_PREDICTIONS.txt d181b58c and its amendment
+            a8bd9d00 before the count; 490 was a target of NUM489's count,
+            so its base was measured and its rows are that count plus the
+            derive. The count: 43 rows, 40 held, 0 differ, 3 read; 490
+            free. Its 16 hex hits lie inside hex runs in 10 blobs, 2 at a
+            run's start, none in a run of 12 or less (FG-S475-D). The three
+            controls each differed only where the amendment said
+            (numbers/NUM490_RESULTS.txt 7e790625).
+
+    FINDINGS
+
+            FG-S485-AE  NOT A SEAT ERROR, MEASURED, FIXED. THE LAST ED25519
+                        TLOG. load_pins took the last PKIX_ED25519 tlog of
+                        the trusted root as the Rekor v2 key. On a
+                        synthetic root with a second such tlog after
+                        log2025-1, the valid anchor of 9.0.0 read FAIL;
+                        with it before, PASS. Sigstore's staging root
+                        already lists three in order; the prod root lists
+                        one today. The key is now the tlog whose host is
+                        the checkpoint's origin, and a root with more than
+                        one for that origin, or more than one with no
+                        origin named, is refused. The tlogs' validFor
+                        windows are not checked, as before.
+
+            FG-S485-AF  NOT A SEAT ERROR, MEASURED. FG-S481-R. A stranger
+                        with the served release directory and the published
+                        procedure cannot reach the Rekor leg: no step names
+                        it, the bundle's served name is not the name the
+                        verifier read, and the verifier wanted a second pin
+                        the first already holds. The verifier now reads the
+                        directory as served with trusted_root.json alone.
+                        9.0.0's index.json calls the bundle verifiable
+                        offline with cryptography and the standard library;
+                        the code that does it ships in the nous-lang wheel,
+                        not in the bundle. The procedure's step and
+                        cold_audit's are owed to the next release, to be
+                        run there from a fresh directory against the live
+                        site.
+
+            FG-S485-AG  SEAT. A REFUSED LOG CALL DID NOT STOP THE NEXT
+                        COMMAND. The log tool refused a stamp a minute
+                        ahead of the clock; the install named in that entry
+                        ran in the same command line anyway, named before
+                        only in the hashed predictions. From then on the
+                        stamp is taken from the clock and the command after
+                        a log call runs only if the call succeeded; the
+                        next refusal stopped its chain.
+
+            FG-S485-AH  SEAT. CHECKS THAT COULD HOLD FOR ANOTHER REASON.
+                        The probe's negative first changed the last
+                        signature line of the checkpoint, a witness's: the
+                        log's own line would still verify and the negative
+                        could not fail; read before any run and aimed at
+                        the log's line. In DOCS2's first RED four tests
+                        failed at the missing bundle, not at what each
+                        tests; amended, POST HOC, before any code. Each
+                        mutant now checks that its modules are imported
+                        from its own copy, not from the editable tree.
+
+            FG-S485-AI  SEAT. STATEMENTS AHEAD OF THEIR EVIDENCE,
+                        CORRECTED. Before G4 the seat wrote that no service
+                        loads the two modules without a restart; not
+                        measured, corrected before G4 ran: four more
+                        modules import rekor_v2_offline, envelope_ledger
+                        inside a function, and whether a running service
+                        imports it after the fast-forward is not known. A
+                        log line said a builder's first runs refused at its
+                        leftover check; they refused at its counts;
+                        corrected in the log.
+
+            FG-S485-AJ  NOT A SEAT ERROR, A LIMIT. ROOT'S PATHS IN THE
+                        CONTAINER. The container's CA variables name a file
+                        under root's home, which s485 cannot read, so pip
+                        as s485 refused TLS; the public CA bundle was
+                        copied to s485's directory and each variable
+                        pointed there. s485 cannot read the seat's mirror;
+                        root cloned the work tree and gave it to s485.
