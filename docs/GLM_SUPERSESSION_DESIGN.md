@@ -32750,3 +32750,256 @@ document itself.
                        test of a checkout in a directory named live, and
                        would skip any test, class or module named live. The
                        gate now asks for the marker.
+
+  - S489 the number the operator gave the seat S485's fourth entry: D487
+    landed; FG-S481-J measured on A, fixed in the deploy gate with the
+    examples page and landed as S485L; R8's D1 measured in its new form;
+    the same class fixed in the release gate and landed as S485R; the
+    number 489 counted; and the codes FG-S485-W to FG-S485-AD
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S485,
+    DURING ITS SESSION, with the labels of D450 to D487: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC: D487's G1, C30 and G2 began on 11-18 of 2026, from 23:48Z; every
+    later time is on 11-19. The operator's clock reads two hours ahead. An
+    operator's time is the time his message was sent, a value ON A carries
+    the clock its command printed. Each value was asserted by the script
+    that built this entry from the seat's running log or its files. Each
+    paste is a file transcribed from the chat, named by its digest. What
+    D487 records is not repeated here. Each suite, control and readback
+    below evidences; nothing here is a Z3 or Farkas result. The container
+    restarted many times in the session; after each the seat read the
+    uptime and the pins before its next act, and no file was lost.
+
+    D489-1  D487 LANDED. d487/D487_PREDICTIONS.txt ccf3d2a0 before its
+            tools, which make_tools487.py made from D486's in one pass; the
+            fixture 23 cases and 15 mutants as predicted; the checkers by
+            their predictions (4e0fcb7b), 17 controls, none bad. L1
+            05729353, one parent daf9452e, one path. OPERATOR, 23:48Z: pame
+            for G1; the branch s487-d487. ON A at 23:50Z, C30
+            (ona/c30_check_015000_transcribed.txt b201c176). OPERATOR,
+            23:51Z: pame for G2; ON A from 23:52:15Z
+            (ona/g2_verify_d487_020900_transcribed.txt 50189ac6): 23 legs
+            0; 5385 passed and 13 skipped at both checkouts, outcomes 5398
+            43b753a9 at both, no outcome moved; the claim lint 410 and 0.
+            OPERATOR, 00:12Z: pame for G3; GitHub's main 05729353.
+            OPERATOR, 00:13Z: pame for G4; ON A at 00:15:12Z
+            (ona/g4_fflive_d487_021500_transcribed.txt 999fe669): the
+            document 644, aetherlang's. The readback: 191 refs,
+            READBACK_GREEN.
+
+    D489-2  FG-S481-J MEASURED ON A. OPERATOR, 00:16Z: continue; LINT taken
+            next. READ IN THE SEAT'S CONTAINER: the deploy gate lints the
+            whole live tree by os.walk, then rsyncs website/ from the
+            working tree; a fresh clone of 05729353 walks 410 files
+            (lint1/walk_clean_05729353.txt 96d76ca5).
+            lint1/LINT1_PREDICTIONS.txt f5dd2310 before the tools,
+            amendment caacbdea before the fixture. The fixture's first run
+            failed on its own expected line; amendment 96c0c159, POST HOC,
+            the fixture only (FG-S485-Y). OPERATOR, 01:03Z: pame for L1R, a
+            read as aetherlang; root ran runuser, find and date only. ON A
+            from 01:04:30Z (ona/l1r_lint1_030400_transcribed.txt 83c03b98):
+            HEAD 05729353, porcelain 0; the walk 441, its tracked part 410
+            and equal to the clone's; the other 31 ignored scratch and
+            generated output at the tree's root and one file of a pytest
+            cache, none served; each of the 581 files rsync would copy from
+            website/ tracked; website/examples/index.html served and not
+            linted (FG-S485-AC). 17 of 17 rows held
+            (lint1/LINT1_RESULTS.txt a5a3c625).
+
+    D489-3  THE DEPLOY GATE READS THE COMMIT, MEASURED IN THE CONTAINER.
+            After a pause of six hours, OPERATOR, 07:03Z: pame for L2a and
+            L2b, and R8's D1 changed with them. READ: release.py's phase 5b
+            lints the working tree too, owed; git archive of HEAD gave the
+            same bytes twice. lint2/LINT2_PREDICTIONS.txt ff75c7fd before
+            the tests and the code. L2a: an exclude entry with a leading
+            slash names a directory from the root only, and claims.toml's
+            examples entry takes the slash. L2b: deploy_website.sh gains
+            untracked_served, which prints each file rsync's own dry run
+            would copy that git does not track and returns rc 3 if rsync or
+            git fails, and the script refuses on a line or a failure, in
+            both modes; and lint_commit, which lints a git archive of HEAD
+            with the commit as its anchor. No rsync in the container;
+            amendment d49a448c before any run: the four tests that need it
+            skip here and run first on A (FG-S485-W). As s485 in the venv
+            form: red 7 failed and 4 skipped; green 7 passed and 4 skipped;
+            the suite 5391 passed and 18 skipped, 11 outcome lines added
+            and none removed; the claim lint 411 and 0. M1, M2 and M5
+            killed as named; M3 survived, an equivalent mutant; amendment
+            9b3ae120, POST HOC, named M3b before it ran,
+            killed (FG-S485-X); M4 and M6 not measured
+            (lint2/LINT2_RESULTS.txt aea33fc6). The first draft of the
+            apply left bytes in a scratch clone (FG-S485-Z).
+
+    D489-4  S485L LANDED, 11-19. s485l/S485L_PREDICTIONS.txt fb57ba77
+            before the tools, S485U's form moved in 48 counted
+            substitutions; the fixture 30 cases and 18 mutants as
+            predicted; the checkers by their predictions (4448d42b), 16
+            controls, none bad. L1 e890ec4d, one parent 05729353, four
+            blobs, the deploy script 755. OPERATOR, 07:35Z: pame for G1;
+            the branch s485-lint. ON A at 07:38Z, C32
+            (ona/c32_check_093800_transcribed.txt 2baa1011). OPERATOR,
+            07:42Z: pame for G2; ON A from 07:43:21Z
+            (ona/g2_verify_s485l_095300_transcribed.txt 5db8e8fa): 26 legs
+            0; 5385 passed and 13 skipped at 05729353, 5396 and 13 at
+            e890ec4d; outcomes 5398 and 5409; 11 added, 0 removed, their
+            digest the pinned fdcad00f, the four tests that run rsync
+            passed in their first run; the claim lint 411 and 0. OPERATOR,
+            07:54Z: pame for G3; GitHub's main e890ec4d. OPERATOR, 07:55Z:
+            pame for G4; ON A at 07:56:33Z
+            (ona/g4_fflive_s485l_095600_transcribed.txt
+            3dccaea6, FG-S485-AA): the four paths 644, 644, 755 and 644,
+            aetherlang's. The readback: 192 refs, READBACK_GREEN. No
+            restart, no deploy: the new gate first runs at the next deploy.
+
+    D489-5  R8'S D1 IN ITS NEW FORM, ON A. lint3/LINT3_PREDICTIONS.txt
+            542430c4 before the tools: as aetherlang in the live tree, the
+            two functions taken from the tree's own deploy_website.sh. In
+            the container at e890ec4d without rsync, untracked_served
+            refused with rc 3, the fail-closed path; with LINT1's plants
+            and two untracked files holding a sentence the lint flags, the
+            commit's lint stayed 411 and 0 while the old form walked 418
+            files, found 2 violations and refused. OPERATOR, 08:03Z: pame
+            for L3R. ON A from 08:03:41Z
+            (ona/l3r_lint3_100400_transcribed.txt ad3842b6): the script's
+            blob d68dd7d9; untracked_served no line, rc 0; lint_commit rc
+            0, anchor e890ec4d, 411 files and 0 violations; the old form on
+            the working tree 442 and 0; 16 of 16 rows held. On A the deploy
+            gate reads the commit's 411, not the 31
+            (lint3/LINT3_RESULTS.txt 4fe1e485). R8's D1 takes this form
+            from here; root's rsync of D2 and D3 is unchanged.
+
+    D489-6  THE RELEASE GATE READS THE COMMIT, MEASURED. OPERATOR, 08:06Z:
+            pame for LINT4. READ: phase_claim_lint in scripts/release.py
+            linted the working tree, the class of FG-S481-J (FG-S485-AD).
+            lint4/LINT4_PREDICTIONS.txt 968bd032 before the tests and the
+            code. The phase now takes HEAD's commit, writes it by git
+            archive into a temporary directory, extracts it with tarfile's
+            data filter, and lints the export with the commit as its
+            anchor. As s485 in the venv form at e890ec4d: red 4 failed and
+            2 passed, each for its predicted reason; green 6 passed; the
+            suite 5397 passed and 18 skipped, 6 outcome lines added and
+            none removed; the claim lint 411 and 0; N1 to N3 killed as
+            named (lint4/LINT4_RESULTS.txt 34a5fea8).
+
+    D489-7  S485R LANDED, 11-19. s485r/S485R_PREDICTIONS.txt d432c02e
+            before the tools, S485L's form moved in 47 counted
+            substitutions; the fixture 30 cases and 18 mutants as
+            predicted; the checkers by their predictions (884a7235), 16
+            controls, none bad. L1 177a8be7, one parent e890ec4d, two
+            blobs. OPERATOR, 08:23Z: pame for G1; the branch s485-release.
+            ON A at 08:25Z, C34 (ona/c34_check_102500_transcribed.txt
+            35d21392). OPERATOR, 08:26Z: pame for G2; ON A from 08:27:18Z
+            (ona/g2_verify_s485r_103600_transcribed.txt d494380f): 24 legs
+            0; 5396 passed and 13 skipped at e890ec4d, 5402 and 13 at
+            177a8be7; outcomes 5409 and 5415; 6 added, 0 removed, their
+            digest the pinned a9aafba5; the claim lint 411 and 0. OPERATOR,
+            08:37Z: pame for G3; GitHub's main 177a8be7. OPERATOR, 08:38Z:
+            pame for G4; ON A at 08:38:44Z
+            (ona/g4_fflive_s485r_103800_transcribed.txt 8f454ada): both
+            paths 644, aetherlang's. The readback: 193 refs,
+            READBACK_GREEN. No restart, no deploy, no release: the new
+            phase has not yet run in a release.
+
+    D489-8  THE NUMBER 489. OPERATOR, 08:40Z: 489, for this entry; 488
+            stays unused. N13, the readback's fetch, and N14 fetched the
+            mirror: main 177a8be7, 193 refs, no ref moved between them.
+            numbers/NUM489_PREDICTIONS.txt d1780891 and its amendment
+            1c14a665 before the count; 489 was not a target of NUM487's
+            count, so its base was not measured and its Q2 and Q3 rows were
+            predicted 0. The count: 42 rows, 39 held, 0 differ, 3 read; 489
+            free. Its 23 hex hits lie inside runs longer than 12 in 7
+            blobs, none at a run's start (FG-S475-D). The three controls
+            each differed only where the amendment said
+            (numbers/NUM489_RESULTS.txt ab97ad65).
+
+    FINDINGS
+
+            FG-S485-W  NOT A SEAT ERROR, A LIMIT, MEASURED. NO RSYNC IN THE
+                       CONTAINER. apt was named, then tried: over http the
+                       proxy refused a request that was not CONNECT, over
+                       https the archive gave no Release file; the first
+                       try hung and was stopped, and the seat did not route
+                       around the proxy. LINT2's four tests that run rsync
+                       skipped in the container and passed in their first
+                       run, on A, inside S485L's G2; the mutants M4 and M6,
+                       which need it, were not measured. The fail-closed
+                       path of untracked_served, rc 3 without rsync, was
+                       measured in the container.
+
+            FG-S485-X  SEAT. AN EQUIVALENT MUTANT NAMED AS KILLABLE.
+                       LINT2's M3 dropped the refusal of the entry "/"; the
+                       clause that refuses an entry ending in a slash
+                       refuses "/" too, so no test could kill M3, and it
+                       survived. Amendment 9b3ae120, POST HOC, named M3b,
+                       that clause dropped, before it ran; V04 killed it. A
+                       mutant is read against every clause that takes its
+                       input before it is named.
+
+            FG-S485-Y  SEAT. A HARNESS'S EXPECTED VALUES WRITTEN APART FROM
+                       THE PREDICTIONS. LINT1's fixture wanted a line
+                       starting MISSING_FROM_TREE; the tool prints that
+                       count inside its TRACKED line; amendment 96c0c159,
+                       POST HOC, the fixture only. The first control run
+                       counted one control bad: ctl_lint1's want set for C3
+                       named LINT1_RC 0, which the predictions did not; the
+                       harness was set to the predicted set, and the rerun
+                       counted none bad. The rehearsal reset the fixture's
+                       outputs; the rerun gave the same bytes, 82cde083. A
+                       want set is copied from the hashed predictions, not
+                       written again.
+
+            FG-S485-Z  SEAT. BUILDERS STOPPED BY THEIR OWN CHECKS, AND A
+                       DRAFT THAT LEFT BYTES. make_land_s485l.py refused
+                       twice: a count of 2 where 3 was asserted, and a
+                       leftover rule that matched the fixture's stable test
+                       id; the files its second run wrote were removed and
+                       rewritten. make_land_s485r.py's leftover check
+                       refused twice before any write: the lint's own calls
+                       name claims.toml and claim_lint.py. mk_cmds487.py
+                       and mk_checkers487.py each refused twice before any
+                       write. A draft of apply_lint2.py compiled to
+                       /dev/null, failed, and left two temporary files in a
+                       scratch clone; no target was written, and the apply
+                       was rebuilt in apply_su1.py's form. A leftover check
+                       is scoped to the tokens that must move.
+
+            FG-S485-AA  NOT A SEAT ERROR, CAUGHT. A PASTE THAT LOST A
+                        NEWLINE. S485L's G4 paste joined its first output
+                        line to the command's line; on the raw bytes
+                        (ac5b028c) the checker counted rows 1 and 2 as
+                        differing. The raw is kept; the transcription
+                        restores that one newline and nothing else
+                        (3dccaea6), and 15 of 15 rows held on it. L1R's
+                        paste came as an attachment with CRLF line ends;
+                        the raw is kept (39974f97) and the LF form was
+                        checked (83c03b98).
+
+            FG-S485-AB  NOT A SEAT ERROR, MEASURED. FG-S481-J. The deploy
+                        gate linted the live tree by os.walk: 441 files on
+                        A, 31 of them ignored scratch and generated output
+                        that no commit holds; a clean commit walks 410. A
+                        violation among the 31 would refuse a deploy for
+                        bytes that are not served, and a file added there
+                        moves the count without a commit. The gate now
+                        lints a git archive of HEAD with the commit named,
+                        411 files on A, and refuses when rsync would serve
+                        a file git does not track.
+
+            FG-S485-AC  NOT A SEAT ERROR, MEASURED. A SERVED PAGE NOT
+                        LINTED. The exclude entry examples took a directory
+                        of that name at any depth, so
+                        website/examples/index.html was served and not
+                        linted; linted alone it had 0 violations. An entry
+                        with a leading slash now names a directory from the
+                        root only, claims.toml's entry is /examples, and
+                        the page is the one file a commit's walk gained,
+                        410 to 411 (d489/walk_diff.txt 32662078).
+
+            FG-S485-AD  NOT A SEAT ERROR, MEASURED. THE SAME CLASS IN THE
+                        RELEASE GATE. scripts/release.py's phase 5b linted
+                        the working tree with --root .; it now lints an
+                        export of HEAD's commit, written by git archive and
+                        extracted with tarfile's data filter, with the
+                        commit as its anchor. It has not yet run in a
+                        release.
