@@ -38,6 +38,10 @@ and is a first-party, version-controlled constant -- it is NEVER read from the
 bundle under verification (that would let an attacker who swaps the VSA also swap
 the key). The pinned log/TSA roots for ROOT 2 come from the TUF-pinned
 trusted_root.json + tsa_chain.pem the caller supplies as durable pins.
+__s485_convergence_pins_v1__ (FG-S481-R): tsa_chain.pem may be absent (the
+TSA roots are then read from trusted_root.json); the Rekor bundle may carry
+the name a served release-vsa directory gives it; the log key is the one
+whose host is the checkpoint origin.
 """
 from __future__ import annotations
 
@@ -274,6 +278,21 @@ def _derive_version(statement: dict[str, Any] | None) -> str | None:
     return None
 
 
+def _rekor_bundle_path(bdir: Path) -> Path:
+    """__s485_convergence_pins_v1__ (FG-S481-R): the canonical name when
+    present, as the anchor stages it; else the one version-named bundle a
+    served release-vsa directory carries. More than one is refused."""
+    canon = bdir / REKOR_FILENAME
+    if canon.is_file():
+        return canon
+    named = sorted(p for p in bdir.glob("nous_lang-*." + REKOR_FILENAME) if p.is_file())
+    if len(named) > 1:
+        raise ConvergenceInputError(
+            "more than one version-named rekor v2 bundle in " + str(bdir) + ": "
+            + ", ".join(p.name for p in named))
+    return named[0] if named else canon
+
+
 def verify_convergence(
     bundle_dir: str | Path,
     pins_dir: str | Path | None = None,
@@ -297,7 +316,7 @@ def verify_convergence(
     pdir = Path(pins_dir) if pins_dir is not None else bdir
 
     envelope = _load_json(bdir / VSA_FILENAME, "release VSA")
-    rekor_bundle = _load_json(bdir / REKOR_FILENAME, "rekor v2 bundle")
+    rekor_bundle = _load_json(_rekor_bundle_path(bdir), "rekor v2 bundle")
 
     payload = _vsa_payload_bytes(envelope)
     vsa_payload_sha256 = hashlib.sha256(payload).hexdigest()
@@ -316,14 +335,14 @@ def verify_convergence(
     pins_err = ""
     verdict: rekor_v2_offline.Verdict | None = None
     tr = pdir / TRUSTED_ROOT_FILENAME
-    tsa = pdir / TSA_CHAIN_FILENAME
     if not tr.is_file():
         pins_err = "pinned " + TRUSTED_ROOT_FILENAME + " not found: " + str(tr)
-    elif not tsa.is_file():
-        pins_err = "pinned " + TSA_CHAIN_FILENAME + " not found: " + str(tsa)
     else:
         try:
-            pins = rekor_v2_offline.load_pins(pdir)
+            origin = rekor_v2_offline.parse_checkpoint(
+                rekor_bundle["transparency_log_entry"]["inclusion_proof"]["checkpoint"]
+            ).origin
+            pins = rekor_v2_offline.load_pins(pdir, origin=origin)
             verdict = rekor_v2_offline.verify_entry(
                 rekor_bundle, pins, verify_time=True
             )
@@ -478,6 +497,8 @@ def build_verify_release_parser(sub: "argparse._SubParsersAction") -> None:
         required=True,
         help=(
             "directory holding " + VSA_FILENAME + " + " + REKOR_FILENAME
+            + " or the one nous_lang-<version>." + REKOR_FILENAME
+            + " a served release-vsa directory carries"
             + " (and the pins, unless --pins-dir is given)"
         ),
     )
@@ -485,8 +506,9 @@ def build_verify_release_parser(sub: "argparse._SubParsersAction") -> None:
         "--pins-dir",
         default=None,
         help=(
-            "directory holding " + TRUSTED_ROOT_FILENAME + " + "
-            + TSA_CHAIN_FILENAME + " (defaults to --bundle-dir)"
+            "directory holding " + TRUSTED_ROOT_FILENAME + " (+ "
+            + TSA_CHAIN_FILENAME + ", optional: the TSA roots are otherwise"
+            + " read from " + TRUSTED_ROOT_FILENAME + ") (defaults to --bundle-dir)"
         ),
     )
     p.add_argument(

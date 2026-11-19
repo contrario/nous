@@ -30,12 +30,13 @@ from conformance_verifier import (  # __an_js_strict_v1__
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec, ed25519, padding, rsa
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
-from cryptography.hazmat.primitives.serialization import load_der_public_key
+from cryptography.hazmat.primitives.serialization import Encoding, load_der_public_key
 from cryptography.x509 import Certificate, load_der_x509_certificate, load_pem_x509_certificates
 from cryptography.x509.oid import ExtendedKeyUsageOID, ExtensionOID
 
@@ -480,23 +481,57 @@ class Pins:
     tsa_roots_pem: bytes
 
 
-def load_pins(pins_dir: Path) -> Pins:
+def _tsa_roots_from_trusted_root(tr: dict[str, Any]) -> bytes:
+    """The last certificate of each timestampAuthorities chain, PEM: the
+    self-signed root a pinned tsa_chain.pem holds."""
+    out = b""
+    for ta in tr.get("timestampAuthorities", []):
+        certs = ta.get("certChain", {}).get("certificates", [])
+        if certs:
+            der = base64.b64decode(certs[-1]["rawBytes"])
+            out += load_der_x509_certificate(der).public_bytes(Encoding.PEM)
+    if not out:
+        raise VerificationError(
+            "no tsa_chain.pem and no timestampAuthorities certificate in "
+            "pinned trusted_root")
+    return out
+
+
+def load_pins(pins_dir: Path, origin: str | None = None) -> Pins:
+    """__s485_convergence_pins_v1__ (FG-S481-R). The Rekor v2 key is the
+    PKIX_ED25519 tlog whose baseUrl host is the checkpoint origin, when one
+    is given; with none given, more than one PKIX_ED25519 tlog is refused,
+    not the last one taken, so a root that gains a shard cannot displace
+    the key an anchor was written under. tsa_chain.pem when present; else
+    the TSA roots of trusted_root.json."""
     tr = _strict_loads((pins_dir / "trusted_root.json").read_bytes(),
                        "trusted_root.json [js:rvo.1]")
-    v2 = None
-    for tlog in tr.get("tlogs", []):
-        if tlog.get("publicKey", {}).get("keyDetails") == "PKIX_ED25519":
-            v2 = tlog
-    if v2 is None:
+    eds = [t for t in tr.get("tlogs", [])
+           if t.get("publicKey", {}).get("keyDetails") == "PKIX_ED25519"]
+    if not eds:
         raise VerificationError("no PKIX_ED25519 rekor v2 tlog in pinned trusted_root")
+    if origin is not None:
+        eds = [t for t in eds if urlsplit(str(t.get("baseUrl", ""))).netloc == origin]
+        if not eds:
+            raise VerificationError(
+                "no PKIX_ED25519 rekor v2 tlog in pinned trusted_root for the "
+                "checkpoint origin " + origin)
+    if len(eds) > 1:
+        raise VerificationError(
+            "more than one PKIX_ED25519 rekor v2 tlog in pinned trusted_root"
+            + (" for the checkpoint origin " + origin if origin is not None
+               else "; name the checkpoint origin"))
+    v2 = eds[0]
     der = base64.b64decode(v2["publicKey"]["rawBytes"])
     key = load_der_public_key(der)
     if not isinstance(key, Ed25519PublicKey):
         key = Ed25519PublicKey.from_public_bytes(der[-32:])
+    tsa = pins_dir / "tsa_chain.pem"
     return Pins(
         log_key=key,
         log_key_id=base64.b64decode(v2["logId"]["keyId"]),
-        tsa_roots_pem=(pins_dir / "tsa_chain.pem").read_bytes(),
+        tsa_roots_pem=(tsa.read_bytes() if tsa.is_file()
+                       else _tsa_roots_from_trusted_root(tr)),
     )
 
 
