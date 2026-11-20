@@ -5,6 +5,151 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [10.0.0]  <!-- __s485_changelog_v10_0_0__ -->
+
+### Security  <!-- __s485_changelog_security_v1__ -->
+
+- When `mint_release_vsa.py` runs as root, it checks the code it is
+  about to load: owned by root and not writable by group or other (what
+  this does not cover is under Known limits). The check runs at import,
+  after the standard-library imports at the top of the file and before
+  `import build_vsa`. It refuses unless the interpreter runs with `-I`
+  and `-B`; removes setuptools' editable-install finders and hooks, and
+  refuses if another hook naming an editable install is left; refuses
+  unless the script, each `sys.path` entry (a missing one by its nearest
+  existing ancestor), each `.pth` file of a site directory and each
+  module already loaded are owned by root and not writable by group or
+  other, along their lexical and resolved paths (a sticky ancestor such
+  as /tmp is accepted, a symlink's own mode is not read); puts its own
+  directory first; and installs a finder first on `sys.meta_path` that
+  checks each later module's origin, cache and search locations before
+  it runs. `mint` and `anchor` first import, through that finder, a
+  fixed list of the modules the file imports later (one that cannot be
+  imported refuses), then check again: `mint` before the seed is read,
+  before its first write and before the ROOT-1 child; `anchor` before
+  the network. A refusal prints `MINT REFUSED:` or `ANCHOR REFUSED:`
+  with the reason and exits 2, also when the refused import is
+  `build_vsa` or one of its own, at the top of the file. The finder
+  keeps each refusal, so one a library catches is not lost: the next
+  check refuses on it; a `mint` or `anchor` command that ends after it,
+  by an exception, a `SystemExit` or a normal return, exits 2 with a
+  REFUSED line that names the kept refusals (when the run stops on a
+  refused import, the line names that import only, not refusals kept
+  before it); a `KeyboardInterrupt` keeps its own exit. Argument parsing
+  and `--help` run before the command and are not covered. For any other
+  euid the check does nothing.
+- For a root run, the mint's output and work directories and the
+  anchor's `--dir` must be owned by root and not writable by group or
+  other, and so must the parent of each; a sticky direct parent such as
+  /tmp is refused, since the anchor journal is the directory's sibling
+  (a sticky directory higher up is accepted). The mint makes them when
+  absent. 9.0.0 used any existing directory. In a container probe, root
+  ran a script the way the ROOT-1 child runs the verifier, in a
+  directory another user had made first in /tmp; that user's `json.py`
+  ran with euid 0.
+- The ROOT-1 child of `mint` gets PATH=/usr/sbin:/usr/bin:/sbin:/bin and
+  LANG=C.UTF-8 only, for every euid.
+- Steps 4 and 5 that `scripts/release.py` prints run the mint as
+  `python3 -I -B` from a root-owned copy staged from the tag, with
+  `/root/nous-vsa/X.Y.Z` as the directory (9.0.0 printed `/tmp/vsaX`).
+- In a container fixture (Python 3.13; Server A runs 3.12), run as root
+  with `-I -B` from a root-owned copy, 9.0.0's mint imported `build_vsa`
+  from an editable install's tree owned by another user (a one-module
+  stand-in tree, installed editable in a venv).
+
+### Changed  <!-- __s485_changelog_changed_v1__ -->
+
+- `nous build-attest-verify` reads a release-vsa directory's files under
+  the names it is served with. When `rekor-v2-bundle.json` is absent it
+  reads the one `nous_lang-*.rekor-v2-bundle.json` in the directory (the
+  version in that name is not compared with the VSA's; the binding leg
+  compares the digests) and refuses more than one, exit 2. When
+  `tsa_chain.pem` is absent, `load_pins` takes the TSA roots from the
+  last certificate of each `timestampAuthorities` chain in
+  `trusted_root.json`. `trusted_root.json` is still needed, in the
+  directory or in `--pins-dir`. On the 12 files of 9.0.0's served
+  directory and no pins, 9.0.0 exited 2 (the bundle not found) and
+  10.0.0 exits 1 (FAIL, `trusted_root.json` not found). Pins without
+  `tsa_chain.pem`, FAIL in 9.0.0, can now PASS.
+- `rekor_v2_offline.load_pins(pins_dir, origin=None)`: with an origin,
+  the Rekor v2 key is the PKIX_ED25519 tlog whose `baseUrl` host is that
+  origin, and none or more than one such tlog is refused; with no
+  origin, more than one PKIX_ED25519 tlog is refused. 9.0.0 took the
+  last PKIX_ED25519 tlog: with a second one after log2025-1 in the
+  trusted root, the valid 9.0.0 anchor read FAIL, and now PASSes
+  (measured on a synthetic root; 8.0.0's anchor is on the same log, not
+  measured). Sigstore's production root, as of 2026-11-18, lists one
+  such tlog. `nous build-attest-verify` passes the bundle's checkpoint
+  origin.
+
+### Release process  <!-- __s485_changelog_release_v1__ -->
+
+- The sdist is rewritten after the build, as PAX: member names sorted;
+  every mtime and the gzip time the build's epoch; uid and gid 0; no
+  owner names; modes 644 or 755. The epoch is SOURCE_DATE_EPOCH when it
+  is ASCII digits, else the commit's time; the build prints which. A
+  link or any member that is not a file or a directory, a duplicate
+  name, or an absolute or `..` name stops the release. The release
+  prints the sdist's content digest (the members' names, types and
+  bytes), the archive's identity across hosts; the .tar.gz bytes still
+  depend on the build host's deflate library. The wheel is not
+  rewritten.
+- The release's claim-boundary gate (phase 5b) and the deploy gate run
+  the commit's own `scripts/claim_lint.py` and `claims.toml` over an
+  export of the commit, with the commit as its `--anchor`, not over the
+  working tree. The deploy, dry run included, refuses (exit 2) when
+  rsync would serve a file git does not track or when that list cannot
+  be made.
+- In `claims.toml`'s `exclude_dirs` a leading `/` names a directory from
+  the root only; `examples` became `/examples`, so
+  website/examples/index.html is now linted. An entry that is empty, `/`
+  or ends in `/` is a CONFIG ERROR, exit 2.
+
+### Known limits  <!-- __s485_changelog_known_limits_v1__ -->
+
+- Run as root without `-I`, the mint's standard-library imports come
+  before the check: a module planted beside a copy of the script runs
+  before the refusal. Run it with `-I -B` as step 4 prints.
+- A `.pth` file's code runs at interpreter start, as root, before the
+  check. The check refuses a `.pth` not owned by root or that group or
+  other can write, but code that has already run can change what the
+  check reads. A root-owned `.pth` that only root can write is accepted;
+  its contents are not inspected.
+- The ROOT-1 child runs the verifier as a stranger would,
+  `sys.executable` without `-I -B`, with the output directory first on
+  its `sys.path` and, without `-I`, root's user site and its `.pth`
+  files, which the parent, run with `-I`, did not check; the guard does
+  not run in it. For a root run that directory is checked as above, not
+  the files in it. Nor does the guard check data files: the signing key
+  and the pins directory.
+- A refusal after the mint's first write leaves the files already
+  written in the work and output directories; nothing removes them. An
+  anchor run that exits 2 on a kept refusal after its Rekor POST leaves
+  the log entry, which cannot be withdrawn, and the files it wrote. A
+  kept refusal turns the command's own exit code, 0 or 1, into 2.
+- Importing `mint_release_vsa` as root without `-I -B` exits 2, as
+  running it does.
+- The validFor windows of the trusted root's tlogs and TSA are not
+  checked.
+
+### Notes  <!-- __s485_changelog_why_major_v1__ -->
+
+- 10.0.0 is a major version because it refuses or changes behaviour
+  9.0.0 accepted: `mint_release_vsa.py` run as root refuses unless it
+  runs as `python3 -I -B`, refuses an environment in which a file it
+  loads, or a path it searches, is writable by another principal (except
+  as listed under Known limits), and refuses a bundle directory or
+  direct parent that is not root-owned or that group or other can write,
+  /tmp included; `load_pins` refuses a trusted root with more than one
+  PKIX_ED25519 tlog for the checkpoint origin, or with more than one and
+  no origin named; and `nous build-attest-verify` on a served directory
+  without pins exits 1 where 9.0.0 exited 2. A root invocation of the
+  mint must be `python3 -I -B` from a root-owned copy, with its
+  directory under a root-only parent such as /root; a caller of
+  `load_pins` whose root lists several Rekor v2 shards must pass the
+  origin; a script that reads that exit code must change.
+
+
 ## [9.0.0]  <!-- __s481_changelog_v9_0_0__ -->
 
 ### Changed  <!-- __an_gate1_d4_changelog_v1__ -->
