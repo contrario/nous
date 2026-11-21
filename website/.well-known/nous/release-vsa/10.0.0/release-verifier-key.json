@@ -1,0 +1,10 @@
+{
+  "alg": "ed25519",
+  "keyid": "66969a4ebc65b0c5f00aa6d93c55e8a3a30d461ffe073caa93d8ea4d5d7898fd",
+  "publicKeyRaw": "E3FNG9zFMRjhg/iVkOu9K3gH5mmG6Uwvdy8EvwHsYVo=",
+  "schema": "nous.release_vsa.verifier_key.v1",
+  "verifiedLevels": [
+    "SLSA_BUILD_LEVEL_2"
+  ],
+  "verifierId": "https://nous-lang.org/verifiers/release-operator/v1"
+}
