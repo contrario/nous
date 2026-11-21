@@ -137,6 +137,44 @@ operator-independent root, verify them directly (Section 6).
 
 PROVES nothing. No Z3 or Farkas leg is carried by this class.
 
+### 1.5 The Rekor leg
+
+`nous_lang-<version>.rekor-v2-bundle.json` carries the Rekor v2 entry for the
+VSA payload: the inclusion proof, the log's signed checkpoint (log2025-1), and
+an RFC 3161 timestamp. Checking it needs the Sigstore public-good trust root.
+This site does not serve one, on purpose: a root fetched from the origin that
+serves the bundle lets whoever controls that origin replace both. Take it from
+Sigstore's TUF repository, through Sigstore's own client. Python 3.11 or newer
+(`nous-lang` requires it).
+
+From the `rel` directory of 1.1:
+
+    curl -fsSLO "$B/nous_lang-$V.rekor-v2-bundle.json"
+    curl -fsSLO "$B/nous_lang-$V.rekor-v2-bundle.json.sha256"
+    sha256sum -c nous_lang-$V.rekor-v2-bundle.json.sha256
+    cd ..
+    python3 -m venv v
+    v/bin/pip install nous-lang==$V sigstore==4.3.0
+    export XDG_CACHE_HOME=$PWD/cache XDG_DATA_HOME=$PWD/data
+    v/bin/python -m sigstore plumbing update-trust-root || echo "STOP: the TUF update failed"
+    P="$XDG_CACHE_HOME/sigstore-python/tuf/https%3A%2F%2Ftuf-repo-cdn.sigstore.dev"
+    v/bin/nous build-attest-verify --bundle-dir rel --pins-dir "$P"
+
+Expect `CONVERGENCE: PASS`, exit `0`: the operator signature (ROOT 1); the
+Merkle inclusion, the checkpoint signature and the RFC 3161 timestamp (ROOT 2);
+and the log's digest equal to the sha256 of the VSA payload (BINDING).
+
+Stop if `update-trust-root` does not exit `0`. sigstore-python writes its
+embedded copy of `trusted_root.json` at that path before it updates, so the
+file is there even when no TUF update checked it.
+
+EVIDENCES the inclusion of the VSA payload's digest in the view of the log that
+the log key signed, at the time the timestamp authority signed. NOT checked
+here: that every client sees the same view of the log. No witness cosignature
+is read, so a split view is not excluded. `index.json` is not signed and no
+verifier reads it; `scripts/cold_audit.py` checks that its payload digest and
+its wheel equal the VSA's. PROVES nothing: no Z3 or Farkas leg.
+
 ## 2. SLSA provenance (build leg)
 
 Served at: `https://nous-lang.org/.well-known/nous/provenance/`

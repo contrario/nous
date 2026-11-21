@@ -41,6 +41,7 @@ Exit: 0 = every audited class verified cold
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import os
@@ -93,10 +94,17 @@ REGISTRY_FILES: tuple[str, ...] = (
 
 CLASSES: tuple[str, ...] = (
     "release-vsa",
+    "release-vsa-rekor",
     "provenance",
     "vsa-vectors",
     "verifier-registry",
 )
+
+# __s485_cold_audit_rekor_v1__ The Rekor leg (Section 1.5): the trust root
+# comes from Sigstore's TUF repository through Sigstore's own client, never
+# from nous-lang.org. These name the client and where it leaves the root.
+SIGSTORE_REQ = "sigstore==4.3.0"
+TUF_TARGETS_SUBDIR = "sigstore-python/tuf/https%3A%2F%2Ftuf-repo-cdn.sigstore.dev"
 
 _VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
 _POSIX_SIDECAR_RE = re.compile(r"^([0-9a-f]{64})  (\S.*)$")
@@ -224,25 +232,63 @@ def _check_sidecar(sidecar: Path) -> None:
         )
 
 
-def _run(argv: list[str], cwd: Path) -> tuple[int, str, str]:
+def _run(argv: list[str], cwd: Path, env: dict[str, str] | None = None) -> tuple[int, str, str]:
     proc = subprocess.run(
         argv,
         cwd=str(cwd),
         capture_output=True,
         text=True,
         timeout=600,
+        env=env,
+        stdin=subprocess.DEVNULL,
     )
     return proc.returncode, proc.stdout, proc.stderr
 
 
-def _require_rc0(argv: list[str], cwd: Path, label: str) -> str:
-    rc, out, err = _run(argv, cwd)
+def _require_rc0(argv: list[str], cwd: Path, label: str,
+                 env: dict[str, str] | None = None) -> str:
+    rc, out, err = _run(argv, cwd, env) if env is not None else _run(argv, cwd)
     if rc != 0:
         raise ColdAuditError(
             label + " exited " + str(rc) + " (expected 0)\n"
             + "--- stdout ---\n" + out + "--- stderr ---\n" + err
         )
     return out
+
+
+def _vsa_subjects(path: Path) -> tuple[str, dict[str, str]]:
+    """The sha256 of the VSA payload and its subjects, name to digest. Read
+    before the verifier checks the signature over those same bytes."""
+    try:
+        env = json.loads(path.read_text(encoding="utf-8"))
+        payload: bytes = base64.b64decode(env["payload"], validate=True)
+        st = json.loads(payload)
+        subj = {str(s["name"]): str(s["digest"]["sha256"]) for s in st["subject"]}
+    except (ValueError, KeyError, TypeError) as exc:
+        raise ColdAuditError(
+            "the VSA envelope cannot be read: " + type(exc).__name__
+        ) from exc
+    return hashlib.sha256(payload).hexdigest(), subj
+
+
+def _bind_index(index: dict, vsa: Path) -> tuple[str, str]:
+    """index.json is not signed and no verifier reads it. Every field of it
+    this audit uses must equal the VSA's; the wheel is the VSA's."""
+    psha, subj = _vsa_subjects(vsa)
+    if index.get("vsaPayloadSha256") != psha:
+        raise ColdAuditError(
+            "index.json vsaPayloadSha256 is not the sha256 of the VSA payload: "
+            "index=" + str(index.get("vsaPayloadSha256"))[:16] + "... vsa=" + psha[:16] + "..."
+        )
+    vw = [(n, d) for n, d in subj.items() if n.endswith(".whl")]
+    iw = [a for a in index.get("artifacts", [])
+          if isinstance(a, dict) and a.get("kind") == "wheel"]
+    if len(vw) != 1 or len(iw) != 1 or (str(iw[0].get("name")), str(iw[0].get("sha256"))) != vw[0]:
+        raise ColdAuditError(
+            "index.json's wheel is not the VSA's wheel subject: "
+            + str(len(vw)) + " in the VSA, " + str(len(iw)) + " in the index"
+        )
+    return vw[0]
 
 
 def audit_release_vsa(version: str, workdir: Path) -> str:
@@ -265,17 +311,7 @@ def audit_release_vsa(version: str, workdir: Path) -> str:
             + " but " + repr(version) + " was requested; the bundle fetched is "
             "not the bundle asked for"
         )
-    wheels = [
-        a for a in index.get("artifacts", [])
-        if isinstance(a, dict) and a.get("kind") == "wheel"
-    ]
-    if len(wheels) != 1:
-        raise ColdAuditError(
-            "index.json names " + str(len(wheels))
-            + " artifacts of kind 'wheel' (expected exactly 1)"
-        )
-    wheel_name: str = str(wheels[0].get("name"))
-    wheel_sha: str = str(wheels[0].get("sha256"))
+    wheel_name, wheel_sha = _bind_index(index, workdir / "build-vsa.intoto.json")
 
     _require_rc0(
         [
@@ -290,13 +326,13 @@ def audit_release_vsa(version: str, workdir: Path) -> str:
     wheel: Path = workdir / wheel_name
     if not wheel.is_file():
         raise ColdAuditError(
-            "pip did not produce the wheel index.json names: " + wheel_name
+            "pip did not produce the wheel the VSA names: " + wheel_name
         )
     got: str = _sha256_file(wheel)
     if got != wheel_sha:
         raise ColdAuditError(
-            "PyPI wheel bytes do not match the digest index.json records: "
-            "index=" + wheel_sha[:16] + "... pypi=" + got[:16] + "..."
+            "PyPI wheel bytes do not match the digest the VSA records: "
+            "vsa=" + wheel_sha[:16] + "... pypi=" + got[:16] + "..."
         )
 
     out: str = _require_rc0(
@@ -309,6 +345,73 @@ def audit_release_vsa(version: str, workdir: Path) -> str:
             "verifier exited 0 but did not print VERDICT: PASS"
         )
     return "wheel " + wheel_sha[:16] + "... bound; VERDICT: PASS"
+
+
+def audit_release_vsa_rekor(version: str, workdir: Path) -> str:
+    """Section 1.5: the Rekor v2 inclusion proof, the checkpoint and the RFC
+    3161 timestamp, under the trust root Sigstore's TUF repository serves.
+    Then a NEGATIVE CONTROL: the same bundle with its log_index moved by one
+    must FAIL, or the PASS above did not check the proof."""
+    base: str = NOUS_BASE + "/release-vsa/" + version
+    bundle: str = "nous_lang-" + version + ".rekor-v2-bundle.json"
+    rel: Path = workdir / "rel"
+    rel.mkdir()
+    _fetch_all(base, ("build-vsa.intoto.json", "build-vsa.intoto.json.sha256",
+                      bundle, bundle + ".sha256", "index.json"), rel)
+    _check_sidecar(rel / "build-vsa.intoto.json.sha256")
+    _check_sidecar(rel / (bundle + ".sha256"))
+    try:
+        index = json.loads((rel / "index.json").read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ColdAuditError("index.json is not JSON: " + str(exc)) from exc
+    _bind_index(index, rel / "build-vsa.intoto.json")
+    env: dict[str, str] = dict(os.environ)
+    env.update({"HOME": str(workdir / "home"), "XDG_CACHE_HOME": str(workdir / "cache"),
+                "XDG_DATA_HOME": str(workdir / "data"), "PIP_NO_CACHE_DIR": "1",
+                "PIP_DISABLE_PIP_VERSION_CHECK": "1"})
+    (workdir / "home").mkdir()
+    venv: Path = workdir / "v"
+    _require_rc0([sys.executable, "-m", "venv", str(venv)], workdir, "python -m venv", env)
+    py: str = str(venv / "bin" / "python")
+    _require_rc0([py, "-m", "pip", "install", "-q", "nous-lang==" + version, SIGSTORE_REQ],
+                 workdir, "pip install nous-lang==" + version + " " + SIGSTORE_REQ, env)
+    rc, out, err = _run([py, "-m", "sigstore", "plumbing", "update-trust-root"], workdir, env)
+    if rc != 0:
+        raise ColdAuditError(
+            "the TUF update exited " + str(rc) + ": sigstore-python leaves its embedded "
+            "copy at the TUF targets path before it updates, so a trusted_root.json "
+            "there is not TUF-checked. Nothing verified.\n" + err[-400:]
+        )
+    pins: Path = workdir / "cache" / TUF_TARGETS_SUBDIR
+    if not (pins / "trusted_root.json").is_file():
+        raise ColdAuditError("the TUF update exited 0 but left no trusted_root.json at " + str(pins))
+    root_sha: str = _sha256_file(pins / "trusted_root.json")
+    nous: str = str(venv / "bin" / "nous")
+    out = _require_rc0([nous, "build-attest-verify", "--bundle-dir", "rel", "--pins-dir", str(pins)],
+                       workdir, "nous build-attest-verify", env)
+    if "CONVERGENCE: PASS" not in out:
+        raise ColdAuditError("build-attest-verify exited 0 but did not print CONVERGENCE: PASS")
+    m = re.search(r"log_index:\s+(\d+)", out)
+    neg: Path = workdir / "neg"
+    shutil.copytree(rel, neg)
+    nb: Path = neg / bundle
+    try:
+        doc = json.loads(nb.read_text(encoding="utf-8"))
+        tle = doc["transparency_log_entry"]
+        tle["log_index"] = type(tle["log_index"])(int(tle["log_index"]) + 1)
+    except (ValueError, KeyError, TypeError) as exc:
+        raise ColdAuditError("the bundle has no log_index to move: " + type(exc).__name__) from exc
+    nb.write_text(json.dumps(doc), encoding="utf-8")
+    nrc, nout, _ = _run([nous, "build-attest-verify", "--bundle-dir", "neg", "--pins-dir", str(pins)],
+                        workdir, env)
+    if nrc != 1 or "CONVERGENCE: FAIL" not in nout:
+        raise ColdAuditError(
+            "NEGATIVE CONTROL FAILED: the bundle with its log_index moved by one exited "
+            + str(nrc) + " (expected 1 with CONVERGENCE: FAIL); the PASS on the served "
+            "bundle does not show the inclusion proof was checked"
+        )
+    return ("CONVERGENCE: PASS, log_index " + (m.group(1) if m else "?")
+            + ", TUF root " + root_sha[:16] + "...; the moved copy FAILs")
 
 
 def audit_provenance(workdir: Path) -> str:
@@ -367,7 +470,7 @@ def main() -> int:
         "--only",
         choices=CLASSES,
         default=None,
-        help="audit a single class instead of all four",
+        help="audit a single class instead of all five",
     )
     parser.add_argument(
         "--keep",
@@ -421,6 +524,8 @@ def main() -> int:
         try:
             if name == "release-vsa":
                 detail: str = audit_release_vsa(args.version, cell)
+            elif name == "release-vsa-rekor":
+                detail = audit_release_vsa_rekor(args.version, cell)
             elif name == "provenance":
                 detail = audit_provenance(cell)
             elif name == "vsa-vectors":
