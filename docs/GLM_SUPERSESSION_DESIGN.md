@@ -33179,3 +33179,278 @@ document itself.
                         copied to s485's directory and each variable
                         pointed there. s485 cannot read the seat's mirror;
                         root cloned the work tree and gave it to s485.
+
+  - S491 the number the operator gave the seat S485's closing entry: the
+    release gate; the notes and their five reviews; S485G and S485H landed;
+    the 10.0.0 release, B1 to B11, with the release VSA minted as root
+    through the guard, anchored and served; Section 1.5 and cold_audit's
+    Rekor step landed as cd5c28ff; the number 491 counted; and the
+    codes FG-S485-AK to FG-S485-AT
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S485,
+    DURING ITS SESSION, with the labels of D450 to D490: READ IN THE SEAT'S
+    CONTAINER, ON A, ON B, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times
+    are UTC, from 11-19 to 11-21 of 2026, as the seat's running log reads
+    them; the operator's clock reads two hours ahead. Each value was
+    asserted by the script that built this entry from that log or the
+    seat's files. Each paste is a file transcribed from the chat, named by
+    its digest. What D490 records is not repeated here. Each suite,
+    control, review and readback below evidences; nothing here is a Z3 or
+    Farkas result. The container restarted often; the log records the
+    uptime and the pins read after each restart the seat met.
+
+    D491-1  THE RELEASE GATE AND ITS RULINGS. OPERATOR, 11:49Z on 11-19:
+            "to release". rel2/RELEASE_GATE_2.txt 53773a12: 13 commits
+            since v9.0.0, two of them (8d8348e2, 9bf1f6e2) change shipped
+            modules; by CHANGELOG's rule 10.0.0, for two new refusals.
+            OPERATOR, by the question card: R1, the version 10.0.0
+            (11:53Z); S481's R2, R3b, R4, R5 and R6 hold (11:55Z).
+
+    D491-2  R5, THE NOTES AND THEIR REVIEWS. The notes drafted from the
+            diffs; a claim-by-claim review in the container found six
+            faults, fixed before the draft was sent, and its 23 claims
+            HELD. OPERATOR, 12:11Z, by the question card: an independent
+            review first. TESTIMONY, each finding checked here before use:
+            a fresh reviewer, without the seat's context or claims, with
+            read access only: 32 statements, 25 supported, 7 overstated, 13
+            omissions. One stands as a known limit of the notes: run as
+            root without -I, a module planted beside a copy of the script
+            runs before the refusal (RV3, rc 7). The DR at 8c544940 on the
+            runner: 6 failed, T12 to T17, tests that read the host's
+            sys.path, where an ancestor under /opt/hostedtoolcache is mode
+            777; and pass 2 found a refusal at a library's call-time import
+            escaping main, exit 1, not 2: OPERATOR, R7. Pass 3 found one
+            statement WRONG (a refused module-level import exits 1); the
+            probes a333fe3a measured root running another user's json.py
+            from a directory that user made first in /tmp, euid 0:
+            OPERATOR, R8, by the card. Pass 5 found no blocker. OPERATOR,
+            01:56Z on 11-20, by the card: draft 7
+            (rel2/CHANGELOG_10_0_0_DRAFT.md 7d83fed0), its 46 claims HELD
+            (rel2/r5_claims_v7.py 781cc686); FG-S485-AL.
+
+    D491-3  S485G LANDED (R7). s485g/S485G_PREDICTIONS.txt 748dc285 before
+            any test or code: the guard keeps each refusal before it
+            raises; the checks and main refuse on a kept one, exit 2; the
+            tests' helper no longer walks the host's sys.path. The runner's
+            failure reproduced here first. L1 4a23d1f5, parent 8c544940. ON
+            A, G2 (ona/g2_verify_s485g_131700_transcribed.txt 6a15a903):
+            every leg 0, 8 outcome lines added, none removed; G4
+            (ona/g4_fflive_s485g_133100_transcribed.txt d271ceb2). The
+            readback: 197 refs. The DR at 4a23d1f5: 5421 passed, 13
+            skipped, 0 failed.
+
+    D491-4  S485H LANDED (R8). s485h/S485H_PREDICTIONS.txt 3e065534 before
+            any test or code: a refused module-level import exits 2 with
+            MINT REFUSED; a root run checks the dirs it writes and their
+            parent, so a sticky /tmp is refused; release.py's steps 4 and 5
+            print /root/nous-vsa/X.Y.Z, no /tmp. Three amendments before
+            the landing tools: the first for a test's own fault; the second
+            dropped H2, -I -B on the ROOT-1 child, when a container G2
+            failed a test of S236's that runs that child bare (FG-S485-AP);
+            the third ran T39 and T40 over both commands. L1 edcd76c4,
+            parent 4a23d1f5. ON A, G2
+            (ona/g2_verify_s485h_012900_transcribed.txt ef9ecd0e): every
+            leg 0, 15 lines added, none removed; G4
+            (ona/g4_fflive_s485h_014000_transcribed.txt 832f87a5). The
+            readback: 198 refs. The DR at edcd76c4: 5436 passed, 13
+            skipped, 0 failed.
+
+    D491-5  B1 LANDED, R6, THE DRY RUN. b1/B1_PREDICTIONS.txt 2caca4f1. L1
+            8a1740a2, parent edcd76c4, six paths, the notes as [10.0.0]. ON
+            A, G2 (ona/g2_verify_b1_094300_transcribed.txt 51509e19): every
+            leg 0, 5436 passed and 13 skipped at both, no line moved; G4
+            (ona/g4_fflive_b1_095600_transcribed.txt 89663423). The
+            readback: 199 refs. R6 ON A: the reinstall as root
+            (ona/g5_ri_v10_100852_transcribed.txt c398e027), 9.0.0 to
+            10.0.0 for root and aetherlang; the API's restart
+            (ona/g6_restart_v10_101338_transcribed.txt b33e9222): health
+            10.0.0. The DR at 8a1740a2: 5436 passed, 13 skipped, 0 failed;
+            its 5c stopped the build, seven registry entries missing for
+            10.0.0, B3's work. SD10's prediction of the sdist digest
+            missed: 5c runs before the build (FG-S485-AK).
+
+    D491-6  THE REGISTRY, B2 TO B4. B2 ON A
+            (ona/b2_check_v10_103600_transcribed.txt 6e1d3933): release.py
+            --check rc 2 at 5c, seven entries missing, as predicted. B3a as
+            root from a root-owned copy
+            (ona/b3a_build_v10_105500_transcribed.txt 9dc4ea4e): 168
+            entries, no load from the live tree, the body 8927ed82 equal to
+            the one computed before; its banner row missed (FG-S485-AK).
+            B3b, the one POST to log2025-1
+            (ona/b3b_anchor_v10_105803_transcribed.txt e761d485): log_index
+            207465984, the registry 00540692. Landed as 71e5e4af by the
+            push rule (200 refs) and deployed
+            (ona/d3_deploy_b3c_015000_transcribed.txt e59a5d69): the public
+            registry 00540692. B4 (ona/b4_check_v10_015800_transcribed.txt
+            de8a1de4): all seven covered, CHECK_RC 0.
+
+    D491-7  THE TAG, THE RELEASE, PYPI, SERVER B. DR5 at 71e5e4af (run
+            44855167719): 5436 passed, 13 skipped. B5: the Linux rehearsal
+            of the tag scripts not run: running a downloaded pwsh not
+            checked against a published digest was denied by the session's
+            safety check, and not worked around; OPERATOR, by the card: RUN
+            A without it. The annotated tag v10.0.0, object 4fffdd99, on
+            71e5e4af, pushed from the operator's computer
+            (ona/tag_v10_runB_023809_transcribed.txt dc86037b). B6: run
+            44856975237, 14 of 14 as predicted (b6/REL_V10_RESULTS.txt
+            2e2ba16b); its wheel 4637f996 and sdist 70a544a5 equal DR5's,
+            where S481's two runner builds differed (FG-S481-L); the
+            operator approved the publish. B7: PyPI holds the wheel (961204
+            B) and the sdist, each with its provenance from release.yml;
+            the PyPI wheel's 167 members equal a local build's by sha256.
+            B8: Server B from b264c9db to 71e5e4af, nous-lang 10.0.0
+            (ona/r8a_b_025941_transcribed.txt 4530af04,
+            ona/r8b_b_030432_transcribed.txt e2d79116).
+
+    D491-8  THE RELEASE VSA, B9. b9/B9V10_PREDICTIONS.txt ef584e97 before
+            the kit's code (out48, from S481's files). The rehearsal, the
+            old kit first: every row as predicted (b9/B9V10_REH_RESULTS.txt
+            63636aff; FG-S485-AM). B9a ON A as root
+            (ona/b9a_mint_v10_034800.txt 6fb4ab80): MINT_RC 0, no load from
+            the live tree, 18 of 18, the payload dcb1cafc. B9b, one Rekor
+            v2 POST and one TSA POST (ona/b9b_anchor_v10_035000.txt
+            db4a5832): log_index 208592459, convergence PASS, 21 of 21, the
+            pack 839811ea. In the container on the pack: the release
+            verifier VERDICT PASS and build-attest-verify CONVERGENCE PASS,
+            each negative FAIL; index.json read by neither (FG-S485-AN).
+
+    D491-9  B9L LANDED AND SERVED. b9l/B9L_PREDICTIONS.txt beddcb14. L1
+            3ba4117b, parent 71e5e4af, twelve paths added. ON A, G2
+            (ona/g2_verify_b9l_043000.txt 610c951e): every leg 0, no line
+            moved. G4; the readback: 202 refs. D1 to D3
+            (ona/d3_deploy_b9l_044200.txt b1c5055e): 13 rsync lines, the
+            twelve served digests the kit's, the public index.json
+            b8360ad5. The 10.0.0 release VSA is served.
+
+    D491-10 THE COLD AUDIT, B10. b10/B10V10_PREDICTIONS.txt bdbcc332. ON B,
+            in a new /tmp directory (ona/b10_audit_onB_044900.txt
+            c185e4e8): 4 of 4 classes, the wheel 4637f996 bound, the
+            registry 00540692.
+
+    D491-11 SECTION 1.5 AND COLD_AUDIT'S REKOR STEP, B11. OPERATOR, 04:55Z
+            on 11-21, by the card: what is right and why, with evidence.
+            READ: our pin 6494e21e equals sigstore 4.3.0's embedded
+            production root; not measured: a live TUF fetch, witness
+            cosignatures, cosign on a converted bundle. OPERATOR, 04:56Z:
+            route (a), the trust root from Sigstore's TUF repository
+            through Sigstore's own client. b11/B11M_PREDICTIONS.txt
+            252e9fbc; ON B, the first run stopped at the venv (FG-S485-AK);
+            the second (ona/b11m2_onB_050900.txt 9afd826f): the TUF update
+            rc 0, the root it checked 6494e21e, equal to the pin;
+            CONVERGENCE PASS on the served directory; the two negatives
+            FAIL (FG-S485-AO). b11/B11C_PREDICTIONS.txt ad44f37d: a fifth
+            class release-vsa-rekor with its negative control, index.json
+            bound to the VSA, nine tests red first, six mutants killed. ON
+            B before landing (ona/b11cb_onB_052600.txt 529e7bb6): 5 of 5.
+            b11l/B11L_PREDICTIONS.txt 76dfe1dd; the fixture 28 of 30, then
+            30 of 30 (FG-S485-AP); L1 cd5c28ff; ON A, G2
+            (ona/g2_verify_b11_075600.txt a400628e): 9 lines added, none
+            removed; G4 (ona/g4_fflive_b11_080000.txt 720f68c3). The
+            readback: 203 refs. No restart, no deploy. The ceremony B1 to
+            B11 is complete.
+
+    D491-12 THE NUMBER 491. OPERATOR, 06:06Z on 11-21: 491, for this entry.
+            numbers/NUM491_PREDICTIONS.txt 0996de3f and amendment 96b206c9
+            before the fetch and the count. The count: 44 rows, 36 held, 5
+            differ, 3 read, 491 free; the five moves lie in three blobs
+            that commits between 9bf1f6e2 and cd5c28ff wrote and
+            replaced (FG-S485-AQ). Amendment 61197045, POST HOC: 41 held, 0
+            differ; the three controls as amendment 96b206c9 said
+            (numbers/NUM491_RESULTS.txt c57ec779).
+
+    FINDINGS
+
+            FG-S485-AK  SEAT. FACTS TAKEN FROM PRIORS. B3a's banner row:
+                        A's python3.12 had been rebuilt since S481's
+                        transcripts of 11-16, still 3.12.3, the cause not
+                        known here; amended POST HOC. SD10: the seat's
+                        model of release.py's phase order was wrong. On B
+                        the seat took python3-venv as present from B's
+                        .venv without reading B; B's python3 is 3.10
+                        without ensurepip, and nous-lang needs 3.11 or
+                        newer; the first B11M stopped at the venv, before
+                        any verify. S485G's container split was predicted
+                        from A's. This entry's first content was written
+                        from a summary of the session; read against the log
+                        it held one fact wrong and left out the reviews of
+                        the notes; it was rewritten from the log. Host
+                        facts and records are read fresh.
+
+            FG-S485-AL  SEAT, METHOD. THE SEAT'S OWN CHECK OF ITS NOTES WAS
+                        NOT ENOUGH. Its review and its 23 claims HELD; a
+                        fresh reviewer then found 7 statements overstated
+                        and 13 omissions, and later passes a statement
+                        WRONG and the /tmp directory through which root ran
+                        another user's code. Each finding was checked here
+                        before it was used. A claims list made by the
+                        writer checks only what the writer thought to
+                        claim.
+
+            FG-S485-AM  NOT A SEAT ERROR, MEASURED. THE GUARD REFUSES
+                        BEFORE THE IMPORT. With httpx writable by its
+                        group, S481's kit minted, rc 0, and only the check
+                        after the run caught it; the 10.0.0 guard refused
+                        the import, exit 2, before the seed was read. With
+                        its boot made to pass a non-root euid, two modules
+                        came from the live tree and the guard's own
+                        checkpoint still refused before the seed. It also
+                        refused the seat's own probe copy, extracted under
+                        the default umask, mode 664.
+
+            FG-S485-AN  NOT A SEAT ERROR, MEASURED, OLDER THAN 10.0.0.
+                        INDEX.JSON IS READ BY NO VERIFIER. With its
+                        vsaPayloadSha256 zeroed, both the release verifier
+                        and build-attest-verify PASS. cold_audit read it
+                        unsigned for the wheel; a wrong payload digest was
+                        not read. It now takes the wheel from the VSA's
+                        subjects and requires the index's wheel and payload
+                        digest to equal the VSA's. The release verifier
+                        still does not read it.
+
+            FG-S485-AO  NOT A SEAT ERROR, MEASURED. THE SEEDED TRUST ROOT.
+                        sigstore-python writes its own copy of
+                        trusted_root.json at the TUF path before it
+                        updates; after a failed update the file is there
+                        and reads as the pin. Section 1.5 and cold_audit
+                        stop unless the update exits 0. Neither reads a
+                        witness cosignature: a split view of the log is not
+                        excluded.
+
+            FG-S485-AP  SEAT. WHAT A PARENT TOOL OR A SCOPE CARRIED. B11's
+                        G2 tool kept B9L's literal added count, 0, beside
+                        the pinned digest; the fixture caught it, 28 of 30;
+                        the count set to 9, two mutant anchors with it.
+                        S485H's scope missed a test of S236's that H2
+                        broke; H2 was dropped. Section 1.5 stops a step
+                        with an echo of STOP, not an exit, which would
+                        close a terminal it is pasted into.
+
+            FG-S485-AQ  NOT A SEAT ERROR, A LIMIT, FIXED. THE DERIVE SAW
+                        TWO TREES. It diffed the OLD and NEW trees only;
+                        blobs that commits between them wrote and replaced
+                        were counted by the instrument and not by the
+                        derive. derive491b counts them.
+
+            FG-S485-AR  NOT A SEAT ERROR, READ. OTHER LANES ON A. A paste
+                        from A opened with another lane's command run as
+                        root from /tmp, 01:08:18Z on 11-21; kept as data,
+                        not acted on. A reply equal to the seat's own
+                        prompt line was not taken as the operator's pame;
+                        the seat asked once.
+
+            FG-S485-AS  SEAT. A DIGEST TYPED PAST WHAT WAS READ. In B3C's
+                        apply the seat wrote the sidecar's sha256 with a
+                        tail it had not read, past the 16 hex it had;
+                        caught before any run, replaced by the computed
+                        digest, and all four pins checked against
+                        sha256sum. A digest is copied from a tool's output,
+                        never completed by hand.
+
+            FG-S485-AT  SEAT. RECORD SLIPS. Two fetches ran before they
+                        were named; a checkout detached the mirror's HEAD;
+                        a control's wants were written before its run but
+                        not hashed apart; a prediction named a wrong path;
+                        a check got a bad argument; a probe's editable
+                        install stayed in the container's python from 11-18
+                        to 11-20; a log call with no body appended one
+                        empty line. Each is in the log.
