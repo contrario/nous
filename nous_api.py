@@ -21,7 +21,9 @@ except ImportError:
     if _nous_env_file:
         raise SystemExit(f"NOUS_ENV_FILE is set but python-dotenv is not importable: {_nous_env_file}")
 else:
-    if not load_dotenv(_nous_env_file or (Path(__file__).parent.parent / ".env")) and _nous_env_file:
+    # __s492_no_parent_dotenv_v1__ FG-S492-J: NOUS_ENV_FILE is the only
+    # file this module loads; no fallback to the .env above the tree.
+    if _nous_env_file and not load_dotenv(_nous_env_file):
         raise SystemExit(f"NOUS_ENV_FILE did not load (missing or empty): {_nous_env_file}")
 
 # === Version & Paths ===

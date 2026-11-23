@@ -33,6 +33,11 @@ ENV_PATH = Path("/opt/aetherlang_agents/.env")
 
 
 def _load_env() -> None:
+    # __s492_platform_env_skip_v1__ FG-S492-E: a process that declares
+    # its credential file (NOUS_ENV_FILE: the API units) does not merge
+    # the platform file as well.
+    if os.environ.get("NOUS_ENV_FILE"):
+        return
     if not ENV_PATH.exists():
         return
     for line in ENV_PATH.read_text(encoding="utf-8").splitlines():
