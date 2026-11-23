@@ -33454,3 +33454,198 @@ document itself.
                         install stayed in the container's python from 11-18
                         to 11-20; a log call with no body appended one
                         empty line. Each is in the log.
+
+  - S493 the number the operator gave the entry the seat S485 owed, written
+    by the seat S492: D491's landing; the closing RULE 0 of S485; the slips
+    after D491's pin; the S485 seal; the seat S492's opening, the seal
+    checked, the sums check and RULE 0 on A; the numbers 492 and 493
+    counted; and the codes FG-S492-A to FG-S492-D
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S492,
+    DURING ITS SESSION, with the labels of D450 to D491: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC, from 11-21 to 11-23 of 2026; an operator's time is the time his
+    message was sent, a value ON A carries the clock its command
+    printed. D493-1 to D493-4 are the seat S485's, from D491's pin at
+    06:45Z on 11-21 to its seal: each value was asserted by the script that
+    built this entry from S485's running log or from a file of its seal's
+    evidence (S485_SEAL_EVIDENCE.tgz 712a7078, 1948 files under its inner
+    sums); the paths named there are that evidence's. D493-5 to D493-8 are
+    the seat S492's, from 23:59Z on 11-22, asserted from its own files and
+    log. Each paste is a file kept from the chat, named by its digest. What
+    D491 records is not repeated here. Each suite, control, count and
+    readback below evidences; nothing here is a Z3 or Farkas result. The
+    container restarted often; the log records the uptime and the pins read
+    after each restart the seat met.
+
+    D493-1  D491 LANDED, 11-21 TO 11-22. The entry was rebuilt from S485's
+            log (content 717f1aef, builder a2a6ff4f: TOKENS 67 UNRESOLVED
+            0, NUMBERS 40 UNSEEN 0; entry 64709bca, 17258 B; message
+            4114f4cf). Pins (d491/pins_out.txt 6ec69ba8): the old document
+            fc9c5d09, 2073940 B, blob 6bb6e86a; the new 535f48d5, 2091198
+            B, blob 3cd04cdd. D491_PREDICTIONS 924483b6 before the tools;
+            make_tools491.py a095a5ef; the fixture 23 cases OK and 15
+            mutants killed (fx_d491_out 52bdec95); the checkers' 17
+            controls (ctl_d491_out babf9507). L1 b4fc7f27, one parent
+            cd5c28ff, the claim lint 411, COMMIT_GREEN. OPERATOR, 06:55Z on
+            11-21: pame; G1 PUSH_BRANCH_GREEN, the branch absent before. ON
+            A, C48, the kit out51/ by its sums (ona/c48_check_085600.txt
+            80c639f6). OPERATOR, 06:59Z: pame; ON A from 06:59:56Z
+            (ona/g2_verify_d491_085956.txt 39c82280): 5445 passed and 13
+            skipped at both, the outcomes 5458 743c7462 at both,
+            OUTCOME_DIFF 0, VERIFY_RC 0; 19 rows held (rec_g2_out
+            539e26b3). OPERATOR, 00:40Z on 11-22, after a reply that echoed
+            the seat's prompt (not taken): pame; G3 FF_MAIN_GREEN, no drift
+            over a 17 h pause. OPERATOR, 00:44Z: pame; ON A at 00:45:19Z
+            (ona/g4_fflive_d491_024519.txt 66e7ecec): HEAD cd5c28ff to
+            b4fc7f27, the document 535f48d5, 644, aetherlang's,
+            FFLIVE_GREEN; 12 rows held (rec_g4_out b32b098b). The readback
+            (readback_out bcf01d39): REFS 204, READBACK_GREEN. No restart,
+            no deploy.
+
+    D493-2  THE CLOSING RULE 0 OF S485, 11-22. rcl/RCL_PREDICTIONS.txt
+            5c27159b before the reconciler, its controls and the command;
+            amendment 4893f05f (the opening ran on 11-17);
+            rcl/reconcile_close485.py b596354e, 18 replacements each
+            counted once, every moved value read from git; 9 controls
+            (rcl/ctl_summary.txt 281a8e2c). The rehearsal
+            (rcl/reh_c2_out.txt 42f116e7): W0, W2 and W3 as predicted; W1
+            missed its want, for the container then held an aetherlang user
+            and a stand-in tree, so the real script's body ran there and
+            read pypi.org's JSON, a network read not named (FG-S485-AK's
+            class). The seat's message carried the command with its
+            question; the operator ran it on A at 00:52:58Z, before a pame
+            word. ON A (ona/rcl_run_005258.txt 314c2927): 20 rows held
+            (rcl/rec_out.txt 89af8c85), the suite 5445 and 13 in 288.06 s,
+            the claim lint 442 and 0 (DERIVED before the run, held), the
+            integrity run of 00:30:31Z CLEAN 593.
+
+    D493-3  THE SLIPS AFTER D491'S PIN, 11-21 TO 11-22. Each logged
+            by S485: a git fetch of GitHub, chained after the fixture's
+            read and not named first (no drift); a restart just before G1,
+            read in the same call as G1, so its pins were re-read only
+            after it; the commands for G2D491, G4D491 and the closing RULE
+            0 sent with their questions; three hex values typed by hand on
+            11-22: a tail invented after 5ddced42 in the G4 command, caught
+            before the run by reading cmd/G4D491.txt b2a2355a against
+            out51/fflive_d491.sh, the command then sent from its file; a
+            placeholder token in a log line, corrected to rec_g4_out
+            b32b098b; a digest typed from no tool in RCL_PREDICTIONS' first
+            write, corrected to the opening paste 4ac08ca8 before the
+            reconciler. W1 of the closing rehearsal, above.
+
+    D493-4  THE S485 SEAL, 11-22. seal485/C1N_PREDICTIONS.txt 9797a709
+            before the rehearsal; C1_next_template.txt a2e47fd8, S481's
+            byte for byte; reh_c1n485.py 59dbc099: N0, the old kit first,
+            to N3 each as predicted (c1n_out 3218eda4). stage485.py
+            f39d9b51 and build_seal_docs485.py 9c25449d; S485's log in its
+            seal ends at the line that announces it, 02:21Z on 11-22. The
+            seal as received by S492: NOUS_SESSION_485_HANDOFF.md 67e86d80,
+            NOUS_S485_OPENER.md fbe56b97, S485_SEAL_EVIDENCE.tgz 712a7078,
+            rule0_owner2.sh 2994b713 and S485_SEAL_SHA256SUMS.txt 050e0ae8.
+
+    D493-5  THE SEAT S492 OPENS, 11-22 TO 11-23. OPERATOR, 23:59Z on 11-22:
+            the five files of the S485 seal and their kickoff digests. READ
+            IN THE SEAT'S CONTAINER: each found once by its sha, the
+            negative 0; the evidence's inner sums rc 0 over 1948 files, a
+            flipped digest rc 1; scripts/handoff_vs_ev2.py: the 1948
+            digests the handoff names equal the sums, BAD 0 (c1/hve_out.txt
+            7241925f; FG-S492-A). OPERATOR, 00:04Z on 11-23: no other lane
+            holds the tree or the hosts. C1: c1/C1_PREDICTIONS.txt 5dba09e4
+            before c1/reh_c1.py 3f35254d, 6 rehearsals over a pty as
+            predicted, the old kit RC 1. OPERATOR, 00:05Z: the seat's own
+            prompt echoed, not taken (FG-S485-AR); 00:06Z: pame. ON A at
+            about 00:08Z (ona/c1_check_000800.txt a90b5b76): FOUND_COUNT 1,
+            rule0_owner2.sh OK, RC 0; 6 rows held (c1/rec_c1_out.txt
+            385b9605).
+
+    D493-6  RULE 0 ON A, 11-23. r0/R0_PREDICTIONS.txt 8513fcc3, the
+            opener's EXPECTED copied by script, A's and B's MainPID made
+            exact from S485's closing paste; r0/reconcile_open.py
+            2e2a024c, S485's with those two rows; 10 controls
+            (r0/ctl_open_out.txt 4545595a). The command r0/C2.txt f1a9bb0a
+            rehearsed with a stub sh on PATH, so the real script did not
+            run here (r0/REH_C2_PREDICTIONS.txt 1fb27ae2;
+            r0/reh_c2o_out.txt 2a33873e). OPERATOR, 00:11Z: pame. ON A from
+            00:12:38Z (ona/r0_run_001238.txt 944a92bc, CRLF; its LF form
+            b9d04bdc): 20 rows held (r0/rec_out.txt 155f8560): HEAD and
+            ORIGIN b4fc7f273bfb; v10.0.0 on 71e5e4af5611; A 10.0.0, MainPID
+            2630184, its start 10:13:37Z on 11-20 (DERIVED); B 10.0.0 at
+            71e5e4af5611, MainPID 4030813; the suite 5445 and 13 in 288.55
+            s; the claim lint 442 and 0; 277 sidecars; the mirror CLEAN,
+            593 tracked; the registry 168 and 207465984, 0054069278835a63
+            in the tree and served; 40 release VSA versions equal, CURRENT
+            10.0.0; PyPI 10.0.0; the integrity run of 00:00:42Z CLEAN 593;
+            18 legs 0; RULE0_RC 0. No finding.
+
+    D493-7  THE NUMBERS 492 AND 493, 11-23. OPERATOR, 00:19Z: 492, the
+            seat's number; 00:38Z: 493, this entry's. Each network call
+            named before it ran: N1 the mirror cloned from GitHub (main
+            b4fc7f27, 204 refs); N2, N3 and N4 fetches, refs unchanged.
+            MEASURED for 492, the form of NUM491:
+            numbers/NUM492_PREDICTIONS.txt e8bd9deb from NUM491's count and
+            derive492 (derive492_out.txt 0ff562f8: 1 path, 1 blob, 1
+            message equal to D491's), amendment b401119f, both before the
+            count; ns_count492.py c9bc91b7 (ns_count492_out.txt 0c4c7cf2):
+            45 rows, 42 held, 0 differ, 3 read, VERDICT 492 FREE; the pass
+            blind to case 14 hits, each inside a hex run; the controls
+            P-OUT, P-K1 and P-TREE each as named (ctl_num492_out.txt
+            e9f180b5); NUM492_RESULTS.txt 3eeb9e97. 493, read zero there
+            but not predicted, counted again in the same form:
+            NUM493_PREDICTIONS.txt 3cf7f5df (derive493_out.txt f195e072:
+            nothing moved), amendment 9f5662eb; ns_count493.py 8227326d
+            (ns_count493_out.txt bf723bef): 46 rows, 43 held, 0 differ, 3
+            read, VERDICT 493 FREE; 30 hits blind to case, each inside a
+            hex run, none at the start of a run 12 or shorter; the controls
+            as named (ctl_num493_out.txt b8ebea81); NUM493_RESULTS.txt
+            690808a6. 492 adopted for the seat, 493 for this entry; 494 and
+            488 read zero, not adopted. The count cannot see a session that
+            wrote nothing to the tree, a commit message or a tag.
+
+    D493-8  WHAT STANDS, 11-23. GitHub's main and A's live tree at b4fc7f27
+            (D491) until this entry lands; NOUS 10.0.0 on A, B and
+            PyPI. S485's board is unchanged by this seat: index.json read
+            by no release verifier (FG-S485-AN); no witness cosignature
+            read, a split view of the log not excluded (FG-S485-AO); the
+            root limits (FG-S485-O) and root's nous-api on B (FG-S485-N); a
+            standard Sigstore bundle checked by cosign, not measured.
+
+    FINDINGS
+
+            FG-S492-A  THE SEAL'S HANDOFF CHECKER EXITS 0 ON A MISMATCH.
+                       scripts/handoff_vs_ev2.py 87a3fc49 prints BAD and
+                       its count but exits 0 whatever it found: with one
+                       digest altered in a copy of the handoff it printed
+                       BAD 1, RC_NEG 0 (c1/hve_out.txt 7241925f). Its
+                       result is the printed count. A checker of a seal
+                       exits non-zero on a mismatch, or its caller reads
+                       the count, never its exit code.
+
+            FG-S492-B  A RESULTS WRITER CUT VALUES TO FIT ITS COLUMN. The
+                       first form of write_results492.py sliced four lines
+                       to a width: two counts read as "bare blobs 2" and
+                       "bare blobs 3" where the outputs say 28 and 34, and
+                       two lines lost their ends
+                       (NUM492_RESULTS_v1_truncated.txt ff19e2e0). Caught
+                       on reading, before use; kept apart, the record
+                       rewritten by wrapping (NUM492_RESULTS.txt 3eeb9e97).
+                       A record writer wraps a long value and never slices
+                       it.
+
+            FG-S492-C  TIMES TYPED INTO A RECORD WRITER.
+                       write_results492.py carried four times of N2 and of
+                       the count typed from tool output seen, not read by
+                       the script (FG-S485-AS's class). Checked by script
+                       against the files' mtimes: all four equal. The first
+                       draft of this entry's content asserted a digest
+                       typed from no tool; removed on reading, before any
+                       run. A time or a digest in a record is read by the
+                       script that writes it, from a file, its mtime or a
+                       line its command printed.
+
+            FG-S492-D  A NETWORK CALL LOGGED AS NAMED LATER. The log line
+                       before N2 said it would be named after the count;
+                       corrected by a later line, and N2 named to the
+                       operator before it ran. A network call is named
+                       before it runs, and a log line that says otherwise
+                       is corrected before the call.
