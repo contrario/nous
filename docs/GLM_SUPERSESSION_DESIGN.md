@@ -34020,3 +34020,211 @@ document itself.
                        ran; the labels do not identify a call. A seat
                        numbers its network calls in one series; this seat's
                        next is N7.
+
+  - S496 the number the operator gave the entry the seat S492 owed, written
+    by the seat S497: D495's landing; FG-S492-A fixed in S492's tools; the
+    closing RULE 0 of S492; the slips after D495's pin; the S492 seal; the
+    seat S497's opening, the seal checked, the sums check and RULE 0 on A;
+    the numbers 496 and 497 counted; and the code FG-S497-A
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S497,
+    DURING ITS SESSION, with the labels of D450 to D495: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC, on 11-24 of 2026; an operator's time is the time his message was
+    sent, a value ON A carries the clock its command printed. D496-1
+    to D496-5 are the seat S492's, from D495's pin at 00:11Z to its seal:
+    each value was asserted by the script that built this entry from S492's
+    running log or from a file of its seal's evidence
+    (S492_SEAL_EVIDENCE.tgz f9442261, 583 files under its inner sums); the
+    paths named there are that evidence's, and what they report is S492's
+    testimony, checked against those files by digest. D496-6 to D496-10 are
+    the seat S497's, from 10:11Z, asserted from its own files and log. Each
+    paste is a file kept from the chat, named by its digest. What D495
+    records is not repeated here. Each suite, control, count and readback
+    below evidences; nothing here is a Z3 or Farkas result. The container
+    restarted often; the log records the uptime and the pins read after
+    each restart the seat saw, and one it did not see (D496-9).
+
+    D496-1  D495 LANDED, 11-24. The entry (content 7faa205b; build_out
+            787d4cae: TOKENS 119 UNRESOLVED 0, NUMBERS 57 UNSEEN 0; entry
+            47f21f36, 24950 B; message b0b68320). Pins (d495/pins_out.txt
+            6a7c363d, at e6f2530d): the old document 2fe9856b, 2103816 B,
+            blob 90250651; the new 0b3cd2fd, 2128766 B, blob d2fd26ad.
+            D495_PREDICTIONS e9d5677d before the tools (make_tools495.py
+            69f27607). L0 (fx_d495_out.txt 11cdfac6, 00:11:25Z to
+            00:13:58Z, rc 0): 23 cases OK, 15 mutants killed. L1 a9e479d8,
+            one parent e6f2530d, the claim lint 411, COMMIT_GREEN
+            (d495/l1_commit_out.txt 96b371d6); 8 rehearsals (reh_d495_out
+            8b91f0f0); the checkers' 17 controls (ctl_d495_out 32c6766b).
+            OPERATOR, 09:22Z: pame; G1 PUSH_BRANCH_GREEN, the branch absent
+            before (d495/l2_push_branch_out.txt 14012bdc). OPERATOR,
+            09:24Z: pame; ON A, C50, the kit out53/ by its sums 3ca17e39
+            (ona/c50_check_112700.txt 010a2e7e): FOUND_COUNT 1, RC 0; 7 of
+            7 held (chk_c50_real_out 09835fc1). OPERATOR, 09:29Z: pame for
+            G2; the operator's 09:30Z paste repeated C50's byte for byte
+            and was not read as G2. ON A from 09:31:06Z
+            (ona/g2_verify_d495_093106.txt 4a0b5188): 5457 passed and 13
+            skipped at both, the outcomes 5470 6b787d861eb1cc72 at both,
+            OUTCOME_DIFF 0, VERIFY_RC 0; 19 rows held (rec_g2_out
+            3eac6c5f). OPERATOR, 09:44Z: pame for G3; its first run omitted
+            the commit id and the tool refused before any fetch or push, RC
+            2 (d495/l3_ff_main_out_refused1.txt 77217992); rerun under the
+            same pame with the full id: FF_MAIN_GREEN (l3_ff_main_out
+            313ccf80). OPERATOR, 09:46Z: pame; ON A from 09:46:29Z
+            (ona/g4_fflive_d495_094629.txt c179d724): HEAD e6f2530d to
+            a9e479d8, the document 0b3cd2fd, 644, aetherlang's,
+            FFLIVE_GREEN; 12 rows held (rec_g4_out b32b098b). The readback
+            (readback_out eaba3c00): REFS 207, READBACK_GREEN. No restart,
+            no deploy.
+
+    D496-2  FG-S492-A FIXED IN S492'S TOOLS, 11-24. tools/handoff_vs_ev3.py
+            27fda744, v2 87a3fc49 left as S485's seal used it: rc 0 only
+            with the marker found, at least one file named, BAD 0 and
+            EV_NOT_NAMED 0; rc 1 otherwise; rc 2 with no marker.
+            hve3/HVE3_PREDICTIONS.txt a1349e85 before it. S492's first
+            harness read tail's exit code, not python's, and printed RC 0
+            for every case (hve3/hve3_out_run1_harness_defect.txt 5bc2e2e8,
+            not read as a result): FG-S492-G's class in the seat's own
+            harness. Rerun with the code taken before the pipe
+            (hve3/hve3_out.txt 91c21076): 6 cases as predicted. Not in the
+            tree; the seal's handoff was checked with it (D496-6).
+
+    D496-3  THE CLOSING RULE 0 OF S492, 11-24. r1/mk_close492.py c0f026cd
+            (its first run refused a 77-character line of its predictions;
+            rerun): R1_PREDICTIONS.txt 7ef12034 before the reconciler, its
+            controls and the command; reconcile_close492.py 52cdd9ff, the
+            opening's with 8 anchors moved; ctl_close492.py 90f53011, 6
+            controls, none bad (ctl_close492_out.txt 24234f71). website/,
+            scripts/release.py and claims.toml unchanged from b4fc7f27 to
+            a9e479d8. OPERATOR, 09:53Z: pame. ON A from 09:54:05Z
+            (ona/r1_run_095405.txt 2edda5a6): 20 rows held
+            (r1/rec_close_out.txt 4209a79d): HEAD and ORIGIN a9e479d8197c;
+            A 10.0.0, MainPID 3220656; B 10.0.0, HEAD 71e5e4af5611 v10.0.0,
+            MainPID 398939; the suite 5457 passed, 13 skipped; PyPI 10.0.0;
+            18 legs 0; RULE0_RC 0.
+
+    D496-4  THE SLIPS AFTER D495'S PIN, 11-24. Each logged by S492 when
+            found. From 09:24Z the seat did not read the uptime first on
+            each operator message (FG-S466-A's rule): C50's pame and paste,
+            G2's pame and pastes, G4's pame and paste, the closing RULE 0's
+            pame and paste; each of those acts read its pins from files by
+            digest or ran on A. G3's first run omitted the commit
+            id (D496-1); the log line saying so was refused as too long and
+            written after the rerun it named (FG-S457-B's order). The first
+            harness of FG-S492-A's fix read the wrong exit code (D496-2).
+            The workspace restarted at about 09:59:30Z, after the closing
+            RULE 0's paste; seen at 10:03Z. A log line named a digest
+            "below" with none below; corrected in the next line,
+            stage492.py 6672bb8c and build_seal_docs492.py 92a87aeb.
+
+    D496-5  THE S492 SEAL, 11-24. seal492/C1_next_template.txt
+            a2e47fd8 (S485's, byte for byte); C1N_PREDICTIONS.txt 6fe69a20;
+            reh_c1n492.py 0e9e7b64: 4 rehearsals OK, the old kit first
+            (seal492/c1n_out.txt 3fc0aa68). stage492.py staged the evidence
+            and build_seal_docs492.py wrote the handoff and the opener. The
+            seal's sums, S492_SEAL_SHA256SUMS.txt 0ded569c, name the
+            handoff 293f8445, the opener de61ad45, the evidence f9442261
+            and rule0_owner2.sh 2994b713.
+
+    D496-6  THE SEAT S497 OPENS, 11-24. OPERATOR, 10:11Z (12:11 local): the
+            kickoff, its five digests. IN THE SEAT'S CONTAINER: each upload
+            found by its sha256, one match each (tools/findsha.py
+            06938c99); the negative, the sums digest altered by one digit,
+            0 matches, rc 1. The sums file checks its four files. The
+            evidence: 618 members, none absolute or with a dot-dot; 583
+            files under its inner sums, all OK, none unlisted, 15
+            non-ASCII. tools/handoff_vs_ev3.py 27fda744 on S492's handoff:
+            583 named, 583 OK, rc 0; one digest altered, BAD 1, rc 1; the
+            marker altered, rc 2. OPERATOR, 10:16Z: no other lane holds the
+            tree or the hosts. C1 (c1/C1.txt ea70828f, the template with
+            0ded569c twice; c1/C1_PREDICTIONS.txt f9f92e09): its builder's
+            first run refused on its own assert, for the prediction said no
+            "<" would remain and the template holds a redirect; amendment
+            c1/C1_AMENDMENT_1.txt 880cef23, post hoc to that refusal and
+            before any rehearsal; 9 rehearsals over a pty, the old kit RC 1
+            where the new RC 0 (c1/reh_c1_out.txt 92b04a50). OPERATOR,
+            10:18Z: pame. ON A (ona/c1_check_101900.txt 4472ea3e): FOUND
+            S492_SEAL_SHA256SUMS.txt, FOUND_COUNT 1, rule0_owner2.sh OK, RC
+            0; 6 of 6 held (c1/rec_c1_out.txt d8aff330). The prompt in that
+            paste shows the operator's shell in ~/s9o1_refresh_2026-11-24
+            on A before the cd: not this seat's, not attributed.
+
+    D496-7  RULE 0 ON A, 11-24. r0/R0_PREDICTIONS.txt 48ffa9eb (by
+            r0/mk_r0_pred.py 632b444d: the opener's EXPECTED, the two PIDs
+            exact), before the reconciler, its controls and the command.
+            r0/reconcile_open.py b44ddbf0: reconcile_close492.py with its
+            last print replaced, so that it exits 1 unless 20 rows
+            hold (FG-S492-A's rule); 9 controls, none bad, the old kit rc 0
+            where the new rc 1 (r0/ctl_open_out.txt aabc1ed1). C2
+            (r0/C2.txt f1a9bb0a, S492's byte for byte): 6 rehearsals with a
+            stub sh, the real script never run (r0/reh_c2_out.txt
+            6a38c5a2). OPERATOR, 10:22Z: pame. ON A from 10:23:27Z,
+            Asklepios read at 10:28:46Z (ona/r0_run_102327.txt e786b9c2):
+            20 rows held, 0 differ, rc 0 (r0/rec_out.txt 0ee0a65f): HEAD
+            and ORIGIN a9e479d8197c; A 10.0.0, MainPID 3220656, its start
+            derived 23:15:40Z on 11-23; B 10.0.0, MainPID 398939, its start
+            derived 13:49:54Z on 11-23; the suite 5457 passed, 13 skipped,
+            in 307.06 s; the claim lint 442 files, 0 violations; sidecars
+            277; the mirror CLEAN 593; the release VSA 40, MISMATCH 0; PyPI
+            10.0.0; the timer's last run 10:00:36Z, CLEAN; 18 legs 0;
+            RULE0_RC 0. No finding.
+
+    D496-8  THE NUMBERS 496 AND 497, 11-24. OPERATOR, 10:30Z: 496, the
+            number for the entry S492 owed. NUM496 in NUM495's form: N1 a
+            mirror clone from GitHub, 207 refs, main a9e479d8; against
+            NUM495's base (refs_after_n6 7c245fd9, 206 refs) one new ref,
+            s495-d495, and main moved by one commit, both S492's.
+            derive496: 496 +0 everywhere (derive496_out.txt f1698e27).
+            NUM496_PREDICTIONS.txt 9614a200 and its amendment 9e351e95
+            before N2 and the count; the reconciler made to exit 1 when it
+            reads other than its 48 rows. The count, detached, 10:36:41Z to
+            10:50:52Z, rc 0 (ns_count496.py 543898b4; ns_count496_out.txt
+            d5ea9eea): 48 rows, 45 held, 0 differ, 3 read, VERDICT 496 FREE
+            (rec496_out.txt 527da7fd); 4 hits blind to case, each inside a
+            hex run (hexctx496_out.txt c1017315); the controls P-OUT, P-K1
+            and P-TREE each as named (ctl_num496_out.txt 79e17e21);
+            NUM496_RESULTS.txt 22799fc3. OPERATOR, 10:59Z: 497, the seat's
+            own number. NUM497 in NUM496's form: N3 and N4 moved nothing
+            (207 refs, main a9e479d8); derive497 (8d82b047) every delta 0;
+            NUM497_PREDICTIONS.txt 4135efda and its amendment 621a6dc6
+            before N4 and the count. The count, detached, 11:02:14Z to
+            11:16:10Z, rc 0 (ns_count497.py 09cbb058; ns_count497_out.txt
+            d552ffc6): 49 rows, 46 held, 0 differ, 3 read, VERDICT 497 FREE
+            (rec497_out.txt a968bcd0); 2 hits blind to case, each inside a
+            hex run (hexctx497_out.txt 6155e39d); the controls each as
+            named (ctl_num497_out.txt 262a1a7d); NUM497_RESULTS.txt
+            9934a6da. The count cannot see a session that wrote nothing to
+            the tree, a commit message or a tag.
+
+    D496-9  THE SLIPS OF THE SEAT S497, 11-24. Each logged when found. At
+            10:16Z uptime printed "up 0 min" five minutes after an "up 0
+            min", and the seat logged no restart where one had
+            come (FG-S497-A); corrected at 11:03Z; no pins were read after
+            that restart before the C1 work, whose scripts read their
+            inputs by digest. At 10:19Z a log line gave the uptime as 7
+            minutes, typed, not read (FG-S485-AS's class); corrected in the
+            next line. After the restart at about 10:30:10Z the RULE 0
+            paste was copied and reconciled before the pins were read; read
+            after it, all as logged. C1's prediction defect (D496-6).
+
+    D496-10 WHAT STANDS, 11-24. GitHub's main and A's live tree at a9e479d8
+            until this entry lands; A's nous-api runs e6f2530d's code
+            (MainPID 3220656, as after S492's G5: DERIVED); B's nous-api
+            runs v10.0.0 as nousapi (MainPID 398939); NOUS 10.0.0 on A, B
+            and PyPI. S492's host changes stand with their undos (D495-8).
+            Open, as S492 left them: B's release step under umask
+            0077 (FG-S492-H); the untracked modules in the API's import
+            path (FG-S492-I); A's tree owned by its service user;
+            /var/lib/nous root 755 on A; no rotation of B's API log; an API
+            with no keys answers without auth (STATIC, S492's); S485's
+            board (FG-S485-AN, FG-S485-AO, FG-S485-O).
+
+    FINDINGS
+
+            FG-S497-A  UPTIME READ AT MINUTE GRANULARITY. At 10:16Z uptime
+                       printed "up 0 min", as at 10:11Z; the seat read no
+                       restart, yet one had come between, and the pins were
+                       not read after it. Two readings each under a minute
+                       old look the same in uptime's minute field. The
+                       uptime is read in seconds from /proc/uptime and
+                       compared with the last reading.
