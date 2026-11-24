@@ -3595,6 +3595,9 @@ async def templates_save(
     """
     require_write_api_key(x_api_key)
     target = _resolve_template_path(name)
+    if not os.access(target.parent, os.W_OK):  # __s497_p3_templates_ro_v1__
+        raise HTTPException(status_code=403, detail={
+            "error": "templates are read-only on this host", "code": "TPL006"})
 
     lint_dict: Optional[dict[str, Any]] = None
     lint_failed = False

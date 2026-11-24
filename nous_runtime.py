@@ -62,7 +62,9 @@ class BudgetGuard:
     _month_spend: float = 0.0
     _today_date: str = ""
     _month_str: str = ""
-    _log_path: Path = field(default_factory=lambda: Path("/opt/aetherlang_agents/nous/runtime_budget.json"))
+    _log_path: Path = field(default_factory=lambda: Path(  # __s497_p3_budget_file_v1__
+        os.environ.get("NOUS_BUDGET_FILE") or "/opt/aetherlang_agents/nous/runtime_budget.json"))
+    _save_warned: bool = False
 
     def __post_init__(self) -> None:
         self._today_date = time.strftime("%Y-%m-%d")
@@ -88,8 +90,10 @@ class BudgetGuard:
                 "month": self._month_str,
                 "month_spend": round(self._month_spend, 6),
             }))
-        except Exception:
-            pass
+        except Exception as e:  # __s497_p3_budget_file_v1__
+            if not self._save_warned:
+                self._save_warned = True
+                log.warning(f"BUDGET: could not persist spend to {self._log_path}: {type(e).__name__}")
 
     def can_spend(self, amount: float) -> bool:
         today = time.strftime("%Y-%m-%d")
