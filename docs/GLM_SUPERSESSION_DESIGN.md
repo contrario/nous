@@ -33649,3 +33649,374 @@ document itself.
                        operator before it ran. A network call is named
                        before it runs, and a log line that says otherwise
                        is corrected before the call.
+
+  - S495 the number the operator gave the seat S492's own entry: D493's
+    landing; nous-api measured on A and B; phase 1, B's nous-api moved off
+    root; phase 2, A's platform file hidden from its nous-api; phase 3, the
+    code that read that file, landed and running on A; the number 495
+    counted; the slips of the seat; and the codes FG-S492-E to FG-S492-L
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S492,
+    DURING ITS SESSION, with the labels of D450 to D493: READ IN THE SEAT'S
+    CONTAINER, ON A, ON B, OPERATOR, DERIVED, STATIC and MEASURED. Times
+    are UTC, from 00:58Z on 11-23 of 2026 to 00:03Z on 11-24; an operator's
+    time is the time his message was sent, a value ON A or ON B carries the
+    clock its command printed. Each value was asserted by the script that
+    built this entry, from the seat's running log or from a file of the
+    seat. Each paste is a file kept from the chat, named by its digest; a
+    kit run on B was run from A over ssh. What D493 records is not repeated
+    here. Each suite, control, count, canary and readback below evidences;
+    nothing here is a Z3 or Farkas result. STATIC marks a read of source,
+    by ast or by eye: it evidences what the code says, not what runs. Every
+    write on A, B or GitHub below ran after its own pame. The container
+    restarted often; the log records the uptime and the pins read after
+    each restart the seat met.
+
+    D495-1  D493 LANDED, 11-23. The entry (content 5313000a; build_out
+            d35e6083: TOKENS 77 UNRESOLVED 0, NUMBERS 28 UNSEEN 0; entry
+            08a3d99c, 12618 B; message a406d32d). Pins (d493/pins_out.txt
+            d8548a3f): the old document 535f48d5, 2091198 B, blob 3cd04cdd;
+            the new 2fe9856b, 2103816 B, blob 90250651. D493_PREDICTIONS
+            0f4b2a7c before the tools (make_tools493.py 35648e86). The
+            fixture L0 missed twice. Run 1 (fx_d493_out_run1.txt b81a516c):
+            21 of 23 cases, 12 of 15 mutants, for the container's system
+            python held no pydantic (d493/vc1_probe_out.txt ff69d9f9); a
+            network call N5, named, installed S485's pins from PyPI
+            (in/sys_pins_s485.txt cda340a1); amendment 3f365c0c post hoc.
+            Run 2 (1ae2408b): 23 of 23, 14 of 15, MU12 surviving because a
+            tree S485's container held was absent here; that tree made from
+            the mirror; amendment a73ab55f post hoc. Run 3 (fx_d493_out.txt
+            1bb46337): 23 of 23, 15 of 15. Both misses are FG-S485-AK's
+            class: a prediction rested on the container's state, not read.
+            L1 b15cb39c, one parent b4fc7f27, the claim lint 411,
+            COMMIT_GREEN (d493/l1_commit_out.txt 1653dad9); 8 rehearsals
+            (reh_d493_out 7049ed99); the checkers' 17 controls
+            (ctl_d493_out 15136759). OPERATOR, 11:36Z: pame for the
+            session's repo attach with push; after it the clone's
+            .git/config was rewritten at the container's start, at 11:38Z
+            and again at 11:55Z (origin URL without its .git suffix, no
+            credential), attributed to the attach. OPERATOR, 11:38Z: pame;
+            G1 PUSH_BRANCH_GREEN (d493/l2_push_branch_out.txt 657b99f4).
+            OPERATOR, 11:40Z: "pame gia to C49", taken as the canonical
+            form, read against S485's log: the seat's refusal at 00:05Z had
+            been stricter than that precedent. ON A, C49
+            (ona/c49_check_134100.txt 1e0836ec): FOUND_COUNT 1, RC 0; 7 of
+            7 held (d493/chk_c49_out.txt 09835fc1). OPERATOR, 11:43Z: pame;
+            ON A from 11:43:30Z (ona/g2_verify_d493_134330.txt 3b968496):
+            5445 passed and 13 skipped at both, the outcomes 5458 743c7462
+            at both, OUTCOME_DIFF 0, VERIFY_RC 0; 19 rows held
+            (d493/rec_g2_out.txt 539e26b3). OPERATOR, 11:54Z: pame; G3
+            FF_MAIN_GREEN (d493/l3_ff_main_out.txt ea9836c5). OPERATOR,
+            11:55Z: pame; ON A from 11:56:02Z
+            (ona/g4_fflive_d493_135602.txt 4e1acd3f): HEAD b4fc7f27 to
+            b15cb39c, the document 2fe9856b, 644, aetherlang's,
+            FFLIVE_GREEN; 12 rows held (d493/rec_g4_out.txt b32b098b). N6,
+            named: the readback (d493/readback_out.txt 04411ceb) REFS 205,
+            READBACK_GREEN. No restart, no deploy. MEASURED on the mirror
+            after it: the ledger document has 126 versions, 122457708 B
+            uncompressed, 3122023 B on disk; not a finding.
+
+    D495-2  NOUS-API MEASURED ON A AND B, 11-23. OPERATOR, 12:02Z: pame for
+            a read-only measurement of nous-api on B, and on A for
+            comparison (FG-S485-N). READ IN THE SEAT'S CONTAINER: the
+            seat's own tool shell runs find as bfs; scripts and the pty
+            rehearsals run GNU findutils 4.9.0, as A and B. API1
+            (predictions 2adf9463): its rehearsal caught a kit that leaked
+            the second word of a quoted Environment= value; amendment
+            f205e6d7 post hoc, nothing run on a host before it. ON A and B
+            from 12:09:14Z (ona/api1_run_120914.txt 3a642697): 12 rows held
+            (api1/rec_api1_out.txt f2f42cde). B's nous-api ran as root with
+            every capability, its EnvironmentFile the platform .env, 41
+            names in its exec environment, 25 of them secret-like; exposure
+            8.4. A's ran as aetherlang, CapEff 0, its keys by
+            LoadCredential from /etc/nous, 16 names, none a secret;
+            exposure 1.9; but ProtectSystem=no, and its user owns its tree.
+            A kit defect of the seat: find under runuser printed four
+            working-directory errors; its results still printed. OPERATOR,
+            12:13Z: this seat takes B's nous-api from measurement to fix.
+            STATIC, v10.0.0 by ast (api2/reach_v10.py 04aa3dcf): nous_api
+            reaches 62 of 304 modules; with NOUS_ENV_FILE unset it loads
+            the .env of its tree's parent (FG-S492-J); of the 32 names of
+            B's platform .env, that closure names 8 as literals
+            (api2/names_v10.py 98d27ab2). API2 (predictions 3a87f5a4; ON A
+            and B from 12:17:45Z, ona/api2_run_121745.txt 170be979; 9 rows
+            held, api2/rec_api2_out.txt 3148d566): A's credential file
+            holds 10 names; on B root was the only non-system user, B's own
+            .env root 600 with 33 names, a signing key under root's home
+            600; systemd 249. STATIC, v10.0.0: nous_runtime.py,
+            noesis_oracle.py and noesis_telegram.py hardcode
+            /opt/aetherlang_agents/.env and copy into os.environ every
+            entry it lacks, at import; nous_runtime is imported by /v1/run,
+            /v1/chat and /v1/chat/stream. On A, whose API user owns that
+            file, those routes would load the whole platform file into the
+            API (DERIVED; G-A1 measured it): the credential design bypassed
+            by code (FG-S492-E). CORRECTION of the seat's message of
+            12:11Z: "on A no secret enters the environment" was wrong; API1
+            had read /proc/<pid>/environ, the exec-time snapshot (H-PYC-5).
+            API3 (predictions dc923b86; ON A and B from 12:31:19Z,
+            ona/api3_run_123119.txt d3b98f64; 9 rows held,
+            b1/rec_api3_out.txt 9330c926): B had no nousapi user, no
+            /var/lib/nous and no /etc/nous; 0 of the last 5000 lines of B's
+            access log name /v1/; 9 of the 10 names of A's credential set
+            present on B, 8 in the platform .env and GEMINI only in B's
+            own. OPERATOR, 12:23Z: pame for the order, phase 1 on B first,
+            from its design and canary, no write before its own pame.
+
+    D495-3  PHASE 1, B'S NOUS-API OFF ROOT, 11-23. G-B1 (predictions
+            d0813a46, amendment 4df03c9a before any rehearsal;
+            b1/b1_prep.sh 0af2434c, b1/b1_undo.sh a90e0163; 10 rehearsals):
+            ON A and B from 12:43:30Z (ona/gb1_run_124330.txt c23f146e): 33
+            rows held (b1/rec_gb1_out.txt 47afacea), the expected values
+            read from API1 and API3: /etc/nous/nous-api.env root 600 with 9
+            names, 8 from the platform file and GEMINI from B's own, each
+            of the length API3 read; a user nousapi, uid 998; the API's log
+            nousapi's; production unchanged. READ: no logrotate stanza on B
+            names that log. G-B2 (predictions d150a6b5; 12 rehearsals): ON
+            A and B from 13:05:01Z (ona/gb2_run_130501.txt 244c1edf): 37 of
+            62 rows held (b2/rec_gb2_out.txt a0ededee), CANARY_RC 58, the
+            canary cleaned up, production untouched. Three causes: %d is no
+            specifier on B's systemd 249, so no key reached the
+            canary (FG-S492-F); B's tree had files nousapi could not read;
+            guard 55 was vacuous, for its unit list held -.mount, read as
+            an option, so two daemon-reloads ran unchecked (FG-S492-G).
+            G-B2M, read only (predictions 689ff594; b2m/measure_b2m.sh
+            7187399f; its rehearsal caught the kit answering 0 from an
+            empty time, fixed to UNKNOWN, amendment f6236455 post hoc): ON
+            A and B from 13:13:45Z (ona/gb2m_run_131345.txt 75f48d10): 10
+            of 11 rows held (b2m/rec_gb2m_out.txt bc691098), the broken row
+            the seat's wording of the second reload's time. No unit file
+            changed between PID 1's prior reload and the two unchecked
+            ones: they applied nothing pending. Root's umask on B over ssh
+            is 0077: 174 tracked files lacked o+r, written by the checkouts
+            of two releases (FG-S492-H); numpy is absent from B's venv.
+            G-B1B (predictions 4cfc2a7a; b1b/b1b_modes.sh b15af2dc,
+            b1b/b1b_undo.sh d2d5be0f; 10 rehearsals): ON A and B from
+            13:27:53Z (ona/gb1b_run_132753.txt 5e7bcb50): 191 targets
+            opened (174 tracked files, 2 tree dirs, 12 venv files, 3 venv
+            dirs), their prior modes kept on B in a root 600 file of 191
+            lines, MODIFIED 0, NOUSAPI_UNREADABLE 0, production untouched.
+            G-B2 v2 (predictions 7cd5f730): the drop-in 7fff5ca0 names the
+            credential file at /run/credentials/%n/; guard 55 counts its
+            answers; guard 59 counts the files it checked (amendment
+            11584d2b, before any run); the probe fails on every check it
+            prints (amendment b2f659df post hoc); b2/b2_canary.sh ea5a5e4a;
+            17 rehearsals. ON A and B from 13:41:01Z
+            (ona/gb2v2_run_134101.txt 1803d184): 69 rows held
+            (b2/rec_gb2v2_out.txt ed7f87f5): 401 units answered, 0 needing
+            a reload; nousapi read 1682 of 1682 tracked files; the probe as
+            uid 998, CapEff 0, NoNewPrivs 1, Seccomp 2, PROBE_BAD 0, LEAK 0
+            of 32; the serve canary answered 10.0.0 from 4 processes;
+            exposure 1.5. G-B3 (predictions 14748872; b3/b3_cutover.sh
+            3b494499, b3/b3_undo.sh c7d83763; 14 rehearsals): ON A and B
+            from 13:49:48Z (ona/gb3_run_134948.txt f332ed56): B's nous-api
+            runs as nousapi, MainPID 4030813 to 398939, 4 processes, each
+            CapEff 0, NoNewPrivs 1, Seccomp 2; health 10.0.0; none of the
+            32 platform names in its exec environment; a non-key refused
+            401 AUTH001; exposure 8.4 to 1.5; GB3_RC 0. The pames:
+            OPERATOR, 12:43Z, 13:04Z, 13:12Z, 13:27Z, 13:37Z and 13:48Z.
+
+    D495-4  PHASE 2, A'S PLATFORM FILE HIDDEN FROM ITS NOUS-API, 11-23.
+            G-A2M, read only (predictions 9f53d61e; a2m/measure_a2m.sh
+            a233b26c): ON A from 13:55:09Z (ona/ga2m_run_135509.txt
+            6b5b2e30): A's platform .env, aetherlang 600, holds 77 names,
+            68 of them absent from the 10-name credential file; the three
+            loaders put those 68 into A's nous-api at its first /v1/run or
+            chat call; of the names the code reads and the credential file
+            lacks, the platform file holds only TELEGRAM_BOT_TOKEN, which
+            no route uses (STATIC); 7 days of journal and log hold no
+            PermissionError. STATIC: A's tracked noesis_engine.py imports
+            at module level 9 modules that are not in the repo (FG-S492-I).
+            G-A1M, read only (predictions 25d7c6b3; a1m/measure_a1m.sh
+            81511d38, printing code lines only as line numbers and call
+            names): ON A from 14:12:11Z (ona/ga1m_run_141211.txt 3ffea2b8):
+            the 9 present, aetherlang 644, reading 7 env names, all
+            NOESIS_* settings in neither file, PLATFORM_ONLY_READ 0; each
+            runs patch functions at import, one loads sentence_transformers
+            there; they reach one more untracked module, noesis_hardening.
+            STATIC (a1m/static_noesis_closure.txt 47724e04): the tracked
+            Noesis closure reads the credential names and
+            TELEGRAM_BOT_TOKEN. G-A1 (amendment 602779c3; a1/a1_canary.sh
+            8e015578, the drop-in 053bd1e9, a1/probe_a.py d1bde3db; 9
+            rehearsals): ON A from 14:18:48Z (ona/ga1_run_141848.txt
+            8997e398), on A's own code as aetherlang: the probe as A ran
+            held all 68 platform-only names after its imports and read 5545
+            bytes of the file; with the drop-in, 0 of 68 and 0 bytes; both
+            with the 10 credential names and PROBE_BAD 0; noesis_hardening
+            reads no env name literally; production untouched. G-A2
+            (predictions dba80dea; a2/a2_cutover.sh c419d9c7, a2/a2_undo.sh
+            62acafba; 11 rehearsals): ON A from 14:24:20Z
+            (ona/ga2_run_142420.txt c5fc9a60): MainPID 2630184 to 1852631;
+            the platform .env read through the process's own root, 5545
+            bytes before and 0 after; uid 986, CapEff 0, NoNewPrivs 1,
+            Seccomp 2; none of the 68 in the exec environment; a non-key
+            refused 401 AUTH001; health 10.0.0; GA2_RC 0; exposure 1.9, the
+            bind not scored. The pames: OPERATOR, 13:54Z, 14:11Z, 14:16Z
+            and 14:24Z.
+
+    D495-5  PHASE 3, THE CODE, 11-23. OPERATOR, 14:25Z: phase 3 in this
+            seat, before a seal. P3_PREDICTIONS 98888f82 before any test or
+            patch: the three loaders return at once when NOUS_ENV_FILE is
+            set, which only the API units set (the standalone noesis
+            scripts and nous_ast_runner do not); nous_api loads
+            NOUS_ENV_FILE only, its fallback to the parent's .env removed;
+            an API with no keys still answers without auth, out of scope,
+            recorded. READ IN THE SEAT'S CONTAINER, as a non-root user on a
+            clean clone: tests/test_s492_platform_env.py, 12 tests, 4
+            failed and 8 passed before the patch, as predicted;
+            p3/patch_p3.py c67e3e7b applied, skipped on a rerun, refused
+            with no write on a moved anchor; after it 12 passed and 6
+            mutants were killed; the full suite 155 failed before and
+            after, the same set (subprocess imports of an uninstalled cli),
+            5267 passed before and 5279 after, 36 skipped; 4 files, 18
+            insertions, 1 deletion, and the test file. The message
+            b3a51164; the tools from D493's (p3/land_p3.py ad844138,
+            p3/verify_p3.sh 3623f35b, p3/fflive_p3.sh e75a711a);
+            predictions 9ddb289e before the fixture, whose run 1 refused:
+            land's porcelain() stripped the first line's leading space,
+            which D493's tool never showed; run 3 (p3/fx_p3.py a85b8474):
+            24 of 24 cases, 17 of 17 mutants. The commit e6f2530d on
+            b15cb39c, the five blobs as pinned, NOT_PUSHED
+            (p3/l1_commit_out.txt be824766). OPERATOR, 17:35Z: pame; G1
+            PUSH_BRANCH_GREEN (p3/l2_push_out.txt 76bf1617). OPERATOR,
+            17:40Z: pame; ON A from 17:55:51Z (ona/g2p3_run_175551.txt
+            8c1b93a0): 5445 passed and 13 skipped at the parent, 5457 and
+            13 at the branch, OUTCOME_DIFF 12 NEW_PASSED 12, the claim lint
+            411 files, VERIFY_RC 0. OPERATOR, 18:06Z: pame; G3
+            FF_MAIN_GREEN (p3/l3_ffmain_out.txt 9f726e35). OPERATOR,
+            18:06Z: pame; ON A from 18:06:42Z (ona/g4p3_run_180642.txt
+            f18a6d28): A's live tree b15cb39c to e6f2530d as aetherlang
+            under umask 022, FFLIVE_RC 0. G5 (predictions 968ad96d;
+            p3/a5_restart.sh 0c5622f1; amendment 5e4057d1 post hoc).
+            OPERATOR, 23:06Z: pame; ON A from 23:15:39Z
+            (ona/g5p3_run_231539.txt 2252b0f3): MainPID 1852631 to 3220656;
+            health 10.0.0; uid 986, CapEff 0, NoNewPrivs 1, Seccomp 2; the
+            platform .env 0 bytes through its root; a non-key refused 401
+            AUTH001; the tree e6f2530d; G5_RC 0. B receives the code at its
+            next release.
+
+    D495-6  THE NUMBER 495, 11-23. OPERATOR, 23:18Z: 495, this entry's
+            number. MEASURED in NUM493's form, each fetch of the mirror
+            from GitHub named first: main e6f2530d, 206 refs, new since
+            NUM493's base s493-d493 and s492-p3, both this seat's.
+            numbers/NUM495_PREDICTIONS.txt be21fec7 from NUM493's count and
+            derive495 (derive495_out.txt 88560e38: 6 paths, 6 new blobs, 2
+            messages equal to the pinned; 495 moved nowhere), amendment
+            94cea814, both before the count. A first count died with the
+            workspace and was not read (ns_count495_out.killed1.txt
+            aec6a43a); the second ran detached, rc 0 (ns_count495.py
+            7b01a4e3; ns_count495_out.txt 953b133f): 47 rows, 44 held, 0
+            differ, 3 read, VERDICT 495 FREE (rec495_out.txt dd403566); 15
+            hits blind to case, each inside a hex run (hexctx495_out.txt
+            478cc6ef); the controls P-OUT, P-K1 and P-TREE each as named
+            (ctl_num495_out.txt 005ab33e); NUM495_RESULTS.txt 2821ee15. The
+            count cannot see a session that wrote nothing to the tree, a
+            commit message or a tag.
+
+    D495-7  THE SLIPS OF THE SEAT, 11-23. Each logged when found. At 12:43Z
+            the seat read uptime -s, printed in EET, as UTC and logged no
+            restart where one had come; corrected in the next line. At
+            12:48Z an import of the API as root in the container created an
+            empty /var/log/nous_api.log; a stand-in guard refused on it,
+            and it was removed. A placeholder digest typed into an
+            amendment's draft, replaced by the measured one before hashing.
+            The digests of p3/a5_restart.sh and cmd/G5P3.txt swapped in a
+            log line, an amendment and a message to the operator; found on
+            re-hashing before G5 and corrected to the operator before the
+            command, which checks the kit's full digest (FG-S492-C's
+            class). A log line dated by the local date in a UTC log;
+            corrected. The labels N5 and N6 each given to two network
+            calls (FG-S492-L). A log line that named a digest "above" with
+            none above it; given in the next line. The first form of
+            write_results495.py wrote its conclusion without checking it;
+            the checked form wrote the same bytes. The comparisons of nine
+            gates with their predictions not kept (FG-S492-K).
+
+    D495-8  WHAT STANDS, 11-24. GitHub's main and A's live tree at e6f2530d
+            until this entry lands; A's nous-api runs it since 23:15:38Z;
+            B's nous-api runs v10.0.0 as nousapi, without the code
+            of FG-S492-E and FG-S492-J; NOUS 10.0.0 on A, B and PyPI. The
+            host changes stand with their undos: on B the drop-in 7fff5ca0,
+            the credential file, the user nousapi and the 191 modes
+            (b3_undo.sh, then G-B1B's and G-B1's); on A the drop-in
+            053bd1e9 (a2_undo.sh). Open: B's release step under umask
+            0077 (FG-S492-H): until it changes, every release on B is to
+            run under umask 022 and pass guard 59's check before its
+            restart; the untracked modules in the API's import path,
+            writable by A's service user (FG-S492-I); A's tree owned by its
+            service user; /var/lib/nous root 755 on A while its API runs as
+            aetherlang, unexercised; no rotation of B's API log, its size
+            not measured; an API with no keys answers without auth
+            (STATIC); handoff_vs_ev2.py's exit code (FG-S492-A). S485's
+            board otherwise stands (FG-S485-AN, FG-S485-AO, FG-S485-O).
+
+    FINDINGS
+
+            FG-S492-E  THE CODE BYPASSED THE CREDENTIAL FILE. Three modules
+                       imported by the API's run and chat routes copied
+                       every entry of the platform .env into the process at
+                       import: on A, where the API's user owns that file, a
+                       probe of A's own code as that user held 68 names the
+                       unit never gave the API (G-A1's ctl leg). Phase 2
+                       hid the file on A; phase 3 (e6f2530d) makes the
+                       loaders return when NOUS_ENV_FILE is set; B runs the
+                       old code until its next release. A design that hands
+                       a process its keys is read through the code that
+                       process imports, not only through its unit.
+
+            FG-S492-F  A SPECIFIER PREDICTED FROM MEMORY. The seat
+                       predicted that systemd 248 and later expand %d; B's
+                       systemd 249 answered "Invalid slot" and dropped the
+                       line, and no key reached the canary. The canary
+                       caught it with production untouched. A unit feature
+                       a prediction rests on is read on the host's systemd
+                       or tried in a canary first.
+
+            FG-S492-G  FOUR VACUOUS ZEROS. Guard 55 counted the units
+                       needing a reload from an answer systemctl never
+                       printed; G-B2M's first kit answered 0 from an empty
+                       time; guard 59's first draft could pass having
+                       checked no file; the probe's verdict counted only
+                       import errors. Each of those checks now prints what
+                       it checked and fails when that count is not the
+                       count expected.
+
+            FG-S492-H  B'S RELEASE STEP WRITES UNDER UMASK 0077. Root's
+                       checkouts over ssh wrote 174 tracked files at 600 or
+                       700; nousapi cannot read such a file, and the next
+                       restart after such a release would fail (DERIVED).
+                       Until the step changes, every release on B is to run
+                       under umask 022 and pass guard 59's check before its
+                       restart.
+
+            FG-S492-I  UNTRACKED CODE IN THE API'S IMPORT PATH.
+                       noesis_engine.py imports at module level modules
+                       that are not in the repo; on A all are present,
+                       owned and writable by the API's own user, and run
+                       patch functions at import. The repo holds none of
+                       them, and the reach analysis covered tracked code
+                       only. Code a service imports is tracked, or read
+                       before each restart.
+
+            FG-S492-J  THE API LOADED THE .ENV ABOVE ITS TREE. With
+                       NOUS_ENV_FILE unset, nous_api loaded the .env of its
+                       tree's parent: on A any import of it without that
+                       name, the suite's processes among them, would load
+                       the platform file (DERIVED from the code and A's
+                       layout). Removed in e6f2530d; nous_api loads
+                       NOUS_ENV_FILE only.
+
+            FG-S492-K  NINE COMPARISONS NOT KEPT. The pastes of G-B1B,
+                       G-B3, G-A1M, G-A2M, G-A1, G-A2 and phase 3's G2, G4
+                       and G5 were compared with their predictions in the
+                       session; no file of the seat reads them but the log.
+                       The pastes are kept and carry their own verdict
+                       lines; the log's row counts cannot be rechecked from
+                       a script. A comparison with predictions is a script
+                       kept with its output.
+
+            FG-S492-L  NETWORK LABELS GIVEN TWICE. N5 and N6 named PyPI's
+                       install and D493's readback, then the two fetches of
+                       the mirror for 495. Each call was named before it
+                       ran; the labels do not identify a call. A seat
+                       numbers its network calls in one series; this seat's
+                       next is N7.
