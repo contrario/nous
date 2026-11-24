@@ -512,18 +512,23 @@ class NousRuntime:
         self.trace_recorder = None  # __nous_runtime_trace_field_v1__
 
     def _get_noesis(self) -> Any:
+        if os.environ.get("NOUS_NOESIS") != "1":  # __s497_noesis_optin_v1__
+            return None
         if self._noesis_engine is None:
             try:
                 from noesis_engine import NoesisEngine
                 from noesis_oracle import create_oracle_fn
                 oracle_fn, _ = create_oracle_fn()
-                self._noesis_engine = NoesisEngine(oracle_fn=oracle_fn, oracle_threshold=0.55)
+                engine = NoesisEngine(oracle_fn=oracle_fn, oracle_threshold=0.55)
                 lattice = Path("/opt/aetherlang_agents/nous/noesis_lattice.json")
                 if lattice.exists():
-                    self._noesis_engine.load(lattice)
-                    log.info(f"Noesis loaded: {self._noesis_engine.lattice.size} atoms")
+                    engine.load(lattice)
+                    log.info(f"Noesis loaded: {engine.lattice.size} atoms")
             except Exception as e:
-                log.warning(f"Noesis not available: {e}")
+                raise RuntimeError(
+                    f"NOUS_NOESIS=1 but Noesis did not load: {type(e).__name__}"
+                ) from e
+            self._noesis_engine = engine
         return self._noesis_engine
 
     def register_soul(self, name: str, model: str, tier: str, senses: list[str], memory: dict[str, Any] | None = None) -> None:
@@ -572,7 +577,7 @@ class NousRuntime:
                     "score": round(result.score, 4) if hasattr(result, 'score') else 0,
                     "cost": 0.0,
                 })
-                log.info(f"[{soul_name}] Noesis hit (score={result.score:.3f}): {query[:60]}")
+                log.warning(f"[{soul_name}] Noesis hit (score={result.score:.3f})")
                 return answer
 
         if self.mode == "dry-run":
