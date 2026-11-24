@@ -705,7 +705,7 @@ def phase_install_smoke(whl: Path, version: str) -> None:
     if TEST_VENV.exists():
         shutil.rmtree(TEST_VENV)
     run(["python3", "-m", "venv", str(TEST_VENV)])
-    run([str(TEST_VENV / "bin" / "pip"), "install", "--quiet", str(whl)])
+    run([str(TEST_VENV / "bin" / "pip"), "install", "--quiet", f"{whl}[smt]"])  # __s497_w1_smt_install_v1__
     pyexe = TEST_VENV / "bin" / "python3"
     check_script = (
         "import importlib.metadata, _version, cli, nous_api;"
@@ -736,6 +736,9 @@ def phase_install_smoke(whl: Path, version: str) -> None:
             raise ReleaseError(f"compiled output suspiciously small: {py_file.stat().st_size}b")
         run([str(nous_bin), "verify", nous_file.name], cwd=td_path)  # __session90_phase9_verify_smoke_v1__
     print(f"  OK: {TEMPLATE_FOR_SMOKE} extract + compile + verify = exit 0")
+    run(["python3", str(REPO_ROOT / "scripts" / "check_quickstart.py"),  # __s497_w1_quickstart_gate_v1__
+         "--nous", str(nous_bin), "--readme", str(REPO_ROOT / "README.md")])
+    print("  OK: README quick start on the built wheel = exit 0")
 
 
 # __s175_p1_upload_refused_v1__ phase_upload (twine token path) retired;

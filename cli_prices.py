@@ -108,9 +108,8 @@ def cmd_prices_init(args: argparse.Namespace) -> int:
               f"Use --force to overwrite.", file=sys.stderr)
         return 1
 
-    pkg_default: Path = (
-        Path(__file__).resolve().parent / "pricing" / "defaults.toml"
-    )
+    import pricing as _pricing  # __s497_w1_prices_init_v1__
+    pkg_default: Path = _pricing._resolve_shipped_defaults()
     if not pkg_default.is_file():
         print(f"ERROR: shipped defaults not found at {pkg_default}",
               file=sys.stderr)

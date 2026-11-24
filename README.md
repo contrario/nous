@@ -62,21 +62,28 @@ Requirements: Python 3.11+. The `[smt]` extra pulls `z3-solver`. `cryptography` 
 ## 60-second quick start
 
 ```bash
+# 0. Install with the SMT extra (step 2 runs Z3)
+pip install 'nous-lang[smt]'
+
 # 1. Initialise a project
 mkdir my_world && cd my_world
-nous prices init                       # writes ./nous_prices.toml from defaults
-nous templates extract cost_cap_basic  # copies a working .nous program
+nous prices init                           # writes ./nous_prices.toml from the shipped defaults
+nous templates extract cost_cap_emit_demo  # writes cost_cap_emit_demo.nous (cost_cap, max_ticks)
 
 # 2. Verify formally
-nous verify cost_cap_basic.nous --smt
-# -> Verdict: PROVEN. Manifest written to cost_cap_basic.manifest.json.
+nous verify cost_cap_emit_demo.nous --smt
+# -> PROVEN: total_cost <= $0.2 USD for every admissible execution, at the
+#    declared token estimates and prices. Writes cost.farkas.json and the
+#    signed cost_cap_emit_demo.manifest.json (key: ~/.local/share/nous/keys).
 
 # 3. Emit an Annex IV compliance dossier
-nous dossier cost_cap_basic.nous
-# -> bundles source, AST, manifest, pricing table, and Annex IV mapping
+nous dossier cost_cap_emit_demo.nous
+# -> cost_cap_emit_demo_dossier_<UTC>/: source, signed manifest, Farkas
+#    certificate, pricing table, canonical spec, public key, offline
+#    verifier, and a README with the Annex IV item-by-item mapping
 
 # 4. (Optional) Anchor the dossier into the public Sigstore Rekor log
-nous dossier cost_cap_basic.nous --anchor rekor
+nous dossier cost_cap_emit_demo.nous --anchor rekor
 # -> manifest gains a transparency_log block with log_index + integrated time
 
 # 5. (Optional) Verify a dossier offline (no NOUS install required for the verifier)

@@ -1370,6 +1370,14 @@ class CodegenSemanticError(Exception):  # __session85_undefined_gate_codegen_v1_
     pass
 
 
+def undefined_name_gate_available() -> bool:  # __s497_w1_gate_skip_honest_v1__
+    try:
+        import pyflakes.api  # noqa: F401
+    except ModuleNotFoundError:
+        return False
+    return True
+
+
 def check_undefined_names(code: str, filename: str = "<generated>") -> list[tuple[int, str, str]]:
     try:  # __session85_gate_optional_pyflakes_v1__
         import pyflakes.api as _pf_api

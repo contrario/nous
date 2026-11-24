@@ -146,7 +146,11 @@ def cmd_compile(args: argparse.Namespace) -> int:
     except CodegenSemanticError as _gate_err:
         print(f"      semantic gate FAIL: CodegenSemanticError: {_gate_err}", file=sys.stderr)
         return 1
-    print("      undefined-name gate PASS")
+    from codegen import undefined_name_gate_available  # __s497_w1_gate_skip_honest_v1__
+    if undefined_name_gate_available():
+        print("      undefined-name gate PASS")
+    else:
+        print("      undefined-name gate SKIPPED (pyflakes not installed)")
     out_path = Path(args.output) if args.output else source.with_suffix(".py")
     out_path.write_text(code, encoding="utf-8")
 
