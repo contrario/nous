@@ -103,6 +103,11 @@ def require_api_key(x_api_key: Optional[str] = Header(None)) -> str:
     return x_api_key
 
 
+def _key_is_valid(x_api_key: Optional[str]) -> bool:  # __s497_p2_keyed_routes_v1__
+    """True only for a caller holding one of the configured keys."""
+    return bool(API_KEYS) and x_api_key in API_KEYS
+
+
 # __s465_true_deadline_v1__
 # S465 option T: a server-side deadline answers 503 and tells the truth.
 # BUSY<n> with Retry-After when no worker was free within the admission
@@ -738,7 +743,7 @@ async def skill_export_endpoint(
     body: SkillExportEndpointRequest,
     x_api_key: Optional[str] = Header(None),
 ):
-    require_api_key(x_api_key)
+    require_write_api_key(x_api_key)  # __s497_p2_keyed_routes_v1__
     from rekor_anchor import RekorRejected, RekorUnavailable
     from conformance_verifier import (  # __s7b_api_refusal_v1__
         StrictJsonError as _S7B_API_SJE)
@@ -2004,7 +2009,7 @@ async def chat(request: Request, body: ChatRequest, x_api_key: Optional[str] = H
         sess["history"] = sess["history"][-20:]
 
     _sb_ctx = ""
-    if _has_superbrain_sense(soul_cfg):
+    if _has_superbrain_sense(soul_cfg) and _key_is_valid(x_api_key):  # __s497_p2_keyed_routes_v1__
         _sb_ctx = await _superbrain_search(body.message)
     _mood_engine = _get_or_create_mood(sess, chosen_soul)
     _mood_hint = _mood_engine.describe() if _mood_engine else ""
@@ -2227,7 +2232,7 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
     chosen_soul = await _route_soul(sess["soul_configs"], getattr(body, "soul", None), body.message)
     soul_cfg = sess["soul_configs"].get(chosen_soul, {})
     _sb_ctx = ""
-    if _has_superbrain_sense(soul_cfg):
+    if _has_superbrain_sense(soul_cfg) and _key_is_valid(x_api_key):  # __s497_p2_keyed_routes_v1__
         _sb_ctx = await _superbrain_search(body.message)
     _mood_engine = _get_or_create_mood(sess, chosen_soul)
     _mood_hint = _mood_engine.describe() if _mood_engine else ""
@@ -2327,7 +2332,7 @@ async def chat_stream(request: Request, body: ChatRequest, x_api_key: Optional[s
 @app.get("/v1/superbrain/health")
 @limiter.limit("60/minute")
 async def superbrain_health(request: Request, x_api_key: Optional[str] = Header(None)):
-    require_api_key(x_api_key)
+    require_write_api_key(x_api_key)  # __s497_p2_keyed_routes_v1__
     import httpx as _hx
     try:
         async with _hx.AsyncClient(timeout=5.0) as client:
@@ -2340,7 +2345,7 @@ async def superbrain_health(request: Request, x_api_key: Optional[str] = Header(
 @app.get("/v1/superbrain/domains")
 @limiter.limit("60/minute")
 async def superbrain_domains(request: Request, x_api_key: Optional[str] = Header(None)):
-    require_api_key(x_api_key)
+    require_write_api_key(x_api_key)  # __s497_p2_keyed_routes_v1__
     import httpx as _hx
     try:
         async with _hx.AsyncClient(timeout=10.0) as client:
@@ -2359,7 +2364,7 @@ class SuperbrainSearchRequest(BaseModel):
 @app.post("/v1/superbrain/search")
 @limiter.limit("30/minute")
 async def superbrain_search_endpoint(request: Request, body: SuperbrainSearchRequest, x_api_key: Optional[str] = Header(None)):
-    require_api_key(x_api_key)
+    require_write_api_key(x_api_key)  # __s497_p2_keyed_routes_v1__
     import httpx as _hx
     try:
         async with _hx.AsyncClient(timeout=15.0) as client:
@@ -2784,7 +2789,7 @@ async def _handle_generic(payload: dict) -> dict[str, Any]:
 async def webhook(request: Request, channel: str, x_api_key: Optional[str] = Header(None)):
     # __s407c_telegram_channel_retired_v1__: no channel skips the key
     # check, and telegram answers as an unknown channel (S407-C).
-    require_api_key(x_api_key)
+    require_write_api_key(x_api_key)  # __s497_p2_keyed_routes_v1__
 
     try:
         raw = await request.body()

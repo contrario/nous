@@ -47,7 +47,8 @@ def _named(text: str) -> list[str]:
 
 
 def _key_check_is_unconditional(tree: ast.AST) -> bool:
-    """True when the webhook route calls require_api_key as a statement
+    """True when the webhook route calls require_api_key (or the stricter
+    require_write_api_key, S497) as a statement
     of its own body, not under an if, a loop or a try."""
     for node in ast.walk(tree):
         if (isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
@@ -56,7 +57,8 @@ def _key_check_is_unconditional(tree: ast.AST) -> bool:
                 if (isinstance(stmt, ast.Expr)
                         and isinstance(stmt.value, ast.Call)
                         and isinstance(stmt.value.func, ast.Name)
-                        and stmt.value.func.id == "require_api_key"):
+                        and stmt.value.func.id in (  # __s497_p2_webhook_keyed_v1__
+                            "require_api_key", "require_write_api_key")):
                     return True
             return False
     return False
@@ -137,6 +139,7 @@ def server(monkeypatch: pytest.MonkeyPatch) -> tuple[Any, FakeTier,
     monkeypatch.setattr(nous_runtime, "RUNTIME_TIERS", [tier])
     monkeypatch.setattr(srv, "_superbrain_search", _no_search)
     monkeypatch.setattr(srv, "_chat_sessions", {})
+    monkeypatch.setattr(srv, "API_KEYS", {GOOD_KEY})  # __s497_p2_webhook_keyed_v1__
     monkeypatch.setattr(httpx.AsyncClient, "post", _record_post)
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "123456:test-token-s407c")
     srv.limiter.reset()
@@ -172,7 +175,8 @@ def test_telegram_update_answers_as_an_unknown_channel(
     from fastapi.testclient import TestClient
     srv, tier, posts = server
     resp = TestClient(srv.app).post("/v1/webhook/telegram",
-                                    json=_update(text))
+                                    json=_update(text),
+                                    headers={"X-API-Key": GOOD_KEY})
     assert resp.status_code == 200
     _assert_unknown(resp.json())
     assert tier.calls == 0
@@ -219,7 +223,8 @@ def test_generic_channel_still_answers_from_a_free_tier(
     from fastapi.testclient import TestClient
     srv, tier, posts = server
     resp = TestClient(srv.app).post("/v1/webhook/generic",
-                                    json={"message": "hello"})
+                                    json={"message": "hello"},
+                                    headers={"X-API-Key": GOOD_KEY})
     assert resp.status_code == 200
     assert resp.json()["reply"] == "reply from FreeA"
     assert tier.calls >= 1

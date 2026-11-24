@@ -224,11 +224,14 @@ def test_chat_stream_never_reaches_the_paid_tier(failing: Any) -> None:
 
 
 @needs_api
-def test_webhook_chat_never_reaches_the_paid_tier(failing: Any) -> None:
+def test_webhook_chat_never_reaches_the_paid_tier(
+        failing: Any, monkeypatch: pytest.MonkeyPatch) -> None:
     from fastapi.testclient import TestClient
     srv, tiers = failing
+    monkeypatch.setattr(srv, "API_KEYS", {GOOD_KEY})  # __s497_p2_webhook_keyed_v1__
     resp = TestClient(srv.app).post(
         "/v1/webhook/generic", json={"message": "hello"},
+        headers={"X-API-Key": GOOD_KEY},
     )
     assert resp.status_code == 200
     assert resp.json().get("error") == "All LLM tiers failed"

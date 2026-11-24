@@ -139,6 +139,7 @@ def server(monkeypatch: pytest.MonkeyPatch) -> tuple[Any, FakeTier,
     monkeypatch.setattr(nous_runtime, "RUNTIME_TIERS", [tier])
     monkeypatch.setattr(srv, "_superbrain_search", _no_search)
     monkeypatch.setattr(srv, "_chat_sessions", {})
+    monkeypatch.setattr(srv, "API_KEYS", {GOOD_KEY})  # __s497_p2_webhook_keyed_v1__
     monkeypatch.setattr(httpx.AsyncClient, "post", _record_post)
     srv.limiter.reset()
     return srv, tier, posts
@@ -163,6 +164,7 @@ def test_callback_url_is_refused_before_any_model_call(
     resp = TestClient(srv.app).post(
         "/v1/webhook/" + channel,
         json={"message": "hello", "callback_url": callback},
+        headers={"X-API-Key": GOOD_KEY},
     )
     _assert_refused(resp, tier, posts, srv)
 
@@ -174,6 +176,7 @@ def test_callback_url_without_a_message_is_refused(server: Any) -> None:
     resp = TestClient(srv.app).post(
         "/v1/webhook/generic",
         json={"callback_url": "http://127.0.0.1:9977/agents/run"},
+        headers={"X-API-Key": GOOD_KEY},
     )
     _assert_refused(resp, tier, posts, srv)
 
@@ -200,7 +203,8 @@ def test_without_callback_url_the_channel_answers_from_a_free_tier(
     from fastapi.testclient import TestClient
     srv, tier, posts = server
     resp = TestClient(srv.app).post("/v1/webhook/" + channel,
-                                    json={"message": "hello"})
+                                    json={"message": "hello"},
+                                    headers={"X-API-Key": GOOD_KEY})
     assert resp.status_code == 200
     body = resp.json()
     assert body["reply"] == "reply from FreeA"
