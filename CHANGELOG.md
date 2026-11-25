@@ -5,6 +5,179 @@
 ## [Unreleased]  <!-- __s105_changelog_ladder_v1__ -->
 
 
+## [11.0.0]  <!-- __s500_changelog_v11_0_0__ -->
+
+### Changed  <!-- __s500_changelog_changed_v1__ -->
+
+- Five API routes need a configured API key: `POST /v1/skill/export`,
+  `GET /v1/superbrain/health`, `GET /v1/superbrain/domains`,
+  `POST /v1/superbrain/search` and `POST /v1/webhook/{channel}`. A
+  request without `X-API-Key` gets 401 `AUTH003`, a key the server does
+  not hold 401 `AUTH001`, and a server with no keys configured answers
+  403 `AUTH002` on these routes; request validation (422) and the rate
+  limit (429) still answer first. 10.0.0 let a request without a key
+  through on them, and any request when no keys were configured. A
+  webhook sender must now send `X-API-Key`, including for
+  `/v1/webhook/slack`'s `url_verification`. Slack documents its Events
+  API requests as carrying `X-Slack-Signature` and
+  `X-Slack-Request-Timestamp`, not `X-API-Key`, so that route refuses
+  Slack's own requests unless something in front of the API adds the
+  key. Neither 10.0.0 nor 11.0.0 reads Slack's signature.
+- `POST /v1/chat` and `POST /v1/chat/stream` add the superbrain context
+  only for a request with a valid key. The check that selects it reads
+  a soul's senses as a mapping, and the soul configurations the API
+  builds hold a list, so it does not match today and no reply changes.
+  The chat routes' own key check is unchanged.
+- `nous_api` loads only the file `NOUS_ENV_FILE` names. With it unset or
+  empty, 10.0.0 loaded the `.env` in the directory above the installed
+  modules; 11.0.0 loads none. Where 10.0.0 took an API key from that
+  `.env`, the API server (`nous_api:app`, the same app as
+  `nous_api_server:app`) now refuses to start rather than run with no
+  keys: its startup raises `RuntimeError` with a message that names the
+  file and holds no value. That is where `NOUS_ENV_FILE` is unset or
+  empty, the process environment held no `NOUS_API_KEYS` when `nous_api`
+  was imported, and that `.env`, read by python-dotenv with the
+  arguments 10.0.0's `load_dotenv` used (`PYTHON_DOTENV_DISABLED`
+  honoured, `${VAR}` resolved from the environment first), gives
+  `NOUS_API_KEYS` a key after the comma split. Under the same conditions
+  it refuses also where that `.env` exists and cannot be read or
+  decoded, where 10.0.0 did not start; with `NOUS_API_KEYS` in the
+  process environment it starts there, where 10.0.0 did not. Without the
+  refusal such a deployment would run with no keys, and every check that
+  takes an optional key would admit a request with a wrong key. The
+  check runs in the app's lifespan only: under `uvicorn --lifespan off`,
+  with the app mounted inside another application, or under an ASGI
+  server that does not run the lifespan, it does not run and such a
+  deployment starts with no keys. It reads only the `.env` above the
+  modules of the running install. Measured with uvicorn 0.54.0, other
+  versions not measured: a single process (no `--workers`) exits 3
+  ("Application startup failed"); with `--workers 2`, as the
+  repository's unit `infra/systemd/nous-api.service.d/99-venv.conf` runs
+  it, the parent stops and exits 0, so a supervisor that acts only on a
+  failed exit sees a clean stop; with `--reload` the reloader stays up,
+  serving nothing, until stopped. Where that `.env` is not
+  `/opt/aetherlang_agents/.env`, every other name kept only there is no
+  longer loaded: settings the API reads from its environment, such as
+  `SLACK_BOT_TOKEN`, `NOUS_CLIENT_CAP`, `NOUS_REPLAY_DIR`,
+  `NOUS_TRACE_DIR`, `NOUS_MEMORY_BASE_DIR`, `NOUS_BUDGET_FILE` and
+  `NOUS_NOESIS`, fall back to their defaults. Where it is that file (a
+  tree directly under `/opt/aetherlang_agents`), `nous_runtime` reads it
+  at its first import, after the API has started, with its own line
+  reader: the names read before that import are lost (`NOUS_CLIENT_CAP`,
+  `NOUS_REPLAY_DIR`), and the others are set as that reader parses them,
+  which differs from python-dotenv (for example, an `export ` prefix
+  stays in the name, a `${VAR}` stays text, an inline comment stays in
+  the value). A `NOUS_ENV_FILE` that names a missing or empty file still
+  stops the start. Only `nous_api` loads the file `NOUS_ENV_FILE` names.
+- When `NOUS_ENV_FILE` is set, `nous_runtime` no longer reads
+  `/opt/aetherlang_agents/.env` at import; when it is unset, it still
+  does, and sets only the names the process lacks. A provider key that
+  was only in that file is then absent from the process: its runtime
+  tier is unavailable, and the chat routes, keyed or not, and the
+  webhook chat path, which call only tiers that are available and free,
+  lose that tier when it is a free one; any other name kept only in that
+  file goes too. A process that sets `NOUS_ENV_FILE` and does not import
+  `nous_api`, such as `nous run`, loads neither file, except that a
+  program with a `dream_system` soul builds a `DreamEngine`, which reads
+  `/opt/aetherlang_agents/.env` whatever `NOUS_ENV_FILE` says, as in
+  10.0.0.
+- `NousRuntime` loads Noesis only when `NOUS_NOESIS` is exactly `1`.
+  10.0.0 tried to import it in each `NousRuntime.think` call until it
+  loaded, before the dry-run branch, and logged a warning ("Noesis not
+  available") and went on when the import failed. On a host where 10.0.0
+  loaded it, `nous run` could return a Noesis answer; 11.0.0 takes the
+  dry-run branch or the LLM tiers unless `NOUS_NOESIS=1`. `POST /v1/run`
+  calls `think` only in dry-run with `emit_trace`, and its reply never
+  carried a `think` answer. In a dry-run, where 10.0.0 recorded a Noesis
+  hit, the runtime log and the trace now record an `llm_call`, in the
+  signed trace `POST /v1/run` returns too. With `NOUS_NOESIS=1`, a
+  failed import or load raises `RuntimeError` ("NOUS_NOESIS=1 but Noesis
+  did not load:" and the exception's type) from `think`, and nothing
+  half-built is kept: `nous run` exits 1 with `Runtime error:` and that
+  text, and `POST /v1/run` in dry-run with `emit_trace` answers 422
+  `RUN001`. Noesis is not part of the wheel, so in a wheel install
+  `NOUS_NOESIS=1` makes `think` raise. A Noesis answer logs a WARNING
+  line without the query's text; the runtime log's `noesis_hit` entry
+  still holds the query's first 100 characters. Code compiled from a
+  program that declares a `noesis` block imports `noesis_engine` as
+  before; `NOUS_NOESIS` does not gate it.
+- `PUT /v1/templates/{name}` answers 403 `TPL006` ("templates are
+  read-only on this host") when the process cannot write the templates
+  directory, before any lint, backup or write. 10.0.0 answered there
+  by what it reached first: 200 with `TPL001` for a source that failed
+  lint without `force`, 500 `INTERNAL001` for an existing name (its
+  backup copy failed), and 500 `TPL002` for a new one.
+- `BudgetGuard` takes its file from `NOUS_BUDGET_FILE` when it is set
+  and non-empty;
+  the default path, `/opt/aetherlang_agents/nous/runtime_budget.json`,
+  is unchanged. A save that fails logs one WARNING per guard, naming the
+  exception's type; 10.0.0 dropped the failure silently. Where that
+  path's directory is missing or not writable, a live `nous run` that
+  records a spend now logs that WARNING once, unless `NOUS_BUDGET_FILE`
+  names a writable file. A guard reads only its own file, so pointing
+  `NOUS_BUDGET_FILE` at a new file starts the day's and month's spend
+  at zero.
+
+### Fixed  <!-- __s500_changelog_fixed_v1__ -->
+
+- `nous prices init` finds the price table installed under the
+  interpreter's prefix (`<prefix>/pricing/` or
+  `<prefix>/share/pricing/`), where a wheel installed into a virtual
+  environment puts it. 10.0.0 looked only beside the module and exited 2
+  on such an install. A `pip install --user` puts the table under the
+  user base, not the prefix, and `nous prices init` still exits 2 there.
+- `nous compile` prints `undefined-name gate SKIPPED (pyflakes not
+  installed)` when pyflakes is absent; 10.0.0 printed `PASS` although
+  the gate had not run.
+- The README's quick start installs `nous-lang[smt]` and uses the
+  template `cost_cap_emit_demo`. The 10.0.0 quick start used
+  `cost_cap_basic`, which declares no `max_ticks`: its `verify --smt`
+  step exited 3 and its `dossier` step exited 1.
+
+### Release process  <!-- __s500_changelog_release_v1__ -->
+
+- In `release.py --build`, phase 8 installs the built wheel with
+  `[smt]`. Phase 9 then runs the
+  README quick start's `nous` steps up to its first optional step
+  (`prices init`, `templates extract`, `verify --smt`, `dossier`)
+  against the installed console script (`scripts/check_quickstart.py`),
+  in a temporary work directory with a temporary HOME beside it. A step
+  stops the release when it exits non-zero or when its output check
+  fails: no `nous_prices.toml` after `prices init`, no `PROVEN:` line
+  from `verify --smt`, no dossier directory holding `manifest.json`
+  after `dossier`. When a step uses `--smt`, the quick start's
+  `pip install` line must name `nous-lang[smt]` or `nous-lang[all]`;
+  that line is checked, not run.
+- `scripts/cold_audit.py` runs a fifth class, `release-vsa-rekor`: the
+  Rekor leg of `docs/VERIFYING_A_RELEASE.md` Section 1.5 (new), with a
+  negative control. It and the `release-vsa` class check that
+  `index.json`'s payload digest and wheel equal the release VSA's. The
+  new class installs `nous-lang` at the audited version and
+  `sigstore==4.3.0` from PyPI into a fresh venv and updates the
+  Sigstore trust root from its TUF repository; without that network it
+  fails, and the run exits 1.
+
+### Notes  <!-- __s500_changelog_why_major_v1__ -->
+
+- 11.0.0 is a major version because it refuses or changes behaviour
+  10.0.0 accepted: the five routes refuse a request without a key, and
+  every request when no keys are configured; `nous_api` no longer reads
+  the `.env` above the installed modules, and the API server refuses
+  to start where 10.0.0 took its API keys from that file (where the
+  server runs the app's lifespan); `nous_runtime`
+  no longer merges `/opt/aetherlang_agents/.env` into a process that
+  sets `NOUS_ENV_FILE`; and `NousRuntime` runs without Noesis unless
+  `NOUS_NOESIS=1`, and raises when that is set and Noesis does not
+  load. A client of those routes must send a configured key. An API
+  deployment that relied on that `.env` must put every name it kept
+  there, `NOUS_API_KEYS` and the provider keys included, in a file of
+  the API's own that `NOUS_ENV_FILE` names, or in the process
+  environment. An API deployment that already sets `NOUS_ENV_FILE` and
+  kept names only in `/opt/aetherlang_agents/.env` must move them into
+  the file `NOUS_ENV_FILE` names. A deployment that used Noesis through
+  `NousRuntime` must set `NOUS_NOESIS=1`.
+
+
 ## [10.0.0]  <!-- __s485_changelog_v10_0_0__ -->
 
 ### Security  <!-- __s485_changelog_security_v1__ -->
