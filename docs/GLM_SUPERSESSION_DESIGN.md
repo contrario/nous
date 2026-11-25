@@ -34228,3 +34228,301 @@ document itself.
                        old look the same in uptime's minute field. The
                        uptime is read in seconds from /proc/uptime and
                        compared with the last reading.
+
+  - S499 the number the operator gave the closing entry of the seat S497,
+    written by the seat S497: D496's landing; FG-S492-I in three phases on
+    GitHub and A (Noesis off by default, the keyless routes with outbound
+    calls behind the key, the code tree read-only for A's API); the wheel's
+    quick start fixed on main; a root venv removed from A; the corrections
+    and the slips; the number 499 counted; and the codes FG-S497-B
+    to FG-S497-F
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S497,
+    DURING ITS SESSION, with the labels of D450 to D496: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC, on 11-24 and 11-25 of 2026; an operator's time is the time his
+    message was sent, a value ON A carries the clock its command printed.
+    Each value was asserted by the script that built this entry from the
+    seat's running log or from its files by digest. Each paste is a file
+    kept from the chat, named by its digest. What D496 records is not
+    repeated here. Each suite, mutant run, canary, control, count and
+    readback below evidences; nothing here is a Z3 or Farkas result. Each
+    write on A or GitHub had its own pame, asked after its kit, its
+    predictions and its rehearsal existed. The container restarted at most
+    operator messages; the log records the uptime and the pins read after
+    each restart, and the slips where they were read late (D499-8).
+
+    D499-1  D496 LANDED, 11-24. The entry c157df90 and message 13895d81. L0
+            (d496/fx_d496_out.txt 746b547c, 11:25:27Z to 11:28:18Z, rc 0):
+            23 cases OK, 15 mutants killed. L1 3161ad95, one parent
+            a9e479d8, the document's blob e366ea37 (d496/l1_commit_out.txt
+            94309f01). OPERATOR, 11:42Z: pame; G1 PUSH_BRANCH_GREEN, the
+            branch absent before (l2_push_branch_out 9d9007da). OPERATOR,
+            11:47Z: pame; ON A, C51 (ona/c51_check_120600.txt da2ae466):
+            FOUND_COUNT 1, RC 0. OPERATOR, 12:17Z: pame; ON A from
+            12:18:19Z (ona/g2_verify_d496_121819.txt 31aedaea): 5457 passed
+            and 13 skipped at both, the outcomes 5470 6b787d861eb1cc72 at
+            both, OUTCOME_DIFF 0, VERIFY_RC 0. OPERATOR, 12:29Z: pame; G3
+            FF_MAIN_GREEN (l3_ff_main_out 4c374f48). OPERATOR, 12:30Z:
+            pame; ON A from 12:30:56Z (ona/g4_fflive_d496_123056.txt
+            2b0d1d31): HEAD a9e479d8 to 3161ad95, the document e552c977,
+            644, aetherlang's, FFLIVE_GREEN. The readback
+            (d496/readback_out.txt 88200e02): REFS 208, READBACK_GREEN. No
+            restart, no deploy.
+
+    D499-2  FG-S492-I, PHASE 0, READ ONLY, 11-24. OPERATOR, 12:38Z: which
+            object is right, and why. Proposed: FG-S492-I (untracked code
+            in the API's import path) first, in phases. OPERATOR, 12:43Z:
+            pame for phase 0. READ IN THE SEAT'S CONTAINER
+            (p0/closure_p0_out.txt 7761692a): nous_api's closure is 62
+            tracked modules; 10 untracked names are imported by tracked
+            code. The tree's .gitignore ignores them (lines 18 and 20,
+            since v2.2.0), so they list as ignored, not untracked: the
+            first prediction was wrong, amended before the second
+            rehearsal. ON A from 13:13:40Z (ona/p0_run_131340.txt
+            4e2aa3ec): the API's one open write fd is its log. The
+            reconciler's K3 differed only by field order (p0/rec_p0_out.txt
+            67cb76c0): the rehearsal's stub printed the -p order and
+            systemctl prints its own, a stub modelled from memory; post hoc
+            by content, 4 of 4 held (rec_p0_v2_out 79b59071). ON A from
+            13:24:38Z (ona/p0b_run_132438.txt a041acdf; rec_p0b_out
+            a466a0dc, 3 of 3): from nous_api's closure the one entry to
+            Noesis is nous_runtime._get_noesis, under except Exception; an
+            answer Noesis replaces leaves no line in the API's log.
+
+    D499-3  PHASE 1: NOESIS OFF BY DEFAULT, LANDED, 11-24. OPERATOR,
+            13:27Z: the design approved "if it is right and evidenced".
+            P1_PREDICTIONS.txt 5d05bd19 before any test or patch; its
+            amendment eecfac52 before the patch: the old code stored the
+            engine before its load, so a raise left a half engine that the
+            next call returned silently; store after load, a sixth test, a
+            fifth mutant. Red on 3161ad95: 8 of 9 failed (p1/red_run3.txt
+            ec7807cf); green 9 of 9 (green_run 921451cc); 5 mutants, each
+            killed by its named tests (mutants_out c70195e2); the container
+            suite 161 failed, 5271 passed, 38 skipped before (suite_base
+            81320a37) and 161, 5280, 38 after (suite_new df08d79b), the
+            failing ids equal. L0 (p1/fx_p1_out.txt 49d66134): 24 cases OK,
+            17 mutants killed; its prediction had counted 23. L1 fe68be57,
+            parent 3161ad95 (l1_commit_out 56fc7d74). G1
+            (l2_push_branch_out 73df61db); C52 (ona/c52_check_141800.txt
+            df71f867); ON A from 14:20:01Z (ona/g2_verify_p1_142001.txt
+            a45340cf): 5457 passed and 13 skipped at 3161ad95, 5466 and 13
+            at fe68be57, OUTCOME_DIFF 9, VERIFY_RC 0. G3's first run lacked
+            the commit id and refused before any network call
+            (l3_ff_main_try1_refused 09fe12a2); rerun: FF_MAIN_GREEN
+            (l3_ff_main_out 705ef9e6). ON A, G4
+            (ona/g4_fflive_p1_185230.txt b9a84ff5). The G5 kit gained a
+            guard: P0B's env read had never matched NOUS_NOESIS. Its
+            rehearsal 6 of 6 (p1/g5/reh_g5p1_out.txt 75a36915). ON A from
+            19:06:27Z (ona/g5_restart_p1_190627.txt 19831f98): MainPID
+            3220656 to 2123225, health 10.0.0, no NOUS_NOESIS, RESTART_RC
+            0: A's API runs fe68be57, Noesis not imported.
+
+    D499-4  THE WHEEL'S QUICK START, LANDED, AND A ROOT VENV REMOVED,
+            11-24. OPERATOR, 19:09Z: S492's after-seal testimony on the
+            published wheel (in/s492_wheel_testimony.txt 1e5b85f9), this
+            arc first, then phase 2. TESTIMONY, each claim re-measured in
+            the container on the published 10.0.0 wheel (W0_PREDICTIONS
+            e535c1fc): prices init looks beside itself only and fails;
+            cost_cap_basic has no max_ticks, so the SMT check of the quick
+            start fails; compile printed PASS for its undefined-name gate
+            with pyflakes absent; the README's quick start is in no gate.
+            W1_PREDICTIONS 8225bdd7 and two amendments before the mutants:
+            the verdict word sits inside its negation, so the new checker
+            reads a line that starts with it. Red on fe68be57: 8 of 11
+            failed (w1/red_run.txt 4162914c); 9 mutants killed (mutants_out
+            831a5b3e); a matrix of wheel and README, published and new:
+            only the new wheel with the new README passes. Suite: + 11, the
+            failing ids equal (suite_new 8c586abf). L0 (fx_w1_out
+            bd833a54); L1 be87ea9b, parent fe68be57 (l1_commit_out
+            2e13f004). ON A from 19:40:25Z (ona/g2_verify_w1_194025.txt
+            eaf071ef): 5466 and 5477 passed, 13 skipped each, OUTCOME_DIFF
+            11, VERIFY_RC 0; G4 (ona/g4_fflive_w1_195514.txt 3756ae9d); G5
+            (ona/g5_restart_w1_195808.txt 6bd8f957): MainPID 2123225 to
+            2267791, RESTART_RC 0. Not on PyPI: 10.0.0's users meet these
+            defects until 10.0.1. ON A from 20:00:41Z
+            (ona/t0_run_200041.txt 37e73f97): /tmp/nous_test, root 755,
+            130M, 2346 files, a venv whose packages match this seat's
+            wheelhouse plus pip, named by nothing, made at 12:56Z. ON A
+            from 20:18:47Z (ona/r0_remove_201847.txt 47a619c4): REMOVED,
+            REMOVE_RC 0; the removal's predictions (t0/R0_PREDICTIONS.txt
+            ad3ccb31) were hashed after its rehearsal and say so.
+
+    D499-5  PHASE 2: THE KEYLESS ROUTES WITH OUTBOUND CALLS, LANDED, 11-24.
+            READ: with keys set, the API's soft key check lets a caller
+            with no header through as anonymous; 22 of 28 routes call only
+            it. ON A from 20:23:47Z (ona/p2m_run_202347.txt 24bdf636):
+            nginx sends /v1/ to the API, so every route is public; port
+            8900 is an ssh listener, a tunnel to another host; and the
+            suite writes A's production API log (FINDING). The operator's
+            first choice (dry-run only) was made on my overclaim of paid
+            LLM calls; corrected from S407's free-tier gate and asked
+            again. OPERATOR, 20:26Z: "Keep live, free tiers only".
+            OPERATOR, 20:28Z: pame for the design: skill export, the
+            superbrain routes and the webhook need the key; the superbrain
+            context in chat only with a valid key. P2_PREDICTIONS 0efa9927.
+            The first red differed: the chat's superbrain check never
+            matches (a type mismatch), so my finding that every keyless
+            chat reached 8900 was a static read taken as behaviour,
+            corrected; amendment a7b2edb1 (red_run2 f8e7de73). One S407
+            test pins the old helper's name: amendment 28552c10; green 53
+            of 53 (green_run2 5c31234a); amendment 0fc2cf12 before 7
+            mutants, all killed (mutants_out b73a17dd); suite + 11
+            (suite_new 4eba4c11). L0 (fx_p2_out 858f1d41); L1 7bae9d0d,
+            parent be87ea9b (l1_commit_out 43f806b0). ON A from 21:02:23Z
+            (ona/g2_verify_p2_210223.txt 62cebe1f): 5477 and 5488 passed,
+            13 skipped each, OUTCOME_DIFF 11, VERIFY_RC 0; G4
+            (ona/g4_fflive_p2_211421.txt 4568e7e5); G5
+            (ona/g5_restart_p2_211540.txt c14a98e0): MainPID 2267791 to
+            2483322, a keyless webhook 401 AUTH003 with no model call,
+            RESTART_RC 0.
+
+    D499-6  PHASE 3: THE CODE TREE READ-ONLY FOR A'S API, 11-24. OPERATOR,
+            21:17Z: "pame phase3". ON A from 21:23:29Z
+            (ona/p3m_run_212329.txt d09dd8ac): ProtectSystem no,
+            ProtectHome no, no ReadWritePaths; in 14 days the API wrote no
+            file of the tree. OPERATOR, 21:25Z, on PUT /v1/templates under
+            a read-only tree: "Refuse clearly". P3_PREDICTIONS 29a762e9:
+            BudgetGuard's path from NOUS_BUDGET_FILE and one warning on a
+            failed save; 403 TPL006 when the templates dir is not writable.
+            Red on 7bae9d0d: 3 of 5 failed (p3/red_run.txt 2cf1ed1c); the
+            patch's first form refused with zero writes; green 5 of 5
+            (green_rA 3b6dc217); 5 mutants killed; suite + 5 (suite_new
+            c5f22d87). L0 (fx_p3_out 5c84df32); L1 373d8e8f (l1_out
+            5e160c4a); G1 (g1_out 2328b3c3); C55 (ona/c55_check_214600.txt
+            de7a06bf); ON A from 21:48:15Z (ona/g2_verify_p3_214815.txt
+            e9c282a1): 5488 and 5493 passed, 13 skipped each, OUTCOME_DIFF
+            5; G3 (g3_out 74336f52); G4 (ona/g4_fflive_p3_220658.txt
+            afac34ef); G5 with the unit unchanged
+            (ona/g5_restart_p3_220815.txt d2ee5ff9): MainPID 2483322 to
+            2653804; its predictions (0e28f5ad) say no probe there tells
+            P3's code from P2's. THE CANARY: predictions a2e77bf4 and
+            amendments 06758ea1, a8d933cf and f8d544db before the run on A;
+            four rehearsals under real read-only binds, the last 12 of 12
+            (p3/canary/reh4_out.txt 2a9fe3df). There, without the log in
+            ReadWritePaths the import stops on Errno 30, and 7bae9d0d's
+            server answers the PUT 500 TPL002 with the EROFS text. ON A
+            from 22:24:47Z (ona/canary_p3_222447.txt 42048be3): a transient
+            unit under the planned sandbox, the API in process with a
+            canary key: 18 routes at the container's codes, 0 EROFS text, 0
+            5xx, PUT 403 TPL006, no secret name in its env, 0 outbound
+            connects, CANARY_RC 0; and no logrotate config names the API
+            log, 16809640 B. G6: predictions 2f7a68d5. ON A from 22:35:52Z
+            (ona/g6_p3_223552.txt 0a1e9d2a): REFUSED 111 at the home guard,
+            on .lesshst, a pager's history; nothing changed. Kit 3bcb32a3
+            to 01c298b3 by amendment 7c7032d8; rehearsal 12 of 12
+            (p3/g6/v2/reh4_out.txt 3e3b8ddf). ON A from 22:44:29Z
+            (ona/g6v2_p3_224429.txt c43cfae3): the drop-in a7a2a060, 644
+            root's; systemd's exposure 1.9 to 1.6; MainPID 2653804 to
+            2746734; the process's mounts: the tree, /etc and the home
+            read-only, the state dir and the log read-write; no EROFS in
+            the journal or the new log bytes; G6_RC 0. Not evidenced by G6:
+            a write of the budget file, and routes beyond its probes.
+
+    D499-7  CORRECTIONS, 11-24 AND 11-25. Each logged when found. The paid
+            LLM calls of phase 2 (D499-5). The keyless chat to
+            8900 (D499-5). 373d8e8f's message gives as its motive that the
+            persisted spend would stop moving: through the API it never
+            moved. READ on 11-25: in dry-run the runtime returns before any
+            record (nous_runtime.py:596); it records only after a live tier
+            call (:617); the run route answers mode execute with "Live
+            execution not yet available" (nous_api_server.py:1676); chat
+            calls the free tiers directly. So through the API BudgetGuard
+            reads its file and writes nothing; A's runtime_budget.json last
+            moved on 05-30. The code change stands for the CLI's live paths
+            and any later live mode in the API; the pushed message cannot
+            change, and this entry carries the correction. The board item
+            for B's NOUS_BUDGET_FILE rested on the same misread and is
+            withdrawn as a fix: no B write was asked for it.
+
+    D499-8  THE SLIPS OF THE SEAT S497 AFTER D496, 11-24 AND 11-25. Each
+            logged when found. Phase 1's first red ran under python3.13. A
+            digest typed, not read (G4P1). A log stamp typed in a quoted
+            heredoc. W0's pip3.12 resolved wheels for 3.13. N15 ran after
+            its log line was refused. W1's tool builder twice stopped on
+            names typed from memory. The removal's predictions after its
+            rehearsal (D499-4). Phase 2's first refusal fixture did not
+            hold the anchor, and its G5 rehearsal checked a PID after
+            another case's restarts. N24b, an ls-remote run unnamed. G1 of
+            phase 3 ran after a restart before the pins were re-read, and a
+            log line was written after a restart before the pins were read
+            (nothing sent between). The canary's third rehearsal ran in the
+            command whose log line was refused, and its second amendment
+            named a stale digest (an erratum logged). G6's first two
+            rehearsals failed on my stand-ins (FG-S497-E). This entry's
+            draft named two digests typed, not read; its own asserts
+            stopped it before any build.
+
+    D499-9  THE NUMBER 499, 11-25. OPERATOR, 10:02Z: "close the seat 499".
+            NUM499 in NUM497's form: N34 a fetch of the mirror, 212 refs,
+            main 373d8e8f (refs_after_n34 0cbf77b7); against NUM497's base
+            five new refs, s496-d496 and s497-p1, w1, p2 and p3, the
+            seat's; the five new messages equal their pinned files;
+            derive499 every 499 delta 0 (derive499_out.txt ac354e62).
+            NUM499_PREDICTIONS.txt e628f827 and its amendment f9f0748e
+            before N35 and the count; N35 moved nothing. The count,
+            detached, 10:07:47Z to 10:20:14Z, rc 0 (ns_count499.py
+            b14fe5d2; ns_count499_out.txt 367e476a): 50 rows, 47 held, 0
+            differ, 3 read, VERDICT 499 FREE (rec499_out.txt 27d88bfe); 28
+            hits blind to case, each inside a hex run (hexctx499_out.txt
+            4362f3f7); the controls P-OUT, P-K1 and P-TREE each as named
+            (ctl_num499_out.txt 5b04bbec); NUM499_RESULTS.txt 00bb204a. The
+            count cannot see a session that wrote nothing to the tree, a
+            commit message or a tag.
+
+    D499-10 WHAT STANDS, 11-25. GitHub's main and A's live tree at 373d8e8f
+            until this entry lands; A's nous-api runs 373d8e8f under the
+            drop-in 95 (MainPID 2746734); B's nous-api runs v10.0.0 as
+            nousapi; NOUS 10.0.0 on PyPI. The three phases and the quick
+            start reach B and PyPI with 10.0.1, its own gate,
+            under FG-S492-H. Undo on A: remove the drop-in, daemon-reload
+            and restart; each code change by its revert. Open: no rotation
+            of A's API log; the suite writes A's production API log; the
+            chat's superbrain check that never matches; 6 stale nginx
+            copies; the far end of the 8900 tunnel; 7 lattice backups of
+            about 33 MB in A's tree; other paths of A's tree written in
+            nous_runtime, outside the API's routes; the API has no live run
+            mode. S492's open items as D496 left them.
+
+    FINDINGS
+
+            FG-S497-B  A GUARD WIDER THAN ITS PURPOSE. G6's home guard was
+                       meant to catch files the API writes in its home,
+                       which ProtectHome would break; it refused on any
+                       recent file and stopped on .lesshst, a pager's
+                       history. A guard names its purpose; a class it
+                       cannot concern is named, printed and not judged, and
+                       every other match still refuses.
+
+            FG-S497-C  A CHECK BEFORE THE IMPORT IT MEASURES. The canary
+                       counted secret names in its env right after the
+                       server's import, but the platform .env is read by
+                       nous_runtime, imported later and lazily: with the
+                       hiding bind dropped the count still read 0. Mutant
+                       M6 found it. A check runs after a line that shows
+                       the code it depends on has run.
+
+            FG-S497-D  A MOTIVE STATED FROM A NAME, NOT A CALL PATH. Paid
+                       LLM calls from the key names; a keyless chat to 8900
+                       from a static read; a persisted spend the API never
+                       writes. Each was stated before its callers were
+                       read, and two reached the operator or a pushed
+                       message. Before saying what code does or would do,
+                       its callers are read to the call.
+
+            FG-S497-E  STAND-INS THAT DIFFER FROM THE TOOL. The rehearsal's
+                       systemctl printed fields in the asked order (P0);
+                       the stand-in user got skel files from useradd
+                       --create-home; the journalctl stand-in did not add
+                       .service (G6). Each failed or passed a case for the
+                       stand-in's sake. A rehearsal failure is attributed,
+                       kit or stand-in, before any change, and a stand-in
+                       is checked against the real tool's behaviour.
+
+            FG-S497-F  A COMPARISON ANOTHER WRITER MOVES. The canary first
+                       compared the size of A's API log around its run,
+                       which the live API also writes: a failure there
+                       would say nothing about the canary. Changed before
+                       the run on A: the evidence is that the canary never
+                       attached the log's handler; a comparison covers only
+                       what nothing else writes.
