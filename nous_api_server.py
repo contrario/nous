@@ -41,6 +41,7 @@ from nous_api import (
     LOG_FILE,
     START_TIME,
     API_KEYS,
+    API_KEYS_FROM_ENV,  # __s500_legacy_env_guard_v3__
     logger,
     CompileRequest,
     VerifyRequest,
@@ -338,9 +339,76 @@ async def _s465_run_budgeted(route: str, fn, *, request):  # __s466_client_cap_v
 
 # ── App ──
 
+_LEGACY_ENV_ADVICE = (  # __s500_legacy_env_guard_v3__
+    "Put NOUS_API_KEYS and the other names this API needs in a file of "
+    "their own and set NOUS_ENV_FILE to it, or set them in the service's "
+    "environment."
+)
+
+
+def _legacy_env_path() -> Path:  # __s500_legacy_env_guard_v3__
+    return NOUS_DIR.parent / ".env"
+
+
+def _legacy_env_state(path: Path) -> Optional[str]:  # __s500_legacy_env_guard_v3__
+    """None, "keys", or "error:" and the type name of the exception that
+    reading path raised. Neither returns nor keeps a value of the file,
+    so no frame of the caller's traceback holds one."""
+    if os.environ.get("NOUS_ENV_FILE") or API_KEYS or API_KEYS_FROM_ENV:
+        return None
+    try:
+        import dotenv.main as _dotenv_main
+    except ImportError:
+        return None
+    disabled = getattr(_dotenv_main, "_load_dotenv_disabled", None)
+    if callable(disabled) and disabled():
+        return None
+    if not os.path.exists(path):
+        return None
+    try:
+        raw = _dotenv_main.DotEnv(
+            path, encoding="utf-8", interpolate=True, override=False,
+        ).dict().get("NOUS_API_KEYS")
+        found = any(k.strip() for k in (raw or "").split(","))
+        del raw
+    except Exception as exc:  # the type alone is reported
+        return "error:" + type(exc).__name__
+    return "keys" if found else None
+
+
+def _legacy_env_guard() -> None:  # __s500_legacy_env_guard_v3__
+    """Refuse to start where 10.0.0 took an API key from the .env above
+    the modules and this version takes none: NOUS_ENV_FILE unset or
+    empty, no key, NOUS_API_KEYS absent from the process environment at
+    import, and that file, read with load_dotenv's own arguments, giving
+    NOUS_API_KEYS a key. Under the same conditions a file that exists
+    and cannot be read refuses too: 10.0.0 did not start there. Runs in
+    the lifespan only. No value is logged, raised or kept in a frame."""
+    path = _legacy_env_path()
+    state = _legacy_env_state(path)
+    if state is None:
+        return
+    if state == "keys":
+        msg = (
+            "NOUS API refuses to start: NOUS_API_KEYS is set in %s, which "
+            "this version no longer loads, and NOUS_ENV_FILE is unset or "
+            "empty. %s" % (path, _LEGACY_ENV_ADVICE)
+        )
+    else:
+        msg = (
+            "NOUS API refuses to start: %s exists and cannot be read (%s); "
+            "10.0.0 loaded that file when NOUS_ENV_FILE was unset or empty, "
+            "and this version does not. %s"
+            % (path, state[len("error:"):], _LEGACY_ENV_ADVICE)
+        )
+    logger.error(msg)
+    raise RuntimeError(msg)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info(f"NOUS API v{VERSION} starting")
+    _legacy_env_guard()  # __s500_legacy_env_guard_v3__
     TEMPLATES_DIR.mkdir(exist_ok=True)
     yield
     logger.info("NOUS API shutting down")

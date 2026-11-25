@@ -40,6 +40,9 @@ START_TIME: float = time.time()
 
 API_KEYS: set[str] = set()
 _raw_keys: str = os.getenv("NOUS_API_KEYS", "")
+# __s500_legacy_env_guard_v3__ read before the pop below: 10.0.0 kept a
+# NOUS_API_KEYS of the process over the .env file.
+API_KEYS_FROM_ENV: bool = "NOUS_API_KEYS" in os.environ
 if _raw_keys:
     API_KEYS = {k.strip() for k in _raw_keys.split(",") if k.strip()}
 
