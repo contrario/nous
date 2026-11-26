@@ -34730,3 +34730,104 @@ document itself.
                        width and the act ran in the same call, so the act
                        preceded its record. The log call runs alone and its
                        acknowledgement is read before the act.
+
+  - S503 the number the operator gave the ledger entry the seat S500 owed,
+    written by the seat S502: D501's landing; S500's closing RULE 0 and its
+    C2F; the slips after D501's build; S500's seal; the seat S502's
+    opening; the numbers 502 and 503 counted; and the code FG-S500-D
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S502,
+    DURING ITS SESSION, with the labels of D450 to D501: READ IN THE SEAT'S
+    CONTAINER, ON A, ON B, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times
+    are UTC, on 11-25 and 11-26 of 2026; an operator's time is the time his
+    message was sent, a value ON A or ON B carries the clock its command
+    printed. Each value was asserted by the script that built this entry,
+    from the seat's running log, from S500's sealed log and handoff, or
+    from files by digest. Each paste is a file kept from the chat, named by
+    its digest. What D501 records is not repeated here. Each rehearsal,
+    control, count, suite and readback below evidences; nothing here is a
+    Z3 or Farkas result. Each write on A, B or GitHub had its own pame,
+    asked after its kit, its predictions and its rehearsal existed. The
+    container restarted at most operator messages; the log records the
+    uptime and the pins read after each restart.
+
+    D503-1  WHAT S500'S HANDOFF OWED: D501 LANDED, 11-26. TESTIMONY,
+            from S500's sealed log and handoff. L1 369a552c, one parent
+            4d9c1316, the document's blob 07fa977e, the message 571557db
+            (d501/l1_commit_out.txt bec17354, 00:27:12Z). G1b
+            PUSH_BRANCH_GREEN at 00:28:12Z, the branch absent before
+            (d501/l2_push_branch_out.txt a964c508). C48 on A
+            (ona/c48_check_003100.txt 30e322b4): FOUND_COUNT 1, both tools
+            OK, RC 0; C48A's output, the names read before the upload, was
+            not in the paste, so their absence before the upload is not
+            evidenced. G2 on A from 00:32:54Z (ona/g2_d501_run_003254.txt
+            d4ea6e6b): 19 rows held, 5521 passed 13 skipped at both,
+            OUTCOME_DIFF 0. G3 FF_MAIN_GREEN at 00:45:32Z
+            (d501/l3_ff_main_out.txt 352d2594). G4 on A at 00:46:14Z
+            (ona/g4_d501_run_004614.txt f111e3c8): HEAD 4d9c1316 to
+            369a552c, FFLIVE_GREEN. The readback at 00:46:57Z (N140,
+            d501/readback_out.txt d30e69b4): main and s501-d501 369a552c,
+            219 refs.
+
+    D503-2  WHAT S500'S HANDOFF OWED: ITS CLOSE, 11-26. TESTIMONY. The
+            closing RULE 0 from 00:50:07Z (ona/r1_close_c2_005007.txt
+            4c655d93): 20 of 20 held (r1s/rec_close_out.txt 76cd7563). C2F
+            (ona/r1_close_c2f_005500.txt 1ce310e7): A's failed units 1,
+            baseline-dsh-check.service only, where 2 were predicted; the
+            offsite heartbeat unit, failed at IR2 and IR3, no longer
+            failed, read and not caused, not S500's unit; B 0.
+
+    D503-3  THE SLIPS AFTER D501'S BUILD. TESTIMONY and READ. The C48
+            message carried a digest typed from its 8-character prefix, not
+            copied from the file; withdrawn before any run and resent from
+            d501/cmd/C48.txt (S500's log at 00:29:58Z; FG-S500-D). The
+            handoff names a second, a log line naming the wrong prior
+            twice, WT 442 for 443: READ here, its lines stand at 23:41:07Z,
+            23:41:33Z and 23:59:49Z on 11-25, before D501's build at
+            00:12:51Z, and D501-14 records it. READ here, not named by the
+            handoff: S500's log line at 00:56:54Z gives the three digests
+            of the closing paste's files to the wrong files:
+            ona/r1_close_c2_005007.txt 1ce310e7,
+            ona/r1_close_c2f_005500.txt 452c6aca and the LF copy
+            ona/r1_close_run_005007_lf.txt 4c655d93, where sha256sum and
+            the handoff's evidence list give, in that order, 4c655d93,
+            1ce310e7 and 452c6aca. No later line corrects it; the
+            reconciled file is the right one.
+
+    D503-4  S500'S SEAL, CHECKED AT THIS SEAT'S OPENING, 11-26. The five
+            uploads found by digest under renamed names, each once; the
+            sums file 81718f20 first, its four rows equal to the kickoff's;
+            EV_SHA256SUMS.txt 1420 lines, sha256sum -c rc 0; the handoff
+            against the evidence (tools/handoff_vs_ev3.py 27fda744): NAMED
+            1420 OK 1420 BAD 0 EV_NOT_NAMED 0, its negative BAD 1.
+
+    D503-5  THE SEAT S502 OPENED, 11-26. OPERATOR, 10:35Z: no other lane
+            holds the tree or the hosts; 502 the seat's number. ON A, C1 at
+            about 10:40Z (ona/c1_check_104000.txt 303c3cf7): S500's sums
+            found once, rule0_owner2.sh OK, RC 0; 6 rows held
+            (c1/rec_c1_real_out.txt 1fec131a). RULE 0 from 10:44:33Z
+            (ona/r0_run_104433_lf.txt 1a4e9040): 20 rows held, 0 differ
+            (r0/rec_open_out.txt b0dfcb3f); the suite on A 5521 passed 13
+            skipped; A's MainPID 1715116 and B's 923735, as at S500's
+            close. C2F at about 10:52Z (ona/r0_c2f_105200.txt 68dabd88): A
+            baseline-dsh-check.service only, B 0.
+
+    D503-6  THE NUMBERS 502 AND 503 COUNTED, 11-26. OPERATOR, 10:35Z: 502,
+            the seat; 10:54Z: 503, this entry. NUM501's instrument with 503
+            and 502 put first (numbers/ns_count502.py 6891eb37), on a
+            mirror of GitHub at main 369a552c, 219 refs (N147; N148 moved
+            nothing): detached, 10:59:31Z to 11:10:32Z, rc 0; 56 rows, 52
+            held, 0 differ, 4 read, VERDICT 502 FREE, VERDICT 503 FREE
+            (rec502_out.txt 4f20d5bf); the controls P-OUT, P-OUT3, P-K1 and
+            P-TREE each as named, controls bad 0 (ctl_num502_out.txt
+            ca05a397); numbers/NUM502_RESULTS.txt 933c4a79.
+
+    FINDINGS
+
+            FG-S500-D  A COMMAND RETYPED, NOT COPIED. After D501's build
+                       the C48 message went to the operator with a digest
+                       typed from its 8-character prefix; run as sent it
+                       would have found nothing (a read, no write). It was
+                       withdrawn before any run and resent from its file. A
+                       command or digest goes to the operator from its
+                       file, never typed.
