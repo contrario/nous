@@ -34526,3 +34526,207 @@ document itself.
                        the run on A: the evidence is that the canary never
                        attached the log's handler; a comparison covers only
                        what nothing else writes.
+
+  - S501 the number the operator gave the ledger entry of the seat S500,
+    written by the seat S500: what S497's handoff owed (D499's landing, its
+    closing RULE 0, its slips, its seal); the seat's opening; the release
+    11.0.0 (the legacy .env guard, the bump, the registry, the tag, PyPI,
+    Server B, the release VSA and its cold audit); the number 501 counted;
+    the slips; and the codes FG-S500-A to FG-S500-C
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S500,
+    DURING ITS SESSION, with the labels of D450 to D499: READ IN THE SEAT'S
+    CONTAINER, ON A, ON B, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times
+    are UTC, on 11-25 and 11-26 of 2026; an operator's time is the time his
+    message was sent, a value ON A or ON B carries the clock its command
+    printed. Each value was asserted by the script that built this entry,
+    from the seat's running log, from S497's sealed log and handoff, or
+    from files by digest. Each paste is a file kept from the chat, named by
+    its digest. What D499 records is not repeated here. Each suite,
+    rehearsal, control, count, verifier run and readback below evidences;
+    nothing here is a Z3 or Farkas result. Each write on A, B or GitHub had
+    its own pame, asked after its kit, its predictions and its rehearsal
+    existed. The container restarted at most operator messages; the log
+    records the uptime and the pins read after each restart.
+
+    D501-1  WHAT S497'S HANDOFF OWED: D499 LANDED, 11-25. TESTIMONY,
+            from S497's sealed log and handoff. L1 f27e6140, one parent
+            373d8e8f, the document's blob 413ef1d4, the message 49b8d101
+            (d499/l1_commit_out.txt 63252b9f, 10:29:52Z). G1
+            PUSH_BRANCH_GREEN at 10:45:49Z, the branch absent before
+            (l2_push_branch_out 2f8913cc). G3 FF_MAIN_GREEN at 11:13:05Z
+            (l3_ff_main_out 8179771b): GitHub main f27e6140. The readback
+            at 11:16:23Z (N38, d499/readback_out.txt d749201b): main
+            f27e6140, 213 refs. The handoff calls every gate as predicted,
+            with no restart: D499's predictions name no restart and no
+            deploy, a docs/ file only.
+
+    D501-2  WHAT S497'S HANDOFF OWED: ITS CLOSE, 11-25. TESTIMONY. The
+            closing RULE 0, 20 held. The slips after D499's pin, in the
+            handoff's words: after three restarts a paste was copied and
+            reconciled before the pins were re-read (G2, G4 and the closing
+            RULE 0, each a local read); the copy of the seal's template and
+            its log line in one command; the rehearsal's first sed set the
+            old kit's path wrong, caught by its diff before any run. The
+            seal itself, checked at this seat's opening: the 5 uploads
+            found by digest, FOUND 5 MISSING 0; EV_SHA256SUMS.txt 743
+            lines, sha256sum -c rc 0; the handoff against the evidence,
+            NAMED 743 OK 743 BAD 0.
+
+    D501-3  THE SEAT S500 OPENED, 11-25. ON A, C1 at about 12:04Z
+            (ona/c1_check_120400.txt 317f7123): S497's sums found once,
+            rule0_owner2.sh OK, RC 0. RULE 0 from 12:08:05Z
+            (ona/r0_run_120805_lf.txt bf9830e5): 20 rows held, 0 differ;
+            the suite on A 5493 passed. The number 500, the operator's for
+            the seat, counted on the full instrument
+            (numbers/ns_count500.py 1c3e4c91, 13:06:25Z to 13:22:35Z, rc
+            0): 51 rows, 48 held, 0 differ, 3 read, VERDICT 500 FREE;
+            controls bad 0 (numbers/NUM500_RESULTS.txt 007c9f2f).
+
+    D501-4  E1, THE FAIL-CLOSED LEGACY .ENV GUARD. 5fbc3a84, parent
+            f27e6140: nous_api.py, nous_api_server.py and the test
+            (e1/g1_commit_out.txt 5115b0eb). G1b PUSH_BRANCH_GREEN
+            (e1/g1b_push_out.txt d03fa618). ON A, G2: parent 5493 passed 13
+            skipped, branch 5521 passed 13 skipped, OUTCOME_DIFF 28
+            NEW_PASSED 28, claim lint 412 files 0 violations. G3
+            FF_MAIN_GREEN (e1/g3_ffmain_out.txt 60d367a5). ON A, G4 at
+            17:39:43Z, the live tree f27e6140 to 5fbc3a84
+            (ona/g4_e1_run_173943.txt a8061c4e); G5 at 17:50:07Z, nous-api
+            restarted, MainPID 2746734 to 1520098, uid 986, CapEff 0, NNP
+            1, Seccomp 2, the platform .env 0 bytes
+            (ona/g5_e1_run_175007.txt 28d39d34). DR1 on the runner at
+            5fbc3a84: 5521 passed, 13 skipped, 0 failed; the floor by R3b,
+            5521 - 1 = 5520.
+
+    D501-5  B1, THE BUMP TO 11.0.0. OPERATOR, 18:10Z: the notes draft 9
+            (113454f8) approved. bc6aa8d0 (b1v2/message.txt f07cf975). ON
+            A, G2 at 18:29:17Z: 5521 passed 13 skipped at both,
+            OUTCOME_DIFF 0, the outcomes 0365fb92a16b0c56
+            (ona/g2_b1_run_182917.txt 961e198f); G4 at 18:41:42Z, 5fbc3a84
+            to bc6aa8d0 (ona/g4_b1_run_184142.txt 69a32dba); the deploy
+            before the 19:00Z integrity run (ona/d3_b1v2_run_185500.txt
+            755b35d8); R6 at 18:59:32Z (ona/r6_b1v2_run_185932.txt
+            e10f971e); G5 at 19:02:31Z, MainPID 1520098 to 1715116, health
+            10.0.0 to 11.0.0 (ona/g5_b1_run_190231.txt 692a6bf1). A runs
+            11.0.0.
+
+    D501-6  THE REGISTRY 11.0.0. ON A, B2 (ona/b2_v11_run_192000.txt
+            24aabecc): 5c 7 MISSING for 11.0.0, ABORT, CHECK_RC 2, as
+            predicted. B3a (ona/b3a_build_v11_194600.txt 8db30bca): 175
+            entries, the body a4b8f3be equal to the one computed before the
+            build, the 7 new. B3b, the Rekor v2 anchor, ran once, 19:50:16Z
+            to 19:50:18Z (N88): log_index 216199352, the file 95d97f8b
+            (ona/b3b_anchor_v11_195016.txt 2fd1af52); verified offline in
+            the container. B3c 1dbce9da (b3c11/message.txt 20358c58): G2 at
+            20:17:28Z (ona/g2_b3c_run_201728.txt dc1be041), G4 at 20:29:32Z
+            (ona/g4_b3c_run_202932.txt 44c332e5), the deploy
+            (ona/d3_b3c_run_203600.txt 640b5f81), the public registry
+            95d97f8b (N98). G4 ran before the 20:30Z integrity run, which
+            read the two registry files as drift until the deploy; the
+            21:00Z run at 21:00:41Z read CLEAN (FG-S500-B).
+
+    D501-7  B4 AND DR2, AT 1DBCE9DA. ON A, B4 (ona/b4_v11_run_204000.txt
+            6db183de): all gates green for v11.0.0, CHECK_RC 0. DR2, run
+            45698807698 dispatched at 20:50:42Z (N100): 5521 passed 13
+            skipped on the runner; the sdist content digest cc0bf521 equal
+            to the container's; the README quick start on the built wheel
+            exit 0 (dr2/n105_log.txt 32db727d).
+
+    D501-8  THE TAG AND PYPI. OPERATOR, on his computer: RUN A 21:01:43Z to
+            21:01:57Z, the tag object
+            bb886114259e10a0f830b3a7e49085367f302b9f on 1dbce9da
+            (ona/tag_v11_runA_210143.txt d3cdd4ba); RUN B 21:03:38Z to
+            21:03:42Z, v11.0.0 pushed (ona/tag_v11_runB_210338.txt
+            caa9a70d). The release run 45700804392 (N106). OPERATOR,
+            21:13Z: the publish job approved and green. READ: the SLSA
+            provenance Rekor entries 4111880662 (the sdist 2232d27d) and
+            4111880871 (the wheel d18bd2d5) (b7v11/n112_log_publish.txt
+            ce74b23e); PyPI's two files, 962949 B and 1538319 B, the built
+            digests (b7v11/n113_pypi_11.json e688a584); a clean venv from
+            PyPI: nous version v11.0.0.
+
+    D501-9  SERVER B ON 11.0.0. ON B, R8A at 21:24:35Z under umask 0022:
+            HEAD 71e5e4af to 1dbce9da; guard 59, 1702 tracked, 0 unreadable
+            by nousapi (ona/r8a_v11_run_212435.txt cee6bb9c). R8B at
+            21:29:14Z: User nousapi, PID 398939 to 923735, RESTART_RC 0,
+            health 11.0.0 (ona/r8b_v11_run_212914.txt d07d4cd3).
+
+    D501-10 THE RELEASE VSA 11.0.0. ON A, B9a 21:42:23Z to 21:42:27Z, as
+            root through mint_release_vsa.py's root guard from a root-owned
+            copy of 1dbce9da's tree (ona/b9a_mint_v11_214223.txt ed5959ca):
+            the payload 10538b1c..., timeVerified 21:42:26Z. B9b 21:47:00Z
+            to 21:47:03Z (N123, N124): Rekor v2 log2025-1, log_index
+            216368195, tree_size 216368202. The pack
+            (b9v11/pack_in/release-vsa-11.0.0.tar 3823a485) read in the
+            container, offline: 7 of 7 as predicted, among them the bundle
+            with its log index moved by one: FAIL, rc 1.
+
+    D501-11 B9L, THE RELEASE VSA LANDED AND SERVED. 4d9c1316, parent
+            1dbce9da, twelve added files (b9v11/l/g1_commit_out.txt
+            a6b56cbe, b9v11/l/message.txt ab732b04). The fixture: 24 cases,
+            17 mutants killed (b9v11/l/fx_b9l11_out2.txt c3ef98cf). The
+            suite in the container: run 1 not held by my harness, run 2
+            held. G1b (b9v11/l/g1b_push_out.txt c875068e). ON A, G2 from
+            22:36:54Z (ona/g2_b9l_run_223654.txt ff81c535), 46 rows held.
+            G3: GitHub main 4d9c1316 (b9v11/l/g3_ffmain_out.txt 4ff8aea3).
+            ON A, G4 with a guard on the clock in its command:
+            CLOCK_REFUSED at 22:53:31Z, nothing written
+            (ona/g4_b9l_refused_225331.txt 594b1853); run at 23:37:37Z, 354
+            s after an integrity run (ona/g4_b9l_run_233737.txt ca47401d).
+            D1 to D3 before the 00:00:46Z run; the public index.json
+            4e9fd3ed (ona/d3_b9l_run_234300.txt 232ffd9f).
+
+    D501-12 B10, THE COLD AUDIT ON B. ON B, 23:48:23Z, as nobody, not root,
+            with B's own cold_audit.py by digest (b10v11/s500_b10v11_b.sh
+            345cadb8; ona/b10_v11_onB_234823.txt 795d11c9): five classes of
+            five, among them release-vsa-rekor, CONVERGENCE PASS at
+            log_index 216368195 under the trust root from Sigstore's TUF
+            repository, its copy with the log index moved by one: FAIL.
+
+    D501-13 THE NUMBER 501 COUNTED, 11-25 AND 11-26. OPERATOR, 23:51Z: 501,
+            for this entry. The instrument of NUM500 with 501 put first
+            (numbers/ns_count501.py d8279fee), on a mirror of GitHub at
+            main 4d9c1316, 218 refs (N134; N135 moved nothing): detached,
+            23:56:49Z to 00:11:28Z, rc 0; 52 rows, 49 held, 0 differ, 3
+            read, VERDICT 501 FREE (rec501_out.txt 403ea365); the controls
+            P-OUT, P-K1 and P-TREE each as named, controls bad 0
+            (ctl_num501_out.txt 533dc860); numbers/NUM501_RESULTS.txt
+            7a218fca.
+
+    D501-14 THE SLIPS. Two network calls ran before they were named: N40 at
+            the opening and N126 at B9L. The G5 command sent for E1 added a
+            tee to /root that was not in its kit. B3c's G4 waited on the
+            clock beside its command, not in it (FG-S500-B). Two pame lines
+            were refused by the log tool for width while the act ran in the
+            same call (FG-S500-C). The suite's first B9L run differed by my
+            harness, its PATH without the venv's bin. A compare of the
+            lint's tree count used another seat's number, and a cause was
+            stated for it before it was measured; corrected the same hour.
+            A tool's file name not substituted, caught before use. A
+            reconciler run once with its default count, rerun with the
+            predicted one.
+
+    FINDINGS
+
+            FG-S500-A  A KIT NAME ON A THAT AN EARLIER SEAT USED. B3c's
+                       tools were uploaded to A's /root under the
+                       names S485 had used (verify_b3c.sh, fflive_b3c.sh),
+                       and the tee targets of its gates too; S485's copies
+                       there were replaced, unnamed. Their bytes survive
+                       in S485's sealed evidence only. Every upload and tee
+                       target on A takes a name of the seat's own, read
+                       absent first.
+
+            FG-S500-B  A TIME CONDITION BESIDE A COMMAND, NOT IN IT. B3c's
+                       G4 was sent with a separate line to wait for the
+                       20:30Z integrity run; it ran before that run, which
+                       read the live tree ahead of the served site as
+                       drift. A condition on the clock goes inside the
+                       command, which refuses with nothing written when it
+                       does not hold.
+
+            FG-S500-C  A LOG LINE REFUSED IN THE CALL THAT ACTS. Twice the
+                       line recording an operator's pame was refused for
+                       width and the act ran in the same call, so the act
+                       preceded its record. The log call runs alone and its
+                       acknowledgement is read before the act.
