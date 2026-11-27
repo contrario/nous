@@ -311,6 +311,7 @@ The resulting bundle contains the verbatim `SKILL.md` and `nous.yaml`, a determi
 - [Parse Error Determinism](docs/PARSE_ERROR_DETERMINISM.md) -- the same source gives the same parse-error text in every process: the expected-token lines are sorted as lark master sorts them, the raised object keeps lark's class and attributes; decisions D381-1 to D381-7  <!-- __s381_readme_parse_error_determinism_xref_v1__ -->
 - [Anchor Journal](docs/ANCHOR_JOURNAL_DESIGN.md) -- why the release-VSA anchor could submit a second Rekor entry after a failure, and the journal beside the bundle directory that makes a rerun resume or refuse instead; decisions D386-1 to D386-6  <!-- __s386_readme_anchor_journal_xref_v1__ -->
 - [Cost Bound Display](docs/COST_BOUND_DISPLAY_DESIGN.md) -- the declared total behind a proven cost cap, read from the cost-cap Farkas certificate: cost_cap minus the certificate residual is the declared total, the residual is the headroom; shown as declared figures, not as a bound on what a run costs; decisions D400-1 to D400-10  <!-- __s400_readme_cost_bound_display_xref_v1__ -->
+- [Release Index Closure](docs/RELEASE_INDEX_CLOSURE_DESIGN.md) -- why a release-VSA directory's unsigned index.json was read by no verifier, and the INDEX leg of nous build-attest-verify that derives it again from the verified VSA payload, the Rekor bundle and time, the pinned key and a known verifier, and accepts only the same bytes, emittedAt aside; decisions D502-1 to D502-9  <!-- __s502_readme_release_index_xref_v1__ -->
 
 ## Contributing
 

@@ -92,18 +92,20 @@ one; it does not fetch. The bundle does not ship the wheel, by design -- you
 should verify the bytes you will actually install, not a copy this project
 mirrors for you.
 
-`index.json` records the wheel's exact name and sha256. Its `url` field points
-at the PyPI project page, not at a file, so fetch the file with pip:
+Fetch the wheel with pip, into this directory:
 
     pip download nous-lang==$V --no-deps --only-binary :all: -d .
 
-Bind what you fetched to what the index records. This step is yours, not ours:
+The verifier of 1.3 hashes it and compares the digest with the wheel subject
+of the signed VSA; a wheel whose bytes differ fails there. That comparison is
+the binding, and it rests on the signed VSA.
 
-    sha256sum nous_lang-$V-py3-none-any.whl
-    python3 -c "import json;print([a['sha256'] for a in json.load(open('index.json'))['artifacts'] if a['kind']=='wheel'][0])"
-
-The two digests must be equal. If they are not, stop: the bytes PyPI served you
-are not the bytes this release VSA endorses.
+`index.json` is not signed: take no digest from it to decide anything. The
+INDEX leg of `nous build-attest-verify` (1.5) derives it again from the inputs
+that command has verified and fails unless the bytes are equal, emittedAt
+aside (docs/RELEASE_INDEX_CLOSURE_DESIGN.md). Only a nous-lang release that
+carries the leg runs it; an older one does not read the file.
+<!-- __s502_guide_1_2_v1__ -->
 
 ### 1.3 Run the verifier bare
 
@@ -151,6 +153,7 @@ From the `rel` directory of 1.1:
 
     curl -fsSLO "$B/nous_lang-$V.rekor-v2-bundle.json"
     curl -fsSLO "$B/nous_lang-$V.rekor-v2-bundle.json.sha256"
+    curl -fsSLO "$B/release-verifier-key.json"
     sha256sum -c nous_lang-$V.rekor-v2-bundle.json.sha256
     cd ..
     python3 -m venv v
@@ -171,9 +174,13 @@ file is there even when no TUF update checked it.
 EVIDENCES the inclusion of the VSA payload's digest in the view of the log that
 the log key signed, at the time the timestamp authority signed. NOT checked
 here: that every client sees the same view of the log. No witness cosignature
-is read, so a split view is not excluded. `index.json` is not signed and no
-verifier reads it; `scripts/cold_audit.py` checks that its payload digest and
-its wheel equal the VSA's. PROVES nothing: no Z3 or Farkas leg.
+is read, so a split view is not excluded. `index.json` is not signed. Where
+the installed nous-lang carries the INDEX leg, the matrix shows it: PASS when
+the file equals the index derived from the verified inputs, emittedAt aside,
+and FAIL fails the convergence; it reads `release-verifier-key.json` and
+`verify_build_vsa_offline.py` beside it. `scripts/cold_audit.py` also checks
+that its payload digest and its wheel equal the VSA's. PROVES nothing: no Z3
+or Farkas leg. <!-- __s502_guide_1_5_tail_v1__ -->
 
 ## 2. SLSA provenance (build leg)
 

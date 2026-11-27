@@ -25,6 +25,12 @@ exact same artifact -- the release VSA payload:
           Without this leg, ROOT 2 would only evidence "some entry exists," not
           "the log entry is about THIS VSA." This leg is the lynchpin.
 
+  INDEX   when the directory holds index.json: it must equal, byte for byte,
+          the index derived from what ROOT 1, ROOT 2 and BINDING verified
+          (release_index.py, S502); emittedAt is not evidenced. FAIL fails
+          the convergence; with no index.json it is ABSENT and the
+          convergence is unchanged. __s502_index_leg_doc_v1__
+
 Honest boundary: a PASS EVIDENCES (Ed25519 authenticity + append-only,
 timestamped public-log inclusion + digest-equality binding) that the pinned
 operator endorsed this VSA AND that endorsement's payload digest is publicly
@@ -59,6 +65,7 @@ from typing import Any
 
 import build_vsa
 import rekor_v2_offline
+import release_index  # __s502_index_leg_import_v1__
 
 NOUS_RELEASE_PINNED_PUBKEY_B64 = "E3FNG9zFMRjhg/iVkOu9K3gH5mmG6Uwvdy8EvwHsYVo="
 
@@ -90,11 +97,17 @@ class ConvergenceInputError(ValueError):
     problem, not a verification verdict). The message starts with the cause."""
 
 
-def _load_json(path: Path, label: str) -> dict[str, Any]:
+def _read_input(path: Path, label: str) -> bytes:  # __s502_read_once_v1__
     if not path.is_file():
         raise ConvergenceInputError(label + " not found: " + str(path))
+    return path.read_bytes()
+
+
+def _load_json(path: Path, label: str, raw: bytes | None = None) -> dict[str, Any]:
+    if raw is None:
+        raw = _read_input(path, label)
     try:
-        obj = _strict_loads(path.read_bytes(), path.name + " [js:crel.1]")
+        obj = _strict_loads(raw, path.name + " [js:crel.1]")
     except json.JSONDecodeError as exc:
         raise ConvergenceInputError(
             label + " is not valid JSON: " + str(exc)
@@ -315,8 +328,12 @@ def verify_convergence(
     bdir = Path(bundle_dir)
     pdir = Path(pins_dir) if pins_dir is not None else bdir
 
-    envelope = _load_json(bdir / VSA_FILENAME, "release VSA")
-    rekor_bundle = _load_json(_rekor_bundle_path(bdir), "rekor v2 bundle")
+    # __s502_read_once_call_v1__ the INDEX leg hashes the bytes parsed here
+    vsa_raw = _read_input(bdir / VSA_FILENAME, "release VSA")
+    envelope = _load_json(bdir / VSA_FILENAME, "release VSA", vsa_raw)
+    bundle_path = _rekor_bundle_path(bdir)
+    bundle_raw = _read_input(bundle_path, "rekor v2 bundle")
+    rekor_bundle = _load_json(bundle_path, "rekor v2 bundle", bundle_raw)
 
     payload = _vsa_payload_bytes(envelope)
     vsa_payload_sha256 = hashlib.sha256(payload).hexdigest()
@@ -410,7 +427,28 @@ def verify_convergence(
     }
 
     root2_ok = inclusion_ok and checkpoint_ok and timestamp_ok
-    convergence_ok = root1_ok and root2_ok and binding_ok
+    # __s502_index_leg_v1__ D502-5: PASS, FAIL or ABSENT. In legs only when
+    # index.json is present, so "CONVERGENCE PASS iff every leg PASS" holds.
+    inputs_ok = root1_ok and root2_ok and binding_ok
+    gen_time = (
+        verdict.timestamp.isoformat().replace("+00:00", "Z")
+        if (inputs_ok and verdict is not None and verdict.timestamp is not None)
+        else None
+    )
+    index_leg = release_index.check_index(
+        bdir,
+        version=_derive_version(statement),
+        statement=statement if inputs_ok else None,
+        bundle=rekor_bundle if inputs_ok else None,
+        vsa_bytes=vsa_raw,
+        bundle_bytes=bundle_raw,
+        pin_b64=pinned_pubkey_b64,
+        vsa_payload_sha256_hex=vsa_payload_sha256,
+        rfc3161_gen_time=gen_time,
+    )
+    if index_leg["status"] != release_index.ABSENT:
+        legs["index_closure"] = index_leg
+    convergence_ok = inputs_ok and index_leg["status"] != _FAIL
 
     result: dict[str, Any] = {
         "schema": "nous.build_attest_verify.v1",
@@ -419,6 +457,7 @@ def verify_convergence(
         "version": _derive_version(statement),
         "convergence": _PASS if convergence_ok else _FAIL,
         "legs": legs,
+        "index_closure": index_leg,  # __s502_index_leg_result_v1__
         "evidence": {
             "vsa_payload_sha256": vsa_payload_sha256,
             "anchored_digest_sha256": anchored_hex,
@@ -467,6 +506,13 @@ def _render_matrix(result: dict[str, Any]) -> str:
         leg = legs[key]
         lines.append("  [" + leg["status"] + "]  " + label)
         lines.append("          " + leg["detail"])
+    ix = result.get("index_closure")  # __s502_index_leg_render_v1__
+    if isinstance(ix, dict):
+        lines.append("  [" + str(ix.get("status")) + "]  INDEX   index.json == "
+                     "image of the verified inputs")
+        lines.append("          " + str(ix.get("detail")))
+        if ix.get("status") != release_index.ABSENT:
+            lines.append("          " + str(ix.get("boundary")))
     lines.append("")
     lines.append("  CONVERGENCE: " + result["convergence"])
     lines.append("")

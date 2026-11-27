@@ -32,7 +32,8 @@ SCOPE_P = ("ndec.py", "cli_ndec.py", "cli_conformance.py", "attest_apr.py",
            "manifest.py", "nous_trace.py", "cli_continuity.py",
            "continuity_ledger.py", "cli_verify_release.py",
            "rekor_v2_offline.py", "cli_verify_cost.py", "rekor_verify_v2.py",
-           "verifier_registry.py", "closure_witness.py")
+           "verifier_registry.py", "closure_witness.py",
+           "release_index.py")  # __s502_an_js_scope_v1__
 
 
 def _region_lines(text: str) -> set:

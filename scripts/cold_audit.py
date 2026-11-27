@@ -272,8 +272,10 @@ def _vsa_subjects(path: Path) -> tuple[str, dict[str, str]]:
 
 
 def _bind_index(index: dict, vsa: Path) -> tuple[str, str]:
-    """index.json is not signed and no verifier reads it. Every field of it
-    this audit uses must equal the VSA's; the wheel is the VSA's."""
+    """index.json is not signed. Every field of it this audit uses must
+    equal the VSA's; the wheel is the VSA's. The INDEX leg of nous
+    build-attest-verify, from the release that carries it, checks the whole
+    file (S502). __s502_bind_index_doc_v1__"""
     psha, subj = _vsa_subjects(vsa)
     if index.get("vsaPayloadSha256") != psha:
         raise ColdAuditError(
@@ -356,8 +358,12 @@ def audit_release_vsa_rekor(version: str, workdir: Path) -> str:
     bundle: str = "nous_lang-" + version + ".rekor-v2-bundle.json"
     rel: Path = workdir / "rel"
     rel.mkdir()
+    # __s502_cold_audit_index_inputs_v1__ the INDEX leg (S502) reads the
+    # verifier and the key record beside index.json; without them a release
+    # whose build-attest-verify carries the leg fails here.
     _fetch_all(base, ("build-vsa.intoto.json", "build-vsa.intoto.json.sha256",
-                      bundle, bundle + ".sha256", "index.json"), rel)
+                      bundle, bundle + ".sha256", "index.json",
+                      "verify_build_vsa_offline.py", "release-verifier-key.json"), rel)
     _check_sidecar(rel / "build-vsa.intoto.json.sha256")
     _check_sidecar(rel / (bundle + ".sha256"))
     try:

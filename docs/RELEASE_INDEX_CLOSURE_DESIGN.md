@@ -231,4 +231,36 @@ Mutants: each check removed in turn must turn a named test red.
 
 ## 16. Build notes
 
-(none yet)
+<!-- __s502_release_index_build_notes_v1__ -->
+
+Recorded with the build commit. [container] is a value measured in the chat
+container on an export of b7cff195 on 2026-11-26.
+
+- B502-1. The VSA and bundle digests are taken from the bytes ROOT 1 and
+  ROOT 2 read, under the version's file names (D502-3); the version-named
+  copies on disk are not read. A directory whose canonical bundle verifies
+  while its version-named copy is damaged stays PASS, as it does today
+  (tests/test_s485_convergence_pins.py, X03).
+- B502-2. The verifier digest and the Rekor boundary text are tables by
+  first version; a version takes the last row at or below it: verifier
+  8bdb7a5e from 5.60.1, 2d24b70d from 5.79.0, cca57a4c from 9.0.0
+  [container, 41 of 41]. This is tighter than "one of a committed table"
+  (D502-3): an older verifier served with a newer release fails. A test
+  holds the last row equal to what build_vsa emits today, so a verifier
+  change fails at its own commit.
+- B502-3. The INDEX outcome is result["index_closure"]. It is in
+  result["legs"] only when index.json is present, so the reading
+  "CONVERGENCE PASS iff every leg PASS" (tests/test_s167_cli_verify_release.py)
+  still holds when the leg is ABSENT.
+- B502-4. release_index.py is on build-attest-verify's input reads, so the
+  AN-GATE-1 scans cover it (tests/test_an_js_inventory.py, SCOPE_P). Its two
+  strict sites, [js:rix.1] index.json and [js:rix.2] canonicalized_body,
+  are reached by tests/test_an_js_strict_rix.py, which sorts before
+  tests/test_an_js_zz_sites.py.
+- B502-5. scripts/cold_audit.py's Rekor section and the guide's 1.5 also
+  fetch release-verifier-key.json, and the cold audit the verifier, beside
+  index.json: without them the INDEX leg of a release that carries it
+  fails the cold audit (D502-7).
+- B502-6. The leg reads index.json, the verifier and the key record with
+  a 1 MiB cap, regular files only, opened non-blocking: a FIFO or a
+  directory under one of those names fails at once.
