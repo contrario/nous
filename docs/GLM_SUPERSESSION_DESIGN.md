@@ -34831,3 +34831,147 @@ document itself.
                        withdrawn before any run and resent from its file. A
                        command or digest goes to the operator from its
                        file, never typed.
+
+  - S504 the number the operator gave the ledger entry of the seat S502,
+    written by that seat: the object FG-S485-AN measured again; D503's
+    landing; the design G502 landed; the build B502 and its landing; the
+    seat's slips; the number 504 counted; and the codes FG-S502-A
+    to FG-S502-C
+
+    R24 GOVERNS EVERY VALUE BELOW. THIS ENTRY WAS WRITTEN BY THE SEAT S502,
+    DURING ITS SESSION, with the labels of D450 to D503: READ IN THE SEAT'S
+    CONTAINER, ON A, OPERATOR, TESTIMONY, DERIVED and MEASURED. Times are
+    UTC, on 11-26 and 11-27 of 2026; an operator's time is the time his
+    message was sent, a value ON A carries the clock its command printed.
+    Each value was asserted by the script that built this entry, from the
+    seat's running log or from files by digest. Each paste is a file kept
+    from the chat, named by its digest. What D503 records is not repeated
+    here. Each rehearsal, control, count, suite, mutant and readback below
+    evidences; nothing here is a Z3 or Farkas result. Each write on A or
+    GitHub had its own pame; nothing was written on B. The container
+    restarted at most operator messages; the log records the uptime and the
+    pins read after each restart.
+
+    D504-1  THE OBJECT, FG-S485-AN, MEASURED AGAIN, 11-26. OPERATOR,
+            11:57Z: S500's board item 1, index.json read by neither public
+            verifier. MEASURED in the container (i1/MI1_PREDICTIONS.txt
+            30dab180 hashed before the probe; i1/probe3_out.txt 0c64f74e):
+            over the 41 served release-VSA directories, index.json is the
+            image of the VSA statement, the Rekor bundle, the co-served
+            files and two times, 19 of 41 byte-equal to the mint's function
+            and 41 of 41 with the older Rekor boundary text for 5.60.1 to
+            5.78.0; on 11.0.0, the index as served and seven tamperings T1
+            to T7 of it left the served verifier and build-attest-verify at
+            PASS, eight of eight; cold_audit's _bind_index refused T1, T2
+            and T7 only. FG-S485-AN stood. OPERATOR, 12:08Z: the proposal,
+            a design file first, the code in a later gate.
+
+    D504-2  D503 LANDED, 11-26. L1 9a5b1b98, parent 369a552c, the
+            document's blob 8d6b129b (d503/l1_commit_out.txt 1ec07f6e).
+            C50A on A (ona/c50a_check_113300.txt 2192193a): the three names
+            absent before the upload; C50 (ona/c50_check_113500.txt
+            bb97196e) RC 0. G2 on A from 11:38:20Z
+            (ona/g2_d503_run_113820.txt 7e2efef0): 19 rows held,
+            OUTCOME_DIFF 0, lint 412 files 0 violations. G3 at 11:51:57Z;
+            G4 on A at 11:53:51Z (ona/g4_d503_run_115351.txt 582a5100):
+            HEAD 369a552c to 9a5b1b98, FFLIVE_GREEN. The readback
+            (d503/readback_out.txt cd32472b): 220 refs.
+
+    D504-3  THE DESIGN G502 LANDED, 11-26.
+            docs/RELEASE_INDEX_CLOSURE_DESIGN.md, decisions D502-1
+            to D502-9, under the seat's number. L1 b7cff195, parent
+            9a5b1b98, blob 66878def (g502/l1_commit_out.txt 14e10eb7). C51A
+            (ona/c51a_check_122600.txt 177459d9): the names absent before
+            the upload; C51 (ona/c51_check_122800.txt 4178c698). G2 on A
+            from 12:29:02Z (ona/g2_g502_run_122902.txt 505a0021): 19 rows
+            held, OUTCOME_DIFF 0, lint 413 files 0 violations. G3 at
+            12:42:30Z; G4 on A at 12:42:56Z (ona/g4_g502_run_124256.txt
+            778d4d6c): HEAD 9a5b1b98 to b7cff195. The readback
+            (g502/readback_out.txt aad79ed1): 221 refs.
+
+    D504-4  THE BUILD B502, IN THE CONTAINER, 11-26. MEASURED.
+            b502/B502_PREDICTIONS.txt dff4b765 hashed before any build
+            code, amended twice before the runs they name (c922bb4f,
+            e4ce3012). Before code (b502/mb502_out.txt bd194d34): the
+            served directories converge 41 of 41 with the RFC3161 time
+            equal to the index's, the key record rebuilds byte-equal in 41,
+            the verifier build_vsa emits today is the last of three served
+            digests. Red: the new tests on b7cff195 do not collect; with
+            release_index.py and no leg, 104 failed and 38 passed. Green:
+            145 of 145; the suite as a non-root user against b7cff195,
+            OUTCOME_DIFF 145 NEW_PASSED 145, no other line; claim lint 414
+            files, 0 violations. 18 mutants of the checks, 18 killed
+            (b502/out/mutants.txt cb52e06e). The landing tools from S500's
+            E1 tools; their fixture 26 cases held, 19 mutants killed
+            (b502/land/fx_b502_out.txt a5388a29). The design's section 16
+            records the build notes B502-1 to B502-6, among them two the
+            design did not foresee: the cold audit and the guide had to
+            fetch the key record, else the first release carrying the leg
+            fails its cold audit; release_index.py joined the AN-GATE
+            scans.
+
+    D504-5  B502 LANDED, 11-27; NOT RELEASED. L1 dcae74d9, parent b7cff195,
+            eleven files at pinned blobs, message 960106bf
+            (b502/land/l1_out.txt f3a80feb). G1b, the branch s502-b1 absent
+            before (b502/land/g1b_out.txt 7f49b23e). C52 on A
+            (ona/c52_check_004800.txt ed9de37c): FOUND_COUNT 1, both tools
+            OK, RC 0. G2 on A from 00:50:26Z (ona/g2_b502_run_005026.txt
+            12cc31ff): 24 legs rc 0, 5521 passed 13 skipped at the parent,
+            5666 passed 13 skipped at the branch, OUTCOME_DIFF 145
+            NEW_PASSED 145, lint 414 files 0 violations. G3: GitHub main
+            dcae74d9 (b502/land/g3_out.txt f16414bd). G4 on A at 01:14:39Z
+            (ona/g4_b502_run_011439.txt 4cef0fc3): HEAD b7cff195 to
+            dcae74d9, FFLIVE_GREEN. The readback: 222 refs
+            (numbers/refs_after_n165.txt 017fef10). No tag, no PyPI
+            release, nothing on B: no user has the INDEX leg yet.
+
+    D504-6  THE SEAT'S SLIPS. READ in the seat's log. At 11:33:40Z a
+            paste's digest typed before it was computed (81a3d4bd for
+            2192193a), corrected at 11:33:49Z; at 12:12:15Z a count typed
+            before it was read (22 for 14), corrected before the hash; at
+            13:03Z the claim lint ran before the amendment that was to
+            predict its count, recorded as measured; the test T02 held the
+            mint to today's boundary for 22 older directories, found by the
+            red run, fixed in the test; at 00:43:54Z the kit's files went
+            to the operator with C52A, the upload came before the read, and
+            the names' absence before 00:44:12Z is not
+            evidenced (FG-S502-B); in the log line of 00:49:54Z a command's
+            digest typed (c8a9a8d3 for 7f453285), corrected at 00:50:04Z
+            before the command was sent (FG-S502-A). TESTIMONY, not in the
+            log: a patch edit whose replacement did not carry its marker
+            re-applied on a second run and duplicated a line of the guide,
+            in the container only; the tree was rebuilt and the tool now
+            refuses such an edit (FG-S502-C).
+
+    D504-7  THE NUMBER 504 COUNTED, 11-27. OPERATOR, 01:33Z: 503 for the
+            seat; READ: 503 is D503's. OPERATOR, 01:36Z: 504. NUM502's
+            instrument with 504 put first, on a mirror of GitHub at main
+            dcae74d9, 222 refs (N165; N166 moved nothing): detached,
+            01:40:43Z to 01:51:37Z, rc 0; 55 rows, 52 held, 0 differ, 3
+            read; for 504 sum 0 over 18 cells, outside [0, 0, 0]; VERDICT
+            504 FREE (numbers/rec504_out.txt 0092aeed); the controls P-OUT,
+            P-K1 and P-TREE each as named, controls bad 0
+            (numbers/ctl_num504_out.txt 10bcfd0c);
+            numbers/NUM504_RESULTS.txt f06c5c4f.
+
+    FINDINGS
+
+            FG-S502-A  A VALUE TYPED INTO A LOG LINE OR A PINNED FILE.
+                       Three times a digest or a count was typed where the
+                       call that wrote the line could print it; each was
+                       corrected before it was used. A digest or count in a
+                       log line or a pinned file comes from the command
+                       that computes it, in the same call.
+
+            FG-S502-B  AN ABSENCE READ AFTER THE UPLOAD. The kit's files
+                       went to the operator with the command that reads
+                       their names absent, and the upload came first; what
+                       the names held before is not evidenced. The kit's
+                       files go to the operator only after that command's
+                       paste shows each name absent.
+
+            FG-S502-C  AN EDIT WHOSE REPLACEMENT DOES NOT CARRY ITS MARKER.
+                       A second run of the patch finds no marker, finds the
+                       anchor again inside the replacement and applies the
+                       edit twice. A patch tool refuses any edit whose
+                       replacement does not contain its marker.
